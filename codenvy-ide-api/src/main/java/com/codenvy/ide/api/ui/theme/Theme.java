@@ -190,6 +190,13 @@ public interface Theme {
      * @return the color
      */
     String getButtonColor();
+    
+    /**
+     * Color of the social button for sharing factory.
+     *
+     * @return the color
+     */
+    String getSocialButtonColor();
 
     /**
      * Background color for all input widgets

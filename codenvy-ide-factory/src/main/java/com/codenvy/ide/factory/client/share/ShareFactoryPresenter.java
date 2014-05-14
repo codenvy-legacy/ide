@@ -17,12 +17,12 @@
  */
 package com.codenvy.ide.factory.client.share;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.factory.dto.FactoryV1_0;
 import com.codenvy.api.factory.dto.FactoryV1_1;
-import com.codenvy.api.factory.dto.FactoryV1_2;
 import com.codenvy.api.factory.dto.ProjectAttributes;
-import com.codenvy.api.factory.dto.Restriction;
+import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
@@ -48,6 +48,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
@@ -59,12 +60,12 @@ import com.google.inject.name.Named;
 
 import javax.validation.constraints.NotNull;
 
-import static com.google.gwt.http.client.URL.encodeQueryString;
 import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.rest.HTTPHeader.ACCEPT;
 import static com.google.gwt.http.client.RequestBuilder.GET;
+import static com.google.gwt.http.client.URL.encodeQueryString;
 
 /**
  * Presenter for Factory creation and sharing.
@@ -78,6 +79,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     private final static String               OPEN_PROJECT_ACTION = "openproject";
     private final String                      SEARCH_URL;
 
+    private final FactoryServiceClient        factoryServiceClient;
     private final ShareFactoryView            view;
     private boolean                           isViewClosed        = true;
     private final WorkspaceAgent              workspaceAgent;
@@ -95,11 +97,13 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     private CoreLocalizationConstant          coreLocale;
     private FactoryResources                  factoryResources;
 
+    private Factory                           factory;
+
     /**
      * 
      */
     @Inject
-    public ShareFactoryPresenter(ShareFactoryView view,
+    public ShareFactoryPresenter(FactoryServiceClient factoryServiceClient, ShareFactoryView view,
                                  WorkspaceAgent workspaceAgent,
                                  FactoryLocalizationConstant locale,
                                  ResourceProvider resourceProvider,
@@ -112,6 +116,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
                                  @Named("workspaceId") String workspaceId,
                                  CoreLocalizationConstant coreLocale,
                                  FactoryResources factoryResources) {
+        this.factoryServiceClient = factoryServiceClient;
         this.view = view;
         this.view.setDelegate(this);
         this.workspaceAgent = workspaceAgent;
@@ -127,8 +132,6 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
         this.factoryResources = factoryResources;
 
         SEARCH_URL = "/project/" + workspaceId + "/search";
-
-        view.setEncodedLink("https://jira.codenvycorp.com/browse/IDEX-456");
     }
 
     public void showDialog() {
@@ -158,7 +161,13 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     }
 
     private void updateNonEncodedFactoryUrl() {
-        // TODO
+        String url = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                                     .setPath("factory").buildString();
+
+        view.setNonEncodedLink(url + "?" + buildNonEncoded(createFactoryFromParameters()));
+    }
+
+    private Factory createFactoryFromParameters() {
         Factory factory = dtoFactory.createDto(Factory.class);
         factory.setV(VERSION);
         factory.setVcs(VSC);
@@ -182,9 +191,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
         } else {
             factory.setStyle(view.getWhiteTheme() ? "White" : "Dark");
         }
-
-
-        view.setNonEncodedLink(buildNonEncoded(factory));
+        return factory;
     }
 
     public String buildNonEncoded(Factory factory) {
@@ -196,33 +203,17 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     private void buildNonEncoded(FactoryV1_0 factory, StringBuilder builder) {
         builder.append("v=").append(factory.getV());
         builder.append("&vcs=").append(factory.getVcs());
-        // TODO builder.append("&vcsurl=").append(encode(factory.getVcsurl()));
+        builder.append("&vcsurl=").append(URL.encode(factory.getVcsurl()));
         if (factory.getCommitid() != null) {
             builder.append("&commitid=").append(factory.getCommitid());
         }
-        if (factory.getIdcommit() != null && factory.getCommitid() == null) {
-            builder.append("&commitid=").append(factory.getIdcommit());
+        if (factory.getCommitid() == null) {
+            builder.append("&commitid=").append(factory.getCommitid());
         }
-        if (factory.getPname() != null) {
-            builder.append("&pname=").append(factory.getPname());
-        }
-        if (factory.getPtype() != null) {
-            builder.append("&ptype=").append(factory.getPtype());
-        }
-
         if (factory.getAction() != null) {
             builder.append("&action=").append(factory.getAction());
         }
-
-        if (factory.getWname() != null) {
-            builder.append("&wname=").append(factory.getWname());
-        }
-
-        if (factory.getVcsinfo()) {
-            builder.append("&vcsinfo=").append(true);
-        }
-
-        if (factory.getOpenfile() != null) {
+        if (factory.getOpenfile() != null && !factory.getOpenfile().isEmpty()) {
             builder.append("&openfile=").append(factory.getOpenfile());
         }
     }
@@ -244,8 +235,12 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
             builder.append("&contactmail=").append(factory.getContactmail());
         }
 
-        if (factory.getAuthor() != null) {
+        if (factory.getAuthor() != null && !factory.getAuthor().isEmpty()) {
             builder.append("&author=").append(factory.getAuthor());
+        }
+
+        if (factory.getDescription() != null && !factory.getDescription().isEmpty()) {
+            builder.append("&description=").append(factory.getDescription());
         }
 
         if (factory.getOrgid() != null) {
@@ -263,46 +258,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
          * TODO if (factory.getVariables() != null) {
          * builder.append("&variables=").append(encode(DtoFactory.getInstance().toJson(factory.getVariables()))); }
          */
-
-        if (factory.getImage() != null) {
-            builder.append("&image=").append(factory.getImage());
-        }
     }
-
-    private void buildNonEncoded(FactoryV1_2 factory, StringBuilder builder) {
-        buildNonEncoded(((FactoryV1_1)factory), builder);
-        Restriction restriction = factory.getRestriction();
-        if (restriction != null) {
-            if (restriction.getValidsince() > 0) {
-                builder.append("&restriction.validsince=").append(restriction.getValidsince());
-            }
-            if (restriction.getValiduntil() > 0) {
-                builder.append("&restriction.validuntil=").append(restriction.getValiduntil());
-            }
-            if (restriction.getMaxsessioncount() > 0) {
-                builder.append("&restriction.maxsessioncount=").append(restriction.getMaxsessioncount());
-            }
-            if (restriction.getRefererhostname() != null) {
-                builder.append("&restriction.refererhostname=").append(restriction.getRefererhostname());
-            }
-
-            if (restriction.getPassword() != null) {
-                builder.append("&restriction.password=").append(restriction.getPassword());
-            }
-
-            if (restriction.getRestrictbypassword()) {
-                builder.append("&restriction.restrictbypassword=").append(true);
-            }
-        }
-        /*
-         * TODO Git git = factory.getGit(); if (git != null) { if (git.getConfigbranchmerge() != null) {
-         * builder.append("&git.configbranchmerge=").append(encode(git.getConfigbranchmerge())); } if (git.getConfigpushdefault() != null) {
-         * builder.append("&git.configpushdefault=").append(git.getConfigpushdefault()); } if (git.getConfigremoteoriginfetch() != null) {
-         * builder.append("&git.configremoteoriginfetch=").append(encode(git.getConfigremoteoriginfetch())); } }
-         */
-
-    }
-
 
     /**
      * The the history of commits.
@@ -358,7 +314,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     }
 
     private void getGitUrl() {
-        gitUrl = "http://127.0.0.1:8080/ide/default";
+        gitUrl = resourceProvider.getActiveProject().getPath();
         openView();
         /*
          * TODO gitService.getGitReadOnlyUrl(resourceProvider.getActiveProject().getId(), new AsyncRequestCallback<String>(new
@@ -395,9 +351,48 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onGenerateEncodedUrlClicked() {
-        view.showGenerateButton(false);
-        view.showEncodedPanel(true);
-        // TODO generate URL
+        createFactory(new AsyncCallback<Factory>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(Factory result) {
+                view.showGenerateButton(false);
+                view.showEncodedPanel(true);
+                for (Link link : result.getLinks()) {
+                    if ("create-project".equals(link.getRel())) {
+                        view.setEncodedLink(link.getHref());
+                    }
+                }
+            }
+        });
+    }
+
+    private void createFactory(final AsyncCallback<Factory> callback) {
+        String post = dtoFactory.toJson(createFactoryFromParameters());
+
+        view.submitCreateFactoryForm(post, new AsyncCallback<String>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    factory = dtoFactory.createDtoFromJson(result, Factory.class);
+                    callback.onSuccess(factory);
+                } catch (Exception e) {
+                    while (result.indexOf(". ") > 0) {
+                        result = result.replace(". ", ".<br>");
+                    }
+                    Notification notification = new Notification(result, ERROR);
+                    notificationManager.showNotification(notification);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -415,7 +410,6 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -555,7 +549,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onFacebookClicked(boolean isEncoded) {
-        //TODO
+        // TODO
         String shareURL = "TODO path";
 
         Window.open("https://www.facebook.com/sharer/sharer.php" +
@@ -569,19 +563,19 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     public void onTwitterClicked(boolean isEncoded) {
         // TODO
         String shareURL = "TODO path";
-        String text = "Code,%20Build,%20Test%20and%20Deploy%20my%20Factory%20-%20" + 
-            resourceProvider.getActiveProject().getName() + ":%20" +
-            encodeQueryString(shareURL) + "%20%23Codenvy";
-        
+        String text = "Code,%20Build,%20Test%20and%20Deploy%20my%20Factory%20-%20" +
+                      resourceProvider.getActiveProject().getName() + ":%20" +
+                      encodeQueryString(shareURL) + "%20%23Codenvy";
+
         Window.open("https://twitter.com/intent/tweet?text=" + text + "&url=/",
-            "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=550,height=420");
+                    "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=550,height=420");
 
     }
 
     /** {@inheritDoc} */
     @Override
     public void onGooglePlusClicked(boolean isEncoded) {
-        //TODO
+        // TODO
         String shareURL = "TODO path";
 
         Window.open("https://plus.google.com/share" +
@@ -600,20 +594,22 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     public void onHtmlSnippetClicked(boolean isEncoded) {
         // TODO Auto-generated method stub
         new SnippetPopup("TODO", "TODO", coreLocale, factoryResources);
-        
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void onGitHubSnippetClicked(boolean isEncoded) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /** {@inheritDoc} */
     @Override
     public void onIFrameSnippetClicked(boolean isEncoded) {
         // TODO Auto-generated method stub
-        
+
     }
+
+
 }

@@ -18,37 +18,37 @@
 		type='com.codenvy.ide.factory.client.FactoryResources' />
 	<ui:style>
 		.button {
-			float: left;
-			margin-right: 3px;
-			height: 24px;
+		float: left;
+		margin-right: 3px;
+		height: 24px;
 		}
 
 		.space {
-			margin-top: 10px;
+		margin-top: 10px;
 		}
 
 		.leftspace {
-			margin-left: 20px;
+		margin-left: 20px;
 		}
 
 		.labelspace {
-			margin-bottom: 5px;
+		margin-bottom: 5px;
 		}
 
 		.padding {
-			padding:
-			20px 10px;
+		padding:
+		20px 10px;
 		}
 
 		.tooltipSocial{
-			margin-top: -60px;
-			margin-left: 50px;
+		margin-top: -60px;
+		margin-left: 50px;
 		}
 
 		.toggleButton{
-			height: 16px;
-			float: left;
-			margin-right: 3px;
+		height: 16px;
+		float: left;
+		margin-right: 3px;
 		}
 	</ui:style>
 	<g:HTMLPanel width="100%" height="100%">
@@ -236,5 +236,10 @@
 			</g:HorizontalPanel>
 			<g:Frame ui:field="previewFrame" addStyleNames="{resources.factoryCSS.previewFrame}"></g:Frame>
 		</g:VerticalPanel>
+		<iframe ui:field="createFactoryIFrame" name="createFactoryIFrame"
+			style="display:none;"></iframe>
+		<form ui:field="createFactoryForm">
+			<input type="hidden" name="factoryUrl" ui:field="factoryUrlContent"></input>
+		</form>
 	</g:HTMLPanel>
 </ui:UiBinder>

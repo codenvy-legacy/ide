@@ -163,7 +163,7 @@
 	position: absolute;
 	padding: 10px;
 	color: rgb(113, 157, 171);
-	background: rgb(255, 255, 255);
+	background: dialogContentBackground;
 	border: 1px solid rgb(221, 221, 253);
 	border-radius: 2px;
 	box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 2px 0px;
@@ -187,10 +187,12 @@
 	float: left;
 	margin: 5px;
 	cursor: pointer;
+	fill: socialButtonColor;
+	opacity: 0.75;
 }
 
 .social svg:hover {
-	fill: red;
+	opacity: 1;
 }
 
 .socialDelimeter {

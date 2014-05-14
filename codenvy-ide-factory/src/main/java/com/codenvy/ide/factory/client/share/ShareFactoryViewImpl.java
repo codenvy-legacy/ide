@@ -26,6 +26,9 @@ import com.codenvy.ide.navigation.NavigateToFileViewImpl;
 import com.codenvy.ide.ui.switcher.Switcher;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -65,90 +68,98 @@ public class ShareFactoryViewImpl extends BaseView<ShareFactoryView.ActionDelega
     }
 
     @UiField
-    Button                      nonEncodedHtmlButton;
+    Button                        nonEncodedHtmlButton;
     @UiField
-    Button                      nonEncodedGitHubButton;
+    Button                        nonEncodedGitHubButton;
     @UiField
-    Button                      nonEncodediFrameButton;
+    Button                        nonEncodediFrameButton;
     @UiField
-    ToggleButton                nonEncodedSocialButton;
+    ToggleButton                  nonEncodedSocialButton;
     @UiField
-    Button                      encodedHtmlButton;
+    Button                        encodedHtmlButton;
     @UiField
-    Button                      encodedGitHubButton;
+    Button                        encodedGitHubButton;
     @UiField
-    Button                      encodediFrameButton;
+    Button                        encodediFrameButton;
     @UiField
-    ToggleButton                encodedSocialButton;
+    ToggleButton                  encodedSocialButton;
     @UiField
-    Button                      generateEncodedUrlButton;
+    Button                        generateEncodedUrlButton;
 
     @UiField
-    Hyperlink                   nonencodedUrl;
+    Hyperlink                     nonencodedUrl;
     @UiField
-    Hyperlink                   encodedUrl;
+    Hyperlink                     encodedUrl;
     @UiField
-    Label                       encodedLabel;
+    Label                         encodedLabel;
     @UiField
-    FlowPanel                   encodedButtons;
+    FlowPanel                     encodedButtons;
     @UiField
-    HorizontalPanel             encodedPanel;
+    HorizontalPanel               encodedPanel;
 
 
     @UiField
-    SVGImage                    nonEncodedUrlCopy;
+    SVGImage                      nonEncodedUrlCopy;
     @UiField
-    SVGImage                    facebookNonEncoded;
+    SVGImage                      facebookNonEncoded;
     @UiField
-    SVGImage                    twitterNonEncoded;
+    SVGImage                      twitterNonEncoded;
     @UiField
-    SVGImage                    googlePlusNonEncoded;
+    SVGImage                      googlePlusNonEncoded;
     @UiField
-    SVGImage                    emailNonEncoded;
+    SVGImage                      emailNonEncoded;
     @UiField
-    FlowPanel                   socialNonEncoded;
+    FlowPanel                     socialNonEncoded;
     @UiField
-    SVGImage                    encodedUrlCopy;
+    SVGImage                      encodedUrlCopy;
     @UiField
-    SVGImage                    facebookEncoded;
+    SVGImage                      facebookEncoded;
     @UiField
-    SVGImage                    twitterEncoded;
+    SVGImage                      twitterEncoded;
     @UiField
-    SVGImage                    googlePlusEncoded;
+    SVGImage                      googlePlusEncoded;
     @UiField
-    SVGImage                    emailEncoded;
+    SVGImage                      emailEncoded;
     @UiField
-    FlowPanel                   socialEncoded;
+    FlowPanel                     socialEncoded;
 
     @UiField
-    TextBox                     authorField;
+    TextBox                       authorField;
     @UiField(provided = true)
-    SuggestBox                  openFileField;
+    SuggestBox                    openFileField;
     @UiField
-    TextBox                     expirationDateField;
+    TextBox                       expirationDateField;
     @UiField
-    TextArea                    descriptionField;
+    TextArea                      descriptionField;
     @UiField
-    TextArea                    findAndReplaceField;
+    TextArea                      findAndReplaceField;
 
     @UiField
-    RadioButton                 verticalAlignField;
+    RadioButton                   verticalAlignField;
     @UiField
-    RadioButton                 horizontalAlignField;
+    RadioButton                   horizontalAlignField;
     @UiField
-    RadioButton                 whiteThemeField;
+    RadioButton                   whiteThemeField;
     @UiField
-    RadioButton                 darkThemeField;
+    RadioButton                   darkThemeField;
     @UiField
-    Switcher                    showNumberOfProjects;
+    Switcher                      showNumberOfProjects;
 
     @UiField
-    Frame                       previewFrame;
+    Frame                         previewFrame;
+    @UiField
+    FormElement                   createFactoryForm;
+    @UiField
+    InputElement                  factoryUrlContent;
+    @UiField
+    IFrameElement                 createFactoryIFrame;
+
 
     @UiField(provided = true)
-    FactoryLocalizationConstant locale;
+    FactoryLocalizationConstant   locale;
     @UiField(provided = true)
-    FactoryResources            resources;
+    FactoryResources              resources;
+    private AsyncCallback<String> createFactoryCallback;
 
     @Inject
     protected ShareFactoryViewImpl(ShareFactoryViewImplUiBinder uibinder,
@@ -488,5 +499,47 @@ public class ShareFactoryViewImpl extends BaseView<ShareFactoryView.ActionDelega
     @Override
     public void showSocialNonEncoded(boolean isVisible) {
         socialNonEncoded.setVisible(isVisible);
+    }
+
+    private native void createFactory() /*-{
+		var instance = this;
+		var ifr = instance.@com.codenvy.ide.factory.client.share.ShareFactoryViewImpl::createFactoryIFrame;
+
+		ifr.onload = function() {
+			ifr = (ifr.contentWindow) ? ifr.contentWindow
+					: (ifr.contentDocument.document) ? ifr.contentDocument.document
+							: ifr.contentDocument;
+
+			var response = ifr.document.body.innerText;
+			if (response == null) {
+				var element = ifr.document.documentElement
+						.getElementsByTagName("body")[0].firstChild;
+				response = element.innerHTML;
+			}
+
+			instance.@com.codenvy.ide.factory.client.share.ShareFactoryViewImpl::factoryCreationResultReceived(Ljava/lang/String;)(response);
+		};
+    }-*/;
+
+    /**
+     * @param response
+     */
+    private void factoryCreationResultReceived(String response) {
+        if (createFactoryCallback != null) {
+            createFactoryCallback.onSuccess(response);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void submitCreateFactoryForm(String content, AsyncCallback<String> callback) {
+        this.createFactoryCallback = callback;
+        factoryUrlContent.setValue(content);
+        createFactory();
+        createFactoryForm.setMethod("post");
+        createFactoryForm.setEnctype("multipart/form-data");
+        createFactoryForm.setAction("/api/factory");
+        createFactoryForm.setTarget("createFactoryIFrame");
+        createFactoryForm.submit();
     }
 }

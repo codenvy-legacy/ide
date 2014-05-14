@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.importproject;
 
+import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
@@ -30,6 +31,7 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -53,16 +55,16 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private final ProjectServiceClient          projectServiceClient;
-    private       ResourceProvider              resourceProvider;
-    private       NotificationManager           notificationManager;
-    private       CoreLocalizationConstant      locale;
-    private       DtoFactory                    dtoFactory;
-    private       ImportProjectView             view;
-    private       ProjectImportersServiceClient projectImportersService;
-    private       DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private NewProjectWizardPresenter wizardPresenter;
-    private Map<String, ProjectImporterDescriptor> importers;
+    private final ProjectServiceClient                   projectServiceClient;
+    private       ResourceProvider                       resourceProvider;
+    private       NotificationManager                    notificationManager;
+    private       CoreLocalizationConstant               locale;
+    private       DtoFactory                             dtoFactory;
+    private       ImportProjectView                      view;
+    private       ProjectImportersServiceClient          projectImportersService;
+    private       DtoUnmarshallerFactory                 dtoUnmarshallerFactory;
+    private       NewProjectWizardPresenter              wizardPresenter;
+    private       Map<String, ProjectImporterDescriptor> importers;
 
     @Inject
 
@@ -116,6 +118,8 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
             }
+
+
         });
 
     }
@@ -138,6 +142,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+
                 resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
@@ -151,6 +156,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                     @Override
                     public void onFailure(Throwable caught) {
                         Log.error(ImportProjectPresenter.class, "can not get project " + projectName);
+
                         Notification notification = new Notification(caught.getMessage(), ERROR);
                         notificationManager.showNotification(notification);
                     }
@@ -159,10 +165,19 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
-                Notification notification = new Notification(exception.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
+                if (exception instanceof UnauthorizedException) {
+                    ServiceError serverError =
+                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse().getText(), ServiceError.class);
+                    Notification notification = new Notification(serverError.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                } else {
+                    Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                }
             }
+
+
         });
     }
 

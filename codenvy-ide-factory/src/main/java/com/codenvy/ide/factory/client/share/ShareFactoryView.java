@@ -104,4 +104,6 @@ public interface ShareFactoryView extends View<ShareFactoryView.ActionDelegate> 
     void showSocialEncoded(boolean isVisible);
     
     void showSocialNonEncoded(boolean isVisible);
+    
+    void submitCreateFactoryForm(String content, AsyncCallback<String> callback);
 }

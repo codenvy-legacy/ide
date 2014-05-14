@@ -435,6 +435,11 @@ public class DarkTheme implements Theme {
     }
     
     @Override
+    public String getSocialButtonColor() {
+        return "#ffffff";
+    }
+    
+    @Override
     public String getToolbarBackgroundColor() {
         return "#484848";
     }

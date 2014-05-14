@@ -113,7 +113,7 @@ public class Style {
     public static String getButtonTopColor() {
         return theme.getButtonTopColor();
     }
-
+    
     public static String getButtonColor() {
         return theme.getButtonColor();
     }
@@ -124,6 +124,10 @@ public class Style {
 
     public static String getNotableButtonColor() {
         return theme.getNotableButtonColor();
+    }
+    
+    public static String getSocialButtonColor() {
+        return theme.getSocialButtonColor();
     }
 
     public static String getInputBackground() {

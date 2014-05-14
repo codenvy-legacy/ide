@@ -64,6 +64,7 @@
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
 @eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
 @eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
+@eval socialButtonColor com.codenvy.ide.api.ui.theme.Style.getSocialButtonColor();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();

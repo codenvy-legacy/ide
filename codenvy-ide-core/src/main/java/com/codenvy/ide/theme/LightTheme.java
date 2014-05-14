@@ -141,6 +141,11 @@ public class LightTheme implements Theme {
     public String getButtonTopColor() {
         return "#D6D6D6";
     }
+    
+    @Override
+    public String getSocialButtonColor() {
+        return "#ffffff";
+    }
 
     @Override
     public String getButtonColor() {
