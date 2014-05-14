@@ -307,6 +307,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
+    /** Returns last build task's status. */
+    public String getLastBuildStatus() {
+        if (lastBuildTaskDescriptor != null) {
+            return lastBuildTaskDescriptor.getStatus().toString();
+        }
+        return null;
+    }
+
     private static Link getLink(BuildTaskDescriptor descriptor, String rel) {
         List<Link> links = descriptor.getLinks();
         for (Link link : links) {
