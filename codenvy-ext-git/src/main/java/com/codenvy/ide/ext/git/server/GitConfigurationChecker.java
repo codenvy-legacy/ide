@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class GitConfigurationChecker {
     /** Special comment for global .gitignore file. Define begin of Codenvy-specific patterns. */
     private static final String      CODENVY_COMMENT    = "# Codenvy files";
     /** Codenvy-specific file patterns to ignore by Git. */
-    private static final Set<String> GITIGNORE_PATTERNS = new HashSet<>();
+    private static final Set<String> GITIGNORE_PATTERNS = new LinkedHashSet<>();
     /** Path to the global gitconfig file. */
     private final Path GLOBAL_GITCONFIG_FILE_PATH;
     /** Path to the file that contains Codenvy-specific file patterns to ignore its by Git. */
