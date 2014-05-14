@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ui.dialogs;
+package com.codenvy.ide.ui.dialogs.ask;
 
 /**
  * Handler for user interaction in Ask dialog window
