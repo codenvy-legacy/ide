@@ -30,7 +30,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.ProjectDescription;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
@@ -50,7 +49,11 @@ import java.lang.reflect.Method;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link com.codenvy.ide.importproject.ImportProjectPresenter} functionality.
@@ -168,6 +171,15 @@ public class ImportProjectPresenterTest {
             }
         }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
         view.showDialog();
         when(view.getUri()).thenReturn(URI);
         when(view.getImporter()).thenReturn(IMPORTER);
@@ -187,9 +199,10 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(resourceProvider, never()).getProject(anyString(), (AsyncCallback<Project>)anyObject());
         verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
+        verify(resourceProvider).getProject(eq(PROJECT_Name), (AsyncCallback<Project>)anyObject());
+        verify(resourceProvider).delete((Project)anyObject(), (AsyncCallback<String>)anyObject());
     }
 
     @Test
