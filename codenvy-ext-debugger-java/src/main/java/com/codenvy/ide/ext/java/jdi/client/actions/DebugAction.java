@@ -27,6 +27,7 @@ import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.ext.java.shared.Constants;
+import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
@@ -75,8 +76,9 @@ public class DebugAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         if (activeProject != null) {
             final String projectTypeId = activeProject.getDescription().getProjectTypeId();
-            e.getPresentation().setVisible(projectTypeId.equals(Constants.SPRING_ID) ||
-                                           projectTypeId.equals(Constants.WAR_ID) ||
+            String packaging = activeProject.getAttributeValue(MavenAttributes.MAVEN_PACKAGING);
+
+            e.getPresentation().setVisible("war".equals(packaging)||
                                            projectTypeId.equals(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID));
             e.getPresentation().setEnabled(!runnerController.isAnyAppRunning());
         } else {

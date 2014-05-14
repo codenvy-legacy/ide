@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
@@ -115,9 +116,13 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
     public void updateControls() {
         // change state of buttons
         view.setBackButtonVisible(stepsPages.indexOf(currentPage) != 0);
-        view.setNextButtonVisible(stepsPages.indexOf(currentPage) != stepsPages.size() -1);
+        view.setNextButtonVisible(stepsPages.indexOf(currentPage) != stepsPages.size() - 1);
         view.setNextButtonEnabled(currentPage.isCompleted());
-        view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage && currentPage != namePage);
+        if(wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE) != null){
+            view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage);
+        } else {
+            view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage && currentPage != namePage);
+        }
         view.setCaption(currentPage.getCaption());
         view.setNotice(currentPage.getNotice());
         view.setImage(currentPage.getImage());

@@ -19,12 +19,6 @@ package com.codenvy.ide.ext.java.server;
 
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.ide.ext.java.server.projecttypes.AntSourceFoldersValueProviderFactory;
-import com.codenvy.ide.ext.java.server.projecttypes.JarProjectTypeExtension;
-import com.codenvy.ide.ext.java.server.projecttypes.MultiModuleProjectTypeDescriptionExtension;
-import com.codenvy.ide.ext.java.server.projecttypes.MultiModuleProjectTypeExtension;
-import com.codenvy.ide.ext.java.server.projecttypes.ProjectTypeDescriptionsExtension;
-import com.codenvy.ide.ext.java.server.projecttypes.SpringProjectTypeExtension;
-import com.codenvy.ide.ext.java.server.projecttypes.WarProjectTypeExtension;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -37,14 +31,6 @@ import com.google.inject.name.Names;
 public class JavaModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(MultiModuleProjectTypeDescriptionExtension.class);
-
-        bind(JarProjectTypeExtension.class);
-        bind(WarProjectTypeExtension.class);
-        bind(SpringProjectTypeExtension.class);
-        bind(MultiModuleProjectTypeExtension.class);
-
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(AntSourceFoldersValueProviderFactory.class);
         bind(RestNameEnvironment.class);

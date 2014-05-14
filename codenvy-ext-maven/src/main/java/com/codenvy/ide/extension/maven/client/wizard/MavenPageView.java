@@ -31,6 +31,8 @@ public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
 
     void setVersion(String value);
 
+    String getPackaging();
+
     public interface ActionDelegate{
 
         void onTextsChange();

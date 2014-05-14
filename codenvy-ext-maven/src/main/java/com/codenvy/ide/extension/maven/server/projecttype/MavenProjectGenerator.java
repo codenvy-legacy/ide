@@ -17,19 +17,9 @@
  */
 package com.codenvy.ide.extension.maven.server.projecttype;
 
-import com.codenvy.api.project.server.AbstractVirtualFileEntry;
-import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.FolderEntry;
-import com.codenvy.api.project.server.ProjectGenerator;
-import com.codenvy.ide.ext.java.shared.Constants;
-import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
-import org.apache.maven.model.Model;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -62,7 +52,7 @@ public class MavenProjectGenerator {
 //            testJava.createFolder(name);
 //        }
 //        FolderEntry folder = (FolderEntry)baseFolder.getChild(".codenvy");
-//        String properties =  "{\"type\":\"" +Constants.MAVEN_JAR_ID +"\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]},{\"name\":\"language\",\"value\":[\"java\"]}]}";
+//        String properties =  "{\"type\":\"" +Constants.MAVEN_ID +"\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]},{\"name\":\"language\",\"value\":[\"java\"]}]}";
 //        AbstractVirtualFileEntry child = folder.getChild("project");
 //        ((FileEntry)child).updateContent(properties.getBytes());
     }
