@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- *  [2012] - [2014] Codenvy, S.A.
- *  All Rights Reserved.
+ * [2012] - [2014] Codenvy, S.A.
+ * All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.server.projecttypes;
+package com.codenvy.ide.extension.maven.server.projecttype;
 
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeExtension;
@@ -23,24 +23,26 @@ import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.ext.java.shared.Constants;
+import com.google.inject.Inject;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-/** @author Artem Zatsarynnyy */
+/**
+ * @author Evgen Vidolob
+ */
 @Singleton
-public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
+public class MavenProjectTypeExtension implements ProjectTypeExtension {
+
     @Inject
-    public MultiModuleProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
+    public MavenProjectTypeExtension(ProjectTypeDescriptionRegistry registry) {
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.MULTI_MODULE_ID, Constants.MULTI_MODULE_NAME, Constants.JAVA_CATEGORY);
+        return new ProjectType(Constants.MAVEN_ID, Constants.MAVEN_NAME, Constants.JAVA_CATEGORY);
     }
 
     @Override
@@ -53,7 +55,19 @@ public class MultiModuleProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        return Collections.emptyList();
+        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        list.add(new ProjectTemplateDescription("zip",
+                                                "JAVA WEB PROJECT",
+                                                "Java Web project.",
+                                                "templates/MavenWar.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN SPRING APPLICATION",
+                                                "Simple Spring project which uses Maven build system.",
+                                                "templates/MavenSpring.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN JAR PROJECT",
+                                                "Simple JAR project which uses Maven build system.",
+                                                "templates/MavenJar.zip"));
+        return list;
     }
-
 }

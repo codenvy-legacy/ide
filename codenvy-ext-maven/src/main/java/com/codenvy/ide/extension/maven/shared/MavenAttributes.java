@@ -22,7 +22,8 @@ package com.codenvy.ide.extension.maven.shared;
  */
 public interface MavenAttributes {
 
-    String MAVEN_GROUP_ID = "maven.groupId";
-    String MAVEN_VERSION  = "maven.version";
+    String MAVEN_GROUP_ID    = "maven.groupId";
+    String MAVEN_VERSION     = "maven.version";
     String MAVEN_ARTIFACT_ID = "maven.artifactId";
+    String MAVEN_PACKAGING   = "maven.packaging";
 }

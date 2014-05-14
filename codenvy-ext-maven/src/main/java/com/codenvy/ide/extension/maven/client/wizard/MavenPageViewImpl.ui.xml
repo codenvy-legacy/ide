@@ -63,5 +63,32 @@
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
+        <g:north size="50">
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="Packaging:"
+                                 addStyleNames="{style.projectNamePosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:SimplePanel addStyleNames="{style.spaceRight}">
+                        <g:SimplePanel>
+                            <g:ListBox ui:field="packagingField" multipleSelect="false" visibleItemCount="1" selectedIndex="0">
+                                <g:item value="jar">
+                                    JAR
+                                </g:item>
+                                <g:item value="war">
+                                    WAR
+                                </g:item>
+                                <g:item value="pom">
+                                    POM
+                                </g:item>
+                            </g:ListBox>
+                        </g:SimplePanel>
+                    </g:SimplePanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>
