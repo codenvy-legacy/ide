@@ -1,6 +1,7 @@
 package com.codenvy.ide.factory.server;
 
 import com.codenvy.api.core.ApiException;
+import com.codenvy.api.core.UnauthorizedException;
 import com.codenvy.api.core.rest.Service;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.factory.dto.Factory;
@@ -17,7 +18,6 @@ import com.codenvy.commons.lang.Strings;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.server.GitConnection;
 import com.codenvy.ide.ext.git.server.GitException;
-import com.codenvy.ide.ext.git.server.NotAuthorizedException;
 import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
 import com.codenvy.ide.ext.git.shared.BranchCheckoutRequest;
 import com.codenvy.ide.factory.server.variable.VariableReplacer;
@@ -101,7 +101,7 @@ public class FactoryService extends Service {
         try {
             importer.importSources(projectFolder, factory.getVcsurl());
         } catch (IOException | ApiException e) {
-            if (e.getCause() != null && e.getCause() instanceof NotAuthorizedException) {
+            if (e instanceof UnauthorizedException) {
                 throw halt(UNAUTHORIZED, e.getMessage(), e);
             }
             throw halt(INTERNAL_SERVER_ERROR, e.getMessage());
