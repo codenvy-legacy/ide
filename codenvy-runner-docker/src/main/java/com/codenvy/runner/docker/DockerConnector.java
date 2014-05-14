@@ -120,6 +120,8 @@ public class DockerConnector {
         int close(int fd);
 
         String strerror(int errno);
+
+        int getuid();
     }
 
 
@@ -261,6 +263,7 @@ public class DockerConnector {
     public ContainerCreated createContainer(ContainerConfig config) throws IOException {
         final int fd = connect();
         try {
+            //config.setUser(Integer.toString(C_LIBRARY.getuid()));
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
             headers.add(Pair.of("Content-Type", "application/json"));
             final String body = JsonHelper.toJson(config, FIRST_LETTER_LOWERCASE);
@@ -591,12 +594,21 @@ public class DockerConnector {
 
 
     private void createTarArchive(java.io.File tar, java.io.File... files) throws IOException {
-        try (final FileOutputStream fOut = new FileOutputStream(tar);
-             final TarArchiveOutputStream tarOut = new TarArchiveOutputStream(fOut)) {
+        FileOutputStream fOut = null;
+        TarArchiveOutputStream tarOut = null;
+        try {
+            fOut = new FileOutputStream(tar);
+            tarOut = new TarArchiveOutputStream(fOut);
+            tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
             for (java.io.File file : files) {
-                if (file.isFile()) {
-                    addFile(tarOut, file, "");
-                }
+                addFile(tarOut, file, "");
+            }
+        } finally {
+            if (tarOut != null) {
+                tarOut.close();
+            }
+            if (fOut != null) {
+                fOut.close();
             }
         }
     }
@@ -604,7 +616,9 @@ public class DockerConnector {
 
     private void addFile(TarArchiveOutputStream tarOut, java.io.File file, String base) throws IOException {
         final String entryName = base + file.getName();
-        tarOut.putArchiveEntry(new TarArchiveEntry(file, entryName));
+        final TarArchiveEntry tarEntry = new TarArchiveEntry(file, entryName);
+        tarEntry.setModTime(0);
+        tarOut.putArchiveEntry(tarEntry);
         if (file.isFile()) {
             Files.copy(file.toPath(), tarOut);
             tarOut.closeArchiveEntry();

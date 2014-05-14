@@ -17,28 +17,27 @@
  */
 package com.codenvy.runner.docker;
 
-import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * @author andrew00x
  */
 public class Dockerfile {
-    private final File file;
+    private List<String>        lines;
+    private Map<String, Object> parameters;
+    private List<DockerImage>   images;
 
-    private List<String>      comments;
-    private List<DockerImage> images;
-
-    public Dockerfile(File file) {
-        this.file = file;
-    }
-
-    public List<String> getComments() {
-        if (comments == null) {
-            comments = new LinkedList<>();
+    public List<String> getLines() {
+        if (lines == null) {
+            lines = new LinkedList<>();
         }
-        return comments;
+        return lines;
     }
 
     public List<DockerImage> getImages() {
@@ -48,7 +47,43 @@ public class Dockerfile {
         return images;
     }
 
-    public File getFile() {
-        return file;
+    public Map<String, Object> getParameters() {
+        if (parameters == null) {
+            parameters = new LinkedHashMap<>();
+        }
+        return parameters;
+    }
+
+    public void writeDockerfile(java.io.File path) throws IOException {
+        try (FileWriter output = new FileWriter(path)) {
+            writeDockerfile(output);
+        }
+    }
+
+    public void writeDockerfile(Appendable output) throws IOException {
+        StringBuilder buf = null;
+        for (String line : getLines()) {
+            final Matcher matcher = DockerfileParser.TEMPLATE_PATTERN.matcher(line);
+            if (matcher.find()) {
+                int start = 0;
+                if (buf == null) {
+                    buf = new StringBuilder();
+                } else {
+                    buf.setLength(0);
+                }
+                do {
+                    buf.append(line.substring(start, matcher.start()));
+                    final String name = line.substring(matcher.start() + 1, matcher.end() - 1);
+                    final Object value = parameters.get(name);
+                    buf.append(value == null ? "" : String.valueOf(value));
+                    start = matcher.end();
+                } while (matcher.find());
+                buf.append(line.substring(start));
+                output.append(buf);
+            } else {
+                output.append(line);
+            }
+            output.append('\n');
+        }
     }
 }
