@@ -1,10 +1,10 @@
 /*
  * CODENVY CONFIDENTIAL
  * __________________
- *
- * [2012] - [2014] Codenvy, S.A.
+ * 
+ * [2012] - [$today.year] Codenvy, S.A. 
  * All Rights Reserved.
- *
+ * 
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
  * if any.  The intellectual and technical concepts contained
@@ -15,15 +15,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.maven.shared;
+package com.codenvy.ide.ui.dialogs.info;
 
 /**
- * @author Evgen Vidolob
+ * Handler for user interaction in Info dialog window
+ *
+ * @author Roman Nikitenko
  */
-public interface MavenAttributes {
+public abstract class InfoHandler {
 
-    String MAVEN_GROUP_ID    = "maven.groupId";
-    String MAVEN_VERSION     = "maven.version";
-    String MAVEN_ARTIFACT_ID = "maven.artifactId";
-    String MAVEN_PACKAGING   = "maven.packaging";
+    /**
+     * Call if user click Ok button
+     */
+    public abstract void onOk();
 }

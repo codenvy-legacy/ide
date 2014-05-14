@@ -72,8 +72,7 @@ public class JavaRuntimeExtension {
         DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
         runContextGroup.add(debugAction);
 
-        debuggerManager.registeredDebugger(Constants.WAR_ID, debuggerPresenter);
-        debuggerManager.registeredDebugger(Constants.SPRING_ID, debuggerPresenter);
+        debuggerManager.registeredDebugger(Constants.MAVEN_ID, debuggerPresenter);
         debuggerManager.registeredDebugger(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID, debuggerPresenter);
         resolverFactory.addResolver(APPLICATION_JAVA, javaFqnResolver);
     }

@@ -95,7 +95,7 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
     }
 
     @Override
-    protected DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request) {
+    protected Dockerfile getDockerfile(DockerEnvironment dockerEnvironment, RunRequest request) throws IOException {
         final boolean debug = request.getDebugMode() != null;
         // DockerEnvironment should never be null.
         if (dockerEnvironment != null) {
@@ -106,7 +106,7 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
             final String envDirPath = getName() + java.io.File.separatorChar + dockerEnvironment.getId() + java.io.File.separatorChar;
             java.io.File dockerFile = new java.io.File(dockerfilesRepository, envDirPath + dockerFileName);
             if (dockerFile.exists()) {
-                return DockerfileTemplate.from(dockerFile);
+                return DockerfileParser.parse(dockerFile);
             }
             if (!debug) {
                 // If there is no Dockerfile for simple run try to use Dockerfile for run under debug, if any.
@@ -116,7 +116,7 @@ public class EmbeddedDockerRunner extends BaseDockerRunner {
                 }
                 dockerFile = new java.io.File(dockerfilesRepository, envDirPath + dockerFileName);
                 if (dockerFile.exists()) {
-                    return DockerfileTemplate.from(dockerFile);
+                    return DockerfileParser.parse(dockerFile);
                 }
             }
         }

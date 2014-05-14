@@ -37,6 +37,7 @@ import com.codenvy.api.runner.internal.RunnerConfigurationFactory;
 import com.codenvy.commons.json.JsonHelper;
 import com.codenvy.commons.json.JsonParseException;
 import com.codenvy.commons.lang.NamedThreadFactory;
+import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.runner.docker.json.BuildImageStatus;
 import com.codenvy.runner.docker.json.ContainerConfig;
@@ -52,7 +53,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashMap;
@@ -178,19 +178,53 @@ public abstract class BaseDockerRunner extends Runner {
     @Override
     protected ApplicationProcess newApplicationProcess(DeploymentSources toDeploy, RunnerConfiguration runnerCfg) throws RunnerException {
         try {
-            final File applicationFile = toDeploy.getFile();
             // It always should be DockerRunnerConfiguration.
             final DockerRunnerConfiguration dockerRunnerCfg = (DockerRunnerConfiguration)runnerCfg;
             final RunRequest request = dockerRunnerCfg.getRequest();
             final DockerEnvironment dockerEnvironment = getDockerEnvironment(request);
-            final DockerfileTemplate dockerfileTemplate = getDockerfileTemplate(dockerEnvironment, request);
-            if (dockerfileTemplate == null) {
+            final Dockerfile dockerfile = getDockerfile(dockerEnvironment, request);
+            if (dockerfile == null) {
                 throw new RunnerException("Unable create environment for starting application. Acceptable dockerfile isn't found.");
             }
             // Apply parameters and write Dockerfile based on it's template.
-            dockerfileTemplate.setParameters(runnerCfg.getOptions()).setParameter("app", applicationFile.getName());
-            final File dockerfile = new File(applicationFile.getParentFile(), "Dockerfile");
-            dockerfileTemplate.writeDockerfile(dockerfile);
+            java.io.File applicationFile = toDeploy.getFile();
+            String applicationFileName = applicationFile.getName();
+            final java.io.File workDir = applicationFile.getParentFile();
+            final List<DockerImage> images = dockerfile.getImages();
+            if (images.isEmpty()) {
+                throw new RunnerException(
+                        "Unable create environment for starting application. Dockerfile exists but doesn't contains any images.");
+            }
+            // First image in the list is image for application.
+            final DockerImage applicationImage = images.get(0);
+            // check do we need unpack application file.
+            // 1. request binding application directory to docker container instead of adding file inside container with 'ADD' instruction
+            final String containerBindDir = dockerEnvironment != null ? dockerEnvironment.getBindAppDir() : null;
+            boolean needUnpack = containerBindDir != null;
+            if (!needUnpack) {
+                // 2. request to add single file from application or if destination path ands with '/'
+                // examples:
+                // a. ADD $app$/some_file /opt/application
+                // b. ADD $app$ /opt/application/
+                for (Pair<String, String> add : applicationImage.getAdd()) {
+                    if (add.first.contains("$app$/") || (add.first.equals("$app$") && add.second.endsWith("/"))) {
+                        needUnpack = true;
+                        break;
+                    }
+                }
+            }
+
+            if (needUnpack) {
+                java.io.File applicationFileUnpack = new java.io.File(workDir, applicationFileName + "_unpack");
+                ZipUtils.unzip(applicationFile, applicationFileUnpack);
+                applicationFile = applicationFileUnpack;
+                applicationFileName = applicationFileUnpack.getName();
+            }
+            dockerfile.getParameters().put("app", applicationFileName);
+            dockerfile.getParameters().putAll(runnerCfg.getOptions());
+            final java.io.File dockerfileIoFile = new java.io.File(workDir, "Dockerfile");
+            dockerfile.writeDockerfile(dockerfileIoFile);
+
             final List<Pair<Integer, Integer>> portMapping = new LinkedList<>();
             int privateWebPort = -1;
             if (dockerEnvironment != null) {
@@ -199,9 +233,8 @@ public abstract class BaseDockerRunner extends Runner {
             if (privateWebPort <= 0) {
                 // Use port that is set in EXPOSE instruction, if any. EXPOSE instruction may contains multiple container ports,
                 // but Codenvy uses only the first one to connect the Docker container and route requests from the Internet.
-                final List<DockerImage> images = DockerfileParser.parse(dockerfile).getImages();
                 if (!images.isEmpty()) {
-                    final List<String> expose = images.get(0).getExpose();
+                    final List<String> expose = applicationImage.getExpose();
                     if (!expose.isEmpty()) {
                         try {
                             privateWebPort = Integer.parseInt(expose.get(0));
@@ -236,13 +269,15 @@ public abstract class BaseDockerRunner extends Runner {
             final String workspace = runnerCfg.getRequest().getWorkspace();
             final String project = runnerCfg.getRequest().getProject();
             final String dockerRepoName = workspace + (project.startsWith("/") ? project : ('/' + runnerCfg.getRequest().getProject()));
+            // count hash-sum from original file
             @SuppressWarnings("unchecked")
-            final String hash = ByteStreams.hash(ByteStreams.join(Files.newInputStreamSupplier(applicationFile),
-                                                                  Files.newInputStreamSupplier(dockerfile)),
+            final String hash = ByteStreams.hash(ByteStreams.join(Files.newInputStreamSupplier(toDeploy.getFile()),
+                                                                  Files.newInputStreamSupplier(dockerfileIoFile)),
                                                  Hashing.sha1()
                                                 ).toString();
             final DockerConnector connector = DockerConnector.getInstance();
-            final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, hash, dockerfile, applicationFile);
+            final ImageStats imageStats =
+                    createImageIfNeed(connector, dockerRepoName, hash, dockerfileIoFile, applicationFile);
             final ContainerConfig containerConfig =
                     new ContainerConfig().withImage(imageStats.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
             HostConfig hostConfig = null;
@@ -254,6 +289,13 @@ public abstract class BaseDockerRunner extends Runner {
                                     new PortBinding[]{new PortBinding().withHostPort(Integer.toString(p.first))});
                 }
                 hostConfig.setPortBindings(portBinding);
+
+            }
+            if (containerBindDir != null) {
+                if (hostConfig == null) {
+                    hostConfig = new HostConfig();
+                }
+                hostConfig.setBinds(new String[]{String.format("%s:%s", applicationFile.getAbsolutePath(), containerBindDir)});
             }
             final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, new ApplicationProcess.Callback() {
                 @Override
@@ -297,7 +339,7 @@ public abstract class BaseDockerRunner extends Runner {
      */
     protected abstract DockerEnvironment getDockerEnvironment(RunRequest request) throws IOException, RunnerException;
 
-    protected abstract DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request)
+    protected abstract Dockerfile getDockerfile(DockerEnvironment dockerEnvironment, RunRequest request)
             throws IOException, RunnerException;
 
     private ImageStats createImageIfNeed(final DockerConnector connector,

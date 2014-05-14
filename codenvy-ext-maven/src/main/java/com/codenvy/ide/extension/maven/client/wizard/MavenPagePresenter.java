@@ -105,6 +105,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         options.put(MavenAttributes.MAVEN_ARTIFACT_ID, Arrays.asList(view.getArtifactId()));
         options.put(MavenAttributes.MAVEN_GROUP_ID, Arrays.asList(view.getGroupId()));
         options.put(MavenAttributes.MAVEN_VERSION, Arrays.asList(view.getVersion()));
+        options.put(MavenAttributes.MAVEN_PACKAGING, Arrays.asList(view.getPackaging()));
         final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         projectDescriptor.setAttributes(options);

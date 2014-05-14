@@ -23,6 +23,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,6 +41,8 @@ public class MavenPageViewImpl implements MavenPageView {
     TextBox groupId;
     @UiField
     TextBox artifactId;
+    @UiField
+    ListBox packagingField;
 
     public MavenPageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
@@ -82,12 +85,17 @@ public class MavenPageViewImpl implements MavenPageView {
     }
 
     @Override
+    public String getPackaging() {
+        return packagingField.getValue(packagingField.getSelectedIndex());
+    }
+
+    @Override
     public String getGroupId() {
         return groupId.getText();
     }
 
     @UiHandler({"versionField", "groupId", "artifactId"})
-    void onKeyUp(KeyUpEvent event){
+    void onKeyUp(KeyUpEvent event) {
         delegate.onTextsChange();
     }
 

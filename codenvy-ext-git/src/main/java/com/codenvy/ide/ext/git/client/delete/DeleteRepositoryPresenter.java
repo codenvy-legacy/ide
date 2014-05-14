@@ -25,14 +25,9 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
 import com.codenvy.ide.ext.git.client.GitServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.ui.dialogs.Ask;
-import com.codenvy.ide.ui.dialogs.AskHandler;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;

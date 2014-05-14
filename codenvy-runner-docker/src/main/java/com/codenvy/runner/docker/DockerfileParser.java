@@ -23,19 +23,42 @@ import com.google.common.io.CharStreams;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author andrew00x
  */
 public class DockerfileParser {
+    final static Pattern TEMPLATE_PATTERN = Pattern.compile("\\$[^\\$^\\$]+\\$");
 
     public static Dockerfile parse(File file) throws IOException {
-        final Dockerfile dockerfile = new Dockerfile(file);
+        return parse(CharStreams.readLines(com.google.common.io.Files.newReaderSupplier(file, Charset.forName("UTF-8"))));
+    }
+
+    public static Dockerfile parse(String file) throws IOException {
+        return parse(CharStreams.readLines(CharStreams.newReaderSupplier(file)));
+    }
+
+    private static Dockerfile parse(Iterable<String> lines) throws IOException {
+        final Dockerfile dockerfile = new Dockerfile();
         DockerImage current = null;
-        for (String line : CharStreams.readLines(com.google.common.io.Files.newReaderSupplier(file, Charset.forName("UTF-8")))) {
+        for (String line : lines) {
             line = line.trim();
+            dockerfile.getLines().add(line);
+            if (line.isEmpty()) {
+                continue;
+            }
+            final Matcher matcher = TEMPLATE_PATTERN.matcher(line);
+            if (matcher.find()) {
+                do {
+                    final String name = line.substring(matcher.start() + 1, matcher.end() - 1);
+                    dockerfile.getParameters().put(name, null);
+                } while (matcher.find());
+            }
+
             Instruction instruction;
-            if (line.isEmpty() || (instruction = getInstruction(line)) == null) {
+            if ((instruction = getInstruction(line)) == null) {
                 continue;
             }
 
@@ -47,9 +70,7 @@ public class DockerfileParser {
                 instruction.setInstructionArgumentsToModel(current, line);
             } else {
                 if (current == null) {
-                    if (instruction == Instruction.COMMENT) {
-                        dockerfile.getComments().add(instruction.getInstructionArguments(line));
-                    } else {
+                    if (instruction != Instruction.COMMENT) {
                         throw new IllegalArgumentException("Dockerfile must start with 'FROM' instruction");
                     }
                 } else {
