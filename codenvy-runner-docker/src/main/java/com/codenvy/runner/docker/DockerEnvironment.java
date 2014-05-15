@@ -53,6 +53,7 @@ public class DockerEnvironment {
     private int    debugPort           = -1;
     private String runDockerfileName   = "run.dc5y";
     private String debugDockerfileName = "debug.dc5y";
+    private String bindAppDir;
 
     public String getId() {
         return id;
@@ -102,6 +103,14 @@ public class DockerEnvironment {
         this.debugDockerfileName = debugDockerfileName;
     }
 
+    public String getBindAppDir() {
+        return bindAppDir;
+    }
+
+    public void setBindAppDir(String bindAppDir) {
+        this.bindAppDir = bindAppDir;
+    }
+
     @Override
     public String toString() {
         return "DockerEnvironment{" +
@@ -111,6 +120,7 @@ public class DockerEnvironment {
                ", debugPort=" + debugPort +
                ", runDockerfileName='" + runDockerfileName + '\'' +
                ", debugDockerfileName='" + debugDockerfileName + '\'' +
+               ", bindAppDir='" + bindAppDir + '\'' +
                '}';
     }
 }

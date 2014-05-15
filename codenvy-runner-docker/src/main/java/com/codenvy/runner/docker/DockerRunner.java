@@ -88,7 +88,7 @@ public class DockerRunner extends BaseDockerRunner {
     }
 
     @Override
-    protected DockerfileTemplate getDockerfileTemplate(DockerEnvironment dockerEnvironment, RunRequest request) throws IOException {
+    protected Dockerfile getDockerfile(DockerEnvironment dockerEnvironment, RunRequest request) throws IOException {
         final boolean debug = request.getDebugMode() != null;
         String dockerFile = null;
         if (dockerEnvironment != null) {
@@ -119,7 +119,7 @@ public class DockerRunner extends BaseDockerRunner {
         try (InputStream in = new URL(myScript).openStream()) {
             ByteStreams.copy(in, output);
         }
-        return DockerfileTemplate.from(dockerFile, output.toString());
+        return DockerfileParser.parse(output.toString());
     }
 
     private String findDockerfileUrl(List<String> scriptUrls, String dockerFile) {

@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.runner.docker.dockerfile;
+package com.codenvy.runner.docker;
 
 import com.codenvy.api.core.util.Pair;
 import com.codenvy.runner.docker.DockerImage;
@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,5 +153,28 @@ public class DockerfileParserTest {
         Assert.assertEquals("andrew", dockerImage2.getUser());
         Assert.assertEquals("/home/andrew", dockerImage2.getWorkdir());
         Assert.assertEquals(Arrays.asList("Image 2"), dockerImage2.getComments());
+    }
+
+    @Test
+    public void testTemplate() throws Exception {
+        String templateContent = "FROM $from$\n" +
+                                 "MAINTAINER Codenvy Corp\n" +
+                                 "ADD $app$ /tmp/$app$\n" +
+                                 "CMD /bin/bash -cl \"java $jvm_args$ -classpath /tmp/$app$ $main_class$ $prg_args$\"\n";
+        String expected = "FROM base\n" +
+                          "MAINTAINER Codenvy Corp\n" +
+                          "ADD hello.jar /tmp/hello.jar\n" +
+                          "CMD /bin/bash -cl \"java -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n -classpath /tmp/hello.jar test.Main name=andrew\"\n";
+        Dockerfile template = DockerfileParser.parse(templateContent);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("from", "base");
+        parameters.put("app", "hello.jar");
+        parameters.put("jvm_args", "-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n");
+        parameters.put("main_class", "test.Main");
+        parameters.put("prg_args", "name=andrew");
+        StringBuilder buf = new StringBuilder();
+        template.getParameters().putAll(parameters);
+        template.writeDockerfile(buf);
+        Assert.assertEquals(expected, buf.toString());
     }
 }
