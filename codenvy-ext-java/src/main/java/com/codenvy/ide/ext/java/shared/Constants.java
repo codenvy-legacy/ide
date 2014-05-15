@@ -19,19 +19,10 @@ package com.codenvy.ide.ext.java.shared;
 
 /** @author Artem Zatsarynnyy */
 public interface Constants {
-    // project type ids
-    final String JAR_ID          = "jar";
-    final String WAR_ID          = "war";
-    final String SPRING_ID       = "spring";
-    final String MULTI_MODULE_ID = "maven_multi_module";
-    final String MAVEN_JAR_ID    = "maven_jar";
+    final String MAVEN_ID = "maven";
 
     // project type names
-    final String JAR_NAME                     = "Java Library (JAR)";
-    final String WAR_NAME                     = "Java Web Application (WAR)";
-    final String SPRING_NAME                  = "Spring Application";
-    final String MULTI_MODULE_NAME            = "Maven Multi Module Project";
-    final String MAVEN_JAR_NAME               = "Maven Jar";
+    final String MAVEN_NAME                   = "Maven Project";
     // project categories
     final String JAVA_CATEGORY                = "Java";
     // project attribute names
@@ -44,7 +35,4 @@ public interface Constants {
     final String BUILDER_ANT_SOURCE_FOLDERS   = "builder.ant.source_folders";
     final String BUILDER_MAVEN_SOURCE_FOLDERS = "builder.maven.source_folders";
     final String RUNNER_NAME                  = "runner.name";
-
-    //generator
-    final String MAVEN_SIMPLE_PROJECT_GENERATOR = "maven.simple.project.generator";
 }

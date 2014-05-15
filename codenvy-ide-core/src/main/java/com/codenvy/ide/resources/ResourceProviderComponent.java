@@ -143,6 +143,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectClosedEvent", e);
                     }
                 }
+
                 activeProject = project;
 
                 project.refreshChildren(new AsyncCallback<Project>() {
@@ -334,6 +335,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         return "_root_";
     }
 
+
     private String getFileExtension(String name) {
         int lastDotPos = name.lastIndexOf('.');
         //file has no extension
@@ -412,7 +414,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             });
         }
     }
-
 
     @Override
     public void refreshRoot() {

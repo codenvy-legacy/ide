@@ -301,8 +301,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingStatus();
 
+                // this mean that application has failed to start
+                if (descriptor.getStartTime() == -1) {
+                    notification.setType(ERROR);
+                    getLogs();
+                } else {
+                    notification.setType(INFO);
+                }
+
                 notification.setStatus(FINISHED);
-                notification.setType(INFO);
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
@@ -418,7 +425,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Returns time when last app started, in format HH:mm:ss. */
     public String getCurrentAppStartTime() {
-        if (lastApplicationDescriptor != null) {
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0) {
             final Date startDate = new Date(lastApplicationDescriptor.getStartTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
         }
@@ -436,7 +443,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Returns total time which application was launched, in format mm:ss.ms. */
     public String getTotalTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStopTime() > 0) {
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0 &&
+            lastApplicationDescriptor.getStopTime() > 0) {
             final long totalTimeMs = lastApplicationDescriptor.getStopTime() - lastApplicationDescriptor.getStartTime();
             int ms = (int)(totalTimeMs % 1000);
             int ss = (int)(totalTimeMs / 1000);

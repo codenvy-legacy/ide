@@ -1,5 +1,7 @@
 package com.codenvy.ide.ext.git.server;
 
+import com.codenvy.api.core.ApiException;
+import com.codenvy.api.core.UnauthorizedException;
 import com.codenvy.api.project.server.AbstractVirtualFileEntry;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.FolderEntry;
@@ -64,7 +66,7 @@ public class GitProjectImporter implements ProjectImporter {
     }
 
     @Override
-    public void importSources(FolderEntry baseFolder, String location) throws IOException {
+    public void importSources(FolderEntry baseFolder, String location) throws IOException, ApiException {
         try {
             if (!baseFolder.isFolder()) {
                 throw new IOException("Project cannot be imported into \"" + baseFolder.getName() + "\". It is not a folder.");
@@ -102,7 +104,9 @@ public class GitProjectImporter implements ProjectImporter {
             }
 
         } catch (NotAuthorizedException e) {
-            throw new IOException("User is not authorize to call this action", e);
+
+            throw new UnauthorizedException("User is not authorize to call this action. " +
+                                            "Try go to main menu Window->Preference->SSH Key and generate new keys pair");
         } catch (VirtualFileSystemException | GitException | URISyntaxException e) {
             throw new IOException("Selected project cannot be imported.", e);
         }

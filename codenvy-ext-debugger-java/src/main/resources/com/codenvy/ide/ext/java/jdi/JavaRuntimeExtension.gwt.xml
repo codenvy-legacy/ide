@@ -29,6 +29,7 @@
     <inherits name="com.codenvy.ide.Core"/>
     <inherits name="com.codenvy.ide.ext.java.Java"/>
     <inherits name="com.codenvy.ide.extension.runner.Runner"/>
+    <inherits name="com.codenvy.ide.extension.maven.Maven"/>
 
     <source path="client"/>
     <source path=""/>

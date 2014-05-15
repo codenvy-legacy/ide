@@ -115,8 +115,8 @@ public class StandardComponentInitializer {
     @Inject
     private ActionManager actionManager;
 
-    @Inject
-    private NewProjectAction newProjectAction;
+//    @Inject
+//    private NewProjectAction newProjectAction;
 
     @Inject
     private SaveAction saveAction;
@@ -224,7 +224,7 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
-        actionManager.registerAction("newProject", newProjectAction);
+//        actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("importProject", importProjectAction);
         actionManager.registerAction("newProject2", newProjectWizardAction);
@@ -239,12 +239,12 @@ public class StandardComponentInitializer {
 
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
-        newGroup.addAction(newProjectAction, Constraints.FIRST);
+//        newGroup.addAction(newProjectAction, Constraints.FIRST);
         newGroup.addAction(newProjectWizardAction);
         toolbarGroup.add(newGroup);
         toolbarGroup.addSeparator();
         fileGroup.add(newGroup);
-        fileGroup.add(openProjectAction);
+//        fileGroup.add(openProjectAction);
         fileGroup.add(importProjectAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);

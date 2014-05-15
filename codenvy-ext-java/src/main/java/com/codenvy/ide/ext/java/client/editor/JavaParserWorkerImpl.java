@@ -324,29 +324,34 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         if (worker != null) {
             worker.terminate();
         }
-        //TODO check project type, create worker only if project is Java
-//        worker = Worker.create("./javaParserWorker/javaParserWorker.nocache.js");
-        worker = Worker.create(GWT.getModuleBaseForStaticFiles() + "javaParserWorker/javaParserWorker.nocache.js");
-        worker.setOnMessage(new MessageHandler() {
-            @Override
-            public void onMessage(MessageEvent event) {
-                MessageImpl message = event.getDataAsJSO().cast();
-                messageFilter.dispatchMessage(message);
-            }
-        });
-        worker.setOnError(new ErrorHandler() {
-            @Override
-            public void onError(ErrorEvent event) {
-                Log.error(JavaParserWorkerImpl.class, event.getMessage(), event.getFilename(), event.getLineNumber());
-            }
-        });
+        try {
 
-        MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
-        config.setRestContext(restContext);
-        config.setWsId("/" + workspaceId);
-        config.setProjectName(event.getProject().getName());
-        config.setJavaDocContext(""); //TODO configure doc context
-        worker.postMessage(config.serialize());
+            //TODO check project type, create worker only if project is Java
+//        worker = Worker.create("http://localhost:8080/ide/_app/javaParserWorker/javaParserWorker.nocache.js");
+            worker = Worker.create(GWT.getModuleBaseForStaticFiles() + "javaParserWorker/javaParserWorker.nocache.js");
+            worker.setOnMessage(new MessageHandler() {
+                @Override
+                public void onMessage(MessageEvent event) {
+                    MessageImpl message = event.getDataAsJSO().cast();
+                    messageFilter.dispatchMessage(message);
+                }
+            });
+            worker.setOnError(new ErrorHandler() {
+                @Override
+                public void onError(ErrorEvent event) {
+                    Log.error(JavaParserWorkerImpl.class, event.getMessage(), event.getFilename(), event.getLineNumber());
+                }
+            });
+
+            MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
+            config.setRestContext(restContext);
+            config.setWsId("/" + workspaceId);
+            config.setProjectName(event.getProject().getName());
+            config.setJavaDocContext(""); //TODO configure doc context
+            worker.postMessage(config.serialize());
+        } catch (Exception e) {
+            Log.error(getClass(), e);
+        }
     }
 
     @Override

@@ -31,12 +31,15 @@ import java.util.Set;
 @ImplementedBy(MainPageViewImpl.class)
 public interface MainPageView extends View<MainPageView.ActionDelegate> {
     String SAMPLES = "Samples";
-    public interface ActionDelegate{
+
+    void selectProjectType(String projectTypeId);
+
+    void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories, Map<String, Set<ProjectTypeDescriptor>> samples);
+
+    public interface ActionDelegate {
 
         void projectTemplateSelected(ProjectTemplateDescriptor template);
 
         void projectTypeSelected(ProjectTypeDescriptor typeDescriptor);
     }
-
-    void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories, Map<String, Set<ProjectTypeDescriptor>> samples);
 }

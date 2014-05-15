@@ -37,7 +37,7 @@ public class NewProjectWizardAction extends Action {
     @Inject
     public NewProjectWizardAction(Resources resources, NewProjectWizardPresenter wizard,
                                   AnalyticsEventLogger eventLogger) {
-        super("Project Advance", "Create new project", resources.project());
+        super("Project", "Create new project", resources.project());
         this.wizard = wizard;
         this.eventLogger = eventLogger;
     }
