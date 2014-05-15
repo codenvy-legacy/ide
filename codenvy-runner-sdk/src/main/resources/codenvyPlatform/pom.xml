@@ -40,46 +40,18 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <scope>runtime</scope>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <scope>provided</scope>
-            <version>${gwt.version}</version>
+            <version>${com.google.gwt.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
             <artifactId>gin</artifactId>
-            <version>${gin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-            <version>${mockito.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.gwt-test-utils</groupId>
-            <artifactId>gwt-test-utils</artifactId>
-            <scope>test</scope>
-            <version>${gwt-test-utils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
@@ -104,12 +76,12 @@
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-vfs</artifactId>
-            <version>${com.codenvy.platform-api.version}</version>
+            <version>${codenvy.platform-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
@@ -147,21 +119,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit.http.server</artifactId>
-            <version>${jgit.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>compile</scope>
             <version>${commons-io.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <scope>compile</scope>
-            <version>${reflections.version}</version>
         </dependency>
     </dependencies>
 
@@ -307,6 +268,13 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.sortpom</groupId>
+                <artifactId>maven-sortpom-plugin</artifactId>
+                <configuration>
+                    <verifyFail>Warn</verifyFail>
+                </configuration>
             </plugin>
         </plugins>
     </build>

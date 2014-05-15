@@ -301,8 +301,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingStatus();
 
+                // this mean that application has failed to start
+                if (descriptor.getStartTime() == -1) {
+                    notification.setType(ERROR);
+                    getLogs();
+                } else {
+                    notification.setType(INFO);
+                }
+
                 notification.setStatus(FINISHED);
-                notification.setType(INFO);
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
