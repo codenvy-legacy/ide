@@ -2,8 +2,8 @@
  * CODENVY CONFIDENTIAL
  * __________________
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
+ *  [2012] - [2014] Codenvy, S.A.
+ *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
  * the property of Codenvy S.A. and its suppliers,
@@ -15,23 +15,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.api.event;
+package com.codenvy.ide.factory.client.welcome;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 
 /**
- * Handles requests to refresh Views, such Project Explorer and others that
- * displays Project content.
- *
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @author Vitaliy Guliy
  */
-public interface RefreshBrowserHandler extends EventHandler {
+public interface GreetingPartView extends View<GreetingPartView.ActionDelegate> {
+
+    public interface ActionDelegate extends BaseActionDelegate {
+    }
 
     /**
-     * Project or it's properties changed event
+     * Set title of greeting part.
      *
-     * @param event
+     * @param title title that need to be set
      */
-    void onRefreshBrowser(RefreshBrowserEvent event);
+    void setTitle(String title);
+
+    void showGreeting(String url);
 
 }

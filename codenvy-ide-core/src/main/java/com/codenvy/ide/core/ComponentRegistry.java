@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
 
 /** @author Nikolay Zamosenchuk */
@@ -45,25 +46,34 @@ public class ComponentRegistry {
     public void start(final Callback<Void, ComponentException> callback) {
         Callback<Component, ComponentException> internalCallback = new Callback<Component, ComponentException>() {
             @Override
-            public void onSuccess(Component result) {
+            public void onSuccess(final Component result) {
                 pendingComponents.remove(result);
+
                 // all components started
                 if (pendingComponents.size() == 0) {
-                    Log.info(ComponentRegistry.class, "All services initialized. Starting.");
+                    Log.info(ComponentRegistry.class, "All services have been successfully initialized.");
+
                     //initialize standard components
                     try {
                         componentInitializer.initialize();
                     } catch (Throwable e) {
                         Log.error(ComponentRegistry.class, e);
                     }
-                    callback.onSuccess(null);
+
+                    // Finalization of starting components
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            callback.onSuccess(null);
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onFailure(ComponentException reason) {
-                callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
-                Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent(), reason);
+            public void onFailure(final ComponentException reason) {
+                Log.info(ComponentRegistry.class, "Unable to start component " + reason.getComponent(), reason);
+                callback.onFailure(new ComponentException("Unable to start component", reason.getComponent()));
             }
         };
 

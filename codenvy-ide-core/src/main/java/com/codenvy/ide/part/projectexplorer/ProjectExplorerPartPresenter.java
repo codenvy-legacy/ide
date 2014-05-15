@@ -36,6 +36,7 @@ import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -98,7 +99,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      *
      * @param resource
      */
-    public void setContent(@NotNull Resource resource) {
+    private void setContent(@NotNull Resource resource) {
         view.setItems(resource);
         onResourceSelected(null);
     }
@@ -118,28 +119,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 } else {
                     view.setProjectHeader(event.getProject());
                 }
-                
-                // TODO: avoid asking project type while show list of all projects
-//                checkProjectType(event.getProject(), new AsyncCallback<Project>() {
-//                    @Override
-//                    public void onSuccess(Project result) {
-//                        resourceProvider.getProject(result.getName(), new AsyncCallback<Project>() {
-//                            @Override
-//                            public void onSuccess(Project result) {
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Throwable caught) {
-//                                Log.error(ProjectExplorerPartPresenter.class, "Can not get project.", caught);
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Throwable caught) {
-//                        Log.error(ProjectExplorerPartPresenter.class, "Can not change project type.", caught);
-//                    }
-//                });
             }
 
             @Override
@@ -183,6 +162,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onResourceTreeRefreshed(ResourceChangedEvent event) {
                 final Resource resource = event.getResource();
+
+                if (resource.getProject() == null) {
+                    if (resource.getId().equals(resourceProvider.getRootId())) {
+                        setContent(resource);
+                        view.hideProjectHeader();
+                    }
+                    return;
+                }
+
                 if (resource instanceof Project && resource.getProject() != null) {
                     view.updateItem(resource.getProject(), resource);
                 } else if (resource instanceof Folder && ((Folder)resource).getChildren().isEmpty()) {
@@ -248,6 +236,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
         }
+
         // open project
         if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
             resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
@@ -257,7 +246,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project", caught);
+                    Log.error(ProjectExplorerPartPresenter.class, "Unable to get project", caught);
                 }
             });
         }

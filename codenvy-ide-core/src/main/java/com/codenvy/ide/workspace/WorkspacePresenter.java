@@ -110,8 +110,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     }
 
     /** Update already launched Codenvy extension. */
-    private static native void updateExtension(String host, String port)
-    /*-{
+    private static native void updateExtension(String host, String port) /*-{
         $wnd.__gwt_bookmarklet_params = {server_url: 'http://' + host + ':' + port + '/', module_name: '_app'};
         var s = $doc.createElement('script');
         s.src = 'http://' + host + ':' + port + '/dev_mode_on.js';

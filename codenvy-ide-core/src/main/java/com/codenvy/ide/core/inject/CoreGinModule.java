@@ -144,7 +144,7 @@ import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
@@ -336,7 +336,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("workspaceId")
     @Singleton
     protected String provideWorkspaceId() {
-        return Utils.getWorkspaceId();
+        return Config.getWorkspaceId();
     }
 
     @Provides
@@ -344,6 +344,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected String provideDefaultWebsocketUrl() {
         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Utils.getWorkspaceId();
+        return (isSecureConnection ? "wss://" : "ws://") + Window.Location.getHost() + "/api/ws/" + Config.getWorkspaceId();
     }
 }

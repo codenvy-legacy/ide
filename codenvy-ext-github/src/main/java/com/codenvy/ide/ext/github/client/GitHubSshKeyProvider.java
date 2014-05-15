@@ -27,7 +27,7 @@ import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -106,7 +106,7 @@ public class GitHubSshKeyProvider implements SshKeyProvider, OAuthCallback {
     private void showPopUp() {
         String authUrl = baseUrl + "/oauth/authenticate?oauth_provider=github"
                          + "&scope=user,repo,write:public_key&userId=" + userId + "&redirect_after_login=" +
-                         Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" + Utils.getWorkspaceName();
+                         Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" + Config.getWorkspaceName();
         JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
         authWindow.loginWithOAuth();
     }

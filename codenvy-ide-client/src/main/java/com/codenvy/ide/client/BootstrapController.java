@@ -17,11 +17,6 @@
  */
 package com.codenvy.ide.client;
 
-import elemental.client.Browser;
-import elemental.events.Event;
-import elemental.events.EventListener;
-import elemental.html.Window;
-
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
@@ -41,7 +36,7 @@ import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
@@ -49,13 +44,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import java.util.Map;
 
 /**
  * Performs initial application startup.
@@ -65,11 +59,17 @@ import java.util.Map;
 public class BootstrapController {
 
     private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
-    private       PreferencesManagerImpl              preferencesManager;
-    private       ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
-    private       ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private       IconRegistry                        iconRegistry;
-    private       ThemeAgent                          themeAgent;
+    private final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
+    private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
+    private final IconRegistry                        iconRegistry;
+    private final ThemeAgent                          themeAgent;
+    private final Provider<ComponentRegistry> componentRegistry;
+    private final Provider<WorkspacePresenter> workspaceProvider;
+    private final ExtensionInitializer extensionInitializer;
+    private final ResourceProvider resourceProvider;
+    private final UserProfileServiceClient userProfileService;
+    private final PreferencesManagerImpl preferencesManager;
+    private final StyleInjector styleInjector;
 
     /**
      * Create controller.
@@ -87,155 +87,208 @@ public class BootstrapController {
      * @param themeAgent
      */
     @Inject
-    public BootstrapController(final Provider<ComponentRegistry> componentRegistry,
-                               final Provider<WorkspacePresenter> workspaceProvider,
-                               final StyleInjector styleInjector,
-                               final ExtensionInitializer extensionInitializer,
-                               final PreferencesManagerImpl preferencesManager,
-                               final UserProfileServiceClient userProfileService,
+    public BootstrapController(Provider<ComponentRegistry> componentRegistry,
+                               Provider<WorkspacePresenter> workspaceProvider,
+                               ExtensionInitializer extensionInitializer,
+                               ResourceProvider resourceProvider,
+                               UserProfileServiceClient userProfileService,
+                               PreferencesManagerImpl preferencesManager,
+                               StyleInjector styleInjector,
+
+                               DtoRegistrar dtoRegistrar,
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                               Resources resources,
+
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
-                               final ResourceProvider resourceProvider,
-                               DtoRegistrar dtoRegistrar,
-                               final ThemeAgent themeAgent,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory, Resources resources) {
+                               final ThemeAgent themeAgent) {
+
+        this.componentRegistry = componentRegistry;
+        this.workspaceProvider = workspaceProvider;
+        this.extensionInitializer = extensionInitializer;
+        this.resourceProvider = resourceProvider;
+        this.userProfileService = userProfileService;
         this.preferencesManager = preferencesManager;
+        this.styleInjector = styleInjector;
+
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
-        //Is necessary for loading IDE styles before standard GWT one:
-//        setTheme();
-//        styleInjector.inject();
+
+        /**
+         * Register DTO providers
+         */
+        dtoRegistrar.registerDtoProviders();
+
+        /**
+         * Register default icons
+         */
+        registerDefaultIcons(resources);
+
+        /**
+         * Inject CodeMirror scripts
+         */
 
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
-                      .setCallback(new Callback<Void, Exception>() {
-                          @Override
-                          public void onSuccess(Void result) {
-                              ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
-                                            .setWindow(ScriptInjector.TOP_WINDOW).inject();
-                          }
+            .setCallback(new Callback<Void, Exception>() {
+                @Override
+                public void onSuccess(Void result) {
+                    ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).
+                        setCallback(new Callback<Void, Exception>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                loadUserProfile();
+                            }
 
-                          @Override
-                          public void onFailure(Exception reason) {
-                          }
-                      }).inject();
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
+                                initializationFailed("Unable to inject CodeMirror parsers");
+                            }
+                        }).inject();
+                }
 
-        dtoRegistrar.registerDtoProviders();
-        registerDefaultIcon(resources);
-        userProfileService.getCurrentProfile(null,
-                                             new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
-                                                 @Override
-                                                 protected void onSuccess(final Profile profile) {
-                                                     Map<String, String> attributes = profile.getPreferences();
-                                                     preferencesManager.load(attributes);
-
-                                                     setTheme();
-                                                     styleInjector.inject();
-
-                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-                                                         @Override
-                                                         public void execute() {
-                                                             componentRegistry.get().start(new Callback<Void, ComponentException>() {
-                                                                 @Override
-                                                                 public void onSuccess(Void result) {
-                                                                     // instantiate extensions
-                                                                     extensionInitializer.startExtensions();
-                                                                     // Start UI
-                                                                     SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
-
-
-                                                                     RootLayoutPanel.get().add(mainPanel);
-                                                                     WorkspacePresenter workspacePresenter = workspaceProvider.get();
-
-                                                                     workspacePresenter
-                                                                             .setUpdateButtonVisibility(Utils.isAppLaunchedInSDKRunner());
-
-                                                                     // Display IDE
-                                                                     workspacePresenter.go(mainPanel);
-                                                                     if (Utils.getProjectToOpen() != null) {
-                                                                         resourceProvider.getProject(Utils.getProjectToOpen(),
-                                                                                                     new AsyncCallback<Project>() {
-                                                                                                         @Override
-                                                                                                         public void onFailure(
-                                                                                                                 Throwable throwable) {
-                                                                                                             // Display list of projects
-                                                                                                             // in project explorer
-                                                                                                             resourceProvider
-                                                                                                                     .showListProjects();
-                                                                                                         }
-
-                                                                                                         @Override
-                                                                                                         public void onSuccess(
-                                                                                                                 Project project) {
-
-                                                                                                         }
-                                                                                                     });
-                                                                     } else {
-                                                                         // Display list of projects in project explorer
-                                                                         resourceProvider.showListProjects();
-                                                                     }
-
-
-                                                                     Window window = Browser.getWindow();
-                                                                     window.addEventListener(Event.FOCUS, new EventListener() {
-                                                                         @Override
-                                                                         public void handleEvent(Event evt) {
-                                                                             Log.info(BootstrapController.class,
-                                                                                      evt.getType() + " " + evt.getTimeStamp());
-                                                                         }
-                                                                     }, true);
-
-                                                                     window.addEventListener(Event.BLUR, new EventListener() {
-                                                                         @Override
-                                                                         public void handleEvent(Event evt) {
-                                                                             Log.info(BootstrapController.class,
-                                                                                      evt.getType() + "  " + evt.getTimeStamp());
-                                                                         }
-                                                                     }, true);
-
-                                                                 }
-
-                                                                 @Override
-                                                                 public void onFailure(ComponentException caught) {
-                                                                     Log.error(BootstrapController.class,
-                                                                               "FAILED to start service:" + caught.getComponent(), caught);
-
-                                                                     // Handle error when receiving profile.
-                                                                     initializationFailed(caught.getMessage());
-                                                                 }
-                                                             });
-
-                                                             initializeProjectTypeDescriptorRegistry();
-                                                         }
-                                                     });
-                                                 }
-
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     Log.error(BootstrapController.class, exception);
-                                                 }
-                                             }
-                                            );
+                @Override
+                public void onFailure(Exception e) {
+                    Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
+                    initializationFailed("Unable to inject CodeMirror");
+                }
+            }).inject();
     }
 
-    /**
-     * Call this method to handle any of initialization errors. If a function window["on-initialization-failed"] is set, it will be called
-     * using 'message' string as a parameter.
-     *
-     * @param message
-     *         error message
-     */
-    private native void initializationFailed(String message) /*-{
-        if ($wnd["on-initialization-failed"]) {
-            $wnd["on-initialization-failed"](message);
-        }
-    }-*/;
 
+    /**
+     * Get User profile, restore preferences and theme
+     */
+    private void loadUserProfile() {
+        userProfileService.getCurrentProfile(null,
+                 new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+                     @Override
+                     protected void onSuccess(final Profile profile) {
+                         /**
+                          * Profile received, restore preferences and theme
+                          */
+                         preferencesManager.load(profile.getPreferences());
+                         setTheme();
+                         styleInjector.inject();
+
+                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                             @Override
+                             public void execute() {
+                                 initializeComponentRegistry();
+                             }
+                         });
+                     }
+
+                     @Override
+                     protected void onFailure(Throwable exception) {
+                         Log.error(BootstrapController.class, "Unable to ret user profile", exception);
+                         initializationFailed("Unable to get user profile");
+                     }
+                 }
+            );
+    }
+
+
+    /**
+     * Initialize Component Registry, start extensions
+     */
+    private void initializeComponentRegistry() {
+        componentRegistry.get().start(new Callback<Void, ComponentException>() {
+            @Override
+            public void onSuccess(Void result) {
+                // Instantiate extensions
+                extensionInitializer.startExtensions();
+
+                // Register project types
+                registerProjectTypes();
+            }
+
+            @Override
+            public void onFailure(ComponentException caught) {
+                Log.error(BootstrapController.class, "Unable to start component " + caught.getComponent(), caught);
+                initializationFailed("Unable to start component " + caught.getComponent());
+            }
+        });
+    }
+
+
+    /**
+     * Register project types
+     */
+    private void registerProjectTypes() {
+        projectTypeDescriptionServiceClient.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<ProjectTypeDescriptor> result) {
+                for (int i = 0; i < result.size(); i++) {
+                    if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID)) {
+                        projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
+                    }
+                }
+
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        displayIDE();
+                    }
+                });
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, "Unable to get list of project types", exception);
+                initializationFailed("Unable to get list of project types");
+            }
+        });
+
+    }
+
+
+    /**
+     * Displays the IDE
+     */
+    private void displayIDE() {
+        // Start UI
+        SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
+
+        RootLayoutPanel.get().add(mainPanel);
+        WorkspacePresenter workspacePresenter = workspaceProvider.get();
+
+        /**
+         * Display 'Update extension' button if IDE is launched in SDK runner
+         */
+        workspacePresenter.setUpdateButtonVisibility(
+                Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
+
+        // Display IDE
+        workspacePresenter.go(mainPanel);
+
+        if (Config.getProjectName() == null) {
+            resourceProvider.refreshRoot();
+        } else {
+            resourceProvider.getProject(Config.getProjectName(),
+                    new AsyncCallback<Project>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            resourceProvider.refreshRoot();
+                        }
+
+                        @Override
+                        public void onSuccess(Project project) {
+                        }
+                    });
+        }
+    }
+
+
+    /**
+     * Applying user defined Theme.
+     */
     private void setTheme() {
         String storedThemeId = preferencesManager.getValue("Theme");
         storedThemeId = storedThemeId != null ? storedThemeId : themeAgent.getCurrentThemeId();
@@ -244,37 +297,33 @@ public class BootstrapController {
         themeAgent.setCurrentThemeId(themeToSet.getId());
     }
 
-    private void initializeProjectTypeDescriptorRegistry() {
-        projectTypeDescriptionServiceClient
-                .getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
-                        dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
-                    @Override
-                    protected void onSuccess(Array<ProjectTypeDescriptor> result) {
-                        for (int i = 0; i < result.size(); i++) {
-                            if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID))// skip
-                                // unknown
-                                // project
-                                // type
-                                // user
-                                // can select this project type need
-                                // use BaseProjectType instead
-                                projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
-                        }
-                    }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(BootstrapController.class, exception);
-                    }
-                });
-    }
-
-    
-    private void registerDefaultIcon(Resources resources) {
+    /**
+     * Registers default icons for resources.
+     *
+     * @param resources
+     */
+    private void registerDefaultIcons(Resources resources) {
         iconRegistry.registerSVGIcon("default.projecttype.small.icon", resources.defaultProject());
         iconRegistry.registerSVGIcon("default.folder.small.icon", resources.defaultFolder());
         iconRegistry.registerSVGIcon("default.file.small.icon", resources.defaultFile());
         iconRegistry.registerSVGIcon("default", resources.defaultIcon());
     }
+
+
+    /**
+     * Handles any of initialization errors.
+     * Tries to call predefined IDE.eventHandlers.ideInitializationFailed function.
+     *
+     * @param message error message
+     */
+    private native void initializationFailed(String message) /*-{
+        try {
+            $wnd.IDE.eventHandlers.initializationFailed(message);
+        } catch (e) {
+            console.log(e.message);
+        }
+    }-*/;
+
 
 }
