@@ -102,11 +102,6 @@ public class AcceptFactoryHandler implements OAuthCallback {
     }
 
 
-    private static final native void log(String msg) /*-{
-        console.log(msg);
-    }-*/;
-
-
     private void checkStartupParams() {
         if (Config.getStartupParam("id") != null) {
             getFactory(Config.getStartupParam("id"), true);

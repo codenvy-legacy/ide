@@ -137,15 +137,22 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);
                 if (activeProject != null) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                    try {
+                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                    } catch (Exception e) {
+                        Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectClosedEvent", e);
+                    }
                 }
-
                 activeProject = project;
 
                 project.refreshChildren(new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project result) {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                        try {
+                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                        } catch (Exception e) {
+                            Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectOpenedEvent", e);
+                        }
                         callback.onSuccess(project);
                     }
 
@@ -203,7 +210,11 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 rootFolder.addChild(project);
 
                 if (activeProject != null) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                    try {
+                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+                    } catch (Exception e) {
+                        Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectClosedEvent", e);
+                    }
                 }
                 activeProject = project;
 

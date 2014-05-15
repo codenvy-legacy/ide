@@ -17,11 +17,15 @@
  */
 package com.codenvy.ide.factory.client.welcome;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.impl.ImageResourcePrototype;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -46,7 +50,6 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
         this.view.setDelegate(this);
     }
 
-
     @Override
     public String getTitle() {
         return TITLE;
@@ -58,46 +61,16 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
         return null;
     }
 
-//    @Nullable
-//    @Override
-//    public IsWidget getTitleWidget() {
-//        return null;
-//    }
-
     @Nullable
     @Override
     public String getTitleToolTip() {
         return "Greeting the user";
     }
 
-//    @Override
-//    public int getSize() {
-//        return 0;
-//    }
-
-//    @Override
-//    public void onOpen() {
-//
-//    }
-
-//    @Override
-//    public boolean onClose() {
-//        return false;
-//    }
-
-//    @Override
-//    public void addPropertyListener(@NotNull PropertyListener listener) {
-//    }
-
-//    @Override
-//    public Selection<?> getSelection() {
-//        return null;
-//    }
-
-//    @Override
-//    public void removePropertyListener(@NotNull PropertyListener listener) {
-//
-//    }
+    @Override
+    public int getSize() {
+        return 250;
+    }
 
     @Override
     public void go(AcceptsOneWidget container) {
@@ -105,11 +78,9 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
     }
 
     @Override
-    public void showGreeting() {
+    public void showGreeting(String title, String iconURL, String greetingContentURL, String notification) {
+        view.setTitle(title);
+        view.showGreeting(greetingContentURL);
     }
-
-//    @Override
-//    public void onClearClicked() {
-//    }
 
 }

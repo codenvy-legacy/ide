@@ -38,7 +38,6 @@ import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -237,6 +236,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         if (resource.isFile()) {
             eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
         }
+
         // open project
         if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
             resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
@@ -246,7 +246,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Can not get project", caught);
+                    Log.error(ProjectExplorerPartPresenter.class, "Unable to get project", caught);
                 }
             });
         }

@@ -26,18 +26,15 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 public interface GreetingPartView extends View<GreetingPartView.ActionDelegate> {
 
     public interface ActionDelegate extends BaseActionDelegate {
-//        /**
-//         * Handle user clicks on clear console button.
-//         */
-//        void onClearClicked();
     }
 
     /**
-     * Set title of console part.
+     * Set title of greeting part.
      *
-     * @param title
-     *         title that need to be set
+     * @param title title that need to be set
      */
     void setTitle(String title);
+
+    void showGreeting(String url);
 
 }

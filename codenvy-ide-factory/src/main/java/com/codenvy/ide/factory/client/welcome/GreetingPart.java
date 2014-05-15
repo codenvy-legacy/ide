@@ -24,6 +24,6 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
  */
 public interface GreetingPart extends PartPresenter {
 
-    void showGreeting();
+    void showGreeting(String title, String iconURL, String greetingContentURL, String notification);
 
 }

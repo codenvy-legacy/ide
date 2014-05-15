@@ -19,13 +19,10 @@ package com.codenvy.ide.factory.client.welcome;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.part.console.ConsolePartView;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,9 +32,33 @@ import com.google.inject.Singleton;
 @Singleton
 public class GreetingPartViewImpl extends BaseView<GreetingPartView.ActionDelegate> implements GreetingPartView {
 
+    private Frame frame;
+
     @Inject
     public GreetingPartViewImpl(PartStackUIResources resources) {
         super(resources);
+
+        frame = new Frame();
+        frame.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+        frame.setWidth("100%");
+        frame.setHeight("100%");
+
+        frame.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+
+        frame.addLoadHandler(new LoadHandler() {
+            @Override
+            public void onLoad(LoadEvent event) {
+                frame.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+            }
+        });
+
+        container.add(frame);
+    }
+
+    @Override
+    public void showGreeting(String url) {
+        frame.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        frame.setUrl(url);
     }
 
 }
