@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.ext.git.client.patcher;
 
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.googlecode.gwt.test.patchers.PatchClass;
 import com.googlecode.gwt.test.patchers.PatchMethod;
 
@@ -26,8 +26,8 @@ import com.googlecode.gwt.test.patchers.PatchMethod;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@PatchClass(Utils.class)
-public class UtilsPatcher {
+@PatchClass(Config.class)
+public class ConfigPatcher {
     public static final String WORKSPACE_NAME = "workspaceName";
 
     /** Patch getWorkspaceName method. */
