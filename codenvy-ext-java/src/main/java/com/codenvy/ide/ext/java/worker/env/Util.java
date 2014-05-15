@@ -92,7 +92,7 @@ public class Util {
                 con = CharConstant.fromValue(constant.getStringField("value").charAt(0));
                 break;
             case TypeIds.T_float :
-                con = FloatConstant.fromValue((float)constant.getDoubleField("value"));
+                con = FloatConstant.fromValue(Float.valueOf(constant.getStringField("value")));
                 break;
             case TypeIds.T_double :
                 if(constant.hasOwnProperty("NotAConstant")){

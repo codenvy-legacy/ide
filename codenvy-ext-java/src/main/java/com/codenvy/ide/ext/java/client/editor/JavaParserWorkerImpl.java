@@ -327,7 +327,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         try {
 
             //TODO check project type, create worker only if project is Java
-//        worker = Worker.create("./javaParserWorker/javaParserWorker.nocache.js");
+//        worker = Worker.create("http://localhost:8080/ide/_app/javaParserWorker/javaParserWorker.nocache.js");
             worker = Worker.create(GWT.getModuleBaseForStaticFiles() + "javaParserWorker/javaParserWorker.nocache.js");
             worker.setOnMessage(new MessageHandler() {
                 @Override

@@ -404,8 +404,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
                         final Folder rootFolder = getRoot();
-                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(null));
-
                         for (ProjectReference item : result.asIterable()) {
                             Project project = new Project(eventBus, asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
                             project.setName(item.getName());
