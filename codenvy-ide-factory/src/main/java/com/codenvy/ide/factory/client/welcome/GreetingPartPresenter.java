@@ -18,12 +18,15 @@
 package com.codenvy.ide.factory.client.welcome;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.impl.ImageResourcePrototype;
 import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -41,11 +44,15 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
 
     private static final String TITLE = "Greeting";
 
-    private GreetingPartView view;
+    private       GreetingPartView    view;
+    private final NotificationManager notificationManager;
 
     @Inject
-    public GreetingPartPresenter(GreetingPartView view) {
+    public GreetingPartPresenter(GreetingPartView view,
+                                 NotificationManager notificationManager) {
         this.view = view;
+        this.notificationManager = notificationManager;
+
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
@@ -69,7 +76,7 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
 
     @Override
     public int getSize() {
-        return 250;
+        return 320;
     }
 
     @Override
@@ -78,9 +85,19 @@ public class GreetingPartPresenter extends BasePresenter implements GreetingPart
     }
 
     @Override
-    public void showGreeting(String title, String iconURL, String greetingContentURL, String notification) {
+    public void showGreeting(String title, String iconURL, String greetingContentURL, final String notification) {
         view.setTitle(title);
         view.showGreeting(greetingContentURL);
+
+        if (notification != null) {
+            new Timer() {
+                @Override
+                public void run() {
+                    new TooltipHint(notification);
+                    //notificationManager.showNotification(new Notification(notification, Notification.Type.INFO));
+                }
+            }.schedule(1000);
+        }
     }
 
 }
