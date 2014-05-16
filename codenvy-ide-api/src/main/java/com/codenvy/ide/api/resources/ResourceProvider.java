@@ -53,7 +53,6 @@ public interface ResourceProvider {
      * Sets the active project.
      *
      * @param project
-     *         active project
      */
     public void setActiveProject(Project project);
 
@@ -75,8 +74,10 @@ public interface ResourceProvider {
      */
     public void createProject(String name, ProjectDescriptor projectDescriptor, AsyncCallback<Project> callback);
 
-    /** Reads already stored projects and shows them in project explorer. */
-    public void showListProjects();
+    /**
+     * Refreshes root folder
+     */
+    public void refreshRoot();
 
     /**
      * Registers {@link ModelProvider} instance for the given language.
@@ -111,14 +112,14 @@ public interface ResourceProvider {
 
 
     /**
-     * Returns root folder's id.
+     * Returns root folder.
      *
      * @return
      */
     public Folder getRoot();
 
     /**
-     * Returns root folder's id.
+     * Returns ID of root folder.
      *
      * @return
      */
