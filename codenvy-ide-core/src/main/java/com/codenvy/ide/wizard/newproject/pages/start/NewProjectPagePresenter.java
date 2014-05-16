@@ -23,11 +23,11 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.resources.model.ResourceNameValidator;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.resources.model.ResourceNameValidator;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -36,9 +36,7 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PAAS;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_NAME;
-import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.PROJECT_TYPE;
+import static com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard.*;
 
 /**
  * Provides selecting kind of project which user wish to create.

@@ -163,7 +163,7 @@ public class BinaryTypeConvector {
                 val = new JsonPrimitive(constant.charValue());
                 break;
             case T_float:
-                val = new JsonPrimitive(constant.floatValue());
+                val = new JsonPrimitive(String.valueOf(constant.floatValue()));
                 break;
             case T_double:
                 if (Constant.NotAConstant.equals(constant)) {

@@ -83,30 +83,31 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         if (tabPosition == LEFT) {
             top += 4;
             SVGImage svgIcon = new SVGImage(resources.arrow());
-            TabButton activeTab = new TabButton(svgIcon, "call dashboard");
-            activeTab.setStyleName(resources.partStackCss().idePartStackBotonLeft());
-            activeTab.addClickHandler(new ClickHandler() {
+
+            TabButton dashboardTabButton = new TabButton(svgIcon, "Dashboard");
+            dashboardTabButton.setStyleName(resources.partStackCss().idePartStackBotonLeft());
+            dashboardTabButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    loadDashboardIfExist();
+                    switchToDashboard();
                 }
             });
-            tabsPanel.add(activeTab);
+            tabsPanel.add(dashboardTabButton);
         }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
 
         addFocusRequestHandler();
-        //DEFAULT
     }
 
     /**
-     * Call this method to load dashboard page maybe called from IDE in hosted version.
-     * If a function window["onLoadDashoboardPage"] is set, it will be called .
+     * Switch to Codenvy Dashboard.
      */
-    private native void loadDashboardIfExist() /*-{
-        if ($wnd["onLoadDashoboardPage"]) {
-            $wnd["onLoadDashoboardPage"]();
+    private native void switchToDashboard() /*-{
+        try {
+            $wnd.IDE.eventHandlers.switchToDashboard();
+        } catch (e) {
+            console.log(e.message);
         }
     }-*/;
 

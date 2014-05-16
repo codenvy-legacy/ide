@@ -97,7 +97,7 @@
 
 .ide-PartStack-Boton-Left {
     border-right: 1px solid tabBorder;
-    cursor: hand;
+    cursor: pointer;
     height: 18px;
     display: inline-block;
 }

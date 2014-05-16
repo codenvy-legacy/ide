@@ -27,7 +27,7 @@ import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
@@ -133,7 +133,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         }
 
         putIfNotNull(USER_PARAM, currentUser, additionalParams);
-        putIfNotNull(WS_PARAM, Utils.getWorkspaceName(), additionalParams);
+        putIfNotNull(WS_PARAM, Config.getWorkspaceName(), additionalParams);
         putIfNotNull(ACTION_PARAM, action, additionalParams);
         putIfNotNull(SOURCE_PARAM, source, additionalParams);
     }

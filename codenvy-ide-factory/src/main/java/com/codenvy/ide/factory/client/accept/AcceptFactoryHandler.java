@@ -19,6 +19,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.factory.client.FactoryLocalizationConstant;
+import com.codenvy.ide.factory.client.welcome.WelcomeHandler;
 import com.codenvy.ide.navigation.NavigateToFilePresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -28,9 +29,10 @@ import com.codenvy.ide.security.oauth.OAuthCallback;
 import com.codenvy.ide.security.oauth.OAuthStatus;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.util.Utils;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.events.ConnectionOpenedHandler;
 import com.codenvy.ide.websocket.events.MessageHandler;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.exceptions.UnauthorizedException;
@@ -61,6 +63,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
     private final DtoFactory                    dtoFactory;
     private final UserServiceClient             userServiceClient;
     private final NavigateToFilePresenter       navigateToFilePresenter;
+    private final WelcomeHandler                welcomeHandler;
 
     private static final String ACCEPT_EVENTS_CHANNEL = "acceptFactoryEvents";
 
@@ -71,7 +74,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                 SelectProjectTypePresenter selectProjectTypePresenter, NotificationManager notificationManager,
                                 ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry, ProjectServiceClient projectServiceClient,
                                 DtoFactory dtoFactory, UserServiceClient userServiceClient,
-                                NavigateToFilePresenter navigateToFilePresenter) {
+                                NavigateToFilePresenter navigateToFilePresenter, WelcomeHandler welcomeHandler) {
         this.restContext = restContext;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.factoryService = factoryService;
@@ -85,31 +88,36 @@ public class AcceptFactoryHandler implements OAuthCallback {
         this.dtoFactory = dtoFactory;
         this.userServiceClient = userServiceClient;
         this.navigateToFilePresenter = navigateToFilePresenter;
+        this.welcomeHandler = welcomeHandler;
     }
+
 
     public void processFactory() {
-        if (Utils.getRawStartUpParams() != null) {
-            checkWebSocketOpenState.scheduleRepeating(500);
+        if (messageBus.getReadyState() == MessageBus.ReadyState.OPEN) {
+            checkStartupParams();
+        } else {
+            messageBus.addOnOpenHandler(new ConnectionOpenedHandler() {
+                @Override
+                public void onOpen() {
+                    checkStartupParams();
+                }
+            });
         }
     }
 
-    Timer checkWebSocketOpenState = new Timer() {
-        @Override
-        public void run() {
-            if (messageBus.getReadyState() == MessageBus.ReadyState.OPEN) {
-                getStartUpParams();
-                cancel();
-            }
-        }
-    };
 
-    private void getStartUpParams() {
-        StringMap<Array<String>> parameterMap = buildParameterMap(Utils.getRawStartUpParams());
-        if (parameterMap.get("id") != null && parameterMap.get("id").get(0) != null) {
-            getFactory(parameterMap.get("id").get(0), true);
-        } else if (parameterMap.get("v") != null && parameterMap.get("v").get(0) != null) {
-            getFactory(Utils.getRawStartUpParams(), false);
+    private void checkStartupParams() {
+        if (Config.getStartupParam("id") != null) {
+            getFactory(Config.getStartupParam("id"), true);
+            return;
         }
+
+        if (Config.getStartupParam("v") != null) {
+            getFactory(Config.getStartupParams(), false);
+            return;
+        }
+
+        welcomeHandler.welcome();
     }
 
     private void getFactory(String queryStringOrId, boolean encoded) {
@@ -117,23 +125,21 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
         try {
             factoryService.getFactory(queryStringOrId, encoded,
-                                      new RequestCallback<Factory>(dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
-                                          @Override
-                                          protected void onSuccess(Factory factory) {
-                                              acceptFactory(factory);
-                                          }
+                  new RequestCallback<Factory>(dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
+                      @Override
+                      protected void onSuccess(Factory factory) {
+                          acceptFactory(factory);
+                      }
 
-                                          @Override
-                                          protected void onFailure(Throwable e) {
-                                              notificationManager
-                                                      .showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
-
-                                          }
-                                      }
-                                     );
+                      @Override
+                      protected void onFailure(Throwable e) {
+                          notificationManager.showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
+                          welcomeHandler.welcome();
+                      }
+                  });
         } catch (WebSocketException e) {
-            notificationManager.showNotification(
-                    new Notification(e.getMessage(), Notification.Type.ERROR));
+            notificationManager.showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
+            welcomeHandler.welcome();
         }
     }
 
@@ -144,24 +150,21 @@ public class AcceptFactoryHandler implements OAuthCallback {
         notificationManager.showNotification(acceptNotification);
 
         try {
-            factoryService.acceptFactory(factory, new RequestCallback<Factory>(
-                    dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
+            factoryService.acceptFactory(factory, new RequestCallback<Factory>(dtoUnmarshallerFactory.newWSUnmarshaller(Factory.class)) {
                 @Override
                 protected void onSuccess(Factory acceptedFactory) {
                     acceptNotification.setStatus(Notification.Status.FINISHED);
                     acceptNotification.setMessage(localization.factoryURLAcceptedSuccessfully());
-
                     notificationManager.showNotification(
-                            new Notification(localization.projectImported(acceptedFactory.getProjectattributes().getPname()),
-                                             Notification.Type.INFO)
-                                                        );
-
+                            new Notification(localization.projectImported(acceptedFactory.getProjectattributes().getPname()),Notification.Type.INFO));
                     openProject(acceptedFactory);
                 }
 
                 @Override
                 protected void onFailure(Throwable e) {
                     unSubscribeFromAcceptFactoryEvents();
+
+                    welcomeHandler.welcome();
 
                     acceptNotification.setStatus(Notification.Status.FINISHED);
                     acceptNotification.setType(Notification.Type.ERROR);
@@ -196,6 +199,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         resourceProvider.getProject(acceptedFactory.getProjectattributes().getPname(), new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
+                welcomeHandler.welcome();
                 updateProjectWithPreSettedProjectType(acceptedFactory);
             }
 
@@ -203,10 +207,12 @@ public class AcceptFactoryHandler implements OAuthCallback {
             public void onSuccess(Project openedProject) {
                 if (openedProject.getDescription() != null &&
                     Constants.NAMELESS_ID.equals(openedProject.getDescription().getProjectTypeId())) {
+                    welcomeHandler.welcome();
                     updateProjectWithPreSettedProjectType(acceptedFactory);
                     return;
                 }
 
+                welcomeHandler.welcome(acceptedFactory);
                 openFile(acceptedFactory);
             }
         });
@@ -271,7 +277,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
     @Override
     public void onAuthenticated(OAuthStatus authStatus) {
         if (authStatus == OAuthStatus.LOGGED_IN) {
-            getStartUpParams();
+            checkStartupParams();
         }
     }
 
@@ -321,8 +327,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
 
     private void showPopUp(String userId, String provider, String scope) {
         String authUrl = restContext + "/oauth/authenticate?oauth_provider=" + provider + "&scope=" + scope + "&userId=" + userId +
-                         "&redirect_after_login=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" +
-                         Utils.getWorkspaceName();
+                         "&redirect_after_login=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/ide/" + Config.getWorkspaceName();
         JsOAuthWindow authWindow = new JsOAuthWindow(authUrl, "error.url", 500, 980, this);
         authWindow.loginWithOAuth();
     }
@@ -332,29 +337,6 @@ public class AcceptFactoryHandler implements OAuthCallback {
      * Commons
      * *****************************************************
      */
-
-    private StringMap<Array<String>> buildParameterMap(String rawQueryString) {
-        StringMap<Array<String>> parameterMap = Collections.createStringMap();
-
-        if (rawQueryString == null || rawQueryString.isEmpty()) {
-            return parameterMap;
-        }
-
-        final String queryString = rawQueryString.startsWith("?") ? rawQueryString.substring(1) : rawQueryString;
-        for (String kvPair : queryString.split("&")) {
-            String[] kv = kvPair.split("=", 2);
-            if (kv[0].length() == 0) continue;
-
-            Array<String> values = parameterMap.get(kv[0]);
-            if (values == null) {
-                values = Collections.createArray();
-                parameterMap.put(kv[0], values);
-            }
-            values.add(kv.length > 1 ? URL.decodeQueryString(kv[1]) : "");
-        }
-
-        return parameterMap;
-    }
 
     private void updateProjectWithPreSettedProjectType(final Factory acceptedFactory) {
         final String projectType = acceptedFactory.getProjectattributes().getPtype();

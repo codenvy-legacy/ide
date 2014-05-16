@@ -26,6 +26,7 @@ import com.codenvy.api.runner.RunnerException;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunRequest;
 import com.codenvy.api.runner.internal.ApplicationLogger;
+import com.codenvy.api.runner.internal.ApplicationLogsPublisher;
 import com.codenvy.api.runner.internal.ApplicationProcess;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.api.runner.internal.DeploymentSources;
@@ -276,8 +277,12 @@ public abstract class BaseDockerRunner extends Runner {
                                                  Hashing.sha1()
                                                 ).toString();
             final DockerConnector connector = DockerConnector.getInstance();
-            final ImageStats imageStats =
-                    createImageIfNeed(connector, dockerRepoName, hash, dockerfileIoFile, applicationFile);
+            final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, hash, dockerfileIoFile, applicationFile,
+                                                            new ApplicationLogsPublisher(ApplicationLogger.DUMMY,
+                                                                                         getEventService(),
+                                                                                         request.getId(),
+                                                                                         workspace,
+                                                                                         project));
             final ContainerConfig containerConfig =
                     new ContainerConfig().withImage(imageStats.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
             HostConfig hostConfig = null;
@@ -346,7 +351,8 @@ public abstract class BaseDockerRunner extends Runner {
                                          final String dockerRepoName,
                                          final String tag,
                                          final java.io.File dockerFile,
-                                         final java.io.File applicationFile) throws IOException, RunnerException {
+                                         final java.io.File applicationFile,
+                                         final ApplicationLogsPublisher logsPublisher) throws IOException, RunnerException {
         final String dockerImageName = dockerRepoName + ':' + tag;
         ImageStats imageStats = dockerImages.get(dockerImageName);
         if (imageStats != null) {
@@ -371,7 +377,7 @@ public abstract class BaseDockerRunner extends Runner {
                 final Callable<ImageStats> c = new Callable<ImageStats>() {
                     public ImageStats call() throws IOException, RunnerException {
                         final long startTime = System.currentTimeMillis();
-                        final CreateImageLogger output = new CreateImageLogger();
+                        final CreateImageLogger output = new CreateImageLogger(logsPublisher);
                         connector.createImage(dockerFile, applicationFile, dockerRepoName, tag, output);
                         final String error = output.getError();
                         if (error != null) {
@@ -425,8 +431,14 @@ public abstract class BaseDockerRunner extends Runner {
     }
 
     private static class CreateImageLogger implements LineConsumer {
+        final ApplicationLogsPublisher logsPublisher;
+
         String imageId;
         String error;
+
+        CreateImageLogger(ApplicationLogsPublisher logsPublisher) {
+            this.logsPublisher = logsPublisher;
+        }
 
         String getImageId() {
             return imageId;
@@ -444,6 +456,9 @@ public abstract class BaseDockerRunner extends Runner {
                     final BuildImageStatus status = JsonHelper.fromJson(line, BuildImageStatus.class, null);
                     final String stream = status.getStream();
                     final String error = status.getError();
+                    if (error != null || stream != null) {
+                        logsPublisher.writeLine(error != null ? String.format("ERROR: %s", error) : stream);
+                    }
                     if (stream != null && stream.startsWith("Successfully built ")) {
                         int endSize = 19;
                         while (endSize < stream.length() && Character.digit(stream.charAt(endSize), 16) != -1) {
