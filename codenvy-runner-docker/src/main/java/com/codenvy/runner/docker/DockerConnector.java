@@ -388,8 +388,19 @@ public class DockerConnector {
         }
     }
 
-
-    public void getContainerLogs(String container, Appendable output) throws IOException {
+    /**
+     * Attach to the container with specified id.
+     *
+     * @param container
+     *         id of container
+     * @param output
+     *         output for container logs
+     * @param stream
+     *         if {@code true} then get 'live' stream from container. Typically need to run this method in separate thread, if {@code
+     *         stream} is {@code true} since this method blocks until container is running.
+     * @throws IOException
+     */
+    public void attachContainer(String container, LineConsumer output, boolean stream) throws IOException {
         final int fd = connect();
         try {
             final List<Pair<String, ?>> headers = new ArrayList<>(2);
@@ -397,19 +408,21 @@ public class DockerConnector {
             headers.add(Pair.of("Content-Length", 0));
             final DockerResponse response = request(fd,
                                                     "POST",
-                                                    String.format("/containers/%s/attach?logs=%d&stdout=%d&stderr=%d", container, 1, 1, 1),
+                                                    String.format("/containers/%s/attach?stream=%d&logs=%d&stdout=%d&stderr=%d",
+                                                                  container, (stream ? 1 : 0), (stream ? 0 : 1), 1, 1),
                                                     headers,
-                                                    (String)null);
+                                                    (String)null
+                                                   );
             final int status = response.getStatus();
             if (200 != status) {
                 final String msg = CharStreams.toString(new InputStreamReader(response.getInputStream()));
                 throw new IOException(String.format("Error response from docker API, status: %d, message: %s", status, msg));
             }
-            final InputStream stream = response.getInputStream();
+            final InputStream inputStream = response.getInputStream();
             final byte[] buf = new byte[8192];
             int streamType = 0;
-            while (true) {
-                int r = stream.read(buf, 0, 8);
+            for (; ; ) {
+                int r = inputStream.read(buf, 0, 8);
                 if (r != 8) {
                     if (r != -1) {
                         LOG.error("Invalid stream, can't read header. Header of each frame must contain 8 bytes but got {}", r);
@@ -422,18 +435,18 @@ public class DockerConnector {
                     // write header if stream type is changed
                     switch (streamType) {
                         case (1):
-                            output.append("\n====> stdout <====\n\n");
+                            output.writeLine("\n====> stdout <====\n\n");
                             break;
                         case (2):
-                            output.append("\n====> stderr <====\n\n");
+                            output.writeLine("\n====> stderr <====\n\n");
                             break;
                     }
                 }
                 int remaining = (buf[7] & 0xFF) + ((buf[6] & 0xFF) << 8) + ((buf[5] & 0xFF) << 16) + ((buf[4] & 0xFF) << 24);
                 while (remaining > 0) {
-                    r = stream.read(buf, 0, Math.min(remaining, buf.length));
+                    r = inputStream.read(buf, 0, Math.min(remaining, buf.length));
                     remaining -= r;
-                    output.append(new String(buf, 0, r));
+                    output.writeLine(new String(buf, 0, r));
                 }
             }
         } finally {

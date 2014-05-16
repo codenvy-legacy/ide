@@ -39,6 +39,5 @@ public class VirtualFileSystemModule extends AbstractModule {
             }
         });
 
-        bind(ConsistentProvider.class).asEagerSingleton();
     }
 }
