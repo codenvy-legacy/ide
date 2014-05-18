@@ -91,8 +91,12 @@ public class AcceptFactoryHandler implements OAuthCallback {
         this.welcomeHandler = welcomeHandler;
     }
 
-
-    public void processFactory() {
+    /**
+     * Start checking the startup params for a factory parameters.
+     * Begins accepting a factory after opening a Message Bus.
+     *
+     */
+    public void process() {
         if (messageBus.getReadyState() == MessageBus.ReadyState.OPEN) {
             checkStartupParams();
         } else {
@@ -106,6 +110,9 @@ public class AcceptFactoryHandler implements OAuthCallback {
     }
 
 
+    /**
+     * Checks the startup params for encoded or not encoded factory.
+     */
     private void checkStartupParams() {
         if (Config.getStartupParam("id") != null) {
             getFactory(Config.getStartupParam("id"), true);
@@ -120,6 +127,12 @@ public class AcceptFactoryHandler implements OAuthCallback {
         welcomeHandler.welcome();
     }
 
+    /**
+     * Get a valid Factory object.
+     *
+     * @param queryStringOrId
+     * @param encoded
+     */
     private void getFactory(String queryStringOrId, boolean encoded) {
         notificationManager.showNotification(new Notification(localization.getInformationAboutFactory(), Notification.Type.INFO));
 
@@ -143,6 +156,11 @@ public class AcceptFactoryHandler implements OAuthCallback {
         }
     }
 
+    /**
+     * Accepts a Factory.
+     *
+     * @param factory
+     */
     private void acceptFactory(final Factory factory) {
         subscribeToAcceptFactoryEvents();
 

@@ -25,7 +25,7 @@ public class FactoryExtension {
     @Inject
     public FactoryExtension(AcceptFactoryHandler acceptFactoryHandler, ActionManager actionManager, ShareFactoryAction shareFactoryAction, FactoryResources resources) {
         //Entry point to start up factory acceptance
-        acceptFactoryHandler.processFactory();
+        acceptFactoryHandler.process();
         
         resources.factoryCSS().ensureInjected();
         
