@@ -542,4 +542,10 @@ public class ShareFactoryViewImpl extends BaseView<ShareFactoryView.ActionDelega
         createFactoryForm.setTarget("createFactoryIFrame");
         createFactoryForm.submit();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getNonEncodedLink() {
+        return nonencodedUrl.getText();
+    }
 }

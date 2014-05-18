@@ -42,11 +42,13 @@ import com.codenvy.ide.factory.client.FactoryLocalizationConstant;
 import com.codenvy.ide.factory.client.FactoryResources;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -314,16 +316,24 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
         }
     }
 
+    /**
+     * Get GIT readonly URL of the current project.
+     */
     private void getGitUrl() {
-        gitUrl = resourceProvider.getActiveProject().getPath();
-        openView();
-        /*
-         * TODO gitService.getGitReadOnlyUrl(resourceProvider.getActiveProject().getId(), new AsyncRequestCallback<String>(new
-         * StringUnmarshaller()) {
-         * @Override protected void onSuccess(String result) { gitUrl = result; openView(); }
-         * @Override protected void onFailure(Throwable exception) { Notification notification = new Notification(exception.getMessage(),
-         * ERROR); notificationManager.showNotification(notification); } });
-         */
+        gitService.getGitReadOnlyUrl(resourceProvider.getActiveProject().getId(), new AsyncRequestCallback<String>(new
+                                                                                                                   StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                gitUrl = result;
+                openView();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+        });
     }
 
     /**
@@ -371,6 +381,11 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
         });
     }
 
+    /**
+     * Create Factory by submiting the form.
+     * 
+     * @param callback
+     */
     private void createFactory(final AsyncCallback<Factory> callback) {
         String post = dtoFactory.toJson(createFactoryFromParameters());
 
@@ -439,7 +454,7 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
      * Updates the factory button preview iframe.
      */
     private void updatePreviewIFame() {
-       
+
         String jsURL = GWT.getModuleBaseForStaticFiles() + "factory-preview.js";
 
         String style = view.getWhiteTheme() ? "white" : "dark";
@@ -550,8 +565,19 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onFacebookClicked(boolean isEncoded) {
-        // TODO
-        String shareURL = "TODO path";
+        String shareURL = "";
+        if (isEncoded) {
+            Link createFactoryLink = getLinkByRel("create-project", factory);
+            if (createFactoryLink == null || createFactoryLink.getHref() == null || createFactoryLink.getHref().isEmpty()) {
+                return;
+            }
+
+            String factoryId = factory.getId();
+            shareURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                                       .setPath("factory/share/" + factoryId).buildString();
+        } else {
+            shareURL = view.getNonEncodedLink();
+        }
 
         Window.open("https://www.facebook.com/sharer/sharer.php" +
                     "?u=" + encodeQueryString(shareURL),
@@ -562,11 +588,20 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onTwitterClicked(boolean isEncoded) {
-        // TODO
-        String shareURL = "TODO path";
+        String factoryURL = "";
+        if (isEncoded) {
+            Link createFactoryLink = getLinkByRel("create-project", factory);
+            if (createFactoryLink == null || createFactoryLink.getHref() == null || createFactoryLink.getHref().isEmpty()) {
+                return;
+            }
+            factoryURL = createFactoryLink.getHref();
+        } else {
+            factoryURL = view.getNonEncodedLink();
+        }
+
         String text = "Code,%20Build,%20Test%20and%20Deploy%20my%20Factory%20-%20" +
                       resourceProvider.getActiveProject().getName() + ":%20" +
-                      encodeQueryString(shareURL) + "%20%23Codenvy";
+                      encodeQueryString(factoryURL) + "%20%23Codenvy";
 
         Window.open("https://twitter.com/intent/tweet?text=" + text + "&url=/",
                     "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=550,height=420");
@@ -576,12 +611,33 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onGooglePlusClicked(boolean isEncoded) {
-        // TODO
-        String shareURL = "TODO path";
+        String shareURL = "";
+        if (isEncoded) {
+            Link createFactoryLink = getLinkByRel("create-project", factory);
+            if (createFactoryLink == null || createFactoryLink.getHref() == null || createFactoryLink.getHref().isEmpty()) {
+                return;
+            }
+            String factoryId = factory.getId();
+            shareURL = new UrlBuilder().setProtocol(Location.getProtocol()).setHost(Location.getHost())
+                                       .setPath("factory/share/" + factoryId).buildString();
+        }
+        else {
+            shareURL = view.getNonEncodedLink();
+        }
+
 
         Window.open("https://plus.google.com/share" +
                     "?url=" + encodeQueryString(shareURL),
                     "", "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=480,width=550");
+    }
+
+    private Link getLinkByRel(String rel, Factory factory) {
+        for (Link link : factory.getLinks()) {
+            if (link.getRel().equals(rel)) {
+                return link;
+            }
+        }
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -593,16 +649,21 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
     /** {@inheritDoc} */
     @Override
     public void onHtmlSnippetClicked(boolean isEncoded) {
-        // TODO Auto-generated method stub
-        new SnippetPopup("TODO", "TODO", coreLocale, factoryResources);
-
+        if (isEncoded) {
+            showSnippet("html", "HTML");
+        } else {
+            // TODO
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onGitHubSnippetClicked(boolean isEncoded) {
-        // TODO Auto-generated method stub
-
+        if (isEncoded) {
+            showSnippet("markdown", "GitHub");
+        } else {
+            // TODO
+        }
     }
 
     /** {@inheritDoc} */
@@ -612,5 +673,31 @@ public class ShareFactoryPresenter extends BasePresenter implements ShareFactory
 
     }
 
+    /**
+     * Show the Factory snippet of the given type.
+     * 
+     * @param type snippet's type
+     * @param title title of the popup
+     */
+    void showSnippet(String type, final String title) {
+        try {
+            factoryServiceClient.getFactorySnippet(factory.getId(), type, new RequestCallback<String>(new StringUnmarshallerWS()) {
 
+                @Override
+                protected void onSuccess(String result) {
+                    new SnippetPopup(title, result, coreLocale, factoryResources);
+
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    notificationManager.showNotification(notification);
+                }
+            });
+        } catch (WebSocketException e) {
+            Notification notification = new Notification(e.getMessage(), ERROR);
+            notificationManager.showNotification(notification);
+        }
+    }
 }

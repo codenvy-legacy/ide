@@ -23,6 +23,8 @@ import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * View for creating and sharing the Factory.
+ * 
  * @author Ann Shumilova
  */
 public interface ShareFactoryView extends View<ShareFactoryView.ActionDelegate> {
@@ -57,53 +59,136 @@ public interface ShareFactoryView extends View<ShareFactoryView.ActionDelegate> 
          */
         void onRequestFileSuggestions(String query, AsyncCallback<Array<String>> callback);
         
+        /** Performs any actions appropriate in response to the user having changed the advanced parameters of the Factory button. */
         void onParametersChanged();
         
+        /**
+         * Performs any actions appropriate in response to the user having clicked share on Facebook button.
+         * 
+         * @param isEncoded is URL encoded or nonencoded
+         */
         void onFacebookClicked(boolean isEncoded);
         
+        /**
+         * Performs any actions appropriate in response to the user having clicked share on Twitter button.
+         * 
+         * @param isEncoded is URL encoded or nonencoded
+         */
         void onTwitterClicked(boolean isEncoded);
         
+        /**
+         * Performs any actions appropriate in response to the user having clicked share on Google Plus button.
+         * 
+         * @param isEncoded is URL encoded or nonencoded
+         */
         void onGooglePlusClicked(boolean isEncoded);
         
         void onMailClicked(boolean isEncoded);
         
     }
 
+    /**
+     * Set the value of non encoded Factory url.
+     * 
+     * @param link
+     */
     void setNonEncodedLink(String link);
-
+    
+    /**
+     * @return {@link String} Factory's non encoded url value
+     */
+    String getNonEncodedLink();
+    
+    /**
+     * Set the value of encoded Factory url.
+     * 
+     * @param link
+     */
     void setEncodedLink(String link);
 
+    /**
+     * @return is vertical align of the Factory button
+     */
     boolean getVerticalAlign();
 
+    /**
+     * @return is horizontal align of the Factory button
+     */
     boolean getHorizontalAlign();
 
+    /**
+     * @return is white theme of the Factory button
+     */
     boolean getWhiteTheme();
 
+    /**
+     * @return is dark theme of the Factory button
+     */
     boolean getDarkTheme();
 
+    /**
+     * @return is show counter near factory button or not
+     */
     boolean getShowCounter();
 
+    /**
+     * @param content factory button preview content
+     */
     void previewFactoryButton(String content);
 
+    /**
+     * @return {@link String} Factory's description
+     */
     String getDescription();
 
+    /**
+     * @return {@link String} Factory's author information
+     */
     String getAuthor();
 
+    /**
+     * @return {@link String} the path of the file, that will be opened on Factory opened
+     */
     String getOpenFile();
 
+    /**
+     * @return {@link String} find replace
+     */
     String getFindReplace();
 
+    /**
+     * @return {@link String} Factory's expiration date
+     */
     String getExpirationDate();
 
+    /**
+     * @param isVisible is show panel with encoded url
+     */
     void showEncodedPanel(boolean isVisible);
 
+    /**
+     * @param isVisible is show Generate encoded url button
+     */
     void showGenerateButton(boolean isVisible);
     
+    /** Set the initial state of the Factory button's style. */
     void setStyleInitialState();
     
+    /**
+     * @param isVisible is show social buttons with encoded url
+     */
     void showSocialEncoded(boolean isVisible);
     
+    /**
+     * @param isVisible is show social buttons with non encoded url
+     */
     void showSocialNonEncoded(boolean isVisible);
     
+    /**
+     * Submit the create Factory form.
+     * 
+     * @param content content of the factory
+     * @param callback on Factory creation callback
+     */
     void submitCreateFactoryForm(String content, AsyncCallback<String> callback);
 }
