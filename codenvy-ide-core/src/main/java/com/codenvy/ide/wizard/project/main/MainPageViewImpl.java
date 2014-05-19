@@ -42,6 +42,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -77,19 +78,17 @@ public class MainPageViewImpl implements MainPageView {
         projectTypeList = SimpleList.create((SimpleList.View)projectsPanel.getElement().<JsElement>cast(), resources.defaultSimpleListCss(),
                                             new SimpleList.ListItemRenderer<Object>() {
 
-
                                                 @Override
-                                                public void render(Element listItemBase,
-                                                                   Object itemData) {
+                                                public void render(Element listItemBase, Object itemData) {
                                                     SpanElement spanElement = Elements.createSpanElement();
                                                     if (itemData instanceof ProjectTypeDescriptor) {
-                                                        spanElement.setInnerHTML(
-                                                                SafeHtmlUtils.htmlEscape(
-                                                                        ((ProjectTypeDescriptor)itemData).getProjectTypeName())
-                                                                                );
+                                                        String projectTypeName = ((ProjectTypeDescriptor)itemData).getProjectTypeName();
+                                                        spanElement.setInnerHTML(SafeHtmlUtils.htmlEscape(projectTypeName));
+                                                        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)listItemBase, projectTypeName);
                                                     } else if (itemData instanceof ProjectTemplateDescriptor) {
-                                                        spanElement.setInnerHTML(SafeHtmlUtils.htmlEscape(
-                                                                ((ProjectTemplateDescriptor)itemData).getDisplayName()));
+                                                        String displayName = ((ProjectTemplateDescriptor)itemData).getDisplayName();
+                                                        spanElement.setInnerHTML(SafeHtmlUtils.htmlEscape(displayName));
+                                                        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)listItemBase, displayName);
                                                     }
                                                     listItemBase.appendChild(spanElement);
                                                 }

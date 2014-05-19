@@ -6,6 +6,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.texteditor.api.TextEditorOperations;
@@ -19,16 +20,16 @@ import com.google.inject.Inject;
 
 public class FormatterAction extends Action {
 
+    private final ResourceProvider     resourceProvider;
     private final EditorAgent          editorAgent;
     private final AnalyticsEventLogger eventLogger;
-
-    private EditorPartPresenter editor;
-
+    private       EditorPartPresenter  editor;
 
     @Inject
-    public FormatterAction(EditorAgent editorAgent, CoreLocalizationConstant localization,
+    public FormatterAction(ResourceProvider resourceProvider, EditorAgent editorAgent, CoreLocalizationConstant localization,
                            AnalyticsEventLogger eventLogger, Resources resources) {
         super(localization.formatName(), localization.formatDescription(), null, resources.format());
+        this.resourceProvider = resourceProvider;
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }
@@ -51,5 +52,6 @@ public class FormatterAction extends Action {
             isCanDoOperation = ((CodenvyTextEditor)editor).getView().canDoOperation(TextEditorOperations.FORMAT);
         }
         e.getPresentation().setEnabled(isCanDoOperation);
+        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
     }
 }

@@ -43,7 +43,7 @@
                     <g:Label text="Project:" height="20px"/>
                   </g:north>
                   <g:center>
-                    <g:SimplePanel ui:field="projectsPanel" addStyleNames="{style.categories}"/>
+                    <g:SimplePanel ui:field="projectsPanel" addStyleNames="{style.categories}" debugId="newProject-projectsPanel"/>
                   </g:center>
               </g:DockLayoutPanel>
           </g:east>
@@ -53,7 +53,7 @@
                       <g:Label text="Categories:" height="20px"/>
                   </g:north>
                   <g:center>
-                      <g:SimplePanel ui:field="categoriesPanel" addStyleNames="{style.categories}"/>
+                      <g:SimplePanel ui:field="categoriesPanel" addStyleNames="{style.categories}" debugId="newProject-categoriesPanel"/>
                   </g:center>
               </g:DockLayoutPanel>
           </g:west>
@@ -65,7 +65,7 @@
               <g:Label text="Description:"/>
           </g:north>
           <g:north size="70">
-              <g:HTMLPanel>
+              <g:HTMLPanel debugId="newProject-descriptionArea">
                   <div class="{style.messageInputContainer}">
                       <textarea ui:field="descriptionArea" class="{style.chatMessageInput}"/>
                   </div>
