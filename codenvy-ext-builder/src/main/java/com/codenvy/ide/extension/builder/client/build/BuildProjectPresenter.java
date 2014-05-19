@@ -279,7 +279,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             final Date startDate = new Date(lastBuildTaskDescriptor.getStartTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
         }
-        return null;
+        return "--:--:--";
     }
 
     /** Returns time when last build task finished in format HH:mm:ss. */
@@ -288,7 +288,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             final Date endDate = new Date(lastBuildTaskDescriptor.getEndTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(endDate);
         }
-        return null;
+        return "--:--:--";
     }
 
     /** Returns total build time in format mm:ss.ms. */
@@ -304,7 +304,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             }
             return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
         }
-        return null;
+        return "--:--.---";
     }
 
     /** Returns last build task's status. */

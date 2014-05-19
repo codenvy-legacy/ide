@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M16-SNAPSHOT</version>
+        <version>3.0.0-M17-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-vfs-fs</artifactId>
     <packaging>jar</packaging>
@@ -38,11 +38,6 @@
             <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-lang</artifactId>
             <version>${codenvy.commons.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.hosted-infrastructure</groupId>
-            <artifactId>codenvy-hosted-platform-api-impl</artifactId>
-            <version>${codenvy.hosted-infrastructure.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>

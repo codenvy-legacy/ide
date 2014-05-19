@@ -429,7 +429,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             final Date startDate = new Date(lastApplicationDescriptor.getStartTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
         }
-        return null;
+        return "--:--:--";
     }
 
     /** Returns time when last app stopped in format HH:mm:ss. */
@@ -438,7 +438,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             final Date stopDate = new Date(lastApplicationDescriptor.getStopTime());
             return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
         }
-        return null;
+        return "--:--:--";
     }
 
     /** Returns total time which application was launched, in format mm:ss.ms. */
@@ -455,7 +455,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             }
             return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
         }
-        return null;
+        return "--:--.---";
     }
 
     private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {

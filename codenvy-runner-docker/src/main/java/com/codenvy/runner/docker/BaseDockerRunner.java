@@ -277,12 +277,13 @@ public abstract class BaseDockerRunner extends Runner {
                                                  Hashing.sha1()
                                                 ).toString();
             final DockerConnector connector = DockerConnector.getInstance();
+            final ApplicationLogsPublisher logsPublisher = new ApplicationLogsPublisher(ApplicationLogger.DUMMY,
+                                                                                        getEventService(),
+                                                                                        request.getId(),
+                                                                                        workspace,
+                                                                                        project);
             final ImageStats imageStats = createImageIfNeed(connector, dockerRepoName, hash, dockerfileIoFile, applicationFile,
-                                                            new ApplicationLogsPublisher(ApplicationLogger.DUMMY,
-                                                                                         getEventService(),
-                                                                                         request.getId(),
-                                                                                         workspace,
-                                                                                         project));
+                                                            logsPublisher);
             final ContainerConfig containerConfig =
                     new ContainerConfig().withImage(imageStats.image).withMemory(runnerCfg.getMemory() * 1024 * 1024).withCpuShares(1);
             HostConfig hostConfig = null;
@@ -302,18 +303,20 @@ public abstract class BaseDockerRunner extends Runner {
                 }
                 hostConfig.setBinds(new String[]{String.format("%s:%s", applicationFile.getAbsolutePath(), containerBindDir)});
             }
-            final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, new ApplicationProcess.Callback() {
-                @Override
-                public void started() {
-                }
+            final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, logsPublisher,
+                                                           new ApplicationProcess.Callback() {
+                                                               @Override
+                                                               public void started() {
+                                                               }
 
-                @Override
-                public void stopped() {
-                    for (Pair<Integer, Integer> p : portMapping) {
-                        portService.release(p.first);
-                    }
-                }
-            });
+                                                               @Override
+                                                               public void stopped() {
+                                                                   for (Pair<Integer, Integer> p : portMapping) {
+                                                                       portService.release(p.first);
+                                                                   }
+                                                               }
+                                                           }
+            );
             imageStats.inc();
             registerDisposer(docker, new Disposer() {
                 @Override
@@ -512,19 +515,25 @@ public abstract class BaseDockerRunner extends Runner {
         }
     }
 
-    private static class DockerProcess extends ApplicationProcess {
-        final DockerConnector connector;
-        final ContainerConfig containerCfg;
-        final HostConfig      hostCfg;
-        final Callback        callback;
-        final AtomicBoolean   started;
+    private class DockerProcess extends ApplicationProcess {
+        final DockerConnector          connector;
+        final ContainerConfig          containerCfg;
+        final HostConfig               hostCfg;
+        final ApplicationLogsPublisher logsPublisher;
+        final Callback                 callback;
+        final AtomicBoolean            started;
         String       container;
         DockerLogger logger;
 
-        DockerProcess(DockerConnector connector, ContainerConfig containerCfg, HostConfig hostCfg, Callback callback) {
+        DockerProcess(DockerConnector connector,
+                      ContainerConfig containerCfg,
+                      HostConfig hostCfg,
+                      ApplicationLogsPublisher logsPublisher,
+                      Callback callback) {
             this.connector = connector;
             this.containerCfg = containerCfg;
             this.hostCfg = hostCfg;
+            this.logsPublisher = logsPublisher;
             this.callback = callback;
             started = new AtomicBoolean(false);
         }
@@ -536,6 +545,18 @@ public abstract class BaseDockerRunner extends Runner {
                     final ContainerCreated response = connector.createContainer(containerCfg);
                     connector.startContainer(response.getId(), hostCfg);
                     container = response.getId();
+                    getExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                LOG.debug("Attach to container {}", container);
+                                connector.attachContainer(container, logsPublisher, true);
+                                LOG.debug("Detach from container {}", container);
+                            } catch (Exception e) {
+                                LOG.error(e.getMessage(), e);
+                            }
+                        }
+                    });
                     logger = new DockerLogger(connector, container);
                     if (callback != null) {
                         callback.started();
@@ -611,7 +632,7 @@ public abstract class BaseDockerRunner extends Runner {
             return ApplicationLogger.DUMMY;
         }
 
-        private static class DockerLogger implements ApplicationLogger {
+        private class DockerLogger implements ApplicationLogger {
             final DockerConnector connector;
             final String          container;
 
@@ -621,8 +642,18 @@ public abstract class BaseDockerRunner extends Runner {
             }
 
             @Override
-            public void getLogs(Appendable output) throws IOException {
-                connector.getContainerLogs(container, output);
+            public void getLogs(final Appendable output) throws IOException {
+                connector.attachContainer(container, new LineConsumer() {
+                    @Override
+                    public void writeLine(String s) throws IOException {
+                        output.append(s);
+                    }
+
+                    @Override
+                    public void close() throws IOException {
+                        // noop
+                    }
+                }, false);
             }
 
             @Override
