@@ -37,19 +37,19 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ImportProjectAction extends Action {
+public class ImportProjectFromGitHubAction extends Action {
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final ImportPresenter        importPresenter;
     private final UserServiceClient      service;
     private final AnalyticsEventLogger   eventLogger;
 
     @Inject
-    public ImportProjectAction(GitHubLocalizationConstant constant,
-                               GitHubResources resources,
-                               ImportPresenter importPresenter,
-                               UserServiceClient service,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                               AnalyticsEventLogger eventLogger) {
+    public ImportProjectFromGitHubAction(GitHubLocalizationConstant constant,
+                                         GitHubResources resources,
+                                         ImportPresenter importPresenter,
+                                         UserServiceClient service,
+                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                         AnalyticsEventLogger eventLogger) {
         super(constant.importFromGithubTitle(), constant.welcomeImportText(), null, resources.importFromGithub());
         this.importPresenter = importPresenter;
         this.service = service;
@@ -68,7 +68,7 @@ public class ImportProjectAction extends Action {
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(ImportProjectAction.class, "Can't get user", exception);
+                Log.error(ImportProjectFromGitHubAction.class, "Can't get user", exception);
             }
         });
     }

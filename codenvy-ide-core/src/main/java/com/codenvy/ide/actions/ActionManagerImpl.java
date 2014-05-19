@@ -50,6 +50,7 @@ public class ActionManagerImpl implements ActionManager {
     }
 
     private void registerDefaultActionGroups() {
+        // register default action groups for main menu
         DefaultActionGroup mainMenu = new DefaultActionGroup(this);
         registerAction(IdeActions.GROUP_MAIN_MENU, mainMenu);
 
@@ -57,10 +58,15 @@ public class ActionManagerImpl implements ActionManager {
         registerAction(IdeActions.GROUP_FILE, fileGroup);
         mainMenu.add(fileGroup);
 
+        DefaultActionGroup codeGroup = new DefaultActionGroup("Code", true, this);
+        registerAction(IdeActions.GROUP_CODE, codeGroup);
+        Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
+        mainMenu.add(codeGroup, afterFile);
+
         DefaultActionGroup buildGroup = new DefaultActionGroup("Build", true, this);
         registerAction(IdeActions.GROUP_BUILD, buildGroup);
-        Constraints afterFile = new Constraints(Anchor.AFTER, IdeActions.GROUP_FILE);
-        mainMenu.add(buildGroup, afterFile);
+        Constraints afterCode = new Constraints(Anchor.AFTER, IdeActions.GROUP_CODE);
+        mainMenu.add(buildGroup, afterCode);
 
         DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
         registerAction(IdeActions.GROUP_RUN, runGroup);
@@ -77,14 +83,20 @@ public class ActionManagerImpl implements ActionManager {
         mainMenu.add(helpGroup, afterWindow);
 
 
-        DefaultActionGroup contextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_MAIN_CONTEXT_MENU, false, this);
-        registerAction(IdeActions.GROUP_MAIN_CONTEXT_MENU, contextMenuGroup);
+        // register default action groups for context menu
+        DefaultActionGroup mainContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_MAIN_CONTEXT_MENU, false, this);
+        registerAction(IdeActions.GROUP_MAIN_CONTEXT_MENU, mainContextMenuGroup);
 
         DefaultActionGroup buildContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_BUILD_CONTEXT_MENU, false, this);
         registerAction(IdeActions.GROUP_BUILD_CONTEXT_MENU, buildContextMenuGroup);
 
         DefaultActionGroup runContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_RUN_CONTEXT_MENU, false, this);
         registerAction(IdeActions.GROUP_RUN_CONTEXT_MENU, runContextMenuGroup);
+
+
+        // register default action groups for main toolbar
+        DefaultActionGroup mainToolbarGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_MAIN_TOOLBAR, mainToolbarGroup);
     }
 
     private static void reportActionError(final String pluginId, final String message) {

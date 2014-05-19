@@ -19,12 +19,14 @@ package com.codenvy.ide.api.ui.action;
 
 /** @author Evgen Vidolob */
 public interface IdeActions {
-    String GROUP_MAIN_MENU = "MainMenu";
-    String GROUP_FILE      = "FileGroup";
-    String GROUP_BUILD     = "BuildGroup";
-    String GROUP_RUN       = "RunGroupMainMenu";
-    String GROUP_WINDOW    = "WindowGroup";
-    String GROUP_HELP      = "HelpGroup";
+    String GROUP_MAIN_MENU      = "MainMenu";
+    String GROUP_FILE           = "FileGroup";
+    String GROUP_CODE           = "CodeGroup";
+    String GROUP_IMPORT_PROJECT = "ImportProjectGroup";
+    String GROUP_BUILD          = "BuildGroup";
+    String GROUP_RUN            = "RunGroupMainMenu";
+    String GROUP_WINDOW         = "WindowGroup";
+    String GROUP_HELP           = "HelpGroup";
 
     String GROUP_MAIN_TOOLBAR  = "MainToolBar";
     String GROUP_BUILD_TOOLBAR = "BuildGroupToolbar";
