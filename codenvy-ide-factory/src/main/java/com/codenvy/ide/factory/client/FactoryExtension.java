@@ -14,7 +14,6 @@ public class FactoryExtension {
 
     @Inject
     public FactoryExtension(AcceptFactoryHandler acceptFactoryHandler) {
-        //Entry point to start up factory acceptance
-        acceptFactoryHandler.processFactory();
+        acceptFactoryHandler.process();
     }
 }
