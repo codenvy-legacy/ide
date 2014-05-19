@@ -37,7 +37,7 @@ public class NewAnnotationProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewAnnotationProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
-        super("Java Annotation", "Java Annotation", iconRegistry.getIcon("java.class"), "java", selectionAgent);
+        super("Java Annotation", "Java Annotation", iconRegistry.getIcon("java.class").getImage(), "java", selectionAgent);
     }
 
     /** {@inheritDoc} */

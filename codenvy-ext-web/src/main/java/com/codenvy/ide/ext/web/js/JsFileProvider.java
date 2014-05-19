@@ -41,7 +41,7 @@ public class JsFileProvider extends NewResourceProvider {
 
     @Inject
     public JsFileProvider(IconRegistry iconRegistry) {
-        super("JavaScript file", "JavaScript file", iconRegistry.getIcon("web/js.file.small.icon"), "js");
+        super("JavaScript file", "JavaScript file", iconRegistry.getIcon("web/js.file.small.icon").getImage(), "js");
     }
 
     /** {@inheritDoc} */

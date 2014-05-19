@@ -41,7 +41,7 @@ public class NewGroovyFileProvider extends NewResourceProvider {
 
     @Inject
     public NewGroovyFileProvider(EditorTutorialResource resource, IconRegistry iconRegistry) {
-        super("Groovy file", "Groovy file", iconRegistry.getDefaultIcon(), "groovy");
+        super("Groovy file", "Groovy file", iconRegistry.getGenericIcon().getImage(), "groovy");
         this.resource = resource;
     }
 

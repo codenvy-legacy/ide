@@ -40,7 +40,7 @@ public class NewPackageProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewPackageProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
-        super("Java Package", "Java Package", iconRegistry.getIcon("java.package"), null, selectionAgent);
+        super("Java Package", "Java Package", iconRegistry.getIcon("java.package").getImage(), null, selectionAgent);
         this.iconRegistry = iconRegistry;
     }
 

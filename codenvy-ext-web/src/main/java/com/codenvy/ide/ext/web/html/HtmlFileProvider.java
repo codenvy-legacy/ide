@@ -49,7 +49,7 @@ public class HtmlFileProvider extends NewResourceProvider {
 
     @Inject
     public HtmlFileProvider(IconRegistry iconRegistry) {
-        super("HTML file", "HTML file", iconRegistry.getIcon("web.html.file.small.icon"), "html");
+        super("HTML file", "HTML file", iconRegistry.getIcon("web.html.file.small.icon").getImage(), "html");
     }
 
     /** {@inheritDoc} */
