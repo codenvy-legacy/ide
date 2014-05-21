@@ -114,6 +114,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private       List<Variable>                         variables;
     private       ApplicationProcessDescriptor           appDescriptor;
     private       Project                                project;
+    private       Location                               location;
 
     /** Create presenter. */
     @Inject
@@ -279,6 +280,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     Log.error(DebuggerPresenter.class, "Unknown type of debugger event: " + event.getType());
                     return;
             }
+            this.location = location;
 
             final String filePath = resolveFilePathByLocation(location);
             if (activeFile == null || !filePath.equalsIgnoreCase(activeFile.getPath())) {
@@ -345,6 +347,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
 
                                           DebuggerPresenter.this.variables = variables;
                                           view.setVariables(variables);
+                                          view.setVariablesInfo(variables.get(0).isExistInformation(), location);
                                       }
 
                                       @Override

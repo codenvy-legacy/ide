@@ -83,7 +83,7 @@ public class JdiStackFrameImpl implements JdiStackFrame {
     }
 
     @Override
-    public JdiLocalVariable[] getLocalVariables() throws DebuggerException {
+    public JdiLocalVariable[] getLocalVariables() throws DebuggerException, DebuggerAbsentInformationException {
         if (localVariables == null) {
             try {
                 List<LocalVariable> targetVariables = stackFrame.visibleVariables();
@@ -92,7 +92,9 @@ public class JdiStackFrameImpl implements JdiStackFrame {
                 for (LocalVariable var : targetVariables) {
                     localVariables[i++] = new JdiLocalVariableImpl(stackFrame, var);
                 }
-            } catch (AbsentInformationException | InvalidStackFrameException | NativeMethodException e) {
+            } catch (AbsentInformationException e) {
+                throw new DebuggerAbsentInformationException(e.getMessage(), e);
+            } catch (InvalidStackFrameException | NativeMethodException e) {
                 throw new DebuggerException(e.getMessage(), e);
             }
         }
@@ -100,7 +102,7 @@ public class JdiStackFrameImpl implements JdiStackFrame {
     }
 
     @Override
-    public JdiLocalVariable getLocalVariableByName(String name) throws DebuggerException {
+    public JdiLocalVariable getLocalVariableByName(String name) throws DebuggerException, DebuggerAbsentInformationException {
         if (name == null) {
             throw new IllegalArgumentException("Field name may not be null. ");
         }
