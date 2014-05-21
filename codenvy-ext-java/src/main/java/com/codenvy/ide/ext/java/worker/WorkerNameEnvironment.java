@@ -32,8 +32,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of {@link com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment} interface, use JavaCodeAssistantService
- * for receiving data and SessionStorage for
+ * Implementation of {@link com.codenvy.ide.ext.java.jdt.internal.compiler.env.INameEnvironment} interface, use RestNameEnvironment
+ * for receiving data and
  * cache Java type data in browser
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -41,9 +41,11 @@ import java.util.Set;
  */
 public class WorkerNameEnvironment implements INameEnvironment {
 
-    private static Set<String> packages = new HashSet<String>();
+    private static Set<String> packages = new HashSet<>();
     protected String restServiceContext;
     private   String projectPath;
+    private Set<String> blackListTypes = new HashSet<>();
+    private Set<String> blackListPackages = new HashSet<>();
 
     /**
      *
@@ -66,6 +68,9 @@ public class WorkerNameEnvironment implements INameEnvironment {
         b.deleteCharAt(b.length() - 1);
 
         final String key = validateFqn(b);
+        if(blackListTypes.contains(key)){
+            return null;
+        }
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key), null);
         }
@@ -89,7 +94,10 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 WorkerTypeInfoStorage.get().putType(key, type);
 
                 return new NameEnvironmentAnswer(type, null);
-            } else return null;
+            } else {
+                blackListTypes.add(key);
+                return null;
+            }
         }
         return null;
     }
@@ -114,6 +122,9 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         b.append(typeName);
         final String key = validateFqn(b);
+        if(blackListTypes.contains(key)){
+            return null;
+        }
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
             return new NameEnvironmentAnswer(WorkerTypeInfoStorage.get().getType(key),
                                              null);
@@ -138,7 +149,10 @@ public class WorkerNameEnvironment implements INameEnvironment {
                 WorkerTypeInfoStorage.get().putType(key, type);
 
                 return new NameEnvironmentAnswer(type, null);
-            } else return null;
+            } else {
+                blackListTypes.add(key);
+                return null;
+            }
         }
         return null;
     }
@@ -158,6 +172,9 @@ public class WorkerNameEnvironment implements INameEnvironment {
             if (packages.contains(p.toString())) {
                 return true;
             }
+            if (blackListPackages.contains(p.toString())) {
+                return false;
+            }
             StringBuilder builder = new StringBuilder();
             if (parentPackageName != null) {
                 for (char[] chars : parentPackageName) {
@@ -173,6 +190,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
             boolean exist = findPackage != null && Boolean.parseBoolean(findPackage);
             if (exist) {
                 packages.add(p.toString());
+            } else {
+                blackListPackages.add(p.toString());
             }
             return exist;
 
@@ -321,6 +340,11 @@ public class WorkerNameEnvironment implements INameEnvironment {
                                      enclosingTypeNames, jso.getIntField("modifiers"), null);
             }
         }
+    }
+
+    public void clearBlackList() {
+        blackListPackages.clear();
+        blackListTypes.clear();
     }
 
     private static final class XmlHttpWraper extends JavaScriptObject {

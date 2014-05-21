@@ -41,6 +41,7 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
+import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
@@ -76,6 +77,7 @@ public class JavaExtension {
     private String              workspaceId;
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
+    private JavaParserWorker    parserWorker;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -97,12 +99,15 @@ public class JavaExtension {
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          EditorAgent editorAgent,
-                         AnalyticsEventLogger eventLogger, JavaResources resources) {
+                         AnalyticsEventLogger eventLogger,
+                         JavaResources resources,
+                         JavaParserWorker parserWorker) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
+        this.parserWorker = parserWorker;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -219,6 +224,7 @@ public class JavaExtension {
             protected void onSuccess(String result) {
                 notification.setMessage("Dependencies successfully updated ");
                 notification.setStatus(FINISHED);
+                parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override
                     public void onIteration(String s, EditorPartPresenter editorPartPresenter) {

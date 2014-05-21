@@ -260,6 +260,12 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         worker.postMessage(message.serialize());
     }
 
+    @Override
+    public void dependenciesUpdated() {
+        MessagesImpls.DependenciesUpdatedMessageImpl message = MessagesImpls.DependenciesUpdatedMessageImpl.make();
+        worker.postMessage(message.serialize());
+    }
+
     /** {@inheritDoc} */
     @Override
     public void parse(String content, String fileName, String fileId, String packageName, String projectPath,
