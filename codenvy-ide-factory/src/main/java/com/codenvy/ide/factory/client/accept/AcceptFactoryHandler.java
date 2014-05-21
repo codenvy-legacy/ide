@@ -14,12 +14,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.factory.client.FactoryLocalizationConstant;
-import com.codenvy.ide.factory.client.welcome.WelcomeHandler;
+import com.codenvy.ide.factory.client.welcome.GreetingPart;
 import com.codenvy.ide.navigation.NavigateToFilePresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -36,8 +33,6 @@ import com.codenvy.ide.websocket.events.ConnectionOpenedHandler;
 import com.codenvy.ide.websocket.events.MessageHandler;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.exceptions.UnauthorizedException;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -63,7 +58,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
     private final DtoFactory                    dtoFactory;
     private final UserServiceClient             userServiceClient;
     private final NavigateToFilePresenter       navigateToFilePresenter;
-    private final WelcomeHandler                welcomeHandler;
+    private final GreetingPart                  greetingPart;
 
     private static final String ACCEPT_EVENTS_CHANNEL = "acceptFactoryEvents";
 
@@ -74,7 +69,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
                                 SelectProjectTypePresenter selectProjectTypePresenter, NotificationManager notificationManager,
                                 ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry, ProjectServiceClient projectServiceClient,
                                 DtoFactory dtoFactory, UserServiceClient userServiceClient,
-                                NavigateToFilePresenter navigateToFilePresenter, WelcomeHandler welcomeHandler) {
+                                NavigateToFilePresenter navigateToFilePresenter, GreetingPart greetingPart) {
         this.restContext = restContext;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.factoryService = factoryService;
@@ -88,7 +83,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         this.dtoFactory = dtoFactory;
         this.userServiceClient = userServiceClient;
         this.navigateToFilePresenter = navigateToFilePresenter;
-        this.welcomeHandler = welcomeHandler;
+        this.greetingPart = greetingPart;
     }
 
     /**
@@ -124,7 +119,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
             return;
         }
 
-        welcomeHandler.welcome();
+        greetingPart.showGreeting();
     }
 
     /**
@@ -147,12 +142,12 @@ public class AcceptFactoryHandler implements OAuthCallback {
                       @Override
                       protected void onFailure(Throwable e) {
                           notificationManager.showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
-                          welcomeHandler.welcome();
+                          greetingPart.showGreeting();
                       }
                   });
         } catch (WebSocketException e) {
             notificationManager.showNotification(new Notification(e.getMessage(), Notification.Type.ERROR));
-            welcomeHandler.welcome();
+            greetingPart.showGreeting();
         }
     }
 
@@ -182,7 +177,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
                 protected void onFailure(Throwable e) {
                     unSubscribeFromAcceptFactoryEvents();
 
-                    welcomeHandler.welcome();
+                    greetingPart.showGreeting();
 
                     acceptNotification.setStatus(Notification.Status.FINISHED);
                     acceptNotification.setType(Notification.Type.ERROR);
@@ -217,7 +212,7 @@ public class AcceptFactoryHandler implements OAuthCallback {
         resourceProvider.getProject(acceptedFactory.getProjectattributes().getPname(), new AsyncCallback<Project>() {
             @Override
             public void onFailure(Throwable caught) {
-                welcomeHandler.welcome();
+                greetingPart.showGreeting();
                 updateProjectWithPreSettedProjectType(acceptedFactory);
             }
 
@@ -225,12 +220,12 @@ public class AcceptFactoryHandler implements OAuthCallback {
             public void onSuccess(Project openedProject) {
                 if (openedProject.getDescription() != null &&
                     Constants.NAMELESS_ID.equals(openedProject.getDescription().getProjectTypeId())) {
-                    welcomeHandler.welcome();
+                    greetingPart.showGreeting();
                     updateProjectWithPreSettedProjectType(acceptedFactory);
                     return;
                 }
 
-                welcomeHandler.welcome(acceptedFactory);
+                greetingPart.showGreeting(acceptedFactory);
                 openFile(acceptedFactory);
             }
         });
