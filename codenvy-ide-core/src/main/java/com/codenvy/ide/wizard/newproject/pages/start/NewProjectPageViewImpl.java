@@ -23,7 +23,6 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -70,8 +69,10 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     /**
      * Create view.
      *
+     * @param uiBinder
      * @param resource
      * @param locale
+     * @param iconRegistry
      */
     @Inject
     protected NewProjectPageViewImpl(NewProjectViewImplUiBinder uiBinder,
@@ -109,15 +110,9 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         //create button for each available wizard
         for (int i = 0; i < projectTypes.size(); i++) {
             final ProjectTypeDescriptor projectTypeData = projectTypes.get(i);
-            Image icon = iconRegistry.getIcon(projectTypeData.getProjectTypeId() + ".projecttype.big.icon");
-            if (icon == null) icon = iconRegistry.getDefaultIcon();
+            Image icon = iconRegistry.getIcon(projectTypeData.getProjectTypeId() + ".projecttype.big.icon").getImage();
             icon.setSize("92px", "92px");
-            final ToggleButton btn;
-            if (icon != null) {
-                btn = new ToggleButton(icon);
-            } else {
-                btn = new ToggleButton();
-            }
+            final ToggleButton btn = new ToggleButton(icon);
             btn.setSize("92px", "92px");
 
             final int id = i;
@@ -172,8 +167,4 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
         delegate.checkProjectName();
     }
 
-//    @UiHandler("chooseTechnologyTooltip")
-//    public void onTechnologyIconClicked(ClickEvent event) {
-//        delegate.onTechnologyIconClicked(event.getClientX() + 10, event.getClientY() + 10);
-//    }
 }

@@ -17,21 +17,19 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceProvider;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.resources.model.Folder.TYPE;
-
 
 /**
  * Provides creating of a new folder.
@@ -40,13 +38,11 @@ import static com.codenvy.ide.api.resources.model.Folder.TYPE;
  */
 public class NewFolderProvider extends NewResourceProvider {
     private SelectionAgent selectionAgent;
-    private IconRegistry iconRegistry;
 
     @Inject
-    public NewFolderProvider(Resources resources, SelectionAgent selectionAgent, IconRegistry iconRegistry) {
-        super("Folder", "Folder", iconRegistry.getIcon("default.folder.small.icon"), null);
+    public NewFolderProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
+        super("Folder", "Folder", iconRegistry.getIcon("default.folder.small.icon").getImage(), null);
         this.selectionAgent = selectionAgent;
-        this.iconRegistry = iconRegistry;
     }
 
     /** {@inheritDoc} */

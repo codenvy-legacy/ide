@@ -417,6 +417,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Returns URL of the application which is currently running. */
     public String getCurrentAppURL() {
+        // TODO: don't show app URL in console when app is stopped. After some time this URL may be used by other app.
         if (lastApplicationDescriptor != null) {
             return getAppLink(lastApplicationDescriptor);
         }
@@ -494,7 +495,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Get a double digit int from a single, e.g.: 1 = "01", 2 = "02". */
+    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
     private static String getDoubleDigit(int i) {
         final String doubleDigitI;
         switch (i) {

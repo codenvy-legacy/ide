@@ -28,7 +28,7 @@ public class MyAction extends Action {
     @Override
     public void actionPerformed(ActionEvent arg0) {
         PopupPanel popup = new PopupPanel(true);
-        popup.add(iconRegistry.getIcon("my.icon"));
+        popup.add(iconRegistry.getIcon("my.icon").getImage());
         popup.center();
         popup.show();
 

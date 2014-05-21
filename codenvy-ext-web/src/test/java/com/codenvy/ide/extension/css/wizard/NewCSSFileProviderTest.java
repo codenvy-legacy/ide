@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.css.CssFileProvider;
@@ -41,6 +42,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link com.codenvy.ide.ext.web.css.CssFileProvider} functionality.
@@ -70,6 +72,7 @@ public class NewCSSFileProviderTest {
 
     @Before
     public void setUp() {
+        when(iconRegistry.getIcon(anyString())).thenReturn(mock(Icon.class));
         newCSSFileProvider = new CssFileProvider(iconRegistry);
         cssFileName = RESOURCE_NAME + '.' + newCSSFileProvider.getExtension();
     }

@@ -30,6 +30,6 @@ public class LessFileProvider extends CssFileProvider {
 
     @Inject
     public LessFileProvider(IconRegistry iconRegistry) {
-        super("Css less", iconRegistry.getIcon("web.css.file.small.icon"), "less");
+        super("Css less", iconRegistry.getIcon("web.css.file.small.icon").getImage(), "less");
     }
 }

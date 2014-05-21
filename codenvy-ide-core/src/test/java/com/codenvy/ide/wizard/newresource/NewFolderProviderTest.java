@@ -19,10 +19,12 @@ package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.ui.Icon;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -44,8 +46,9 @@ import static org.mockito.Mockito.when;
 public class NewFolderProviderTest extends BaseNewResourceProviderTest {
     @Before
     public void setUp() {
-        newResourceProvider = new NewFolderProvider(resources, selectionAgent, iconRegistry);
+        when(iconRegistry.getIcon(anyString())).thenReturn(mock(Icon.class));
         when(folder.getResourceType()).thenReturn(TYPE);
+        newResourceProvider = new NewFolderProvider(selectionAgent, iconRegistry);
     }
 
     @Override
