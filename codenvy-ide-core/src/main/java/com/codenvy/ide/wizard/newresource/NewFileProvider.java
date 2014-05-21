@@ -39,7 +39,7 @@ public class NewFileProvider extends NewResourceProvider {
 
     @Inject
     public NewFileProvider(IconRegistry iconRegistry) {
-        super("File", "File", iconRegistry.getIcon("default.file") , "");
+        super("File", "File", iconRegistry.getIcon("default.file").getImage() , "");
     }
 
     /** {@inheritDoc} */

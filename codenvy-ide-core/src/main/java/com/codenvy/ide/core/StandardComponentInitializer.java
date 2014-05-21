@@ -23,12 +23,10 @@ import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FindActionAction;
 import com.codenvy.ide.actions.FormatterAction;
-import com.codenvy.ide.actions.ImportProjectAction;
+import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
-import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.NewResourceAction;
-import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
@@ -39,7 +37,6 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
@@ -49,10 +46,6 @@ import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.welcome.action.ConnectSupportAction;
-import com.codenvy.ide.welcome.action.CreateProjectAction;
-import com.codenvy.ide.welcome.action.InviteAction;
-import com.codenvy.ide.welcome.action.ShowDocumentationAction;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
@@ -65,7 +58,6 @@ import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
@@ -110,13 +102,7 @@ public class StandardComponentInitializer {
     private KeyBindingAgent keyBinding;
 
     @Inject
-    private EventBus eventBus;
-
-    @Inject
     private ActionManager actionManager;
-
-//    @Inject
-//    private NewProjectAction newProjectAction;
 
     @Inject
     private SaveAction saveAction;
@@ -126,9 +112,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private NewResourceAction newFileAction;
-
-    @Inject
-    private OpenProjectAction openProjectAction;
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
@@ -145,18 +128,6 @@ public class StandardComponentInitializer {
     @Inject
     @MainToolbar
     private ToolbarPresenter toolbarPresenter;
-
-    @Inject
-    private CreateProjectAction createProjectAction;
-
-    @Inject
-    private ShowDocumentationAction showDocumentationAction;
-
-    @Inject
-    private InviteAction inviteAction;
-
-    @Inject
-    private ConnectSupportAction connectSupportAction;
 
     @Inject
     private DeleteResourceAction deleteResourceAction;
@@ -186,7 +157,7 @@ public class StandardComponentInitializer {
     private UploadFileAction uploadFileAction;
 
     @Inject
-    private ImportProjectAction importProjectAction;
+    private ImportProjectFromLocationAction importProjectFromLocationAction;
 
     @Inject
     private NewProjectWizardAction newProjectWizardAction;
@@ -207,65 +178,81 @@ public class StandardComponentInitializer {
         newResourceAgent.register(xmlFileProvider);
         editorRegistry.register(xmlFile, xmlEditorProvider);
 
-        DefaultActionGroup window = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
-        actionManager.registerAction("showPreferences", showPreferencesAction);
-        window.add(showPreferencesAction);
 
-        DefaultActionGroup help = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
-        actionManager.registerAction("showAbout", showAboutAction);
-        actionManager.registerAction("findActionAction", findActionAction);
-        help.add(findActionAction);
-        help.add(showAboutAction);
+        // Compose Import Project group
+        DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
+        importProjectGroup.getTemplatePresentation().setSVGIcon(resources.importProject());
+        actionManager.registerAction(IdeActions.GROUP_IMPORT_PROJECT, importProjectGroup);
+        actionManager.registerAction("importProject", importProjectFromLocationAction);
+        importProjectGroup.addAction(importProjectFromLocationAction);
 
-        DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
-
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
-
-//        actionManager.registerAction("newProject", newProjectAction);
-        actionManager.registerAction("openProject", openProjectAction);
-        actionManager.registerAction("importProject", importProjectAction);
-        actionManager.registerAction("newProject2", newProjectWizardAction);
-        actionManager.registerAction("uploadFile", uploadFileAction);
-
-        actionManager.registerAction("navigateToFile", navigateToFileAction);
-        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
-
-        DefaultActionGroup toolbarGroup = new DefaultActionGroup(actionManager);
-        toolbarGroup.addSeparator();
-        actionManager.registerAction(IdeActions.GROUP_MAIN_TOOLBAR, toolbarGroup);
-
+        // Compose New group
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
-//        newGroup.addAction(newProjectAction, Constraints.FIRST);
-        newGroup.addAction(newProjectWizardAction);
-        toolbarGroup.add(newGroup);
-        toolbarGroup.addSeparator();
-        fileGroup.add(newGroup);
-//        fileGroup.add(openProjectAction);
-        fileGroup.add(importProjectAction);
-        fileGroup.add(uploadFileAction);
-        fileGroup.add(navigateToFileAction);
-        fileGroup.add(renameResourceAction);
+        actionManager.registerAction("newProject2", newProjectWizardAction);
         actionManager.registerAction("newResource", newFileAction);
+        newGroup.addAction(newProjectWizardAction);
         newGroup.add(newFileAction);
 
+        actionManager.registerAction("uploadFile", uploadFileAction);
+        actionManager.registerAction("navigateToFile", navigateToFileAction);
+
+        // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
         actionManager.registerAction("saveAll", saveAllAction);
-        actionManager.registerAction("format", formatterAction);
         saveGroup.addSeparator();
         saveGroup.add(saveAction);
         saveGroup.add(saveAllAction);
-        saveGroup.add(formatterAction);
-        toolbarGroup.addSeparator();
-        toolbarGroup.add(saveAllAction);
-        toolbarGroup.addSeparator();
+
+        // Compose File menu
+        DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
+        fileGroup.add(importProjectGroup);
+        fileGroup.add(newGroup);
+        fileGroup.add(uploadFileAction);
+        fileGroup.add(navigateToFileAction);
+        fileGroup.add(renameResourceAction);
         fileGroup.add(saveGroup);
 
+        // Compose Code menu
+        DefaultActionGroup codeGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_CODE);
+        actionManager.registerAction("format", formatterAction);
+        codeGroup.add(formatterAction);
+
+        // Compose Window menu
+        DefaultActionGroup windowGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
+        actionManager.registerAction("showPreferences", showPreferencesAction);
+        windowGroup.add(showPreferencesAction);
+
+        // Compose Help menu
+        DefaultActionGroup helpGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
+        actionManager.registerAction("findActionAction", findActionAction);
+        actionManager.registerAction("showAbout", showAboutAction);
+        helpGroup.add(findActionAction);
+        helpGroup.add(showAboutAction);
+
+
+        // Compose main context menu
+        DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
+        actionManager.registerAction("resourceOperation", resourceOperation);
+        resourceOperation.addSeparator();
+        resourceOperation.add(deleteResourceAction);
+        resourceOperation.add(renameResourceAction);
+
+        DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
+        actionManager.registerAction("closeProjectGroup", closeProjectGroup);
+        closeProjectGroup.addSeparator();
+        closeProjectGroup.add(closeProjectAction);
+
+        DefaultActionGroup mainContextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
+        mainContextMenuGroup.add(newGroup);
+        mainContextMenuGroup.addSeparator();
+        mainContextMenuGroup.add(resourceOperation);
+        mainContextMenuGroup.add(closeProjectGroup);
+
+
+        // Compose main toolbar
         DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("closeProject", closeProjectAction);
@@ -274,26 +261,24 @@ public class StandardComponentInitializer {
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteResourceAction);
         changeResourceGroup.addSeparator();
-        toolbarGroup.add(changeResourceGroup);
 
-        toolbarPresenter.bindMainGroup(toolbarGroup);
+        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_TOOLBAR);
+        mainToolbarGroup.addSeparator();
+        mainToolbarGroup.add(newGroup);
+        mainToolbarGroup.addSeparator();
+        mainToolbarGroup.addSeparator();
+        mainToolbarGroup.add(saveAllAction);
+        mainToolbarGroup.addSeparator();
+        mainToolbarGroup.add(changeResourceGroup);
+        toolbarPresenter.bindMainGroup(mainToolbarGroup);
 
-        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
-        contextMenuGroup.add(newGroup);
-        contextMenuGroup.addSeparator();
 
-        DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
-        resourceOperation.addSeparator();
-        actionManager.registerAction("resourceOperation", resourceOperation);
-        resourceOperation.add(deleteResourceAction);
-        resourceOperation.add(renameResourceAction);
-        contextMenuGroup.add(resourceOperation);
-
-        DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
-        closeProjectGroup.addSeparator();
-        actionManager.registerAction("closeProjectGroup", closeProjectGroup);
-        closeProjectGroup.add(closeProjectAction);
-        contextMenuGroup.add(closeProjectGroup);
+        // Define hot-keys
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
         newProjectWizard.addPage(newProjectPageProvider);
         newProjectWizard.addPage(chooseTemplatePageProvider);

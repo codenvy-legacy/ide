@@ -38,7 +38,7 @@ public class NewHTMLFileProvider extends NewResourceProvider {
 
     @Inject
     public NewHTMLFileProvider() {
-        super("HTML file", "HTML file",null, "html");
+        super("HTML file", "HTML file", null, "html");
     }
 
     /** {@inheritDoc} */

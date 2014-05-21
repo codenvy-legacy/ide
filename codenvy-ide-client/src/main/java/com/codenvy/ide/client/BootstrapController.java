@@ -26,6 +26,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
@@ -44,7 +45,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
@@ -118,21 +118,13 @@ public class BootstrapController {
         this.themeAgent = themeAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
-
-        /**
-         * Register DTO providers
-         */
+        // Register DTO providers
         dtoRegistrar.registerDtoProviders();
 
-        /**
-         * Register default icons
-         */
+        // Register default icons
         registerDefaultIcons(resources);
 
-        /**
-         * Inject CodeMirror scripts
-         */
-
+        // Inject CodeMirror scripts
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
             .setCallback(new Callback<Void, Exception>() {
                 @Override
@@ -160,10 +152,7 @@ public class BootstrapController {
             }).inject();
     }
 
-
-    /**
-     * Get User profile, restore preferences and theme
-     */
+    /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
                  new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
@@ -193,10 +182,7 @@ public class BootstrapController {
             );
     }
 
-
-    /**
-     * Initialize Component Registry, start extensions
-     */
+    /** Initialize Component Registry, start extensions */
     private void initializeComponentRegistry() {
         componentRegistry.get().start(new Callback<Void, ComponentException>() {
             @Override
@@ -216,10 +202,7 @@ public class BootstrapController {
         });
     }
 
-
-    /**
-     * Register project types
-     */
+    /** Register project types */
     private void registerProjectTypes() {
         projectTypeDescriptionServiceClient.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
                 dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
@@ -245,13 +228,9 @@ public class BootstrapController {
                 initializationFailed("Unable to get list of project types");
             }
         });
-
     }
 
-
-    /**
-     * Displays the IDE
-     */
+    /** Displays the IDE */
     private void displayIDE() {
         // Start UI
         SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
@@ -259,9 +238,7 @@ public class BootstrapController {
         RootLayoutPanel.get().add(mainPanel);
         WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
-        /**
-         * Display 'Update extension' button if IDE is launched in SDK runner
-         */
+        // Display 'Update extension' button if IDE is launched in SDK runner
         workspacePresenter.setUpdateButtonVisibility(
                 Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
 
@@ -285,10 +262,7 @@ public class BootstrapController {
         }
     }
 
-
-    /**
-     * Applying user defined Theme.
-     */
+    /** Applying user defined Theme. */
     private void setTheme() {
         String storedThemeId = preferencesManager.getValue("Theme");
         storedThemeId = storedThemeId != null ? storedThemeId : themeAgent.getCurrentThemeId();
@@ -297,19 +271,12 @@ public class BootstrapController {
         themeAgent.setCurrentThemeId(themeToSet.getId());
     }
 
-
-    /**
-     * Registers default icons for resources.
-     *
-     * @param resources
-     */
     private void registerDefaultIcons(Resources resources) {
-        iconRegistry.registerSVGIcon("default.projecttype.small.icon", resources.defaultProject());
-        iconRegistry.registerSVGIcon("default.folder.small.icon", resources.defaultFolder());
-        iconRegistry.registerSVGIcon("default.file.small.icon", resources.defaultFile());
-        iconRegistry.registerSVGIcon("default", resources.defaultIcon());
+        iconRegistry.registerIcon(new Icon("default.projecttype.small.icon", "default/project.png", resources.defaultProject()));
+        iconRegistry.registerIcon(new Icon("default.folder.small.icon", "default/folder.png", resources.defaultFolder()));
+        iconRegistry.registerIcon(new Icon("default.file.small.icon", "default/file.png", resources.defaultFile()));
+        iconRegistry.registerIcon(new Icon("default", "default/default.jpg", resources.defaultIcon()));
     }
-
 
     /**
      * Handles any of initialization errors.
@@ -324,6 +291,5 @@ public class BootstrapController {
             console.log(e.message);
         }
     }-*/;
-
 
 }

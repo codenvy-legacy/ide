@@ -39,7 +39,7 @@ public class NewEnumProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewEnumProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
-        super("Java Enum", "Java Enum", iconRegistry.getIcon("java.class"), "java", selectionAgent);
+        super("Java Enum", "Java Enum", iconRegistry.getIcon("java.class").getImage(), "java", selectionAgent);
         this.iconRegistry = iconRegistry;
     }
 

@@ -42,7 +42,7 @@ public class XmlFileProvider extends NewResourceProvider {
 
     @Inject
     public XmlFileProvider(IconRegistry iconRegistry) {
-        super("Xml file", "Xml file", iconRegistry.getIcon("default.xml"), "xml");
+        super("Xml file", "Xml file", iconRegistry.getIcon("default.xml").getImage(), "xml");
     }
 
     /** {@inheritDoc} */

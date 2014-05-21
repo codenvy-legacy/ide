@@ -44,7 +44,7 @@ public class CssFileProvider extends NewResourceProvider {
 
     @Inject
     public CssFileProvider(IconRegistry iconRegistry) {
-        this("Css css", iconRegistry.getIcon("web.css.file.small.icon"), "css");
+        this("Css css", iconRegistry.getIcon("web.css.file.small.icon").getImage(), "css");
     }
 
     /** {@inheritDoc} */

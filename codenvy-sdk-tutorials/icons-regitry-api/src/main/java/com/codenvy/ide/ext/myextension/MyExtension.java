@@ -7,6 +7,7 @@ package com.codenvy.ide.ext.myextension;
  */
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -32,7 +33,7 @@ public class MyExtension
 {
     @Inject
     public MyExtension(ActionManager actionManager, MyAction action, IconRegistry iconRegistry) {
-        iconRegistry.registerIcon("my.icon", "my-extension/mammoth_happy.png");
+        iconRegistry.registerIcon(new Icon("my.icon", "my-extension/mammoth_happy.png"));
         actionManager.registerAction("HelloWorldID", action);
 
         DefaultActionGroup contextMenu = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
