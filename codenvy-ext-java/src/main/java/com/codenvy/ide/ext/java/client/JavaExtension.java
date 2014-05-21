@@ -34,12 +34,14 @@ import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
+import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
@@ -75,7 +77,7 @@ public class JavaExtension {
     private String              workspaceId;
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
-    private JavaParserWorker parserWorker;
+    private JavaParserWorker    parserWorker;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,

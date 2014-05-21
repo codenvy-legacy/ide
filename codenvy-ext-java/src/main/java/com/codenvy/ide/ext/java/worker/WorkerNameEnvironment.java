@@ -44,7 +44,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
     private static Set<String> packages = new HashSet<>();
     protected String restServiceContext;
     private   String projectPath;
-    private Set<String> blackList = new HashSet<>();
+    private Set<String> blackListTypes = new HashSet<>();
+    private Set<String> blackListPackages = new HashSet<>();
 
     /**
      *
@@ -67,7 +68,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
         b.deleteCharAt(b.length() - 1);
 
         final String key = validateFqn(b);
-        if(blackList.contains(key)){
+        if(blackListTypes.contains(key)){
             return null;
         }
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
@@ -94,7 +95,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
                 return new NameEnvironmentAnswer(type, null);
             } else {
-                blackList.add(key);
+                blackListTypes.add(key);
                 return null;
             }
         }
@@ -121,7 +122,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
         }
         b.append(typeName);
         final String key = validateFqn(b);
-        if(blackList.contains(key)){
+        if(blackListTypes.contains(key)){
             return null;
         }
         if (WorkerTypeInfoStorage.get().containsKey(key)) {
@@ -149,7 +150,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
 
                 return new NameEnvironmentAnswer(type, null);
             } else {
-                blackList.add(key);
+                blackListTypes.add(key);
                 return null;
             }
         }
@@ -171,7 +172,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             if (packages.contains(p.toString())) {
                 return true;
             }
-            if (blackList.contains(p.toString())) {
+            if (blackListPackages.contains(p.toString())) {
                 return false;
             }
             StringBuilder builder = new StringBuilder();
@@ -190,7 +191,7 @@ public class WorkerNameEnvironment implements INameEnvironment {
             if (exist) {
                 packages.add(p.toString());
             } else {
-                blackList.add(p.toString());
+                blackListPackages.add(p.toString());
             }
             return exist;
 
@@ -342,7 +343,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
     }
 
     public void clearBlackList() {
-        blackList.clear();
+        blackListPackages.clear();
+        blackListTypes.clear();
     }
 
     private static final class XmlHttpWraper extends JavaScriptObject {
