@@ -81,7 +81,9 @@ public class ApiModule extends AbstractModule {
     protected void configure() {
         bind(ProjectService.class);
         bind(ProjectTypeDescriptionService.class);
+        bind(com.codenvy.api.project.server.ProjectImportersService.class);
         bind(LocalFileSystemRegistryPlugin.class);
+        bind(com.codenvy.api.workspace.server.WorkspaceService.class);
         bind(LocalFSMountStrategy.class).to(WorkspaceHashLocalFSMountStrategy.class);
         bind(SearcherProvider.class).to(CleanableSearcherProvider.class);
         bind(RequestValidator.class).toProvider(Providers.<RequestValidator>of(null));

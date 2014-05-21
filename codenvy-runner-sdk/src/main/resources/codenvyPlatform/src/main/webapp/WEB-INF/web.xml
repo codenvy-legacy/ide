@@ -43,7 +43,7 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>Dispatcher</servlet-name>
+        <servlet-name>IDE</servlet-name>
         <!--servlet-class>com.codenvy.commons.servlet.DispatcherServlet</servlet-class-->
         <jsp-file>/IDE.jsp</jsp-file>
     </servlet>
