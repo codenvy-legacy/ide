@@ -17,12 +17,18 @@
  */
 package com.codenvy.ide.factory.client.welcome;
 
+import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
  * @author Vitaliy Guliy
  */
 public interface GreetingPart extends PartPresenter {
+
+    void showGreeting();
+
+    void showGreeting(Factory factory);
+
 
     void showGreeting(String title, String iconURL, String greetingContentURL, String notification);
 
