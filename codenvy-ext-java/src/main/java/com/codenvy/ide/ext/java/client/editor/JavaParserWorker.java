@@ -32,20 +32,11 @@ import com.codenvy.ide.text.edits.TextEdit;
  */
 public interface JavaParserWorker {
 
-    public interface WorkerCallback<T> {
-        void onResult(Array<T> problems);
-    }
-
-    public interface ApplyCallback {
-        void onApply(ProposalAppliedMessage message);
-    }
-    public interface FormatResultCallback {
-        void onApplyFormat(TextEdit edit);
-    }
+    void dependenciesUpdated();
 
     void parse(String content, String fileName, String fileId, String packageName, String projectPath, WorkerCallback<IProblem> callback);
 
-    void computeCAProposals(String content, int offset, String fileName,String projectPath, WorkerCallback<WorkerProposal> callback);
+    void computeCAProposals(String content, int offset, String fileName, String projectPath, WorkerCallback<WorkerProposal> callback);
 
     void applyCAProposal(String id, ApplyCallback callback);
 
@@ -58,6 +49,19 @@ public interface JavaParserWorker {
     void removeFanFromCache(String fqn);
 
     void format(int offset, int length, String content, FormatResultCallback callback);
+
     void preferenceFormatsettings(JsoStringMap<String> settings);
+
+    public interface WorkerCallback<T> {
+        void onResult(Array<T> problems);
+    }
+
+    public interface ApplyCallback {
+        void onApply(ProposalAppliedMessage message);
+    }
+
+    public interface FormatResultCallback {
+        void onApplyFormat(TextEdit edit);
+    }
 
 }
