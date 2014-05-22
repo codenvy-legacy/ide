@@ -47,8 +47,8 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-                                   MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources , DataGridResources,
-                                   CellTableResources{
+                                   MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources, DataGridResources,
+                                   CellTableResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
@@ -60,6 +60,10 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
         String mainFont();
 
         String mainBoldFont();
+
+        String defaultFont();
+
+        String warningFont();
 
         String errorFont();
 
@@ -109,73 +113,73 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("texteditor/save-all.png")
     ImageResource saveAll();
-    
+
     @Source("texteditor/open-list.png")
     ImageResource listOpenedEditors();
 
     @Source("xml/xml_file.png")
     ImageResource xmlFile();
-    
+
     @Source("about/logo.png")
     ImageResource logo();
-    
+
     @Source("console/clear.svg")
     SVGResource clear();
-    
+
     @Source("actions/about.svg")
     SVGResource about();
-    
+
     @Source("actions/close-project.svg")
     SVGResource closeProject();
-    
+
     @Source("actions/delete.svg")
     SVGResource delete();
-    
+
     @Source("actions/new-resource.svg")
     SVGResource newResource();
-    
+
     @Source("actions/navigate-to-file.svg")
     SVGResource navigateToFile();
-    
+
     @Source("actions/open-project.svg")
     SVGResource openProject();
-    
+
     @Source("actions/save.svg")
     SVGResource save();
-    
+
     @Source("actions/preferences.svg")
     SVGResource preferences();
-    
+
     @Source("actions/rename.svg")
     SVGResource rename();
-    
+
     @Source("actions/format.svg")
     SVGResource format();
-    
+
     @Source("actions/import.svg")
     SVGResource importProject();
-    
+
     @Source("actions/upload-file.svg")
     SVGResource uploadFile();
-    
+
     @Source("project/private-project.svg")
     SVGResource privateProject();
-    
+
     @Source("project/public-project.svg")
     SVGResource publicProject();
-    
+
     @Source("workspace/codenvy-placeholder.png")
     ImageResource codenvyPlaceholder();
-    
+
     @Source("defaulticons/file.svg")
     SVGResource defaultFile();
-    
+
     @Source("defaulticons/default.svg")
     SVGResource defaultIcon();
-    
+
     @Source("defaulticons/folder.svg")
     SVGResource defaultFolder();
-    
+
     @Source("defaulticons/project.svg")
     SVGResource defaultProject();
 }

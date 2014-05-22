@@ -25,12 +25,14 @@ import elemental.html.TableElement;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
+import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -51,6 +53,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.OMSVGStyleElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.validation.constraints.NotNull;
@@ -83,19 +86,20 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     Label                           vmName;
     @UiField
+    Label                           variablesInfo;
+    @UiField
     ScrollPanel                     variablesPanel;
     @UiField
     ScrollPanel                     breakpointsPanel;
     @UiField(provided = true)
     JavaRuntimeLocalizationConstant locale;
     @UiField(provided = true)
-    JavaRuntimeResources            res;
-    @UiField(provided = true)
     Resources                       coreRes;
     private final DtoFactory                dtoFactory;
     private       SimpleList<Breakpoint>    breakpoints;
     private       Tree<Variable>            variables;
     private       TreeNodeElement<Variable> selectedVariable;
+    private       JavaRuntimeResources      res;
 
     /**
      * Create view.
@@ -227,6 +231,22 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
         widget.setHeight("100%");
         this.variablesPanel.add(widget);
         minimizeButton.ensureDebugId("debugger-minimizeBut");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setVariablesInfo(boolean existInformation, Location location) {
+        StringBuilder labelText = new StringBuilder();
+        if (location != null) {
+            labelText.append("{" + location.getClassName() + ":" + location.getLineNumber() + "} ");
+        }
+        if (existInformation) {
+            variablesInfo.getElement().setClassName(coreRes.coreCss().defaultFont());
+        } else {
+            labelText.append(locale.absentInformationVariables());
+            variablesInfo.getElement().setClassName(coreRes.coreCss().warningFont());
+        }
+        variablesInfo.setText(labelText.toString());
     }
 
     /** {@inheritDoc} */
