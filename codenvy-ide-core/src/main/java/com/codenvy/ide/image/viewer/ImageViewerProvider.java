@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.image.editor;
+package com.codenvy.ide.image.viewer;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
@@ -27,12 +27,12 @@ import com.google.inject.Provider;
  * 
  * @author Ann Shumilova
  */
-public class ImageEditorProvider implements EditorProvider {
-    private Provider<ImageEditor>     editorProvider;
+public class ImageViewerProvider implements EditorProvider {
+    private Provider<ImageViewer>     editorProvider;
 
     /** @param documentProvider */
     @Inject
-    public ImageEditorProvider(Provider<ImageEditor> editorProvider) {
+    public ImageViewerProvider(Provider<ImageViewer> editorProvider) {
         super();
         this.editorProvider = editorProvider;
     }

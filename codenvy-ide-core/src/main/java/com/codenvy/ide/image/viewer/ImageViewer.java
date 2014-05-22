@@ -15,7 +15,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.image.editor;
+package com.codenvy.ide.image.viewer;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * 
  * @author Ann Shumilova
  */
-public class ImageEditor extends AbstractEditorPresenter {
+public class ImageViewer extends AbstractEditorPresenter {
 
     /** {@inheritDoc} */
     @Override

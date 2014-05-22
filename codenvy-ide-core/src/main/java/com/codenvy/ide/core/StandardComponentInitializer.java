@@ -44,7 +44,7 @@ import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
-import com.codenvy.ide.image.editor.ImageEditorProvider;
+import com.codenvy.ide.image.viewer.ImageViewerProvider;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
@@ -94,7 +94,7 @@ public class StandardComponentInitializer {
     private XmlEditorProvider                     xmlEditorProvider;
 
     @Inject
-    private ImageEditorProvider                   imageEditorProvider;
+    private ImageViewerProvider                   imageViewerProvider;
 
     @Inject
     private NewResourceAgentImpl                  newResourceAgent;
@@ -184,35 +184,35 @@ public class StandardComponentInitializer {
 
         FileType pngFile = new FileType(null, MimeType.IMAGE_PNG, "png");
         resourceProvider.registerFileType(pngFile);
-        editorRegistry.register(pngFile, imageEditorProvider);
+        editorRegistry.register(pngFile, imageViewerProvider);
 
         FileType bmpFile = new FileType(null, MimeType.IMAGE_BMP, "bmp");
         resourceProvider.registerFileType(bmpFile);
-        editorRegistry.register(bmpFile, imageEditorProvider);
+        editorRegistry.register(bmpFile, imageViewerProvider);
 
         FileType gifFile = new FileType(null, MimeType.IMAGE_GIF, "gif");
         resourceProvider.registerFileType(gifFile);
-        editorRegistry.register(gifFile, imageEditorProvider);
+        editorRegistry.register(gifFile, imageViewerProvider);
 
         FileType iconFile = new FileType(null, MimeType.IMAGE_X_ICON, "ico");
         resourceProvider.registerFileType(iconFile);
-        editorRegistry.register(iconFile, imageEditorProvider);
+        editorRegistry.register(iconFile, imageViewerProvider);
 
         FileType svgFile = new FileType(null, MimeType.IMAGE_SVG_XML, "svg");
         resourceProvider.registerFileType(svgFile);
-        editorRegistry.register(svgFile, imageEditorProvider);
+        editorRegistry.register(svgFile, imageViewerProvider);
 
         FileType jpeFile = new FileType(null, MimeType.IMAGE_JPEG, "jpe");
         resourceProvider.registerFileType(jpeFile);
-        editorRegistry.register(jpeFile, imageEditorProvider);
+        editorRegistry.register(jpeFile, imageViewerProvider);
 
         FileType jpegFile = new FileType(null, MimeType.IMAGE_JPEG, "jpeg");
         resourceProvider.registerFileType(jpegFile);
-        editorRegistry.register(jpegFile, imageEditorProvider);
+        editorRegistry.register(jpegFile, imageViewerProvider);
 
         FileType jpgFile = new FileType(null, MimeType.IMAGE_JPEG, "jpg");
         resourceProvider.registerFileType(jpgFile);
-        editorRegistry.register(jpgFile, imageEditorProvider);
+        editorRegistry.register(jpgFile, imageViewerProvider);
 
         // Compose Import Project group
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
