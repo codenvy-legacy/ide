@@ -79,6 +79,7 @@ public class Project extends Folder {
         id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
+        setLinks(itemReference.getLinks());
     }
 
     @Override

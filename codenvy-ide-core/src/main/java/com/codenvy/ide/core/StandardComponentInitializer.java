@@ -44,6 +44,7 @@ import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
+import com.codenvy.ide.image.viewer.ImageViewerProvider;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.NewResourceAgentImpl;
@@ -61,7 +62,7 @@ import com.google.inject.Singleton;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
- *
+ * 
  * @author Evgen Vidolob
  */
 @Singleton
@@ -69,98 +70,101 @@ public class StandardComponentInitializer {
 
     @Inject
     @NewResource
-    private DefaultWizard newResourceWizard;
+    private DefaultWizard                         newResourceWizard;
 
     @Inject
-    private Provider<NewResourcePagePresenter> chooseResourcePage;
+    private Provider<NewResourcePagePresenter>    chooseResourcePage;
 
     @Inject
-    private EditorRegistry editorRegistry;
+    private EditorRegistry                        editorRegistry;
 
     @Inject
-    private ResourceProvider resourceProvider;
+    private ResourceProvider                      resourceProvider;
 
     @Inject
-    private NewFolderProvider folderProvider;
+    private NewFolderProvider                     folderProvider;
 
     @Inject
-    private NewFileProvider textFileProvider;
+    private NewFileProvider                       textFileProvider;
 
     @Inject
-    private XmlFileProvider xmlFileProvider;
+    private XmlFileProvider                       xmlFileProvider;
 
     @Inject
-    private XmlEditorProvider xmlEditorProvider;
+    private XmlEditorProvider                     xmlEditorProvider;
 
     @Inject
-    private NewResourceAgentImpl newResourceAgent;
+    private ImageViewerProvider                   imageViewerProvider;
 
     @Inject
-    private Resources resources;
+    private NewResourceAgentImpl                  newResourceAgent;
 
     @Inject
-    private KeyBindingAgent keyBinding;
+    private Resources                             resources;
 
     @Inject
-    private ActionManager actionManager;
+    private KeyBindingAgent                       keyBinding;
 
     @Inject
-    private SaveAction saveAction;
+    private ActionManager                         actionManager;
 
     @Inject
-    private SaveAllAction saveAllAction;
+    private SaveAction                            saveAction;
 
     @Inject
-    private NewResourceAction newFileAction;
+    private SaveAllAction                         saveAllAction;
 
     @Inject
-    private ShowPreferencesAction showPreferencesAction;
+    private NewResourceAction                     newFileAction;
 
     @Inject
-    private ShowAboutAction showAboutAction;
+    private ShowPreferencesAction                 showPreferencesAction;
 
     @Inject
-    private FindActionAction findActionAction;
+    private ShowAboutAction                       showAboutAction;
 
     @Inject
-    private NavigateToFileAction navigateToFileAction;
+    private FindActionAction                      findActionAction;
+
+    @Inject
+    private NavigateToFileAction                  navigateToFileAction;
 
     @Inject
     @MainToolbar
-    private ToolbarPresenter toolbarPresenter;
+    private ToolbarPresenter                      toolbarPresenter;
 
     @Inject
-    private DeleteResourceAction deleteResourceAction;
+    private DeleteResourceAction                  deleteResourceAction;
 
     @Inject
-    private RenameResourceAction renameResourceAction;
+    private RenameResourceAction                  renameResourceAction;
 
     @Inject
-    private CloseProjectAction closeProjectAction;
+    private CloseProjectAction                    closeProjectAction;
 
     @Inject
-    private NewProjectWizard newProjectWizard;
+    private NewProjectWizard                      newProjectWizard;
 
     @Inject
-    private Provider<NewProjectPagePresenter> newProjectPageProvider;
+    private Provider<NewProjectPagePresenter>     newProjectPageProvider;
 
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
     @Inject
-    private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
+    private Provider<SelectPaasPagePresenter>     selectPaasPagePresenterProvider;
 
     @Inject
-    private FormatterAction formatterAction;
+    private FormatterAction                       formatterAction;
 
     @Inject
-    private UploadFileAction uploadFileAction;
+    private UploadFileAction                      uploadFileAction;
 
     @Inject
-    private ImportProjectFromLocationAction importProjectFromLocationAction;
+    private ImportProjectFromLocationAction       importProjectFromLocationAction;
 
     @Inject
-    private NewProjectWizardAction newProjectWizardAction;
+    private NewProjectWizardAction                newProjectWizardAction;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
@@ -178,6 +182,37 @@ public class StandardComponentInitializer {
         newResourceAgent.register(xmlFileProvider);
         editorRegistry.register(xmlFile, xmlEditorProvider);
 
+        FileType pngFile = new FileType(null, MimeType.IMAGE_PNG, "png");
+        resourceProvider.registerFileType(pngFile);
+        editorRegistry.register(pngFile, imageViewerProvider);
+
+        FileType bmpFile = new FileType(null, MimeType.IMAGE_BMP, "bmp");
+        resourceProvider.registerFileType(bmpFile);
+        editorRegistry.register(bmpFile, imageViewerProvider);
+
+        FileType gifFile = new FileType(null, MimeType.IMAGE_GIF, "gif");
+        resourceProvider.registerFileType(gifFile);
+        editorRegistry.register(gifFile, imageViewerProvider);
+
+        FileType iconFile = new FileType(null, MimeType.IMAGE_X_ICON, "ico");
+        resourceProvider.registerFileType(iconFile);
+        editorRegistry.register(iconFile, imageViewerProvider);
+
+        FileType svgFile = new FileType(null, MimeType.IMAGE_SVG_XML, "svg");
+        resourceProvider.registerFileType(svgFile);
+        editorRegistry.register(svgFile, imageViewerProvider);
+
+        FileType jpeFile = new FileType(null, MimeType.IMAGE_JPEG, "jpe");
+        resourceProvider.registerFileType(jpeFile);
+        editorRegistry.register(jpeFile, imageViewerProvider);
+
+        FileType jpegFile = new FileType(null, MimeType.IMAGE_JPEG, "jpeg");
+        resourceProvider.registerFileType(jpegFile);
+        editorRegistry.register(jpegFile, imageViewerProvider);
+
+        FileType jpgFile = new FileType(null, MimeType.IMAGE_JPEG, "jpg");
+        resourceProvider.registerFileType(jpgFile);
+        editorRegistry.register(jpgFile, imageViewerProvider);
 
         // Compose Import Project group
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
