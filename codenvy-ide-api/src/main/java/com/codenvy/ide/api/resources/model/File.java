@@ -82,6 +82,7 @@ public class File extends Resource {
         id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
+        setLinks(itemReference.getLinks());
         this.contentChanged = false;
         fixMimeType();
     }
