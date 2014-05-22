@@ -60,6 +60,7 @@ public class Folder extends Resource {
         id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
+        setLinks(itemReference.getLinks());
     }
 
     public void init(JSONObject itemObject) {
