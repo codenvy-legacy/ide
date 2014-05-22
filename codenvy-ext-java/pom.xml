@@ -37,11 +37,6 @@
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-builder-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
         </dependency>
