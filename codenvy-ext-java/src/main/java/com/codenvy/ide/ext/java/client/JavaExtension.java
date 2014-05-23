@@ -248,7 +248,7 @@ public class JavaExtension {
                 if (object.containsKey("message")) {
                     notification.setMessage(object.get("message").isString().stringValue());
                 } else {
-                    notification.setMessage("Update dependencies fail");
+                    notification.setMessage("Updating dependencies failed");
                 }
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);
