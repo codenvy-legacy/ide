@@ -32,6 +32,7 @@ import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.UIObject;
 
 
 /** A renderer for the line numbers in the left gutter. */
@@ -157,6 +158,7 @@ public class LineNumberRenderer {
                 LineNumberRenderer.this.breakpointGutterManager.changeBreakPointState(lineNumber);
             }
         });
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)leftGutter.getGutterElement(), "lineNumberPanel");
     }
 
     void renderImpl(int updateBeginLineNumber) {
