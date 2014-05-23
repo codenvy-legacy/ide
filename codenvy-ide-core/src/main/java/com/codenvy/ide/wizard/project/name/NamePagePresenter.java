@@ -32,6 +32,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -75,7 +77,7 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     @Override
     public boolean isCompleted() {
-            return !view.getProjectName().equals("");
+        return !view.getProjectName().equals("");
     }
 
     @Override
@@ -101,6 +103,24 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
             return;
         }
         final String projectName = view.getProjectName();
+
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                Info info = new Info("Project already exist");
+                info.show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                //project doesn't exist
+                importProject(callback, templateDescriptor, projectName);
+            }
+        });
+
+    }
+
+    private void importProject(final CommitCallback callback, ProjectTemplateDescriptor templateDescriptor, final String projectName) {
         projectService.importProject(projectName, templateDescriptor.getSources(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
@@ -109,7 +129,6 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
                                              resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
                                                  @Override
                                                  public void onSuccess(Project project) {
-//                                                     wizardContext.putData(PROJECT, result);
                                                      callback.onSuccess();
                                                  }
 
@@ -134,7 +153,7 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
         wizard = null;
 
         final Project project = wizardContext.getData(ProjectWizard.PROJECT);
-        if(project!= null){
+        if (project != null) {
             view.setProjectName(project.getName());
             Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override
@@ -144,7 +163,7 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
             });
         }
         ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
-        if(descriptor != null){
+        if (descriptor != null) {
             wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
             if (wizard != null) {
                 wizard.flipToFirst();
@@ -155,18 +174,18 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
 
     public Array<String> getStepsCaptions() {
         Array<String> stringArray = Collections.createArray("Choose Project", getCaption());
-        if(wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE) != null) {
+        if (wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE) != null) {
             return stringArray;
         }
-        if(wizard != null){
+        if (wizard != null) {
             stringArray.addAll(wizard.getStepsCaptions());
             return stringArray;
         }
         return Collections.createArray("");
     }
 
-    public Array<WizardPage> getNextPages(){
-        if(wizard != null){
+    public Array<WizardPage> getNextPages() {
+        if (wizard != null) {
             return wizard.getPages();
         }
         return null;
