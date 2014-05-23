@@ -49,8 +49,5 @@
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
-        <g:north size="50.0">
-            <g:CheckBox ui:field="bare" HTML="{locale.createBareFieldTitle}" debugId="git-initializeRepository-bare"/>
-        </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>

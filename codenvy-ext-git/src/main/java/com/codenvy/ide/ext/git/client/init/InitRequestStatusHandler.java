@@ -39,7 +39,6 @@ public class InitRequestStatusHandler implements RequestStatusHandler {
      *         project's name
      */
     public InitRequestStatusHandler(@NotNull String projectName, @NotNull EventBus eventBus, @NotNull GitLocalizationConstant constant) {
-        super();
         this.projectName = projectName;
         this.eventBus = eventBus;
         this.constant = constant;
