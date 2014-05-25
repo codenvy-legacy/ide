@@ -48,9 +48,6 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("choosePaas")
     String choosePaaS();
 
-    @Key("choosePaasTooltip")
-    String choosePaaSTooltip();
-
     @Key("noTechnologyTitle")
     String noTechnologyTitle();
 
@@ -77,10 +74,10 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("setProjectTypeTitle")
     String setProjectTypeTitle();
-    
+
     @Key("navigateToFile.view.title")
     String navigateToFileViewTitle();
-    
+
     @Key("navigateToFile.view.file.field.title")
     String navigateToFileViewFileFieldTitle();
 
@@ -89,13 +86,13 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("deleteResourceQuestion")
     String deleteResourceQuestion(String resource);
-    
+
     @Key("renameButton")
     String renameButton();
-    
+
     @Key("renameResourceViewTitle")
     String renameResourceViewTitle();
-    
+
     @Key("renameFieldTitle")
     String renameFieldTitle();
 
@@ -170,28 +167,55 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
-    
+
+    /* Actions */
+    @Key("action.newFolder.title")
+    String actionNewFolderTitle();
+
+    @Key("action.newFolder.description")
+    String actionNewFolderDescription();
+
+    @Key("action.newFile.title")
+    String actionNewFileTitle();
+
+    @Key("action.newFile.description")
+    String actionNewFileDescription();
+
+    @Key("action.newXmlFile.title")
+    String actionNewXmlFileTitle();
+
+    @Key("action.newXmlFile.description")
+    String actionNewXmlFileDescription();
+
+    /* NewResource */
+    @Key("newResource.title")
+    String newResourceTitle(String title);
+
+    @Key("newResource.label")
+    String newResourceLabel();
+
+    /* Buttons */
     @Key("ok")
     String ok();
-    
+
     @Key("cancel")
     String cancel();
-    
+
     @Key("open")
     String open();
-    
+
     @Key("next")
     String next();
-    
+
     @Key("back")
     String back();
-    
+
     @Key("finish")
     String finish();
-    
+
     @Key("close")
     String close();
-    
+
     @Key("apply")
     String apply();
 

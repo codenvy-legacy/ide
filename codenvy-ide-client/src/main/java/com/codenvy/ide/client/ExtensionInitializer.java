@@ -52,7 +52,6 @@ public class ExtensionInitializer {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("rawtypes")
     public void startExtensions() {
         String value = preferencesManager.getValue("ExtensionsPreferences");
         final Jso jso = Jso.deserialize(value == null ? "{}" : value);

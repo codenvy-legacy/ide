@@ -22,13 +22,14 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
-import com.codenvy.ide.ext.web.css.CssFileProvider;
-import com.codenvy.ide.ext.web.css.LessFileProvider;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.ext.web.css.NewCssFileAction;
+import com.codenvy.ide.ext.web.css.NewLessFileAction;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
-import com.codenvy.ide.ext.web.html.HtmlFileProvider;
+import com.codenvy.ide.ext.web.html.NewHtmlFileAction;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorProvider;
-import com.codenvy.ide.ext.web.js.JsFileProvider;
+import com.codenvy.ide.ext.web.js.NewJavaScriptFileAction;
 import com.codenvy.ide.ext.web.js.editor.JsEditorProvider;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
@@ -38,9 +39,10 @@ import com.google.inject.Singleton;
 
 /**
  * Extension add editing JavaScript, HTML, CSS css type support to the IDE Application.
- * It provides configured TextEditorView with {@link com.codenvy.ide.ext.web.css.editor.CssEditorProvider} with syntax coloring and autocomplete.
+ * It provides configured TextEditorView with {@link com.codenvy.ide.ext.web.css.editor.CssEditorProvider}
+ * with syntax coloring and autocomplete.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 @Extension(title = "Web", version = "3.0.0", description = "syntax highlighting and autocomplete.")
@@ -60,32 +62,41 @@ public class WebExtension {
                         JsEditorProvider jsEditorProvider,
                         CssEditorProvider cssEditorProvider,
                         EditorRegistry editorRegistry,
-                        NewResourceAgent newResourceAgent,
-                        CssFileProvider cssFileProvider,
-                        LessFileProvider lessFileProvider,
-                        JsFileProvider jsFileProvider,
-                        HtmlFileProvider htmlFileProvider,
-                        ParserResource res) {
+                        ParserResource res,
+                        WebLocalizationConstant constant,
+                        ActionManager actionManager,
+                        NewCssFileAction newCssFileAction,
+                        NewLessFileAction newLessFileAction,
+                        NewHtmlFileAction newHtmlFileAction,
+                        NewJavaScriptFileAction newJavaScriptFileAction) {
+        // Register and add actions
+        actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);
+        actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
+        actionManager.registerAction(constant.newHtmlFileActionId(), newHtmlFileAction);
+        actionManager.registerAction(constant.newJavaScriptFileActionId(), newJavaScriptFileAction);
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction("newGroup");
+        newGroup.addSeparator();
+        newGroup.add(newCssFileAction);
+        newGroup.add(newLessFileAction);
+        newGroup.add(newHtmlFileAction);
+        newGroup.add(newJavaScriptFileAction);
+
         // Create and register new File types
-        //CSS
+        // CSS
         FileType cssFile = new FileType(null, MimeType.TEXT_CSS, "css");
         resourceProvider.registerFileType(cssFile);
-        newResourceAgent.register(cssFileProvider);
 
         // Also register .less files
         FileType lessFile = new FileType(null, MimeType.TEXT_CSS, "less");
         resourceProvider.registerFileType(lessFile);
-        newResourceAgent.register(lessFileProvider);
 
-        //JS
+        // JS
         FileType jsFile = new FileType(null, MimeType.TEXT_JAVASCRIPT, "js");
         resourceProvider.registerFileType(jsFile);
-        newResourceAgent.register(jsFileProvider);
 
-        //HTML
+        // HTML
         FileType htmlFile = new FileType(null, MimeType.TEXT_HTML, "html");
         resourceProvider.registerFileType(htmlFile);
-        newResourceAgent.register(htmlFileProvider);
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);

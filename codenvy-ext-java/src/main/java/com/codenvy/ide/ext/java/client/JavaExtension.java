@@ -38,17 +38,15 @@ import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewAnnotationProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewClassProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewEnumProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewInterfaceProvider;
-import com.codenvy.ide.ext.java.client.wizard.NewPackageProvider;
+import com.codenvy.ide.ext.java.client.newresource.NewClassAction;
+import com.codenvy.ide.ext.java.client.newresource.NewEnumAction;
+import com.codenvy.ide.ext.java.client.newresource.NewInterfaceAction;
+import com.codenvy.ide.ext.java.client.newresource.NewPackageAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -83,12 +81,6 @@ public class JavaExtension {
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
                          EventBus eventBus,
-                         NewResourceAgent newResourceAgent,
-                         NewClassProvider newClassHandler,
-                         NewInterfaceProvider newInterfaceHandler,
-                         NewEnumProvider newEnumHandler,
-                         NewAnnotationProvider newAnnotationHandler,
-                         NewPackageProvider newPackage,
                          @Named("restContext") String restContext,
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
@@ -97,7 +89,13 @@ public class JavaExtension {
                          IconRegistry iconRegistry,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          EditorAgent editorAgent,
-                         AnalyticsEventLogger eventLogger, JavaResources resources) {
+                         AnalyticsEventLogger eventLogger,
+                         JavaResources resources,
+                         JavaLocalizationConstant localizationConstant,
+                         NewClassAction newClassAction,
+                         NewInterfaceAction newInterfaceAction,
+                         NewEnumAction newEnumAction,
+                         NewPackageAction newPackageAction) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
@@ -158,6 +156,18 @@ public class JavaExtension {
 
         JavaResources.INSTANCE.css().ensureInjected();
 
+        // add actions to New group
+        actionManager.registerAction(localizationConstant.actionNewClassId(), newClassAction);
+        actionManager.registerAction(localizationConstant.actionNewInterfaceId(), newInterfaceAction);
+        actionManager.registerAction(localizationConstant.actionNewEnumId(), newEnumAction);
+        actionManager.registerAction(localizationConstant.actionNewEnumId(), newPackageAction);
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction("newGroup");
+        newGroup.addSeparator();
+        newGroup.add(newClassAction);
+        newGroup.add(newInterfaceAction);
+        newGroup.add(newEnumAction);
+        newGroup.add(newPackageAction);
+
         // add actions in context menu
         DefaultActionGroup buildContextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextMenuGroup.addSeparator();
@@ -167,12 +177,6 @@ public class JavaExtension {
 
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
         buildMenuActionGroup.add(dependencyAction);
-
-        newResourceAgent.register(newClassHandler);
-        newResourceAgent.register(newInterfaceHandler);
-        newResourceAgent.register(newEnumHandler);
-        newResourceAgent.register(newAnnotationHandler);
-        newResourceAgent.register(newPackage);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override

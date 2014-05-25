@@ -21,11 +21,9 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.wysiwyg.part.TutorialHowToPresenter;
-import com.codenvy.ide.tutorial.wysiwyg.wizard.NewHTMLFileProvider;
 import com.google.inject.Inject;
 
 /**
@@ -37,12 +35,10 @@ public class WysiwygExtension {
 
     @Inject
     public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry,
-                            NewHTMLFileProvider newHTMLFileProvider, NewResourceAgent newResourceAgent, WorkspaceAgent workspaceAgent,
-                            TutorialHowToPresenter howToPresenter) {
+                            WorkspaceAgent workspaceAgent, TutorialHowToPresenter howToPresenter) {
         FileType htmlFileType = new FileType(null, "text/html", "html");
         resourceProvider.registerFileType(htmlFileType);
         editorRegistry.register(htmlFileType, editorProvider);
-        newResourceAgent.register(newHTMLFileProvider);
 
         workspaceAgent.openPart(howToPresenter, PartStackType.EDITING);
     }

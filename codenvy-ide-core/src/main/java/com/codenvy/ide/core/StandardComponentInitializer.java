@@ -26,7 +26,6 @@ import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
-import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
@@ -41,19 +40,15 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
-import com.codenvy.ide.wizard.newresource.NewFileProvider;
-import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
-import com.codenvy.ide.xml.XmlFileProvider;
+import com.codenvy.ide.newresource.NewFileAction;
+import com.codenvy.ide.newresource.NewFolderAction;
+import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -68,32 +63,13 @@ import com.google.inject.Singleton;
 public class StandardComponentInitializer {
 
     @Inject
-    @NewResource
-    private DefaultWizard newResourceWizard;
-
-    @Inject
-    private Provider<NewResourcePagePresenter> chooseResourcePage;
-
-    @Inject
     private EditorRegistry editorRegistry;
 
     @Inject
     private ResourceProvider resourceProvider;
 
     @Inject
-    private NewFolderProvider folderProvider;
-
-    @Inject
-    private NewFileProvider textFileProvider;
-
-    @Inject
-    private XmlFileProvider xmlFileProvider;
-
-    @Inject
     private XmlEditorProvider xmlEditorProvider;
-
-    @Inject
-    private NewResourceAgentImpl newResourceAgent;
 
     @Inject
     private Resources resources;
@@ -109,9 +85,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private SaveAllAction saveAllAction;
-
-    @Inject
-    private NewResourceAction newFileAction;
 
     @Inject
     private ShowPreferencesAction showPreferencesAction;
@@ -162,22 +135,24 @@ public class StandardComponentInitializer {
     @Inject
     private NewProjectWizardAction newProjectWizardAction;
 
+    @Inject
+    private NewFolderAction newFolderAction;
+
+    @Inject
+    private NewFileAction newFileAction;
+
+    @Inject
+    private NewXmlFileAction newXmlFileAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
     }
 
     public void initialize() {
-        newResourceWizard.addPage(chooseResourcePage);
-
-        newResourceAgent.register(folderProvider);
-        newResourceAgent.register(textFileProvider);
-
         FileType xmlFile = new FileType(null, MimeType.TEXT_XML, "xml");
         resourceProvider.registerFileType(xmlFile);
-        newResourceAgent.register(xmlFileProvider);
         editorRegistry.register(xmlFile, xmlEditorProvider);
-
 
         // Compose Import Project group
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
@@ -189,10 +164,17 @@ public class StandardComponentInitializer {
         // Compose New group
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
-        actionManager.registerAction("newProject2", newProjectWizardAction);
-        actionManager.registerAction("newResource", newFileAction);
+        actionManager.registerAction("newGroup", newGroup);
+        actionManager.registerAction("newProject", newProjectWizardAction);
+        actionManager.registerAction("newFile", newFileAction);
+        actionManager.registerAction("newFolder", newFolderAction);
+        actionManager.registerAction("newXmlFile", newXmlFileAction);
         newGroup.addAction(newProjectWizardAction);
-        newGroup.add(newFileAction);
+        newGroup.addSeparator();
+        newGroup.addAction(newFileAction);
+        newGroup.addAction(newFolderAction);
+        newGroup.addSeparator();
+        newGroup.addAction(newXmlFileAction);
 
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);

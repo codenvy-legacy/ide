@@ -1,9 +1,0 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:FlowPanel>
-        <g:Label text="Login:"/>
-        <g:TextBox ui:field="login" width="350px" />
-        <g:Label text="Password:"/>
-        <g:TextBox ui:field="password" width="350px" />
-    </g:FlowPanel>
-</ui:UiBinder>

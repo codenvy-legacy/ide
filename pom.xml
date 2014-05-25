@@ -62,7 +62,6 @@
         <module>codenvy-sdk-tutorials/theme-api</module>
         <module>codenvy-sdk-tutorials/parts-api</module>
         <module>codenvy-sdk-tutorials/notification-api</module>
-        <module>codenvy-sdk-tutorials/new-resource-wizard</module>
         <module>codenvy-sdk-tutorials/editor-api</module>
         <module>codenvy-sdk-tutorials/empty-ext</module>
         <module>codenvy-sdk-tutorials/gin</module>
