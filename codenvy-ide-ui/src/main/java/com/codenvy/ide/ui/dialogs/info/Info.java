@@ -44,6 +44,22 @@ public class Info extends Window {
     @UiField
     TextArea message;
 
+
+    public Info(String message) {
+        Widget widget = ourUiBinder.createAndBindUi(this);
+        this.setWidget(widget);
+
+        Button btnOk = createButton(locale.ok(), "info-window", new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                onClose();
+            }
+        });
+        getFooter().add(btnOk);
+        this.message.setText(message);
+    }
+
     /**
      * Create view.
      *
@@ -64,6 +80,19 @@ public class Info extends Window {
             }
         });
         getFooter().add(btnOk);
+
+    }
+
+    /**
+     * Create view.
+     *
+     * @param handler
+     *         the handler that call after user interact
+     */
+
+    public Info(final InfoHandler handler, String message) {
+        this(handler);
+        this.message.setText(message);
     }
 
     public void setMessage(String message) {

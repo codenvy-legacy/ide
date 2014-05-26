@@ -11,19 +11,18 @@
             margin-right: 8px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX">
+    <g:DockLayoutPanel unit="PX" debugId="mavenPageView-mainPanel">
         <g:north size="50">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:west size="138">
                     <g:FlowPanel>
-                        <g:Label text="Artifact Id:"
-                                 addStyleNames="{style.projectNamePosition}"/>
+                        <g:Label text="Artifact Id:" addStyleNames="{style.projectNamePosition}"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:TextBox width="390px" height="29px" ui:field="artifactId"/>
+                            <g:TextBox width="390px" height="29px" ui:field="artifactId" debugId="mavenPageView-artifactId"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -33,14 +32,13 @@
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:west size="138">
                     <g:FlowPanel>
-                        <g:Label text="Group Id:"
-                                 addStyleNames="{style.projectNamePosition}"/>
+                        <g:Label text="Group Id:" addStyleNames="{style.projectNamePosition}"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:TextBox width="390px" height="29px" ui:field="groupId"/>
+                            <g:TextBox width="390px" height="29px" ui:field="groupId" debugId="mavenPageView-groupId"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -50,14 +48,13 @@
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:west size="138">
                     <g:FlowPanel>
-                        <g:Label text="Version:"
-                                 addStyleNames="{style.projectNamePosition}"/>
+                        <g:Label text="Version:" addStyleNames="{style.projectNamePosition}"/>
                     </g:FlowPanel>
                 </g:west>
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:TextBox width="390px" height="29px" ui:field="versionField">1.0-SNAPSHOT</g:TextBox>
+                            <g:TextBox width="390px" height="29px" ui:field="versionField" debugId="mavenPageView-version">1.0-SNAPSHOT</g:TextBox>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -74,7 +71,8 @@
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:ListBox ui:field="packagingField" multipleSelect="false" visibleItemCount="1" selectedIndex="0">
+                            <g:ListBox ui:field="packagingField" multipleSelect="false" visibleItemCount="1" selectedIndex="0"
+                                       debugId="mavenPageView-packagingField">
                                 <g:item value="jar">
                                     JAR
                                 </g:item>

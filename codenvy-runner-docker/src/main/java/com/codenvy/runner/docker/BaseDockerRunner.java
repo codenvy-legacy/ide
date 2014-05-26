@@ -303,7 +303,7 @@ public abstract class BaseDockerRunner extends Runner {
                 }
                 hostConfig.setBinds(new String[]{String.format("%s:%s", applicationFile.getAbsolutePath(), containerBindDir)});
             }
-            final DockerProcess docker = new DockerProcess(connector, containerConfig, hostConfig, logsPublisher,
+            final DockerProcess docker = new DockerProcess(request, connector, containerConfig, hostConfig, logsPublisher,
                                                            new ApplicationProcess.Callback() {
                                                                @Override
                                                                public void started() {
@@ -516,6 +516,7 @@ public abstract class BaseDockerRunner extends Runner {
     }
 
     private class DockerProcess extends ApplicationProcess {
+        final RunRequest               request;
         final DockerConnector          connector;
         final ContainerConfig          containerCfg;
         final HostConfig               hostCfg;
@@ -525,11 +526,13 @@ public abstract class BaseDockerRunner extends Runner {
         String       container;
         DockerLogger logger;
 
-        DockerProcess(DockerConnector connector,
+        DockerProcess(RunRequest request,
+                      DockerConnector connector,
                       ContainerConfig containerCfg,
                       HostConfig hostCfg,
                       ApplicationLogsPublisher logsPublisher,
                       Callback callback) {
+            this.request = request;
             this.connector = connector;
             this.containerCfg = containerCfg;
             this.hostCfg = hostCfg;
@@ -545,6 +548,7 @@ public abstract class BaseDockerRunner extends Runner {
                     final ContainerCreated response = connector.createContainer(containerCfg);
                     connector.startContainer(response.getId(), hostCfg);
                     container = response.getId();
+                    LOG.info("EVENT#configure-docker-started# WS#{}# USER#{}# ID#{}#", request.getWorkspace(), request.getUserName(), container);
                     getExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -574,6 +578,7 @@ public abstract class BaseDockerRunner extends Runner {
             if (started.get()) {
                 try {
                     connector.stopContainer(container, 3, TimeUnit.SECONDS);
+                    LOG.info("EVENT#configure-docker-finished# WS#{}# USER#{}# ID#{}#", request.getWorkspace(), request.getUserName(), container);
                     if (callback != null) {
                         callback.stopped();
                     }

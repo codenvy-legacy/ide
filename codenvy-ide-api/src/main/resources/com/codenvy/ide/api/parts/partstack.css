@@ -95,14 +95,14 @@
     /*Toolbar that is currently selected(active)*/
 }
 
-.ide-PartStack-Boton-Left {
+.ide-PartStack-Button-Left {
     border-right: 1px solid tabBorder;
     cursor: pointer;
     height: 18px;
     display: inline-block;
 }
 
-.ide-PartStack-Boton-Left > svg {
+.ide-PartStack-Button-Left > svg {
     -webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     transform: rotate(270deg);

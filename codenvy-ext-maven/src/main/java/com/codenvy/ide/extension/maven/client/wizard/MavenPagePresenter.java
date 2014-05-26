@@ -24,6 +24,7 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.core.client.Scheduler;
@@ -106,6 +107,12 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         options.put(MavenAttributes.MAVEN_GROUP_ID, Arrays.asList(view.getGroupId()));
         options.put(MavenAttributes.MAVEN_VERSION, Arrays.asList(view.getVersion()));
         options.put(MavenAttributes.MAVEN_PACKAGING, Arrays.asList(view.getPackaging()));
+        if("war".equals(view.getPackaging())){
+            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaWeb"));
+        }
+        if ("jar".equals(view.getPackaging())) {
+            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaStandalone"));
+        }
         final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         projectDescriptor.setAttributes(options);

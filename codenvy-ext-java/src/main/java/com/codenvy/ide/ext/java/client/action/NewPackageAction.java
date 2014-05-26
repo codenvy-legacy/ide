@@ -15,16 +15,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client.newresource;
+package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.client.JavaLocalizationConstant;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.Package;
+import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
+import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -37,7 +41,7 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewPackageAction extends NewJavaResourceAction {
+public class NewPackageAction extends DefaultNewResourceAction {
     @Inject
     public NewPackageAction(JavaResources javaResources,
                             JavaLocalizationConstant localizationConstant,
@@ -71,5 +75,21 @@ public class NewPackageAction extends NewJavaResourceAction {
             }
         }
         ).show();
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        boolean enabled = false;
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selection.getFirstElement() instanceof Resource) {
+                Resource resource = (Resource)selection.getFirstElement();
+                if (resource.isFile()) {
+                    resource = resource.getParent();
+                }
+                enabled = resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
+            }
+        }
+        e.getPresentation().setEnabledAndVisible(enabled);
     }
 }

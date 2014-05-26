@@ -24,6 +24,7 @@ import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
 import com.codenvy.ide.ext.web.css.NewLessFileAction;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
@@ -36,6 +37,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
 /**
  * Extension add editing JavaScript, HTML, CSS css type support to the IDE Application.
@@ -74,7 +77,7 @@ public class WebExtension {
         actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
         actionManager.registerAction(constant.newHtmlFileActionId(), newHtmlFileAction);
         actionManager.registerAction(constant.newJavaScriptFileActionId(), newJavaScriptFileAction);
-        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction("newGroup");
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
         newGroup.addSeparator();
         newGroup.add(newCssFileAction);
         newGroup.add(newLessFileAction);

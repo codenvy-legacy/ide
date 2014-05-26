@@ -15,13 +15,15 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.ext.java.client;
+package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.ext.java.client.JavaExtension;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.shared.Constants;
 
 /** @author Evgen Vidolob */
@@ -33,7 +35,7 @@ public class UpdateDependencyAction extends Action {
 
     public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
                                   AnalyticsEventLogger eventLogger, JavaResources resources) {
-        super("Update dependencies", "Update dependencies", null, resources.updateDependencies());
+        super("Update Dependencies", "Update Dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;

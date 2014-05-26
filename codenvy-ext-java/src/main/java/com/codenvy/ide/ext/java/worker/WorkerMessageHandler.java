@@ -53,6 +53,7 @@ import com.codenvy.ide.ext.java.jdt.templates.TypeResolver;
 import com.codenvy.ide.ext.java.jdt.templates.TypeVariableResolver;
 import com.codenvy.ide.ext.java.jdt.templates.VarResolver;
 import com.codenvy.ide.ext.java.messages.ConfigMessage;
+import com.codenvy.ide.ext.java.messages.DependenciesUpdatedMessage;
 import com.codenvy.ide.ext.java.messages.FormatMessage;
 import com.codenvy.ide.ext.java.messages.ParseMessage;
 import com.codenvy.ide.ext.java.messages.PreferenceFormatSetMessage;
@@ -167,6 +168,14 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                                                        });
                                                    }
                                                });
+        messageFilter.registerMessageRecipient(RoutingTypes.DEPENDENCIES_UPDATED, new MessageFilter.MessageRecipient<DependenciesUpdatedMessage>() {
+            @Override
+            public void onMessageReceived(DependenciesUpdatedMessage message) {
+                if(nameEnvironment != null) {
+                    nameEnvironment.clearBlackList();
+                }
+            }
+        });
     }
 
     private Jso convertTextEditToJso(TextEdit edit) {

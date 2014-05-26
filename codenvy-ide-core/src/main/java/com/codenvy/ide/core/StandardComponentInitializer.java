@@ -41,18 +41,21 @@ import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
+import com.codenvy.ide.image.viewer.ImageViewerProvider;
+import com.codenvy.ide.newresource.NewFileAction;
+import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
-import com.codenvy.ide.newresource.NewFileAction;
-import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
@@ -144,6 +147,9 @@ public class StandardComponentInitializer {
     @Inject
     private NewXmlFileAction newXmlFileAction;
 
+    @Inject
+    private ImageViewerProvider imageViewerProvider;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -153,6 +159,38 @@ public class StandardComponentInitializer {
         FileType xmlFile = new FileType(null, MimeType.TEXT_XML, "xml");
         resourceProvider.registerFileType(xmlFile);
         editorRegistry.register(xmlFile, xmlEditorProvider);
+
+        FileType pngFile = new FileType(null, MimeType.IMAGE_PNG, "png");
+        resourceProvider.registerFileType(pngFile);
+        editorRegistry.register(pngFile, imageViewerProvider);
+
+        FileType bmpFile = new FileType(null, MimeType.IMAGE_BMP, "bmp");
+        resourceProvider.registerFileType(bmpFile);
+        editorRegistry.register(bmpFile, imageViewerProvider);
+
+        FileType gifFile = new FileType(null, MimeType.IMAGE_GIF, "gif");
+        resourceProvider.registerFileType(gifFile);
+        editorRegistry.register(gifFile, imageViewerProvider);
+
+        FileType iconFile = new FileType(null, MimeType.IMAGE_X_ICON, "ico");
+        resourceProvider.registerFileType(iconFile);
+        editorRegistry.register(iconFile, imageViewerProvider);
+
+        FileType svgFile = new FileType(null, MimeType.IMAGE_SVG_XML, "svg");
+        resourceProvider.registerFileType(svgFile);
+        editorRegistry.register(svgFile, imageViewerProvider);
+
+        FileType jpeFile = new FileType(null, MimeType.IMAGE_JPEG, "jpe");
+        resourceProvider.registerFileType(jpeFile);
+        editorRegistry.register(jpeFile, imageViewerProvider);
+
+        FileType jpegFile = new FileType(null, MimeType.IMAGE_JPEG, "jpeg");
+        resourceProvider.registerFileType(jpegFile);
+        editorRegistry.register(jpegFile, imageViewerProvider);
+
+        FileType jpgFile = new FileType(null, MimeType.IMAGE_JPEG, "jpg");
+        resourceProvider.registerFileType(jpgFile);
+        editorRegistry.register(jpgFile, imageViewerProvider);
 
         // Compose Import Project group
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
@@ -164,7 +202,7 @@ public class StandardComponentInitializer {
         // Compose New group
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
-        actionManager.registerAction("newGroup", newGroup);
+        actionManager.registerAction(GROUP_FILE_NEW, newGroup);
         actionManager.registerAction("newProject", newProjectWizardAction);
         actionManager.registerAction("newFile", newFileAction);
         actionManager.registerAction("newFolder", newFolderAction);

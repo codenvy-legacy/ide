@@ -26,6 +26,16 @@ import com.google.gwt.i18n.client.Messages;
  * @author Artem Zatsarynnyy
  */
 public interface JavaLocalizationConstant extends Messages {
+    /* NewJavaClassView */
+    @Key("title")
+    String title();
+
+    @Key("ok")
+    String buttonOk();
+
+    @Key("cancel")
+    String buttonCancel();
+
     /* Actions */
     @Key("action.newClass.id")
     String actionNewClassId();
@@ -35,24 +45,6 @@ public interface JavaLocalizationConstant extends Messages {
 
     @Key("action.newClass.description")
     String actionNewClassDescription();
-
-    @Key("action.newInterface.id")
-    String actionNewInterfaceId();
-
-    @Key("action.newInterface.title")
-    String actionNewInterfaceTitle();
-
-    @Key("action.newInterface.description")
-    String actionNewInterfaceDescription();
-
-    @Key("action.newEnum.id")
-    String actionNewEnumId();
-
-    @Key("action.newEnum.title")
-    String actionNewEnumTitle();
-
-    @Key("action.newEnum.description")
-    String actionNewEnumDescription();
 
     @Key("action.newPackage.id")
     String actionNewPackageId();

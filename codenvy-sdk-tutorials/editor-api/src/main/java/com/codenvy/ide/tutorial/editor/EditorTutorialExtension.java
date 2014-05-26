@@ -13,6 +13,7 @@ import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
@@ -43,7 +44,7 @@ public class EditorTutorialExtension {
         editorRegistry.register(groovyFile, groovyEditorProvider);
 
         actionManager.registerAction("newGroovyFileActionId", newGroovyFileAction);
-        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction("newGroup");
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
         newGroup.addSeparator();
         newGroup.add(newGroovyFileAction);
     }

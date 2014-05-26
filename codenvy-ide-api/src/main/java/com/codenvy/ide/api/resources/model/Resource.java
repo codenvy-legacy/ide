@@ -17,6 +17,11 @@
  */
 package com.codenvy.ide.api.resources.model;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Resource's superclass.
  * Not intended to be extended by client code. Use File, Folder and Project as superclass.
@@ -43,6 +48,8 @@ public abstract class Resource {
 
     /** Parent Folder */
     protected Folder parent;
+    
+    protected List<Link> links;
 
     /**
      * Create a Resource of given Type.
@@ -179,6 +186,17 @@ public abstract class Resource {
      */
     public Object getTag() {
         return tags;
+    }
+    
+    public List<Link> getLinks() {
+        if (links == null) {
+            links = new ArrayList<Link>();
+        }
+        return links;
+    }
+
+    public void setLinks(List<Link> v) {
+        this.links = v;
     }
 
     /** @return  */

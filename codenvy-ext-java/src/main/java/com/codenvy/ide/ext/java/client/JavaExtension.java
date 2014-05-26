@@ -39,14 +39,14 @@ import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.ext.java.client.action.NewJavaClassAction;
+import com.codenvy.ide.ext.java.client.action.NewPackageAction;
+import com.codenvy.ide.ext.java.client.action.UpdateDependencyAction;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
+import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.ext.java.client.newresource.NewClassAction;
-import com.codenvy.ide.ext.java.client.newresource.NewEnumAction;
-import com.codenvy.ide.ext.java.client.newresource.NewInterfaceAction;
-import com.codenvy.ide.ext.java.client.newresource.NewPackageAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -65,6 +65,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
@@ -74,6 +75,7 @@ public class JavaExtension {
     private String              workspaceId;
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
+    private JavaParserWorker    parserWorker;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -92,15 +94,15 @@ public class JavaExtension {
                          AnalyticsEventLogger eventLogger,
                          JavaResources resources,
                          JavaLocalizationConstant localizationConstant,
-                         NewClassAction newClassAction,
-                         NewInterfaceAction newInterfaceAction,
-                         NewEnumAction newEnumAction,
-                         NewPackageAction newPackageAction) {
+                         NewPackageAction newPackageAction,
+                         NewJavaClassAction newJavaClassAction,
+                         JavaParserWorker parserWorker) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
+        this.parserWorker = parserWorker;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -157,15 +159,11 @@ public class JavaExtension {
         JavaResources.INSTANCE.css().ensureInjected();
 
         // add actions to New group
-        actionManager.registerAction(localizationConstant.actionNewClassId(), newClassAction);
-        actionManager.registerAction(localizationConstant.actionNewInterfaceId(), newInterfaceAction);
-        actionManager.registerAction(localizationConstant.actionNewEnumId(), newEnumAction);
-        actionManager.registerAction(localizationConstant.actionNewEnumId(), newPackageAction);
-        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction("newGroup");
+        actionManager.registerAction(localizationConstant.actionNewPackageId(), newPackageAction);
+        actionManager.registerAction(localizationConstant.actionNewClassId(), newJavaClassAction);
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
         newGroup.addSeparator();
-        newGroup.add(newClassAction);
-        newGroup.add(newInterfaceAction);
-        newGroup.add(newEnumAction);
+        newGroup.add(newJavaClassAction);
         newGroup.add(newPackageAction);
 
         // add actions in context menu
@@ -223,6 +221,7 @@ public class JavaExtension {
             protected void onSuccess(String result) {
                 notification.setMessage("Dependencies successfully updated ");
                 notification.setStatus(FINISHED);
+                parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override
                     public void onIteration(String s, EditorPartPresenter editorPartPresenter) {
@@ -246,7 +245,7 @@ public class JavaExtension {
                 if (object.containsKey("message")) {
                     notification.setMessage(object.get("message").isString().stringValue());
                 } else {
-                    notification.setMessage("Update dependencies fail");
+                    notification.setMessage("Updating dependencies failed");
                 }
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);

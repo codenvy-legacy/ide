@@ -76,6 +76,9 @@ public interface JavaRuntimeLocalizationConstant extends com.google.gwt.i18n.cli
     @Key("variables")
     String variables();
 
+    @Key("absentInformationVariables")
+    String absentInformationVariables();
+
     @Key("stepInto")
     String stepInto();
 
