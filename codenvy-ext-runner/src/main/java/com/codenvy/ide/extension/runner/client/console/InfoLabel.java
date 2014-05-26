@@ -57,7 +57,7 @@ public class InfoLabel extends Composite {
             dataLabel.setStyleName(resources.runner().dataLabel());
             panel.add(dataLabel);
         }
-
+        panel.ensureDebugId(caption);
         panel.setStyleName(resources.runner().infoPanel());
         initWidget(panel);
     }

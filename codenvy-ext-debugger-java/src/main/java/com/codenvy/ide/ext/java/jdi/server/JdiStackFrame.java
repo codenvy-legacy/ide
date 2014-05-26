@@ -51,8 +51,10 @@ public interface JdiStackFrame {
      * @return list of local variables
      * @throws DebuggerException
      *         if an error occurs
+     * @throws DebuggerAbsentInformationException
+     *         if an error occurs
      */
-    JdiLocalVariable[] getLocalVariables() throws DebuggerException;
+    JdiLocalVariable[] getLocalVariables() throws DebuggerException, DebuggerAbsentInformationException;
 
     /**
      * Get local variable by name.
@@ -60,6 +62,8 @@ public interface JdiStackFrame {
      * @return local variable or <code>null</code> if there is not such local variable
      * @throws DebuggerException
      *         if an error occurs
+     * @throws DebuggerAbsentInformationException
+     *         if an error occurs
      */
-    JdiLocalVariable getLocalVariableByName(String name) throws DebuggerException;
+    JdiLocalVariable getLocalVariableByName(String name) throws DebuggerException, DebuggerAbsentInformationException;
 }

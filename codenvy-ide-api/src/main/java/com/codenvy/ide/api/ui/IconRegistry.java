@@ -17,66 +17,55 @@
  */
 package com.codenvy.ide.api.ui;
 
-import com.google.gwt.user.client.ui.Image;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Provide  possibility to define images for UI in IDE extensions.
+ * Client-side singleton component that provides possibility to define icons for UI in extensions.
+ * On IDE start it populated by application-scope 'default' icons and 'generic' icon (e.g. Codenvy logo).
  *
  * @author Vitaly Parfonov
+ * @author Artem Zatsarynnyy
  */
 public interface IconRegistry {
 
     /**
-     * @param iconId
-     * @return Image GWT widget
+     * Register {@link Icon}.
+     * If icon with the same id previously registered,
+     * the old icon is replaced by the specified icon.
+     *
+     * @param icon
+     *         icon to be registered
      */
-    Image getIcon(String iconId);
-    
-    /**
-     * @param iconId id of the icon
-     * @return SVG GWT image
-     */
-    SVGImage getSVGIcon(String iconId);
+    void registerIcon(Icon icon);
 
     /**
-     * @param iconId
-     * @return Image GWT widget if exist, otherwise - null
+     * Returns {@link Icon} by its id.
+     * If no such icon is registered, it returns the same named 'default' icon.
+     * If it also not found, returns 'generic' icon.
+     *
+     * @param id
+     *         icon id
+     * @return registered icon or the same named "default" icon or "generic" icon
      */
-    Image getIconIfExist(String iconId);
+    @NotNull
+    Icon getIcon(String id);
 
     /**
-     * @param iconId
-     * @return SVG Image GWT widget if exist, otherwise - null
+     * Returns {@link Icon} by its id, or {@code null} if no icon with the specified id.
+     *
+     * @param id
+     *         icon id
+     * @return registered icon, or {@code null} if found no icon with the specified id
      */
-    SVGImage getSVGIconIfExist(String iconId);
-
-    
-    /**
-     * @return default icon, can be useful if don't find icon by id
-     */
-    Image getDefaultIcon();
-    
-    /**
-     * @return default SVG icon, can be useful if don't find icon by id
-     */
-    SVGImage getDefaultSVGIcon();
+    @Nullable
+    Icon getIconIfExist(String id);
 
     /**
-     * @param iconId
-     *         some id
-     * @param iconPath
-     *         path to the image
+     * Returns 'generic' icon (e.g. Codenvy logo).
+     * May be useful when no icon found by its id.
+     *
+     * @return 'generic' icon
      */
-    void registerIcon(String iconId, String iconPath);
-    
-    /**
-     * @param iconId
-     *         some id
-     * @param resource
-     *         SVG resource
-     */
-    void registerSVGIcon(String iconId, SVGResource resource);
+    Icon getGenericIcon();
 }

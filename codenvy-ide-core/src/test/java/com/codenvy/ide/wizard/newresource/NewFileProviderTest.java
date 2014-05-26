@@ -19,9 +19,11 @@ package com.codenvy.ide.wizard.newresource;
 
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.ui.Icon;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
+import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -32,6 +34,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link NewFileProvider} functionality.
@@ -43,6 +46,7 @@ public class NewFileProviderTest extends BaseNewResourceProviderTest {
 
     @Before
     public void setUp() {
+        when(iconRegistry.getIcon(anyString())).thenReturn(mock(Icon.class));
         newResourceProvider = new NewFileProvider(iconRegistry);
         textFileName = RESOURCE_NAME;
     }

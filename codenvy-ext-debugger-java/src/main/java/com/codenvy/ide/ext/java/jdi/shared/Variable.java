@@ -30,6 +30,12 @@ public interface Variable {
 
     Variable withName(String name);
 
+    boolean isExistInformation();
+
+    void setExistInformation(boolean existInformation);
+
+    Variable withExistInformation(boolean existInformation);
+
     String getValue();
 
     void setValue(String value);

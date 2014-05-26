@@ -37,6 +37,7 @@ import com.sun.jdi.ClassNotPreparedException;
 import com.sun.jdi.IncompatibleThreadStateException;
 import com.sun.jdi.NativeMethodException;
 import com.sun.jdi.ReferenceType;
+import com.sun.jdi.StackFrame;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMCannotBeModifiedException;
 import com.sun.jdi.VirtualMachine;
@@ -385,7 +386,16 @@ public class Debugger implements EventsHandler {
      *         when any other errors occur when try to access the current state of target JVM
      */
     public StackFrameDump dumpStackFrame() throws DebuggerStateException, DebuggerException {
+
         StackFrameDump dump = DtoFactory.getInstance().createDto(StackFrameDump.class);
+        boolean existInformation = true;
+        JdiLocalVariable[] variables = new JdiLocalVariable[0];
+        try {
+            variables = getCurrentFrame().getLocalVariables();
+        } catch (DebuggerAbsentInformationException e) {
+            existInformation = false;
+        }
+
         for (JdiField f : getCurrentFrame().getFields()) {
             dump.getFields().add((Field)DtoFactory.getInstance().createDto(Field.class)
                                                   .withIsFinal(f.isFinal())
@@ -393,6 +403,7 @@ public class Debugger implements EventsHandler {
                                                   .withIsTransient(f.isTransient())
                                                   .withIsVolatile(f.isVolatile())
                                                   .withName(f.getName())
+                                                  .withExistInformation(existInformation)
                                                   .withValue(f.getValue().getAsString())
                                                   .withType(f.getTypeName())
                                                   .withVariablePath(
@@ -401,9 +412,10 @@ public class Debugger implements EventsHandler {
                                                                    )
                                                   .withPrimitive(f.isPrimitive()));
         }
-        for (JdiLocalVariable var : getCurrentFrame().getLocalVariables()) {
+        for (JdiLocalVariable var : variables) {
             dump.getLocalVariables().add(DtoFactory.getInstance().createDto(Variable.class)
                                                    .withName(var.getName())
+                                                   .withExistInformation(existInformation)
                                                    .withValue(var.getValue().getAsString())
                                                    .withType(var.getTypeName())
                                                    .withVariablePath(
@@ -474,7 +486,11 @@ public class Debugger implements EventsHandler {
             variable = getCurrentFrame().getFieldByName(path.get(1));
             offset = 2;
         } else {
-            variable = getCurrentFrame().getLocalVariableByName(path.get(0));
+            try {
+                variable = getCurrentFrame().getLocalVariableByName(path.get(0));
+            } catch (DebuggerAbsentInformationException e) {
+                return null;
+            }
             offset = 1;
         }
 
@@ -498,6 +514,7 @@ public class Debugger implements EventsHandler {
                                                    .withIsTransient(f.isTransient())
                                                    .withIsVolatile(f.isVolatile())
                                                    .withName(f.getName())
+                                                   .withExistInformation(true)
                                                    .withValue(f.getValue().getAsString())
                                                    .withType(f.getTypeName())
                                                    .withVariablePath(chPath)
@@ -506,6 +523,7 @@ public class Debugger implements EventsHandler {
                 // Array element.
                 value.getVariables().add(DtoFactory.getInstance().createDto(Variable.class)
                                                    .withName(ch.getName())
+                                                   .withExistInformation(true)
                                                    .withValue(ch.getValue().getAsString())
                                                    .withType(ch.getTypeName())
                                                    .withVariablePath(chPath)

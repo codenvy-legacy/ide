@@ -770,6 +770,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         String lineWarning();
 
         String lineError();
+        
+        String imageViewer();
     }
 
     /** ClientBundle for the editor. */
@@ -783,6 +785,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         @Source("squiggle-warning.png")
         ImageResource squiggleWarning();
+        
+        @Source("image-viewer-bg.png")
+        ImageResource imageViewerBackground();
     }
 
     /**

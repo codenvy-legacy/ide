@@ -266,6 +266,18 @@ a {
     color: #545454;
 }
 
+.defaultFont {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    color: inherit;
+}
+
+.warningFont {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    color: #d26a11;
+}
+
 .cursorPointer {
     cursor: pointer;
 }

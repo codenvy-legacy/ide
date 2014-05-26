@@ -33,7 +33,7 @@ public class UpdateDependencyAction extends Action {
 
     public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
                                   AnalyticsEventLogger eventLogger, JavaResources resources) {
-        super("Update dependencies", "Update dependencies", null, resources.updateDependencies());
+        super("Update Dependencies", "Update Dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;

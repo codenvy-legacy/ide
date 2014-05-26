@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.rename;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
@@ -24,7 +25,9 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,19 +44,21 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class RenameResourcePresenter implements RenameResourceView.ActionDelegate {
 
-    private RenameResourceView  view;
-    private EditorAgent         editorAgent;
-    private ResourceProvider    resourceProvider;
-    private Resource            resource;
-    private NotificationManager notificationManager;
-
+    private       RenameResourceView   view;
+    private final ProjectServiceClient projectServiceClient;
+    private       EditorAgent          editorAgent;
+    private       ResourceProvider     resourceProvider;
+    private       Resource             resource;
+    private       NotificationManager  notificationManager;
 
     @Inject
     public RenameResourcePresenter(RenameResourceView view,
                                    EditorAgent editorAgent,
                                    ResourceProvider resourceProvider,
-                                   NotificationManager notificationManager) {
+                                   NotificationManager notificationManager,
+                                   ProjectServiceClient projectServiceClient) {
         this.view = view;
+        this.projectServiceClient = projectServiceClient;
         view.setDelegate(this);
         this.editorAgent = editorAgent;
         this.resourceProvider = resourceProvider;
@@ -79,43 +84,60 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onRenameClicked() {
-        String newName = view.getName();
-        resourceProvider.getActiveProject().rename(resource, newName, new AsyncCallback<Resource>() {
-            @Override
-            public void onSuccess(Resource result) {
-                if (result instanceof File) {
-                    //Change renamed file for all opened editors:
-                    for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                        if (editor.getEditorInput().getFile().getId().equals(resource.getId())) {
-                            editor.getEditorInput().setFile((File)result);
-                            editor.onFileChanged();
-                            break;
+        final String newName = view.getName();
+        Project activeProject = resourceProvider.getActiveProject();
+
+        // rename project in project list (when no active project)
+        if (activeProject == null) {
+            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    resourceProvider.refreshRoot();
+                }
+
+                @Override
+                protected void onFailure(Throwable throwable) {
+                    notificationManager.showNotification(new Notification(throwable.getMessage(), ERROR));
+                }
+            });
+        } else {
+            // rename project's child resource
+            activeProject.rename(resource, newName, new AsyncCallback<Resource>() {
+                @Override
+                public void onSuccess(Resource result) {
+                    if (result instanceof File) {
+                        //Change renamed file for all opened editors:
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            if (editor.getEditorInput().getFile().getId().equals(resource.getId())) {
+                                editor.getEditorInput().setFile((File)result);
+                                editor.onFileChanged();
+                                break;
+                            }
                         }
-                    }
-                } else if (result instanceof Folder) {
-                    //Check whether opened file's parent was renamed, then change file in editor, because
-                    //rename changes the id of the file too.
-                    for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                        //Find parent of the opened file by it's old id:
-                        Folder parent = getParentById(resource.getId(), editor.getEditorInput().getFile());
-                        if (parent != null) {
-                            //New path of the file:
-                            String path = editor.getEditorInput().getFile().getPath().replaceFirst(parent.getPath(), result.getPath());
-                            Resource updatedResource = findResourceByPath((Folder)result, path);
-                            if (updatedResource != null && (updatedResource instanceof File)) {
-                                editor.getEditorInput().setFile((File)updatedResource);
+                    } else if (result instanceof Folder) {
+                        //Check whether opened file's parent was renamed, then change file in editor, because
+                        //rename changes the id of the file too.
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            //Find parent of the opened file by it's old id:
+                            Folder parent = getParentById(resource.getId(), editor.getEditorInput().getFile());
+                            if (parent != null) {
+                                //New path of the file:
+                                String path = editor.getEditorInput().getFile().getPath().replaceFirst(parent.getPath(), result.getPath());
+                                Resource updatedResource = findResourceByPath((Folder)result, path);
+                                if (updatedResource != null && (updatedResource instanceof File)) {
+                                    editor.getEditorInput().setFile((File)updatedResource);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Notification notification = new Notification(caught.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
+                @Override
+                public void onFailure(Throwable caught) {
+                    notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+                }
+            });
+        }
 
         view.close();
     }

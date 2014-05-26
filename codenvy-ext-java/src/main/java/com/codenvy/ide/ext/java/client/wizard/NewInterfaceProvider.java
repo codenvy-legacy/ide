@@ -39,7 +39,7 @@ public class NewInterfaceProvider extends AbstractNewJavaResourceProvider {
 
     @Inject
     public NewInterfaceProvider(SelectionAgent selectionAgent, IconRegistry iconRegistry) {
-        super("Java Interface", "Java Interface", iconRegistry.getIcon("java.class"), "java", selectionAgent);
+        super("Java Interface", "Java Interface", iconRegistry.getIcon("java.class").getImage(), "java", selectionAgent);
         this.iconRegistry = iconRegistry;
     }
 

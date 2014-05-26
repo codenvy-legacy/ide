@@ -35,7 +35,7 @@ public class LightTheme implements Theme {
 
     @Override
     public String getDescription() {
-        return "Light theme";
+        return "Light Theme";
     }
 
     @Override

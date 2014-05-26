@@ -18,11 +18,10 @@
 package com.codenvy.ide.ext.github.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.ext.github.client.welcome.ImportProjectAction;
+import com.codenvy.ide.ext.github.client.welcome.ImportProjectFromGitHubAction;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,19 +35,17 @@ import com.google.inject.Singleton;
 @Extension(title = "GitHub", version = "3.0.0")
 public class GitHubExtension {
 
-    public static final String GITHUB_HOST        = "github.com";
-    
+    public static final String GITHUB_HOST = "github.com";
+
     @Inject
-    public GitHubExtension(GitHubResources resources,
-                           ActionManager actionManager,
-                           GitHubLocalizationConstant constant,
-                           ImportProjectAction importProjectAction,
+    public GitHubExtension(ActionManager actionManager,
+                           ImportProjectFromGitHubAction importProjectFromGitHubAction,
                            SshKeyService sshKeyService,
                            GitHubSshKeyProvider gitHubSshKeyProvider) {
 
         sshKeyService.registerSshKeyProvider(GITHUB_HOST, gitHubSshKeyProvider);
-        actionManager.registerAction("importProjectAction", importProjectAction);
-        DefaultActionGroup file = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
-        file.add(importProjectAction);
+        actionManager.registerAction("importProjectFromGitHubAction", importProjectFromGitHubAction);
+        DefaultActionGroup importProjectGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_IMPORT_PROJECT);
+        importProjectGroup.add(importProjectFromGitHubAction);
     }
 }

@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.rename;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -24,7 +25,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,15 +46,15 @@ import static org.mockito.Mockito.when;
 
 /**
  * Test for {@link RenameResourcePresenter}.
- * 
+ *
  * @author Ann Shumilova
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RenameResourceTest {
-    public static final String      FOLDER_NAME  = "folder";
-    public static final String      NEW_NAME     = "newName";
-    public static final String      EMPTY        = "";
-    public static final boolean     ENABLE_STATE = true;
+    public static final String  FOLDER_NAME  = "folder";
+    public static final String  NEW_NAME     = "newName";
+    public static final String  EMPTY        = "";
+    public static final boolean ENABLE_STATE = true;
     @Mock
     private RenameResourceView      view;
     @Mock
@@ -68,7 +68,8 @@ public class RenameResourceTest {
     @Mock
     private EditorAgent             editorAgent;
     @Mock
-    private EventBus                eventBus;
+    private ProjectServiceClient    projectServiceClient;
+    @Mock
     private RenameResourcePresenter presenter;
 
     @Before
@@ -76,7 +77,7 @@ public class RenameResourceTest {
         when(resource.getName()).thenReturn(FOLDER_NAME);
         when(resourceProvider.getActiveProject()).thenReturn(project);
 
-        presenter = new RenameResourcePresenter(view, editorAgent, resourceProvider, notificationManager);
+        presenter = new RenameResourcePresenter(view, editorAgent, resourceProvider, notificationManager, projectServiceClient);
     }
 
     @Test

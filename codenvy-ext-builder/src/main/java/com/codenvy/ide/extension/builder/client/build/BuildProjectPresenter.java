@@ -324,7 +324,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
-    /** Get a double digit int from a single, e.g.: 1 = "01", 2 = "02". */
+    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
     private static String getDoubleDigit(int i) {
         final String doubleDigitI;
         switch (i) {

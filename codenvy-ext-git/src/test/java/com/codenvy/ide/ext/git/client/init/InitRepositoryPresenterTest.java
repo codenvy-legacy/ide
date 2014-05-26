@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class InitRepositoryPresenterTest extends BaseTest {
-    public static final boolean BARE = true;
+    public static final boolean BARE = false;
     @Mock
     private InitRepositoryView      view;
     private InitRepositoryPresenter presenter;
@@ -55,7 +55,6 @@ public class InitRepositoryPresenterTest extends BaseTest {
 
         presenter = new InitRepositoryPresenter(view, service, resourceProvider, eventBus, constant, notificationManager);
 
-        when(view.isBare()).thenReturn(BARE);
         when(project.getName()).thenReturn(PROJECT_NAME);
     }
 
@@ -64,7 +63,6 @@ public class InitRepositoryPresenterTest extends BaseTest {
         presenter.showDialog();
 
         verify(view).setWorkDir(eq(PROJECT_PATH));
-        verify(view).setBare(eq(!BARE));
         verify(view).setEnableOkButton(eq(ENABLE_BUTTON));
         verify(view).showDialog();
     }
@@ -85,7 +83,6 @@ public class InitRepositoryPresenterTest extends BaseTest {
         presenter.showDialog();
         presenter.onOkClicked();
 
-        verify(view).isBare();
         verify(view).close();
         verify(service).init(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(constant).initSuccess();
@@ -108,7 +105,6 @@ public class InitRepositoryPresenterTest extends BaseTest {
         presenter.showDialog();
         presenter.onOkClicked();
 
-        verify(view).isBare();
         verify(view).close();
         verify(service).init(eq(PROJECT_ID), eq(PROJECT_NAME), eq(BARE), (RequestCallback<Void>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());

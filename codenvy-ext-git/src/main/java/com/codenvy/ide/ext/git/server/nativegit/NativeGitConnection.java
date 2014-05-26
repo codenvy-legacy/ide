@@ -392,7 +392,7 @@ public class NativeGitConnection implements GitConnection {
         } else {
             pushCommand = nativeGit.createPushCommand();
         }
-        pushCommand.setRemote(url).setForce(request.isForce())
+        pushCommand.setRemote(request.getRemote()).setForce(request.isForce())
                    .setRefSpec(request.getRefSpec())
                    .setTimeout(request.getTimeout());
         executeWithCredentials(pushCommand, url);

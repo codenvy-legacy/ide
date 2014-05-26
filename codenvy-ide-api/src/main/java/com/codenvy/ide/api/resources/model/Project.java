@@ -79,6 +79,7 @@ public class Project extends Folder {
         id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
+        setLinks(itemReference.getLinks());
     }
 
     @Override
@@ -505,9 +506,8 @@ public class Project extends Folder {
             projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    final Folder folderToRefresh =
-                            (resource instanceof Project && resource.getParent().getId().equals("_root_"))
-                            ? (Project)resource : resource.getParent();
+                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getId().equals("_root_"))
+                                                   ? (Project)resource : resource.getParent();
                     if (resource instanceof Project && resource.getParent().getId().equals("_root_")) {
                         resource.setName(newName);
 //                        resource.setId(resource.getId());
@@ -516,10 +516,11 @@ public class Project extends Folder {
                     refreshChildren(folderToRefresh, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Resource renamed =
-                                    (resource instanceof Project && resource.getParent().getId().equals("_root_"))
-                                    ? resource : result.findChildByName(newName);
-                            renamed.getParent().setTag(folderToRefresh.getTag());
+                            Resource renamed = (resource instanceof Project && resource.getParent().getId().equals("_root_"))
+                                               ? resource : result.findChildByName(newName);
+                            if (!renamed.getParent().getId().equals("_root_")) {
+                                renamed.getParent().setTag(folderToRefresh.getTag());
+                            }
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
                             callback.onSuccess(renamed);
                         }

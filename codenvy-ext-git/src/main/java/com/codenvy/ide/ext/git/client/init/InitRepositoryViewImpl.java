@@ -49,8 +49,6 @@ public class InitRepositoryViewImpl extends Window implements InitRepositoryView
     private static InitRepositoryViewImplUiBinder ourUiBinder = GWT.create(InitRepositoryViewImplUiBinder.class);
 
     @UiField
-    CheckBox bare;
-    @UiField
     TextBox  workdir;
     Button   btnOk;
     Button   btnCancel;
@@ -100,18 +98,6 @@ public class InitRepositoryViewImpl extends Window implements InitRepositoryView
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isBare() {
-        return bare.getValue();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setBare(boolean isBare) {
-        bare.setValue(isBare);
     }
 
     /** {@inheritDoc} */

@@ -85,7 +85,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             SVGImage svgIcon = new SVGImage(resources.arrow());
 
             TabButton dashboardTabButton = new TabButton(svgIcon, "Dashboard");
-            dashboardTabButton.setStyleName(resources.partStackCss().idePartStackBotonLeft());
+            dashboardTabButton.setStyleName(resources.partStackCss().idePartStackButtonLeft());
             dashboardTabButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {

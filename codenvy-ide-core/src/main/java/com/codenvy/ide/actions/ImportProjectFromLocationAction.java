@@ -33,14 +33,16 @@ import com.google.inject.Singleton;
  * @author Roman Nikitenko
  */
 @Singleton
-public class ImportProjectAction extends Action {
+public class ImportProjectFromLocationAction extends Action {
 
     private final ImportProjectPresenter presenter;
     private final AnalyticsEventLogger   eventLogger;
 
     @Inject
-    public ImportProjectAction(ImportProjectPresenter presenter,
-                               CoreLocalizationConstant locale, AnalyticsEventLogger eventLogger, Resources resources) {
+    public ImportProjectFromLocationAction(ImportProjectPresenter presenter,
+                                           CoreLocalizationConstant locale,
+                                           AnalyticsEventLogger eventLogger,
+                                           Resources resources) {
         super(locale.importProjectName(), locale.importProjectDescription(), null, resources.importProject());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
