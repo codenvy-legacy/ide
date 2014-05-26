@@ -40,7 +40,6 @@
         <module>codenvy-ant-tools</module>
         <module>codenvy-builder-maven</module>
         <module>codenvy-builder-ant</module>
-        <module>codenvy-runner-docker</module>
         <module>codenvy-sdk-api-war</module>
         <module>codenvy-runner-sdk</module>
         <module>codenvy-runner-webapps</module>
@@ -71,7 +70,6 @@
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-sdk-tutorials/server-side</module>
         <module>codenvy-sdk-tools</module>
-        <module>codenvy-ide-factory</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
