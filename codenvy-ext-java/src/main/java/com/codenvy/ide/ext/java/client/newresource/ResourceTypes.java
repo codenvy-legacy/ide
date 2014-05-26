@@ -18,7 +18,7 @@
 package com.codenvy.ide.ext.java.client.newresource;
 
 /**
- * //
+ * Types of Java files for {@link NewJavaResourcePresenter}.
  *
  * @author Artem Zatsarynnyy
  */
