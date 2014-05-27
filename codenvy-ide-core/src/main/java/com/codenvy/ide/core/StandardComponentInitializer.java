@@ -26,7 +26,6 @@ import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
-import com.codenvy.ide.actions.NewResourceAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
@@ -41,130 +40,115 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
 import com.codenvy.ide.image.viewer.ImageViewerProvider;
+import com.codenvy.ide.newresource.NewFileAction;
+import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
-import com.codenvy.ide.wizard.newresource.NewFileProvider;
-import com.codenvy.ide.wizard.newresource.NewFolderProvider;
-import com.codenvy.ide.wizard.newresource.page.NewResourcePagePresenter;
-import com.codenvy.ide.xml.XmlFileProvider;
+import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
+
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
- * 
+ *
  * @author Evgen Vidolob
  */
 @Singleton
 public class StandardComponentInitializer {
 
     @Inject
-    @NewResource
-    private DefaultWizard                         newResourceWizard;
+    private EditorRegistry editorRegistry;
 
     @Inject
-    private Provider<NewResourcePagePresenter>    chooseResourcePage;
+    private ResourceProvider resourceProvider;
 
     @Inject
-    private EditorRegistry                        editorRegistry;
+    private XmlEditorProvider xmlEditorProvider;
 
     @Inject
-    private ResourceProvider                      resourceProvider;
+    private Resources resources;
 
     @Inject
-    private NewFolderProvider                     folderProvider;
+    private KeyBindingAgent keyBinding;
 
     @Inject
-    private NewFileProvider                       textFileProvider;
+    private ActionManager actionManager;
 
     @Inject
-    private XmlFileProvider                       xmlFileProvider;
+    private SaveAction saveAction;
 
     @Inject
-    private XmlEditorProvider                     xmlEditorProvider;
+    private SaveAllAction saveAllAction;
 
     @Inject
-    private ImageViewerProvider                   imageViewerProvider;
+    private ShowPreferencesAction showPreferencesAction;
 
     @Inject
-    private NewResourceAgentImpl                  newResourceAgent;
+    private ShowAboutAction showAboutAction;
 
     @Inject
-    private Resources                             resources;
+    private FindActionAction findActionAction;
 
     @Inject
-    private KeyBindingAgent                       keyBinding;
-
-    @Inject
-    private ActionManager                         actionManager;
-
-    @Inject
-    private SaveAction                            saveAction;
-
-    @Inject
-    private SaveAllAction                         saveAllAction;
-
-    @Inject
-    private NewResourceAction                     newFileAction;
-
-    @Inject
-    private ShowPreferencesAction                 showPreferencesAction;
-
-    @Inject
-    private ShowAboutAction                       showAboutAction;
-
-    @Inject
-    private FindActionAction                      findActionAction;
-
-    @Inject
-    private NavigateToFileAction                  navigateToFileAction;
+    private NavigateToFileAction navigateToFileAction;
 
     @Inject
     @MainToolbar
-    private ToolbarPresenter                      toolbarPresenter;
+    private ToolbarPresenter toolbarPresenter;
 
     @Inject
-    private DeleteResourceAction                  deleteResourceAction;
+    private DeleteResourceAction deleteResourceAction;
 
     @Inject
-    private RenameResourceAction                  renameResourceAction;
+    private RenameResourceAction renameResourceAction;
 
     @Inject
-    private CloseProjectAction                    closeProjectAction;
+    private CloseProjectAction closeProjectAction;
 
     @Inject
-    private NewProjectWizard                      newProjectWizard;
+    private NewProjectWizard newProjectWizard;
 
     @Inject
-    private Provider<NewProjectPagePresenter>     newProjectPageProvider;
+    private Provider<NewProjectPagePresenter> newProjectPageProvider;
 
     @Inject
     private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
 
     @Inject
-    private Provider<SelectPaasPagePresenter>     selectPaasPagePresenterProvider;
+    private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
 
     @Inject
-    private FormatterAction                       formatterAction;
+    private FormatterAction formatterAction;
 
     @Inject
-    private UploadFileAction                      uploadFileAction;
+    private UploadFileAction uploadFileAction;
 
     @Inject
-    private ImportProjectFromLocationAction       importProjectFromLocationAction;
+    private ImportProjectFromLocationAction importProjectFromLocationAction;
 
     @Inject
-    private NewProjectWizardAction                newProjectWizardAction;
+    private NewProjectWizardAction newProjectWizardAction;
+
+    @Inject
+    private NewFolderAction newFolderAction;
+
+    @Inject
+    private NewFileAction newFileAction;
+
+    @Inject
+    private NewXmlFileAction newXmlFileAction;
+
+    @Inject
+    private ImageViewerProvider imageViewerProvider;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
@@ -172,14 +156,8 @@ public class StandardComponentInitializer {
     }
 
     public void initialize() {
-        newResourceWizard.addPage(chooseResourcePage);
-
-        newResourceAgent.register(folderProvider);
-        newResourceAgent.register(textFileProvider);
-
         FileType xmlFile = new FileType(null, MimeType.TEXT_XML, "xml");
         resourceProvider.registerFileType(xmlFile);
-        newResourceAgent.register(xmlFileProvider);
         editorRegistry.register(xmlFile, xmlEditorProvider);
 
         FileType pngFile = new FileType(null, MimeType.IMAGE_PNG, "png");
@@ -224,10 +202,17 @@ public class StandardComponentInitializer {
         // Compose New group
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
-        actionManager.registerAction("newProject2", newProjectWizardAction);
-        actionManager.registerAction("newResource", newFileAction);
+        actionManager.registerAction(GROUP_FILE_NEW, newGroup);
+        actionManager.registerAction("newProject", newProjectWizardAction);
+        actionManager.registerAction("newFile", newFileAction);
+        actionManager.registerAction("newFolder", newFolderAction);
+        actionManager.registerAction("newXmlFile", newXmlFileAction);
         newGroup.addAction(newProjectWizardAction);
-        newGroup.add(newFileAction);
+        newGroup.addSeparator();
+        newGroup.addAction(newFileAction);
+        newGroup.addAction(newFolderAction);
+        newGroup.addSeparator();
+        newGroup.addAction(newXmlFileAction);
 
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);

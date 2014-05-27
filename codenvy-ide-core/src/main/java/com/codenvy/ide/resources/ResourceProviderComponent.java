@@ -99,7 +99,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
         this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
-        this.modelProviders = Collections.<ModelProvider>createStringMap();
+        this.modelProviders = Collections.createStringMap();
         this.fileTypes = Collections.createIntegerMap();
     }
 

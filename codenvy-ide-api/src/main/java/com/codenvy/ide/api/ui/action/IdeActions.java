@@ -21,6 +21,7 @@ package com.codenvy.ide.api.ui.action;
 public interface IdeActions {
     String GROUP_MAIN_MENU      = "MainMenu";
     String GROUP_FILE           = "FileGroup";
+    String GROUP_FILE_NEW       = "NewGroup";
     String GROUP_CODE           = "CodeGroup";
     String GROUP_IMPORT_PROJECT = "ImportProjectGroup";
     String GROUP_BUILD          = "BuildGroup";
