@@ -24,6 +24,7 @@ import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.wizard.newproject.ProjectWizardView;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.codenvy.ide.wizard.project.name.NamePagePresenter;
@@ -94,21 +95,25 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         currentPage.commit(new WizardPage.CommitCallback() {
             @Override
             public void onSuccess() {
-
+                view.close();
             }
 
             @Override
             public void onFailure(@NotNull Throwable exception) {
-
+                Info info = new Info("Project already exist");
+                info.show();
             }
         });
-        view.close();
+        namePage.clearFields();
+        mainPage.clearProjectTypePanel();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
+        namePage.clearFields();
+        mainPage.clearProjectTypePanel();
     }
 
     /** {@inheritDoc} */

@@ -59,7 +59,7 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(8);
+        final List<ProjectTemplateDescription> list = new ArrayList<>();
         list.add(new ProjectTemplateDescription("zip",
                                                 "NOTIFICATION API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Notification API.",
@@ -74,12 +74,6 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
                                                 "WIZARD API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Wizard API.",
                                                 baseUrl + "/wizard-api-tutorial.zip"));
-
-        list.add(new ProjectTemplateDescription("zip",
-                                                "NEW RESOURCE WIZARD TUTORIAL",
-                                                "The following tutorial will take you through simple example to learn how to implement a " +
-                                                "new resource wizard.",
-                                                baseUrl + "/new-resource-wizard-tutorial.zip"));
 
         list.add(new ProjectTemplateDescription("zip",
                                                 "PART API TUTORIAL",

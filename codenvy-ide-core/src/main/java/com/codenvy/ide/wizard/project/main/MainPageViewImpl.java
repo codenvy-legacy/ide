@@ -232,6 +232,11 @@ public class MainPageViewImpl implements MainPageView {
         categoriesTree.renderTree();
     }
 
+    @Override
+    public void clearProjectTypePanel() {
+        projectsPanel.getElement().removeAllChildren();
+    }
+
     private class CategoriesDataAdapter implements NodeDataAdapter<String> {
 
         private Map<String, TreeNodeElement<String>> elements = new HashMap<>();

@@ -39,22 +39,7 @@ public interface InitRepositoryView extends View<InitRepositoryView.ActionDelega
         void onValueChanged();
     }
 
-    /**
-     * Return which type of repository must be.
-     *
-     * @return <code>true</code> if the repository must be bare, and <code>false</code> otherwise
-     */
-    boolean isBare();
-
-    /**
-     * Set value of the bare field.
-     *
-     * @param isBare
-     *         state of the field
-     */
-    void setBare(boolean isBare);
-
-    /** @return work directory */
+   /** @return work directory */
     @NotNull
     String getWorkDir();
 

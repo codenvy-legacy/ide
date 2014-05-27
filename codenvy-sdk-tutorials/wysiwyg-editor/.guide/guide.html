@@ -99,12 +99,11 @@ Now we need to make sure IDE knows what exact editor to use when opening particu
 
 <pre>
 @Inject
-    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry, NewHTMLFileProvider newHTMLFileProvider, NewResourceAgent newResourceAgent) {
+    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry) {
 
         FileType htmlFileType = new FileType(null, "text/html", "html");
         resourceProvider.registerFileType(htmlFileType);
         editorRegistry.register(htmlFileType, editorProvider);
-        newResourceAgent.register(newHTMLFileProvider);
     }
 
 </pre>

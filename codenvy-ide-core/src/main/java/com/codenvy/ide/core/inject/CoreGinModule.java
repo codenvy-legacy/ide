@@ -47,6 +47,7 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -60,13 +61,10 @@ import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardDialogFactory;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResource;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
@@ -150,7 +148,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.welcome.WelcomePartView;
 import com.codenvy.ide.welcome.WelcomePartViewImpl;
-import com.codenvy.ide.wizard.NewResourceAgentImpl;
 import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
@@ -162,9 +159,6 @@ import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
 import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
 import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
-import com.codenvy.ide.wizard.newresource.NewResourceWizardProvider;
-import com.codenvy.ide.wizard.newresource.page.NewResourcePageView;
-import com.codenvy.ide.wizard.newresource.page.NewResourcePageViewImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
 import com.codenvy.ide.workspace.PartStackViewFactory;
@@ -226,7 +220,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-        bind(NewResourceAgent.class).to(NewResourceAgentImpl.class).in(Singleton.class);
         bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptorRegistry.class).to(ProjectTypeDescriptorRegistryImpl.class).in(Singleton.class);
         bind(IconRegistry.class).to(IconRegistryImpl.class).in(Singleton.class);
@@ -240,6 +233,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
+
+        bind(UserInfo.class).in(Singleton.class);
     }
 
     /** Configures binding for Editor API */
@@ -290,8 +285,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
 
         bind(ChooseTemplatePageView.class).to(ChooseTemplatePageViewImpl.class);
-        bind(DefaultWizard.class).annotatedWith(NewResource.class).toProvider(NewResourceWizardProvider.class).in(Singleton.class);
-        bind(NewResourcePageView.class).to(NewResourcePageViewImpl.class);
         bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(ImportProjectView.class).to(ImportProjectViewImpl.class);

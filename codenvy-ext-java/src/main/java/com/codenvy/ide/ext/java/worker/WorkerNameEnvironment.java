@@ -28,6 +28,7 @@ import com.codenvy.ide.ext.java.worker.env.Util;
 import com.codenvy.ide.ext.java.worker.env.json.BinaryTypeJso;
 import com.google.gwt.core.client.JavaScriptObject;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -160,7 +161,6 @@ public class WorkerNameEnvironment implements INameEnvironment {
     /** {@inheritDoc} */
     @Override
     public boolean isPackage(char[][] parentPackageName, char[] packageName) {
-        //TODO maybe need more actions on this
         StringBuilder p = new StringBuilder();
         try {
             if (parentPackageName != null) {
@@ -248,13 +248,23 @@ public class WorkerNameEnvironment implements INameEnvironment {
      */
     @Override
     public void findPackages(char[] qualifiedName, final ISearchRequestor requestor) {
-        final String pack = new String(qualifiedName);
-        for (String key : packages) {
-            if (key.startsWith(pack)) {
-                requestor.acceptPackage(key.toCharArray());
+        String url =
+                restServiceContext + "/findPackages" + "?packagename=" + new String(qualifiedName)
+                + "&projectpath=" + projectPath;
+        String pak = runSyncRequest(url);
+        if (pak != null) {
+            JsoArray<String> packages = Jso.deserialize(pak).cast();
+            packages.sort(new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return o1.compareTo(o2);
+                }
+            });
+            for (String s : packages.asIterable()) {
+                requestor.acceptPackage(s.toCharArray());
+                WorkerNameEnvironment.packages.add(s);
             }
         }
-
     }
 
     private String runSyncRequest(String url) {

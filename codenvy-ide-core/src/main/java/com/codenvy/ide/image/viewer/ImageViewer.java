@@ -18,13 +18,17 @@
 package com.codenvy.ide.image.viewer;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.inject.Inject;
 
 /**
  * Is used for displaying images in editor area.
@@ -32,6 +36,16 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @author Ann Shumilova
  */
 public class ImageViewer extends AbstractEditorPresenter {
+
+    private Resources resources;
+
+    /**
+     * 
+     */
+    @Inject
+    public ImageViewer(Resources resources) {
+        this.resources = resources;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -69,7 +83,14 @@ public class ImageViewer extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        container.setWidget(new ScrollPanel(getImage()));
+        VerticalPanel panel = new VerticalPanel();
+        panel.setSize("100%", "100%");
+        panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+        panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        panel.add(getImage());
+        ScrollPanel scrollable = new ScrollPanel(panel);
+        scrollable.getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
+        container.setWidget(scrollable);
     }
 
     /**
@@ -85,8 +106,7 @@ public class ImageViewer extends AbstractEditorPresenter {
             }
         }
         Image image = (contentLink != null) ? new Image(contentLink.getHref()) : new Image();
-        image.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-        image.getElement().getStyle().setBorderWidth(1, Unit.PX);
+        image.setStyleName(resources.workspaceEditorCss().imageViewer());
         return image;
     }
 
@@ -94,4 +114,5 @@ public class ImageViewer extends AbstractEditorPresenter {
     @Override
     protected void initializeEditor() {
     }
+
 }

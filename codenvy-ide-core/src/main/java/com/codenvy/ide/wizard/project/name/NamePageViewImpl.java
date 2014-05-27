@@ -46,6 +46,7 @@ public class NamePageViewImpl implements NamePageView {
 
     public NamePageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
+        projectName.setText("");
         projectVisibility.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -77,6 +78,11 @@ public class NamePageViewImpl implements NamePageView {
     @Override
     public void setProjectName(String name) {
         projectName.setValue(name, true);
+    }
+
+    @Override
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription.setText(projectDescription);
     }
 
     @Override

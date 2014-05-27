@@ -31,6 +31,9 @@ public interface NamePageView extends View<NamePageView.ActionDelegate> {
 
     void setProjectName(String name);
 
+    /** Set project's description. */
+    void setProjectDescription(String projectDescription);
+
     boolean getProjectVisibility();
 
     public interface ActionDelegate{

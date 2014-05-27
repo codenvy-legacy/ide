@@ -23,6 +23,7 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -69,6 +70,7 @@ public class BootstrapController {
     private final ResourceProvider resourceProvider;
     private final UserProfileServiceClient userProfileService;
     private final PreferencesManagerImpl preferencesManager;
+    private final UserInfo userInfo;
     private final StyleInjector styleInjector;
 
     /**
@@ -93,6 +95,7 @@ public class BootstrapController {
                                ResourceProvider resourceProvider,
                                UserProfileServiceClient userProfileService,
                                PreferencesManagerImpl preferencesManager,
+                               UserInfo userInfo,
                                StyleInjector styleInjector,
 
                                DtoRegistrar dtoRegistrar,
@@ -110,6 +113,7 @@ public class BootstrapController {
         this.resourceProvider = resourceProvider;
         this.userProfileService = userProfileService;
         this.preferencesManager = preferencesManager;
+        this.userInfo = userInfo;
         this.styleInjector = styleInjector;
 
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
@@ -158,6 +162,7 @@ public class BootstrapController {
                  new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
                      @Override
                      protected void onSuccess(final Profile profile) {
+                         userInfo.setProfile(profile);
                          /**
                           * Profile received, restore preferences and theme
                           */
@@ -175,8 +180,15 @@ public class BootstrapController {
 
                      @Override
                      protected void onFailure(Throwable exception) {
-                         Log.error(BootstrapController.class, "Unable to ret user profile", exception);
-                         initializationFailed("Unable to get user profile");
+                         // load Codenvy for anonymous user
+                         setTheme();
+                         styleInjector.inject();
+                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                             @Override
+                             public void execute() {
+                                 initializeComponentRegistry();
+                             }
+                         });
                      }
                  }
             );
