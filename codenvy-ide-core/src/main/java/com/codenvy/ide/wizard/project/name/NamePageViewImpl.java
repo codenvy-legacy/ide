@@ -81,6 +81,11 @@ public class NamePageViewImpl implements NamePageView {
     }
 
     @Override
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription.setText(projectDescription);
+    }
+
+    @Override
     public boolean getProjectVisibility() {
         return projectVisibility.getValue();
     }

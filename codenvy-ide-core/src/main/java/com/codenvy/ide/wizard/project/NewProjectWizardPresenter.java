@@ -104,12 +104,16 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
                 info.show();
             }
         });
+        namePage.clearFields();
+        mainPage.clearProjectTypePanel();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
         view.close();
+        namePage.clearFields();
+        mainPage.clearProjectTypePanel();
     }
 
     /** {@inheritDoc} */
