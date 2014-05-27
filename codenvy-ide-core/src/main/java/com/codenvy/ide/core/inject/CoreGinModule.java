@@ -47,6 +47,7 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -232,6 +233,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
+
+        bind(UserInfo.class).in(Singleton.class);
     }
 
     /** Configures binding for Editor API */
