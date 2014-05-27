@@ -11,26 +11,32 @@
 package com.codenvy.ide.ext.java.server.internal.core.search.matching;
 
 import com.codenvy.ide.ext.java.jdt.internal.core.util.Util;
+import com.codenvy.ide.ext.java.server.internal.core.builder.CodenvyClasspathLocation;
 import com.codenvy.ide.ext.java.server.internal.core.util.ResourceCompilationUnit;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
-import org.eclipse.jdt.internal.core.builder.ClasspathLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
-public class ClasspathSourceDirectory extends ClasspathLocation {
-
+public class ClasspathSourceDirectory extends CodenvyClasspathLocation {
+    private static final Logger LOG = LoggerFactory.getLogger(ClasspathSourceDirectory.class);
     File              sourceFolder;
     SimpleLookupTable directoryCache;
     SimpleLookupTable missingPackageHolder = new SimpleLookupTable();
-    char[][] fullExclusionPatternChars;
-    char[][] fulInclusionPatternChars;
+    char[][]    fullExclusionPatternChars;
+    char[][]    fulInclusionPatternChars;
+    Set<String> packagesCache;
 
     ClasspathSourceDirectory(File sourceFolder, char[][] fullExclusionPatternChars, char[][] fulInclusionPatternChars) {
         this.sourceFolder = sourceFolder;
@@ -41,6 +47,7 @@ public class ClasspathSourceDirectory extends ClasspathLocation {
 
     public void cleanup() {
         this.directoryCache = null;
+        packagesCache = null;
     }
 
     SimpleLookupTable directoryTable(String qualifiedPackageName) {
@@ -68,8 +75,8 @@ public class ClasspathSourceDirectory extends ClasspathLocation {
                         }
                     }
                 }
-               this.directoryCache.put(qualifiedPackageName, dirTable);
-               return dirTable;
+                this.directoryCache.put(qualifiedPackageName, dirTable);
+                return dirTable;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,4 +130,36 @@ public class ClasspathSourceDirectory extends ClasspathLocation {
         return this.sourceFolder.getPath();
     }
 
+    @Override
+    public void findPackages(String[] pkgName, ISearchRequestor requestor) {
+        if (packagesCache == null) {
+            packagesCache = new HashSet<>();
+            packagesCache.add("");
+            fillPackagesCache(sourceFolder, "");
+        }
+        String pkg = org.eclipse.jdt.internal.core.util.Util.concatWith(pkgName, '.');
+        for (String s : packagesCache) {
+            if (s.startsWith(pkg)) {
+                requestor.acceptPackage(s.toCharArray());
+            }
+        }
+    }
+
+    private void fillPackagesCache(File parentFolder, String parentPackage) {
+        try {
+            DirectoryStream<Path> directoryStream = Files.newDirectoryStream(parentFolder.toPath());
+            for (Path path : directoryStream) {
+                if (path.toFile().isDirectory()) {
+                    if (org.eclipse.jdt.internal.core.util.Util.isValidFolderNameForPackage(path.getFileName().toString(), "1.7", "1.7")) {
+                        String pack = parentPackage + "." + path.getFileName();
+                        packagesCache.add(pack);
+                        fillPackagesCache(path.toFile(), pack);
+
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Can't read packages", e);
+        }
+    }
 }

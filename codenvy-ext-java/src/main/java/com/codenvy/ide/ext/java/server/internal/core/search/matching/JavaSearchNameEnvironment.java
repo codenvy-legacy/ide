@@ -17,6 +17,9 @@ import com.codenvy.ide.ext.java.server.internal.core.ClasspathEntry;
 import com.codenvy.ide.ext.java.server.internal.core.JavaModelManager;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.PackageFragmentRoot;
+import com.codenvy.ide.ext.java.server.internal.core.builder.ClasspathDirectory;
+import com.codenvy.ide.ext.java.server.internal.core.builder.ClasspathJar;
+import com.codenvy.ide.ext.java.server.internal.core.builder.CodenvyClasspathLocation;
 import com.codenvy.ide.ext.java.server.internal.core.search.BasicSearchEngine;
 import com.codenvy.ide.ext.java.server.internal.core.search.IRestrictedAccessConstructorRequestor;
 import com.codenvy.ide.ext.java.server.internal.core.search.IRestrictedAccessTypeRequestor;
@@ -40,8 +43,6 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.internal.core.INameEnvironmentWithProgress;
 import org.eclipse.jdt.internal.core.NameLookup;
-import org.eclipse.jdt.internal.core.builder.ClasspathJar;
-import org.eclipse.jdt.internal.core.builder.ClasspathLocation;
 import org.eclipse.jdt.internal.core.util.Util;
 
 import java.io.File;
@@ -53,7 +54,7 @@ import java.util.zip.ZipFile;
  */
 public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConstants, INameEnvironmentWithProgress {
 
-    ClasspathLocation[] locations;
+    CodenvyClasspathLocation[] locations;
 
     /*
      * A map from the fully qualified slash-separated name of the main type (String) to the working copy
@@ -85,7 +86,7 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
     }
 
     public void cleanup() {
-        for (ClasspathLocation location : this.locations) {
+        for (CodenvyClasspathLocation location : this.locations) {
             location.cleanup();
         }
     }
@@ -94,7 +95,7 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
      * reset only source locations
      */
     public void reset() {
-        for (ClasspathLocation location : this.locations) {
+        for (CodenvyClasspathLocation location : this.locations) {
             if (location instanceof ClasspathSourceDirectory)
                 location.cleanup();
         }
@@ -108,11 +109,11 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
             roots = javaProject.getAllPackageFragmentRoots();
         } catch (JavaModelException e) {
             // project doesn't exist
-            this.locations = new ClasspathLocation[0];
+            this.locations = new CodenvyClasspathLocation[0];
             return;
         }
         int length = roots.length;
-        ClasspathLocation[] cpLocations = new ClasspathLocation[length];
+        CodenvyClasspathLocation[] cpLocations = new CodenvyClasspathLocation[length];
         int index = 0;
         JavaModelManager manager = JavaModelManager.getJavaModelManager();
         for (int i = 0; i < length; i++) {
@@ -127,13 +128,12 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
                     if (target == null) {
                         // target doesn't exist any longer
                         // just resize cpLocations
-                        System.arraycopy(cpLocations, 0, cpLocations = new ClasspathLocation[cpLocations.length - 1], 0, index);
+                        System.arraycopy(cpLocations, 0, cpLocations = new CodenvyClasspathLocation[cpLocations.length - 1], 0, index);
                     } else if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
                         cpLocations[index++] = new ClasspathSourceDirectory((File)target, root.fullExclusionPatternChars(),
                                                                             root.fullInclusionPatternChars());
                     } else {
-                        cpLocations[index++] = ClasspathLocation
-                                .forBinaryFolder((IContainer)target, false,
+                        cpLocations[index++] = new ClasspathDirectory((IContainer)target, false,
                                                  ((ClasspathEntry)root.getRawClasspathEntry()).getAccessRuleSet());
                     }
                 }
@@ -141,7 +141,7 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
                 // problem opening zip file or getting root kind
                 // consider root corrupt and ignore
                 // just resize cpLocations
-                System.arraycopy(cpLocations, 0, cpLocations = new ClasspathLocation[cpLocations.length - 1], 0, index);
+                System.arraycopy(cpLocations, 0, cpLocations = new CodenvyClasspathLocation[cpLocations.length - 1], 0, index);
             }
         }
         this.locations = cpLocations;
@@ -154,7 +154,7 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
                 qPackageName = null;
         NameEnvironmentAnswer suggestedAnswer = null;
         for (int i = 0, length = this.locations.length; i < length; i++) {
-            ClasspathLocation location = this.locations[i];
+            CodenvyClasspathLocation location = this.locations[i];
             NameEnvironmentAnswer answer;
             if (location instanceof ClasspathSourceDirectory) {
                 if (sourceFileName == null) {
@@ -229,8 +229,8 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
     }
 
     public boolean isPackage(String qualifiedPackageName) {
-        for (int i = 0, length = this.locations.length; i < length; i++)
-            if (this.locations[i].isPackage(qualifiedPackageName))
+        for (CodenvyClasspathLocation location : this.locations)
+            if (location.isPackage(qualifiedPackageName))
                 return true;
         return false;
     }
@@ -657,10 +657,10 @@ public class JavaSearchNameEnvironment implements INameEnvironment, SuffixConsta
      *    ISearchRequestor.acceptPackage(char[][] packageName)
      */
     public void findPackages(char[] prefix, ISearchRequestor requestor) {
-//        this.nameLookup.seekPackageFragments(
-//                new String(prefix),
-//                true,
-//                new SearchableEnvironmentRequestor(requestor));
-        throw new UnsupportedOperationException();
+        String name = new String(prefix);
+        String[] splittedName = Util.splitOn('.', name, 0, name.length());
+        for (CodenvyClasspathLocation location : this.locations) {
+            location.findPackages(splittedName, requestor);
+        }
     }
 }

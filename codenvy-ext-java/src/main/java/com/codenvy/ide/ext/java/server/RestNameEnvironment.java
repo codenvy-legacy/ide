@@ -56,6 +56,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -104,8 +105,7 @@ public class RestNameEnvironment {
     @javax.ws.rs.Path("findTypeCompound")
     public String findTypeCompound(@QueryParam("compoundTypeName") String compoundTypeName, @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
-
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
         try {
             NameEnvironmentAnswer answer = environment.findType(getCharArrayFrom(compoundTypeName));
             if (answer == null && compoundTypeName.contains("$")) {
@@ -154,7 +154,7 @@ public class RestNameEnvironment {
     public String findType(@QueryParam("typename") String typeName, @QueryParam("packagename") String packageName,
                            @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
 
         NameEnvironmentAnswer answer = environment.findType(typeName.toCharArray(), getCharArrayFrom(packageName));
         try {
@@ -173,8 +173,19 @@ public class RestNameEnvironment {
     public String isPackage(@QueryParam("packagename") String packageName, @QueryParam("parent") String parentPackageName,
                             @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
         return String.valueOf(environment.isPackage(getCharArrayFrom(parentPackageName), packageName.toCharArray()));
+    }
+
+    @GET
+    @Path("findPackages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findPackages(@QueryParam("packagename") String packageName, @QueryParam("projectpath") String projectPath) {
+        JavaProject javaProject = getJavaProject(projectPath);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
+        JsonSearchRequester requestor = new JsonSearchRequester();
+        environment.findPackages(packageName.toCharArray(), requestor);
+        return requestor.toJsonString();
     }
 
     @GET
@@ -184,7 +195,7 @@ public class RestNameEnvironment {
                                               @QueryParam("camelcase") boolean camelCaseMatch,
                                               @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
         JsonSearchRequester searchRequester = new JsonSearchRequester();
         environment.findConstructorDeclarations(prefix.toCharArray(), camelCaseMatch, searchRequester, null);
         return searchRequester.toJsonString();
@@ -198,7 +209,7 @@ public class RestNameEnvironment {
                             @QueryParam("searchfor") int searchFor,
                             @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
         JsonSearchRequester searchRequester = new JsonSearchRequester();
         environment.findTypes(qualifiedName.toCharArray(), findMembers, camelCaseMatch, searchFor, searchRequester);
         return searchRequester.toJsonString();
@@ -211,7 +222,7 @@ public class RestNameEnvironment {
                                  @QueryParam("searchfor") int searchFor,
                                  @QueryParam("projectpath") String projectPath) {
         JavaProject javaProject = getJavaProject(projectPath);
-        JavaSearchNameEnvironment environment = new JavaSearchNameEnvironment(javaProject, null);
+        JavaSearchNameEnvironment environment = javaProject.getNameEnvironment();
         JsonSearchRequester searchRequester = new JsonSearchRequester();
         environment.findExactTypes(missingSimpleName.toCharArray(), findMembers, searchFor, searchRequester);
         return searchRequester.toJsonString();
