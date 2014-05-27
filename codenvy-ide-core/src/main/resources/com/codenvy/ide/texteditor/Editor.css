@@ -134,3 +134,11 @@
         width: auto;
         overflow: visible;
     }
+    
+    @url background imageViewerBackground;
+    
+    .imageViewer {
+    	margin: auto;
+    	background-image: background;
+    	display: block;
+    }

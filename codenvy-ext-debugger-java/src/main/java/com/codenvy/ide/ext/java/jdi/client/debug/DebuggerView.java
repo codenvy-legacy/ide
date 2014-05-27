@@ -22,6 +22,7 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.ext.java.jdi.shared.Variable;
+import com.codenvy.ide.ext.java.jdi.shared.Location;
 import com.google.gwt.user.client.ui.ToggleButton;
 
 import javax.validation.constraints.NotNull;
@@ -70,6 +71,16 @@ public interface DebuggerView extends View<DebuggerView.ActionDelegate> {
          */
         void onSelectedVariableElement(@NotNull Variable variable);
     }
+
+    /**
+     * Sets additional information for variables.
+     *
+     * @param absentInformation
+     *         availability status for variables
+     * @param location
+     *         Information about the location of the resource
+     */
+    public void setVariablesInfo(boolean absentInformation, Location location);
 
     /**
      * Sets variables.

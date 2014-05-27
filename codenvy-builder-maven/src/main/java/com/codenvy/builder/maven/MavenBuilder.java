@@ -98,10 +98,10 @@ public class MavenBuilder extends Builder {
     private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
 
     @Inject
-    public MavenBuilder(@Named(Constants.REPOSITORY) java.io.File rootDirectory,
+    public MavenBuilder(@Named(Constants.BASE_DIRECTORY) java.io.File rootDirectory,
                         @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
-                        @Named(Constants.INTERNAL_QUEUE_SIZE) int queueSize,
-                        @Named(Constants.CLEANUP_RESULT_TIME) int cleanupTime,
+                        @Named(Constants.QUEUE_SIZE) int queueSize,
+                        @Named(Constants.KEEP_RESULT_TIME) int cleanupTime,
                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanupTime, eventService);
     }

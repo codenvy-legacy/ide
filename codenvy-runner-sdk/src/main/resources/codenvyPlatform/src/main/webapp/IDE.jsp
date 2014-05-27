@@ -75,12 +75,6 @@
         };
         */
 
-        /**
-         * Make URL pretty
-         */
-
-        window.history.pushState("", window.document.title, "/ide/" + window.IDE.config.workspaceName);
-
     </script>
 
     <script type="text/javascript" src="/ide/_app/greetings/greetings.js"></script>

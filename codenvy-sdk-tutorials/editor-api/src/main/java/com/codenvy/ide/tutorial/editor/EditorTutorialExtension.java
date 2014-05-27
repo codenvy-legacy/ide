@@ -4,15 +4,16 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.wizard.newresource.NewResourceAgent;
+import com.codenvy.ide.api.ui.action.ActionManager;
+import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.editor.editor.GroovyEditorProvider;
 import com.codenvy.ide.tutorial.editor.part.TutorialHowToPresenter;
-import com.codenvy.ide.tutorial.editor.provider.NewGroovyFileProvider;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 import static com.google.gwt.core.client.ScriptInjector.TOP_WINDOW;
 
@@ -29,8 +30,8 @@ public class EditorTutorialExtension {
                                    ResourceProvider resourceProvider,
                                    GroovyEditorProvider groovyEditorProvider,
                                    EditorTutorialResource editorTutorialResource,
-                                   NewResourceAgent newResourceAgent,
-                                   NewGroovyFileProvider newGroovyFileProvider,
+                                   ActionManager actionManager,
+                                   NewGroovyFileAction newGroovyFileAction,
                                    EditorTutorialResource resource) {
         editorTutorialResource.groovyCSS().ensureInjected();
         ScriptInjector.fromString(editorTutorialResource.groovyParserJS().getText()).setWindow(TOP_WINDOW).inject();
@@ -42,6 +43,9 @@ public class EditorTutorialExtension {
 
         editorRegistry.register(groovyFile, groovyEditorProvider);
 
-        newResourceAgent.register(newGroovyFileProvider);
+        actionManager.registerAction("newGroovyFileActionId", newGroovyFileAction);
+        DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
+        newGroup.addSeparator();
+        newGroup.add(newGroovyFileAction);
     }
 }

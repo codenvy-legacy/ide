@@ -57,9 +57,6 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Tab-Below")
         String idePartStackTabBelow();
 
-//        @ClassName("ide-PartStack-Tab-selected-Below")
-//        String idePartStackTabSelectedBelow();
-
         @ClassName("ide-Base-Part-Toolbar")
         String ideBasePartToolbar();
 
@@ -100,10 +97,10 @@ public interface PartStackUIResources extends ClientBundle {
         String idePartStackMultipleTabsItem();
 
         @ClassName("ide-Base-Part-Title-Label")
-        String ideBasePartTitleLabel ();
+        String ideBasePartTitleLabel();
 
-        @ClassName("ide-PartStack-Boton-Left")
-        String idePartStackBotonLeft();
+        @ClassName("ide-PartStack-Button-Left")
+        String idePartStackButtonLeft();
     }
 
     @Source({"partstack.css", "com/codenvy/ide/api/ui/style.css"})

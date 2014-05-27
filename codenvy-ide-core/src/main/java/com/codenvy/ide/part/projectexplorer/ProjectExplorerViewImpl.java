@@ -33,6 +33,7 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.dom.client.Document;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -49,10 +50,10 @@ import javax.validation.constraints.NotNull;
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
-    private Resources        resources;
-    private SVGImage         projectVisibilityImage;
-    private InlineLabel      projectTitle;
-    private FlowPanel        projectHeader;
+    private   Resources      resources;
+    private   SVGImage       projectVisibilityImage;
+    private   InlineLabel    projectTitle;
+    private   FlowPanel      projectHeader;
 
     /**
      * Create view.
@@ -159,13 +160,14 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader.add(delimeter);
 
         projectVisibilityImage = new SVGImage("private".equals(project.getVisibility()) ? resources.privateProject()
-                                     : resources.publicProject());
+                                                                                        : resources.publicProject());
         projectVisibilityImage.getElement().setAttribute("class", resources.partStackCss().idePartStackToolbarBottomIcon());
         projectHeader.add(projectVisibilityImage);
 
         projectTitle = new InlineLabel(project.getName());
         projectTitle.getElement().getStyle().setFloat(Float.LEFT);
         projectHeader.add(projectTitle);
+        Document.get().setTitle("Codenvy | " + project.getName());
     }
 
     /** {@inheritDoc} */

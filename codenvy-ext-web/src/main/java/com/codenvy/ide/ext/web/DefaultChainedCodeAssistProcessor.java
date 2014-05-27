@@ -18,13 +18,10 @@
 
 package com.codenvy.ide.ext.web;
 
-import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.CodeAssistCallback;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;

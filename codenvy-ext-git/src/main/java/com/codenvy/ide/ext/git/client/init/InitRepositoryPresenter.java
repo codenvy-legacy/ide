@@ -81,7 +81,6 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
         project = resourceProvider.getActiveProject();
 
         view.setWorkDir(project.getPath());
-        view.setBare(false);
         view.setEnableOkButton(true);
         view.showDialog();
     }
@@ -89,13 +88,12 @@ public class InitRepositoryPresenter implements InitRepositoryView.ActionDelegat
     /** {@inheritDoc} */
     @Override
     public void onOkClicked() {
-        boolean bare = view.isBare();
         String projectName = project.getName();
         String projectId = project.getId();
         view.close();
 
         try {
-            service.init(projectId, projectName, bare, new RequestCallback<Void>() {
+            service.init(projectId, projectName, false, new RequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     Notification notification = new Notification(constant.initSuccess(), INFO);
