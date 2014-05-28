@@ -194,6 +194,10 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("newResource.label")
     String newResourceLabel();
 
+    /* Messages */
+    @Key("messages.changesMayBeLost")
+    String changesMayBeLost();
+
     /* Buttons */
     @Key("ok")
     String ok();
