@@ -24,6 +24,7 @@ import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
+import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
@@ -78,11 +79,12 @@ public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
     private final VirtualFileImpl virtualFile;
-    private       Project         project;
+    private final JavaSearchNameEnvironment nameEnvironment;
+    private Project             project;
     private Map<String, String> options;
-    private IClasspathEntry[] rawClassPath;
-    private ResolvedClasspath resolvedClasspath;
-    private IndexManager      indexManager;
+    private IClasspathEntry[]   rawClassPath;
+    private ResolvedClasspath   resolvedClasspath;
+    private IndexManager        indexManager;
 
     public JavaProject(Project project, String tempDir, ProjectManager projectManager, String ws, Map<String, String> options) {
         super(null);
@@ -136,6 +138,11 @@ public class JavaProject extends Openable implements IJavaProject {
 //        thread.start();
         indexManager.indexAll(this);
         indexManager.saveIndexes();
+        nameEnvironment = new JavaSearchNameEnvironment(this, null);
+    }
+
+    public JavaSearchNameEnvironment getNameEnvironment() {
+        return nameEnvironment;
     }
 
     private void addSources(Project project, List<IClasspathEntry> paths) throws IOException {
@@ -857,6 +864,7 @@ public class JavaProject extends Openable implements IJavaProject {
     @Override
     public void close() throws JavaModelException {
        indexManager.shutdown();
+       nameEnvironment.cleanup();
     }
 
     @Override
