@@ -122,4 +122,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         delegate.updateControls();
     }
+
+    public void clearProjectTypePanel() {
+        view.clearProjectTypePanel();
+    }
 }

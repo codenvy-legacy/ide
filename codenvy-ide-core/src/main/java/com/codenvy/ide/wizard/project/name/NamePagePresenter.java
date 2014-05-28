@@ -33,7 +33,6 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -200,5 +199,10 @@ public class NamePagePresenter extends AbstractWizardPage implements NamePageVie
     @Override
     public void onVisibilityChanged(boolean value) {
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, view.getProjectVisibility());
+    }
+
+    public void clearFields() {
+        view.setProjectName("");
+        view.setProjectDescription("");
     }
 }

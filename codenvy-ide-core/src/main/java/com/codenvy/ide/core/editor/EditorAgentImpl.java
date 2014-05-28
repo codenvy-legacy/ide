@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -26,6 +27,8 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
@@ -78,7 +81,25 @@ public class EditorAgentImpl implements EditorAgent {
             }
         }
     };
-    private final WorkspaceAgent      workspace;
+    private final WindowActionHandler      windowActionHandler      = new WindowActionHandler() {
+        @Override
+        public void onWindowClosing(final WindowActionEvent event) {
+            openedEditors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
+                @Override
+                public void onIteration(String s, EditorPartPresenter editorPartPresenter) {
+                    if (editorPartPresenter.isDirty()) {
+                        event.setMessage(coreLocalizationConstant.changesMayBeLost());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onWindowClosed(WindowActionEvent event) {
+        }
+    };
+    private final WorkspaceAgent workspace;
+    private CoreLocalizationConstant coreLocalizationConstant;
     private final EventBus            eventBus;
     private       EditorRegistry      editorRegistry;
     private       ResourceProvider    provider;
@@ -86,12 +107,13 @@ public class EditorAgentImpl implements EditorAgent {
 
     @Inject
     public EditorAgentImpl(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
-                           final WorkspaceAgent workspace) {
+                           final WorkspaceAgent workspace, CoreLocalizationConstant coreLocalizationConstant) {
         super();
         this.eventBus = eventBus;
         this.editorRegistry = editorRegistry;
         this.provider = provider;
         this.workspace = workspace;
+        this.coreLocalizationConstant = coreLocalizationConstant;
         openedEditors = Collections.createStringMap();
 
         bind();
@@ -100,6 +122,7 @@ public class EditorAgentImpl implements EditorAgent {
     protected void bind() {
         eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
         eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
+        eventBus.addHandler(WindowActionEvent.TYPE, windowActionHandler);
     }
 
     /** {@inheritDoc} */
