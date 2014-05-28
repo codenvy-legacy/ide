@@ -56,6 +56,7 @@
     display: inline-block;
     vertical-align: middle;
     margin-top: -4px;
+    pointer-events: none; /* do not allow SVG element to intercept pointer events */
 }
 
 .folderFont {

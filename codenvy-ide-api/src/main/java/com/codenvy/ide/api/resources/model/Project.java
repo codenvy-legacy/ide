@@ -126,7 +126,7 @@ public class Project extends Folder {
      */
     public String getAttributeValue(String attributeName) {
         List<String> attributeValues = getAttributeValues(attributeName);
-        if (attributeValues != null) {
+        if (attributeValues != null && !attributeValues.isEmpty()) {
             return attributeValues.get(0);
         }
         return null;

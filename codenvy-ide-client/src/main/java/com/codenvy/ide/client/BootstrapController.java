@@ -23,7 +23,7 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.user.UserInfo;
+import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -32,6 +32,7 @@ import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
@@ -46,11 +47,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Performs initial application startup.
@@ -64,30 +69,17 @@ public class BootstrapController {
     private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private final IconRegistry                        iconRegistry;
     private final ThemeAgent                          themeAgent;
-    private final Provider<ComponentRegistry> componentRegistry;
-    private final Provider<WorkspacePresenter> workspaceProvider;
-    private final ExtensionInitializer extensionInitializer;
-    private final ResourceProvider resourceProvider;
-    private final UserProfileServiceClient userProfileService;
-    private final PreferencesManagerImpl preferencesManager;
-    private final UserInfo userInfo;
-    private final StyleInjector styleInjector;
+    private final Provider<ComponentRegistry>         componentRegistry;
+    private final Provider<WorkspacePresenter>        workspaceProvider;
+    private final ExtensionInitializer                extensionInitializer;
+    private final ResourceProvider                    resourceProvider;
+    private final UserProfileServiceClient            userProfileService;
+    private final PreferencesManagerImpl              preferencesManager;
+    private final UserInfo                            userInfo;
+    private final StyleInjector                       styleInjector;
+    private final EventBus                            eventBus;
 
-    /**
-     * Create controller.
-     *
-     * @param componentRegistry
-     * @param workspaceProvider
-     * @param styleInjector
-     * @param extensionInitializer
-     * @param preferencesManager
-     * @param userProfileService
-     * @param projectTypeDescriptionServiceClient
-     * @param projectTypeDescriptorRegistry
-     * @param resourceProvider
-     * @param dtoRegistrar
-     * @param themeAgent
-     */
+    /** Create controller. */
     @Inject
     public BootstrapController(Provider<ComponentRegistry> componentRegistry,
                                Provider<WorkspacePresenter> workspaceProvider,
@@ -101,6 +93,7 @@ public class BootstrapController {
                                DtoRegistrar dtoRegistrar,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                Resources resources,
+                               EventBus eventBus,
 
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
@@ -115,6 +108,7 @@ public class BootstrapController {
         this.preferencesManager = preferencesManager;
         this.userInfo = userInfo;
         this.styleInjector = styleInjector;
+        this.eventBus = eventBus;
 
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
@@ -251,8 +245,7 @@ public class BootstrapController {
         WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
         // Display 'Update extension' button if IDE is launched in SDK runner
-        workspacePresenter.setUpdateButtonVisibility(
-                Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
+        workspacePresenter.setUpdateButtonVisibility(Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
 
         // Display IDE
         workspacePresenter.go(mainPanel);
@@ -272,6 +265,20 @@ public class BootstrapController {
                         }
                     });
         }
+
+        // Bind browser's window events
+        Window.addWindowClosingHandler(new Window.ClosingHandler() {
+            @Override
+            public void onWindowClosing(Window.ClosingEvent event) {
+                eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
+            }
+        });
+        Window.addCloseHandler(new CloseHandler<Window>() {
+            @Override
+            public void onClose(CloseEvent<Window> event) {
+                eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
+            }
+        });
     }
 
     /** Applying user defined Theme. */
