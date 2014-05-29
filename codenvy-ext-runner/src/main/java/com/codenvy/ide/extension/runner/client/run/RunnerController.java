@@ -23,6 +23,7 @@ import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -46,12 +47,11 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.Date;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -88,6 +88,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected Project                                           activeProject;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
+    private   RunnerMetric                                      lastAppWaitingTimeLimit;
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
@@ -314,6 +315,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 workspaceAgent.setActivePart(console);
                 break;
+            case FAILED:
+                isAnyAppRunning = false;
+                stopCheckingStatus();
+                getLogs();
+
+                notification.setStatus(FINISHED);
+                notification.setType(ERROR);
+                notification.setMessage(constant.applicationFailed(activeProject.getName()));
+
+                workspaceAgent.setActivePart(console);
+                break;
             case CANCELLED:
                 isAnyAppRunning = false;
                 stopCheckingStatus();
@@ -416,47 +428,56 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Returns URL of the application which is currently running. */
+    @Nullable
     public String getCurrentAppURL() {
-        // TODO: don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null) {
+        // don't show app URL in console when app is stopped. After some time this URL may be used by other app.
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
             return getAppLink(lastApplicationDescriptor);
         }
         return null;
     }
 
-    /** Returns time when last app started, in format HH:mm:ss. */
-    public String getCurrentAppStartTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0) {
-            final Date startDate = new Date(lastApplicationDescriptor.getStartTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
-        }
-        return "--:--:--";
+    /** Returns startTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStartTime() {
+        return getRunnerMetric("startTime");
     }
 
-    /** Returns time when last app stopped in format HH:mm:ss. */
-    public String getCurrentAppStopTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStopTime() > 0) {
-            final Date stopDate = new Date(lastApplicationDescriptor.getStopTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
+    /** Returns waitingTimeLimit {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppTimeoutThreshold() {
+        if (lastApplicationDescriptor == null) {
+            return null;
         }
-        return "--:--:--";
+        RunnerMetric waitingTime = getRunnerMetric("waitingTimeLimit");
+        if (waitingTime != null) {
+            lastAppWaitingTimeLimit = waitingTime;
+        }
+        return lastAppWaitingTimeLimit;
     }
 
-    /** Returns total time which application was launched, in format mm:ss.ms. */
-    public String getTotalTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0 &&
-            lastApplicationDescriptor.getStopTime() > 0) {
-            final long totalTimeMs = lastApplicationDescriptor.getStopTime() - lastApplicationDescriptor.getStartTime();
-            int ms = (int)(totalTimeMs % 1000);
-            int ss = (int)(totalTimeMs / 1000);
-            int mm = 0;
-            if (ss > 60) {
-                mm = ss / 60;
-                ss = ss % 60;
+    /** Returns stopTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStopTime() {
+        return getRunnerMetric("stopTime");
+    }
+
+    /** Returns uptime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getTotalTime() {
+        return getRunnerMetric("uptime");
+    }
+
+    @Nullable
+    private RunnerMetric getRunnerMetric(String metricName) {
+        if (lastApplicationDescriptor != null) {
+            for (RunnerMetric runnerStat : lastApplicationDescriptor.getRunStats()) {
+                if (metricName.equals(runnerStat.getName())) {
+                    return runnerStat;
+                }
             }
-            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
         }
-        return "--:--.---";
+        return null;
     }
 
     private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
@@ -486,6 +507,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return url;
     }
 
+    @Nullable
     private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
         List<Link> links = appDescriptor.getLinks();
         for (Link link : links) {
@@ -495,43 +517,4 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
-    private static String getDoubleDigit(int i) {
-        final String doubleDigitI;
-        switch (i) {
-            case 0:
-                doubleDigitI = "00";
-                break;
-            case 1:
-                doubleDigitI = "01";
-                break;
-            case 2:
-                doubleDigitI = "02";
-                break;
-            case 3:
-                doubleDigitI = "03";
-                break;
-            case 4:
-                doubleDigitI = "04";
-                break;
-            case 5:
-                doubleDigitI = "05";
-                break;
-            case 6:
-                doubleDigitI = "06";
-                break;
-            case 7:
-                doubleDigitI = "07";
-                break;
-            case 8:
-                doubleDigitI = "08";
-                break;
-            case 9:
-                doubleDigitI = "09";
-                break;
-            default:
-                doubleDigitI = Integer.toString(i);
-        }
-        return doubleDigitI;
-    }
 }
