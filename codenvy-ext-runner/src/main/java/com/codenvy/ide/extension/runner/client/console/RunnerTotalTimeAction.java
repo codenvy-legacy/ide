@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -42,6 +43,12 @@ public class RunnerTotalTimeAction extends InfoAction {
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getTotalTime());
+        final RunnerMetric metric = runnerController.getTotalTime();
+        if (metric != null) {
+            presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
+            presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
+        } else {
+            presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
+        }
     }
 }
