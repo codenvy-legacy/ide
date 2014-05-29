@@ -314,6 +314,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 workspaceAgent.setActivePart(console);
                 break;
+            case FAILED:
+                isAnyAppRunning = false;
+                stopCheckingStatus();
+
+                notification.setStatus(FINISHED);
+                notification.setType(ERROR);
+                notification.setMessage(constant.applicationFailed(activeProject.getName()));
+
+                workspaceAgent.setActivePart(console);
+                break;
             case CANCELLED:
                 isAnyAppRunning = false;
                 stopCheckingStatus();
