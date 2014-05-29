@@ -41,6 +41,14 @@ public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
      */
     void print(String text);
 
+    void print(String text, String color);
+
+    void printInfo(String text);
+
+    void printWarn(String text);
+
+    void printError(String text);
+
     /**
      * Set title of console part.
      *

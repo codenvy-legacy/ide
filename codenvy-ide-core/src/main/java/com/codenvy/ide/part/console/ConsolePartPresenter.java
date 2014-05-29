@@ -88,7 +88,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     public void print(String text) {
         String []lines = text.split("\n");
         for (String line : lines) {
-            view.print(line);
+            view.print(line.isEmpty() ? " " : line);
         }
         performPostOutputActions();
     }
@@ -110,7 +110,6 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     public void onOpen() {
         super.onOpen();
         Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
-
             @Override
             public boolean execute() {
                 view.scrollBottom();
@@ -124,15 +123,21 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     }
 
     @Override
-    public void displayMsgInfo(String text) {
+    public void printInfo(String text) {
+        view.printInfo(text);
+        performPostOutputActions();
     }
 
     @Override
-    public void displayMsgError(String text) {
+    public void printWarn(String text) {
+        view.printWarn(text);
+        performPostOutputActions();
     }
 
     @Override
-    public void displayMsgWarn(String text) {
+    public void printError(String text) {
+        view.printError(text);
+        performPostOutputActions();
     }
 
 }
