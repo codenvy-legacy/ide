@@ -15,35 +15,35 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Codenvy S.A..
  */
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.builder.client.console;
 
-import com.codenvy.api.runner.dto.RunnerMetric;
+import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.builder.client.BuilderResources;
+import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show time when runner finished.
+ * Action used to show build timeout threshold.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerFinishedAction extends InfoAction {
-    private final RunnerController runnerController;
+public class BuildTimeoutThresholdAction extends InfoAction {
+    private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public RunnerFinishedAction(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Finished At", false, resources);
-        this.runnerController = runnerController;
+    public BuildTimeoutThresholdAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Timeout Threshold", false, resources);
+        this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppStopTime();
+        final BuilderMetric metric = buildProjectPresenter.getLastBuildTimeoutThreshold();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

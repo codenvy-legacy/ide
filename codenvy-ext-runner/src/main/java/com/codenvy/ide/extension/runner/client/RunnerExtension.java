@@ -35,6 +35,7 @@ import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerTimeoutThresholdAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
@@ -67,6 +68,7 @@ public class RunnerExtension {
                            ClearConsoleAction clearConsoleAction,
                            ApplicationURLAction applicationURLAction,
                            RunnerStartedAction runnerStartedAction,
+                           RunnerTimeoutThresholdAction runnerTimeoutThresholdAction,
                            RunnerFinishedAction runnerFinishedAction,
                            RunnerTotalTimeAction runnerTotalTimeAction,
                            WorkspaceAgent workspaceAgent,
@@ -116,6 +118,8 @@ public class RunnerExtension {
         consoleToolbarActionGroup.add(applicationURLAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerTimeoutThresholdAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerFinishedAction);
         consoleToolbarActionGroup.addSeparator();

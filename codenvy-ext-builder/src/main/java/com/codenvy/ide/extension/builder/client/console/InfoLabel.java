@@ -87,7 +87,7 @@ public class InfoLabel extends Composite {
 
         if (isURL) {
             if (value.length() > 20) {
-                dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length()-10));
+                dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length() - 10));
             } else {
                 dataAnchor.setText(value);
             }
@@ -98,11 +98,26 @@ public class InfoLabel extends Composite {
         }
     }
 
+    private void setHint(String value) {
+        if (value == null) {
+            value = "";
+        }
+
+        if (isURL) {
+            dataAnchor.setTitle(value);
+        } else {
+            dataLabel.setTitle(value);
+        }
+    }
+
     private class PropertyListener implements PropertyChangeListener {
         @Override
         public void onPropertyChange(PropertyChangeEvent e) {
-            if (Properties.DATA_PROPERTY.equals(e.getPropertyName())) {
-                setData((String)e.getNewValue());
+            switch (e.getPropertyName()) {
+                case Properties.DATA_PROPERTY:
+                    setData((String)e.getNewValue());
+                case Properties.HINT_PROPERTY:
+                    setHint((String)e.getNewValue());
             }
         }
     }

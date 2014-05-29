@@ -17,7 +17,12 @@
  */
 package com.codenvy.ide.extension.builder.client.console;
 
-/** @author Artem Zatsarynnyy */
-public interface Properties {
+/**
+ * Properties for {@link InfoLabel}.
+ *
+ * @author Artem Zatsarynnyy
+ */
+interface Properties {
     String DATA_PROPERTY = "data";
+    String HINT_PROPERTY = "hint";
 }
