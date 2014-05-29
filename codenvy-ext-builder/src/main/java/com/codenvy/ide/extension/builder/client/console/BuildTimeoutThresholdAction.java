@@ -26,24 +26,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show time when build task started.
+ * Action used to show build timeout threshold.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildStartedAction extends InfoAction {
+public class BuildTimeoutThresholdAction extends InfoAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public BuildStartedAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Started At", false, resources);
+    public BuildTimeoutThresholdAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Timeout Threshold", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final BuilderMetric metric = buildProjectPresenter.getLastBuildStartTime();
+        final BuilderMetric metric = buildProjectPresenter.getLastBuildTimeoutThreshold();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

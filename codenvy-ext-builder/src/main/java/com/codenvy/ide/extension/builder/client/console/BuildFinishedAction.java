@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.extension.builder.client.console;
 
+import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
@@ -42,6 +43,12 @@ public class BuildFinishedAction extends InfoAction {
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildEndTime());
+        final BuilderMetric metric = buildProjectPresenter.getLastBuildEndTime();
+        if (metric != null) {
+            presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
+            presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
+        } else {
+            presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
+        }
     }
 }
