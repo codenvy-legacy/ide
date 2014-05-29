@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
 import com.codenvy.ide.extension.builder.client.console.BuildStatusAction;
 import com.codenvy.ide.extension.builder.client.console.BuildFinishedAction;
 import com.codenvy.ide.extension.builder.client.console.BuildStartedAction;
+import com.codenvy.ide.extension.builder.client.console.BuildTimeoutThresholdAction;
 import com.codenvy.ide.extension.builder.client.console.BuildTotalTimeAction;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
@@ -69,6 +70,7 @@ public class BuilderExtension {
                             BuildStartedAction buildStartedAction,
                             BuildFinishedAction buildFinishedAction,
                             BuildTotalTimeAction buildTotalTimeAction,
+                            BuildTimeoutThresholdAction buildTimeoutThresholdAction,
                             BuildStatusAction buildStatusAction,
                             WorkspaceAgent workspaceAgent,
                             BuilderConsolePresenter builderConsolePresenter,
@@ -106,6 +108,8 @@ public class BuilderExtension {
         consoleToolbarActionGroup.add(artifactURLAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildTimeoutThresholdAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildFinishedAction);
         consoleToolbarActionGroup.addSeparator();

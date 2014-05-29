@@ -107,6 +107,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("stopAppFailed")
     String stopApplicationFailed(String name);
 
+    @Key("appFailed")
+    String applicationFailed(String name);
+
     @Key("appCanceled")
     String applicationCanceled(String name);
 
