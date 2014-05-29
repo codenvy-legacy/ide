@@ -317,6 +317,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             case FAILED:
                 isAnyAppRunning = false;
                 stopCheckingStatus();
+                getLogs();
 
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
