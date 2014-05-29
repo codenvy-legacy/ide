@@ -23,7 +23,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M17.1</version>
     </parent>
     <artifactId>codenvy-sdk-api-war</artifactId>
     <packaging>war</packaging>
