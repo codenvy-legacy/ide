@@ -68,6 +68,10 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "MAVEN JAR PROJECT",
                                                 "Simple JAR project which uses Maven build system.",
                                                 "templates/MavenJar.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN Console App",
+                                                "Simple Console Application.",
+                                                "templates/MavenConsoleApp.zip"));
         return list;
     }
 }
