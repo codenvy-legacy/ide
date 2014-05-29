@@ -92,6 +92,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    private   long                                              startTime;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -288,6 +289,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
+                startTime = System.currentTimeMillis();
+
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
@@ -465,7 +468,36 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
-        return getRunnerMetric("uptime");
+        // if app already stopped, get uptime from server
+        if (getCurrentAppStopTime() != null) {
+            return getRunnerMetric("uptime");
+        }
+
+        // if app is running now, count uptime on the client-side
+        if (getCurrentAppStartTime() != null) {
+            final long totalTimeMillis = System.currentTimeMillis() - startTime;
+            int ss = (int)(totalTimeMillis / 1000);
+            int mm = 0;
+            if (ss >= 60) {
+                mm = ss / 60;
+                ss = ss % 60;
+            }
+            int hh = 0;
+            if (mm >= 60) {
+                hh = mm / 60;
+                mm = mm % 60;
+            }
+            int d = 0;
+            if (hh >= 24) {
+                d = hh / 24;
+                hh = hh % 24;
+            }
+            final String value =
+                    String.valueOf("" + d + "d:" + getDoubleDigit(hh) + "h:" + getDoubleDigit(mm) + "m:" + getDoubleDigit(ss) + "s");
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Application's uptime").withValue(value);
+        }
+
+        return null;
     }
 
     @Nullable
@@ -515,6 +547,46 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 return link;
         }
         return null;
+    }
+
+    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
+    private static String getDoubleDigit(int i) {
+        final String doubleDigitI;
+        switch (i) {
+            case 0:
+                doubleDigitI = "00";
+                break;
+            case 1:
+                doubleDigitI = "01";
+                break;
+            case 2:
+                doubleDigitI = "02";
+                break;
+            case 3:
+                doubleDigitI = "03";
+                break;
+            case 4:
+                doubleDigitI = "04";
+                break;
+            case 5:
+                doubleDigitI = "05";
+                break;
+            case 6:
+                doubleDigitI = "06";
+                break;
+            case 7:
+                doubleDigitI = "07";
+                break;
+            case 8:
+                doubleDigitI = "08";
+                break;
+            case 9:
+                doubleDigitI = "09";
+                break;
+            default:
+                doubleDigitI = Integer.toString(i);
+        }
+        return doubleDigitI;
     }
 
 }
