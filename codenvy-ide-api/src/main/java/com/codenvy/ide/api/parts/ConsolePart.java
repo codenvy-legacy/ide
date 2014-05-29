@@ -51,21 +51,21 @@ public interface ConsolePart extends PartPresenter {
      *
      * @param text
      */
-    void displayMsgInfo(String text);
+    void printInfo(String text);
 
     /**
      * [ERROR] text
      *
      * @param text
      */
-    void displayMsgError(String text);
+    void printError(String text);
 
     /**
      * [WARNING] text
      *
      * @param text
      */
-    void displayMsgWarn(String text);
+    void printWarn(String text);
 
     /** Clear console. Remove all messages. */
     void clear();
