@@ -30,6 +30,7 @@ import com.codenvy.ide.ext.git.shared.FetchRequest;
 import com.codenvy.ide.ext.git.shared.GitUser;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
+import com.codenvy.ide.ext.git.shared.LsRemoteRequest;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.ext.git.shared.MoveRequest;
@@ -38,6 +39,7 @@ import com.codenvy.ide.ext.git.shared.PushRequest;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
 import com.codenvy.ide.ext.git.shared.RemoteListRequest;
+import com.codenvy.ide.ext.git.shared.RemoteReference;
 import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
@@ -194,6 +196,16 @@ public interface GitConnection {
      * @see LogRequest
      */
     LogPage log(LogRequest request) throws GitException;
+
+    /**
+     * List references in a remote repository.
+     *
+     * @param request ls-remote request
+     * @return list references in a remote repository.
+     * @throws GitException if any error occurs
+     * @see LsRemoteRequest
+     */
+    List<RemoteReference> lsRemote(LsRemoteRequest request) throws GitException;
 
     /**
      * Merge commits.
