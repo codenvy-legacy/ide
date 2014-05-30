@@ -66,7 +66,7 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES      = "<assembly>\n" +
                                                                                      "  <id>jar-with-dependencies</id>\n" +
                                                                                      "  <formats>\n" +
-                                                                                     "    <format>jar</format>\n" +
+                                                                                     "    <format>zip</format>\n" +
                                                                                      "  </formats>\n" +
                                                                                      "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
