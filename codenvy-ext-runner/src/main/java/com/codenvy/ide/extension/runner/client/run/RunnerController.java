@@ -23,6 +23,7 @@ import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -46,12 +47,11 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.Date;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -88,9 +88,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected Project                                           activeProject;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
+    private   RunnerMetric                                      lastAppWaitingTimeLimit;
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    private   long                                              startTime;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -287,6 +289,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
+                startTime = System.currentTimeMillis();
+
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
@@ -427,47 +431,85 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Returns URL of the application which is currently running. */
+    @Nullable
     public String getCurrentAppURL() {
-        // TODO: don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null) {
+        // don't show app URL in console when app is stopped. After some time this URL may be used by other app.
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
             return getAppLink(lastApplicationDescriptor);
         }
         return null;
     }
 
-    /** Returns time when last app started, in format HH:mm:ss. */
-    public String getCurrentAppStartTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0) {
-            final Date startDate = new Date(lastApplicationDescriptor.getStartTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
-        }
-        return "--:--:--";
+    /** Returns startTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStartTime() {
+        return getRunnerMetric("startTime");
     }
 
-    /** Returns time when last app stopped in format HH:mm:ss. */
-    public String getCurrentAppStopTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStopTime() > 0) {
-            final Date stopDate = new Date(lastApplicationDescriptor.getStopTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
+    /** Returns waitingTimeLimit {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppTimeoutThreshold() {
+        if (lastApplicationDescriptor == null) {
+            return null;
         }
-        return "--:--:--";
+        RunnerMetric waitingTime = getRunnerMetric("waitingTimeLimit");
+        if (waitingTime != null) {
+            lastAppWaitingTimeLimit = waitingTime;
+        }
+        return lastAppWaitingTimeLimit;
     }
 
-    /** Returns total time which application was launched, in format mm:ss.ms. */
-    public String getTotalTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0 &&
-            lastApplicationDescriptor.getStopTime() > 0) {
-            final long totalTimeMs = lastApplicationDescriptor.getStopTime() - lastApplicationDescriptor.getStartTime();
-            int ms = (int)(totalTimeMs % 1000);
-            int ss = (int)(totalTimeMs / 1000);
+    /** Returns stopTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStopTime() {
+        return getRunnerMetric("stopTime");
+    }
+
+    /** Returns uptime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getTotalTime() {
+        // if app already stopped, get uptime from server
+        if (getCurrentAppStopTime() != null) {
+            return getRunnerMetric("uptime");
+        }
+
+        // if app is running now, count uptime on the client-side
+        if (getCurrentAppStartTime() != null) {
+            final long totalTimeMillis = System.currentTimeMillis() - startTime;
+            int ss = (int)(totalTimeMillis / 1000);
             int mm = 0;
-            if (ss > 60) {
+            if (ss >= 60) {
                 mm = ss / 60;
                 ss = ss % 60;
             }
-            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+            int hh = 0;
+            if (mm >= 60) {
+                hh = mm / 60;
+                mm = mm % 60;
+            }
+            int d = 0;
+            if (hh >= 24) {
+                d = hh / 24;
+                hh = hh % 24;
+            }
+            final String value =
+                    String.valueOf("" + d + "d:" + getDoubleDigit(hh) + "h:" + getDoubleDigit(mm) + "m:" + getDoubleDigit(ss) + "s");
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Application's uptime").withValue(value);
         }
-        return "--:--.---";
+
+        return null;
+    }
+
+    @Nullable
+    private RunnerMetric getRunnerMetric(String metricName) {
+        if (lastApplicationDescriptor != null) {
+            for (RunnerMetric runnerStat : lastApplicationDescriptor.getRunStats()) {
+                if (metricName.equals(runnerStat.getName())) {
+                    return runnerStat;
+                }
+            }
+        }
+        return null;
     }
 
     private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
@@ -497,6 +539,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return url;
     }
 
+    @Nullable
     private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
         List<Link> links = appDescriptor.getLinks();
         for (Link link : links) {
@@ -545,4 +588,5 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         return doubleDigitI;
     }
+
 }

@@ -79,22 +79,26 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         this.delegate = delegate;
     }
 
+    private static final String INFO_COLOR = "lightgreen";
+    private static final String WARNING_COLOR = "cyan";
+    private static final String ERROR_COLOR = "#F62217";
+
     /** {@inheritDoc} */
     @Override
     public void print(String text) {
-        String preStyle = " style='margin:0px; font-weight:700; font-size: 12;' ";
+        String preStyle = " style='margin:0px; font-size: 12px;' ";
 
         HTML html = new HTML();
 
         String TEXT = text.toUpperCase();
         if (TEXT.startsWith("[INFO]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
 
         } else if (TEXT.startsWith("[ERROR]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
 
         } else if (TEXT.startsWith("[WARNING]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + WARNING_COLOR + ";'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
 
         } else {
             html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
@@ -102,6 +106,32 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
 
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
+    }
+
+    @Override
+    public void print(String text, String color) {
+        String preStyle = " style='margin:0px; font-size: 12px;' ";
+
+        HTML html = new HTML();
+        html.setHTML("<pre" + preStyle + "><span style='color:" + color + ";'>" + text + "</span></pre>");
+
+        html.getElement().setAttribute("style", "padding-left: 2px;");
+        consoleArea.add(html);
+    }
+
+    @Override
+    public void printInfo(String text) {
+        print(text, INFO_COLOR);
+    }
+
+    @Override
+    public void printWarn(String text) {
+        print(text, WARNING_COLOR);
+    }
+
+    @Override
+    public void printError(String text) {
+        print(text, ERROR_COLOR);
     }
 
     /** {@inheritDoc} */

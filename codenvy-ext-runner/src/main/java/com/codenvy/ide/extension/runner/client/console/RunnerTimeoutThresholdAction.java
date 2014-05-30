@@ -26,24 +26,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show time when runner finished.
+ * Action used to show time when runner started.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerFinishedAction extends InfoAction {
+public class RunnerTimeoutThresholdAction extends InfoAction {
     private final RunnerController runnerController;
 
     @Inject
-    public RunnerFinishedAction(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Finished At", false, resources);
+    public RunnerTimeoutThresholdAction(RunnerController runnerController, RunnerResources resources) {
+        super("Runner Timeout Threshold", false, resources);
         this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppStopTime();
+        final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

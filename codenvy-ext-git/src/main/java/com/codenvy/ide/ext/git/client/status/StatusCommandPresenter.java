@@ -74,7 +74,7 @@ public class StatusCommandPresenter {
                            new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                @Override
                                protected void onSuccess(String result) {
-                                   console.print(result);
+                                   printGitStatus(result);
                                }
 
                                @Override
@@ -85,4 +85,29 @@ public class StatusCommandPresenter {
                                }
                            });
     }
+
+    /**
+     * Print colored Git status to Output
+     *
+     * @param statusText text to be printed
+     */
+    private void printGitStatus(String statusText) {
+        console.print("");
+        String []lines = statusText.split("\n");
+        for (String line : lines) {
+
+            if (line.startsWith("\tmodified:")) {
+                console.printError(line);
+                continue;
+            }
+
+            if (line.startsWith("\t")) {
+                console.printInfo(line);
+                continue;
+            }
+
+            console.print(line);
+        }
+    }
+
 }
