@@ -233,7 +233,11 @@ public class MavenBuilder extends Builder {
                     throw new BuilderException(e);
                 }
                 final String packaging = mavenModel.getPackaging();
-                final String fileExt = config.getRequest().isIncludeDependencies() ? ".zip" : packaging != null ? '.' + packaging : ".jar";
+                final String fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
+                                       ? ".zip"
+                                       : packaging != null
+                                         ? '.' + packaging
+                                         : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {
