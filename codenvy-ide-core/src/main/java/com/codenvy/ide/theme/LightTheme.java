@@ -141,6 +141,11 @@ public class LightTheme implements Theme {
     public String getButtonTopColor() {
         return "#D6D6D6";
     }
+    
+    @Override
+    public String getSocialButtonColor() {
+        return "#ffffff";
+    }
 
     @Override
     public String getButtonColor() {
@@ -306,6 +311,11 @@ public class LightTheme implements Theme {
     public String getWelcomeFontColor() {
         return "#5E5E5E";
     }
+    
+    @Override
+    public String getCaptionFontColor() {
+        return "#888888";
+    }
 
     @Override
     public String getConsolePanelColor() {
@@ -453,13 +463,18 @@ public class LightTheme implements Theme {
     }
     
     @Override
-    public String getEventDelimeterColor() {
+    public String getDelimeterColor() {
         return "#2f2f2f";
     }
     
     @Override
     public String getLinkColor() {
         return "#acacac";
+    }
+    
+    @Override
+    public String getFactoryLinkColor() {
+        return "#60abe0";
     }
     
     @Override

@@ -164,7 +164,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-hovering, .gwt-ToggleButton-down-hovering{
@@ -174,7 +174,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-disabled, .gwt-ToggleButton-down-disabled{
@@ -382,8 +382,8 @@ class for the document-level scrollbars. */
     background: dialogTopLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopCenter {
     background: dialogTopCenter url("");
@@ -392,8 +392,8 @@ class for the document-level scrollbars. */
     background: dialogTopRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
     background: dialogMiddleLeft url("");
@@ -408,8 +408,8 @@ class for the document-level scrollbars. */
     background: dialogBottomLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomCenter {
     background: dialogBottomCenter url("");
@@ -418,8 +418,8 @@ class for the document-level scrollbars. */
     background: dialogBottomRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .item {
     color: boxTextColor;

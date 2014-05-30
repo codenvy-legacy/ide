@@ -19,7 +19,7 @@
 .notificationItem {
     font-size: secondaryTextFontSize;
     font-family: mainFontFamily;
-    border-bottom: 1px solid eventDelimeterColor;
+    border-bottom: 1px solid delimeterColor;
     height: 20px;
     vertical-align: middle;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);

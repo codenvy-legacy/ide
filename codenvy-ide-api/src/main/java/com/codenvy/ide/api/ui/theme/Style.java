@@ -113,7 +113,7 @@ public class Style {
     public static String getButtonTopColor() {
         return theme.getButtonTopColor();
     }
-
+    
     public static String getButtonColor() {
         return theme.getButtonColor();
     }
@@ -124,6 +124,10 @@ public class Style {
 
     public static String getNotableButtonColor() {
         return theme.getNotableButtonColor();
+    }
+    
+    public static String getSocialButtonColor() {
+        return theme.getSocialButtonColor();
     }
 
     public static String getInputBackground() {
@@ -254,7 +258,15 @@ public class Style {
     public static String getWelcomeFontColor() {
         return theme.getWelcomeFontColor();
     }
-
+    
+    public static String getCaptionFontColor() {
+        return theme.getCaptionFontColor();
+    }
+    
+    public static String getFactoryLinkColor() {
+        return theme.getFactoryLinkColor();
+    }
+    
     public static String getConsolePanelColor() {
         return theme.getConsolePanelColor();
     }
@@ -366,9 +378,9 @@ public class Style {
     public static String getLinkColor() {
         return theme.getLinkColor();
     }
-
-    public static String getEventDelimeterColor() {
-        return theme.getEventDelimeterColor();
+    
+    public static String getDelimeterColor() {
+        return theme.getDelimeterColor();
     }
 
     public static String getMinimizeIconColor() {
