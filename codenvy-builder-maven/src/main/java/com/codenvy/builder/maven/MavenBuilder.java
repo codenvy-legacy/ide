@@ -66,7 +66,7 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES      = "<assembly>\n" +
                                                                                      "  <id>jar-with-dependencies</id>\n" +
                                                                                      "  <formats>\n" +
-                                                                                     "    <format>jar</format>\n" +
+                                                                                     "    <format>zip</format>\n" +
                                                                                      "  </formats>\n" +
                                                                                      "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
@@ -233,7 +233,11 @@ public class MavenBuilder extends Builder {
                     throw new BuilderException(e);
                 }
                 final String packaging = mavenModel.getPackaging();
-                final String fileExt = packaging != null ? '.' + packaging : ".jar";
+                final String fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
+                                       ? ".zip"
+                                       : packaging != null
+                                         ? '.' + packaging
+                                         : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {

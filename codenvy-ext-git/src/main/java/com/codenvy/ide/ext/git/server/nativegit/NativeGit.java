@@ -31,6 +31,7 @@ import com.codenvy.ide.ext.git.server.nativegit.commands.FetchCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.InitCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.ListFilesCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.LogCommand;
+import com.codenvy.ide.ext.git.server.nativegit.commands.LsRemoteCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.MergeCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.MoveCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.PullCommand;
@@ -148,6 +149,11 @@ public class NativeGit {
     /** @return log command */
     public LogCommand createLogCommand() {
         return new LogCommand(repository);
+    }
+
+    /** @return ls command */
+    public LsRemoteCommand createLsRemoteCommand() {
+        return new LsRemoteCommand(repository);
     }
 
     /** @return add command */

@@ -36,6 +36,7 @@ import com.codenvy.ide.ext.git.server.nativegit.commands.FetchCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.GitCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.InitCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.LogCommand;
+import com.codenvy.ide.ext.git.server.nativegit.commands.LsRemoteCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.PullCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.PushCommand;
 import com.codenvy.ide.ext.git.server.nativegit.commands.RemoteListCommand;
@@ -53,6 +54,7 @@ import com.codenvy.ide.ext.git.shared.FetchRequest;
 import com.codenvy.ide.ext.git.shared.GitUser;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
+import com.codenvy.ide.ext.git.shared.LsRemoteRequest;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.ext.git.shared.MoveRequest;
@@ -61,6 +63,7 @@ import com.codenvy.ide.ext.git.shared.PushRequest;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
 import com.codenvy.ide.ext.git.shared.RemoteListRequest;
+import com.codenvy.ide.ext.git.shared.RemoteReference;
 import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
@@ -323,6 +326,28 @@ public class NativeGitConnection implements GitConnection {
     @Override
     public LogPage log(LogRequest request) throws GitException {
         return new LogPage(nativeGit.createLogCommand().execute());
+    }
+
+    @Override
+    public List<RemoteReference> lsRemote(LsRemoteRequest request) throws GitException {
+        LsRemoteCommand command = nativeGit.createLsRemoteCommand().setRemoteUrl(request.getRemoteUrl());
+        if (request.isUseAuthorization()) {
+            executeWithCredentials(command, request.getRemoteUrl());
+        } else {
+            //create empty credentials
+            CredentialItem.Username username = new CredentialItem.Username();
+            username.setValue("");
+            CredentialItem.Password password = new CredentialItem.Password();
+            password.setValue("");
+            //set up empty credentials
+            command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
+            if (!nativeGit.getRepository().exists()) {
+                nativeGit.getRepository().mkdirs();
+            }
+
+            command.execute();
+        }
+        return command.getRemoteReferences();
     }
 
     @Override
