@@ -17,6 +17,8 @@
  */
 package com.codenvy.ide.ext.java.client.editor;
 
+import elemental.dom.Element;
+
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -40,8 +42,11 @@ import com.codenvy.ide.text.rules.FastPartitioner;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
 import com.codenvy.ide.texteditor.api.quickassist.QuickFixableAnnotation;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -120,13 +125,15 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         public static final String INFO_ANNOTATION_TYPE    = "org.eclipse.jdt.ui.info"; //$NON-NLS-1$
         public static final String TASK_ANNOTATION_TYPE    = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
         /** The layer in which task problem annotations are located. */
-        private static final int TASK_LAYER;
+        private static final int           TASK_LAYER;
         /** The layer in which info problem annotations are located. */
-        private static final int INFO_LAYER;
+        private static final int           INFO_LAYER;
         /** The layer in which warning problem annotations representing are located. */
-        private static final int WARNING_LAYER;
+        private static final int           WARNING_LAYER;
         /** The layer in which error problem annotations representing are located. */
-        private static final int ERROR_LAYER;
+        private static final int           ERROR_LAYER;
+        /** The resources in which image and CSS links are located. */
+        private static final JavaResources javaRes;
 
         static {
             //TODO configure this
@@ -134,19 +141,20 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             INFO_LAYER = 1;
             WARNING_LAYER = 2;
             ERROR_LAYER = 3;
+            javaRes = JavaResources.INSTANCE;
+            javaRes.css().ensureInjected();
         }
 
-        private static ImageResource fgQuickFixImage      = JavaResources.INSTANCE.markWarning();
-        private static ImageResource fgQuickFixErrorImage = JavaResources.INSTANCE.markError();
-        private static ImageResource fgTaskImage          = JavaResources.INSTANCE.taskmrk();
-        private static ImageResource fgInfoImage          = JavaResources.INSTANCE.imp_obj();
-        private static ImageResource fgWarningImage       = JavaResources.INSTANCE.markWarning();
-        private static ImageResource fgErrorImage         = JavaResources.INSTANCE.markError();
+        private static Element fgQuickFixElement      = (Element)(new SVGImage(javaRes.markWarning())).getElement();
+        private static Element fgQuickFixErrorElement = (Element)(new SVGImage(javaRes.markError())).getElement();
+        private static Element fgTaskElement          = (Element)(new Image(javaRes.taskmrk())).getElement();
+        private static Element fgInfoElement          = (Element)(new Image(javaRes.imp_obj())).getElement();
+        private static Element fgWarningElement       = (Element)(new SVGImage(javaRes.markWarning())).getElement();
+        private static Element fgErrorElement         = (Element)(new SVGImage(javaRes.markError())).getElement();
         private List<JavaAnnotation> fOverlaids;
         private IProblem             fProblem;
-        private ImageResource        fImage;
-        private boolean fImageInitialized = false;
-        private int     fLayer            = 0;
+        private Element fImageElement = null;
+        private int     fLayer        = 0;
         private boolean fIsQuickFixable;
         private boolean fIsQuickFixableStateSet = false;
 
@@ -175,27 +183,29 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         }
 
         private void initializeImage() {
-            if (!fImageInitialized) {
-                if (!isQuickFixableStateSet())
-                    setQuickFixable(isProblem() && JavaCorrectionProcessor.hasCorrections(this)); // no light bulb for tasks
-                if (isQuickFixable()) {
-                    if (ERROR_ANNOTATION_TYPE.equals(getType()))
-                        fImage = fgQuickFixErrorImage;
-                    else
-                        fImage = fgQuickFixImage;
-                } else {
-                    String type = getType();
-                    if (TASK_ANNOTATION_TYPE.equals(type))
-                        fImage = fgTaskImage;
-                    else if (INFO_ANNOTATION_TYPE.equals(type))
-                        fImage = fgInfoImage;
-                    else if (WARNING_ANNOTATION_TYPE.equals(type))
-                        fImage = fgWarningImage;
-                    else if (ERROR_ANNOTATION_TYPE.equals(type))
-                        fImage = fgErrorImage;
-                }
-                fImageInitialized = true;
+            Element selectedImageElement = null;
+            if (!isQuickFixableStateSet())
+                setQuickFixable(isProblem() && JavaCorrectionProcessor.hasCorrections(this)); // no light bulb for tasks
+            if (isQuickFixable()) {
+                if (ERROR_ANNOTATION_TYPE.equals(getType()))
+                    selectedImageElement = fgQuickFixErrorElement;
+                else
+                    selectedImageElement = fgQuickFixElement;
+            } else {
+                String type = getType();
+                if (TASK_ANNOTATION_TYPE.equals(type))
+                    selectedImageElement = fgTaskElement;
+                else if (INFO_ANNOTATION_TYPE.equals(type))
+                    selectedImageElement = fgInfoElement;
+                else if (WARNING_ANNOTATION_TYPE.equals(type))
+                    selectedImageElement = fgWarningElement;
+                else if (ERROR_ANNOTATION_TYPE.equals(type))
+                    selectedImageElement = fgErrorElement;
             }
+            selectedImageElement.setAttribute("class", javaRes.css().markElementIcon());
+            fImageElement = Elements.createDivElement();
+            fImageElement.setAttribute("class", javaRes.css().markElement());
+            fImageElement.setInnerHTML(selectedImageElement.getOuterHTML());
         }
 
         /** {@inheritDoc} */
@@ -279,12 +289,11 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
         /** {@inheritDoc} */
         @Override
-        public ImageResource getImage() {
-            if (!fImageInitialized)
+        public Element getImageElement() {
+            if (fImageElement == null)
                 initializeImage();
-            return fImage;
+            return fImageElement;
         }
-
     }
 
     class JavaAnnotationModel extends AnnotationModelImpl implements AnnotationModel, IProblemRequestor {

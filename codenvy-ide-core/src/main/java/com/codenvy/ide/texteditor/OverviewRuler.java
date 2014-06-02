@@ -73,7 +73,7 @@ public class OverviewRuler {
             try {
                 int lineNumber = editor.getDocument().getLineOfOffset(model.getPosition(annotation).getOffset());
 
-                mark.setTopPosition((100 * lineNumber) / numberOfLines, "%");
+                mark.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
                 mark.setLineNumber(lineNumber);
                 mark.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
                 mark.getElement().setClassName(model.getAnnotationStyle().get(annotation.getType()));
