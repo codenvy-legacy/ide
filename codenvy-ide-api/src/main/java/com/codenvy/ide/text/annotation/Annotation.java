@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.text.annotation;
 
-import com.google.gwt.resources.client.ImageResource;
+import elemental.dom.Element;
 
 /**
  * Annotation managed by an{@link AnnotationModel}.
@@ -50,8 +50,8 @@ public class Annotation {
     /** Annotation drawing layer. */
     protected int layer;
 
-    /** Image associated with this annotation */
-    protected ImageResource image;
+    /** Element associated with this annotation */
+    protected Element element;
 
     /** Creates a new annotation that is not persistent and type less. */
     protected Annotation() {
@@ -97,20 +97,20 @@ public class Annotation {
      *         the text associated with this annotation
      * @param layer
      *         annotation draw layer
-     * @param image
-     *         image associated with this annotation
+     * @param element
+     *         element associated with this annotation
      */
-    public Annotation(String type, boolean isPersistent, String text, int layer, ImageResource image) {
+    public Annotation(String type, boolean isPersistent, String text, int layer, Element element) {
         this(type, isPersistent, text);
         this.layer = layer;
-        this.image = image;
+        this.element = element;
     }
 
     /**
      * Returns whether this annotation is persistent.
      *
      * @return <code>true</code> if this annotation is persistent, <code>false</code>
-     *         otherwise
+     * otherwise
      */
     public boolean isPersistent() {
         return isPersistent;
@@ -150,7 +150,7 @@ public class Annotation {
      * Returns whether this annotation is marked as deleted.
      *
      * @return <code>true</code> if annotation is marked as deleted, <code>false</code>
-     *         otherwise
+     * otherwise
      */
     public boolean isMarkedDeleted() {
         return markedAsDeleted;
@@ -176,13 +176,13 @@ public class Annotation {
     }
 
     /**
-     * Return image resource for this annotation.
+     * Return element resource for this annotation.
      * Note: if this method return <code>null</code>, this annotation not draw in left gutter
      *
      * @return
      */
-    public ImageResource getImage() {
-        return image;
+    public Element getElement() {
+        return element;
     }
 
     /**
