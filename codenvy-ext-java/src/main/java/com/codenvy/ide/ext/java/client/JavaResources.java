@@ -163,12 +163,6 @@ public interface JavaResources extends ClientBundle {
     @Source("com/codenvy/ide/ext/java/client/internal/text/correction/proposals/javadoc.gif")
     ImageResource javadoc();
 
-    @Source("com/codenvy/ide/ext/java/client/images/mark-error.png")
-    ImageResource markError();
-
-    @Source("com/codenvy/ide/ext/java/client/images/mark-warning.png")
-    ImageResource markWarning();
-
     @Source("com/codenvy/ide/ext/java/client/images/taskmrk.gif")
     ImageResource taskmrk();
 
@@ -177,49 +171,55 @@ public interface JavaResources extends ClientBundle {
 
     @Source("com/codenvy/ide/ext/java/client/images/newProjJava.png")
     ImageResource newJavaProject();
-    
+
+    @Source("svg/mark-error.svg")
+    SVGResource markError();
+
+    @Source("svg/mark-warning.svg")
+    SVGResource markWarning();
+
     @Source("svg/close-folder.svg")
     SVGResource closeFolder();
-    
+
     @Source("svg/css.svg")
     SVGResource cssFile();
-    
+
     @Source("svg/html.svg")
     SVGResource htmlFile();
-    
+
     @Source("svg/image-icon.svg")
     SVGResource imageIcon();
-    
+
     @Source("svg/java.svg")
     SVGResource javaFile();
-    
+
     @Source("svg/js.svg")
     SVGResource jsFile();
-    
+
     @Source("svg/jsf.svg")
     SVGResource jsfFile();
-    
+
     @Source("svg/json.svg")
     SVGResource jsonFile();
-    
+
     @Source("svg/jsp.svg")
     SVGResource jspFile();
-    
+
     @Source("svg/maven.svg")
     SVGResource maven();
-    
+
     @Source("svg/open-folder.svg")
     SVGResource openFolder();
-    
+
     @Source("svg/package.svg")
     SVGResource packageIcon();
-    
+
     @Source("svg/text.svg")
     SVGResource textFile();
-    
+
     @Source("svg/xml.svg")
     SVGResource xmlFile();
-    
+
     @Source("svg/update-dependencies.svg")
     SVGResource updateDependencies();
 }
