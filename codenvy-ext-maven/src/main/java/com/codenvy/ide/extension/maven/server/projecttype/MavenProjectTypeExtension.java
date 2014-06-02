@@ -55,7 +55,7 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(1);
+        final List<ProjectTemplateDescription> list = new ArrayList<>(5);
         list.add(new ProjectTemplateDescription("zip",
                                                 "JAVA WEB PROJECT",
                                                 "Java Web project.",
@@ -72,6 +72,10 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "MAVEN Console App",
                                                 "Simple Console Application.",
                                                 "templates/MavenConsoleApp.zip"));
+        list.add(new ProjectTemplateDescription("zip",
+                                                "MAVEN GUI App",
+                                                "Simple GUI Application.",
+                                                "templates/MavenGUIApp.zip"));
         return list;
     }
 }
