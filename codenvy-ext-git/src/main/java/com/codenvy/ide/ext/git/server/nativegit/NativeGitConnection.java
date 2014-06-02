@@ -558,34 +558,38 @@ public class NativeGitConnection implements GitConnection {
         CredentialItem.Password password = new CredentialItem.Password();
         password.setValue("");
         //set up empty credentials
-        command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
         try {
-            //after failed clone, git will remove directory
-            if (!nativeGit.getRepository().exists()) {
-                nativeGit.getRepository().mkdirs();
-            }
-            command.execute();
-        } catch (GitException e) {
-            if (isOperationNeedAuth(e.getMessage())) {
-                //try to search available credentials and execute command with it
-                command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
-                try {
-                    //after failed clone, git will remove directory
-                    if (!nativeGit.getRepository().exists()) {
-                        nativeGit.getRepository().mkdirs();
-                    }
-                    command.execute();
-                } catch (GitException inner) {
-                    //if not authorized again make runtime exception
-                    if (isOperationNeedAuth(inner.getMessage())) {
-                        throw new NotAuthorizedException();
-                    } else {
-                        throw inner;
-                    }
+            command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
+            try {
+                //after failed clone, git will remove directory
+                if (!nativeGit.getRepository().exists()) {
+                    nativeGit.getRepository().mkdirs();
                 }
-            } else {
-                throw e;
+                command.execute();
+            } catch (GitException e) {
+                if (isOperationNeedAuth(e.getMessage())) {
+                    //try to search available credentials and execute command with it
+                    command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
+                    try {
+                        //after failed clone, git will remove directory so we need to restore it
+                        if (!nativeGit.getRepository().exists()) {
+                            nativeGit.getRepository().mkdirs();
+                        }
+                        command.execute();
+                    } catch (GitException inner) {
+                        //if not authorized again make runtime exception
+                        if (isOperationNeedAuth(inner.getMessage())) {
+                            throw new NotAuthorizedException();
+                        } else {
+                            throw inner;
+                        }
+                    }
+                } else {
+                    throw e;
+                }
             }
+        } finally {
+            credentialsLoader.removeAskPassScript();
         }
     }
 
