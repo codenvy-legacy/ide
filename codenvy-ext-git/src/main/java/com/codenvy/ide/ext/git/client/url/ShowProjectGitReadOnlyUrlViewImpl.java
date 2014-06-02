@@ -64,6 +64,7 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends Window implements ShowPro
     protected ShowProjectGitReadOnlyUrlViewImpl(GitResources resources, GitLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
+        this.ensureDebugId("projectReadOnlyGitUrl-window");
 
         Widget widget = ourUiBinder.createAndBindUi(this);
 
@@ -77,6 +78,7 @@ public class ShowProjectGitReadOnlyUrlViewImpl extends Window implements ShowPro
                 delegate.onCloseClicked();
             }
         });
+        btnClose.ensureDebugId("projectReadOnlyGitUrl-btnClose");
         getFooter().add(btnClose);
     }
 
