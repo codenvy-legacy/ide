@@ -99,4 +99,10 @@ public interface JavaCss extends CssResource {
 
     @ClassName("overview-mark-task")
     String overviewMarkTask();
+
+    @ClassName("mark-element-icon")
+    String markElementIcon();
+
+    @ClassName("mark-element")
+    String markElement();
 }
