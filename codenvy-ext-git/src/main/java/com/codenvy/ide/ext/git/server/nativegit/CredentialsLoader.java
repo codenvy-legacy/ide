@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
 
@@ -32,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Set;
+
 
 /**
  * Load credentials
@@ -72,8 +74,8 @@ public class CredentialsLoader {
         File gitAskPassScript = new File(askScriptDirectory, GIT_ASK_PASS_SCRIPT);
         try (FileOutputStream fos = new FileOutputStream(gitAskPassScript)) {
             String actualGitAskPassTemplate = gitAskPassTemplate.replace("$self", gitAskPassScript.getAbsolutePath())
-                                                   .replace("$password", password.toString())
-                                                   .replace("$username", username.getValue());
+                                                                .replace("$password", password.toString())
+                                                                .replace("$username", username.getValue());
             fos.write(actualGitAskPassTemplate.getBytes());
         } catch (IOException e) {
             LOG.error("It is not possible to store " + gitAskPassScript + " credentials", e);
@@ -102,9 +104,9 @@ public class CredentialsLoader {
         CredentialItem.Password password = new CredentialItem.Password();
         boolean isCredentialsPresent = false;
         for (CredentialsProvider cp : credentialsProviders) {
-           if (isCredentialsPresent = cp.get(url, username, password)) {
-               break;
-           }
+            if (isCredentialsPresent = cp.get(url, username, password)) {
+                break;
+            }
         }
         //if not available tokenProvider exist
         if (!isCredentialsPresent) {
@@ -112,6 +114,15 @@ public class CredentialsLoader {
             password.setValue("");
         }
         return createGitAskPassScript(username, password);
+    }
+
+    public void removeAskPassScript() {
+        File askScriptDirectory = new File(System.getProperty("java.io.tmpdir")
+                                           + "/" + EnvironmentContext.getCurrent().getUser().getName());
+        if (askScriptDirectory.exists()) {
+            if (!IoUtil.deleteRecursive(askScriptDirectory))
+                LOG.warn("Ask-pass script deletion failed.");
+        }
     }
 
     @PostConstruct
