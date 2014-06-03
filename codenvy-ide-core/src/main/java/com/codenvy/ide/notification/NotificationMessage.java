@@ -23,11 +23,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -84,6 +82,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         notification.addObserver(this);
 
         this.getElement().addClassName(resources.notificationCss().notificationPopup());
+        this.ensureDebugId("notificationMessage-popupPanel");
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
