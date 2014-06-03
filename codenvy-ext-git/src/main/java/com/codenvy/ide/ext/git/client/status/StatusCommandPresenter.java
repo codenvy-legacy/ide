@@ -96,12 +96,12 @@ public class StatusCommandPresenter {
         String []lines = statusText.split("\n");
         for (String line : lines) {
 
-            if (line.startsWith("\tmodified:")) {
+            if (line.startsWith("\tmodified:") || line.startsWith("#\tmodified:")) {
                 console.printError(line);
                 continue;
             }
 
-            if (line.startsWith("\t")) {
+            if (line.startsWith("\t") || line.startsWith("#\t")) {
                 console.printInfo(line);
                 continue;
             }
