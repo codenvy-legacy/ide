@@ -76,6 +76,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;
     private   WorkBenchPartController workBenchPartController;
+
     private Array<Double> partsSize = Collections.createArray();
 
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
@@ -250,6 +251,16 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         item.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                if (activePart == part) {
+                    partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+                    workBenchPartController.setHidden(true);
+                    activePart = null;
+                    view.setActiveTabButton(-1);
+
+                    //workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+                    return;
+                }
+
                 // make active
                 setActivePart(part);
             }
