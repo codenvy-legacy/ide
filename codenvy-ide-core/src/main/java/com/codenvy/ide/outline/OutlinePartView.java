@@ -25,6 +25,8 @@ public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
 
     void setTitle(String title);
 
+    void clear();
+
     public interface ActionDelegate extends BaseActionDelegate {
 
     }

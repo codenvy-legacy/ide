@@ -13,6 +13,8 @@ package com.codenvy.ide.outline;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
@@ -33,11 +35,28 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     private       TextEditorPartPresenter activePart;
 
     @Inject
-    public OutlinePartPresenter(OutlinePartView view, EventBus eventBus) {
+    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus) {
         this.view = view;
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
         view.setTitle("Outline");
         view.setDelegate(this);
+
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                view.clear();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+
+            }
+        });
     }
 
     /** {@inheritDoc} */
