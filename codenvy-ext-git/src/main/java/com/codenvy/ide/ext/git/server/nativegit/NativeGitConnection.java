@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.git.server.nativegit;
 
 
@@ -558,34 +551,38 @@ public class NativeGitConnection implements GitConnection {
         CredentialItem.Password password = new CredentialItem.Password();
         password.setValue("");
         //set up empty credentials
-        command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
         try {
-            //after failed clone, git will remove directory
-            if (!nativeGit.getRepository().exists()) {
-                nativeGit.getRepository().mkdirs();
-            }
-            command.execute();
-        } catch (GitException e) {
-            if (isOperationNeedAuth(e.getMessage())) {
-                //try to search available credentials and execute command with it
-                command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
-                try {
-                    //after failed clone, git will remove directory
-                    if (!nativeGit.getRepository().exists()) {
-                        nativeGit.getRepository().mkdirs();
-                    }
-                    command.execute();
-                } catch (GitException inner) {
-                    //if not authorized again make runtime exception
-                    if (isOperationNeedAuth(inner.getMessage())) {
-                        throw new NotAuthorizedException();
-                    } else {
-                        throw inner;
-                    }
+            command.setAskPassScriptPath(credentialsLoader.createGitAskPassScript(username, password).toString());
+            try {
+                //after failed clone, git will remove directory
+                if (!nativeGit.getRepository().exists()) {
+                    nativeGit.getRepository().mkdirs();
                 }
-            } else {
-                throw e;
+                command.execute();
+            } catch (GitException e) {
+                if (isOperationNeedAuth(e.getMessage())) {
+                    //try to search available credentials and execute command with it
+                    command.setAskPassScriptPath(credentialsLoader.findCredentialsAndCreateGitAskPassScript(url).toString());
+                    try {
+                        //after failed clone, git will remove directory so we need to restore it
+                        if (!nativeGit.getRepository().exists()) {
+                            nativeGit.getRepository().mkdirs();
+                        }
+                        command.execute();
+                    } catch (GitException inner) {
+                        //if not authorized again make runtime exception
+                        if (isOperationNeedAuth(inner.getMessage())) {
+                            throw new NotAuthorizedException();
+                        } else {
+                            throw inner;
+                        }
+                    }
+                } else {
+                    throw e;
+                }
             }
+        } finally {
+            credentialsLoader.removeAskPassScript();
         }
     }
 

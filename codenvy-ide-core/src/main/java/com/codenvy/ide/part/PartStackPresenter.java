@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -76,6 +69,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;
     private   WorkBenchPartController workBenchPartController;
+
     private Array<Double> partsSize = Collections.createArray();
 
     /** Creates PartStack with given instance of display and resources (CSS and Images) */
@@ -250,6 +244,16 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         item.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                if (activePart == part) {
+                    partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+                    workBenchPartController.setHidden(true);
+                    activePart = null;
+                    view.setActiveTabButton(-1);
+
+                    //workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+                    return;
+                }
+
                 // make active
                 setActivePart(part);
             }

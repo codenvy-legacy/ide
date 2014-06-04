@@ -1,169 +1,192 @@
-    /*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
-    .exo-autocomplete-fqn {
-        color: gray;
-    }
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+/*
+* CODENVY CONFIDENTIAL
+* __________________
+*
+* [2012] - [2013] Codenvy, S.A.
+* All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Codenvy S.A. and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Codenvy S.A.
+* and its suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Codenvy S.A..
+*/
+.exo-autocomplete-fqn {
+    color: gray;
+}
 
-    .exo-codeassistant-counter {
-        color: #326EED;
-    }
+.exo-codeassistant-counter {
+    color: #326EED;
+}
 
-    .outline-root {
-        display: inline-block;
-    }
+.outline-root {
+    display: inline-block;
+}
 
-    .outline-icon {
-        margin: 0px 0px -1px 5px;
-    }
+.outline-icon {
+    margin: 0px 0px -1px 5px;
+}
 
-    .outline-label {
-        font-family: "Lucida Grande", Verdana, Arial;
-        font-size: 11px;
-        padding: 0px 5px 0px 6px;
-        display: inline-block;
-    }
+.outline-label {
+    font-family: "Lucida Grande", Verdana, Arial;
+    font-size: 11px;
+    padding: 0px 5px 0px 6px;
+    display: inline-block;
+}
 
-    @sprite .imports {
-        gwt-image: "imports";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .imports {
+    gwt-image: "imports";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .importItem {
-        gwt-image: "importItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .importItem {
+    gwt-image: "importItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .classItem {
-        gwt-image: "classItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .classItem {
+    gwt-image: "classItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .interfaceItem {
-        gwt-image: "interfaceItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .interfaceItem {
+    gwt-image: "interfaceItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .enumItem {
-        gwt-image: "enumItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .enumItem {
+    gwt-image: "enumItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .annotationItem {
-        gwt-image: "annotationItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .annotationItem {
+    gwt-image: "annotationItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    @sprite .publicMethod {
-        gwt-image: "publicMethod";
-        display: inline-block;
-        background-position: center 3px;
-    }
+@sprite .publicMethod {
+    gwt-image: "publicMethod";
+    display: inline-block;
+    background-position: center 3px;
+}
 
-    @sprite .protectedMethod {
-        gwt-image: "protectedMethod";
-        display: inline-block;
-        background-position: center 3px;
-    }
+@sprite .protectedMethod {
+    gwt-image: "protectedMethod";
+    display: inline-block;
+    background-position: center 3px;
+}
 
-    @sprite .privateMethod {
-        gwt-image: "privateMethod";
-        display: inline-block;
-        background-position: center 3px;
-    }
+@sprite .privateMethod {
+    gwt-image: "privateMethod";
+    display: inline-block;
+    background-position: center 3px;
+}
 
-    @sprite .defaultMethod {
-        gwt-image: "defaultMethod";
-        display: inline-block;
-        background-position: center 3px;
-    }
+@sprite .defaultMethod {
+    gwt-image: "defaultMethod";
+    display: inline-block;
+    background-position: center 3px;
+}
 
-    @sprite .publicField {
-        gwt-image: "publicField";
-        display: inline-block;
-        background-position: center 4px;
-    }
+@sprite .publicField {
+    gwt-image: "publicField";
+    display: inline-block;
+    background-position: center 4px;
+}
 
-    @sprite .protectedField {
-        gwt-image: "protectedField";
-        display: inline-block;
-        background-position: center 3px;
-    }
+@sprite .protectedField {
+    gwt-image: "protectedField";
+    display: inline-block;
+    background-position: center 3px;
+}
 
-    @sprite .privateField {
-        gwt-image: "privateField";
-        display: inline-block;
-        background-position: center 4px;
-    }
+@sprite .privateField {
+    gwt-image: "privateField";
+    display: inline-block;
+    background-position: center 4px;
+}
 
-    @sprite .defaultField {
-        gwt-image: "defaultField";
-        display: inline-block;
-        background-position: center 4px;
-    }
+@sprite .defaultField {
+    gwt-image: "defaultField";
+    display: inline-block;
+    background-position: center 4px;
+}
 
-    @sprite .packageItem {
-        gwt-image: "packageItem";
-        display: inline-block;
-        background-position: center center;
-    }
+@sprite .packageItem {
+    gwt-image: "packageItem";
+    display: inline-block;
+    background-position: center center;
+}
 
-    .overview-mark-error, .overview-bottom-mark-error,
-    .overview-mark-warning, .overview-bottom-mark-warning, .overview-mark-task {
-        border-width: 1px;
-        border-style: solid;
-        cursor: pointer;
-        left: 1px;
-        right: 2px;
-        height: 3px;
-        position: absolute;
-    }
+.overview-mark-error, .overview-bottom-mark-error,
+.overview-mark-warning, .overview-bottom-mark-warning, .overview-mark-task {
+    margin-top: 6px;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    left: 1px;
+    right: 2px;
+    height: 3px;
+    position: absolute;
+}
 
-    .overview-mark-error {
-        background-color: #DB4C29;
-        border: 0;
-    }
+.overview-mark-error {
+    background-color: #DB4C29;
+    border: 0;
+}
 
-    .overview-mark-task {
-        background-color: #a5c5e4;
-        border-color: #2c92f8;
-    }
+.overview-mark-task {
+    background-color: #a5c5e4;
+    border-color: #2c92f8;
+}
 
-    .overview-bottom-mark-warning, .overview-bottom-mark-error {
-        height: 8px;
-    }
+.overview-bottom-mark-warning, .overview-bottom-mark-error {
+    height: 8px;
+}
 
-    .overview-bottom-mark-error {
-        background-color: #e4a5c5;
-        border-color: #f82c92;
-    }
+.overview-bottom-mark-error {
+    background-color: #e4a5c5;
+    border-color: #f82c92;
+}
 
-    .overview-mark-warning {
-        background-color: #EFD746;
-        border: 0;
-    }
+.overview-mark-warning {
+    background-color: #EFD746;
+    border: 0;
+}
 
-    .overview-bottom-mark-warning {
-        background-color: #fcf1ca;
-        border-color: #f6d357;
-    }
+.overview-bottom-mark-warning {
+    background-color: #fcf1ca;
+    border-color: #f6d357;
+}
+
+.mark-element-icon {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    margin-left: 2px;
+    margin-top: 2px;
+}
+
+.mark-element {
+    position: absolute;
+}
