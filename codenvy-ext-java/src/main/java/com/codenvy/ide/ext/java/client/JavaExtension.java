@@ -38,6 +38,7 @@ import com.codenvy.ide.ext.java.client.action.UpdateDependencyAction;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
+import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -89,7 +90,9 @@ public class JavaExtension {
                          JavaLocalizationConstant localizationConstant,
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
-                         JavaParserWorker parserWorker) {
+                         JavaParserWorker parserWorker,
+                         /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not delete!. */
+                         FormatController formatController) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
