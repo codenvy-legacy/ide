@@ -38,7 +38,6 @@ import com.codenvy.ide.ext.java.client.action.UpdateDependencyAction;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.format.FormatClientService;
 import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
@@ -92,7 +91,8 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
-                         FormatClientService formatClientService) {
+                         /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not delete!. */
+                         FormatController formatController) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
@@ -144,8 +144,6 @@ public class JavaExtension {
         iconRegistry.registerIcon(new Icon("war/jpg.file.small.icon", resources.imageIcon()));
         iconRegistry.registerIcon(new Icon("war/png.file.small.icon", resources.imageIcon()));
         iconRegistry.registerIcon(new Icon("war/pom.xml.file.small.icon", resources.maven()));
-
-        new FormatController(parserWorker, formatClientService, eventBus);
 
         FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
