@@ -344,6 +344,26 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/ide/texteditor/**/*.*</exclude>
+                        <exclude>**/ide/text/store/**/*.*</exclude>
+                        <exclude>**/ide/Resources.java</exclude>
+                        <exclude>**/ide/common/Constants.java</exclude>
+                        <exclude>**/ide/dto/DocOp.java</exclude>
+                        <exclude>**/ide/dto/DocOpComponent.java</exclude>
+                        <exclude>**/ide/dto/client/ClientDocOpFactory.java</exclude>
+                        <exclude>**/ide/dto/shared/DocOpFactory.java</exclude>
+                        <exclude>**/ide/tree/FileTreeNodeRenderer.java</exclude>
+                        <exclude>**/ide/xml/editor/XmlContext.java</exclude>
+                        <exclude>**/ide/xml/editor/XmlState.java</exclude>
+                        <exclude>**/ide/text/ConfigurableLineTracker.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

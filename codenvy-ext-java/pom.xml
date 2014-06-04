@@ -292,6 +292,32 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/ext/java/client/editor/JavaAnnotation.java</exclude>
+                        <exclude>**/ext/java/jdt/JavaPreferencesSettings.java</exclude>
+                        <exclude>**/ext/java/jdt/MultiStatus.java</exclude>
+                        <exclude>**/ext/java/jdt/JavaUIStatus.java</exclude>
+                        <exclude>**/ext/java/jdt/codeassistant/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/core/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/InvocationContext.java</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/QuickAssistProcessor.java</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/QuickFixProcessor.java</exclude>
+                        <exclude>**/ext/java/jdt/refactoring/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/templates/**/*.*</exclude>
+                        <exclude>**/ext/java/server/core/**/*.*</exclude>
+                        <exclude>**/ext/java/server/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/templates/**/*.*</exclude>
+                        <exclude>**/ext/java/client/core/**/*.*</exclude>
+                        <exclude>**/ext/java/emul/**/*.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
