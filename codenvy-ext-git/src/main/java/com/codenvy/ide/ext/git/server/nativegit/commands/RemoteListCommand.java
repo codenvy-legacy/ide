@@ -71,4 +71,5 @@ public class RemoteListCommand extends GitCommand<List<Remote>> {
         this.remoteName = remoteName;
         return this;
     }
+
 }

@@ -10,19 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.git.server.rest;
 
-import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
-import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
-import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
-import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Item;
-import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ext.git.server.GitConnection;
@@ -30,43 +24,10 @@ import com.codenvy.ide.ext.git.server.GitConnectionFactory;
 import com.codenvy.ide.ext.git.server.GitException;
 import com.codenvy.ide.ext.git.server.InfoPage;
 import com.codenvy.ide.ext.git.server.LogPage;
-import com.codenvy.ide.ext.git.shared.AddRequest;
-import com.codenvy.ide.ext.git.shared.Branch;
-import com.codenvy.ide.ext.git.shared.BranchCheckoutRequest;
-import com.codenvy.ide.ext.git.shared.BranchCreateRequest;
-import com.codenvy.ide.ext.git.shared.BranchDeleteRequest;
-import com.codenvy.ide.ext.git.shared.BranchListRequest;
-import com.codenvy.ide.ext.git.shared.CloneRequest;
-import com.codenvy.ide.ext.git.shared.CommitRequest;
-import com.codenvy.ide.ext.git.shared.Commiters;
-import com.codenvy.ide.ext.git.shared.DiffRequest;
-import com.codenvy.ide.ext.git.shared.FetchRequest;
-import com.codenvy.ide.ext.git.shared.InitRequest;
-import com.codenvy.ide.ext.git.shared.LogRequest;
-import com.codenvy.ide.ext.git.shared.MergeRequest;
-import com.codenvy.ide.ext.git.shared.MergeResult;
-import com.codenvy.ide.ext.git.shared.MoveRequest;
-import com.codenvy.ide.ext.git.shared.PullRequest;
-import com.codenvy.ide.ext.git.shared.PushRequest;
-import com.codenvy.ide.ext.git.shared.Remote;
-import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
-import com.codenvy.ide.ext.git.shared.RemoteListRequest;
-import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
-import com.codenvy.ide.ext.git.shared.RepoInfo;
-import com.codenvy.ide.ext.git.shared.ResetRequest;
-import com.codenvy.ide.ext.git.shared.Revision;
-import com.codenvy.ide.ext.git.shared.RmRequest;
-import com.codenvy.ide.ext.git.shared.Status;
-import com.codenvy.ide.ext.git.shared.Tag;
-import com.codenvy.ide.ext.git.shared.TagCreateRequest;
-import com.codenvy.ide.ext.git.shared.TagDeleteRequest;
-import com.codenvy.ide.ext.git.shared.TagListRequest;
-import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.ide.Constants;
+import com.codenvy.ide.ext.git.shared.*;
 import com.codenvy.vfs.impl.fs.GitUrlResolver;
 import com.codenvy.vfs.impl.fs.LocalPathResolver;
 
-import org.apache.maven.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,14 +43,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** @author andrew00x */
@@ -130,7 +87,6 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.branchCheckout(request);
-            determineProjectType();
         } finally {
             gitConnection.close();
         }
@@ -204,8 +160,6 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.clone(request);
-            setGitRepositoryProp(projectId);
-            determineProjectType();
             return DtoFactory.getInstance().createDto(RepoInfo.class).withRemoteUri(request.getRemoteUri());
         } finally {
             long end = System.currentTimeMillis();
@@ -214,151 +168,6 @@ public class GitService {
                      + "' finished. Process took " + seconds + " seconds (" + seconds / 60 + " minutes)");
             gitConnection.close();
         }
-    }
-
-    private void setGitRepositoryProp(String projectId) throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-        Item project = vfs.getItem(projectId, false, PropertyFilter.ALL_FILTER);
-        String value = null;
-        for (Property property : project.getProperties()) {
-            if ("isGitRepository".equals(property.getName())) {
-                value = (property.getValue() != null && property.getValue().size() > 0) ? property.getValue().get(0) : null;
-                break;
-            }
-        }
-
-        if (value == null || !value.equals("true")) {
-            Property isGitRepositoryProperty = DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
-                                                         .withValue(new ArrayList<>(Arrays.asList("true")));
-            List<Property> propertiesList = new ArrayList<>(1);
-            propertiesList.add(isGitRepositoryProperty);
-            vfs.updateItem(projectId, propertiesList, null);
-        }
-    }
-
-    /**
-     * Try to determine project's type by it's structure.
-     *
-     * @throws VirtualFileSystemException
-     */
-    private void determineProjectType() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-
-        //Сheck whether ".codenvy" folder and "project" file are already exists
-        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.ALL_FILTER);
-        for (Item folder : folders.getItems()) {
-            if (".codenvy".equals(folder.getName())) {
-                ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
-                for (Item file : files.getItems()) {
-                    if ("project".equals(file.getName())) {
-                        return;
-                    }
-                }
-            }
-        }
-        ItemList files = vfs.getChildren(projectId, -1, 0, "file", false, PropertyFilter.NONE_FILTER);
-        boolean foundMavenProject = false;
-        for (Item file : files.getItems()) {
-            if ("pom.xml".equals(file.getName())) {
-                boolean isMultiModule = isMultiModule(vfs.getContent(file.getId()));
-                String propertyFileContent = "";
-                if (isMultiModule) {
-                    processMultiModuleMavenProject(vfs, projectId);
-                    propertyFileContent =
-                            "{\"type\":\"maven_multi_module\",\"properties\":[{\"name\":\"builder.name\",\"value\":[\"maven\"]}]}";
-                } else {
-                    propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
-                }
-                foundMavenProject = true;
-                Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
-                vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                               new ByteArrayInputStream(propertyFileContent.getBytes()));
-                break;
-            }
-        }
-        // We didn't found a maven project, turn it as nameless project
-        if (!foundMavenProject) {
-            String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
-            Folder codenvyFolder = vfs.createFolder(projectId, ".codenvy");
-            vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                           new ByteArrayInputStream(propertyFileContent.getBytes()));
-
-        }
-
-    }
-
-    /**
-     * @param vfs
-     *         virtual file system
-     * @param projectId
-     *         id of the multimodule project
-     * @throws ItemNotFoundException
-     * @throws InvalidArgumentException
-     * @throws PermissionDeniedException
-     * @throws VirtualFileSystemException
-     */
-    private void processMultiModuleMavenProject(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException {
-        ItemList folders = vfs.getChildren(projectId, -1, 0, "folder", false, PropertyFilter.ALL_FILTER);
-        findPom(vfs, folders);
-    }
-
-    /**
-     * Recursively find pom.xml in the project's structure.
-     *
-     * @param vfs
-     *         virtual file system
-     * @param folders
-     *         folders to look for pom.xml
-     * @throws ItemNotFoundException
-     * @throws InvalidArgumentException
-     * @throws PermissionDeniedException
-     * @throws VirtualFileSystemException
-     */
-    private void findPom(VirtualFileSystem vfs, ItemList folders) throws VirtualFileSystemException {
-        if (folders.getItems().isEmpty()) {
-            return;
-        }
-
-        for (Item folder : folders.getItems()) {
-            ItemList files = vfs.getChildren(folder.getId(), -1, 0, "file", false, PropertyFilter.NONE_FILTER);
-            boolean found = false;
-            for (Item file : files.getItems()) {
-                if ("pom.xml".equals(file.getName())) {
-                    List<Property> propertiesList = new ArrayList<>();
-                    propertiesList.add(DtoFactory.getInstance().createDto(Property.class).withName("isGitRepository")
-                                                 .withValue(new ArrayList<>(Arrays.asList("true"))));
-                    vfs.updateItem(folder.getId(), propertiesList, null);
-                    found = true;
-
-                    final String propertyFileContent = "{\"type\":\"" + Constants.NAMELESS_ID + "\"}";
-                    Folder codenvyFolder = vfs.createFolder(folder.getId(), ".codenvy");
-                    vfs.createFile(codenvyFolder.getId(), "project", MediaType.APPLICATION_JSON_TYPE,
-                                   new ByteArrayInputStream(propertyFileContent.getBytes()));
-                    break;
-                }
-            }
-            if (!found) {
-                findPom(vfs, vfs.getChildren(folder.getId(), -1, 0, "folder", false, PropertyFilter.ALL_FILTER));
-            }
-        }
-    }
-
-    /**
-     * Checks whether project is multi-module by analyzing packaging in pom.xml.
-     * Must be {@code &lt;packaging&gt;pom&lt;/packaging&gt;}.
-     *
-     * @param pomContent
-     *         content of the pom.xml file
-     * @return {@code true} if project is multi-module
-     */
-    private boolean isMultiModule(ContentStream pomContent) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(pomContent.getStream()))) {
-            final Model pom = MavenUtils.readModel(reader);
-            return (pom.getModules().size() > 0);
-        } catch (IOException e) {
-            LOG.error("Can't read pom.xml to determine project's type.", e);
-        }
-        return false;
     }
 
     @Path("commit")
@@ -406,7 +215,6 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.fetch(request);
-            determineProjectType();
         } finally {
             gitConnection.close();
         }
@@ -420,7 +228,6 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.init(request);
-            setGitRepositoryProp(projectId);
         } finally {
             gitConnection.close();
         }
@@ -471,7 +278,6 @@ public class GitService {
         GitConnection gitConnection = getGitConnection();
         try {
             gitConnection.pull(request);
-            determineProjectType();
         } finally {
             gitConnection.close();
         }
@@ -570,9 +376,6 @@ public class GitService {
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Status status(@QueryParam("short") boolean shortFormat)
             throws GitException, VirtualFileSystemException {
-        if (!isGitRepository()) {
-            throw new GitException("Not a git repository.");
-        }
         GitConnection gitConnection = getGitConnection();
         try {
             return gitConnection.status(shortFormat);
@@ -676,20 +479,6 @@ public class GitService {
         return project;
     }
 
-    protected boolean isGitRepository() throws VirtualFileSystemException {
-        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
-        Item project = getGitProject(vfs, projectId);
-
-        String value = null;
-        for (Property property : project.getProperties()) {
-            if ("isGitRepository".equals(property.getName())) {
-                value = (property.getValue() != null && property.getValue().size() > 0) ? property.getValue().get(0) : null;
-                break;
-            }
-        }
-
-        return value != null && value.equals("true");
-    }
 
     // TODO: this is temporary method
     protected String resolveLocalPathByPath(String folderPath) throws VirtualFileSystemException {

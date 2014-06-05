@@ -233,11 +233,15 @@ public class NativeGitConnection implements GitConnection {
 
     @Override
     public Revision commit(CommitRequest request) throws GitException {
-        Config config = new Config(nativeGit.getRepository());
-        final String remoteOriginURL = config.loadValue("remote.origin.url");
-
+        //Add this block for getting original Git url from that repository was cloned
+        //may be temporary solution because potential can be problem if user add one more remote repository
+        //But for now we get always first remote.
+        //in common use it must be enough
+        RemoteListCommand remoteListCommand = new RemoteListCommand(nativeGit.getRepository());
+        List<Remote> remotes = remoteListCommand.execute();
+        Remote remote = remotes.get(0);
+        final String remoteOriginURL = remote.getUrl();
         GitUser committer;
-
         CredentialItem.AuthenticatedUserName authenticatedUserName = new CredentialItem.AuthenticatedUserName();
         CredentialItem.AuthenticatedUserEmail authenticatedUserEmail = new CredentialItem.AuthenticatedUserEmail();
         boolean isCredentialsPresent = false;

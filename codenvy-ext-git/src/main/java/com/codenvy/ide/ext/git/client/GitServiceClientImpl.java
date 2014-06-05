@@ -211,16 +211,19 @@ public class GitServiceClientImpl implements GitServiceClient {
     /** {@inheritDoc} */
     @Override
     public void commit(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                       @NotNull RequestCallback<Revision> callback) throws WebSocketException {
+                       @NotNull AsyncRequestCallback<Revision> callback)  {
         CommitRequest commitRequest =
                 dtoFactory.createDto(CommitRequest.class).withMessage(message).withAmend(amend).withAll(all);
-        callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
-        String url = gitServicePath + COMMIT + "?projectid=" + project.getId();
-        MessageBuilder builder = new MessageBuilder(POST, url);
-        builder.data(dtoFactory.toJson(commitRequest))
-               .header(CONTENTTYPE, APPLICATION_JSON);
-        Message requestMessage = builder.build();
-        wsMessageBus.send(requestMessage, callback);
+//        callback.setStatusHandler(new CommitRequestHandler(project.getName(), message, eventBus, constant));
+        String url = baseHttpUrl + COMMIT + "?projectid=" + project.getId();
+
+        asyncRequestFactory.createPostRequest(url, commitRequest).loader(loader).send(callback);
+
+//        MessageBuilder builder = new MessageBuilder(POST, url);
+//        builder.data(dtoFactory.toJson(commitRequest))
+//               .header(CONTENTTYPE, APPLICATION_JSON);
+//        Message requestMessage = builder.build();
+//        wsMessageBus.send(requestMessage, null);
     }
 
     /** {@inheritDoc} */

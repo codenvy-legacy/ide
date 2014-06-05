@@ -12,14 +12,14 @@ package com.codenvy.ide.ext.git.client.commit;
 
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.ext.git.client.GitServiceClient;
-import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
-import com.codenvy.ide.ext.git.shared.Revision;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.ext.git.client.GitLocalizationConstant;
+import com.codenvy.ide.ext.git.client.GitServiceClient;
+import com.codenvy.ide.ext.git.shared.Revision;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -55,8 +55,12 @@ public class CommitPresenter implements CommitView.ActionDelegate {
      * @param notificationManager
      */
     @Inject
-    public CommitPresenter(CommitView view, GitServiceClient service, ResourceProvider resourceProvider, GitLocalizationConstant constant,
-                           NotificationManager notificationManager, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public CommitPresenter(CommitView view,
+                           GitServiceClient service,
+                           ResourceProvider resourceProvider,
+                           GitLocalizationConstant constant,
+                           NotificationManager notificationManager,
+                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.view.setDelegate(this);
@@ -84,28 +88,24 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         boolean all = view.isAllFilesInclued();
         boolean amend = view.isAmend();
 
-        try {
-            service.commit(project, message, all, amend,
-                           new RequestCallback<Revision>(dtoUnmarshallerFactory.newWSUnmarshaller(Revision.class)) {
-                               @Override
-                               protected void onSuccess(Revision result) {
-                                   if (!result.isFake()) {
-                                       onCommitSuccess(result);
-                                   } else {
-                                       Notification notification = new Notification(result.getMessage(), ERROR);
-                                       notificationManager.showNotification(notification);
-                                   }
-                               }
-
-                               @Override
-                               protected void onFailure(Throwable exception) {
-                                   handleError(exception);
+        service.commit(project, message, all, amend,
+                       new AsyncRequestCallback<Revision>(dtoUnmarshallerFactory.newUnmarshaller(Revision.class)) {
+                           @Override
+                           protected void onSuccess(Revision result) {
+                               if (!result.isFake()) {
+                                   onCommitSuccess(result);
+                               } else {
+                                   Notification notification = new Notification(result.getMessage(), ERROR);
+                                   notificationManager.showNotification(notification);
                                }
                            }
-                          );
-        } catch (WebSocketException e) {
-            handleError(e);
-        }
+
+                           @Override
+                           protected void onFailure(Throwable exception) {
+                               handleError(exception);
+                           }
+                       }
+                      );
         view.close();
     }
 
@@ -120,7 +120,8 @@ public class CommitPresenter implements CommitView.ActionDelegate {
         String date = formatter.format(new Date(revision.getCommitTime()));
 
         String message = constant.commitMessage(revision.getId(), date);
-        message += (revision.getCommitter() != null && revision.getCommitter().getName() != null && !revision.getCommitter().getName().isEmpty())
+        message += (revision.getCommitter() != null && revision.getCommitter().getName() != null &&
+                    !revision.getCommitter().getName().isEmpty())
                    ? " " + constant.commitUser(revision.getCommitter().getName()) : "";
 
         Notification notification = new Notification(message, INFO);

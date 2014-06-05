@@ -315,7 +315,7 @@ public interface GitServiceClient {
      * @throws WebSocketException
      */
     void commit(@NotNull Project project, @NotNull String message, boolean all, boolean amend,
-                @NotNull RequestCallback<Revision> callback) throws WebSocketException;
+                @NotNull AsyncRequestCallback<Revision> callback) ;
 
     /**
      * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.
