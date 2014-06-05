@@ -30,7 +30,6 @@ import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerTimeoutThresholdAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
-import com.codenvy.ide.extension.runner.client.console.ShellURLAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,7 +60,6 @@ public class RunnerExtension {
                            UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
                            ApplicationURLAction applicationURLAction,
-                           ShellURLAction shellURLAction,
                            RunnerStartedAction runnerStartedAction,
                            RunnerTimeoutThresholdAction runnerTimeoutThresholdAction,
                            RunnerFinishedAction runnerFinishedAction,
@@ -111,8 +109,6 @@ public class RunnerExtension {
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(applicationURLAction);
-        consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(shellURLAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerStartedAction);
         consoleToolbarActionGroup.addSeparator();
