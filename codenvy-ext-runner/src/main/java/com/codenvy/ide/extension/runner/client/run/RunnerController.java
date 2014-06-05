@@ -433,7 +433,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Returns URL of the application which is currently running. */
+    /** Returns URL of the environment's shell where application currently running. */
     @Nullable
     public String getCurrentAppShellURL() {
         // don't show shell URL in console when app is stopped. After some time this URL may be used by other app.
