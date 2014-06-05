@@ -80,6 +80,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -90,10 +91,11 @@ import java.util.regex.Pattern;
 public class NativeGitConnection implements GitConnection {
 
     private final static Logger LOG = LoggerFactory.getLogger(NativeGitConnection.class);
-    private final NativeGit         nativeGit;
-    private final CredentialsLoader credentialsLoader;
-    private       GitUser           user;
-    private       SshKeysManager    keysManager;
+    private final NativeGit                nativeGit;
+    private final CredentialsLoader        credentialsLoader;
+    private final Set<CredentialsProvider> credentialsProviders;
+    private       GitUser                  user;
+    private       SshKeysManager           keysManager;
 
     private static final Pattern authErrorPattern =
             Pattern.compile(
@@ -110,14 +112,17 @@ public class NativeGitConnection implements GitConnection {
      *         manager for ssh keys. If it is null default ssh will be used;
      * @param credentialsLoader
      *          loader for credentials
+     * @param credentialsProviders
+     *          set of credentials providers
      * @throws GitException
      *         when some error occurs
      */
-    public NativeGitConnection(File repository, GitUser user, SshKeysManager keysManager,
-                               CredentialsLoader credentialsLoader) throws GitException {
+    public NativeGitConnection(File repository, GitUser user, SshKeysManager keysManager, CredentialsLoader credentialsLoader,
+                               Set<CredentialsProvider> credentialsProviders) throws GitException {
         this.user = user;
         this.keysManager = keysManager;
         this.credentialsLoader = credentialsLoader;
+        this.credentialsProviders = credentialsProviders;
         nativeGit = new NativeGit(repository);
     }
 
@@ -227,15 +232,37 @@ public class NativeGitConnection implements GitConnection {
                                            .setNewUrl(request.getRemoteUri())
                                            .execute();
         nativeGit.createConfig().setUser(user).saveUser();
-        return new NativeGitConnection(repository, user, keysManager, credentialsLoader);
+        return new NativeGitConnection(repository, user, keysManager, credentialsLoader, credentialsProviders);
     }
 
     @Override
     public Revision commit(CommitRequest request) throws GitException {
-        nativeGit.createConfig().setUser(user).saveUser();
+        Config config = new Config(nativeGit.getRepository());
+        final String remoteOriginURL = config.loadValue("remote.origin.url");
+
+        GitUser committer;
+
+        CredentialItem.AuthenticatedUserName authenticatedUserName = new CredentialItem.AuthenticatedUserName();
+        CredentialItem.AuthenticatedUserEmail authenticatedUserEmail = new CredentialItem.AuthenticatedUserEmail();
+        boolean isCredentialsPresent = false;
+        for (CredentialsProvider cp : credentialsProviders) {
+            if (isCredentialsPresent = cp.getUser(remoteOriginURL, authenticatedUserName, authenticatedUserEmail)) {
+                break;
+            }
+        }
+
+        if (isCredentialsPresent) {
+            committer = DtoFactory.getInstance().createDto(GitUser.class)
+                                  .withName(authenticatedUserName.getValue())
+                                  .withEmail(authenticatedUserEmail.getValue());
+        } else {
+            committer = user;
+        }
+
+        nativeGit.createConfig().setUser(committer).saveUser();
         CommitCommand command = nativeGit.createCommitCommand();
-        command.setAuthor(user);
-        command.setCommitter(user);
+        command.setAuthor(committer);
+        command.setCommitter(committer);
         command.setAll(request.isAll());
         command.setAmend(request.isAmend());
         command.setMessage(request.getMessage());
@@ -317,7 +344,7 @@ public class NativeGitConnection implements GitConnection {
                 //if nothing to commit
             }
         }
-        return new NativeGitConnection(nativeGit.getRepository(), user, keysManager, credentialsLoader);
+        return new NativeGitConnection(nativeGit.getRepository(), user, keysManager, credentialsLoader, credentialsProviders);
     }
 
     @Override

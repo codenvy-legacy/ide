@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Native implementation for GitConnectionFactory
@@ -48,61 +49,65 @@ public class NativeGitConnectionFactory extends GitConnectionFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(NativeGitConnectionFactory.class);
 
-    private final SshKeysManager    keysManager;
-    private final CredentialsLoader credentialsLoader;
-    private final UserProfileDao    userProfileDao;
+    private final SshKeysManager           keysManager;
+    private final CredentialsLoader        credentialsLoader;
+    private final UserProfileDao           userProfileDao;
+    private final Set<CredentialsProvider> credentialsProviders;
 
     @Inject
-    public NativeGitConnectionFactory(SshKeysManager keysManager, CredentialsLoader credentialsLoader, UserProfileDao userProfileDao) {
+    public NativeGitConnectionFactory(SshKeysManager keysManager, CredentialsLoader credentialsLoader, UserProfileDao userProfileDao,
+                                      Set<CredentialsProvider> credentialsProviders) {
         this.keysManager = keysManager;
         this.credentialsLoader = credentialsLoader;
         this.userProfileDao = userProfileDao;
+        this.credentialsProviders = credentialsProviders;
     }
 
     /** {@inheritDoc} */
     @Override
     public GitConnection getConnection(File workDir, GitUser user) throws GitException {
-        return new NativeGitConnection(workDir, user, keysManager, credentialsLoader);
+        return new NativeGitConnection(workDir, user, keysManager, credentialsLoader, credentialsProviders);
     }
 
     /** {@inheritDoc} */
     @Override
     public GitConnection getConnection(File workDir) throws GitException {
+        return getConnection(workDir, getGitUser());
+    }
+
+    private GitUser getGitUser() throws GitException {
         List<Attribute> profileAttributes = null;
         try {
             Profile userProfile = userProfileDao.getById(EnvironmentContext.getCurrent().getUser().getId());
             if (userProfile != null) {
                 profileAttributes = userProfile.getAttributes();
             }
-        } catch (NotFoundException e) {
-            LOG.warn("Failed to obtain user information.", e);
-            throw new GitException("Failed to obtain user information.");
-        } catch (ServerException e) {
+        } catch (NotFoundException | ServerException e) {
             LOG.warn("Failed to obtain user information.", e);
             throw new GitException("Failed to obtain user information.");
         }
 
-        String firstName = null, lastName = null;
-
+        String firstName = null, lastName = null, email = null;
         if (profileAttributes != null) {
             for (Attribute attribute : profileAttributes) {
                 if ("firstName".equals(attribute.getName())) {
                     firstName = attribute.getValue();
                 } else if ("lastName".equals(attribute.getName())) {
                     lastName = attribute.getValue();
+                } else if ("email".equals(attribute.getName())) {
+                    email = attribute.getValue();
                 }
             }
         }
 
         GitUser gitUser = DtoFactory.getInstance().createDto(GitUser.class);
-
         if (firstName != null || lastName != null) {
-            gitUser.withEmail(Strings.join(" ", Strings.nullToEmpty(firstName), Strings.nullToEmpty(lastName)))
-                   .withEmail(EnvironmentContext.getCurrent().getUser().getName());
+            gitUser.withName(Strings.join(" ", Strings.nullToEmpty(firstName), Strings.nullToEmpty(lastName)));
         } else {
-            gitUser.withEmail(EnvironmentContext.getCurrent().getUser().getName());
+            gitUser.withName(EnvironmentContext.getCurrent().getUser().getName());
         }
+        gitUser.withEmail(email != null ? email : EnvironmentContext.getCurrent().getUser().getName());
 
-        return getConnection(workDir, gitUser);
+        return gitUser;
     }
 }

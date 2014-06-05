@@ -69,4 +69,40 @@ public abstract class CredentialItem {
             value = null;
         }
     }
+
+    public static class AuthenticatedUserName extends CredentialItem {
+
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public void clear() {
+            value = null;
+        }
+    }
+
+    public static class AuthenticatedUserEmail extends CredentialItem {
+
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public void clear() {
+            value = null;
+        }
+    }
 }

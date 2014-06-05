@@ -26,4 +26,7 @@ import com.codenvy.ide.ext.git.server.GitException;
  */
 public interface CredentialsProvider {
     public boolean get(String url, CredentialItem... items) throws GitException;
+
+    /** Provides the information about authenticated user over the specified OAuth provider. */
+    public boolean getUser(String url, CredentialItem... items) throws GitException;
 }
