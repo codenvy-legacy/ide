@@ -87,7 +87,7 @@ public class WorkBenchPresenter implements Presenter {
 //        openPart(welcomePart, PartStackType.EDITING);
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
-        openPart(consolePart, PartStackType.INFORMATION);
+//        openPart(consolePart, PartStackType.INFORMATION);
         openPart(notificationManager, PartStackType.INFORMATION);
         setActivePart(projectExplorerPart);
     }
