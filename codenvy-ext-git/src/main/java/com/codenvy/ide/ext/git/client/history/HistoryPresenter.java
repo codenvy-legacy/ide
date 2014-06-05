@@ -12,6 +12,8 @@ package com.codenvy.ide.ext.git.client.history;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
@@ -88,11 +90,11 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
      * @param notificationManager
      */
     @Inject
-    public HistoryPresenter(HistoryView view,
+    public HistoryPresenter(final HistoryView view,
                             EventBus eventBus,
                             GitResources resources,
                             GitServiceClient service,
-                            WorkspaceAgent workspaceAgent,
+                            final WorkspaceAgent workspaceAgent,
                             GitLocalizationConstant constant,
                             ResourceProvider resourceProvider,
                             NotificationManager notificationManager,
@@ -108,6 +110,24 @@ public class HistoryPresenter extends BasePresenter implements HistoryView.Actio
         this.notificationManager = notificationManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                onRefreshClicked();
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                isViewClosed = true;
+                workspaceAgent.hidePart(HistoryPresenter.this);
+                view.clear();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+
+            }
+        });
     }
 
     /** Show dialog. */

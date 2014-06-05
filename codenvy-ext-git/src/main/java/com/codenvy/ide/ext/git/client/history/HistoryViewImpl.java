@@ -256,6 +256,22 @@ public class HistoryViewImpl extends BaseView<HistoryView.ActionDelegate> implem
         dataCommitBPanel.setVisible(visible);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void clear() {
+        dataCommitBPanel.clear();
+        revisionCommitBPanel.clear();
+        commitARevision.setText("");
+        commitBRevision.setText("");
+        commitADate.setText("");
+        commitBDate.setText("");
+        compareType.setText("");
+        editor.setText("");
+
+        List<Revision> list = new ArrayList<Revision>();
+        commits.setRowData(list);
+    }
+
     @UiHandler("btnRefresh")
     public void onRefreshClicked(ClickEvent event) {
         delegate.onRefreshClicked();

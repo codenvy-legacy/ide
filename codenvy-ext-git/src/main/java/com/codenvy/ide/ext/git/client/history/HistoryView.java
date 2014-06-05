@@ -163,4 +163,8 @@ public interface HistoryView extends View<HistoryView.ActionDelegate> {
      *         title of dialog
      */
     void setTitle(String title);
+
+    /** Clear all fields and panels of the view.*/
+    void clear();
+
 }
