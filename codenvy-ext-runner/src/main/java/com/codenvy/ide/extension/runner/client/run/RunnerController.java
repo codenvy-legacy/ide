@@ -433,6 +433,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
+    /** Returns URL of the application which is currently running. */
+    @Nullable
+    public String getCurrentAppShellURL() {
+        // don't show shell URL in console when app is stopped. After some time this URL may be used by other app.
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
+            Link link = getLink(lastApplicationDescriptor, "shell url");
+            if (link != null) {
+                return link.getHref();
+            }
+        }
+        return null;
+    }
+
     /** Returns startTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStartTime() {
