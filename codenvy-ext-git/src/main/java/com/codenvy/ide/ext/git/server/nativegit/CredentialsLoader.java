@@ -1,22 +1,16 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.git.server.nativegit;
 
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.ide.ext.git.server.GitException;
 
@@ -32,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Set;
+
 
 /**
  * Load credentials
@@ -72,8 +67,8 @@ public class CredentialsLoader {
         File gitAskPassScript = new File(askScriptDirectory, GIT_ASK_PASS_SCRIPT);
         try (FileOutputStream fos = new FileOutputStream(gitAskPassScript)) {
             String actualGitAskPassTemplate = gitAskPassTemplate.replace("$self", gitAskPassScript.getAbsolutePath())
-                                                   .replace("$password", password.toString())
-                                                   .replace("$username", username.getValue());
+                                                                .replace("$password", password.toString())
+                                                                .replace("$username", username.getValue());
             fos.write(actualGitAskPassTemplate.getBytes());
         } catch (IOException e) {
             LOG.error("It is not possible to store " + gitAskPassScript + " credentials", e);
@@ -102,9 +97,9 @@ public class CredentialsLoader {
         CredentialItem.Password password = new CredentialItem.Password();
         boolean isCredentialsPresent = false;
         for (CredentialsProvider cp : credentialsProviders) {
-           if (isCredentialsPresent = cp.get(url, username, password)) {
-               break;
-           }
+            if (isCredentialsPresent = cp.get(url, username, password)) {
+                break;
+            }
         }
         //if not available tokenProvider exist
         if (!isCredentialsPresent) {
@@ -112,6 +107,15 @@ public class CredentialsLoader {
             password.setValue("");
         }
         return createGitAskPassScript(username, password);
+    }
+
+    public void removeAskPassScript() {
+        File askScriptDirectory = new File(System.getProperty("java.io.tmpdir")
+                                           + "/" + EnvironmentContext.getCurrent().getUser().getName());
+        if (askScriptDirectory.exists()) {
+            if (!IoUtil.deleteRecursive(askScriptDirectory))
+                LOG.warn("Ask-pass script deletion failed.");
+        }
     }
 
     @PostConstruct

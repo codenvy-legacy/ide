@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    CODENVY CONFIDENTIAL
-    __________________
+    Copyright (c) 2012-2014 Codenvy, S.A.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
 
-     [2012] - [2013] Codenvy, S.A.
-     All Rights Reserved.
-
-    NOTICE:  All information contained herein is, and remains
-    the property of Codenvy S.A. and its suppliers,
-    if any.  The intellectual and technical concepts contained
-    herein are proprietary to Codenvy S.A.
-    and its suppliers and may be covered by U.S. and Foreign Patents,
-    patents in process, and are protected by trade secret or copyright law.
-    Dissemination of this information or reproduction of this material
-    is strictly forbidden unless prior written permission is obtained
-    from Codenvy S.A..
+    Contributors:
+      Codenvy, S.A. - initial API and implementation
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -30,9 +23,6 @@
     <name>Codenvy Extension :: Java</name>
     <properties>
         <dto-generator-out-directory>${project.build.directory}/generated-sources/dto/</dto-generator-out-directory>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
         <dependency>
@@ -295,114 +285,32 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/ext/java/client/editor/JavaAnnotation.java</exclude>
+                        <exclude>**/ext/java/jdt/JavaPreferencesSettings.java</exclude>
+                        <exclude>**/ext/java/jdt/MultiStatus.java</exclude>
+                        <exclude>**/ext/java/jdt/JavaUIStatus.java</exclude>
+                        <exclude>**/ext/java/jdt/codeassistant/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/core/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/InvocationContext.java</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/QuickAssistProcessor.java</exclude>
+                        <exclude>**/ext/java/jdt/quickassist/api/QuickFixProcessor.java</exclude>
+                        <exclude>**/ext/java/jdt/refactoring/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/templates/**/*.*</exclude>
+                        <exclude>**/ext/java/server/core/**/*.*</exclude>
+                        <exclude>**/ext/java/server/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/internal/**/*.*</exclude>
+                        <exclude>**/ext/java/jdt/templates/**/*.*</exclude>
+                        <exclude>**/ext/java/client/core/**/*.*</exclude>
+                        <exclude>**/ext/java/emul/**/*.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>generate-dto</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-testCompile</id>
-                                <phase>test-compile</phase>
-                                <goals>
-                                    <goal>testCompile</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>true</skip>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <source>${maven.compiler.source}</source>
-                            <target>${maven.compiler.target}</target>
-                            <includes>
-                                <include>**/messages/*.java</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.4</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <classifier>messages</classifier>
-                                    <includes>
-                                        <include>**/messages/*</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>dto-client</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>java</goal>
-                                </goals>
-                                <configuration>
-                                    <mainClass>com.google.gwt.webworker.dtogen.DtoGenerator</mainClass>
-                                    <arguments>
-                                        <argument>--dto_jar=${project.build.directory}/${project.build.finalName}-messages.jar</argument>
-                                        <argument>--gen_file_name=${client.dto}</argument>
-                                        <argument>--package_base=${project.build.sourceDirectory}/</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <properties>
-                <client.dto>${project.build.sourceDirectory}/com/codenvy/ide/ext/java/messages/impl/MessagesImpls.java</client.dto>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>com.codenvy.platform-api-gwt-client</groupId>
-                    <artifactId>codenvy-gwt-client-commons</artifactId>
-                    <version>${codenvy.platform-api-gwt-client.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                    <version>2.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                    <version>12.0.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-user</artifactId>
-                    <version>${com.google.gwt.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

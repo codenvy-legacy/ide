@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.git.server;
 
 import com.codenvy.ide.ext.git.shared.AddRequest;
@@ -30,6 +23,7 @@ import com.codenvy.ide.ext.git.shared.FetchRequest;
 import com.codenvy.ide.ext.git.shared.GitUser;
 import com.codenvy.ide.ext.git.shared.InitRequest;
 import com.codenvy.ide.ext.git.shared.LogRequest;
+import com.codenvy.ide.ext.git.shared.LsRemoteRequest;
 import com.codenvy.ide.ext.git.shared.MergeRequest;
 import com.codenvy.ide.ext.git.shared.MergeResult;
 import com.codenvy.ide.ext.git.shared.MoveRequest;
@@ -38,6 +32,7 @@ import com.codenvy.ide.ext.git.shared.PushRequest;
 import com.codenvy.ide.ext.git.shared.Remote;
 import com.codenvy.ide.ext.git.shared.RemoteAddRequest;
 import com.codenvy.ide.ext.git.shared.RemoteListRequest;
+import com.codenvy.ide.ext.git.shared.RemoteReference;
 import com.codenvy.ide.ext.git.shared.RemoteUpdateRequest;
 import com.codenvy.ide.ext.git.shared.ResetRequest;
 import com.codenvy.ide.ext.git.shared.Revision;
@@ -194,6 +189,16 @@ public interface GitConnection {
      * @see LogRequest
      */
     LogPage log(LogRequest request) throws GitException;
+
+    /**
+     * List references in a remote repository.
+     *
+     * @param request ls-remote request
+     * @return list references in a remote repository.
+     * @throws GitException if any error occurs
+     * @see LsRemoteRequest
+     */
+    List<RemoteReference> lsRemote(LsRemoteRequest request) throws GitException;
 
     /**
      * Merge commits.
