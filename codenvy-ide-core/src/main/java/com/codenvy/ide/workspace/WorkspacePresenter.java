@@ -45,6 +45,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      *
      * @param view
      * @param menu
+     * @param toolbarPresenter
      * @param genericPerspectiveProvider
      */
     @Inject

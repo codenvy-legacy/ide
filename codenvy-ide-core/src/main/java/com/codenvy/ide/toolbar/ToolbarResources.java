@@ -27,6 +27,8 @@ public interface ToolbarResources extends ClientBundle {
 
         String toolbarPanel();
 
+        String toolbarMenuPanel();
+
         String iconButtonPanelDown();
 
         String iconButtonPanelSelectedOver();
