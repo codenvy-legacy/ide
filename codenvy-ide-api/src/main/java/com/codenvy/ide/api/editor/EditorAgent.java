@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.resources.model.File;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -31,12 +33,26 @@ public interface EditorAgent {
     void openEditor(@NotNull final File file);
 
     /**
+     * Returns array of EditorPartPresenters whose content have changed since the last save operation.
+     *
+     * @return Array<EditorPartPresenter>
+     */
+    Array<EditorPartPresenter> getDirtyEditors();
+
+    /**
      * Get all opened editors
      *
      * @return map with all opened editors
      */
     @NotNull
     StringMap<EditorPartPresenter> getOpenedEditors();
+
+    /**
+     * Saves all opened files whose content have changed since the last save operation
+     *
+     * @param callback
+     */
+    void saveAll(AsyncCallback callback);
 
     /**
      * Current active editor
