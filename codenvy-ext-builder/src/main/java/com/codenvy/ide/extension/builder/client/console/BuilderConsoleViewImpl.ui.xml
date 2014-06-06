@@ -20,8 +20,8 @@
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-        <g:north size="27">
-            <g:SimplePanel height="27" ui:field="toolbarPanel"/>
+        <g:north size="17">
+            <g:SimplePanel height="17" ui:field="toolbarPanel"/>
         </g:north>
         <g:center>
             <g:ScrollPanel width="100%" height="100%" ui:field="scrollPanel" debugId="builderConsolePart" addStyleNames="{style.console}">
