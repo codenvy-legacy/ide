@@ -22,6 +22,9 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
@@ -32,6 +35,7 @@ import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
@@ -71,6 +75,7 @@ public class BootstrapController {
     private final UserInfo                            userInfo;
     private final StyleInjector                       styleInjector;
     private final EventBus                            eventBus;
+    private final ActionManager                       actionManager;
 
     /** Create controller. */
     @Inject
@@ -91,7 +96,8 @@ public class BootstrapController {
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
-                               final ThemeAgent themeAgent) {
+                               final ThemeAgent themeAgent,
+                               ActionManager actionManager) {
 
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
@@ -107,6 +113,7 @@ public class BootstrapController {
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
+        this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         // Register DTO providers
@@ -243,21 +250,7 @@ public class BootstrapController {
         // Display IDE
         workspacePresenter.go(mainPanel);
 
-        if (Config.getProjectName() == null) {
-            resourceProvider.refreshRoot();
-        } else {
-            resourceProvider.getProject(Config.getProjectName(),
-                    new AsyncCallback<Project>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            resourceProvider.refreshRoot();
-                        }
-
-                        @Override
-                        public void onSuccess(Project project) {
-                        }
-                    });
-        }
+        processStartupParameters();
 
         // Bind browser's window events
         Window.addWindowClosingHandler(new Window.ClosingHandler() {
@@ -272,6 +265,42 @@ public class BootstrapController {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
             }
         });
+    }
+
+    private void processStartupParameters() {
+        final String projectToOpen = Config.getProjectName();
+        if (projectToOpen == null) {
+            resourceProvider.refreshRoot();
+            processStartupAction();
+        } else {
+            resourceProvider.getProject(projectToOpen,
+                                        new AsyncCallback<Project>() {
+                                            @Override
+                                            public void onSuccess(Project project) {
+                                                processStartupAction();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Throwable throwable) {
+                                                resourceProvider.refreshRoot();
+                                                processStartupAction();
+                                            }
+                                        });
+        }
+    }
+
+    private void processStartupAction() {
+        final String startupAction = Config.getStartupParam("action");
+        if (startupAction != null) {
+            Action action = actionManager.getAction(startupAction);
+            if (action != null) {
+                ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
+                action.update(e);
+                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
+                    action.actionPerformed(e);
+                }
+            }
+        }
     }
 
     /** Applying user defined Theme. */
