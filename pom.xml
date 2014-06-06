@@ -42,9 +42,7 @@
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-debugger-java</module>
-        <module>codenvy-ext-git</module>
         <module>codenvy-ext-ssh</module>
-        <module>codenvy-ext-github</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ext-tutorials</module>
