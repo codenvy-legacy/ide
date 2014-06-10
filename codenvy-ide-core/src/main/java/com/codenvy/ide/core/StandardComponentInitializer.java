@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.core;
 
+import com.codenvy.ide.Constants;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
@@ -33,6 +34,7 @@ import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -40,6 +42,8 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.image.viewer.ImageViewerProvider;
 import com.codenvy.ide.newresource.NewFileAction;
@@ -149,6 +153,12 @@ public class StandardComponentInitializer {
 
     @Inject
     private ImageViewerProvider imageViewerProvider;
+
+    @Inject
+    private ProjectTypeWizardRegistry wizardRegistry;
+
+    @Inject
+    private NotificationManager notificationManager;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
@@ -303,5 +313,7 @@ public class StandardComponentInitializer {
         newProjectWizard.addPage(newProjectPageProvider);
         newProjectWizard.addPage(chooseTemplatePageProvider);
         newProjectWizard.addPage(selectPaasPagePresenterProvider);
+
+        wizardRegistry.addWizard(Constants.UNKNOWN_ID, new ProjectWizard(notificationManager));
     }
 }

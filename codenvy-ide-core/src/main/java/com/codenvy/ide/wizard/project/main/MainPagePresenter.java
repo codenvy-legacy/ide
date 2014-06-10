@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,12 +40,11 @@ import java.util.Set;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private MainPageView                  view;
-    private ProjectTypeDescriptorRegistry registry;
-    private ProjectTypeWizardRegistry     wizardRegistry;
-    private ProjectTypeDescriptor         typeDescriptor;
-    private ProjectTemplateDescriptor     template;
-
+    private       MainPageView                  view;
+    private       ProjectTypeDescriptorRegistry registry;
+    private       ProjectTypeWizardRegistry     wizardRegistry;
+    private       ProjectTypeDescriptor         typeDescriptor;
+    private       ProjectTemplateDescriptor     template;
 
     @Inject
     public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry) {
@@ -63,11 +63,16 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public boolean isCompleted() {
-        return typeDescriptor != null || template != null;
+        return (typeDescriptor != null || template != null) && wizardContext.getData(ProjectWizard.PROJECT_NAME) != null;
     }
 
     @Override
     public void focusComponent() {
+
+    }
+
+    @Override
+    public void commit(@NotNull final CommitCallback callback) {
 
     }
 
@@ -120,6 +125,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.template = template;
         wizardContext.putData(ProjectWizard.PROJECT_TEMPLATE, template);
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
+        typeDescriptor = null;
         delegate.updateControls();
     }
 }

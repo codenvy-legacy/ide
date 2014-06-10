@@ -17,6 +17,14 @@
  */
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.Constants;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
@@ -24,10 +32,13 @@ import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.wizard.newproject.ProjectWizardView;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
-import com.codenvy.ide.wizard.project.name.NamePagePresenter;
+import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,20 +48,31 @@ import javax.validation.constraints.NotNull;
  * @author Evgen Vidolob
  */
 @Singleton
-public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    private WizardPage        currentPage;
-    private ProjectWizardView view;
-    private MainPagePresenter mainPage;
-    private NamePagePresenter namePage;
+public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
+    private final ProjectServiceClient      projectService;
+    private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private final ResourceProvider          resourceProvider;
+    private       ProjectTypeWizardRegistry wizardRegistry;
+    private       DtoFactory                factory;
+    private       WizardPage                currentPage;
+    private       ProjectWizardView         view;
+    private       MainPagePresenter         mainPage;
     /** Pages for which 'step tabs' will be showed. */
     private Array<WizardPage> stepsPages = Collections.createArray();
     private WizardContext wizardContext;
+    private ProjectWizard wizard;
 
     @Inject
-    public NewProjectWizardPresenter(ProjectWizardView view, MainPagePresenter mainPage, NamePagePresenter namePage) {
+    public NewProjectWizardPresenter(ProjectWizardView view, MainPagePresenter mainPage, ProjectServiceClient projectService,
+                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                     ResourceProvider resourceProvider, ProjectTypeWizardRegistry wizardRegistry, DtoFactory factory) {
         this.view = view;
         this.mainPage = mainPage;
-        this.namePage = namePage;
+        this.projectService = projectService;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.resourceProvider = resourceProvider;
+        this.wizardRegistry = wizardRegistry;
+        this.factory = factory;
         mainPage.setUpdateDelegate(this);
         view.setDelegate(this);
         wizardContext = new WizardContext();
@@ -62,17 +84,11 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         currentPage.storeOptions();
         final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex + 1);
+        if (wizardPage != mainPage) {
+            view.disableInput();
+        }
         setPage(wizardPage);
-        if (wizardPage == namePage) {
-            view.setStepTitles(namePage.getStepsCaptions());
-            Array<WizardPage> nextPages = namePage.getNextPages();
-            if(nextPages != null){
-                stepsPages.addAll(nextPages);
-            }
-        } //else {
-        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
         currentPage.focusComponent();
-//        }
     }
 
     /** {@inheritDoc} */
@@ -83,16 +99,16 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         if (previousStepPageIndex == 0) return;
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex - 1);
         if (wizardPage == mainPage) {
-            view.setStepTitles(Collections.createArray(mainPage.getCaption(), "..."));
+            view.enableInput();
         }
         setPage(wizardPage);
-        view.setStepArrowPosition(stepsPages.indexOf(currentPage) - previousStepPageIndex);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onFinishClicked() {
-        currentPage.commit(new WizardPage.CommitCallback() {
+    public void onSaveClicked() {
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+        final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
             @Override
             public void onSuccess() {
                 view.close();
@@ -103,8 +119,82 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
                 Info info = new Info("Project already exist");
                 info.show();
             }
+        };
+        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null &&
+            Constants.UNKNOWN_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+            createUnknownProject(callback);
+            return;
+        }
+        if (templateDescriptor == null && wizard != null) {
+            wizard.onFinish();
+            view.close();
+            return;
+        }
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                Info info = new Info("Project already exist");
+                info.show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                //project doesn't exist
+                importProject(callback, templateDescriptor, projectName);
+            }
         });
     }
+
+    private void createUnknownProject(final WizardPage.CommitCallback callback) {
+        final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
+        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
+        boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+        projectDescriptor.setVisibility(visibility ? "public" : "private");
+        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                callback.onSuccess();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+
+    private void importProject(final WizardPage.CommitCallback callback, ProjectTemplateDescriptor templateDescriptor,
+                               final String projectName) {
+        projectService.importProject(projectName, templateDescriptor.getSources(),
+                                     new AsyncRequestCallback<ProjectDescriptor>(
+                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                         @Override
+                                         protected void onSuccess(final ProjectDescriptor result) {
+                                             resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                                                 @Override
+                                                 public void onSuccess(Project project) {
+                                                     callback.onSuccess();
+                                                 }
+
+                                                 @Override
+                                                 public void onFailure(Throwable caught) {
+                                                     callback.onFailure(caught);
+                                                 }
+                                             });
+                                         }
+
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             callback.onFailure(exception);
+                                         }
+                                     }
+                                    );
+    }
+
 
     /** {@inheritDoc} */
     @Override
@@ -112,42 +202,86 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         view.close();
     }
 
+    @Override
+    public void projectNameChanged(String name) {
+        RegExp regExp = RegExp.compile("[A-Za-z0-9_]");
+        if (regExp.test(name)) {
+            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+        } else {
+            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+        }
+        updateControls();
+    }
+
+    @Override
+    public void projectVisibilityChanged(Boolean publ) {
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, publ);
+    }
+
+    @Override
+    public void projectDescriptionChanged(String projectDescriptionValue) {
+        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void updateControls() {
-        // change state of buttons
-        view.setBackButtonVisible(stepsPages.indexOf(currentPage) != 0);
-        view.setNextButtonVisible(stepsPages.indexOf(currentPage) != stepsPages.size() - 1);
-        view.setNextButtonEnabled(currentPage.isCompleted());
-        if(wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE) != null){
-            view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage);
-        } else {
-            view.setFinishButtonEnabled(currentPage.isCompleted() && currentPage != mainPage && currentPage != namePage);
+        if (currentPage == mainPage) {
+            ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+            if (descriptor != null) {
+                wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
+                if (wizard != null) {
+                    wizard.flipToFirst();
+                    stepsPages.clear();
+                    stepsPages.add(mainPage);
+                    stepsPages.addAll(wizard.getPages());
+                }
+
+            } else {
+                stepsPages.clear();
+                stepsPages.add(mainPage);
+            }
+
         }
-        view.setCaption(currentPage.getCaption());
-        view.setNotice(currentPage.getNotice());
-        view.setImage(currentPage.getImage());
+        ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+        ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+        // change state of buttons
+        view.setBackButtonEnabled(stepsPages.indexOf(currentPage) != 0);
+        view.setNextButtonEnabled(stepsPages.indexOf(currentPage) != stepsPages.size() - 1 && currentPage.isCompleted());
+        view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
+                                    (templateDescriptor == null && currentPage != mainPage && currentPage.isCompleted()) ||
+                                    (descriptor != null && descriptor.getProjectTypeId().equals(
+                                            Constants.UNKNOWN_ID) && currentPage.isCompleted()));
+        if (templateDescriptor != null) {
+            view.setNextButtonEnabled(false);
+
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void show() {
         wizardContext.clear();
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
         showFirstPage();
     }
 
     private void showFirstPage() {
         stepsPages.clear();
         stepsPages.add(mainPage);
-        stepsPages.add(namePage);
-        view.setTitle("New Project");
+        view.reset();
         setPage(mainPage);
-        view.setStepTitles(Collections.createArray(mainPage.getCaption(), "..."));
+        Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        if (project != null) {
+            view.setName(project.getName());
+            view.setVisibility(project.getVisibility().equals("public")? true : false);
+            wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
+        }
         view.showDialog();
         view.setEnabledAnimation(true);
     }
 
-    public void show(WizardContext context){
+    public void show(WizardContext context) {
         wizardContext = context;
         showFirstPage();
     }
@@ -163,6 +297,6 @@ public class NewProjectWizardPresenter  implements WizardDialog, Wizard.UpdateDe
         currentPage.setContext(wizardContext);
         currentPage.setUpdateDelegate(this);
         updateControls();
-        currentPage.go(view.getContentPanel());
+        view.showPage(currentPage);
     }
 }

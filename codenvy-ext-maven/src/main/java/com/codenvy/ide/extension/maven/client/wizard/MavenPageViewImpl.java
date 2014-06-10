@@ -90,6 +90,14 @@ public class MavenPageViewImpl implements MavenPageView {
     }
 
     @Override
+    public void reset() {
+        artifactId.setText("");
+        groupId.setText("");
+        versionField.setText("1.0-SNAPSHOT");
+        packagingField.setSelectedIndex(0);
+    }
+
+    @Override
     public String getGroupId() {
         return groupId.getText();
     }
