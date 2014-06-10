@@ -23,6 +23,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
@@ -32,6 +34,7 @@ public class CompletionProposalImpl implements CompletionProposal {
     private String           id;
     private String           display;
     private Image            image;
+    private SVGImage         svgImage;
     private boolean          autoInsertable;
     private JavaParserWorker worker;
 
@@ -39,6 +42,14 @@ public class CompletionProposalImpl implements CompletionProposal {
         this.id = id;
         this.display = display;
         this.image = image;
+        this.autoInsertable = autoInsertable;
+        this.worker = worker;
+    }
+    
+    public CompletionProposalImpl(String id, String display, SVGImage svgImage, boolean autoInsertable, JavaParserWorker worker) {
+        this.id = id;
+        this.display = display;
+        this.svgImage = svgImage;
         this.autoInsertable = autoInsertable;
         this.worker = worker;
     }
@@ -59,6 +70,12 @@ public class CompletionProposalImpl implements CompletionProposal {
     @Override
     public Image getImage() {
         return image;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGImage() {
+        return svgImage;
     }
 
     /** {@inheritDoc} */

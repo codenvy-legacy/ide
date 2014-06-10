@@ -21,6 +21,8 @@ package com.codenvy.ide.ext.web.css.editor;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
@@ -28,4 +30,7 @@ import com.google.gwt.resources.client.ImageResource;
 public interface CssResources extends ClientBundle {
     @Source("com/codenvy/ide/ext/web/css-property-gray.png")
     ImageResource property();
+    
+    @Source("com/codenvy/ide/ext/web/css.svg")
+    SVGResource propertyCss();
 }

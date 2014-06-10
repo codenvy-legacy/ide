@@ -62,6 +62,12 @@
     .proposalIcon img {
         vertical-align: middle;
     }
+    
+    .proposalIcon svg {
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+    }
 
     .proposalLabel {
         max-width: 400px;

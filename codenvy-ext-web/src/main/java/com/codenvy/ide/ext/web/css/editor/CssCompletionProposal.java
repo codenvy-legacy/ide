@@ -31,6 +31,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 
 /**
  * {@link CompletionProposal} implementation for Css code assistant.
@@ -153,5 +155,11 @@ public class CssCompletionProposal implements CompletionProposal {
      */
     public void setContext(InvocationContext context) {
         this.context = context;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGImage getSVGImage() {
+        return new SVGImage(context.getResources().propertyCss());
     }
 }
