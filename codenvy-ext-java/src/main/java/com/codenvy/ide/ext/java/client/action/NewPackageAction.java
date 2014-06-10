@@ -24,6 +24,7 @@ import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -63,6 +64,7 @@ public class NewPackageAction extends DefaultNewResourceAction {
 
                     @Override
                     public void onFailure(Throwable caught) {
+                        new Info(caught.getMessage()).show();
                     }
                 });
             }
