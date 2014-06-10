@@ -17,6 +17,7 @@
  */
 package com.codenvy.ide.ext.web.css.editor;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
@@ -28,10 +29,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 
 /**
@@ -96,11 +94,10 @@ public class CssCompletionProposal implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public Image getImage() {
-        Image image = new Image();
+    public Icon getIcon() {
         if (type == CompletionType.PROPERTY)
-            image.setResource(context.getResources().property());
-        return image;
+            return new Icon("css.property", context.getResources().propertyCss());
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -155,11 +152,5 @@ public class CssCompletionProposal implements CompletionProposal {
      */
     public void setContext(InvocationContext context) {
         this.context = context;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public SVGImage getSVGImage() {
-        return new SVGImage(context.getResources().propertyCss());
     }
 }

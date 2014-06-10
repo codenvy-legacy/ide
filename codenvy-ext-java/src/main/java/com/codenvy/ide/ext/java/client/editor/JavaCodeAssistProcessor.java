@@ -12,6 +12,7 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.Images;
@@ -21,7 +22,6 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -58,7 +58,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                                               WorkerProposal proposal = problems.get(i);
                                               proposals[i] = new CompletionProposalImpl(proposal.id(),
                                                                                         insertStyle(javaResources, proposal.displayText()),
-                                                                                        getImage(javaResources, proposal.image()),
+                                                                                        new Icon("", getImage(javaResources, proposal.image())),
                                                                                         proposal.autoInsertable(), worker);
                                           }
 
@@ -75,7 +75,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
         else return display;
     }
 
-    public static Image getImage(JavaResources javaResources, String image) {
+    public static ImageResource getImage(JavaResources javaResources, String image) {
         if (image == null) {
             return null;
         }
@@ -167,7 +167,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
                 img = javaResources.imp_obj();
                 break;
         }
-        return new Image(img);
+        return img;
     }
 
     /** {@inheritDoc} */

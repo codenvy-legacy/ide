@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.messages.Change;
 import com.codenvy.ide.ext.java.messages.ProposalAppliedMessage;
@@ -20,10 +21,7 @@ import com.codenvy.ide.text.RegionImpl;
 import com.codenvy.ide.texteditor.api.codeassistant.Completion;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -33,27 +31,18 @@ public class CompletionProposalImpl implements CompletionProposal {
 
     private String           id;
     private String           display;
-    private Image            image;
-    private SVGImage         svgImage;
+    private Icon             icon;
     private boolean          autoInsertable;
     private JavaParserWorker worker;
 
-    public CompletionProposalImpl(String id, String display, Image image, boolean autoInsertable, JavaParserWorker worker) {
+    public CompletionProposalImpl(String id, String display, Icon icon, boolean autoInsertable, JavaParserWorker worker) {
         this.id = id;
         this.display = display;
-        this.image = image;
+        this.icon = icon;
         this.autoInsertable = autoInsertable;
         this.worker = worker;
     }
     
-    public CompletionProposalImpl(String id, String display, SVGImage svgImage, boolean autoInsertable, JavaParserWorker worker) {
-        this.id = id;
-        this.display = display;
-        this.svgImage = svgImage;
-        this.autoInsertable = autoInsertable;
-        this.worker = worker;
-    }
-
     /** {@inheritDoc} */
     @Override
     public Widget getAdditionalProposalInfo() {
@@ -68,16 +57,10 @@ public class CompletionProposalImpl implements CompletionProposal {
 
     /** {@inheritDoc} */
     @Override
-    public Image getImage() {
-        return image;
+    public Icon getIcon() {
+        return icon;
     }
     
-    /** {@inheritDoc} */
-    @Override
-    public SVGImage getSVGImage() {
-        return svgImage;
-    }
-
     /** {@inheritDoc} */
     @Override
     public char[] getTriggerCharacters() {

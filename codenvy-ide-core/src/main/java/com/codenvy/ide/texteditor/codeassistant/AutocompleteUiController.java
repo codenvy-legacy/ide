@@ -62,10 +62,10 @@ public class AutocompleteUiController implements AutocompleteBox {
                     TableCellElement icon = Elements.createTDElement(css.proposalIcon());
                     TableCellElement label = Elements.createTDElement(css.proposalLabel());
                     TableCellElement group = Elements.createTDElement(css.proposalGroup());
-                    if (itemData.getSVGImage() != null){
-                        icon.appendChild((Node)itemData.getSVGImage().getElement()); 
-                    } else if (itemData.getImage() != null) {
-                        icon.appendChild((Node)itemData.getImage().getElement());
+                    if (itemData.getIcon() != null && itemData.getIcon().getSVGImage() != null){
+                        icon.appendChild((Node)itemData.getIcon().getSVGImage().getElement()); 
+                    } else if (itemData.getIcon() != null && itemData.getIcon().getImage() != null) {
+                        icon.appendChild((Node)itemData.getIcon().getImage().getElement());
                     }
                     label.setInnerHTML(itemData.getDisplayString());
                     itemElement.appendChild(icon);

@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.client.JavaResources;
@@ -106,7 +107,7 @@ public class JavaCorrectionProcessor implements com.codenvy.ide.texteditor.api.q
                      WorkerProposal proposal = problems.get(i);
                      proposals[i] = new CompletionProposalImpl(proposal.id(), JavaCodeAssistProcessor.insertStyle(javaResources,
                                                                                                                   proposal.displayText()),
-                                                               JavaCodeAssistProcessor.getImage(javaResources, proposal.image()),
+                                                               new Icon("", JavaCodeAssistProcessor.getImage(javaResources, proposal.image())),
                                                                proposal.autoInsertable(), worker);
                  }
                  callback.proposalComputed(proposals);

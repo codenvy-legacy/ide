@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
@@ -24,9 +25,10 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class Icon {
-    private final String      id;
-    private final String      sourcePath;
-    private final SVGResource svgResource;
+    private final String        id;
+    private final String        sourcePath;
+    private final SVGResource   svgResource;
+    private final ImageResource imageResource;
 
     /**
      * Create a new icon based on the specified image path.
@@ -40,6 +42,7 @@ public class Icon {
         this.id = id;
         this.sourcePath = sourcePath;
         this.svgResource = null;
+        this.imageResource = null;
     }
 
     /**
@@ -54,6 +57,20 @@ public class Icon {
         this.id = id;
         this.sourcePath = null;
         this.svgResource = svgResource;
+        this.imageResource = null;
+    }
+    
+    /**
+     * Create a new icon based on the specified {@link ImageResource}.
+     * 
+     * @param id icon's id
+     * @param imageResource resource that contains image
+     */
+    public Icon(String id, ImageResource imageResource) {
+        this.id = id;
+        this.sourcePath = null;
+        this.imageResource = imageResource;
+        this.svgResource = null;
     }
 
     /**
@@ -70,6 +87,7 @@ public class Icon {
         this.id = id;
         this.sourcePath = sourcePath;
         this.svgResource = svgResource;
+        this.imageResource = null;
     }
 
     /**
@@ -88,10 +106,13 @@ public class Icon {
      */
     @Nullable
     public Image getImage() {
-        if (sourcePath == null) {
+        if (sourcePath != null) {
+            return new Image(GWT.getModuleBaseForStaticFiles() + sourcePath);
+        } else if (imageResource != null) {
+            return new Image(imageResource);
+        } else {
             return null;
         }
-        return new Image(GWT.getModuleBaseForStaticFiles() + sourcePath);
     }
 
     /**
