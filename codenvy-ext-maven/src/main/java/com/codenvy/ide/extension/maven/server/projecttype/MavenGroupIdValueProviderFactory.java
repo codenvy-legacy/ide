@@ -45,7 +45,7 @@ public class MavenGroupIdValueProviderFactory implements ValueProviderFactory {
                         Model model = MavenUtils.readModel(pomFile.getInputStream());
                         list.add(model.getGroupId());
                     } catch (IOException e) {
-                        throw new IllegalStateException(e);
+//                        throw new IllegalStateException(e);
                     }
                 }
                 return list;

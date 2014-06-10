@@ -47,10 +47,10 @@ public class MavenSourceFoldersValueProviderFactory implements ValueProviderFact
                     if (buildDescriptor != null) {
                         list.addAll(getSourceFolders(buildDescriptor));
                     }
-                    return list;
                 } catch (IOException e) {
-                    throw new IllegalStateException(e);
+//                    throw new IllegalStateException(e);
                 }
+                return list;
             }
 
             @Override

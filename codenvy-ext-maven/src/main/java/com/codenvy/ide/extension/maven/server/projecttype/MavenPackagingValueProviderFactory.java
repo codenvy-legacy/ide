@@ -46,7 +46,7 @@ public class MavenPackagingValueProviderFactory implements ValueProviderFactory 
                         Model model = MavenUtils.readModel(pomFile.getInputStream());
                         list.add(model.getPackaging());
                     } catch (IOException e) {
-                        throw new IllegalStateException(e);
+//                        throw new IllegalStateException(e);
                     }
                 }
                 return list;

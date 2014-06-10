@@ -45,7 +45,7 @@ public class MavenArtifactIdValueProviderFactory implements ValueProviderFactory
                         Model model = MavenUtils.readModel(pomFile.getInputStream());
                         list.add(model.getArtifactId());
                     } catch (IOException e) {
-                        throw new IllegalStateException(e);
+//                        throw new IllegalStateException(e);
                     }
                 }
                 return list;
