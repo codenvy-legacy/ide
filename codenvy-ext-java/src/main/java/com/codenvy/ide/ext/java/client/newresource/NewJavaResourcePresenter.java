@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -117,6 +118,7 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
 
             @Override
             public void onFailure(Throwable caught) {
+                new Info(caught.getMessage()).show();
             }
         });
     }

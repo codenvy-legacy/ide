@@ -32,8 +32,8 @@ public class JavaProjectTest {
     private static final String[] packages = new String[]{
             "org",//
             "org.exo",//
-            "org.exo.ide",
-            "org.exo.ide.cli"
+            "org.codenvy.ide",
+            "org.codenvy.ide.cli"
     };
     @Mock
     private SourceFolder sourceFolder;
@@ -59,19 +59,19 @@ public class JavaProjectTest {
 
     @Test
     public void findParentForNewPackageWithNameConflict() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.ide.client");
-        assertThat(parentForPackage.getName()).isEqualTo("org.exo.ide");
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.codenvy.ide.client");
+        assertThat(parentForPackage.getName()).isEqualTo("org.codenvy.ide");
     }
 
     @Test
     public void parentNotExist() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "com.exo.ide.client");
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "com.codenvy.ide.client");
         assertThat(parentForPackage).isNull();
     }
 
     @Test
-    public void findParentPartNameMathch() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.idetest");
+    public void findParentPartNameMatch() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.codenvy.idetest");
         assertThat(parentForPackage.getName()).isEqualTo("org.exo");
     }
 
