@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.java.client;
 
 import com.google.gwt.core.client.GWT;
@@ -163,12 +156,6 @@ public interface JavaResources extends ClientBundle {
     @Source("com/codenvy/ide/ext/java/client/internal/text/correction/proposals/javadoc.gif")
     ImageResource javadoc();
 
-    @Source("com/codenvy/ide/ext/java/client/images/mark-error.png")
-    ImageResource markError();
-
-    @Source("com/codenvy/ide/ext/java/client/images/mark-warning.png")
-    ImageResource markWarning();
-
     @Source("com/codenvy/ide/ext/java/client/images/taskmrk.gif")
     ImageResource taskmrk();
 
@@ -177,49 +164,55 @@ public interface JavaResources extends ClientBundle {
 
     @Source("com/codenvy/ide/ext/java/client/images/newProjJava.png")
     ImageResource newJavaProject();
-    
+
+    @Source("svg/mark-error.svg")
+    SVGResource markError();
+
+    @Source("svg/mark-warning.svg")
+    SVGResource markWarning();
+
     @Source("svg/close-folder.svg")
     SVGResource closeFolder();
-    
+
     @Source("svg/css.svg")
     SVGResource cssFile();
-    
+
     @Source("svg/html.svg")
     SVGResource htmlFile();
-    
+
     @Source("svg/image-icon.svg")
     SVGResource imageIcon();
-    
+
     @Source("svg/java.svg")
     SVGResource javaFile();
-    
+
     @Source("svg/js.svg")
     SVGResource jsFile();
-    
+
     @Source("svg/jsf.svg")
     SVGResource jsfFile();
-    
+
     @Source("svg/json.svg")
     SVGResource jsonFile();
-    
+
     @Source("svg/jsp.svg")
     SVGResource jspFile();
-    
+
     @Source("svg/maven.svg")
     SVGResource maven();
-    
+
     @Source("svg/open-folder.svg")
     SVGResource openFolder();
-    
+
     @Source("svg/package.svg")
     SVGResource packageIcon();
-    
+
     @Source("svg/text.svg")
     SVGResource textFile();
-    
+
     @Source("svg/xml.svg")
     SVGResource xmlFile();
-    
+
     @Source("svg/update-dependencies.svg")
     SVGResource updateDependencies();
 }

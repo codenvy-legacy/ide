@@ -19,7 +19,6 @@ package com.codenvy.ide.texteditor;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -38,7 +37,6 @@ import com.codenvy.ide.ui.Tooltip;
 import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.Iterator;
@@ -117,14 +115,15 @@ public class VerticalRuler {
 
         for (Iterator<Annotation> iterator = model.getAnnotationIterator(); iterator.hasNext(); ) {
             Annotation annotation = iterator.next();
-            if (annotation.getImage() == null)
+            if (annotation.getImageElement() == null)
                 continue;
             Mark m = new Mark(annotation);
             Position position = model.getPosition(annotation);
             int lineNumber = getLineNumberForPosition(position);
             m.lineNumber = lineNumber;
             m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
-            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)m.getElement(), "mark" + (lineNumber+1) + "-" + annotation.getType());
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)m.getElement(),
+                                   "mark" + (lineNumber + 1) + "-" + annotation.getType());
             view.addUnmanagedElement(m.getElement());
             elements.add(m);
         }
@@ -179,18 +178,14 @@ public class VerticalRuler {
          */
         public Mark(Annotation annotation) {
             this.annotation = annotation;
-            setElement((Element)AbstractImagePrototype.create(annotation.getImage()).createElement());
+            setElement(annotation.getImageElement());
             getElement().getStyle().setZIndex(annotation.getLayer());
-            getElement().getStyle().setPosition("absolute");
-            getElement().getStyle().setWidth("15px");
-            getElement().getStyle().setLeft("0px");
             getElement().addEventListener(Event.MOUSEOVER, new EventListener() {
                 @Override
                 public void handleEvent(Event evt) {
                     showToolTip(Mark.this);
                 }
             }, false);
-
         }
 
         public void setTopPosition(int top, String unit) {

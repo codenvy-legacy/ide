@@ -1,23 +1,17 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ext.java.client.JavaResources;
@@ -113,7 +107,7 @@ public class JavaCorrectionProcessor implements com.codenvy.ide.texteditor.api.q
                      WorkerProposal proposal = problems.get(i);
                      proposals[i] = new CompletionProposalImpl(proposal.id(), JavaCodeAssistProcessor.insertStyle(javaResources,
                                                                                                                   proposal.displayText()),
-                                                               JavaCodeAssistProcessor.getImage(javaResources, proposal.image()),
+                                                               new Icon("", JavaCodeAssistProcessor.getImage(javaResources, proposal.image())),
                                                                proposal.autoInsertable(), worker);
                  }
                  callback.proposalComputed(proposals);

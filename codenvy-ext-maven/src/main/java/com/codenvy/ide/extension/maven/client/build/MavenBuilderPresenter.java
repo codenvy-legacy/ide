@@ -1,24 +1,18 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -59,8 +53,9 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     MessageBus messageBus,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
+                                    EditorAgent editorAgent,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory,
+        super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory, editorAgent,
               dtoUnmarshallerFactory, messageBus);
         this.view = view;
         this.view.setDelegate(this);

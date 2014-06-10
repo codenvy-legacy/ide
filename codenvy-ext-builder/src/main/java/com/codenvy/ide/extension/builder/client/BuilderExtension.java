@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.extension.Extension;
@@ -29,6 +22,7 @@ import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
 import com.codenvy.ide.extension.builder.client.console.BuildStatusAction;
 import com.codenvy.ide.extension.builder.client.console.BuildFinishedAction;
 import com.codenvy.ide.extension.builder.client.console.BuildStartedAction;
+import com.codenvy.ide.extension.builder.client.console.BuildTimeoutThresholdAction;
 import com.codenvy.ide.extension.builder.client.console.BuildTotalTimeAction;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
@@ -69,6 +63,7 @@ public class BuilderExtension {
                             BuildStartedAction buildStartedAction,
                             BuildFinishedAction buildFinishedAction,
                             BuildTotalTimeAction buildTotalTimeAction,
+                            BuildTimeoutThresholdAction buildTimeoutThresholdAction,
                             BuildStatusAction buildStatusAction,
                             WorkspaceAgent workspaceAgent,
                             BuilderConsolePresenter builderConsolePresenter,
@@ -106,6 +101,8 @@ public class BuilderExtension {
         consoleToolbarActionGroup.add(artifactURLAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildTimeoutThresholdAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildFinishedAction);
         consoleToolbarActionGroup.addSeparator();

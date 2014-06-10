@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  [2012] - [2014] Codenvy, S.A.
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.ui.action.Presentation;
@@ -87,7 +80,7 @@ public class InfoLabel extends Composite {
 
         if (isURL) {
             if (value.length() > 20) {
-                dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length()-10));
+                dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length() - 10));
             } else {
                 dataAnchor.setText(value);
             }
@@ -98,11 +91,26 @@ public class InfoLabel extends Composite {
         }
     }
 
+    private void setHint(String value) {
+        if (value == null) {
+            value = "";
+        }
+
+        if (isURL) {
+            dataAnchor.setTitle(value);
+        } else {
+            dataLabel.setTitle(value);
+        }
+    }
+
     private class PropertyListener implements PropertyChangeListener {
         @Override
         public void onPropertyChange(PropertyChangeEvent e) {
-            if (Properties.DATA_PROPERTY.equals(e.getPropertyName())) {
-                setData((String)e.getNewValue());
+            switch (e.getPropertyName()) {
+                case Properties.DATA_PROPERTY:
+                    setData((String)e.getNewValue());
+                case Properties.HINT_PROPERTY:
+                    setHint((String)e.getNewValue());
             }
         }
     }

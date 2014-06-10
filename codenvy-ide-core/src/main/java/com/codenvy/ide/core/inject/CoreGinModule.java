@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
@@ -135,6 +128,7 @@ import com.codenvy.ide.theme.DarkTheme;
 import com.codenvy.ide.theme.LightTheme;
 import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
+import com.codenvy.ide.toolbar.ToolbarMainPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
@@ -274,8 +268,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
 
         bind(ToolbarView.class).to(ToolbarViewImpl.class);
-        bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
-
+        bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarMainPresenter.class).in(Singleton.class);
 
         bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);

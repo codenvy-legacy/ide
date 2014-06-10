@@ -1,28 +1,24 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.build;
 
 import com.codenvy.api.builder.BuildStatus;
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
+import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -30,22 +26,25 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.Date;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -80,6 +79,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected Notification        notification;
     /** Descriptor of the last build task. */
     private   BuildTaskDescriptor lastBuildTaskDescriptor;
+    private   BuilderMetric       lastWaitingTimeLimit;
+    private   EditorAgent         editorAgent;
 
     @Inject
     protected BuildProjectPresenter(EventBus eventBus,
@@ -90,6 +91,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                     BuilderLocalizationConstant constant,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
+                                    EditorAgent editorAgent,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                     MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
@@ -99,6 +101,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
+        this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
 
@@ -127,7 +130,34 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Build active project. */
     public void buildActiveProject() {
-        buildActiveProject(null);
+        //Save the files before building if necessary
+        Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
+        if (dirtyEditors.isEmpty()) {
+            buildActiveProject(null);
+        } else {
+            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+                @Override
+                public void onOk() {
+                    editorAgent.saveAll(new AsyncCallback() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(getClass(), caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Object result) {
+                            buildActiveProject(null);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancel() {
+                    buildActiveProject(null);
+                }
+            });
+            askWindow.show();
+        }
     }
 
     /**
@@ -263,6 +293,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     }
 
     /** Returns link to download result of last build task. */
+    @Nullable
     public String getLastBuildResultURL() {
         if (lastBuildTaskDescriptor != null) {
             Link downloadResultLink = getLink(lastBuildTaskDescriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
@@ -273,41 +304,51 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
-    /** Returns time when last build task started in format HH:mm:ss. */
-    public String getLastBuildStartTime() {
-        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getStartTime() > 0) {
-            final Date startDate = new Date(lastBuildTaskDescriptor.getStartTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
-        }
-        return "--:--:--";
+    /** Returns startTime {@link BuilderMetric}. */
+    @Nullable
+    public BuilderMetric getLastBuildStartTime() {
+        return getBuilderMetric("startTime");
     }
 
-    /** Returns time when last build task finished in format HH:mm:ss. */
-    public String getLastBuildEndTime() {
-        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
-            final Date endDate = new Date(lastBuildTaskDescriptor.getEndTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(endDate);
+    /** Returns waitingTimeLimit {@link BuilderMetric}. */
+    @Nullable
+    public BuilderMetric getLastBuildTimeoutThreshold() {
+        if (lastBuildTaskDescriptor == null) {
+            return null;
         }
-        return "--:--:--";
+        BuilderMetric waitingTimeLimit = getBuilderMetric("waitingTimeLimit");
+        if (waitingTimeLimit != null) {
+            lastWaitingTimeLimit = waitingTimeLimit;
+        }
+        return lastWaitingTimeLimit;
     }
 
-    /** Returns total build time in format mm:ss.ms. */
-    public String getLastBuildTotalTime() {
-        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getEndTime() > 0) {
-            final long totalTimeMs = lastBuildTaskDescriptor.getEndTime() - lastBuildTaskDescriptor.getStartTime();
-            int ms = (int)(totalTimeMs % 1000);
-            int ss = (int)(totalTimeMs / 1000);
-            int mm = 0;
-            if (ss > 60) {
-                mm = ss / 60;
-                ss = ss % 60;
+    /** Returns endTime {@link BuilderMetric}. */
+    @Nullable
+    public BuilderMetric getLastBuildEndTime() {
+        return getBuilderMetric("endTime");
+    }
+
+    /** Returns runningTime {@link BuilderMetric}. */
+    @Nullable
+    public BuilderMetric getLastBuildRunningTime() {
+        return getBuilderMetric("runningTime");
+    }
+
+    @Nullable
+    private BuilderMetric getBuilderMetric(String metricName) {
+        if (lastBuildTaskDescriptor != null) {
+            for (BuilderMetric buildStat : lastBuildTaskDescriptor.getBuildStats()) {
+                if (metricName.equals(buildStat.getName())) {
+                    return buildStat;
+                }
             }
-            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
         }
-        return "--:--.---";
+        return null;
     }
 
     /** Returns last build task's status. */
+    @Nullable
     public String getLastBuildStatus() {
         if (lastBuildTaskDescriptor != null) {
             return lastBuildTaskDescriptor.getStatus().toString();
@@ -315,6 +356,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
+    @Nullable
     private static Link getLink(BuildTaskDescriptor descriptor, String rel) {
         List<Link> links = descriptor.getLinks();
         for (Link link : links) {
@@ -324,43 +366,4 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return null;
     }
 
-    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
-    private static String getDoubleDigit(int i) {
-        final String doubleDigitI;
-        switch (i) {
-            case 0:
-                doubleDigitI = "00";
-                break;
-            case 1:
-                doubleDigitI = "01";
-                break;
-            case 2:
-                doubleDigitI = "02";
-                break;
-            case 3:
-                doubleDigitI = "03";
-                break;
-            case 4:
-                doubleDigitI = "04";
-                break;
-            case 5:
-                doubleDigitI = "05";
-                break;
-            case 6:
-                doubleDigitI = "06";
-                break;
-            case 7:
-                doubleDigitI = "07";
-                break;
-            case 8:
-                doubleDigitI = "08";
-                break;
-            case 9:
-                doubleDigitI = "09";
-                break;
-            default:
-                doubleDigitI = Integer.toString(i);
-        }
-        return doubleDigitI;
-    }
 }

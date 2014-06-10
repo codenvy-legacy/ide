@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.client;
 
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
@@ -23,21 +16,26 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.user.UserInfo;
+import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
+import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
@@ -46,11 +44,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Performs initial application startup.
@@ -64,30 +66,18 @@ public class BootstrapController {
     private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private final IconRegistry                        iconRegistry;
     private final ThemeAgent                          themeAgent;
-    private final Provider<ComponentRegistry> componentRegistry;
-    private final Provider<WorkspacePresenter> workspaceProvider;
-    private final ExtensionInitializer extensionInitializer;
-    private final ResourceProvider resourceProvider;
-    private final UserProfileServiceClient userProfileService;
-    private final PreferencesManagerImpl preferencesManager;
-    private final UserInfo userInfo;
-    private final StyleInjector styleInjector;
+    private final Provider<ComponentRegistry>         componentRegistry;
+    private final Provider<WorkspacePresenter>        workspaceProvider;
+    private final ExtensionInitializer                extensionInitializer;
+    private final ResourceProvider                    resourceProvider;
+    private final UserProfileServiceClient            userProfileService;
+    private final PreferencesManagerImpl              preferencesManager;
+    private final UserInfo                            userInfo;
+    private final StyleInjector                       styleInjector;
+    private final EventBus                            eventBus;
+    private final ActionManager                       actionManager;
 
-    /**
-     * Create controller.
-     *
-     * @param componentRegistry
-     * @param workspaceProvider
-     * @param styleInjector
-     * @param extensionInitializer
-     * @param preferencesManager
-     * @param userProfileService
-     * @param projectTypeDescriptionServiceClient
-     * @param projectTypeDescriptorRegistry
-     * @param resourceProvider
-     * @param dtoRegistrar
-     * @param themeAgent
-     */
+    /** Create controller. */
     @Inject
     public BootstrapController(Provider<ComponentRegistry> componentRegistry,
                                Provider<WorkspacePresenter> workspaceProvider,
@@ -101,11 +91,13 @@ public class BootstrapController {
                                DtoRegistrar dtoRegistrar,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                Resources resources,
+                               EventBus eventBus,
 
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
-                               final ThemeAgent themeAgent) {
+                               final ThemeAgent themeAgent,
+                               ActionManager actionManager) {
 
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
@@ -115,11 +107,13 @@ public class BootstrapController {
         this.preferencesManager = preferencesManager;
         this.userInfo = userInfo;
         this.styleInjector = styleInjector;
+        this.eventBus = eventBus;
 
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
+        this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         // Register DTO providers
@@ -251,26 +245,61 @@ public class BootstrapController {
         WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
         // Display 'Update extension' button if IDE is launched in SDK runner
-        workspacePresenter.setUpdateButtonVisibility(
-                Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
+        workspacePresenter.setUpdateButtonVisibility(Config.getStartupParam("h") != null && Config.getStartupParam("p") != null);
 
         // Display IDE
         workspacePresenter.go(mainPanel);
 
-        if (Config.getProjectName() == null) {
-            resourceProvider.refreshRoot();
-        } else {
-            resourceProvider.getProject(Config.getProjectName(),
-                    new AsyncCallback<Project>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            resourceProvider.refreshRoot();
-                        }
+        processStartupParameters();
 
-                        @Override
-                        public void onSuccess(Project project) {
-                        }
-                    });
+        // Bind browser's window events
+        Window.addWindowClosingHandler(new Window.ClosingHandler() {
+            @Override
+            public void onWindowClosing(Window.ClosingEvent event) {
+                eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
+            }
+        });
+        Window.addCloseHandler(new CloseHandler<Window>() {
+            @Override
+            public void onClose(CloseEvent<Window> event) {
+                eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
+            }
+        });
+    }
+
+    private void processStartupParameters() {
+        final String projectToOpen = Config.getProjectName();
+        if (projectToOpen == null) {
+            resourceProvider.refreshRoot();
+            processStartupAction();
+        } else {
+            resourceProvider.getProject(projectToOpen,
+                                        new AsyncCallback<Project>() {
+                                            @Override
+                                            public void onSuccess(Project project) {
+                                                processStartupAction();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Throwable throwable) {
+                                                resourceProvider.refreshRoot();
+                                                processStartupAction();
+                                            }
+                                        });
+        }
+    }
+
+    private void processStartupAction() {
+        final String startupAction = Config.getStartupParam("action");
+        if (startupAction != null) {
+            Action action = actionManager.getAction(startupAction);
+            if (action != null) {
+                ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
+                action.update(e);
+                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
+                    action.actionPerformed(e);
+                }
+            }
         }
     }
 

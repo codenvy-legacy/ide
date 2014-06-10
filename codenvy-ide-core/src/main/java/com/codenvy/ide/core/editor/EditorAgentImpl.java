@@ -1,22 +1,16 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -26,6 +20,10 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.event.WindowActionHandler;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
@@ -40,11 +38,15 @@ import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 
 /** @author Evgen Vidolob */
@@ -52,6 +54,7 @@ import javax.validation.constraints.NotNull;
 public class EditorAgentImpl implements EditorAgent {
 
     private final StringMap<EditorPartPresenter> openedEditors;
+    private       Array<EditorPartPresenter>     dirtyEditors;
     /** Used to notify {@link EditorAgentImpl} that editor has closed */
     private final EditorPartCloseHandler   editorClosed             = new EditorPartCloseHandler() {
         @Override
@@ -78,20 +81,45 @@ public class EditorAgentImpl implements EditorAgent {
             }
         }
     };
-    private final WorkspaceAgent      workspace;
-    private final EventBus            eventBus;
-    private       EditorRegistry      editorRegistry;
-    private       ResourceProvider    provider;
-    private       EditorPartPresenter activeEditor;
+    private final WindowActionHandler      windowActionHandler      = new WindowActionHandler() {
+        @Override
+        public void onWindowClosing(final WindowActionEvent event) {
+            openedEditors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
+                @Override
+                public void onIteration(String s, EditorPartPresenter editorPartPresenter) {
+                    if (editorPartPresenter.isDirty()) {
+                        event.setMessage(coreLocalizationConstant.changesMayBeLost());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onWindowClosed(WindowActionEvent event) {
+        }
+    };
+    private final EventBus                 eventBus;
+    private       ResourceProvider         provider;
+    private       EditorRegistry           editorRegistry;
+    private final WorkspaceAgent           workspace;
+    private       EditorPartPresenter      activeEditor;
+    private       NotificationManager      notificationManager;
+    private       CoreLocalizationConstant coreLocalizationConstant;
 
     @Inject
-    public EditorAgentImpl(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
-                           final WorkspaceAgent workspace) {
+    public EditorAgentImpl(EventBus eventBus,
+                           ResourceProvider provider,
+                           EditorRegistry editorRegistry,
+                           final WorkspaceAgent workspace,
+                           final NotificationManager notificationManager,
+                           CoreLocalizationConstant coreLocalizationConstant) {
         super();
         this.eventBus = eventBus;
-        this.editorRegistry = editorRegistry;
         this.provider = provider;
+        this.editorRegistry = editorRegistry;
         this.workspace = workspace;
+        this.notificationManager = notificationManager;
+        this.coreLocalizationConstant = coreLocalizationConstant;
         openedEditors = Collections.createStringMap();
 
         bind();
@@ -100,6 +128,7 @@ public class EditorAgentImpl implements EditorAgent {
     protected void bind() {
         eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
         eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
+        eventBus.addHandler(WindowActionEvent.TYPE, windowActionHandler);
     }
 
     /** {@inheritDoc} */
@@ -120,6 +149,18 @@ public class EditorAgentImpl implements EditorAgent {
             workspace.openPart(editor, PartStackType.EDITING);
             openedEditors.put(file.getPath(), editor);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Array<EditorPartPresenter> getDirtyEditors() {
+        Array<EditorPartPresenter> dirtyEditors = Collections.createArray();
+        for (EditorPartPresenter partPresenter : getOpenedEditors().getValues().asIterable()) {
+            if (partPresenter.isDirty()) {
+                dirtyEditors.add(partPresenter);
+            }
+        }
+        return dirtyEditors;
     }
 
     /** @param editor */
@@ -147,6 +188,43 @@ public class EditorAgentImpl implements EditorAgent {
     @Override
     public StringMap<EditorPartPresenter> getOpenedEditors() {
         return openedEditors;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void saveAll(final AsyncCallback callback) {
+        dirtyEditors = getDirtyEditors();
+        if (dirtyEditors.isEmpty()) {
+            Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
+            notificationManager.showNotification(notification);
+            callback.onSuccess("Success");
+        } else {
+            doSave(callback);
+        }
+
+    }
+    private void doSave(final AsyncCallback callback) {
+        final EditorPartPresenter partPresenter = dirtyEditors.get(0);
+        partPresenter.doSave(new AsyncCallback<EditorInput>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+                Notification notification = new Notification(coreLocalizationConstant.someFilesCanNotBeSaved(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+
+            @Override
+            public void onSuccess(EditorInput result) {
+                dirtyEditors.remove(partPresenter);
+                if(dirtyEditors.isEmpty()) {
+                    Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
+                    notificationManager.showNotification(notification);
+                    callback.onSuccess("Success");
+                } else {
+                    doSave(callback);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */

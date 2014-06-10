@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
- * 
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.ide.api.extension.Extension;
@@ -35,7 +28,9 @@ import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
+import com.codenvy.ide.extension.runner.client.console.RunnerTimeoutThresholdAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
+import com.codenvy.ide.extension.runner.client.console.ShellURLAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -66,7 +61,9 @@ public class RunnerExtension {
                            UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
                            ApplicationURLAction applicationURLAction,
+                           ShellURLAction shellURLAction,
                            RunnerStartedAction runnerStartedAction,
+                           RunnerTimeoutThresholdAction runnerTimeoutThresholdAction,
                            RunnerFinishedAction runnerFinishedAction,
                            RunnerTotalTimeAction runnerTotalTimeAction,
                            WorkspaceAgent workspaceAgent,
@@ -115,7 +112,11 @@ public class RunnerExtension {
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(applicationURLAction);
         consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(shellURLAction);
+        consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerStartedAction);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerTimeoutThresholdAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerFinishedAction);
         consoleToolbarActionGroup.addSeparator();

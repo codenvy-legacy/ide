@@ -1,25 +1,20 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.google.gwt.resources.client.ImageResource;
@@ -40,11 +35,28 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     private       TextEditorPartPresenter activePart;
 
     @Inject
-    public OutlinePartPresenter(OutlinePartView view, EventBus eventBus) {
+    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus) {
         this.view = view;
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
         view.setTitle("Outline");
         view.setDelegate(this);
+
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                view.clear();
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+
+            }
+        });
     }
 
     /** {@inheritDoc} */

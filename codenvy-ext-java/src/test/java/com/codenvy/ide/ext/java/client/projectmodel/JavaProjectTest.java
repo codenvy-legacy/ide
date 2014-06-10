@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.ide.collections.Array;
@@ -39,8 +32,8 @@ public class JavaProjectTest {
     private static final String[] packages = new String[]{
             "org",//
             "org.exo",//
-            "org.exo.ide",
-            "org.exo.ide.cli"
+            "org.codenvy.ide",
+            "org.codenvy.ide.cli"
     };
     @Mock
     private SourceFolder sourceFolder;
@@ -66,19 +59,19 @@ public class JavaProjectTest {
 
     @Test
     public void findParentForNewPackageWithNameConflict() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.ide.client");
-        assertThat(parentForPackage.getName()).isEqualTo("org.exo.ide");
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.codenvy.ide.client");
+        assertThat(parentForPackage.getName()).isEqualTo("org.codenvy.ide");
     }
 
     @Test
     public void parentNotExist() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "com.exo.ide.client");
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "com.codenvy.ide.client");
         assertThat(parentForPackage).isNull();
     }
 
     @Test
-    public void findParentPartNameMathch() {
-        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.idetest");
+    public void findParentPartNameMatch() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.codenvy.idetest");
         assertThat(parentForPackage.getName()).isEqualTo("org.exo");
     }
 

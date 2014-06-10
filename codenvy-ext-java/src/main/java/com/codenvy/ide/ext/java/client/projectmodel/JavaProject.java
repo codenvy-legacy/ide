@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
@@ -77,13 +70,13 @@ public class JavaProject extends Project {
     @Override
     public void refreshChildren(final Folder root, final AsyncCallback<Folder> callback) {
         final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
-        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(final Array<ItemReference> children) {
                 // check if sub-modules exists
                 if (Project.TYPE.equals(folderToRefresh.getResourceType())) {
-                    final Unmarshallable<Array<ProjectDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class);
+                    Unmarshallable<Array<ProjectDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class);
                     projectServiceClient.getModules(root.getPath(), new AsyncRequestCallback<Array<ProjectDescriptor>>(unmarshaller) {
                         @Override
                         protected void onSuccess(Array<ProjectDescriptor> modules) {
@@ -99,7 +92,7 @@ public class JavaProject extends Project {
                 // for flat mode package presentation
                 else if ((folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) &&
                          children.size() == 1 && children.get(0).getType().equals(Folder.TYPE)) {
-                    final Unmarshallable<TreeElement> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
+                    Unmarshallable<TreeElement> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
                     projectServiceClient.getTree(root.getPath(), -1,
                                                  new AsyncRequestCallback<TreeElement>(unmarshaller) {
                                                      @Override
@@ -142,26 +135,25 @@ public class JavaProject extends Project {
 
     /**
      * Create new Java package.
-     * This method check package name, and if name not valid call <code>onFailure</code> callback method with JavaModelException.
+     * This method checks package name, and if name is not valid then calls
+     * <code>onFailure</code> callback method with JavaModelException.
      *
      * @param parent
      *         the source folder where create package
      * @param name
-     *         the name of new package
+     *         the name of new package e.g. com.codenvy
      * @param callback
      */
     public void createPackage(@NotNull final Folder parent, final String name, final AsyncCallback<Package> callback) {
         try {
             checkItemValid(parent);
+            checkPackageName(name);
+
             final Folder checkedParent = checkParent(parent);
-            if (!checkPackageName(name)) {
-                callback.onFailure(new JavaModelException("Package name not valid"));
-                return;
-            }
             Folder foundParent = findFolderParent(checkedParent, name);
             final Folder folderParent = foundParent == null ? checkedParent : foundParent;
 
-            projectServiceClient.createFolder(parent.getPath() + '/' + name, new AsyncRequestCallback<Void>() {
+            projectServiceClient.createFolder(parent.getPath() + '/' + name.replace('.', '/'), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     final Package pack = new Package();
@@ -170,7 +162,7 @@ public class JavaProject extends Project {
                     pack.setParent(checkedParent);
                     pack.setProject(JavaProject.this);
                     checkedParent.addChild(pack);
-                    // refresh tree, cause additional hierarchy folders my have been created
+                    // refresh tree, cause additional hierarchy folders may have been created
                     refreshChildren(folderParent, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
@@ -194,7 +186,6 @@ public class JavaProject extends Project {
                     callback.onFailure(exception);
                 }
             });
-
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -266,9 +257,9 @@ public class JavaProject extends Project {
         for (Resource r : parent.getChildren().asIterable()) {
             if (r instanceof Package) {
                 if (name.startsWith(r.getName()) && r.getName().length() > longestMatch) {
-                    //additional check for situation if parent package partial match:
-                    // "com.exo.ide.cli" - exist, and we try to create "com.exo.ide.client" package,
-                    //in this case parent folder for this package must be "com.exo.ide" not com.exo.ide.cli
+                    // additional check for situation if parent package partial match:
+                    // "com.codenvy.ide.cli" - exist, and we try to create "com.codenvy.ide.client" package,
+                    // in this case parent folder for this package must be "com.codenvy.ide" not com.codenvy.ide.cli
                     String packName = r.getName();
                     String[] split = packName.split("\\.");
                     String lastPackage = split[split.length - 1];
@@ -288,13 +279,17 @@ public class JavaProject extends Project {
         if (parent instanceof JavaProject && description.getSourceFolders().contains(name)) {
             createSourceFolder((JavaProject)parent, name, callback);
             return;
-        } else if (checkPackageName(name)) {
-            if (parent instanceof SourceFolder) {
-                createFolderAsPackage(parent, name, callback);
-                return;
-            } else if (parent instanceof Package) {
-                createFolderAsPackage(parent.getParent(), name, callback);
-                return;
+        } else {
+            try {
+                checkPackageName(name);
+                if (parent instanceof SourceFolder) {
+                    createFolderAsPackage(parent, name, callback);
+                    return;
+                } else if (parent instanceof Package) {
+                    createFolderAsPackage(parent.getParent(), name, callback);
+                    return;
+                }
+            } catch (JavaModelException ignore) {
             }
         }
 
@@ -361,7 +356,7 @@ public class JavaProject extends Project {
     }
 
     /**
-     * Check is parent instance of Package or Source folder
+     * Check is parent instance of Package or Source folder.
      *
      * @param parent
      * @throws JavaModelException
@@ -395,15 +390,15 @@ public class JavaProject extends Project {
      * defined by PackageDeclaration (JLS2 7.4). For example, <code>"java.lang"</code>.
      * <p/>
      *
-     * @param name
+     * @param name name of the package
      */
-    protected boolean checkPackageName(String name) {
+    protected static void checkPackageName(String name) throws JavaModelException {
         //TODO infer COMPILER_SOURCE and COMPILER_COMPLIANCE to project properties
-        IStatus status =
-                JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                    JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-        return status.getSeverity() != IStatus.ERROR;
-
+        IStatus status = JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+                                                             JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+        if (status.getSeverity() == IStatus.ERROR) {
+            throw new JavaModelException(status.getMessage());
+        }
     }
 
     /**
@@ -417,14 +412,13 @@ public class JavaProject extends Project {
      * </ul>
      * </p>
      *
-     * @param name
+     * @param name name of the package
      * @throws JavaModelException
      */
     private void checkCompilationUnitName(String name) throws JavaModelException {
         //TODO infer COMPILER_SOURCE and COMPILER_COMPLIANCE to project properties
-        IStatus status =
-                JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+        IStatus status = JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+                                                                     JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         if (status.getSeverity() == IStatus.ERROR) {
             throw new JavaModelException(status.getMessage());
         }

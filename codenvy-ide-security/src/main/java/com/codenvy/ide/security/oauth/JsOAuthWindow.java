@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 /*
 * CODENVY CONFIDENTIAL
 * __________________
@@ -85,8 +95,8 @@ public class JsOAuthWindow {
                     if (href) {
                         console.log(href);
                         var path = popupWindow.location.pathname;
-                        console.log("path" + path);
-                        if (path == ("/ide/" + $wnd.wsName) || path == "/dashboard/") {
+                        console.log("path" + path + " :: " + "/ide/" + $wnd.wsName);
+                        if (path == ("/ide/" + $wnd.IDE.config.workspaceName) || path == "/dashboard/") {
                             instance.@com.codenvy.ide.security.oauth.JsOAuthWindow::setAuthenticationStatus(I)(3);
                             popupWindow.close();
                             popupWindow = null;

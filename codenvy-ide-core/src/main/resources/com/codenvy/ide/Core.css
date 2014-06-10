@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 @external .gwt-SplitLayoutPanel-HDragger, .gwt-SplitLayoutPanel-VDragger, .hsplitter, .hsplitter, .gwt-DialogBox, gwt-Button,
 gwt-PushButton-up,gwt-PushButton-up-hovering,gwt-PushButton-up-disabled,
 gwt-PushButton-down,.gwt-PushButton-down-hovering,.gwt-PushButton-down-disabled, gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled,
@@ -164,7 +157,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-hovering, .gwt-ToggleButton-down-hovering{
@@ -174,7 +167,7 @@ textarea {
     font-weight: 500;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
-    border-radius: 3px;
+    border-radius: 1px;
     outline: none;
 }
 .gwt-PushButton-down-disabled, .gwt-ToggleButton-down-disabled{
@@ -382,8 +375,8 @@ class for the document-level scrollbars. */
     background: dialogTopLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupTopCenter {
     background: dialogTopCenter url("");
@@ -392,8 +385,8 @@ class for the document-level scrollbars. */
     background: dialogTopRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupTopRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
     background: dialogMiddleLeft url("");
@@ -408,8 +401,8 @@ class for the document-level scrollbars. */
     background: dialogBottomLeft url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomCenter {
     background: dialogBottomCenter url("");
@@ -418,8 +411,8 @@ class for the document-level scrollbars. */
     background: dialogBottomRight url("");
 }
 .gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
-    width: 2px;
-    height: 2px;
+    width: 1px;
+    height: 1px;
 }
 .gwt-SuggestBoxPopup .item {
     color: boxTextColor;

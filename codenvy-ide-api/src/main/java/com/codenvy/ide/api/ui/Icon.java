@@ -1,23 +1,17 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  [2012] - [2014] Codenvy, S.A.
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.api.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
@@ -31,9 +25,10 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class Icon {
-    private final String      id;
-    private final String      sourcePath;
-    private final SVGResource svgResource;
+    private final String        id;
+    private final String        sourcePath;
+    private final SVGResource   svgResource;
+    private final ImageResource imageResource;
 
     /**
      * Create a new icon based on the specified image path.
@@ -47,6 +42,7 @@ public class Icon {
         this.id = id;
         this.sourcePath = sourcePath;
         this.svgResource = null;
+        this.imageResource = null;
     }
 
     /**
@@ -61,6 +57,20 @@ public class Icon {
         this.id = id;
         this.sourcePath = null;
         this.svgResource = svgResource;
+        this.imageResource = null;
+    }
+    
+    /**
+     * Create a new icon based on the specified {@link ImageResource}.
+     * 
+     * @param id icon's id
+     * @param imageResource resource that contains image
+     */
+    public Icon(String id, ImageResource imageResource) {
+        this.id = id;
+        this.sourcePath = null;
+        this.imageResource = imageResource;
+        this.svgResource = null;
     }
 
     /**
@@ -77,6 +87,7 @@ public class Icon {
         this.id = id;
         this.sourcePath = sourcePath;
         this.svgResource = svgResource;
+        this.imageResource = null;
     }
 
     /**
@@ -95,10 +106,13 @@ public class Icon {
      */
     @Nullable
     public Image getImage() {
-        if (sourcePath == null) {
+        if (sourcePath != null) {
+            return new Image(GWT.getModuleBaseForStaticFiles() + sourcePath);
+        } else if (imageResource != null) {
+            return new Image(imageResource);
+        } else {
             return null;
         }
-        return new Image(GWT.getModuleBaseForStaticFiles() + sourcePath);
     }
 
     /**

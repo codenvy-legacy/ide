@@ -1,23 +1,15 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
- * 
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.api.deploy;
 
-import com.codenvy.api.auth.oauth.OAuthTokenProvider;
 import com.codenvy.api.builder.BuilderAdminService;
 import com.codenvy.api.builder.BuilderSelectionStrategy;
 import com.codenvy.api.builder.BuilderService;
@@ -48,16 +40,6 @@ import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMa
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.ide.env.TokenValidatorImpl;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
-import com.codenvy.ide.ext.git.server.GitConnectionFactory;
-import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
-import com.codenvy.ide.ext.git.server.rest.GitService;
-import com.codenvy.ide.ext.github.server.oauth.GitHubOAuthAuthenticatorProvider;
-import com.codenvy.ide.ext.github.server.rest.GitHubService;
-import com.codenvy.ide.ext.ssh.server.KeyService;
-import com.codenvy.ide.ext.ssh.server.SshKeyStore;
-import com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore;
-import com.codenvy.ide.security.oauth.server.LocalOAuthTokenProvider;
-import com.codenvy.ide.security.oauth.server.OAuthAuthenticatorProvider;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
@@ -67,7 +49,6 @@ import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveExceptionMapper;
 import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveExceptionMapper;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
@@ -113,15 +94,6 @@ public class ApiModule extends AbstractModule {
         bind(UserProfileService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
-        bind(GitService.class);
-        bind(GitHubService.class);
-        bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
-        bind(KeyService.class);
-        bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
-        bind(OAuthTokenProvider.class).to(LocalOAuthTokenProvider.class);
-        Multibinder<OAuthAuthenticatorProvider> oAuthAuthenticatorMultibinder =
-                Multibinder.newSetBinder(binder(), OAuthAuthenticatorProvider.class);
-        oAuthAuthenticatorMultibinder.addBinding().to(GitHubOAuthAuthenticatorProvider.class);
         bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }

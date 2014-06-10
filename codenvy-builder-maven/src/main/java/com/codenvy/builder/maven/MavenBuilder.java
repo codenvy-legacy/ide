@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  [2012] - [2013] Codenvy, S.A.
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.builder.maven;
 
 import com.codenvy.api.builder.BuilderException;
@@ -66,7 +59,7 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES      = "<assembly>\n" +
                                                                                      "  <id>jar-with-dependencies</id>\n" +
                                                                                      "  <formats>\n" +
-                                                                                     "    <format>jar</format>\n" +
+                                                                                     "    <format>zip</format>\n" +
                                                                                      "  </formats>\n" +
                                                                                      "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
@@ -233,7 +226,11 @@ public class MavenBuilder extends Builder {
                     throw new BuilderException(e);
                 }
                 final String packaging = mavenModel.getPackaging();
-                final String fileExt = packaging != null ? '.' + packaging : ".jar";
+                final String fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
+                                       ? ".zip"
+                                       : packaging != null
+                                         ? '.' + packaging
+                                         : ".jar";
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {

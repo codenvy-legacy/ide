@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2014] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.ui.theme.Theme;
@@ -310,6 +303,16 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getCaptionFontColor() {
+        return "#888888";
+    }
+    
+    @Override
+    public String getFactoryLinkColor() {
+        return "#60abe0";
+    }
+    
+    @Override
     public String getConsolePanelColor() {
         return "#313131";
     }
@@ -425,6 +428,11 @@ public class DarkTheme implements Theme {
     }
     
     @Override
+    public String getSocialButtonColor() {
+        return "#ffffff";
+    }
+    
+    @Override
     public String getToolbarBackgroundColor() {
         return "#484848";
     }
@@ -455,7 +463,7 @@ public class DarkTheme implements Theme {
     }
     
     @Override
-    public String getEventDelimeterColor() {
+    public String getDelimeterColor() {
         return "#2f2f2f";
     }
     

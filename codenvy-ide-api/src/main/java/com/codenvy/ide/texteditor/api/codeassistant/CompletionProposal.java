@@ -17,7 +17,7 @@
  */
 package com.codenvy.ide.texteditor.api.codeassistant;
 
-import com.google.gwt.user.client.ui.Image;
+import com.codenvy.ide.api.ui.Icon;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -56,7 +56,7 @@ public interface CompletionProposal {
      *
      * @return the image to be shown or <code>null</code> if no image is desired
      */
-    Image getImage();
+    Icon getIcon();
 
     /**
      * Returns the characters which trigger the application of this completion proposal.

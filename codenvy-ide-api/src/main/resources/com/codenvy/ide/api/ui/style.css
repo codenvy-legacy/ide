@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 @CHARSET "UTF-8";
 /*
  * CODENVY CONFIDENTIAL
@@ -64,6 +74,7 @@
 @eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
 @eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
 @eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
+@eval socialButtonColor com.codenvy.ide.api.ui.theme.Style.getSocialButtonColor();
 
 /* notable button */
 @eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
@@ -133,6 +144,8 @@
 @eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
 @eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
 @eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
+@eval captionFontColor com.codenvy.ide.api.ui.theme.Style.getCaptionFontColor();
+@eval factoryLinkColor com.codenvy.ide.api.ui.theme.Style.getFactoryLinkColor();
 @eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
 @eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
 @eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
@@ -190,5 +203,5 @@
 @eval successEventColor com.codenvy.ide.api.ui.theme.Style.getSuccessEventColor();
 @eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
 @eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
-@eval eventDelimeterColor com.codenvy.ide.api.ui.theme.Style.getEventDelimeterColor();
+@eval delimeterColor com.codenvy.ide.api.ui.theme.Style.getDelimeterColor();
 

@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.api.ui.theme;
 
 /**
@@ -113,7 +106,7 @@ public class Style {
     public static String getButtonTopColor() {
         return theme.getButtonTopColor();
     }
-
+    
     public static String getButtonColor() {
         return theme.getButtonColor();
     }
@@ -124,6 +117,10 @@ public class Style {
 
     public static String getNotableButtonColor() {
         return theme.getNotableButtonColor();
+    }
+    
+    public static String getSocialButtonColor() {
+        return theme.getSocialButtonColor();
     }
 
     public static String getInputBackground() {
@@ -254,7 +251,15 @@ public class Style {
     public static String getWelcomeFontColor() {
         return theme.getWelcomeFontColor();
     }
-
+    
+    public static String getCaptionFontColor() {
+        return theme.getCaptionFontColor();
+    }
+    
+    public static String getFactoryLinkColor() {
+        return theme.getFactoryLinkColor();
+    }
+    
     public static String getConsolePanelColor() {
         return theme.getConsolePanelColor();
     }
@@ -366,9 +371,9 @@ public class Style {
     public static String getLinkColor() {
         return theme.getLinkColor();
     }
-
-    public static String getEventDelimeterColor() {
-        return theme.getEventDelimeterColor();
+    
+    public static String getDelimeterColor() {
+        return theme.getDelimeterColor();
     }
 
     public static String getMinimizeIconColor() {

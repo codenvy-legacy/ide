@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.Resources;
@@ -79,22 +72,26 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         this.delegate = delegate;
     }
 
+    private static final String INFO_COLOR = "lightgreen";
+    private static final String WARNING_COLOR = "cyan";
+    private static final String ERROR_COLOR = "#F62217";
+
     /** {@inheritDoc} */
     @Override
     public void print(String text) {
-        String preStyle = " style='margin:0px; font-weight:700; font-size: 12;' ";
+        String preStyle = " style='margin:0px; font-size: 12px;' ";
 
         HTML html = new HTML();
 
         String TEXT = text.toUpperCase();
         if (TEXT.startsWith("[INFO]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:lightgreen;'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
 
         } else if (TEXT.startsWith("[ERROR]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:#F62217;'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
 
         } else if (TEXT.startsWith("[WARNING]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:cyan;'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + WARNING_COLOR + ";'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
 
         } else {
             html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
@@ -102,6 +99,32 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
 
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
+    }
+
+    @Override
+    public void print(String text, String color) {
+        String preStyle = " style='margin:0px; font-size: 12px;' ";
+
+        HTML html = new HTML();
+        html.setHTML("<pre" + preStyle + "><span style='color:" + color + ";'>" + text + "</span></pre>");
+
+        html.getElement().setAttribute("style", "padding-left: 2px;");
+        consoleArea.add(html);
+    }
+
+    @Override
+    public void printInfo(String text) {
+        print(text, INFO_COLOR);
+    }
+
+    @Override
+    public void printWarn(String text) {
+        print(text, WARNING_COLOR);
+    }
+
+    @Override
+    public void printError(String text) {
+        print(text, ERROR_COLOR);
     }
 
     /** {@inheritDoc} */

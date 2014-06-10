@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
- * 
- *  [2012] - [2013] Codenvy, S.A. 
- *  All Rights Reserved.
- * 
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
@@ -23,8 +16,11 @@ import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -32,6 +28,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
@@ -41,17 +38,19 @@ import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.Date;
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -75,6 +74,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected final ResourceProvider           resourceProvider;
     private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private final   DtoFactory                 dtoFactory;
+    private         EditorAgent                editorAgent;
     private         MessageBus                 messageBus;
     private         WorkspaceAgent             workspaceAgent;
     private         RunnerConsolePresenter     console;
@@ -88,9 +88,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected Project                                           activeProject;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
+    private   RunnerMetric                                      lastAppWaitingTimeLimit;
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    private   long                                              startTime;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -102,6 +104,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoFactory dtoFactory,
+                            EditorAgent editorAgent,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
@@ -112,6 +115,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
+        this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
 
@@ -152,7 +156,34 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Run active project. */
     public void runActiveProject() {
-        runActiveProject(null, false, null);
+        //Save the files before running if necessary
+        Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
+        if (dirtyEditors.isEmpty()) {
+            runActiveProject(null, false, null);
+        } else {
+            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+                @Override
+                public void onOk() {
+                    editorAgent.saveAll(new AsyncCallback() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(getClass(), caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Object result) {
+                            runActiveProject(null, false, null);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancel() {
+                    runActiveProject(null, false, null);
+                }
+            });
+            askWindow.show();
+        }
     }
 
     /**
@@ -287,6 +318,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
+                startTime = System.currentTimeMillis();
+
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
@@ -311,6 +344,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
+
+                workspaceAgent.setActivePart(console);
+                break;
+            case FAILED:
+                isAnyAppRunning = false;
+                stopCheckingStatus();
+                getLogs();
+
+                notification.setStatus(FINISHED);
+                notification.setType(ERROR);
+                notification.setMessage(constant.applicationFailed(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
                 break;
@@ -416,47 +460,98 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Returns URL of the application which is currently running. */
+    @Nullable
     public String getCurrentAppURL() {
-        // TODO: don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null) {
+        // don't show app URL in console when app is stopped. After some time this URL may be used by other app.
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
             return getAppLink(lastApplicationDescriptor);
         }
         return null;
     }
 
-    /** Returns time when last app started, in format HH:mm:ss. */
-    public String getCurrentAppStartTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0) {
-            final Date startDate = new Date(lastApplicationDescriptor.getStartTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(startDate);
+    /** Returns URL of the application which is currently running. */
+    @Nullable
+    public String getCurrentAppShellURL() {
+        // don't show shell URL in console when app is stopped. After some time this URL may be used by other app.
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
+            Link link = getLink(lastApplicationDescriptor, "shell url");
+            if (link != null) {
+                return link.getHref();
+            }
         }
-        return "--:--:--";
+        return null;
     }
 
-    /** Returns time when last app stopped in format HH:mm:ss. */
-    public String getCurrentAppStopTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStopTime() > 0) {
-            final Date stopDate = new Date(lastApplicationDescriptor.getStopTime());
-            return DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.HOUR24_MINUTE_SECOND).format(stopDate);
-        }
-        return "--:--:--";
+    /** Returns startTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStartTime() {
+        return getRunnerMetric("startTime");
     }
 
-    /** Returns total time which application was launched, in format mm:ss.ms. */
-    public String getTotalTime() {
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStartTime() > 0 &&
-            lastApplicationDescriptor.getStopTime() > 0) {
-            final long totalTimeMs = lastApplicationDescriptor.getStopTime() - lastApplicationDescriptor.getStartTime();
-            int ms = (int)(totalTimeMs % 1000);
-            int ss = (int)(totalTimeMs / 1000);
+    /** Returns waitingTimeLimit {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppTimeoutThreshold() {
+        if (lastApplicationDescriptor == null) {
+            return null;
+        }
+        RunnerMetric waitingTime = getRunnerMetric("waitingTimeLimit");
+        if (waitingTime != null) {
+            lastAppWaitingTimeLimit = waitingTime;
+        }
+        return lastAppWaitingTimeLimit;
+    }
+
+    /** Returns stopTime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getCurrentAppStopTime() {
+        return getRunnerMetric("stopTime");
+    }
+
+    /** Returns uptime {@link RunnerMetric}. */
+    @Nullable
+    public RunnerMetric getTotalTime() {
+        // if app already stopped, get uptime from server
+        if (getCurrentAppStopTime() != null) {
+            return getRunnerMetric("uptime");
+        }
+
+        // if app is running now, count uptime on the client-side
+        if (getCurrentAppStartTime() != null) {
+            final long totalTimeMillis = System.currentTimeMillis() - startTime;
+            int ss = (int)(totalTimeMillis / 1000);
             int mm = 0;
-            if (ss > 60) {
+            if (ss >= 60) {
                 mm = ss / 60;
                 ss = ss % 60;
             }
-            return String.valueOf("" + getDoubleDigit(mm) + ':' + getDoubleDigit(ss) + '.' + ms);
+            int hh = 0;
+            if (mm >= 60) {
+                hh = mm / 60;
+                mm = mm % 60;
+            }
+            int d = 0;
+            if (hh >= 24) {
+                d = hh / 24;
+                hh = hh % 24;
+            }
+            final String value =
+                    String.valueOf("" + d + "d:" + getDoubleDigit(hh) + "h:" + getDoubleDigit(mm) + "m:" + getDoubleDigit(ss) + "s");
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Application's uptime").withValue(value);
         }
-        return "--:--.---";
+
+        return null;
+    }
+
+    @Nullable
+    private RunnerMetric getRunnerMetric(String metricName) {
+        if (lastApplicationDescriptor != null) {
+            for (RunnerMetric runnerStat : lastApplicationDescriptor.getRunStats()) {
+                if (metricName.equals(runnerStat.getName())) {
+                    return runnerStat;
+                }
+            }
+        }
+        return null;
     }
 
     private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
@@ -486,6 +581,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return url;
     }
 
+    @Nullable
     private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
         List<Link> links = appDescriptor.getLinks();
         for (Link link : links) {
@@ -534,4 +630,5 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         return doubleDigitI;
     }
+
 }
