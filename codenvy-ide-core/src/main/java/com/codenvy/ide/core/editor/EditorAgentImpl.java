@@ -22,6 +22,8 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
@@ -36,11 +38,15 @@ import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 
 /** @author Evgen Vidolob */
@@ -48,6 +54,7 @@ import javax.validation.constraints.NotNull;
 public class EditorAgentImpl implements EditorAgent {
 
     private final StringMap<EditorPartPresenter> openedEditors;
+    private       Array<EditorPartPresenter>     dirtyEditors;
     /** Used to notify {@link EditorAgentImpl} that editor has closed */
     private final EditorPartCloseHandler   editorClosed             = new EditorPartCloseHandler() {
         @Override
@@ -91,21 +98,27 @@ public class EditorAgentImpl implements EditorAgent {
         public void onWindowClosed(WindowActionEvent event) {
         }
     };
-    private final WorkspaceAgent workspace;
-    private CoreLocalizationConstant coreLocalizationConstant;
-    private final EventBus            eventBus;
-    private       EditorRegistry      editorRegistry;
-    private       ResourceProvider    provider;
-    private       EditorPartPresenter activeEditor;
+    private final EventBus                 eventBus;
+    private       ResourceProvider         provider;
+    private       EditorRegistry           editorRegistry;
+    private final WorkspaceAgent           workspace;
+    private       EditorPartPresenter      activeEditor;
+    private       NotificationManager      notificationManager;
+    private       CoreLocalizationConstant coreLocalizationConstant;
 
     @Inject
-    public EditorAgentImpl(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
-                           final WorkspaceAgent workspace, CoreLocalizationConstant coreLocalizationConstant) {
+    public EditorAgentImpl(EventBus eventBus,
+                           ResourceProvider provider,
+                           EditorRegistry editorRegistry,
+                           final WorkspaceAgent workspace,
+                           final NotificationManager notificationManager,
+                           CoreLocalizationConstant coreLocalizationConstant) {
         super();
         this.eventBus = eventBus;
-        this.editorRegistry = editorRegistry;
         this.provider = provider;
+        this.editorRegistry = editorRegistry;
         this.workspace = workspace;
+        this.notificationManager = notificationManager;
         this.coreLocalizationConstant = coreLocalizationConstant;
         openedEditors = Collections.createStringMap();
 
@@ -138,6 +151,18 @@ public class EditorAgentImpl implements EditorAgent {
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public Array<EditorPartPresenter> getDirtyEditors() {
+        Array<EditorPartPresenter> dirtyEditors = Collections.createArray();
+        for (EditorPartPresenter partPresenter : getOpenedEditors().getValues().asIterable()) {
+            if (partPresenter.isDirty()) {
+                dirtyEditors.add(partPresenter);
+            }
+        }
+        return dirtyEditors;
+    }
+
     /** @param editor */
     protected void editorClosed(EditorPartPresenter editor) {
         if (activeEditor == editor) {
@@ -163,6 +188,43 @@ public class EditorAgentImpl implements EditorAgent {
     @Override
     public StringMap<EditorPartPresenter> getOpenedEditors() {
         return openedEditors;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void saveAll(final AsyncCallback callback) {
+        dirtyEditors = getDirtyEditors();
+        if (dirtyEditors.isEmpty()) {
+            Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
+            notificationManager.showNotification(notification);
+            callback.onSuccess("Success");
+        } else {
+            doSave(callback);
+        }
+
+    }
+    private void doSave(final AsyncCallback callback) {
+        final EditorPartPresenter partPresenter = dirtyEditors.get(0);
+        partPresenter.doSave(new AsyncCallback<EditorInput>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+                Notification notification = new Notification(coreLocalizationConstant.someFilesCanNotBeSaved(), ERROR);
+                notificationManager.showNotification(notification);
+            }
+
+            @Override
+            public void onSuccess(EditorInput result) {
+                dirtyEditors.remove(partPresenter);
+                if(dirtyEditors.isEmpty()) {
+                    Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
+                    notificationManager.showNotification(notification);
+                    callback.onSuccess("Success");
+                } else {
+                    doSave(callback);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */

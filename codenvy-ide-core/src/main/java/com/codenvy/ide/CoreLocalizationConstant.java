@@ -191,6 +191,12 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.changesMayBeLost")
     String changesMayBeLost();
 
+    @Key("messages.allFilesSaved")
+    String allFilesSaved();
+
+    @Key("messages.someFilesCanNotBeSaved")
+    String someFilesCanNotBeSaved();
+
     /* Buttons */
     @Key("ok")
     String ok();

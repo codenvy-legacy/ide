@@ -118,6 +118,13 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("gettingEnvironmentsFailed")
     String gettingEnvironmentsFailed();
 
+    @Key("messages.promptSaveFiles")
+    String messagePromptSaveFiles();
+
+    /* Titles */
+    @Key("titles.promptSaveFiles")
+    String titlePromptSaveFiles();
+
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();

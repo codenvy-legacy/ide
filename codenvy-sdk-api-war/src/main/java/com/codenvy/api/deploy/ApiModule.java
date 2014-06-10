@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.api.deploy;
 
-import com.codenvy.api.auth.oauth.OAuthTokenProvider;
 import com.codenvy.api.builder.BuilderAdminService;
 import com.codenvy.api.builder.BuilderSelectionStrategy;
 import com.codenvy.api.builder.BuilderService;
@@ -41,16 +40,6 @@ import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeExceptionMa
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.ide.env.TokenValidatorImpl;
 import com.codenvy.ide.everrest.CodenvyAsynchronousJobPool;
-import com.codenvy.ide.ext.git.server.GitConnectionFactory;
-import com.codenvy.ide.ext.git.server.nativegit.NativeGitConnectionFactory;
-import com.codenvy.ide.ext.git.server.rest.GitService;
-import com.codenvy.ide.ext.github.server.oauth.GitHubOAuthAuthenticatorProvider;
-import com.codenvy.ide.ext.github.server.rest.GitHubService;
-import com.codenvy.ide.ext.ssh.server.KeyService;
-import com.codenvy.ide.ext.ssh.server.SshKeyStore;
-import com.codenvy.ide.ext.ssh.server.UserProfileSshKeyStore;
-import com.codenvy.ide.security.oauth.server.LocalOAuthTokenProvider;
-import com.codenvy.ide.security.oauth.server.OAuthAuthenticatorProvider;
 import com.codenvy.inject.DynaModule;
 import com.codenvy.runner.webapps.DeployToApplicationServerRunner;
 import com.codenvy.vfs.impl.fs.CleanableSearcherProvider;
@@ -60,7 +49,6 @@ import com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy;
 import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveExceptionMapper;
 import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveExceptionMapper;
 import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.util.Providers;
 
 import org.everrest.core.impl.async.AsynchronousJobPool;
@@ -106,15 +94,6 @@ public class ApiModule extends AbstractModule {
         bind(UserProfileService.class);
         bind(AsynchronousJobPool.class).to(CodenvyAsynchronousJobPool.class);
         bind(new PathKey<>(AsynchronousJobService.class, "/async/{ws-id}")).to(AsynchronousJobService.class);
-        bind(GitService.class);
-        bind(GitHubService.class);
-        bind(GitConnectionFactory.class).to(NativeGitConnectionFactory.class);
-        bind(KeyService.class);
-        bind(SshKeyStore.class).to(UserProfileSshKeyStore.class);
-        bind(OAuthTokenProvider.class).to(LocalOAuthTokenProvider.class);
-        Multibinder<OAuthAuthenticatorProvider> oAuthAuthenticatorMultibinder =
-                Multibinder.newSetBinder(binder(), OAuthAuthenticatorProvider.class);
-        oAuthAuthenticatorMultibinder.addBinding().to(GitHubOAuthAuthenticatorProvider.class);
         bind(TokenValidator.class).to(TokenValidatorImpl.class);
     }
 }

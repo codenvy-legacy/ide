@@ -13,8 +13,10 @@ package com.codenvy.ide.image.viewer;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.EditorInput;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -43,6 +45,11 @@ public class ImageViewer extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void doSave() {
+    }
+
+    @Override
+    public void doSave(AsyncCallback<EditorInput> callback) {
+        
     }
 
     /** {@inheritDoc} */

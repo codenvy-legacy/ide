@@ -48,6 +48,13 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("messages.buildCanceled")
     String buildCanceled();
 
+    @Key("messages.promptSaveFiles")
+    String messagePromptSaveFiles();
+
+    /* Titles */
+    @Key("titles.promptSaveFiles")
+    String titlePromptSaveFiles();
+
     /* BuildProjectPresenter */
     @Key("build.started")
     String buildStarted(String project);

@@ -86,6 +86,26 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
         });
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void doSave(final AsyncCallback<EditorInput> callback) {
+        documentProvider.saveDocument(getEditorInput(), document, false, new AsyncCallback<EditorInput>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess(EditorInput result) {
+                updateDirtyState(false);
+                callback.onSuccess(result);
+                afterSave();
+            }
+        });
+    }
+
     /**
      * Override this method for handling after save actions
      */

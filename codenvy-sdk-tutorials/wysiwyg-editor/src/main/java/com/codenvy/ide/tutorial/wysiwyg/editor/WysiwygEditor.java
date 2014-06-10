@@ -11,6 +11,7 @@
 package com.codenvy.ide.tutorial.wysiwyg.editor;
 
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Style;
@@ -59,6 +60,11 @@ public class WysiwygEditor extends AbstractEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public void doSave() {
+    }
+
+    @Override
+    public void doSave(AsyncCallback<EditorInput> callback) {
+
     }
 
     /** {@inheritDoc} */

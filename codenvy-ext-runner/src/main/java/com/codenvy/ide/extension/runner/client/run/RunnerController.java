@@ -19,6 +19,8 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -26,6 +28,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
@@ -35,11 +38,14 @@ import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -68,6 +74,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected final ResourceProvider           resourceProvider;
     private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private final   DtoFactory                 dtoFactory;
+    private         EditorAgent                editorAgent;
     private         MessageBus                 messageBus;
     private         WorkspaceAgent             workspaceAgent;
     private         RunnerConsolePresenter     console;
@@ -97,6 +104,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoFactory dtoFactory,
+                            EditorAgent editorAgent,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
@@ -107,6 +115,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.constant = constant;
         this.notificationManager = notificationManager;
         this.dtoFactory = dtoFactory;
+        this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
 
@@ -147,7 +156,34 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Run active project. */
     public void runActiveProject() {
-        runActiveProject(null, false, null);
+        //Save the files before running if necessary
+        Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
+        if (dirtyEditors.isEmpty()) {
+            runActiveProject(null, false, null);
+        } else {
+            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+                @Override
+                public void onOk() {
+                    editorAgent.saveAll(new AsyncCallback() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(getClass(), caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Object result) {
+                            runActiveProject(null, false, null);
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancel() {
+                    runActiveProject(null, false, null);
+                }
+            });
+            askWindow.show();
+        }
     }
 
     /**

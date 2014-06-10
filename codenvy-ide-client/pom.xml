@@ -43,16 +43,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-git</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-github</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!-- Extensions -->
         <dependency>
             <groupId>com.codenvy.ide</groupId>

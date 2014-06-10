@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.validation.constraints.NotNull;
 
@@ -67,6 +68,14 @@ public interface EditorPartPresenter extends PartPresenter {
 
     /** Saves the contents of this editor. */
     void doSave();
+
+    /**
+     * Saves the contents of this editor.
+     *
+     * @param callback
+     *         the callback for save operation
+     */
+    void doSave(@NotNull AsyncCallback<EditorInput> callback);
 
     /** Saves the contents of this part to another object. */
     void doSaveAs();

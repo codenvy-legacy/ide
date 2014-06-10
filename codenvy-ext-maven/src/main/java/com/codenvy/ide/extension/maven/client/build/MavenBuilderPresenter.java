@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -52,8 +53,9 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     MessageBus messageBus,
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
+                                    EditorAgent editorAgent,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory,
+        super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory, editorAgent,
               dtoUnmarshallerFactory, messageBus);
         this.view = view;
         this.view.setDelegate(this);
