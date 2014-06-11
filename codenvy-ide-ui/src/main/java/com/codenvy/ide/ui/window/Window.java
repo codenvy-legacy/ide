@@ -39,6 +39,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -66,7 +67,7 @@ public abstract class Window implements IsWidget {
         resources.centerPanelCss().ensureInjected();
     }
 
-    private boolean hideOnEscapeEnabled = false;
+    private boolean hideOnEscapeEnabled = true;
     private boolean isShowing;
     private View    view;
 
@@ -310,6 +311,8 @@ public abstract class Window implements IsWidget {
         @UiField(provided = true)
         final Css       css;
         @UiField
+        FocusPanel focusPanel;
+        @UiField
         HTMLPanel contentContainer;
         @UiField
         HTMLPanel glass;
@@ -364,6 +367,7 @@ public abstract class Window implements IsWidget {
          */
         protected void setShowing(boolean showing) {
             if (showing) {
+                focusPanel.setFocus(true);
                 glass.addStyleName(css.glassVisible());
                 contentContainer.addStyleName(css.contentVisible());
             } else {
@@ -386,7 +390,7 @@ public abstract class Window implements IsWidget {
             };
 
 
-            contentContainer.addDomHandler(handler, KeyDownEvent.getType());
+            focusPanel.addDomHandler(handler, KeyDownEvent.getType());
 
             crossButton.addDomHandler(new ClickHandler() {
                 @Override
