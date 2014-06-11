@@ -223,10 +223,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             int partIndex = parts.indexOf(part);
             view.removeTabButton(partIndex);
             parts.remove(part);
-            view.getContentPanel().setWidget(null);
             partsSize.remove(partIndex);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
+                view.getContentPanel().setWidget(null);
                 //select another part
 //                setActivePart(parts.isEmpty() ? null : parts.get(0));
                 setActivePart(null);
