@@ -125,7 +125,10 @@
         .disabled{
             opacity: 0.4;
         }
-
+        .inputError{
+            border-color: red;
+            box-shadow: 0 0 5px red;
+        }
 
     </ui:style>
     <g:FlowPanel width="774px" height="530px" addStyleNames="{style.rootPanel}">

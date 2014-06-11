@@ -196,6 +196,16 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         projectPublic.setValue(visible, false);
     }
 
+    @Override
+    public void removeNameError() {
+        projectName.removeStyleName(style.inputError());
+    }
+
+    @Override
+    public void showNameError() {
+        projectName.addStyleName(style.inputError());
+    }
+
     void changeEnabledState(boolean enabled) {
         projectName.setEnabled(enabled);
         projectDescription.setEnabled(enabled);
@@ -251,6 +261,8 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         String blueButton();
 
         String disabled();
+
+        String inputError();
     }
 
     interface ProjectWizardViewImplUiBinder

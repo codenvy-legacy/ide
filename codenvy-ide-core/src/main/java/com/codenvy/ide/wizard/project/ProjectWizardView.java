@@ -51,6 +51,10 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setVisibility(boolean visible);
 
+    void removeNameError();
+
+    void showNameError();
+
     public interface ActionDelegate{
         /** Performs any actions appropriate in response to the user having pressed the Next button */
         void onNextClicked();

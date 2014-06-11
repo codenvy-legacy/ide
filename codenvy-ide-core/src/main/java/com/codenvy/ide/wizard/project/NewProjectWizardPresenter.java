@@ -138,8 +138,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 importProject(callback, templateDescriptor, projectName);
             }
         });
-        namePage.clearFields();
-        mainPage.clearProjectTypePanel();
     }
 
     private void createUnknownProject(final WizardPage.CommitCallback callback) {
@@ -195,17 +193,17 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void onCancelClicked() {
         view.close();
-        namePage.clearFields();
-        mainPage.clearProjectTypePanel();
     }
 
     @Override
     public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("[A-Za-z0-9_]");
+        RegExp regExp = RegExp.compile("^[A-Za-z0-9_]*$");
         if (regExp.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+            view.removeNameError();
         } else {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+            view.showNameError();
         }
         updateControls();
     }

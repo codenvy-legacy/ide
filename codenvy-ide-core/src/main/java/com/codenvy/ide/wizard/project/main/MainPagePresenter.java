@@ -121,8 +121,4 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         typeDescriptor = null;
         delegate.updateControls();
     }
-
-    public void clearProjectTypePanel() {
-        view.clearProjectTypePanel();
-    }
 }
