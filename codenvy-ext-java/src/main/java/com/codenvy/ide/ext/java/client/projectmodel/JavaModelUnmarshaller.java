@@ -14,16 +14,16 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.TreeElement;
+import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.StringSet.IterationCallback;
 import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
 import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.runtime.IStatus;
@@ -40,18 +40,17 @@ import java.util.List;
  */
 public class JavaModelUnmarshaller {
 
-    private final AsyncRequestFactory    asyncRequestFactory;
-    private final ProjectServiceClient   projectServiceClient;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private       JavaProject            project;
-    private       StringSet              sourceFolders;
-    private       String                 projectPath;
-    private       Folder                 root;
-    private       EventBus               eventBus;
+    private AsyncRequestFactory    asyncRequestFactory;
+    private ProjectServiceClient   projectServiceClient;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private JavaProject            project;
+    private StringSet              sourceFolders;
+    private String                 projectPath;
+    private Folder                 root;
+    private EventBus               eventBus;
 
     public JavaModelUnmarshaller(Folder root, JavaProject project, EventBus eventBus, AsyncRequestFactory asyncRequestFactory,
                                  ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super();
         this.root = root;
         this.eventBus = eventBus;
         this.asyncRequestFactory = asyncRequestFactory;
@@ -70,26 +69,12 @@ public class JavaModelUnmarshaller {
         });
     }
 
-    public void unmarshalChildren(Array<ItemReference> children, Array<ProjectDescriptor> modules) {
-        parseChildren(children, root, root, modules, project);
+    public void unmarshalChildren(Array<ItemReference> children, Array<ProjectDescriptor> modules, List<TreeElement> folderTree) {
+        addChildren(children, root, root, modules, project, folderTree);
     }
 
-    public void unmarshalTree(List<TreeElement> children) {
-        for (TreeElement treeElement : children) {
-            ItemReference item = treeElement.getNode();
-            if (item.getType().equals(Folder.TYPE) && treeElement.getChildren().size() == 1 && item.getChildrenCount() == 1) {
-                unmarshalTree(treeElement.getChildren());
-            } else {
-                final String itemPath = item.getPath();
-                String packageName = itemPath.replace(root.getPath(), "").replaceAll("/", ".");
-                packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
-                parseFolderItem(item, root, new Package(item, packageName), project);
-            }
-        }
-    }
-
-    private void parseChildren(Array<ItemReference> children, Folder parentFolder, Folder parentFolderNonModelItems,
-                               Array<ProjectDescriptor> modules, Project project) {
+    private void addChildren(Array<ItemReference> children, Folder parentFolder, Folder parentFolderNonModelItems,
+                             Array<ProjectDescriptor> modules, Project project, List<TreeElement> folderTree) {
         for (ItemReference item : children.asIterable()) {
             // skip hidden items
             if (item.getName().startsWith(".")) {
@@ -99,21 +84,21 @@ public class JavaModelUnmarshaller {
             switch (item.getType()) {
                 case File.TYPE:
                     File file;
-                    // check if parent of this file is package and file has valid JAVA name,
-                    // then add as compilation unit else as regular file
-                    if (parentFolderNonModelItems instanceof Package && isCompilationUnitName(item.getName())) {
+                    // check if parent of this file is a package and file has a valid Java name,
+                    // then add file as a compilation unit else as a regular file
+                    if (parentFolderNonModelItems instanceof Package && isValidCompilationUnitName(item.getName())) {
                         file = new CompilationUnit(item);
                     } else {
                         file = new File(item);
                     }
-                    parentFolderNonModelItems.addChild(file);
                     file.setProject(project);
+                    parentFolderNonModelItems.addChild(file);
                     break;
                 case Folder.TYPE:
-                    if (isProject(item, modules)) {
-                        parseProjectItem(item, parentFolder, parentFolderNonModelItems, project, modules);
+                    if (isSubModule(item, modules)) {
+                        addItemAsProject(item, parentFolder, parentFolderNonModelItems, project, modules);
                     } else {
-                        parseFolderItem(item, parentFolder, parentFolderNonModelItems, project);
+                        addItemAsFolderOrPackage(item, parentFolder, parentFolderNonModelItems, project, folderTree);
                     }
                     break;
                 default:
@@ -122,7 +107,7 @@ public class JavaModelUnmarshaller {
         }
     }
 
-    private boolean isProject(ItemReference item, Array<ProjectDescriptor> modules) {
+    private boolean isSubModule(ItemReference item, Array<ProjectDescriptor> modules) {
         for (ProjectDescriptor moduleDescriptor : modules.asIterable()) {
             if (moduleDescriptor.getName().equals(item.getName())) {
                 return true;
@@ -131,7 +116,19 @@ public class JavaModelUnmarshaller {
         return false;
     }
 
-    private void parseProjectItem(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project,
+    // item considered as 'empty' package when it contains one folder only
+    private TreeElement getTreeElementForEmptyPackage(ItemReference item, List<TreeElement> foldersTree) {
+        for (TreeElement treeElement : foldersTree) {
+            if (treeElement.getNode().getPath().equals(item.getPath()) &&
+                treeElement.getChildren().size() == 1 &&
+                !treeElement.getNode().hasChildFiles()) {
+                return treeElement;
+            }
+        }
+        return null;
+    }
+
+    private void addItemAsProject(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project,
                                   Array<ProjectDescriptor> modules) {
         Project childProject;
         Resource existingProject = parentFolder.findChildByName(item.getName());
@@ -164,7 +161,8 @@ public class JavaModelUnmarshaller {
         }
     }
 
-    private void parseFolderItem(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project) {
+    private void addItemAsFolderOrPackage(ItemReference item, Folder parentFolder, Folder parentFolderNonModelItems, Project project,
+                                          List<TreeElement> folderTree) {
         Folder folder;
         Resource existingFolder = parentFolder.findChildByName(item.getName());
         if (existingFolder == null) {
@@ -193,16 +191,23 @@ public class JavaModelUnmarshaller {
             else {
                 String packageName = name;
                 // filter folders with invalid names for java packages
-                if ((parentFolder instanceof SourceFolder || parentFolder instanceof Package) &&
-                    isPackageNameValid(packageName)) {
+                if ((parentFolder instanceof SourceFolder || parentFolder instanceof Package) && isValidPackageName(packageName)) {
                     if (parentFolder instanceof SourceFolder) {
                         sourceFolders.remove(path);
                     }
-                    packageName = path.replace(parentFolder.getPath(), "").replaceAll("/", ".");
-                    packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
-                    folder = new Package(item, packageName);
-                    parentFolder.addChild(folder);
-                    folder.setProject(project);
+
+                    TreeElement treeElement = getTreeElementForEmptyPackage(item, folderTree);
+                    // compact 'empty' packages
+                    if (treeElement != null) {
+                        addItemAsFolderOrPackage(treeElement.getChildren().get(0).getNode(), parentFolder, parentFolderNonModelItems,
+                                                 project, treeElement.getChildren());
+                    } else {
+                        packageName = path.replace(parentFolder.getPath(), "").replaceAll("/", ".");
+                        packageName = packageName.startsWith(".") ? packageName.replaceFirst(".", "") : packageName;
+                        folder = new Package(item, packageName);
+                        parentFolder.addChild(folder);
+                        folder.setProject(project);
+                    }
                 } else {
                     folder = new Folder(item);
                     parentFolderNonModelItems.addChild(folder);
@@ -212,7 +217,7 @@ public class JavaModelUnmarshaller {
         }
     }
 
-    private boolean isPackageNameValid(String name) {
+    private boolean isValidPackageName(String name) {
         IStatus status = JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
                                                              JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {
@@ -224,7 +229,7 @@ public class JavaModelUnmarshaller {
         }
     }
 
-    private boolean isCompilationUnitName(String name) {
+    private boolean isValidCompilationUnitName(String name) {
         IStatus status = JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
                                                                      JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
         switch (status.getSeverity()) {

@@ -16,14 +16,14 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
+import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -33,6 +33,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * A Java project represents a view of a project resource in terms of Java
@@ -69,18 +70,20 @@ public class JavaProject extends Project {
     /** {@inheritDoc} */
     @Override
     public void refreshChildren(final Folder root, final AsyncCallback<Folder> callback) {
-        final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(root.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(final Array<ItemReference> children) {
-                // check if sub-modules exists
+                final Folder folderToRefresh = (root instanceof Package && root.getParent() != null) ? root.getParent() : root;
+
+                // project may contains sub-modules
                 if (Project.TYPE.equals(folderToRefresh.getResourceType())) {
-                    Unmarshallable<Array<ProjectDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class);
+                    Unmarshallable<Array<ProjectDescriptor>> unmarshaller =
+                            dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectDescriptor.class);
                     projectServiceClient.getModules(root.getPath(), new AsyncRequestCallback<Array<ProjectDescriptor>>(unmarshaller) {
                         @Override
                         protected void onSuccess(Array<ProjectDescriptor> modules) {
-                            onChildrenRefreshed(folderToRefresh, children, modules, callback);
+                            addChildren(folderToRefresh, children, modules, java.util.Collections.<TreeElement>emptyList(), callback);
                         }
 
                         @Override
@@ -89,21 +92,14 @@ public class JavaProject extends Project {
                         }
                     });
                 }
-                // for flat mode package presentation
-                else if ((folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) &&
-                         children.size() == 1 && children.get(0).getType().equals(Folder.TYPE)) {
+                // compact 'empty' packages
+                else if (folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) {
                     Unmarshallable<TreeElement> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
-                    projectServiceClient.getTree(root.getPath(), -1,
-                                                 new AsyncRequestCallback<TreeElement>(unmarshaller) {
+                    projectServiceClient.getTree(root.getPath(), -1, new AsyncRequestCallback<TreeElement>(unmarshaller) {
                                                      @Override
                                                      protected void onSuccess(TreeElement result) {
-                                                         JavaModelUnmarshaller unmarshaller =
-                                                                 new JavaModelUnmarshaller(root,
-                                                                                           (JavaProject)folderToRefresh.getProject(),
-                                                                                           eventBus, asyncRequestFactory,
-                                                                                           projectServiceClient, dtoUnmarshallerFactory);
-                                                         unmarshaller.unmarshalTree(result.getChildren());
-                                                         callback.onSuccess(unmarshaller.getPayload());
+                                                         addChildren(root, children, Collections.<ProjectDescriptor>createArray(),
+                                                                     result.getChildren(), callback);
                                                      }
 
                                                      @Override
@@ -111,9 +107,9 @@ public class JavaProject extends Project {
                                                          callback.onFailure(exception);
                                                      }
                                                  });
-
                 } else {
-                    onChildrenRefreshed(root, children, Collections.<ProjectDescriptor>createArray(), callback);
+                    addChildren(root, children, Collections.<ProjectDescriptor>createArray(),
+                                java.util.Collections.<TreeElement>emptyList(), callback);
                 }
             }
 
@@ -124,12 +120,11 @@ public class JavaProject extends Project {
         });
     }
 
-    private void onChildrenRefreshed(Folder folderToRefresh, Array<ItemReference> children, Array<ProjectDescriptor> modules,
-                                     AsyncCallback<Folder> callback) {
-        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(folderToRefresh, (JavaProject)folderToRefresh.getProject(),
-                                                                       eventBus, asyncRequestFactory, projectServiceClient,
-                                                                       dtoUnmarshallerFactory);
-        unmarshaller.unmarshalChildren(children, modules);
+    private void addChildren(Folder rootFolder, Array<ItemReference> children, Array<ProjectDescriptor> modules,
+                             List<TreeElement> tree, AsyncCallback<Folder> callback) {
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(rootFolder, (JavaProject)rootFolder.getProject(), eventBus,
+                                                                       asyncRequestFactory, projectServiceClient, dtoUnmarshallerFactory);
+        unmarshaller.unmarshalChildren(children, modules, tree);
         callback.onSuccess(unmarshaller.getPayload());
     }
 
@@ -390,7 +385,8 @@ public class JavaProject extends Project {
      * defined by PackageDeclaration (JLS2 7.4). For example, <code>"java.lang"</code>.
      * <p/>
      *
-     * @param name name of the package
+     * @param name
+     *         name of the package
      */
     protected static void checkPackageName(String name) throws JavaModelException {
         //TODO infer COMPILER_SOURCE and COMPILER_COMPLIANCE to project properties
@@ -412,7 +408,8 @@ public class JavaProject extends Project {
      * </ul>
      * </p>
      *
-     * @param name name of the package
+     * @param name
+     *         name of the package
      * @throws JavaModelException
      */
     private void checkCompilationUnitName(String name) throws JavaModelException {

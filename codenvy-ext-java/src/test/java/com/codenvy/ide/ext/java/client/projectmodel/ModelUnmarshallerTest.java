@@ -12,13 +12,13 @@ package com.codenvy.ide.ext.java.client.projectmodel;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.ext.java.client.BaseTest;
+import com.codenvy.api.project.shared.dto.TreeElement;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.ext.java.client.BaseTest;
 import com.google.common.collect.Lists;
 
 import org.junit.Before;
@@ -42,7 +42,6 @@ public class ModelUnmarshallerTest extends BaseTest {
     private JavaProject project = new JavaProject(null, null, null, null);
     @Mock
     private JavaProjectDescription projectDescription;
-    private Array<ItemReference>   itemReferenceArray;
 
     @Before
     public void setUp() {
@@ -72,7 +71,6 @@ public class ModelUnmarshallerTest extends BaseTest {
                              "org.springframework.samples.mvc.ajax", //
                              "org.springframework.samples.mvc.ajax.json", //
                              "org.springframework.samples.mvc.ajax.account");
-
     }
 
     @Test
@@ -97,7 +95,8 @@ public class ModelUnmarshallerTest extends BaseTest {
 
     private List<Resource> parseProject() throws UnmarshallerException {
         JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project, null, null, null, null);
-        unmarshaller.unmarshalChildren(Collections.<ItemReference>createArray(), Collections.<ProjectDescriptor>createArray());
+        unmarshaller.unmarshalChildren(Collections.<ItemReference>createArray(), Collections.<ProjectDescriptor>createArray(),
+                                       java.util.Collections.<TreeElement>emptyList());
         ArgumentCaptor<Resource> children = ArgumentCaptor.forClass(Resource.class);
         verify(project, times(7)).addChild(children.capture());
         List<Resource> allValues = children.getAllValues();
