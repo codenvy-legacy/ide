@@ -37,19 +37,14 @@ import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
-import com.codenvy.ide.api.ui.wizard.newproject.NewProjectWizard;
 import com.codenvy.ide.image.viewer.ImageViewerProvider;
 import com.codenvy.ide.newresource.NewFileAction;
 import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.wizard.newproject.pages.paas.SelectPaasPagePresenter;
-import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePagePresenter;
 import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
@@ -110,18 +105,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
-
-    @Inject
-    private NewProjectWizard newProjectWizard;
-
-    @Inject
-    private Provider<NewProjectPagePresenter> newProjectPageProvider;
-
-    @Inject
-    private Provider<ChooseTemplatePagePresenter> chooseTemplatePageProvider;
-
-    @Inject
-    private Provider<SelectPaasPagePresenter> selectPaasPagePresenterProvider;
 
     @Inject
     private FormatterAction formatterAction;
@@ -302,10 +285,6 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
-
-        newProjectWizard.addPage(newProjectPageProvider);
-        newProjectWizard.addPage(chooseTemplatePageProvider);
-        newProjectWizard.addPage(selectPaasPagePresenterProvider);
 
         wizardRegistry.addWizard(Constants.UNKNOWN_ID, new ProjectWizard(notificationManager));
     }
