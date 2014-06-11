@@ -40,7 +40,6 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -62,6 +61,7 @@ import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.IconRegistryImpl;
@@ -147,12 +147,6 @@ import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.newproject.PaaSAgentImpl;
 import com.codenvy.ide.wizard.newproject.ProjectTypeDescriptorRegistryImpl;
-import com.codenvy.ide.wizard.newproject.ProjectWizardView;
-import com.codenvy.ide.wizard.newproject.ProjectWizardViewImpl;
-import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageView;
-import com.codenvy.ide.wizard.newproject.pages.start.NewProjectPageViewImpl;
-import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageView;
-import com.codenvy.ide.wizard.newproject.pages.template.ChooseTemplatePageViewImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
 import com.codenvy.ide.workspace.PartStackViewFactory;
@@ -277,8 +271,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
 
-        bind(ChooseTemplatePageView.class).to(ChooseTemplatePageViewImpl.class);
-        bind(NewProjectPageView.class).to(NewProjectPageViewImpl.class);
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(ImportProjectView.class).to(ImportProjectViewImpl.class);
         bind(UploadFileView.class).to(UploadFileViewImpl.class);
@@ -293,7 +285,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
 
-        bind(ProjectWizardView.class).to(ProjectWizardViewImpl.class);
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
     }
 
