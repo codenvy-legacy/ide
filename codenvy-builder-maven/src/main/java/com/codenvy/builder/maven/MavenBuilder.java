@@ -41,7 +41,9 @@ import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,6 +91,13 @@ public class MavenBuilder extends Builder {
     private static final String DEPENDENCIES_JSON_FILE      = "dependencies.json";
     private static final String ASSEMBLY_DESCRIPTOR_FILE    = "dependencies-zip-assembly-descriptor.xml";
     private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
+
+    private static final Map<String, String> pluginPackaging = new HashMap<>();
+
+    static {
+        pluginPackaging.put("play2", "war");
+        pluginPackaging.put("grails-app", "war");
+    }
 
     @Inject
     public MavenBuilder(@Named(Constants.BASE_DIRECTORY) java.io.File rootDirectory,
@@ -226,11 +235,19 @@ public class MavenBuilder extends Builder {
                     throw new BuilderException(e);
                 }
                 final String packaging = mavenModel.getPackaging();
-                final String fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
-                                       ? ".zip"
-                                       : packaging != null
-                                         ? '.' + packaging
-                                         : ".jar";
+
+                // TODO Make detecting result of maven plugin building without initialization in code
+                final String fileExt;
+                if (pluginPackaging.containsKey(packaging)) {
+                    fileExt = '.' + pluginPackaging.get(packaging);
+                } else {
+                    fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
+                              ? ".zip"
+                              : packaging != null
+                                ? '.' + packaging
+                                : ".jar";
+                }
+
                 files = new java.io.File(workDir, "target").listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(java.io.File dir, String name) {
