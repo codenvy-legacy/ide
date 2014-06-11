@@ -79,6 +79,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+        view.reset();
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             view.setArtifactId(project.getAttributeValue(MavenAttributes.MAVEN_ARTIFACT_ID));
@@ -111,6 +112,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         projectDescriptor.setAttributes(options);
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
+        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         final Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {

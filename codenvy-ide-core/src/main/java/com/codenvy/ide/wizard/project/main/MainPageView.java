@@ -29,8 +29,6 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories, Map<String, Set<ProjectTypeDescriptor>> samples);
 
-    void clearProjectTypePanel();
-
     public interface ActionDelegate {
 
         void projectTemplateSelected(ProjectTemplateDescriptor template);

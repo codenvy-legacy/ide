@@ -1,0 +1,172 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field='res' type='com.codenvy.ide.Resources'/>
+    <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
+    <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.ProjectWizardViewImpl.Style">
+        .project {
+            /*margin-right: 8px;*/
+            margin-top: 4px;
+            margin-left: 5px;
+        }
+
+        .projectNamePosition {
+            position: relative;
+            line-height: 29px;
+            margin-left: 9px;
+            font-weight: 700;
+            float: left;
+            font-size: 12px;
+        }
+
+        .topPanel {
+            /*background-color: dialogContentBackground ;*/
+            /*box-shadow: 0 -1px 0px 0px tabBorderShadow;*/
+            /*border-top:  1px solid tabBorderShadow;*/
+            margin-top: -1px;
+            border-top: 1px solid rgba(188, 195, 199, 0.5);
+            box-shadow: 0 -1px 0 0 #232323;
+            z-index: 4;
+            background-color: dialogContentBackground;
+        }
+
+        .bottomPanel {
+            position: absolute;
+            bottom: 0;
+            border-top: 1px solid rgba(188, 195, 199, 0.5);
+            box-shadow: 0 -1px 0 0 #232323;
+            z-index: 4;
+            background-color: dialogContentBackground;
+            margin-bottom: -2px;
+        }
+
+        .namePanel, .namePanelRight {
+            border-right: 1px solid tabBorder;
+            box-shadow: 1px 0px 0px 0px tabBorderShadow;
+            position: relative;
+            top: -1px;
+            overflow: hidden;
+            display: inline-block;
+            /*background-color: dialogContentBackground ;*/
+
+        }
+
+        .namePanelRight {
+            border-right: none;
+            box-shadow: 0px 0px 0 0 tabBorderShadow;
+        }
+
+        .rootPanel {
+            position: relative;
+            top: -2px;
+        }
+
+        .privacy {
+            display: inline-block;
+            margin-top: 8px;
+            margin-left: 5px;
+        }
+
+        .privacy label {
+            padding-left: 17px;
+        }
+
+        .tab {
+            left: 26px;
+            top: 0px;
+            right: 26px;
+            bottom: 0px;
+            position: absolute !important;
+        }
+
+        .buttonLikePanelLeft, .buttonLikePanelRight {
+            cursor: pointer;
+            background-color: toolbarBackgroundColor;
+            width: 26px;
+            position: absolute;
+        }
+
+        .buttonLikePanelLeft {
+            box-shadow: 1px 0px 0 0 #505050;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .buttonLikePanelRight {
+            box-shadow: -1px 0px 0 0 #505050;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .centerPanel {
+            position: relative;
+            box-shadow: 0 -1px 0 0 tabBorder;
+        }
+
+        .svgStyle, .svgRotated {
+            width: 26px;
+            height: 24px;
+            position: relative;
+            top: 200px;
+        }
+        svg.svgStyle, svg.svgRotated{
+            fill: tabFontColor;
+        }
+
+        .svgRotated{
+            transform: rotate(180deg);
+            -webkit-transform: rotate(180deg);
+        }
+        .blueButton{
+            background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
+            border-radius: 2px;
+        }
+        .disabled{
+            opacity: 0.4;
+        }
+        .inputError{
+            border-color: red;
+            box-shadow: 0 0 5px red;
+        }
+
+    </ui:style>
+    <g:FlowPanel width="774px" height="530px" addStyleNames="{style.rootPanel}">
+        <g:FlowPanel width="774px" addStyleNames="{style.topPanel}" height="29px">
+            <g:FlowPanel width="198px" height="29px" addStyleNames="{style.namePanel}">
+                <g:Label text="{locale.createProjectFromTemplateName}"
+                         addStyleNames="{style.projectNamePosition}"/>
+                <g:TextBox width="128px" height="14px" ui:field="projectName" addStyleNames="{style.project}"
+                           debugId="file-newProject-projectName"/>
+            </g:FlowPanel>
+            <g:FlowPanel width="302px" height="29px" addStyleNames="{style.namePanel}">
+                <g:Label text="{locale.createProjectFromTemplateDescription}"
+                         addStyleNames="{style.projectNamePosition}"/>
+                <g:TextBox width="198px" height="14px" ui:field="projectDescription" addStyleNames="{style.project}"
+                           debugId="file-newProject-projectDescription"/>
+            </g:FlowPanel>
+            <g:FlowPanel width="270px" height="29px" addStyleNames="{style.namePanelRight}">
+                <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}"
+                         addStyleNames="{style.projectNamePosition}"/>
+                <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" addStyleNames="{style.privacy}" height="13px"
+                               checked="true"
+                               ui:field="projectPublic" debugId="file-newProject-public"/>
+                <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}" addStyleNames="{style.privacy}" height="13px"
+                               debugId="file-newProject-private" ui:field="projectPrivate"/>
+                <g:Button ui:field="saveButton" text="Save" addStyleNames="{style.blueButton}"/>
+            </g:FlowPanel>
+        </g:FlowPanel>
+        <g:FlowPanel width="774px" height="441px" addStyleNames="{style.centerPanel}">
+            <g:FlowPanel addStyleNames="{style.buttonLikePanelRight}" ui:field="nextStep">
+
+            </g:FlowPanel>
+            <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}" />
+            <g:FlowPanel addStyleNames="{style.buttonLikePanelLeft}" ui:field="previousStep">
+
+            </g:FlowPanel>
+        </g:FlowPanel>
+        <g:FlowPanel width="774px" height="60px" addStyleNames="{style.bottomPanel}">
+
+        </g:FlowPanel>
+    </g:FlowPanel>
+</ui:UiBinder>

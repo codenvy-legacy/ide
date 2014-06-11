@@ -29,6 +29,7 @@ public class ProjectWizard extends DefaultWizard {
     public static final WizardContext.Key<ProjectTemplateDescriptor> PROJECT_TEMPLATE =
             new WizardContext.Key<>("Project template");
     public static final WizardContext.Key<String>                    PROJECT_NAME     = new WizardContext.Key<>("Project name");
+    public static final WizardContext.Key<String>                    PROJECT_DESCRIPTION     = new WizardContext.Key<>("Project description");
 
     public static final WizardContext.Key<Project> PROJECT            = new WizardContext.Key<>("Project");
     public static final WizardContext.Key<Boolean> PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");

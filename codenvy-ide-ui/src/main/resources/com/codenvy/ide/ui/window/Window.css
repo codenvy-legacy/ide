@@ -29,9 +29,9 @@
 .glass {
     background: #373737;
     opacity: 0.0;
-    -moz-transition: all animationDuration;
-    -webkit-transition: all animationDuration;
-    transition: all animationDuration;
+    /*-moz-transition: all animationDuration;*/
+    /*-webkit-transition: all animationDuration;*/
+    /*transition: all animationDuration;*/
 }
 
 .glassVisible {
@@ -74,8 +74,8 @@
     -moz-transform: scale(1.1);
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
-    -moz-transition: all animationDuration;
-    -webkit-transition: all animationDuration;
+    /*-moz-transition: all animationDuration;*/
+    /*-webkit-transition: all animationDuration;*/
     transition: all animationDuration;
 
     -webkit-user-select: none;  /* Chrome all / Safari all */
