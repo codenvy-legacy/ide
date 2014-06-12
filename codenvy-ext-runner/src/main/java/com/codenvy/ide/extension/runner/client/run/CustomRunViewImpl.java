@@ -69,6 +69,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
             }
         });
         createButtons();
+        ensureDebugId("customRun-window");
     }
 
     private void createButtons() {
