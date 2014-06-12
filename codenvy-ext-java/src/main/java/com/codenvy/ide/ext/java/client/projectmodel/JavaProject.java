@@ -22,18 +22,18 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.runtime.IStatus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaUtils.checkCompilationUnitName;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaUtils.checkPackageName;
 
 /**
  * A Java project represents a view of a project resource in terms of Java
@@ -203,6 +203,7 @@ public class JavaProject extends Project {
             checkItemValid(parent);
             final Folder checkedParent = checkParent(parent);
             checkCompilationUnitName(name);
+
             projectServiceClient.createFile(parent.getPath(), name, content, MimeType.APPLICATION_JAVA, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
@@ -376,49 +377,6 @@ public class JavaProject extends Project {
             throw new JavaModelException("CompilationUnit or Package must be child of 'Package' or 'SourceFolder'");
         }
         return parent;
-    }
-
-    /**
-     * Check package name.
-     * <p/>
-     * The syntax of a package name corresponds to PackageName as
-     * defined by PackageDeclaration (JLS2 7.4). For example, <code>"java.lang"</code>.
-     * <p/>
-     *
-     * @param name
-     *         name of the package
-     */
-    protected static void checkPackageName(String name) throws JavaModelException {
-        //TODO infer COMPILER_SOURCE and COMPILER_COMPLIANCE to project properties
-        IStatus status = JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                             JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new JavaModelException(status.getMessage());
-        }
-    }
-
-    /**
-     * Check the given compilation unit name.
-     * <p>
-     * A compilation unit name must obey the following rules:
-     * <ul>
-     * <li> it must not be null
-     * <li> it must be suffixed by a dot ('.') followed by one of the java like extension
-     * <li> its prefix must be a valid identifier
-     * </ul>
-     * </p>
-     *
-     * @param name
-     *         name of the package
-     * @throws JavaModelException
-     */
-    private void checkCompilationUnitName(String name) throws JavaModelException {
-        //TODO infer COMPILER_SOURCE and COMPILER_COMPLIANCE to project properties
-        IStatus status = JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                                     JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new JavaModelException(status.getMessage());
-        }
     }
 
     /**

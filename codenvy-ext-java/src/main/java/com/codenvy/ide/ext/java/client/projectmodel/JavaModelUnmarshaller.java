@@ -22,16 +22,15 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
 import com.codenvy.ide.collections.StringSet.IterationCallback;
-import com.codenvy.ide.ext.java.jdt.core.JavaConventions;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.runtime.IStatus;
-import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.util.loging.Log;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.List;
+
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaUtils.isValidCompilationUnitName;
+import static com.codenvy.ide.ext.java.client.projectmodel.JavaUtils.isValidPackageName;
 
 /**
  * Recursively traverses the folder's children to build Java project model.
@@ -214,30 +213,6 @@ public class JavaModelUnmarshaller {
                     folder.setProject(project);
                 }
             }
-        }
-    }
-
-    private boolean isValidPackageName(String name) {
-        IStatus status = JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                             JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-        switch (status.getSeverity()) {
-            case Status.WARNING:
-            case Status.OK:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private boolean isValidCompilationUnitName(String name) {
-        IStatus status = JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-                                                                     JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
-        switch (status.getSeverity()) {
-            case Status.WARNING:
-            case Status.OK:
-                return true;
-            default:
-                return false;
         }
     }
 
