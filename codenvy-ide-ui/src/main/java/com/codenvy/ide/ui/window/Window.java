@@ -15,7 +15,6 @@ import elemental.js.dom.JsElement;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -86,7 +85,7 @@ public abstract class Window implements IsWidget {
         }
         isShowing = false;
 
-        // Animate the popup out of existance.
+        // Animate the popup out of existence.
         view.setShowing(false);
 
         // Remove the popup when the animation completes.
@@ -121,8 +120,6 @@ public abstract class Window implements IsWidget {
      * @param isEnabled
      *         true to close on escape, false not to
      */
-    // TODO: This only works if the popup has focus. We need to capture events.
-    // TODO: Consider making escaping the default.
     public void setHideOnEscapeEnabled(boolean isEnabled) {
         this.hideOnEscapeEnabled = isEnabled;
     }
@@ -208,7 +205,7 @@ public abstract class Window implements IsWidget {
 
     @Override
     public Widget asWidget() {
-        return com.google.gwt.user.client.ui.HTML.wrap((Element)view.getElement());
+        return com.google.gwt.user.client.ui.HTML.wrap(view.getElement());
     }
 
     public void setTitle(String title) {
