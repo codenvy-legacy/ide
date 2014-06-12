@@ -92,20 +92,17 @@ public class MavenBuilder extends Builder {
     private static final String ASSEMBLY_DESCRIPTOR_FILE    = "dependencies-zip-assembly-descriptor.xml";
     private static final String CODENVY_IDE_API_ARTIFACT_ID = "codenvy-ide-api";
 
-    private static final Map<String, String> pluginPackaging = new HashMap<>();
-
-    static {
-        pluginPackaging.put("play2", "war");
-        pluginPackaging.put("grails-app", "war");
-    }
+    private final Map<String, String> pluginPackaging;
 
     @Inject
     public MavenBuilder(@Named(Constants.BASE_DIRECTORY) java.io.File rootDirectory,
                         @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
                         @Named(Constants.QUEUE_SIZE) int queueSize,
                         @Named(Constants.KEEP_RESULT_TIME) int cleanupTime,
+                        @Named("PLUGIN_PACKAGING") Map<String, String> pluginPackaging,
                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanupTime, eventService);
+        this.pluginPackaging = pluginPackaging;
     }
 
     @Override
