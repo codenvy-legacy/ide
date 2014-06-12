@@ -29,12 +29,12 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-api</artifactId>
+            <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
+            <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
