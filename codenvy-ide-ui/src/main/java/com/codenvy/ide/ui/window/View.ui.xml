@@ -16,7 +16,7 @@
   <ui:with field="css" type="com.codenvy.ide.ui.window.Window.Css" />
   <g:FlowPanel ui:field="popup" styleName="{css.popup}">
     <g:FlowPanel ui:field="glass" styleName="{css.glass}"></g:FlowPanel>
-    <g:FlowPanel styleName="{css.positioner}">
+    <g:FocusPanel styleName="{css.positioner}" ui:field="focusPanel">
       <g:FlowPanel ui:field="contentContainer" styleName="{css.content}">
           <g:FlowPanel ui:field="header" styleName="{css.header}">
               <g:FlowPanel styleName="{css.headerTitleWrapper}">
@@ -26,6 +26,6 @@
           </g:FlowPanel>
           <g:FlowPanel ui:field="content"></g:FlowPanel>
       </g:FlowPanel>
-    </g:FlowPanel>
+    </g:FocusPanel>
   </g:FlowPanel>
 </ui:UiBinder>

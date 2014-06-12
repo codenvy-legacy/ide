@@ -12,6 +12,7 @@ package com.codenvy.ide.part.projectexplorer;
 
 import elemental.events.MouseEvent;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.resources.model.Project;
@@ -42,11 +43,12 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
-    protected Tree<Resource> tree;
-    private   Resources      resources;
-    private   SVGImage       projectVisibilityImage;
-    private   InlineLabel    projectTitle;
-    private   FlowPanel      projectHeader;
+    protected Tree<Resource>               tree;
+    private Resources                      resources;
+    private SVGImage                       projectVisibilityImage;
+    private InlineLabel                    projectTitle;
+    private FlowPanel                      projectHeader;
+    private final CoreLocalizationConstant locale;
 
     /**
      * Create view.
@@ -55,9 +57,10 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
      * @param iconRegistry
      */
     @Inject
-    public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry) {
+    public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry, CoreLocalizationConstant locale) {
         super(resources);
         this.resources = resources;
+        this.locale = locale;
 
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
@@ -160,7 +163,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectTitle = new InlineLabel(project.getName());
         projectTitle.getElement().getStyle().setFloat(Float.LEFT);
         projectHeader.add(projectTitle);
-        Document.get().setTitle("Codenvy | " + project.getName());
+        Document.get().setTitle(locale.projectOpenedTitle(project.getName()));
     }
 
     /** {@inheritDoc} */
@@ -168,5 +171,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public void hideProjectHeader() {
         toolBar.remove(projectHeader);
         container.setWidgetSize(toolBar, 22);
+        Document.get().setTitle(locale.projectClosedTitle());
     }
 }

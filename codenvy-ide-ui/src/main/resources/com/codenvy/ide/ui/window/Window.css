@@ -59,6 +59,10 @@
     box-align: center;
 }
 
+.positioner:focus {
+	outline: none;
+}
+
 .content {
     display: inline-block;
     background: windowContentBackground;

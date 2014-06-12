@@ -39,6 +39,7 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -54,6 +55,8 @@ public class View extends Composite {
     final Window.Resources res;
     @UiField(provided = true)
     final Window.Css       css;
+    @UiField
+    FocusPanel focusPanel;
     @UiField
     FlowPanel contentContainer;
     @UiField
@@ -117,6 +120,7 @@ public class View extends Composite {
         if (showing) {
             glass.addStyleName(css.glassVisible());
             contentContainer.addStyleName(css.contentVisible());
+            focusPanel.setFocus(true);
         } else {
             glass.removeStyleName(css.glassVisible());
             contentContainer.removeStyleName(css.contentVisible());
@@ -137,7 +141,7 @@ public class View extends Composite {
         };
 
 
-        contentContainer.addDomHandler(handler, KeyDownEvent.getType());
+        focusPanel.addDomHandler(handler, KeyDownEvent.getType());
 
         crossButton.addDomHandler(new ClickHandler() {
             @Override

@@ -34,7 +34,7 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Codenvy IDE</title>
+    <title>Codenvy Developer Environment</title>
     <link rel="shortcut icon" href="/ide/_app/favicon.ico"/>
 
     <script type="text/javascript" language="javascript">

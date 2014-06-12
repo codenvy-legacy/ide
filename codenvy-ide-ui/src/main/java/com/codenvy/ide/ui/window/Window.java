@@ -49,7 +49,7 @@ public abstract class Window implements IsWidget {
         resources.centerPanelCss().ensureInjected();
     }
 
-    private boolean hideOnEscapeEnabled = false;
+    private boolean hideOnEscapeEnabled = true;
     private boolean isShowing;
     private View    view;
 
