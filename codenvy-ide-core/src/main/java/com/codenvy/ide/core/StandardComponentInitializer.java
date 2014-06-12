@@ -13,6 +13,7 @@ package com.codenvy.ide.core;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
 import com.codenvy.ide.actions.FindActionAction;
@@ -136,6 +137,9 @@ public class StandardComponentInitializer {
     @Inject
     private NotificationManager notificationManager;
 
+    @Inject
+    private ChangeProjectTypeAction changeProjectTypeAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -202,6 +206,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);
+        actionManager.registerAction("ChangeProjectType", changeProjectTypeAction);
 
         // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
@@ -216,6 +221,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
         fileGroup.add(importProjectGroup);
         fileGroup.add(newGroup);
+        fileGroup.add(changeProjectTypeAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameResourceAction);

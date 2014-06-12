@@ -48,9 +48,58 @@ public class MainPageViewImpl implements MainPageView {
     private static final String CATEGORIES = "Categories";
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
-    private final DockLayoutPanel       rootElement;
-    private final Tree.Listener<String> treeEventHandler;
-    private final Tree<String>          categoriesTree;
+    private final DockLayoutPanel rootElement;
+    private final Tree.Listener<String> treeEventHandler = new Tree.Listener<String>() {
+        @Override
+        public void onNodeAction(TreeNodeElement<String> node) {
+
+        }
+
+        @Override
+        public void onNodeClosed(TreeNodeElement<String> node) {
+
+        }
+
+        @Override
+        public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<String> node) {
+
+        }
+
+        @Override
+        public void onNodeDragStart(TreeNodeElement<String> node, MouseEvent event) {
+
+        }
+
+        @Override
+        public void onNodeDragDrop(TreeNodeElement<String> node, MouseEvent event) {
+
+        }
+
+        @Override
+        public void onNodeExpanded(TreeNodeElement<String> node) {
+
+        }
+
+        @Override
+        public void onNodeSelected(TreeNodeElement<String> node, SignalEvent event) {
+            String key = node.getData();
+            if (templateOrType.containsKey(key)) {
+                selectNextWizardType(templateOrType.get(key));
+            }
+        }
+
+        @Override
+        public void onRootContextMenu(int mouseX, int mouseY) {
+
+        }
+
+        @Override
+        public void onRootDragDrop(MouseEvent event) {
+
+        }
+    };
+
+    private Tree<String> categoriesTree;
     @UiField
     SimplePanel categoriesPanel;
 //    @UiField
@@ -62,68 +111,13 @@ public class MainPageViewImpl implements MainPageView {
     private Map<String, Set<ProjectTypeDescriptor>> categories;
     private Map<String, Set<ProjectTypeDescriptor>> samples;
     private Map<String, Object>                     templateOrType;
+    private Resources resources;
 
     @Inject
     public MainPageViewImpl(Resources resources) {
+        this.resources = resources;
         rootElement = ourUiBinder.createAndBindUi(this);
-        categoriesTree = Tree.create(resources, new CategoriesDataAdapter(), new CategoriesNodeRenderer());
-
-        categoriesPanel.add(categoriesTree);
-        Style style = categoriesTree.asWidget().getElement().getStyle();
-        style.setWidth(100, Style.Unit.PCT);
-        style.setHeight(100, Style.Unit.PCT);
-        style.setPosition(Style.Position.RELATIVE);
-        treeEventHandler = new Tree.Listener<String>() {
-            @Override
-            public void onNodeAction(TreeNodeElement<String> node) {
-
-            }
-
-            @Override
-            public void onNodeClosed(TreeNodeElement<String> node) {
-
-            }
-
-            @Override
-            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<String> node) {
-
-            }
-
-            @Override
-            public void onNodeDragStart(TreeNodeElement<String> node, MouseEvent event) {
-
-            }
-
-            @Override
-            public void onNodeDragDrop(TreeNodeElement<String> node, MouseEvent event) {
-
-            }
-
-            @Override
-            public void onNodeExpanded(TreeNodeElement<String> node) {
-
-            }
-
-            @Override
-            public void onNodeSelected(TreeNodeElement<String> node, SignalEvent event) {
-                String key = node.getData();
-                if (templateOrType.containsKey(key)) {
-                    selectNextWizardType(templateOrType.get(key));
-                }
-            }
-
-            @Override
-            public void onRootContextMenu(int mouseX, int mouseY) {
-
-            }
-
-            @Override
-            public void onRootDragDrop(MouseEvent event) {
-
-            }
-        };
-        categoriesTree.setTreeEventHandler(treeEventHandler);
-
+        reset();
     }
 
     private void selectNextWizardType(Object itemData) {
@@ -150,19 +144,28 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     @Override
-    public void selectProjectType(String projectTypeId) {
+    public void selectProjectType(final String projectTypeId) {
+
+        ProjectTypeDescriptor typeDescriptor = null;
         for (String category : categories.keySet()) {
             for (ProjectTypeDescriptor descriptor : categories.get(category)) {
                 if (descriptor.getProjectTypeId().equals(projectTypeId)) {
-                    categoriesTree.getSelectionModel().selectSingleNode(category);
-                    treeEventHandler.onNodeSelected(categoriesTree.getNode(category), null);
-//                  projectTypeList.getSelectionModel().setSelectedItem(descriptor);
-                    selectNextWizardType(descriptor);
+                    typeDescriptor = descriptor;
                     break;
                 }
             }
+            if (typeDescriptor != null) break;
         }
+        if (typeDescriptor != null) {
+            for (String key : templateOrType.keySet()) {
+                        if (templateOrType.get(key) == typeDescriptor) {
+                            categoriesTree.getSelectionModel().selectSingleNode(key);
+//                            treeEventHandler.onNodeSelected(categoriesTree.getNode(key), null);
+                            selectNextWizardType(typeDescriptor);
 
+                        }
+                    }
+                }
     }
 
     @Override
@@ -172,7 +175,22 @@ public class MainPageViewImpl implements MainPageView {
         this.samples = samples;
         templateOrType = new HashMap<>();
         categoriesTree.getModel().setRoot("");
-        categoriesTree.renderTree(0);
+        if (samples.isEmpty()) {
+            categoriesTree.renderTree(1);
+        } else
+            categoriesTree.renderTree(0);
+    }
+
+    @Override
+    public void reset() {
+        categoriesPanel.clear();
+        categoriesTree = Tree.create(resources, new CategoriesDataAdapter(), new CategoriesNodeRenderer());
+        categoriesPanel.add(categoriesTree);
+        Style style = categoriesTree.asWidget().getElement().getStyle();
+        style.setWidth(100, Style.Unit.PCT);
+        style.setHeight(100, Style.Unit.PCT);
+        style.setPosition(Style.Position.RELATIVE);
+        categoriesTree.setTreeEventHandler(treeEventHandler);
     }
 
     interface MainPageViewImplUiBinder
@@ -240,7 +258,7 @@ public class MainPageViewImpl implements MainPageView {
                             array.add(itemKey);
                         }
                     }
-                  return array;
+                    return array;
                 }
             }
 
@@ -312,12 +330,12 @@ public class MainPageViewImpl implements MainPageView {
                 data = data.substring(CATEGORIES.length());
                 spanElement.getStyle().setFontWeight("bold");
             }
-            if(data.equals(SAMPLES)){
+            if (data.equals(SAMPLES)) {
                 spanElement.getStyle().setFontWeight("bold");
             }
             if (templateOrType.containsKey(data)) {
                 Object temOrType = templateOrType.get(data);
-                if(temOrType instanceof ProjectTemplateDescriptor) {
+                if (temOrType instanceof ProjectTemplateDescriptor) {
                     ProjectTemplateDescriptor template = ((ProjectTemplateDescriptor)temOrType);
                     data = template.getDisplayName();
                 } else if (temOrType instanceof ProjectTypeDescriptor) {

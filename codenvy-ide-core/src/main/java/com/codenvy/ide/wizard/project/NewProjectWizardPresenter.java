@@ -265,13 +265,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         stepsPages.clear();
         stepsPages.add(mainPage);
         view.reset();
-        setPage(mainPage);
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             view.setName(project.getName());
             view.setVisibility(project.getVisibility().equals("public")? true : false);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
         }
+        setPage(mainPage);
         view.showDialog();
         view.setEnabledAnimation(true);
     }

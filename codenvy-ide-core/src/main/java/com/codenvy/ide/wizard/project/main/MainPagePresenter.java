@@ -76,6 +76,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void go(AcceptsOneWidget container) {
+        view.reset();
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTypeDescriptor>> samples = new HashMap<>();
@@ -108,6 +109,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     @Override
     public void projectTypeSelected(ProjectTypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
+        template = null;
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
