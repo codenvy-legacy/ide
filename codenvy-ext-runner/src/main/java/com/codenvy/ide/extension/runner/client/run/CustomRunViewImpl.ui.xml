@@ -32,7 +32,7 @@
             resize: none;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="140px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="350px" height="140px" addStyleNames="{style.emptyBorder}" debugId="customRun-panel">
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label text="Select the environment your application needs to run in:" width="100%" addStyleNames="{style.labelMargin}"/>
