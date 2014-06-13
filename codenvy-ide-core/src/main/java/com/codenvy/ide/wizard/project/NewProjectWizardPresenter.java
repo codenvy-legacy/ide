@@ -209,8 +209,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     @Override
-    public void projectVisibilityChanged(Boolean publ) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, publ);
+    public void projectVisibilityChanged(Boolean aPublic) {
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
     }
 
     @Override
@@ -268,7 +268,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             view.setName(project.getName());
-            view.setVisibility(project.getVisibility().equals("public")? true : false);
+            boolean aPublic = project.getVisibility().equals("public") ? true : false;
+            view.setVisibility(aPublic);
+            wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY,aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
         }
         setPage(mainPage);
