@@ -11,10 +11,16 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
+import com.codenvy.ide.ext.tutorials.client.wizard.ExtensionPagePresenter;
+import com.codenvy.ide.ext.tutorials.shared.Constants;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import java.util.HashMap;
@@ -37,7 +43,9 @@ public class TutorialsExtension {
     public TutorialsExtension(TutorialsResources resources,
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager,
-                              ShowTutorialGuideAction showAction) {
+                              ShowTutorialGuideAction showAction,
+                              ProjectTypeWizardRegistry wizardRegistry,
+                              NotificationManager notificationManager, Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
 
         Map<String, String> icons = new HashMap<>(1);
@@ -48,5 +56,8 @@ public class TutorialsExtension {
 
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
+        ProjectWizard wizard = new ProjectWizard(notificationManager);
+        wizard.addPage(extensionPagePresenter);
+        wizardRegistry.addWizard(Constants.TUTORIAL_ID, wizard);
     }
 }
