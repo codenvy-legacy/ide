@@ -120,7 +120,7 @@ public class JavaModelUnmarshaller {
         for (TreeElement treeElement : foldersTree) {
             if (treeElement.getNode().getPath().equals(item.getPath()) &&
                 treeElement.getChildren().size() == 1 &&
-                !treeElement.getNode().hasChildFiles()) {
+                !treeElement.getNode().getHasChildFiles()) {
                 return treeElement;
             }
         }
