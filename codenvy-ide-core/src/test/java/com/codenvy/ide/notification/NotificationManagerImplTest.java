@@ -11,12 +11,14 @@
 package com.codenvy.ide.notification;
 
 import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
@@ -29,6 +31,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link NotificationManagerImpl} functionality
@@ -38,17 +41,22 @@ import static org.mockito.Mockito.verify;
 @GwtModule("com.codenvy.ide.Core")
 public class NotificationManagerImplTest extends GwtTestWithMockito {
     @Mock
-    private NotificationManagerView   view;
+    private NotificationManagerView  view;
     @Mock
-    private NotificationContainer notificationContainer;
+    private NotificationContainer    notificationContainer;
     @Mock
-    private NotificationMessageStack  notificationMessageStack;
+    private NotificationMessageStack notificationMessageStack;
 
-    private NotificationManagerImpl   manager;
+    private NotificationManagerImpl manager;
+
+    @Mock
+    PartStackPresenter partStack;
 
     @Before
     public void disarm() {
         manager = new NotificationManagerImpl(view, notificationContainer, notificationMessageStack);
+        manager.setPartStack(partStack);
+        when(partStack.getActivePart()).thenReturn(manager);
         reset(view);
     }
 
@@ -73,6 +81,7 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
 
     @Test
     public void testShowNotification() throws Exception {
+
         Notification notification = new Notification("test message", INFO);
         manager.showNotification(notification);
 
