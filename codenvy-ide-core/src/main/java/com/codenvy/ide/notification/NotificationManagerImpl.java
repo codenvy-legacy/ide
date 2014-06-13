@@ -13,6 +13,7 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
@@ -89,11 +90,16 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
     /** {@inheritDoc} */
     @Override
     public void showNotification(@NotNull Notification notification) {
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
         notification.addObserver(this);
         notifications.add(notification);
         notificationMessageStack.addNotification(notification);
         notificationContainer.addNotification(notification);
         onValueChanged();
+
     }
 
 
