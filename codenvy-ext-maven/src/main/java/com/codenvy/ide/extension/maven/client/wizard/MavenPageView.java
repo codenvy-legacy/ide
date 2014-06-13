@@ -28,6 +28,8 @@ public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
 
     void reset();
 
+    void setPackaging(String packaging);
+
     public interface ActionDelegate{
 
         void onTextsChange();

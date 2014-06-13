@@ -91,6 +91,16 @@ public class MavenPageViewImpl implements MavenPageView {
     }
 
     @Override
+    public void setPackaging(String packaging) {
+        for (int i = 0; i < packagingField.getItemCount(); i++) {
+            if (packaging.equals(packagingField.getValue(i))) {
+                packagingField.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+
+    @Override
     public String getGroupId() {
         return groupId.getText();
     }
