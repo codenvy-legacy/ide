@@ -125,7 +125,7 @@ public class RestNameEnvironment {
                         break;
                     }
                 }
-                return TypeBindingConvetror.toJsonBinaryType(binding);
+                return TypeBindingConvector.toJsonBinaryType(binding);
             }
 
             return processAnswer(answer, javaProject, environment);
@@ -377,7 +377,7 @@ public class RestNameEnvironment {
                 }
             }
             if (binding == null) return null;
-            return TypeBindingConvetror.toJsonBinaryType(binding);
+            return TypeBindingConvector.toJsonBinaryType(binding);
         }
         return null;
     }

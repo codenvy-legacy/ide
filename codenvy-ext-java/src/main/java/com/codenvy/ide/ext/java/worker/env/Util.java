@@ -92,7 +92,7 @@ public class Util {
                    con = Constant.NotAConstant;
                 }
                 else {
-                   con = DoubleConstant.fromValue(constant.getDoubleField("value"));
+                    con = DoubleConstant.fromValue(Double.valueOf(constant.getStringField("value")));
                 }
                 break;
             case TypeIds.T_boolean :

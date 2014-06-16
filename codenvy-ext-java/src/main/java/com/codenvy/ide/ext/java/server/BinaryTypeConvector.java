@@ -163,7 +163,7 @@ public class BinaryTypeConvector {
                     val = new JsonPrimitive("NaN");
                     con.addProperty("NotAConstant", 1);
                 } else {
-                    val = new JsonPrimitive(constant.doubleValue());
+                    val = new JsonPrimitive(constant.stringValue());
                 }
                 break;
             case T_boolean:
