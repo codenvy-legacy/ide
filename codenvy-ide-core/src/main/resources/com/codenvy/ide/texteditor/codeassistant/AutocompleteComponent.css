@@ -29,6 +29,7 @@
         box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
         padding: 5px 0 5px 10px;
         min-width: 150px;
+        overflow-x: auto !important;
     }
 
     .items {
@@ -75,6 +76,7 @@
         color: mainFontColor;
         font-size: boxFontSize;
         font-family: mainFontFamily;
+        overflow-x: auto;
     }
 	
 	.infoPopup {
