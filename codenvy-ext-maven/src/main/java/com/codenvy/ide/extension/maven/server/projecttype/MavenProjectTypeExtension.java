@@ -97,7 +97,7 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "https://github.com/codenvy-templates/web-lift-java-simple.git"));
 
         list.add(new ProjectTemplateDescription("git",
-                                                "MAVEN Struts App",
+                                                "Struts App",
                                                 "Simple Struts Application",
                                                 "https://github.com/codenvy-templates/web-struts-java-simple.git"));
 
