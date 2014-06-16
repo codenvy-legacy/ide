@@ -16,10 +16,13 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -43,15 +46,17 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     private ProjectServiceClient projectServiceClient;
     private ResourceProvider     resourceProvider;
     private DtoFactory           factory;
+    private MavenPomReaderClient pomReaderClient;
 
     @Inject
     public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider,
-                              DtoFactory factory) {
+                              DtoFactory factory, MavenPomReaderClient pomReaderClient) {
         super("Maven project settings", null);
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.resourceProvider = resourceProvider;
         this.factory = factory;
+        this.pomReaderClient = pomReaderClient;
         view.setDelegate(this);
     }
 
@@ -82,16 +87,40 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         view.reset();
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
-            view.setArtifactId(project.getAttributeValue(MavenAttributes.MAVEN_ARTIFACT_ID));
-            view.setGroupId(project.getAttributeValue(MavenAttributes.MAVEN_GROUP_ID));
-            view.setVersion(project.getAttributeValue(MavenAttributes.MAVEN_VERSION));
-            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    onTextsChange();
-                }
-            });
+            if (project.hasAttribute(MavenAttributes.MAVEN_ARTIFACT_ID)) {
+                view.setArtifactId(project.getAttributeValue(MavenAttributes.MAVEN_ARTIFACT_ID));
+                view.setGroupId(project.getAttributeValue(MavenAttributes.MAVEN_GROUP_ID));
+                view.setVersion(project.getAttributeValue(MavenAttributes.MAVEN_VERSION));
+                view.setPackaging(project.getAttributeValue(MavenAttributes.MAVEN_PACKAGING));
+                scheduleTextChanges();
+            } else {
+                pomReaderClient.readPomAttributes(project.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                    @Override
+                    protected void onSuccess(String result) {
+                        Jso jso = Jso.deserialize(result);
+                        view.setArtifactId(jso.getStringField(MavenAttributes.MAVEN_ARTIFACT_ID));
+                        view.setGroupId(jso.getStringField(MavenAttributes.MAVEN_GROUP_ID));
+                        view.setVersion(jso.getStringField(MavenAttributes.MAVEN_VERSION));
+                        view.setPackaging(jso.getStringField(MavenAttributes.MAVEN_PACKAGING));
+                        scheduleTextChanges();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(MavenPagePresenter.class, exception);
+                    }
+                });
+            }
         }
+    }
+
+    private void scheduleTextChanges() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                onTextsChange();
+            }
+        });
     }
 
     @Override
@@ -101,7 +130,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         options.put(MavenAttributes.MAVEN_GROUP_ID, Arrays.asList(view.getGroupId()));
         options.put(MavenAttributes.MAVEN_VERSION, Arrays.asList(view.getVersion()));
         options.put(MavenAttributes.MAVEN_PACKAGING, Arrays.asList(view.getPackaging()));
-        if("war".equals(view.getPackaging())){
+        if ("war".equals(view.getPackaging())) {
             options.put(Constants.RUNNER_NAME, Arrays.asList("JavaWeb"));
         }
         if ("jar".equals(view.getPackaging())) {

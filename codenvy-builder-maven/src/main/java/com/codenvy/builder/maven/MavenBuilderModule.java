@@ -30,6 +30,7 @@ public class MavenBuilderModule extends AbstractModule {
         multiBinder.addBinding().to(MavenBuilder.class);
 
         Map<String, String> pluginPackaging = new HashMap<>();
+        pluginPackaging.put("play", "zip");
         pluginPackaging.put("play2", "war");
         pluginPackaging.put("grails-app", "war");
         bind(new TypeLiteral<Map<String, String>>() {

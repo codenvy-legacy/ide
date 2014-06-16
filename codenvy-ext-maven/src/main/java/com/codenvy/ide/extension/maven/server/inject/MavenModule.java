@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.maven.server.inject;
 
 import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.ide.extension.maven.server.MavenPomReaderService;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenArtifactIdValueProviderFactory;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenGroupIdValueProviderFactory;
 import com.codenvy.ide.extension.maven.server.projecttype.MavenPackagingValueProviderFactory;
@@ -29,6 +30,7 @@ public class MavenModule extends AbstractModule {
     protected void configure() {
         bind(MavenProjectTypeExtension.class);
         bind(MavenProjectTypeDescriptionsExtension.class);
+        bind(MavenPomReaderService.class);
 
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(MavenSourceFoldersValueProviderFactory.class);
