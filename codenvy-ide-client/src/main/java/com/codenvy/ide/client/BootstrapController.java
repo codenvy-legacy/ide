@@ -10,10 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.client;
 
+import elemental.client.Browser;
+import elemental.events.Event;
+import elemental.events.EventListener;
+
+import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
+import com.codenvy.api.workspace.shared.dto.Workspace;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.WindowActionEvent;
@@ -32,11 +39,13 @@ import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.Config;
+import com.codenvy.ide.util.UUID;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
@@ -54,6 +63,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Performs initial application startup.
  *
@@ -62,6 +74,7 @@ import com.google.web.bindery.event.shared.EventBus;
 public class BootstrapController {
 
     private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt             analyticsEventLoggerExt;
     private final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
     private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
     private final IconRegistry                        iconRegistry;
@@ -71,6 +84,7 @@ public class BootstrapController {
     private final ExtensionInitializer                extensionInitializer;
     private final ResourceProvider                    resourceProvider;
     private final UserProfileServiceClient            userProfileService;
+    private final WorkspaceServiceClient              workspaceServiceClient;
     private final PreferencesManagerImpl              preferencesManager;
     private final UserInfo                            userInfo;
     private final StyleInjector                       styleInjector;
@@ -84,12 +98,14 @@ public class BootstrapController {
                                ExtensionInitializer extensionInitializer,
                                ResourceProvider resourceProvider,
                                UserProfileServiceClient userProfileService,
+                               WorkspaceServiceClient workspaceServiceClient,
                                PreferencesManagerImpl preferencesManager,
                                UserInfo userInfo,
                                StyleInjector styleInjector,
 
                                DtoRegistrar dtoRegistrar,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                               AnalyticsEventLoggerExt analyticsEventLoggerExt,
                                Resources resources,
                                EventBus eventBus,
 
@@ -104,6 +120,7 @@ public class BootstrapController {
         this.extensionInitializer = extensionInitializer;
         this.resourceProvider = resourceProvider;
         this.userProfileService = userProfileService;
+        this.workspaceServiceClient = workspaceServiceClient;
         this.preferencesManager = preferencesManager;
         this.userInfo = userInfo;
         this.styleInjector = styleInjector;
@@ -115,6 +132,7 @@ public class BootstrapController {
         this.themeAgent = themeAgent;
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.analyticsEventLoggerExt = analyticsEventLoggerExt;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -124,17 +142,19 @@ public class BootstrapController {
 
         // Inject CodeMirror scripts
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
-            .setCallback(new Callback<Void, Exception>() {
-                @Override
-                public void onSuccess(Void result) {
-                    ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js").setWindow(ScriptInjector.TOP_WINDOW).
-                        setCallback(new Callback<Void, Exception>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                loadUserProfile();
-                            }
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onSuccess(Void result) {
+                              ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
+                                            .setWindow(ScriptInjector.TOP_WINDOW).
+                                      setCallback(new Callback<Void, Exception>() {
+                                          @Override
+                                          public void onSuccess(Void aVoid) {
+                                              loadUserProfile();
+                                              loadWorkspace();
+                                          }
 
-                            @Override
+                                          @Override
                             public void onFailure(Exception e) {
                                 Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
                                 initializationFailed("Unable to inject CodeMirror parsers");
@@ -186,6 +206,25 @@ public class BootstrapController {
                      }
                  }
             );
+    }
+
+    /**
+     * Fetches current workspace and saves it to Config.
+     */
+    private void loadWorkspace() {
+        workspaceServiceClient.getWorkspace(Config.getWorkspaceId(),
+                                            new AsyncRequestCallback<Workspace>(dtoUnmarshallerFactory.newUnmarshaller(Workspace.class)) {
+                                                @Override
+                                                protected void onSuccess(Workspace result) {
+                                                    Config.setCurrentWorkspace(result);
+                                                }
+
+                                                @Override
+                                                protected void onFailure(Throwable exception) {
+                                                    Log.error(getClass(), exception);
+                                                }
+                                            }
+                                           );
     }
 
     /** Initialize Component Registry, start extensions */
@@ -265,6 +304,48 @@ public class BootstrapController {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
             }
         });
+
+        final String sessionID = UUID.uuid();
+        elemental.html.Window window = Browser.getWindow();
+
+        window.addEventListener(Event.FOCUS, new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                sessionIsStarted(sessionID);
+            }
+        }, true);
+
+        window.addEventListener(Event.BLUR, new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
+                sessionIsStoped(sessionID);
+            }
+        }, true);
+
+        //This is necessary to forcibly print the first log
+        sessionIsStarted(sessionID);
+    }
+
+    private void sessionIsStarted(String sessionID) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("SESSION-ID", sessionID);
+
+        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_STARTED, parameters);
+
+        if (Config.getCurrentWorkspace().isTemporary()) {
+            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STARTED, parameters);
+        }
+    }
+
+    private void sessionIsStoped(String sessionID) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("SESSION-ID", sessionID);
+
+        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FINISHED, parameters);
+
+        if (Config.getCurrentWorkspace().isTemporary()) {
+            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STOPPED, parameters);
+        }
     }
 
     private void processStartupParameters() {
