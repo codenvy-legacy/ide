@@ -276,6 +276,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         setPage(mainPage);
         view.showDialog();
         view.setEnabledAnimation(true);
+        view.focusOnName();
     }
 
     public void show(WizardContext context) {
