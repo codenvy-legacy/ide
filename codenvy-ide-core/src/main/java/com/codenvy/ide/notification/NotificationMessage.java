@@ -16,6 +16,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -57,6 +61,12 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     private Notification    prevState;
     private ActionDelegate  delegate;
     private Resources       resources;
+    private Timer           hideTimer        = new Timer() {
+                                             @Override
+                                             public void run() {
+                                                 hide();
+                                             }
+                                         };
 
     /**
      * Create notitfication message.
@@ -88,7 +98,9 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
                 NotificationMessage.this.delegate.onOpenMessageClicked(NotificationMessage.this.notification);
             }
         };
+        
         mainPanel.addDomHandler(handler, DoubleClickEvent.getType());
+        addMouseHandlers();
 
         iconPanel = new SimplePanel();
         iconPanel.setStyleName(resources.notificationCss().notificationMessage());
@@ -123,6 +135,24 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         mainPanel.add(title);
 
         setWidget(mainPanel);
+    }
+    
+    private void addMouseHandlers(){
+        mainPanel.addDomHandler(new MouseOverHandler() {
+            
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                hideTimer.cancel();
+            }
+        }, MouseOverEvent.getType());
+        
+        mainPanel.addDomHandler(new MouseOutHandler() {
+            
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                hideTimer.schedule(DEFAULT_TIME);
+            }
+        }, MouseOutEvent.getType());
     }
 
     /**
@@ -189,13 +219,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         show();
 
         if (!prevState.isImportant()) {
-            Timer timer = new Timer() {
-                @Override
-                public void run() {
-                    hide();
-                }
-            };
-            timer.schedule(DEFAULT_TIME);
+            hideTimer.schedule(DEFAULT_TIME);
         }
     }
 
