@@ -115,6 +115,8 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
+import com.codenvy.ide.requirejs.ModuleHolder;
+import com.codenvy.ide.requirejs.RequireJsLoader;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -204,6 +206,7 @@ public class CoreGinModule extends AbstractGinModule {
         resourcesAPIconfigure();
         coreUiConfigure();
         editorAPIconfigure();
+        requirejsConfigure();
     }
 
     /** API Bindings, binds API interfaces to the implementations */
@@ -289,6 +292,11 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
 
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
+    }
+
+    protected void requirejsConfigure() {
+        bind(ModuleHolder.class).in(javax.inject.Singleton.class);
+        bind(RequireJsLoader.class);
     }
 
     @Provides
