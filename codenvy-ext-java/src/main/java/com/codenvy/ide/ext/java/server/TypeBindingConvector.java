@@ -32,7 +32,7 @@ import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 /**
  * @author Evgen Vidolob
  */
-public class TypeBindingConvetror {
+public class TypeBindingConvector {
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().create();
 
     public static String toJsonBinaryType(SourceTypeBinding binding) {
@@ -116,7 +116,6 @@ public class TypeBindingConvetror {
 
     private static JsonElement toJsonDefaultValue(Object defaultValue) {
         if (defaultValue == null) return JsonNull.INSTANCE;
-        if(defaultValue == null) return JsonNull.INSTANCE;
         JsonObject object = new JsonObject();
         if(defaultValue instanceof Constant){
             object.add("constant", BinaryTypeConvector.toJsonConstant((Constant)defaultValue));

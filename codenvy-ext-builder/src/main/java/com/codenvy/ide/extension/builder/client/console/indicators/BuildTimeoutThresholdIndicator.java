@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.builder.client.console.indicators;
 
 import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -24,11 +24,11 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildTimeoutThresholdAction extends InfoAction {
+public class BuildTimeoutThresholdIndicator extends IndicatorAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public BuildTimeoutThresholdAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+    public BuildTimeoutThresholdIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
         super("Build Timeout Threshold", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }

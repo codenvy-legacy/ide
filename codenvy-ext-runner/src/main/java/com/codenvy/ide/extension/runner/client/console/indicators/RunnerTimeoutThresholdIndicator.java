@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -24,19 +24,19 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerStartedAction extends InfoAction {
+public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
     private final RunnerController runnerController;
 
     @Inject
-    public RunnerStartedAction(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Started At", false, resources);
+    public RunnerTimeoutThresholdIndicator(RunnerController runnerController, RunnerResources resources) {
+        super("Runner Timeout Threshold", false, resources);
         this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppStartTime();
+        final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

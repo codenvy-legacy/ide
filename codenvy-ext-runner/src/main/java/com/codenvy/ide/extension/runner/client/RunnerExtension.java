@@ -22,15 +22,15 @@ import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
-import com.codenvy.ide.extension.runner.client.console.ApplicationURLAction;
+import com.codenvy.ide.extension.runner.client.console.indicators.ApplicationURLIndicator;
 import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
-import com.codenvy.ide.extension.runner.client.console.RunnerFinishedAction;
-import com.codenvy.ide.extension.runner.client.console.RunnerStartedAction;
-import com.codenvy.ide.extension.runner.client.console.RunnerTimeoutThresholdAction;
-import com.codenvy.ide.extension.runner.client.console.RunnerTotalTimeAction;
-import com.codenvy.ide.extension.runner.client.console.ShellURLAction;
+import com.codenvy.ide.extension.runner.client.console.indicators.RunnerFinishedIndicator;
+import com.codenvy.ide.extension.runner.client.console.indicators.RunnerStartedIndicator;
+import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTimeoutThresholdIndicator;
+import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTotalTimeIndicator;
+import com.codenvy.ide.extension.runner.client.console.indicators.ShellURLIndicator;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -60,12 +60,12 @@ public class RunnerExtension {
                            StopAction stopAction,
                            UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
-                           ApplicationURLAction applicationURLAction,
-                           ShellURLAction shellURLAction,
-                           RunnerStartedAction runnerStartedAction,
-                           RunnerTimeoutThresholdAction runnerTimeoutThresholdAction,
-                           RunnerFinishedAction runnerFinishedAction,
-                           RunnerTotalTimeAction runnerTotalTimeAction,
+                           ApplicationURLIndicator applicationURLIndicator,
+                           ShellURLIndicator shellURLIndicator,
+                           RunnerStartedIndicator runnerStartedIndicator,
+                           RunnerTimeoutThresholdIndicator runnerTimeoutThresholdIndicator,
+                           RunnerFinishedIndicator runnerFinishedIndicator,
+                           RunnerTotalTimeIndicator runnerTotalTimeIndicator,
                            WorkspaceAgent workspaceAgent,
                            RunnerConsolePresenter runnerConsolePresenter,
                            RunnerResources runnerResources,
@@ -110,17 +110,17 @@ public class RunnerExtension {
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(applicationURLAction);
+        consoleToolbarActionGroup.add(applicationURLIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(shellURLAction);
+        consoleToolbarActionGroup.add(shellURLIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(runnerStartedAction);
+        consoleToolbarActionGroup.add(runnerStartedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(runnerTimeoutThresholdAction);
+        consoleToolbarActionGroup.add(runnerTimeoutThresholdIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(runnerFinishedAction);
+        consoleToolbarActionGroup.add(runnerFinishedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(runnerTotalTimeAction);
+        consoleToolbarActionGroup.add(runnerTotalTimeIndicator);
         runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

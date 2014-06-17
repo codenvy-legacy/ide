@@ -337,7 +337,8 @@ public class Project extends Folder {
                 if (path.equals(child.getPath())) {
                     callback.onSuccess(child);
                     return;
-                } else if (path.startsWith(child.getPath())) {
+                } else if (path.startsWith(child.getPath().endsWith("/") ? child.getPath() : child.getPath() + "/")) {
+                    // we're on the right way
                     findResourceByPath((Folder)child, path, callback);
                     return;
                 }
@@ -347,7 +348,11 @@ public class Project extends Folder {
             refreshChildren(rootFolder, new AsyncCallback<Folder>() {
                 @Override
                 public void onSuccess(Folder result) {
-                    findResourceByPath(result, path, callback);
+                    if (result.getChildren().isEmpty()) {
+                        callback.onFailure(new Exception("Resource not found"));
+                    } else {
+                        findResourceByPath(result, path, callback);
+                    }
                 }
 
                 @Override

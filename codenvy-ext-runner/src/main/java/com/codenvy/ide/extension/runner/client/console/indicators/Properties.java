@@ -8,10 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
 /**
- * Properties for {@link InfoLabel}.
+ * Properties for {@link IndicatorView}.
  *
  * @author Artem Zatsarynnyy
  */

@@ -21,8 +21,10 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ext.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.ext.java.client.projectmodel.Package;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,7 +38,7 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDelegate {
-    private static final String DEFAULT_CONTENT = "\n{\n}";
+    private static final String DEFAULT_CONTENT = " {\n}\n";
     private NewJavaResourceView view;
     private EditorAgent         editorAgent;
     private SelectionAgent      selectionAgent;
@@ -58,43 +60,9 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
         types.add(ResourceTypes.ENUM);
     }
 
-    @Override
-    public void onOkClicked() {
-        view.close();
-
-        final String resourceName = view.getName();
-        switch (view.getSelectedType()) {
-            case CLASS:
-                createClass(resourceName);
-                break;
-            case INTERFACE:
-                createInterface(resourceName);
-                break;
-            case ENUM:
-                createEnum(resourceName);
-                break;
-        }
-    }
-
-    private void createClass(String resourceName) {
-        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
-        StringBuilder content = new StringBuilder(getPackage(getParent(), activeProject.getSourceFolders()));
-        content.append("public class ").append(resourceName).append(DEFAULT_CONTENT);
-        createFile(resourceName, getParent(), activeProject, content.toString());
-    }
-
-    private void createInterface(String resourceName) {
-        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
-        StringBuilder content = new StringBuilder(getPackage(getParent(), (activeProject).getSourceFolders()));
-        content.append("public interface ").append(resourceName).append(DEFAULT_CONTENT);
-        createFile(resourceName, getParent(), activeProject, content.toString());
-    }
-
-    private void createEnum(String resourceName) {
-        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
-        StringBuilder content = new StringBuilder(getPackage(getParent(), (activeProject).getSourceFolders()));
-        content.append("public enum ").append(resourceName).append(DEFAULT_CONTENT);
-        createFile(resourceName, getParent(), activeProject, content.toString());
+    public void showDialog() {
+        view.setTypes(types);
+        view.showDialog();
     }
 
     @Override
@@ -102,13 +70,57 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
         view.close();
     }
 
-    public void showDialog() {
-        view.setTypes(types);
-        view.showDialog();
+    @Override
+    public void onOkClicked() {
+        view.close();
+        final String resourceName = view.getName();
+        ensureParent(resourceName, new AsyncCallback<Folder>() {
+            @Override
+            public void onSuccess(Folder result) {
+                final String className = resourceName.substring(resourceName.lastIndexOf('.') + 1);
+                switch (view.getSelectedType()) {
+                    case CLASS:
+                        createClass(className, result);
+                        break;
+                    case INTERFACE:
+                        createInterface(className, result);
+                        break;
+                    case ENUM:
+                        createEnum(className, result);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(NewJavaResourcePresenter.class, caught);
+            }
+        });
+    }
+
+    private void createClass(String resourceName, Folder parent) {
+        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
+        StringBuilder content = new StringBuilder(getPackageDeclaration(parent, activeProject.getSourceFolders()));
+        content.append("public class ").append(resourceName).append(DEFAULT_CONTENT);
+        createFile(resourceName, parent, activeProject, content.toString());
+    }
+
+    private void createInterface(String resourceName, Folder parent) {
+        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
+        StringBuilder content = new StringBuilder(getPackageDeclaration(parent, activeProject.getSourceFolders()));
+        content.append("public interface ").append(resourceName).append(DEFAULT_CONTENT);
+        createFile(resourceName, parent, activeProject, content.toString());
+    }
+
+    private void createEnum(String resourceName, Folder parent) {
+        JavaProject activeProject = (JavaProject)resourceProvider.getActiveProject();
+        StringBuilder content = new StringBuilder(getPackageDeclaration(parent, activeProject.getSourceFolders()));
+        content.append("public enum ").append(resourceName).append(DEFAULT_CONTENT);
+        createFile(resourceName, parent, activeProject, content.toString());
     }
 
     private void createFile(@NotNull String name, @NotNull Folder parent, @NotNull Project project, @NotNull String content) {
-        ((JavaProject)project).createCompilationUnit(parent, createResourceName(name), content, new AsyncCallback<CompilationUnit>() {
+        ((JavaProject)project).createCompilationUnit(parent, name + ".java", content, new AsyncCallback<CompilationUnit>() {
             @Override
             public void onSuccess(CompilationUnit result) {
                 if (result.isFile()) {
@@ -123,11 +135,8 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
         });
     }
 
-    private String createResourceName(@NotNull String name) {
-        return name + ".java";
-    }
-
-    private String getPackage(@NotNull Folder parent, @NotNull Array<SourceFolder> sourceFolders) {
+    /** Returns package declaration string. */
+    private String getPackageDeclaration(@NotNull Folder parent, @NotNull Array<SourceFolder> sourceFolders) {
         if (parent instanceof SourceFolder) {
             return "\n";
         }
@@ -139,27 +148,56 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
                 return "package " + packageName + ";\n\n";
             }
         }
-
         return "";
     }
 
-    /** Returns parent folder for creating new resource. */
-    private Folder getParent() {
-        Project activeProject = resourceProvider.getActiveProject();
+    /** Ensures that parent package for the given class is exist. */
+    private void ensureParent(String className, final AsyncCallback<Folder> callback) {
+        final Project activeProject = resourceProvider.getActiveProject();
         Folder parent = null;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selection.getFirstElement() instanceof Resource) {
-                Resource resource = (Resource)selection.getFirstElement();
-                if (resource.isFile()) {
-                    parent = resource.getParent();
+                Resource selectedResource = (Resource)selection.getFirstElement();
+                if (selectedResource.isFile()) {
+                    parent = selectedResource.getParent();
                 } else {
-                    parent = (Folder)resource;
+                    parent = (Folder)selectedResource;
                 }
             }
         } else {
             parent = activeProject;
         }
-        return parent;
+
+        final int lastDotPos = className.lastIndexOf('.');
+        final boolean withPackagePrefixed = lastDotPos > 0;
+        if (withPackagePrefixed) {
+            final String packageName = className.substring(0, lastDotPos);
+            final String packagePath = parent.getPath() + '/' + packageName.replace('.', '/');
+            final Folder finalParent = parent;
+            activeProject.findResourceByPath(packagePath, new AsyncCallback<Resource>() {
+                @Override
+                public void onSuccess(Resource result) {
+                    callback.onSuccess((Folder)result);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    ((JavaProject)activeProject).createPackage(finalParent, packageName, new AsyncCallback<Package>() {
+                        @Override
+                        public void onSuccess(Package result) {
+                            callback.onSuccess(result);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            callback.onFailure(caught);
+                        }
+                    });
+                }
+            });
+        } else {
+            callback.onSuccess(parent);
+        }
     }
 }

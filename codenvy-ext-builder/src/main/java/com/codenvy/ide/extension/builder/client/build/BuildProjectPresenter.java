@@ -39,12 +39,14 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
+
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -332,8 +334,42 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Returns runningTime {@link BuilderMetric}. */
     @Nullable
     public BuilderMetric getLastBuildRunningTime() {
-        return getBuilderMetric("runningTime");
+        BuilderMetric builderMetric = getBuilderMetric("runningTime");
+        if (builderMetric != null && builderMetric.getValue() != null) {
+            //The value is the number of seconds (example: 4.000s):
+            int ss = (int)getNumber(builderMetric.getValue());
+            int mm = 0;
+            if (ss >= 60) {
+                mm = ss / 60;
+                ss = ss % 60;
+            }
+            int hh = 0;
+            if (mm >= 60) {
+                hh = mm / 60;
+                mm = mm % 60;
+            }
+            StringBuilder value = new StringBuilder();
+            value.append(hh > 9 ? hh : "0" + hh).append("h:");
+            value.append(mm > 9 ? mm : "0" + mm).append("m:");
+            value.append(ss > 9 ? ss : "0" + ss).append("s");
+            return dtoFactory.createDto(BuilderMetric.class).withName(builderMetric.getName()).withDescription(builderMetric.getDescription()).withValue(value.toString());
+        }
+        return builderMetric;
     }
+    
+    /**
+     * Parses given string to find the decimal number.
+     * @param str input to parse 
+     * @return decimal number
+     */
+    private native float getNumber(String str) /*-{
+        var pattern = new RegExp("[0-9]+(\.[0-9]+)?");
+        var result = pattern.exec(str);
+        if (result != null && result.length > 0){
+            return parseFloat(result[0]);
+        }
+        return 0;
+    }-*/;
 
     @Nullable
     private BuilderMetric getBuilderMetric(String metricName) {

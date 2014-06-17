@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.builder.client.console.indicators;
 
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.api.ui.action.PropertyChangeEvent;
@@ -20,20 +20,20 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * View for {@link InfoAction}.
+ * View for {@link IndicatorAction}.
  * It contains caption and data separated by colon symbol.
  * Data may be text or URL.
  *
  * @author Artem Zatsarynnyy
  */
-public class InfoLabel extends Composite {
+public class IndicatorView extends Composite {
     private final boolean          isURL;
     private final Presentation     presentation;
     private       Anchor           dataAnchor;
     private       InlineLabel      dataLabel;
     private       PropertyListener propertyListener;
 
-    public InfoLabel(String caption, boolean isURL, Presentation presentation, BuilderResources resources) {
+    public IndicatorView(String caption, boolean isURL, Presentation presentation, BuilderResources resources) {
         this.isURL = isURL;
         this.presentation = presentation;
 

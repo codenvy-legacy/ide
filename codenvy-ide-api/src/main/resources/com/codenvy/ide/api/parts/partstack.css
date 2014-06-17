@@ -38,7 +38,11 @@
 }
 
 .ide-PartStack .ide-PartStack-Editor-Content {
-    border: 3px solid activeTabBackground;
+    /*border: 3px solid activeTabBackground;*/
+    border-left: 3px solid activeTabBackground;
+    border-top: 3px solid activeTabBackground;
+    /*width: calc(100% - 3px);*/
+    /*height: calc(100% - 3px);*/
     background-color: activeTabBackground;
 }
 
