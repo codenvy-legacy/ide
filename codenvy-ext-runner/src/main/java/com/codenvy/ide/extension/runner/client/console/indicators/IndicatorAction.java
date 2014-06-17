@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -18,16 +18,16 @@ import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Action used to show some information in console's toolbar.
+ * Action used to displaying some information.
  *
  * @author Artem Zatsarynnyy
  */
-public class InfoAction extends Action implements CustomComponentAction {
+public class IndicatorAction extends Action implements CustomComponentAction {
     private String          caption;
     private boolean         isURL;
     private RunnerResources resources;
 
-    public InfoAction(String caption, boolean isURL, RunnerResources resources) {
+    public IndicatorAction(String caption, boolean isURL, RunnerResources resources) {
         super();
         this.caption = caption;
         this.isURL = isURL;
@@ -36,7 +36,7 @@ public class InfoAction extends Action implements CustomComponentAction {
 
     @Override
     public Widget createCustomComponent(Presentation presentation) {
-        return new InfoLabel(caption, isURL, presentation, resources);
+        return new IndicatorView(caption, isURL, presentation, resources);
     }
 
     @Override

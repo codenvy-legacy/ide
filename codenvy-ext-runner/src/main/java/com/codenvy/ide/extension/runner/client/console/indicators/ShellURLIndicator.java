@@ -8,9 +8,8 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
-import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -19,29 +18,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show total time which application was launched.
+ * Action used to show shell URL.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerTotalTimeAction extends InfoAction {
+public class ShellURLIndicator extends IndicatorAction {
     private final RunnerController runnerController;
 
     @Inject
-    public RunnerTotalTimeAction(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Total Time", false, resources);
+    public ShellURLIndicator(RunnerController runnerController, RunnerResources resources) {
+        super("Shell URL", true, resources);
         this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getTotalTime();
-        if (metric != null) {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
-            presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
-        } else {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
-        }
+        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppShellURL());
     }
 }

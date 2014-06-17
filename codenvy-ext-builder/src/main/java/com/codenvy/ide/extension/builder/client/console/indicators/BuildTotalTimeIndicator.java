@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.builder.client.console.indicators;
 
 import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -19,24 +19,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show time when build task started.
+ * Action used to show build total time.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildStartedAction extends InfoAction {
+public class BuildTotalTimeIndicator extends IndicatorAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public BuildStartedAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Started At", false, resources);
+    public BuildTotalTimeIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Total Time", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final BuilderMetric metric = buildProjectPresenter.getLastBuildStartTime();
+        final BuilderMetric metric = buildProjectPresenter.getLastBuildRunningTime();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
