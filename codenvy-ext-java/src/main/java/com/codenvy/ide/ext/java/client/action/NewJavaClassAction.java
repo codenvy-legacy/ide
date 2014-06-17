@@ -49,7 +49,7 @@ public class NewJavaClassAction extends Action {
 
     @Override
     public void update(ActionEvent e) {
-        boolean enabled = false;
+        boolean visible = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selection.getFirstElement() instanceof Resource) {
@@ -57,9 +57,9 @@ public class NewJavaClassAction extends Action {
                 if (resource.isFile()) {
                     resource = resource.getParent();
                 }
-                enabled = resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
+                visible = resource instanceof com.codenvy.ide.ext.java.client.projectmodel.Package || resource instanceof SourceFolder;
             }
         }
-        e.getPresentation().setEnabledAndVisible(enabled);
+        e.getPresentation().setEnabledAndVisible(visible);
     }
 }

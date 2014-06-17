@@ -27,7 +27,6 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public boolean hasChildren(Resource data) {
-        // TODO: need to find another solution
         // hide 'expand arrow' for project when all projects are displayed
         if (data instanceof Project) {
             return data.getProject() != null;
@@ -80,8 +79,8 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public Array<String> getNodePath(Resource data) {
-        Array<String> list = Collections.<String>createArray();
-        Array<String> result = Collections.<String>createArray();
+        Array<String> list = Collections.createArray();
+        Array<String> result = Collections.createArray();
         list.add(data.getId());
 
         Resource localData = data;
