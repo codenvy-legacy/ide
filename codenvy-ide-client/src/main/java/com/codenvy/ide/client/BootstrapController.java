@@ -332,7 +332,7 @@ public class BootstrapController {
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_STARTED, parameters);
 
-        if (Config.getCurrentWorkspace().isTemporary()) {
+        if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
             analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STARTED, parameters);
         }
     }
@@ -343,7 +343,7 @@ public class BootstrapController {
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FINISHED, parameters);
 
-        if (Config.getCurrentWorkspace().isTemporary()) {
+        if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
             analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STOPPED, parameters);
         }
     }
