@@ -29,6 +29,7 @@
         box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
         padding: 5px 0 5px 10px;
         min-width: 150px;
+        max-width: 450px;
         overflow-x: auto !important;
     }
 
@@ -71,12 +72,10 @@
     }
 
     .proposalLabel {
-        max-width: 400px;
         text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
         color: mainFontColor;
         font-size: boxFontSize;
         font-family: mainFontFamily;
-        overflow-x: auto;
     }
 	
 	.infoPopup {
