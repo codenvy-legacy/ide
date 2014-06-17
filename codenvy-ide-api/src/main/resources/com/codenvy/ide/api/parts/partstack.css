@@ -309,6 +309,7 @@
     width: 100%;
     line-height: 26px;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .ide-Base-Part-Toolbar-Separator {
