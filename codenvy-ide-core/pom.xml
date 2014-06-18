@@ -347,6 +347,12 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.jpg</exclude>
+                        <exclude>**/readableNames</exclude>
+                        <exclude>**/project</exclude>
                         <exclude>**/ide/Resources.java</exclude>
                         <exclude>**/ide/common/Constants.java</exclude>
                         <exclude>**/ide/dto/DocOp.java</exclude>

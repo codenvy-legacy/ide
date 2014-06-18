@@ -163,6 +163,10 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <configuration>
                         <excludes>
+                            <exclude>**/*.svg</exclude>
+                            <exclude>**/*.png</exclude>
+                            <exclude>**/*.gif</exclude>
+                            <exclude>**/*.jpg</exclude>
                             <exclude>**/ide/text/TextSelection.java</exclude>
                             <exclude>**/ide/text/TextSelectionImpl.java</exclude>
                             <exclude>**/ide/text/TypedPosition.java</exclude>

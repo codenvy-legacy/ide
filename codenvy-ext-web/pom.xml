@@ -98,6 +98,8 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
                         <exclude>**/com/codenvy/ide/ext/web/css/editor/CompletionType.java</exclude>
                         <exclude>**/com/codenvy/ide/ext/web/css/editor/CssCompletionQuery.java</exclude>
                         <exclude>**/com/codenvy/ide/ext/web/css/editor/CssPartialParser.java</exclude>

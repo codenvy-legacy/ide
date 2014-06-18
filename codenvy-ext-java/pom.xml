@@ -290,8 +290,17 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.rscjson</exclude>
+                        <exclude>**/*.zip</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.jpg</exclude>
+                        <exclude>**/*.rsc</exclude>
+                        <exclude>**/readableNames</exclude>
+                        <exclude>**/project</exclude>
                         <exclude>**/ext/java/client/editor/JavaAnnotation.java</exclude>
-                        <!--<exclude>**/ext/java/client/core/**/*.*</exclude>-->
                         <exclude>**/com/codenvy/ide/ext/java/jdt/codeassistant/api/ContentAssistInvocationContext.java</exclude>
                         <exclude>**/com/codenvy/ide/ext/java/jdt/codeassistant/api/IProblemLocation.java</exclude>
                         <exclude>**/com/codenvy/ide/ext/java/jdt/codeassistant/api/JavaCompletionProposal.java</exclude>

@@ -92,6 +92,10 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.jpg</exclude>
                         <exclude>**/tutorial/wysiwyg/editor/RichTextToolbar.java</exclude>
                     </excludes>
                 </configuration>
