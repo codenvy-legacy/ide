@@ -12,6 +12,7 @@ package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -89,8 +90,6 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
 
         mainPanel = new DockLayoutPanel(PX);
         mainPanel.setWidth(String.valueOf(WIDTH) + "px");
-        mainPanel.setHeight(String.valueOf(HEIGHT) + "px");
-
 
         DoubleClickHandler handler = new DoubleClickHandler() {
             @Override
@@ -131,10 +130,22 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
 
         title = new HTML("<p>" + notification.getMessage() + "</p>");
         title.setStyleName(resources.notificationCss().center());
-        title.setHeight(HEIGHT + "px");
         mainPanel.add(title);
-
         setWidget(mainPanel);
+
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            public void execute() {
+                int offsetHeight = title.getElement().getOffsetHeight();
+
+                if (offsetHeight < HEIGHT) {
+                    offsetHeight = HEIGHT;
+                }
+                String height = String.valueOf(offsetHeight + 5) + "px";
+
+                title.setHeight(height);
+                mainPanel.setHeight(height);
+            }
+        });
     }
     
     private void addMouseHandlers(){
