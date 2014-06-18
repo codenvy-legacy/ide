@@ -7,8 +7,7 @@
  *
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
- ******************************************************************************/
-
+ *******************************************************************************/
 package com.codenvy.ide.extension.maven.server;
 
 import com.codenvy.api.project.server.Project;

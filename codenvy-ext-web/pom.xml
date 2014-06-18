@@ -98,8 +98,15 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/web/css/editor/**/*.*</exclude>
-                        <exclude>**/web/html/editor/**/*.*</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CompletionType.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssCompletionQuery.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssPartialParser.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssState.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssToken.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssTokenFactory.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssTrie.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/html/editor/HtmlState.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/html/editor/HtmlTokenFactory.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

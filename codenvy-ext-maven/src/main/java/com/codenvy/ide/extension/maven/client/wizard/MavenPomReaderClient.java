@@ -7,8 +7,7 @@
  *
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
- ******************************************************************************/
-
+ *******************************************************************************/
 package com.codenvy.ide.extension.maven.client.wizard;
 
 import com.codenvy.ide.rest.AsyncRequestCallback;
