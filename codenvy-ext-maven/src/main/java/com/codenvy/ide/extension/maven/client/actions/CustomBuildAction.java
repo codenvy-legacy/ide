@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.maven.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -32,17 +33,20 @@ public class CustomBuildAction extends Action {
     private final ResourceProvider      resourceProvider;
     private final MavenBuilderPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
+    private BuildContext buildContext;
 
     @Inject
     public CustomBuildAction(MavenBuilderPresenter presenter,
                              MavenResources resources,
                              MavenLocalizationConstant localizationConstant,
-                             ResourceProvider resourceProvider, AnalyticsEventLogger eventLogger) {
+                             ResourceProvider resourceProvider, AnalyticsEventLogger eventLogger,
+                             BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.buildContext = buildContext;
     }
 
     /** {@inheritDoc} */
@@ -65,6 +69,9 @@ public class CustomBuildAction extends Action {
             }
         } else {
             e.getPresentation().setEnabledAndVisible(false);
+        }
+        if (buildContext.isBuilding()) {
+            e.getPresentation().setEnabled(false);
         }
     }
 }

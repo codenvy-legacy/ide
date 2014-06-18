@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -54,9 +55,10 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     NotificationManager notificationManager,
                                     DtoFactory dtoFactory,
                                     EditorAgent editorAgent,
-                                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                    BuildContext buildContext) {
         super(eventBus, workspaceAgent, resourceProvider, console, service, constant, notificationManager, dtoFactory, editorAgent,
-              dtoUnmarshallerFactory, messageBus);
+              dtoUnmarshallerFactory, messageBus, buildContext);
         this.view = view;
         this.view.setDelegate(this);
         this.view.setBuildCommand("clean install");

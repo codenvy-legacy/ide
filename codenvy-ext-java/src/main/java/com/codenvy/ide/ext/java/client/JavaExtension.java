@@ -13,6 +13,7 @@ package com.codenvy.ide.ext.java.client;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -70,6 +71,7 @@ public class JavaExtension {
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
     private JavaParserWorker    parserWorker;
+    private BuildContext buildContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -91,14 +93,16 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
-                         /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not delete!. */
-                         FormatController formatController) {
+                         /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
+                          * delete!. */
+                         FormatController formatController, BuildContext buildContext) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
         this.parserWorker = parserWorker;
+        this.buildContext = buildContext;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -165,7 +169,7 @@ public class JavaExtension {
         // add actions in context menu
         DefaultActionGroup buildContextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextMenuGroup.addSeparator();
-        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger, resources);
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, resourceProvider, eventLogger, resources, buildContext);
         actionManager.registerAction("updateDependency", dependencyAction);
         buildContextMenuGroup.addAction(dependencyAction);
 
@@ -211,12 +215,13 @@ public class JavaExtension {
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
         notificationManager.showNotification(notification);
-
+        buildContext.setBuilding(true);
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
                 notification.setMessage("Dependencies successfully updated ");
                 notification.setStatus(FINISHED);
+                buildContext.setBuilding(false);
                 parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override
@@ -245,6 +250,7 @@ public class JavaExtension {
                 }
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);
+                buildContext.setBuilding(false);
             }
         });
     }

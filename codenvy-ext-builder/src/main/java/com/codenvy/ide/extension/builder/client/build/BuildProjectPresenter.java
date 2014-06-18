@@ -17,6 +17,7 @@ import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -61,12 +62,13 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
 
-    protected final ResourceProvider                         resourceProvider;
-    protected final BuilderConsolePresenter                  console;
-    protected final BuilderServiceClient                     service;
-    protected final BuilderLocalizationConstant              constant;
-    protected final WorkspaceAgent                           workspaceAgent;
-    protected final MessageBus                               messageBus;
+    protected final ResourceProvider            resourceProvider;
+    protected final BuilderConsolePresenter     console;
+    protected final BuilderServiceClient        service;
+    protected final BuilderLocalizationConstant constant;
+    protected final WorkspaceAgent              workspaceAgent;
+    protected final MessageBus                  messageBus;
+    private BuildContext buildContext;
     protected final NotificationManager                      notificationManager;
     protected final DtoFactory                               dtoFactory;
     protected final DtoUnmarshallerFactory                   dtoUnmarshallerFactory;
@@ -93,7 +95,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                     DtoFactory dtoFactory,
                                     EditorAgent editorAgent,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                    MessageBus messageBus) {
+                                    MessageBus messageBus,
+                                    BuildContext buildContext) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
@@ -104,6 +107,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
+        this.buildContext = buildContext;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -179,7 +183,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
-
+        buildContext.setBuilding(true);
         service.build(activeProject.getPath(),
                       buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
@@ -203,6 +207,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
                               console.print(exception.getMessage());
+                              buildContext.setBuilding(false);
                           }
                       }
                      );
@@ -229,6 +234,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         notification.setType(ERROR);
                         notification.setStatus(FINISHED);
                         notification.setMessage(exception.getMessage());
+                        buildContext.setBuilding(false);
                     }
                 };
 
@@ -266,7 +272,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(activeProject.getName()));
-
+                buildContext.setBuilding(false);
                 workspaceAgent.setActivePart(console);
                 break;
             case FAILED:
@@ -276,7 +282,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(constant.buildFailed());
-
+                buildContext.setBuilding(false);
                 workspaceAgent.setActivePart(console);
                 break;
             case CANCELLED:
@@ -286,7 +292,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);
                 notification.setMessage(constant.buildCanceled());
-
+                buildContext.setBuilding(false);
                 workspaceAgent.setActivePart(console);
                 break;
         }

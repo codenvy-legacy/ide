@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.builder.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -31,16 +32,18 @@ public class BuildAction extends Action {
     private final ResourceProvider      resourceProvider;
     private final BuildProjectPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
+    private BuildContext buildContext;
 
     @Inject
     public BuildAction(BuildProjectPresenter presenter, BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant, ResourceProvider resourceProvider,
-                       AnalyticsEventLogger eventLogger) {
+                       AnalyticsEventLogger eventLogger, BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.buildContext = buildContext;
     }
 
     /** {@inheritDoc} */
@@ -53,6 +56,11 @@ public class BuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        if(buildContext.isBuilding()){
+            e.getPresentation().setEnabled(false);
+            e.getPresentation().setVisible(true);
+            return;
+        }
         e.getPresentation().setEnabledAndVisible(resourceProvider.getActiveProject() != null);
     }
 }

@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -25,13 +26,15 @@ public class UpdateDependencyAction extends Action {
     private final JavaExtension        javaExtension;
     private final ResourceProvider     resourceProvider;
     private final AnalyticsEventLogger eventLogger;
+    private BuildContext buildContext;
 
     public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
-                                  AnalyticsEventLogger eventLogger, JavaResources resources) {
+                                  AnalyticsEventLogger eventLogger, JavaResources resources, BuildContext buildContext) {
         super("Update Dependencies", "Update Dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.buildContext = buildContext;
     }
 
     @Override
@@ -44,6 +47,10 @@ public class UpdateDependencyAction extends Action {
     @Override
     public void update(ActionEvent e) {
         Project activeProject = resourceProvider.getActiveProject();
+        if(buildContext.isBuilding()) {
+            e.getPresentation().setEnabled(false);
+            return;
+        }
         if (activeProject != null) {
             final String builder = activeProject.getAttributeValue(Constants.BUILDER_NAME);
             if ("maven".equals(builder)) {
