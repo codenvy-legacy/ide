@@ -113,8 +113,8 @@ public class NotificationItem extends Composite implements Notification.Notifica
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         time.getElement().getStyle().setLineHeight(20, PX);
         mainPanel.addWest(time, 55);
-
-        title = new HTML("<p>" + notification.getMessage() + "</p>");
+      //If notification message is formated HTML - need to display only plain text from it.
+        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
         title.addStyleName(resources.notificationCss().center());
         title.setHeight("20px");
         mainPanel.add(title);
