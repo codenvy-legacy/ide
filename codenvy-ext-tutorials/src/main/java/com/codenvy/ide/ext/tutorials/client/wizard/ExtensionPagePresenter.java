@@ -7,7 +7,7 @@
  *
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
- ******************************************************************************/
+ *******************************************************************************/
 package com.codenvy.ide.ext.tutorials.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;

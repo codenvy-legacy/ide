@@ -10,7 +10,6 @@
       Codenvy, S.A. - initial API and implementation
 
 --%>
-
 <%@ page import="com.codenvy.commons.env.EnvironmentContext" %>
 
 <!DOCTYPE html>

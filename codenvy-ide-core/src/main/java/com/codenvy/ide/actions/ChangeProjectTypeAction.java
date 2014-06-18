@@ -7,8 +7,7 @@
  *
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
- ******************************************************************************/
-
+ *******************************************************************************/
 package com.codenvy.ide.actions;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
