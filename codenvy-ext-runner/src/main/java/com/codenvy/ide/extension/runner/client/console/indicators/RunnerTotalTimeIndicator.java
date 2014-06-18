@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -19,24 +19,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show time when runner started.
+ * Action used to show total time which application was launched.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerTimeoutThresholdAction extends InfoAction {
+public class RunnerTotalTimeIndicator extends IndicatorAction {
     private final RunnerController runnerController;
 
     @Inject
-    public RunnerTimeoutThresholdAction(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Timeout Threshold", false, resources);
+    public RunnerTotalTimeIndicator(RunnerController runnerController, RunnerResources resources) {
+        super("Runner Total Time", false, resources);
         this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
+        final RunnerMetric metric = runnerController.getTotalTime();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

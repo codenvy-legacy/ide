@@ -8,9 +8,8 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.builder.client.console.indicators;
 
-import com.codenvy.api.builder.dto.BuilderMetric;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
@@ -19,29 +18,23 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show build total time.
+ * Action used to show build task status.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildTotalTimeAction extends InfoAction {
+public class BuildStatusIndicator extends IndicatorAction {
     private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public BuildTotalTimeAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Total Time", false, resources);
+    public BuildStatusIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Build Status", false, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final BuilderMetric metric = buildProjectPresenter.getLastBuildRunningTime();
-        if (metric != null) {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
-            presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
-        } else {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
-        }
+        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildStatus());
     }
 }

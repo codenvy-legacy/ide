@@ -183,15 +183,22 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      * @param resource
      *         the resource that need to be updated
      */
-    private void updateItem(@NotNull Resource resource) {
+    private void updateItem(@NotNull final Resource resource) {
         Project project = resource.getProject();
-        Resource oldResource;
         if (resource.getParent().getId().equals(resourceProvider.getRootId())) {
-            oldResource = project;
+            view.updateItem(project, resource);
         } else {
-            oldResource = project.findResourceById(resource.getId());
+            project.findResourceByPath(resource.getPath(), new AsyncCallback<Resource>() {
+                @Override
+                public void onSuccess(Resource result) {
+                    view.updateItem(result, resource);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                }
+            });
         }
-        view.updateItem(oldResource, resource);
     }
 
     /** {@inheritDoc} */

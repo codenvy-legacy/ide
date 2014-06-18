@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
@@ -49,8 +48,6 @@ public abstract class BaseTest {
     protected EventBus                        eventBus;
     @Mock
     protected MessageBus                      messageBus;
-    @Mock
-    protected ConsolePart                     console;
     @Mock
     protected DtoFactory                      dtoFactory;
     @Mock

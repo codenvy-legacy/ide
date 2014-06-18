@@ -37,7 +37,7 @@ import static com.codenvy.ide.ext.java.client.projectmodel.JavaUtils.checkPackag
 
 /**
  * A Java project represents a view of a project resource in terms of Java
- * elements such as package , compilation units.
+ * elements such as package, compilation units.
  * A project may contain several source folders, which contain packages.
  * JavaProject overrides <code>createFolder</code> and <code>createFile</code>,
  * implementations try to create package or compilation unit if it's possible,
@@ -91,22 +91,19 @@ public class JavaProject extends Project {
                             callback.onFailure(exception);
                         }
                     });
-                }
-                // compact 'empty' packages
-                else if (folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) {
+                } else if (folderToRefresh instanceof SourceFolder || folderToRefresh instanceof Package) {
                     Unmarshallable<TreeElement> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(TreeElement.class);
                     projectServiceClient.getTree(root.getPath(), -1, new AsyncRequestCallback<TreeElement>(unmarshaller) {
-                                                     @Override
-                                                     protected void onSuccess(TreeElement result) {
-                                                         addChildren(root, children, Collections.<ProjectDescriptor>createArray(),
-                                                                     result.getChildren(), callback);
-                                                     }
+                        @Override
+                        protected void onSuccess(TreeElement result) {
+                            addChildren(root, children, Collections.<ProjectDescriptor>createArray(), result.getChildren(), callback);
+                        }
 
-                                                     @Override
-                                                     protected void onFailure(Throwable exception) {
-                                                         callback.onFailure(exception);
-                                                     }
-                                                 });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            callback.onFailure(exception);
+                        }
+                    });
                 } else {
                     addChildren(root, children, Collections.<ProjectDescriptor>createArray(),
                                 java.util.Collections.<TreeElement>emptyList(), callback);
@@ -129,6 +126,60 @@ public class JavaProject extends Project {
     }
 
     /**
+     * Recursively looks for the {@link Resource}.
+     *
+     * @param rootFolder
+     *         root folder
+     * @param path
+     *         resource's path to find (e.g. /project/folder/file)
+     * @param callback
+     *         callback
+     */
+    public void findResourceByPath(Folder rootFolder, final String path, final AsyncCallback<Resource> callback) {
+        // Avoid redundant requests. Use cached project structure.
+        if (!rootFolder.getChildren().isEmpty()) {
+            for (Resource child : rootFolder.getChildren().asIterable()) {
+                if (path.equals(child.getPath())) {
+                    callback.onSuccess(child);
+                    return;
+                } else if (path.startsWith(child.getPath().endsWith("/") ? child.getPath() : child.getPath() + "/")) {
+                    // we're on the right way
+                    findResourceByPath((Folder)child, path, callback);
+                    return;
+                } else if (child instanceof Package && child.getName().contains(".")) {
+                    // this is 'compact' package
+                    if (child.getPath().startsWith(path)) {
+                        Package p = new Package();
+                        p.setProject(JavaProject.this);
+                        p.setParent(child.getParent());
+                        final String name = path.substring(child.getParent().getPath().length() + 1).replace('/', '.');
+                        p.setName(name);
+                        callback.onSuccess(p);
+                        return;
+                    }
+                }
+            }
+            callback.onFailure(new Exception("Resource not found"));
+        } else {
+            refreshChildren(rootFolder, new AsyncCallback<Folder>() {
+                @Override
+                public void onSuccess(Folder result) {
+                    if (result.getChildren().isEmpty()) {
+                        callback.onFailure(new Exception("Resource not found"));
+                    } else {
+                        findResourceByPath(result, path, callback);
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    callback.onFailure(caught);
+                }
+            });
+        }
+    }
+
+    /**
      * Create new Java package.
      * This method checks package name, and if name is not valid then calls
      * <code>onFailure</code> callback method with JavaModelException.
@@ -145,18 +196,19 @@ public class JavaProject extends Project {
             checkPackageName(name);
 
             final Folder checkedParent = checkParent(parent);
-            Folder foundParent = findFolderParent(checkedParent, name);
-            final Folder folderParent = foundParent == null ? checkedParent : foundParent;
+//            Folder foundParent = findFolderParent(checkedParent, name);
+//            final Folder folderParent = foundParent == null ? checkedParent : foundParent;
+            final Folder folderParent = checkedParent;
 
             projectServiceClient.createFolder(parent.getPath() + '/' + name.replace('.', '/'), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     final Package pack = new Package();
                     pack.setName(name);
-
                     pack.setParent(checkedParent);
                     pack.setProject(JavaProject.this);
                     checkedParent.addChild(pack);
+
                     // refresh tree, cause additional hierarchy folders may have been created
                     refreshChildren(folderParent, new AsyncCallback<Folder>() {
                         @Override
@@ -214,7 +266,7 @@ public class JavaProject extends Project {
                     newCU.setProject(JavaProject.this);
                     checkedParent.addChild(newCU);
                     // refresh tree, cause additional hierarchy folders my have been created
-                    refreshChildren(checkedParent, new AsyncCallback<Folder>() {
+                    refreshChildren(checkedParent.getParent(), new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
                             eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
@@ -352,10 +404,13 @@ public class JavaProject extends Project {
     }
 
     /**
-     * Check is parent instance of Package or Source folder.
+     * Checks that given <code>parent</code> is instance of {@link Package} or {@link SourceFolder}.
      *
      * @param parent
+     *         folder to check
+     * @return given folder as instance of {@link Package} or {@link SourceFolder}
      * @throws JavaModelException
+     *         if the specified folder isn't {@link Package} or {@link SourceFolder}
      */
     protected Folder checkParent(Folder parent) throws JavaModelException {
         if (!(parent instanceof Package) && !(parent instanceof SourceFolder)) {
@@ -366,6 +421,7 @@ public class JavaProject extends Project {
                     String id = parent.getId();
                     String name = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
                     name = (name.startsWith("/")) ? name.replaceFirst("/", "").replaceAll("/", ".") : name.replaceAll("/", ".");
+
                     parent = new Package();
                     parent.setId(id);
                     parent.setName(name);

@@ -8,33 +8,33 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.builder.client.console.indicators;
 
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.builder.client.BuilderResources;
+import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show application URL.
+ * Action used to show artifact download URL.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ApplicationURLAction extends InfoAction {
-    private final RunnerController runnerController;
+public class ArtifactURLIndicator extends IndicatorAction {
+    private final BuildProjectPresenter buildProjectPresenter;
 
     @Inject
-    public ApplicationURLAction(RunnerController runnerController, RunnerResources resources) {
-        super("Application URL", true, resources);
-        this.runnerController = runnerController;
+    public ArtifactURLIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+        super("Artifact URL", true, resources);
+        this.buildProjectPresenter = buildProjectPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildResultURL());
     }
 }

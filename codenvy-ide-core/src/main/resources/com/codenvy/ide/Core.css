@@ -19,6 +19,9 @@ body, td {
     font-size: 13px;
     font-family: mainFontFamily;
     color: mainFontColor;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
     /* We turn off document level scrolling all together for the outer page. */
     overflow: hidden;

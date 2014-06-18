@@ -67,6 +67,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.BREAKPOINT;
 import static com.codenvy.ide.ext.java.jdi.shared.DebuggerEvent.STEP;
@@ -89,7 +90,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     private       DebuggerView                           view;
     private       RunnerController                       runnerController;
     private       DebuggerClientService                  service;
-    private       ConsolePart                            console;
     private       JavaRuntimeLocalizationConstant        constant;
     private       DebuggerInfo                           debuggerInfo;
     private       MessageBus                             messageBus;
@@ -114,7 +114,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     public DebuggerPresenter(DebuggerView view,
                              final DebuggerClientService service,
                              final EventBus eventBus,
-                             final ConsolePart console,
                              final MessageBus messageBus,
                              final JavaRuntimeLocalizationConstant constant,
                              WorkspaceAgent workspaceAgent,
@@ -134,7 +133,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         this.view.setDelegate(this);
         this.view.setTitle(TITLE);
         this.service = service;
-        this.console = console;
         this.messageBus = messageBus;
         this.constant = constant;
         this.workspaceAgent = workspaceAgent;
@@ -575,8 +573,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             @Override
                             public void onSuccess(DebuggerInfo result) {
                                 debuggerInfo = result;
-                                console.print(
-                                        constant.debuggerConnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
+                                Notification notification = new Notification(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort(), INFO);
+                                notificationManager.showNotification(notification);
                                 showDialog(debuggerInfo);
                                 startCheckingEvents();
                             }
@@ -649,7 +647,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         debuggerInfo = null;
         gutterManager.unmarkCurrentBreakpoint();
         gutterManager.removeAllBreakPoints();
-        console.print(constant.debuggerDisconnected(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort()));
+        Notification notification = new Notification(constant.debuggerDisconnected(appDescriptor.getDebugHost()) + ':' + appDescriptor.getDebugPort(), INFO);
+        notificationManager.showNotification(notification);
         appDescriptor = null;
     }
 

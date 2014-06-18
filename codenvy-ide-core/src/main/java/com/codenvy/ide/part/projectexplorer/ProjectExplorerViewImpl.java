@@ -161,7 +161,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader.add(projectVisibilityImage);
 
         projectTitle = new InlineLabel(project.getName());
-        projectTitle.getElement().getStyle().setFloat(Float.LEFT);
         projectHeader.add(projectTitle);
         Document.get().setTitle(locale.projectOpenedTitle(project.getName()));
     }

@@ -8,33 +8,33 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.builder.client.console;
+package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action used to show build task status.
+ * Action used to show application URL.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildStatusAction extends InfoAction {
-    private final BuildProjectPresenter buildProjectPresenter;
+public class ApplicationURLIndicator extends IndicatorAction {
+    private final RunnerController runnerController;
 
     @Inject
-    public BuildStatusAction(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Status", false, resources);
-        this.buildProjectPresenter = buildProjectPresenter;
+    public ApplicationURLIndicator(RunnerController runnerController, RunnerResources resources) {
+        super("Application URL", true, resources);
+        this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildStatus());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppURL());
     }
 }

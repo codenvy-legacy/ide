@@ -18,12 +18,12 @@ import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
-import com.codenvy.ide.extension.builder.client.console.ArtifactURLAction;
-import com.codenvy.ide.extension.builder.client.console.BuildStatusAction;
-import com.codenvy.ide.extension.builder.client.console.BuildFinishedAction;
-import com.codenvy.ide.extension.builder.client.console.BuildStartedAction;
-import com.codenvy.ide.extension.builder.client.console.BuildTimeoutThresholdAction;
-import com.codenvy.ide.extension.builder.client.console.BuildTotalTimeAction;
+import com.codenvy.ide.extension.builder.client.console.indicators.ArtifactURLIndicator;
+import com.codenvy.ide.extension.builder.client.console.indicators.BuildFinishedIndicator;
+import com.codenvy.ide.extension.builder.client.console.indicators.BuildStartedIndicator;
+import com.codenvy.ide.extension.builder.client.console.indicators.BuildStatusIndicator;
+import com.codenvy.ide.extension.builder.client.console.indicators.BuildTimeoutThresholdIndicator;
+import com.codenvy.ide.extension.builder.client.console.indicators.BuildTotalTimeIndicator;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
 import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
@@ -59,12 +59,12 @@ public class BuilderExtension {
                             ActionManager actionManager,
                             BuildAction buildAction,
                             ClearConsoleAction clearConsoleAction,
-                            ArtifactURLAction artifactURLAction,
-                            BuildStartedAction buildStartedAction,
-                            BuildFinishedAction buildFinishedAction,
-                            BuildTotalTimeAction buildTotalTimeAction,
-                            BuildTimeoutThresholdAction buildTimeoutThresholdAction,
-                            BuildStatusAction buildStatusAction,
+                            ArtifactURLIndicator artifactURLIndicator,
+                            BuildStartedIndicator buildStartedIndicator,
+                            BuildFinishedIndicator buildFinishedIndicator,
+                            BuildTotalTimeIndicator buildTotalTimeIndicator,
+                            BuildTimeoutThresholdIndicator buildTimeoutThresholdIndicator,
+                            BuildStatusIndicator buildStatusIndicator,
                             WorkspaceAgent workspaceAgent,
                             BuilderConsolePresenter builderConsolePresenter,
                             @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
@@ -94,21 +94,21 @@ public class BuilderExtension {
         // add Builder console
         workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
 
-        // add toolbar with actions to Builder console
+        // add toolbar with indicators to Builder console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_BUILDER_CONSOLE_TOOLBAR, false, actionManager);
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(artifactURLAction);
+        consoleToolbarActionGroup.add(artifactURLIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildStartedAction);
+        consoleToolbarActionGroup.add(buildStartedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildTimeoutThresholdAction);
+        consoleToolbarActionGroup.add(buildTimeoutThresholdIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildFinishedAction);
+        consoleToolbarActionGroup.add(buildFinishedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildTotalTimeAction);
+        consoleToolbarActionGroup.add(buildTotalTimeIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildStatusAction);
+        consoleToolbarActionGroup.add(buildStatusIndicator);
         builderConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

@@ -17,6 +17,9 @@
         @eval editorBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorBackgroundColor();
         .console {
             background-color: editorBackgroundColor;
+            -moz-user-select: text;
+            -webkit-user-select: text;
+            user-select: text;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">

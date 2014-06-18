@@ -15,6 +15,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.json.client.JSONObject;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents the folder containing {@link Resource}s.
  *
@@ -84,6 +86,7 @@ public class Folder extends Resource {
      * @param id
      * @return resource or null if not found
      */
+    @Nullable
     public Resource findResourceById(String id) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
@@ -107,6 +110,7 @@ public class Folder extends Resource {
      * @param name
      * @return resource or null if not found
      */
+    @Nullable
     public Resource findChildByName(String name) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
@@ -124,6 +128,7 @@ public class Folder extends Resource {
      * @param type
      * @return resource or null if not found
      */
+    @Nullable
     public Resource findResourceByName(String name, String type) {
         for (int i = 0; i < children.size(); i++) {
             Resource child = children.get(i);
