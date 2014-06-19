@@ -135,6 +135,7 @@
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
+@def outputFontFamily 'Droid Sans Mono', monospace;
 
 /*Main Menu*/
 @eval mainMenuBkgColor com.codenvy.ide.api.ui.theme.Style.getMainMenuBkgColor();
@@ -204,4 +205,9 @@
 @eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
 @eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
 @eval delimeterColor com.codenvy.ide.api.ui.theme.Style.getDelimeterColor();
+
+/*Events*/
+@eval outputFontColor com.codenvy.ide.api.ui.theme.Style.getOutputFontColor();
+@eval outputLinkColor com.codenvy.ide.api.ui.theme.Style.getOutputLinkColor();
+
 
