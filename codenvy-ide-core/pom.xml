@@ -347,8 +347,12 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/ide/texteditor/**/*.*</exclude>
-                        <exclude>**/ide/text/store/**/*.*</exclude>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.jpg</exclude>
+                        <exclude>**/readableNames</exclude>
+                        <exclude>**/project</exclude>
                         <exclude>**/ide/Resources.java</exclude>
                         <exclude>**/ide/common/Constants.java</exclude>
                         <exclude>**/ide/dto/DocOp.java</exclude>
@@ -359,6 +363,86 @@
                         <exclude>**/ide/xml/editor/XmlContext.java</exclude>
                         <exclude>**/ide/xml/editor/XmlState.java</exclude>
                         <exclude>**/ide/text/ConfigurableLineTracker.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/Anchor.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/AnchorDeferredDispatcher.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/AnchorList.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/AnchorManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/AnchorType.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/AnchorUtils.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/InsertionPlacementStrategy.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/LineAnchorList.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/anchor/ReadOnlyAnchor.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/util/LineUtils.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/util/PositionUtils.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/DocumentModel.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/DocumentMutatorImpl.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/Line.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/LineFinder.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/LineInfo.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/LineNumberAndColumn.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/Position.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/PositionOutOfBoundsException.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/TaggableLine.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/TextChange.java</exclude>
+                        <exclude>**/com/codenvy/ide/text/store/TextStoreMutator.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/codeassistant/AutocompleteBox.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/codeassistant/AutocompleteUiController.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/codeassistant/SignalEventEssence.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/documentparser/AsyncParser.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/documentparser/DocumentParser.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/documentparser/DocumentParserWorker.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/documentparser/ParseResult.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/gutter/Gutter.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/gutter/GutterView.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/gutter/LeftGutterManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/ActionExecutor.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/ActionShortcut.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/CommonActions.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/DefaultActionExecutor.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/DefaultScheme.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/EventShortcut.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/InputController.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/InputMode.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/InputScheme.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/ReadOnlyScheme.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/RootActionExecutor.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/Shortcut.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/input/StreamShortcut.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/linedimensions/*.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/ot/*.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/parenmatch/ParenMatchHighlighter.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/ChangeTracker.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/ErrorRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/LineNumberRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/LineRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/LineRendererController.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/PreviousAnchorRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/Renderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/RenderTimeExecutor.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/SingleChunkLineRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/renderer/ViewportRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/search/SearchTask.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/CursorView.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/LocalCursorController.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/SelectionLineRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/SelectionManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/SelectionModel.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/selection/ToggleCommentsController.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/syntaxhighlighter/SyntaxHighlighter.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/syntaxhighlighter/SyntaxHighlighterRenderer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/Autoindenter.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/Buffer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/CoordinateMap.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/EditableContentArea.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/EditorActivityManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/ElementManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/FocusManagerImpl.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/MouseHoverManager.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/MouseWheelRedirector.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/Spacer.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/TextActions.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/TextEditorViewImpl.java</exclude>
+                        <exclude>**/com/codenvy/ide/texteditor/ViewportModel.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
