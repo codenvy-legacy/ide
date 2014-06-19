@@ -16,6 +16,10 @@
     <ui:with field='locale' type='com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant'/>
     <ui:with field='coreRes' type='com.codenvy.ide.Resources'/>
     <ui:style>
+        .positionAbs {
+            position: absolute;
+        }
+
         .alignRight {
             float: right;
         }
@@ -113,7 +117,7 @@
                                 <g:Label ui:field="variablesInfo"/>
                             </g:north>
                             <g:center>
-                                <g:ScrollPanel ui:field="variablesPanel" addStyleNames="{coreRes.coreCss.simpleListContainer}"
+                                <g:SimplePanel ui:field="variablesPanel" addStyleNames="{coreRes.coreCss.simpleListContainer}"
                                                debugId="debugger-variablesPanel"/>
                             </g:center>
                         </g:DockLayoutPanel>

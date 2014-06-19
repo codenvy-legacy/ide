@@ -42,7 +42,6 @@ public class BreakpointGutterManager {
     private EditorAgent                  editorAgent;
     private DebuggerManager              debuggerManager;
     private ConsolePart                  console;
-    private DebugLineRenderer            debugLineRenderer;
     private Breakpoint                   currentBreakpoint;
 
     /**
@@ -58,19 +57,6 @@ public class BreakpointGutterManager {
         this.breakpoints = Collections.createStringMap();
         this.debuggerManager = debuggerManager;
         this.console = console;
-
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
-            @Override
-            public void onActivePartChanged(ActivePartChangedEvent event) {
-                PartPresenter activePart = event.getActivePart();
-                if (activePart instanceof CodenvyTextEditor) {
-                    TextEditorPartView view = ((CodenvyTextEditor)activePart).getView();
-                    if (view instanceof TextEditorViewImpl) {
-                        BreakpointGutterManager.this.debugLineRenderer = ((TextEditorViewImpl)view).getDebugLineRenderer();
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -211,7 +197,21 @@ public class BreakpointGutterManager {
 
         renderer.fillOrUpdateLines(oldLineNumber, oldLineNumber);
         renderer.fillOrUpdateLines(lineNumber, lineNumber);
-        debugLineRenderer.showLine(lineNumber);
+        DebugLineRenderer debugLineRenderer = getDebugLineRenderer();
+        if (debugLineRenderer != null)
+            debugLineRenderer.showLine(lineNumber);
+    }
+
+
+    private DebugLineRenderer getDebugLineRenderer() {
+        EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
+        if (activeEditor instanceof CodenvyTextEditor) {
+            TextEditorPartView view = ((CodenvyTextEditor)activeEditor).getView();
+            if (view instanceof TextEditorViewImpl) {
+                return ((TextEditorViewImpl)view).getDebugLineRenderer();
+            }
+        }
+        return null;
     }
 
     /** Unmark current line. */
@@ -221,7 +221,9 @@ public class BreakpointGutterManager {
             LineNumberRenderer r = getRendererForFile(currentBreakpoint.getFile());
             currentBreakpoint = null;
             r.fillOrUpdateLines(oldLineNumber, oldLineNumber);
-            debugLineRenderer.disableLine();
+            DebugLineRenderer debugLineRenderer = getDebugLineRenderer();
+            if (debugLineRenderer != null)
+                debugLineRenderer.disableLine();
         }
     }
 

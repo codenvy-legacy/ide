@@ -553,7 +553,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         variables.clear();
         view.setEnableRemoveAllBreakpointsButton(false);
         view.setEnableDisconnectButton(false);
-        workspaceAgent.hidePart(this);
+        workspaceAgent.removePart(this);
     }
 
     /**
