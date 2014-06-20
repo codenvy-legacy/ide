@@ -13,8 +13,7 @@ package com.codenvy.ide.workspace;
 /**
  * This interface give ability part stack manipulate visibility an size in container.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public interface WorkBenchPartController {
 

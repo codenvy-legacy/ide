@@ -23,15 +23,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-
 /**
- * Root Presenter that implements Workspace logic. Descendant Presenters are injected via constructor and exposed to
- * corresponding UI
- * containers. It contains Menu, Toolbar and WorkBench Presenter to expose their views into corresponding places and to
- * maintain their
- * interactions.
+ * Root Presenter that implements Workspace logic. Descendant Presenters are injected
+ * via constructor and exposed to corresponding UI containers. It contains Menu,
+ * Toolbar and WorkBench Presenter to expose their views into corresponding places and to
+ * maintain their interactions.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
@@ -41,7 +39,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     private       WorkBenchPresenter workBenchPresenter;
 
     /**
-     * Instantiates Presenter
+     * Instantiates Presenter.
      *
      * @param view
      * @param menu
@@ -64,7 +62,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        // Expose Project Explorer into Tools Panel
         menu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
         workBenchPresenter.go(view.getPerspectivePanel());

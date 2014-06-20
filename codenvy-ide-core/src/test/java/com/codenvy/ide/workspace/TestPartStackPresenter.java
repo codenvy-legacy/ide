@@ -100,7 +100,7 @@ public class TestPartStackPresenter {
         PartPresenter part = mock(PartPresenter.class);
         stack.addPart(part);
 
-        assertTrue("shoud contain part", stack.containsPart(part));
+        assertTrue("should contain part", stack.containsPart(part));
     }
 
     @Test

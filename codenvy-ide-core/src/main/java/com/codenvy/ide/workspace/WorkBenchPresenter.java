@@ -12,7 +12,6 @@ package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
@@ -28,19 +27,19 @@ import com.google.inject.Singleton;
 
 
 /**
- * * General-purpose, displaying all the PartStacks in a default manner:
+ * General-purpose, displaying all the PartStacks in a default manner:
  * Navigation at the left side;
  * Tooling at the right side;
  * Information at the bottom of the page;
- * Editors int center.
+ * Editors in the center.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class WorkBenchPresenter implements Presenter {
 
     protected final StringMap<PartStack> partStacks = Collections.createStringMap();
-    private WorkBenchViewImpl view;
+    private WorkBenchViewImpl   view;
 
     /**
      * Instantiates the Perspective
@@ -50,7 +49,6 @@ public class WorkBenchPresenter implements Presenter {
      * @param stackPresenterFactory
      * @param partViewFactory
      * @param outlinePart
-     * @param consolePart
      * @param projectExplorerPart
      * @param notificationManager
      */
@@ -60,7 +58,6 @@ public class WorkBenchPresenter implements Presenter {
                               PartStackPresenterFactory stackPresenterFactory,
                               PartStackViewFactory partViewFactory,
                               OutlinePart outlinePart,
-                              ConsolePart consolePart,
                               ProjectExplorerPart projectExplorerPart,
                               NotificationManager notificationManager) {
         this.view = view;
@@ -84,11 +81,10 @@ public class WorkBenchPresenter implements Presenter {
                 stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
-//        openPart(welcomePart, PartStackType.EDITING);
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
-//        openPart(consolePart, PartStackType.INFORMATION);
         openPart(notificationManager, PartStackType.INFORMATION);
+
         setActivePart(projectExplorerPart);
     }
 
