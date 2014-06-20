@@ -66,11 +66,18 @@ public class MavenBuilder extends Builder {
                                                                                      "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
                                                                                      "    <dependencySet>\n" +
-                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
-                                                                                     "      <unpack>true</unpack>\n" +
-                                                                                     "      <scope>runtime</scope>\n" +
+                                                                                     "      <outputDirectory>/lib</outputDirectory>\n" +
+                                                                                     "      <unpack>false</unpack>\n" +
+                                                                                     "      <useProjectArtifact>false</useProjectArtifact>\n" +
                                                                                      "    </dependencySet>\n" +
                                                                                      "  </dependencySets>\n" +
+                                                                                     "  <files>\n" +
+                                                                                     "    <file>\n" +
+                                                                                     "      <source>${project.build.directory}/${project.build.finalName}.jar</source>\n" +
+                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
+                                                                                     "      <destName>application.jar</destName>\n" +
+                                                                                     "    </file>\n" +
+                                                                                     "  </files>\n" +
                                                                                      "</assembly>\n";
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE = "jar-with-dependencies-assembly-descriptor.xml";
 
