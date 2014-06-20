@@ -119,6 +119,11 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "Wicket App",
                                                 "Simple application that uses Apache Wicket web framework",
                                                 "https://github.com/codenvy-templates/web-wicket-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Groovy App",
+                                                "Simple Groovy web application",
+                                                "https://github.com/codenvy-templates/web-groovy-java-simple.git"));
+
         return list;
     }
 }

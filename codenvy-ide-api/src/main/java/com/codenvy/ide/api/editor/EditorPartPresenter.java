@@ -23,10 +23,8 @@ import javax.validation.constraints.NotNull;
  * <p>
  * An editor is document or input-centric.  Each editor has an input, and only
  * one editor can exist for each editor input within a page.
- * </p>
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public interface EditorPartPresenter extends PartPresenter {
     public interface EditorPartCloseHandler {

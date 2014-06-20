@@ -62,7 +62,6 @@ public abstract class AbstractPartPresenter implements PartPresenter {
      */
     protected void firePropertyChange(final int propId) {
         manager.dispatch(new Dispatcher<PropertyListener>() {
-
             @Override
             public void dispatch(PropertyListener listener) {
                 listener.propertyChanged(AbstractPartPresenter.this, propId);

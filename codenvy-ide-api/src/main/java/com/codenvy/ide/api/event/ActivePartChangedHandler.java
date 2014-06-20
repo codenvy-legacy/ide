@@ -15,7 +15,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handles Active Part Changed Event
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface ActivePartChangedHandler extends EventHandler {
     /**
