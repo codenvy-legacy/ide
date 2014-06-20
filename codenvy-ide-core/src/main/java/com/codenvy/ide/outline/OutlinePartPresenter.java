@@ -26,13 +26,13 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Part presenter for Outline.
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
-    private final OutlinePartView         view;
-    private       TextEditorPartPresenter activePart;
+    private final OutlinePartView   view;
+    private TextEditorPartPresenter activePart;
 
     @Inject
     public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus) {
@@ -88,6 +88,9 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
+        if (event.getActivePart() == null) {
+            view.showNoOutline();
+        }
         if (event.getActivePart() instanceof TextEditorPartPresenter) {
             if (activePart != event.getActivePart()) {
                 activePart = (TextEditorPartPresenter)event.getActivePart();
