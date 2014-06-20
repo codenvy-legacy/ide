@@ -379,4 +379,12 @@ public class Style {
     public static String getMinimizeIconColor() {
         return theme.getMinimizeIconColor();
     }
+    
+    public static String getOutputFontColor() {
+        return theme.getOutputFontColor();
+    }
+    
+    public static String getOutputLinkColor() {
+        return theme.getOutputLinkColor();
+    }
 }

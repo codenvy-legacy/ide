@@ -596,5 +596,14 @@ public interface Theme {
      * @return the color of part minimize button color.
      */
     String getMinimizeIconColor();
-
+    
+    /**
+     * @return the color of the output font.
+     */
+    String getOutputFontColor();
+    
+    /**
+     * @return the color of output link.
+     */
+    String getOutputLinkColor();
 }

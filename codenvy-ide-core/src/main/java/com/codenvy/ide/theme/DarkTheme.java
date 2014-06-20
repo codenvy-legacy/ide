@@ -477,4 +477,13 @@ public class DarkTheme implements Theme {
         return "#dbdbdb";
     }
     
+    @Override
+    public String getOutputFontColor() {
+        return "#e6e6e6";
+    }
+    
+    @Override
+    public String getOutputLinkColor() {
+        return "#61b7ef";
+    }
 }

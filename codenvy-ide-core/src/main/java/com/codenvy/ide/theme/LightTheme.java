@@ -474,4 +474,14 @@ public class LightTheme implements Theme {
     public String getMinimizeIconColor() {
         return "#7b7b7b";
     }
+    
+    @Override
+    public String getOutputFontColor() {
+        return "#e6e6e6";
+    }
+    
+    @Override
+    public String getOutputLinkColor() {
+        return "#61b7ef";
+    }
 }
