@@ -29,7 +29,7 @@ public class BuildFinishedIndicator extends IndicatorAction {
 
     @Inject
     public BuildFinishedIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Finished At", false, resources);
+        super("Build Finished At", false, 300, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 

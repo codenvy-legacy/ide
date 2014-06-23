@@ -26,17 +26,19 @@ public class IndicatorAction extends Action implements CustomComponentAction {
     private String  caption;
     private boolean isURL;
     private BuilderResources resources;
+    private int width;
 
-    public IndicatorAction(String caption, boolean isURL, BuilderResources resources) {
+    public IndicatorAction(String caption, boolean isURL, int width, BuilderResources resources) {
         super();
         this.caption = caption;
         this.isURL = isURL;
         this.resources = resources;
+        this.width = width;
     }
 
     @Override
     public Widget createCustomComponent(Presentation presentation) {
-        return new IndicatorView(caption, isURL, presentation, resources);
+        return new IndicatorView(caption, isURL, width, presentation, resources);
     }
 
     @Override

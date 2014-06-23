@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -87,8 +88,13 @@ public class RenameResourceViewImpl extends Window implements RenameResourceView
 
     /** {@inheritDoc} */
     @Override
-    public void selectText(String value) {
-        newName.setSelectionRange(0, value.length());
+    public void selectText(final String value) {
+        new Timer() {
+            @Override
+            public void run() {
+                newName.setSelectionRange(0, value.length());
+            }
+        }.schedule(100);
     }
 
     /** {@inheritDoc} */

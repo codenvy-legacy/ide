@@ -123,6 +123,14 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "Groovy App",
                                                 "Simple Groovy web application",
                                                 "https://github.com/codenvy-templates/web-groovy-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Clojure App",
+                                                "Sample app using Clojure framework",
+                                                "https://github.com/codenvy-templates/desktop-clojure-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Scala App",
+                                                "Simple app using Scala object-oriented language",
+                                                "https://github.com/codenvy-templates/desktop-scala-java-simple.git"));
 
         return list;
     }
