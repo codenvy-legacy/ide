@@ -129,6 +129,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
+                // TODO: get information about app from runner and adopt UI
             }
 
             @Override
@@ -156,9 +157,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onWindowClosed(WindowActionEvent event) {
-                if (isAnyAppRunning()) {
-                    stopActiveProject();
-                }
             }
         });
     }
