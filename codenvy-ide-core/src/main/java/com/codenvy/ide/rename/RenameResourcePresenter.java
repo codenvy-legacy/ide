@@ -179,7 +179,6 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
         return null;
     }
 
-
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {

@@ -16,7 +16,6 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.model.File;
@@ -61,7 +60,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     private   BreakpointGutterManager breakpointGutterManager;
     private   DtoFactory              dtoFactory;
     private   WorkspaceAgent          workspaceAgent;
-    private   UserInfo                userInfo;
 
     @Inject
     public TextEditorPresenter(Resources resources,
@@ -69,14 +67,12 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                                BreakpointGutterManager breakpointGutterManager,
                                DtoFactory dtoFactory,
                                WorkspaceAgent workspaceAgent,
-                               EventBus eventBus,
-                               UserInfo userInfo) {
+                               EventBus eventBus) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
         this.dtoFactory = dtoFactory;
         this.workspaceAgent = workspaceAgent;
-        this.userInfo = userInfo;
 
         eventBus.addHandler(FileEvent.TYPE, this);
     }
@@ -97,12 +93,10 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                         TextEditorPresenter.this.document = document;
                         AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
                         editor.setDocument(document, annotationModel);
-                        editor.setReadOnly(userInfo.isAnonymous());
                         firePropertyChange(PROP_INPUT);
                         document.addDocumentListener(new DocumentListener() {
                             @Override
                             public void documentAboutToBeChanged(DocumentEvent event) {
-
                             }
 
                             @Override
