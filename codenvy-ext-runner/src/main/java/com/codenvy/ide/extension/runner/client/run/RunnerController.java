@@ -23,6 +23,8 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -141,6 +143,22 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
+            }
+        });
+
+        eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
+            @Override
+            public void onWindowClosing(WindowActionEvent event) {
+                if (isAnyAppRunning()) {
+                    event.setMessage("Your app is currently running and will be stopped.");
+                }
+            }
+
+            @Override
+            public void onWindowClosed(WindowActionEvent event) {
+                if (isAnyAppRunning()) {
+                    stopActiveProject();
+                }
             }
         });
     }
