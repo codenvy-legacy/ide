@@ -29,7 +29,7 @@ public class RunnerTotalTimeIndicator extends IndicatorAction {
 
     @Inject
     public RunnerTotalTimeIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Total Time", false, resources);
+        super("Runner Total Time", false, 170, resources);
         this.runnerController = runnerController;
     }
 

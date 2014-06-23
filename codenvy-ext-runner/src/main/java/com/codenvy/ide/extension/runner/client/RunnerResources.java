@@ -46,6 +46,6 @@ public interface RunnerResources extends ClientBundle {
         String dataLabel();
     }
 
-    @Source({"runner.css"})
+    @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})
     Css runner();
 }

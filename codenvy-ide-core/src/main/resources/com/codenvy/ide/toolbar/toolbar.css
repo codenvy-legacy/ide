@@ -30,11 +30,16 @@
     background-color: tabsPanelBackground;
     border-top: 1px solid tabBorderShadow;
     border-bottom: 1px solid tabBorder;
+	box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);    
 }
 
 .toolbarPanel div {
     text-shadow: 0px 1px 0px buttonTextShadow;
     float: left;
+}
+
+.toolbarPanel a {
+    color: outputLinkColor;
 }
 
 .toolbarPanel .toolbarDelimiter {

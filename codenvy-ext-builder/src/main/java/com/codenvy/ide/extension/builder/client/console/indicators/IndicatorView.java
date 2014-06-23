@@ -31,9 +31,9 @@ public class IndicatorView extends Composite {
     private final Presentation     presentation;
     private       Anchor           dataAnchor;
     private       InlineLabel      dataLabel;
-    private       PropertyListener propertyListener;
+    private PropertyListener   propertyListener;
 
-    public IndicatorView(String caption, boolean isURL, Presentation presentation, BuilderResources resources) {
+    public IndicatorView(String caption, boolean isURL, int width, Presentation presentation, BuilderResources resources) {
         this.isURL = isURL;
         this.presentation = presentation;
 
@@ -52,9 +52,10 @@ public class IndicatorView extends Composite {
         }
         panel.ensureDebugId(caption);
         panel.setStyleName(resources.builder().infoPanel());
+        panel.setWidth(width + "px");
         initWidget(panel);
     }
-
+    
     @Override
     protected void onLoad() {
         super.onLoad();

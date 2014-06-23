@@ -33,7 +33,7 @@ public class IndicatorView extends Composite {
     private       InlineLabel      dataLabel;
     private       PropertyListener propertyListener;
 
-    public IndicatorView(String caption, boolean isURL, Presentation presentation, RunnerResources resources) {
+    public IndicatorView(String caption, boolean isURL, int width, Presentation presentation, RunnerResources resources) {
         this.isURL = isURL;
         this.presentation = presentation;
 
@@ -51,6 +51,7 @@ public class IndicatorView extends Composite {
             panel.add(dataLabel);
         }
         panel.ensureDebugId(caption);
+        panel.setWidth(width + "px");
         panel.setStyleName(resources.runner().infoPanel());
         initWidget(panel);
     }
