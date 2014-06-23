@@ -64,7 +64,6 @@ import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartStack;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
@@ -227,8 +226,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
-
-        bind(UserInfo.class).in(Singleton.class);
     }
 
     /** Configures binding for Editor API */
