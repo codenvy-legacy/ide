@@ -10,7 +10,6 @@
  *******************************************************************************/
 .info-panel {
     display: inline;
-    font-family: outputFontFamily;
     font-size: 11px;
     padding-top: 2px;
     padding-left: 10px;
