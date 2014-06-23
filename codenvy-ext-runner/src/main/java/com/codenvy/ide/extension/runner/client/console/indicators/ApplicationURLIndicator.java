@@ -28,7 +28,7 @@ public class ApplicationURLIndicator extends IndicatorAction {
 
     @Inject
     public ApplicationURLIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Application URL", true, resources);
+        super("Application URL", true, 190, resources);
         this.runnerController = runnerController;
     }
 

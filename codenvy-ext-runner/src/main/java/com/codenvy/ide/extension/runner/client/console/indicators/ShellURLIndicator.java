@@ -28,7 +28,7 @@ public class ShellURLIndicator extends IndicatorAction {
 
     @Inject
     public ShellURLIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Shell URL", true, resources);
+        super("Shell URL", true, 190, resources);
         this.runnerController = runnerController;
     }
 

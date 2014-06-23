@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -50,6 +51,10 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("builder-console-minimizeButton");
+        
+        // this hack used for adding box shadow effect to toolbar
+        toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
+        toolbarPanel.getElement().getParentElement().getStyle().setZIndex(1);
     }
 
     /** {@inheritDoc} */
