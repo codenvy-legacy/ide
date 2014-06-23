@@ -23,7 +23,6 @@ import com.codenvy.api.builder.internal.DependencyCollector;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.util.CommandLine;
 import com.codenvy.api.core.util.CustomPortService;
-import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.ide.ant.tools.AntBuildListener;
 import com.codenvy.ide.ant.tools.AntMessage;
@@ -47,7 +46,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -76,7 +74,7 @@ public class AntBuilder extends Builder {
     private static final String BUILD_LISTENER_CLASS_PATH;
     private static final String LINE_SEPARATOR                     = System.getProperty("line.separator");
     private static final String CLASSPATH_SEPARATOR                = System.getProperty("path.separator");
-    private static final String DEFAULT_JAR_WITH_DEPENDENCIES_NAME = "jar-with-dependencies.jar";
+    private static final String DEFAULT_JAR_WITH_DEPENDENCIES_NAME = "jar-with-dependencies.zip";
 
     private static interface AntEventFilter {
         boolean accept(AntEvent event);
@@ -188,25 +186,50 @@ public class AntBuilder extends Builder {
                     result.getResults().clear();
                     // Get all needed dependencies from classpath. Do that only for jar files. We need to have single jar that contains all
                     // dependencies of project otherwise we won't be able to run application on runner side.
-                    final Set<java.io.File> classpath = new LinkedHashSet<>();
-                    for (AntEvent event : server.receiver.events) {
-                        if (event.isPack()) {
-                            classpath.add(event.getPack());
-                        } else if (event.isClasspath()) {
-                            Collections.addAll(classpath, event.getClasspath());
-                        }
-                    }
-                    java.io.File jarWithDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
+                    java.io.File withDependencies = new java.io.File(workDir, DEFAULT_JAR_WITH_DEPENDENCIES_NAME);
+                    final FileFilter filter = newSystemFileFilter();
+                    final UniqueNameChecker uniqueNameChecker = new UniqueNameChecker();
                     try {
-                        ZipUtils.mergeArchives(jarWithDependencies, workDir, classpath.toArray(new java.io.File[classpath.size()]));
+                        FileOutputStream fOut = null;
+                        ZipOutputStream zipOut = null;
+                        try {
+                            fOut = new FileOutputStream(withDependencies);
+                            zipOut = new ZipOutputStream(fOut);
+
+                            for (AntEvent event : server.receiver.events) {
+                                if (event.isPack()) {
+                                    zipOut.putNextEntry(new ZipEntry("application.jar"));
+                                    Files.copy(event.getPack().toPath(), zipOut);
+                                    zipOut.closeEntry();
+                                }
+                                if (event.isClasspath()) {
+                                    for (java.io.File item : event.getClasspath()) {
+                                        if (!item.isFile()) {
+                                            continue;
+                                        }
+                                        if (item.exists() && filter.accept(item)) {
+                                            zipOut.putNextEntry(new ZipEntry("lib/" + uniqueNameChecker.maybeAddIndex(item.getName())));
+                                            Files.copy(item.toPath(), zipOut);
+                                            zipOut.closeEntry();
+                                        }
+                                    }
+                                }
+                            }
+                        } finally {
+                            if (zipOut != null) {
+                                zipOut.close();
+                            }
+                            if (fOut != null) {
+                                fOut.close();
+                            }
+                        }
                     } catch (IOException e) {
-                        throw new BuilderException("It is not possible to create jar with dependencies", e);
+                        throw new BuilderException(e);
                     }
-                    result.getResults().add(jarWithDependencies);
+                    result.getResults().add(withDependencies);
                 }
                 return result;
-            } else if (config.getTaskType() == BuilderTaskType.LIST_DEPS
-                       || config.getTaskType() == BuilderTaskType.COPY_DEPS) {
+            } else if (config.getTaskType() == BuilderTaskType.LIST_DEPS || config.getTaskType() == BuilderTaskType.COPY_DEPS) {
                 // Status may be unsuccessful we are not care about it, we just need to get classpath.
                 final BuildResult result = new BuildResult(true);
                 final Set<java.io.File> classpath = new LinkedHashSet<>();
@@ -368,18 +391,10 @@ public class AntBuilder extends Builder {
             }
         } finally {
             if (zipOut != null) {
-                try {
-                    zipOut.close();
-                } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
-                }
+                zipOut.close();
             }
             if (fOut != null) {
-                try {
-                    fOut.close();
-                } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
-                }
+                fOut.close();
             }
         }
     }
