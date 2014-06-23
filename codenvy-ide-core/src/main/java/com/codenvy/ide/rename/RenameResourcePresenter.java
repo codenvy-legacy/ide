@@ -94,12 +94,12 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                 }
             });
         } else {
-            // rename project's child resource
+            // rename opened project or its child resource
             activeProject.rename(resource, newName, new AsyncCallback<Resource>() {
                 @Override
                 public void onSuccess(Resource result) {
                     if (result instanceof File) {
-                        //Change renamed file for all opened editors:
+                        // change renamed file for all opened editors
                         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
                             if (editor.getEditorInput().getFile().getId().equals(resource.getId())) {
                                 editor.getEditorInput().setFile((File)result);
@@ -108,15 +108,15 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                             }
                         }
                     } else if (result instanceof Folder) {
-                        //Check whether opened file's parent was renamed, then change file in editor, because
-                        //rename changes the id of the file too.
+                        // Check whether opened file's parent was renamed, then change file in editor,
+                        // because rename changes the path of the file too.
                         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                            //Find parent of the opened file by it's old id:
+                            // find parent of the opened file by its old id
                             Folder parent = getParentById(resource.getId(), editor.getEditorInput().getFile());
                             if (parent != null) {
-                                //New path of the file:
+                                // new path of the file
                                 String path = editor.getEditorInput().getFile().getPath().replaceFirst(parent.getPath(), result.getPath());
-                                Resource updatedResource = findResourceByPath((Folder)result, path);
+                                Resource updatedResource = findChildByPath((Folder)result, path);
                                 if (updatedResource != null && (updatedResource instanceof File)) {
                                     editor.getEditorInput().setFile((File)updatedResource);
                                 }
@@ -156,7 +156,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     }
 
     /**
-     * Find resource by its path.
+     * Find child resource by its path.
      *
      * @param parent
      *         parent to start search
@@ -164,7 +164,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
      *         path of the resource
      * @return {@link Resource} found resource or <code>null</code>
      */
-    private Resource findResourceByPath(Folder parent, String path) {
+    private Resource findChildByPath(Folder parent, String path) {
         String[] names = path.split("/");
         for (int i = 0; i < names.length; i++) {
             for (Resource child : parent.getChildren().asIterable()) {

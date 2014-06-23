@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
- * Editor Agent manages Editors, it allows to open a new editor with given file, retrieve current active editor and find all the opened
- * editors.
+ * Editor Agent manages Editors, it allows to open a new editor with given file,
+ * retrieve current active editor and find all the opened editors.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface EditorAgent {
     /**

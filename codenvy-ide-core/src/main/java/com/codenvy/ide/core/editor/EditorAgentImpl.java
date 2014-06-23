@@ -48,7 +48,6 @@ import javax.validation.constraints.NotNull;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
-
 /** @author Evgen Vidolob */
 @Singleton
 public class EditorAgentImpl implements EditorAgent {
@@ -174,14 +173,13 @@ public class EditorAgentImpl implements EditorAgent {
         }
         Array<String> keys = openedEditors.getKeys();
         for (int i = 0; i < keys.size(); i++) {
-            String fileId = keys.get(i);
+            final String filePath = keys.get(i);
             // same instance
-            if (openedEditors.get(fileId) == editor) {
-                openedEditors.remove(fileId);
+            if (openedEditors.get(filePath) == editor) {
+                openedEditors.remove(filePath);
                 return;
             }
         }
-
     }
 
     /** {@inheritDoc} */
@@ -201,8 +199,8 @@ public class EditorAgentImpl implements EditorAgent {
         } else {
             doSave(callback);
         }
-
     }
+
     private void doSave(final AsyncCallback callback) {
         final EditorPartPresenter partPresenter = dirtyEditors.get(0);
         partPresenter.doSave(new AsyncCallback<EditorInput>() {
@@ -233,13 +231,7 @@ public class EditorAgentImpl implements EditorAgent {
         return activeEditor;
     }
 
-    /**
-     *
-     */
     final class EditorInputImpl implements EditorInput {
-        /**
-         *
-         */
         private File file;
 
         /** @param file */

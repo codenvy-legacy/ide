@@ -508,7 +508,6 @@ public class Project extends Folder {
                                                    ? (Project)resource : resource.getParent();
                     if (resource instanceof Project && resource.getParent().getId().equals("_root_")) {
                         resource.setName(newName);
-//                        resource.setId(resource.getId());
                     }
 
                     refreshChildren(folderToRefresh, new AsyncCallback<Folder>() {
@@ -540,7 +539,6 @@ public class Project extends Folder {
         }
     }
 
-
     /**
      * @param callback
      *         callback
@@ -548,8 +546,6 @@ public class Project extends Folder {
     public void search(final AsyncCallback<Array<Resource>> callback) {
         callback.onFailure(new Exception("Operation not currently supported"));
     }
-
-    // ====================================================================================================
 
     /**
      * Check if resource belongs to this project
