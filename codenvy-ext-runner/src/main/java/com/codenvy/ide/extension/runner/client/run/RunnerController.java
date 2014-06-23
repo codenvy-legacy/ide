@@ -107,7 +107,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             ShellConsolePresenter shellConsole,
                             RunnerServiceClient service,
                             UpdateServiceClient updateService,
-                            RunnerLocalizationConstant constant,
+                            final RunnerLocalizationConstant constant,
                             NotificationManager notificationManager,
                             DtoFactory dtoFactory,
                             EditorAgent editorAgent,
@@ -150,7 +150,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
                 if (isAnyAppRunning()) {
-                    event.setMessage("Your app is currently running and will be stopped.");
+                    event.setMessage(constant.appWillBeStopped(activeProject.getName()));
                 }
             }
 

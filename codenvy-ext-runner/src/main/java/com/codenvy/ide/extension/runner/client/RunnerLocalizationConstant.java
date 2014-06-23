@@ -121,6 +121,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.promptSaveFiles")
     String messagePromptSaveFiles();
 
+    @Key("appWillBeStopped")
+    String appWillBeStopped(String appName);
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
