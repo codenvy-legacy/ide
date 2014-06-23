@@ -29,7 +29,6 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private RunnerConsoleView view;
     private final ToolbarPresenter consoleToolbar;
 
-    /** Construct empty Part */
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar) {
         this.view = view;

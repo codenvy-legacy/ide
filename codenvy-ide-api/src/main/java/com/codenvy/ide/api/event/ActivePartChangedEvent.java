@@ -13,21 +13,16 @@ package com.codenvy.ide.api.event;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.google.gwt.event.shared.GwtEvent;
 
-
 /**
- * Event that notifies of changed Core Expressions
+ * Event that notifies of changing active PartPresenter
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class ActivePartChangedEvent extends GwtEvent<ActivePartChangedHandler> {
-    public static Type<ActivePartChangedHandler> TYPE = new Type<ActivePartChangedHandler>();
+    public static Type<ActivePartChangedHandler> TYPE = new Type<>();
 
     private final PartPresenter activePart;
 
-    /**
-     * @param expressions
-     *         the map of ID's and current values
-     */
     public ActivePartChangedEvent(PartPresenter activePart) {
         this.activePart = activePart;
     }
