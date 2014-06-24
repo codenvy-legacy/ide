@@ -21,6 +21,9 @@
     <artifactId>codenvy-runner-sdk</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy Runner :: SDK</name>
+    <properties>
+        <org.apache.tomcat.version>7.0.50</org.apache.tomcat.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.commons</groupId>

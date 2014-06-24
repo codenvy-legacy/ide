@@ -14,6 +14,7 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
+import org.apache.maven.model.Resource;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -300,6 +301,20 @@ public class MavenUtils {
                 list.add(build.getSourceDirectory());
             } else if (build.getTestSourceDirectory() != null) {
                 list.add(build.getTestSourceDirectory());
+            }
+        }
+        return list;
+    }
+
+    /** Get source directories. */
+    public static List<String> getResourceDirectories(Model model) {
+        List<String> list = new ArrayList<>();
+        Build build = model.getBuild();
+
+        if (build != null) {
+            if (build.getResources() != null && !build.getResources().isEmpty()) {
+                for (Resource resource : build.getResources())
+                   list.add(resource.getDirectory());
             }
         }
         return list;

@@ -45,8 +45,12 @@ public class JavaRuntimeExtension {
     public static final String DISCONNECT_CHANNEL = "debugger:disconnected:";
 
     @Inject
-    public JavaRuntimeExtension(ActionManager actionManager, DebugAction debugAction, DebuggerManager debuggerManager,
-                                DebuggerPresenter debuggerPresenter, FqnResolverFactory resolverFactory, JavaFqnResolver javaFqnResolver,
+    public JavaRuntimeExtension(ActionManager actionManager,
+                                DebugAction debugAction,
+                                DebuggerManager debuggerManager,
+                                DebuggerPresenter debuggerPresenter,
+                                FqnResolverFactory resolverFactory,
+                                JavaFqnResolver javaFqnResolver,
                                 JavaRuntimeLocalizationConstant localizationConstant,
                                 RunnerLocalizationConstant runnerLocalizationConstants) {
         // register actions

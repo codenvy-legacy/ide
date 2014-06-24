@@ -46,6 +46,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.List;
+
 import static com.codenvy.ide.api.resources.model.ProjectDescription.LANGUAGE_ATTRIBUTE;
 
 /**
@@ -117,8 +119,12 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 Folder rootFolder = getRoot();
-                final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
+                String language = null;
+                if (attr != null && !attr.isEmpty())
+                    language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
+
                 project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
@@ -189,9 +195,14 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         projectServiceClient.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                Log.info(ResourceProviderComponent.class, " :1111: " + result.getName());
                 Folder rootFolder = getRoot();
-                final String language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
+                String language = null;
+                if (attr != null && !attr.isEmpty())
+                  language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
+                Log.info(ResourceProviderComponent.class, " :: " + project.getName());
                 project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());

@@ -30,14 +30,12 @@
     <inherits name='com.codenvy.ide.ext.java.Java'/>
     <inherits name='com.codenvy.ide.extension.builder.Builder'/>
     <inherits name='com.codenvy.ide.extension.runner.Runner'/>
-    <inherits name='com.codenvy.ide.ext.git.Git'/>
-    <inherits name='com.codenvy.ide.ext.ssh.Ssh'/>
-
     <inherits name="com.codenvy.ide.ui.CodenvyUI"/>
 
     <inherits name='com.codenvy.api.Core'/>
     <inherits name='com.codenvy.api.Builder'/>
     <inherits name='com.codenvy.api.Project'/>
+    <inherits name='com.codenvy.api.Workspace'/>
     <inherits name='com.codenvy.api.Runner'/>
     <inherits name='com.codenvy.api.User'/>
     <inherits name='com.codenvy.api.VFS'/>

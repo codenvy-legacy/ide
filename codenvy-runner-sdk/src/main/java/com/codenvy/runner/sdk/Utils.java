@@ -154,9 +154,18 @@ class Utils {
                 throw new IllegalArgumentException(String.format("%s is not a valid Codenvy Extension", zipFile.getName()));
             }
 
-            String gwtModuleName = gwtXmlEntry.getName().replace(java.io.File.separatorChar, '.');
+            String gwtModuleName = gwtXmlEntry.getName();
             gwtModuleName = gwtModuleName.substring(0, gwtModuleName.length() - GwtXmlUtils.GWT_MODULE_XML_SUFFIX.length());
             Model pom = MavenUtils.readModel(zipFile.getInputStream(pomEntry));
+            List<String> sourceDirectories = MavenUtils.getSourceDirectories(pom);
+            sourceDirectories.addAll(MavenUtils.getResourceDirectories(pom));
+            for (String src : sourceDirectories) {
+                if (gwtModuleName.startsWith(src))
+                    gwtModuleName = gwtModuleName.replace(src,"");
+            }
+            gwtModuleName = gwtModuleName.replace(java.io.File.separatorChar, '.');
+            if (gwtModuleName.startsWith("."))
+                gwtModuleName = gwtModuleName.replaceFirst(".","");
             return new ExtensionDescriptor(gwtModuleName, MavenUtils.getGroupId(pom), pom.getArtifactId(), MavenUtils.getVersion(pom));
         } finally {
             zipFile.close();

@@ -45,7 +45,8 @@ public class TutorialsExtension {
                               ActionManager actionManager,
                               ShowTutorialGuideAction showAction,
                               ProjectTypeWizardRegistry wizardRegistry,
-                              NotificationManager notificationManager, Provider<ExtensionPagePresenter> extensionPagePresenter) {
+                              NotificationManager notificationManager,
+                              Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
 
         Map<String, String> icons = new HashMap<>(1);
@@ -59,5 +60,6 @@ public class TutorialsExtension {
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(extensionPagePresenter);
         wizardRegistry.addWizard(Constants.TUTORIAL_ID, wizard);
+        wizardRegistry.addWizard(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID, wizard);
     }
 }
