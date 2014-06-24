@@ -48,6 +48,6 @@ public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistr
         if (!wsPath.exists()) {
             return null;
         }
-        return new LocalFileSystemProvider(vfsId, mountStrategy, eventService, searcherProvider);
+        return new LocalFileSystemProvider(vfsId, mountStrategy, eventService, searcherProvider, this);
     }
 }

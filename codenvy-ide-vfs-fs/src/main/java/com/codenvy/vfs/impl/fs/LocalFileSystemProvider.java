@@ -13,6 +13,7 @@ package com.codenvy.vfs.impl.fs;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
+import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
@@ -39,6 +40,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
     private final SearcherProvider             searcherProvider;
     private final MountPointRef                mountRef;
     private final VirtualFileSystemUserContext userContext;
+    private final VirtualFileSystemRegistry    vfsRegistry;
 
     /**
      * @param workspaceId
@@ -52,8 +54,9 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
     public LocalFileSystemProvider(String workspaceId,
                                    LocalFSMountStrategy mountStrategy,
                                    EventService eventService,
-                                   SearcherProvider searcherProvider) {
-        this(workspaceId, mountStrategy, eventService, searcherProvider, VirtualFileSystemUserContext.newInstance());
+                                   SearcherProvider searcherProvider,
+                                   VirtualFileSystemRegistry vfsRegistry) {
+        this(workspaceId, mountStrategy, eventService, searcherProvider, VirtualFileSystemUserContext.newInstance(), vfsRegistry);
     }
 
 
@@ -70,7 +73,8 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
                                       LocalFSMountStrategy mountStrategy,
                                       EventService eventService,
                                       SearcherProvider searcherProvider,
-                                      VirtualFileSystemUserContext userContext) {
+                                      VirtualFileSystemUserContext userContext,
+                                      VirtualFileSystemRegistry vfsRegistry) {
         super(workspaceId);
         this.workspaceId = workspaceId;
         this.mountStrategy = mountStrategy;
@@ -78,6 +82,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
         this.searcherProvider = searcherProvider;
         this.userContext = userContext;
         this.mountRef = new MountPointRef();
+        this.vfsRegistry = vfsRegistry;
     }
 
     /** Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used first time. */
@@ -87,7 +92,8 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
                                    baseUri == null ? URI.create("") : baseUri,
                                    userContext,
                                    getMountPoint(true),
-                                   searcherProvider);
+                                   searcherProvider,
+                                   vfsRegistry);
     }
 
     @Override
