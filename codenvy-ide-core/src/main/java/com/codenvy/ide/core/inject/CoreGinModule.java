@@ -69,6 +69,7 @@ import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
@@ -235,6 +236,7 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configures binding for Editor API */
     protected void editorAPIconfigure() {
         bind(EditorTypeSelection.class).in(Singleton.class);
+        bind(CodenvyTextEditorFactory.class);
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
         bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
