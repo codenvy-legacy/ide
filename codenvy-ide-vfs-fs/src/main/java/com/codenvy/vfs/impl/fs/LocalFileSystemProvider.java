@@ -92,7 +92,8 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
                                    baseUri == null ? URI.create("") : baseUri,
                                    userContext,
                                    getMountPoint(true),
-                                   searcherProvider, vfsRegistry);
+                                   searcherProvider,
+                                   vfsRegistry);
     }
 
     @Override
