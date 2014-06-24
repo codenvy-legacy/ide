@@ -197,6 +197,24 @@ public class BootstrapController {
         injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "lib/codemirror.css");
     }
 
+    protected void injectOrionScripts() {
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.js").setWindow(ScriptInjector.TOP_WINDOW)
+            .setCallback(new Callback<Void, Exception>() {
+                @Override
+                public void onSuccess(Void result) {
+                    Log.info(BootstrapController.class, "Finished loading CodeMirror scripts.");
+                    loadUserProfile();
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    Log.error(BootstrapController.class, "Unable to inject Orion", e);
+                    initializationFailed("Unable to inject Orion");
+                }
+            }).inject();
+
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.css");
+    }
+
     private static void injectCssLink(final String url) {
         LinkElement link = Document.get().createLinkElement();
         link.setRel("stylesheet");
@@ -216,7 +234,7 @@ public class BootstrapController {
     private void injectCodeMirrorExtensions(final Stack<String> scripts) {
         if (scripts.isEmpty()) {
             Log.info(BootstrapController.class, "Finished loading CodeMirror scripts.");
-            loadUserProfile();
+            injectOrionScripts();
         } else {
             final String script = scripts.pop();
             ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + script)
