@@ -42,6 +42,7 @@ import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.loging.Log;
@@ -57,6 +58,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static com.codenvy.api.runner.ApplicationStatus.NEW;
+import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -97,21 +100,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
-    private   long                                              startTime;
 
     @Inject
     public RunnerController(EventBus eventBus,
-                            WorkspaceAgent workspaceAgent,
+                            final WorkspaceAgent workspaceAgent,
                             ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
-                            ShellConsolePresenter shellConsole,
-                            RunnerServiceClient service,
+                            final ShellConsolePresenter shellConsole,
+                            final RunnerServiceClient service,
                             UpdateServiceClient updateService,
                             final RunnerLocalizationConstant constant,
-                            NotificationManager notificationManager,
+                            final NotificationManager notificationManager,
                             DtoFactory dtoFactory,
                             EditorAgent editorAgent,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                            final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
@@ -128,8 +130,37 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                // TODO: get information about app from runner and adopt UI
+            public void onProjectOpened(final ProjectActionEvent event) {
+                Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
+                        dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
+                service.getRunningProcesses(event.getProject().getPath(),
+                                            new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
+                                                @Override
+                                                protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
+                                                    for (ApplicationProcessDescriptor processDescriptor : result.asIterable()) {
+                                                        if (processDescriptor.getStatus() == NEW ||
+                                                            processDescriptor.getStatus() == RUNNING) {
+                                                            onAppLaunched(processDescriptor);
+                                                            getLogs();
+                                                            // open WebShell console
+                                                            Link shellLink = getLink(lastApplicationDescriptor, "shell url");
+                                                            if (shellLink != null) {
+                                                                workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
+                                                                shellConsole.setUrl(shellLink.getHref());
+                                                            }
+                                                            notificationManager.showNotification(new Notification(
+                                                                    "Application " + event.getProject().getName() + " is running now.",
+                                                                    INFO));
+
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                protected void onFailure(Throwable ignore) {
+                                                }
+                                            });
             }
 
             @Override
@@ -177,7 +208,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Run active project. */
     public void runActiveProject() {
-        //Save the files before running if necessary
+        // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
             runActiveProject(null, false, null);
@@ -267,10 +298,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
-                            lastApplicationDescriptor = result;
-                            isAnyAppRunning = true;
-                            startCheckingStatus(lastApplicationDescriptor);
-                            startCheckingOutput(lastApplicationDescriptor);
+                            onAppLaunched(result);
                         }
 
                         @Override
@@ -335,12 +363,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        this.lastApplicationDescriptor = applicationProcessDescriptor;
+        isAnyAppRunning = true;
+        startCheckingStatus(lastApplicationDescriptor);
+        startCheckingOutput(lastApplicationDescriptor);
+    }
+
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
-                startTime = System.currentTimeMillis();
-
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
@@ -511,7 +544,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (lastApplicationDescriptor == null) {
             return null;
         }
-        RunnerMetric waitingTime = getRunnerMetric("waitingTimeLimit");
+        RunnerMetric waitingTime = getRunnerMetric("waitingTime");
         if (waitingTime != null) {
             lastAppWaitingTimeLimit = waitingTime;
         }
@@ -534,7 +567,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         // if app is running now, count uptime on the client-side
         if (getCurrentAppStartTime() != null) {
-            final long totalTimeMillis = System.currentTimeMillis() - startTime;
+            final long totalTimeMillis = System.currentTimeMillis() - lastApplicationDescriptor.getStartTime();
             int ss = (int)(totalTimeMillis / 1000);
             int mm = 0;
             if (ss >= 60) {
