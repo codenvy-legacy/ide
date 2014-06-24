@@ -57,6 +57,7 @@ import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
+import com.codenvy.ide.texteditor.infopanel.InfoPanel;
 import com.codenvy.ide.texteditor.input.ActionExecutor;
 import com.codenvy.ide.texteditor.input.CommonActions;
 import com.codenvy.ide.texteditor.input.InputController;
@@ -123,6 +124,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     };
     private final Array<Gutter>                     gutters                       = Collections.createArray();
     private final InputController   input;
+    private InfoPanel     info;
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
@@ -163,10 +165,13 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         buffer = Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions, renderTimeExecutor);
         input = new InputController();
-        View view = new View(resources, buffer.getView().getElement(), input.getInputElement());
+        info = new InfoPanel(resources, this);
+
+        View view = new View(resources, buffer.getView().getElement(), input.getInputElement(), info.getView().getElement());
         setView(view);
 
         focusManager = new FocusManagerImpl(buffer, input.getInputElement());
+        info.addFocusListener(focusManager);
 
         Gutter overviewGutter = createGutter(true, Gutter.Position.RIGHT, resources.workspaceEditorCss().leftGutterNotification());
         overviewRuller = new OverviewRuler(overviewGutter, this);
@@ -189,6 +194,10 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         addBoxShadowOnScrollHandler();
         editorFontDimensionsCalculator.addCallback(fontDimensionsChangedCallback);
     }
+
+         public InfoPanel getInfoPanel(){
+             return info;
+         }
 
     /**
      * Hook called on receipt of a <code>EditorDocumentMutator</code>. The event has
@@ -409,6 +418,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         selectionManager = SelectionManager.create(document, textStore, buffer, focusManager, resources);
 
         SelectionModel selection = selectionManager.getSelectionModel();
+        info.addCursorListener(selection);
         viewport = ViewportModel.create(textStore, selection, buffer);
         input.handleDocumentChanged(textStore, selection, viewport);
         renderer = Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
@@ -772,6 +782,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         String lineError();
         
         String imageViewer();
+
+        String withEditorInfo();
     }
 
     /** ClientBundle for the editor. */
@@ -806,17 +818,38 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         final         Css       css;
         final         Resources res;
         private final Element   bufferElement;
+        private Element rootElement;
+        private Element infoPanel;
+        private boolean infoPanelExist = false;
 
-        private View(Resources res, Element bufferElement, Element inputElement) {
-
+        private View(Resources res, Element bufferElement, Element inputElement, Element infoPanel) {
             this.res = res;
             this.bufferElement = bufferElement;
+            this.infoPanel = infoPanel;
             this.css = res.workspaceEditorCss();
 
-            Element rootElement = Elements.createDivElement(css.root());
+            rootElement = Elements.createDivElement(css.root());
             rootElement.appendChild(bufferElement);
             rootElement.appendChild(inputElement);
+//            rootElement.appendChild(infoPanel);
             setElement(rootElement);
+        }
+
+        public void setInfoPanelExist(boolean infoPanelExist) {
+            if(this.infoPanelExist != infoPanelExist){
+                this.infoPanelExist = infoPanelExist;
+                if (infoPanelExist) {
+                    Elements.addClassName(css.withEditorInfo(), rootElement);
+                    rootElement.appendChild(infoPanel);
+                } else {
+                    Elements.removeClassName(css.withEditorInfo(), rootElement);
+                    rootElement.removeChild(infoPanel);
+                }
+            }
+        }
+
+        public boolean isInfoPanelExist() {
+            return infoPanelExist;
         }
 
         private void addGutter(Element gutterElement) {

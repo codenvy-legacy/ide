@@ -25,6 +25,14 @@ import javax.validation.constraints.NotNull;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 public interface EditorInput {
+
+    /**
+     * Returns the content description for this editor input. This content description is used for editors' information panel
+     *
+     * @return the content description for this input
+     */
+    String getFileContentDescription();
+
     /**
      * Returns the image descriptor for this input.
      *
@@ -60,10 +68,10 @@ public interface EditorInput {
      */
     @NotNull
     File getFile();
-    
+
     /**
      * Sets file of this input.
-     * 
+     *
      * @param file
      */
     void setFile(@NotNull File file);

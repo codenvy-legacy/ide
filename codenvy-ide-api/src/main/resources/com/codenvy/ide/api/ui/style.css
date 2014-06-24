@@ -75,6 +75,9 @@
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
 @eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
 @eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
+@eval editorInfoBorderColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderColor();
+@eval editorInfoBorderShadowColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderShadowColor();
+@eval editorInfoBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBackgroundColor();
 
 /* Listbox, TextBox... */
 @eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();

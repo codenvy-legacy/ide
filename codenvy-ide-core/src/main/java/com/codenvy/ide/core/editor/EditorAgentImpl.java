@@ -214,7 +214,7 @@ public class EditorAgentImpl implements EditorAgent {
             @Override
             public void onSuccess(EditorInput result) {
                 dirtyEditors.remove(partPresenter);
-                if(dirtyEditors.isEmpty()) {
+                if (dirtyEditors.isEmpty()) {
                     Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
                     notificationManager.showNotification(notification);
                     callback.onSuccess("Success");
@@ -237,6 +237,11 @@ public class EditorAgentImpl implements EditorAgent {
         /** @param file */
         private EditorInputImpl(File file) {
             this.file = file;
+        }
+
+        @Override
+        public String getFileContentDescription() {
+            return provider.getFileType(file).getСontentDescription();
         }
 
         @Override

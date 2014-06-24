@@ -79,19 +79,19 @@ public class WebExtension {
 
         // Create and register new File types
         // CSS
-        FileType cssFile = new FileType(null, MimeType.TEXT_CSS, "css");
+        FileType cssFile = new FileType("CSS file", null, MimeType.TEXT_CSS, "css");
         resourceProvider.registerFileType(cssFile);
 
         // Also register .less files
-        FileType lessFile = new FileType(null, MimeType.TEXT_CSS, "less");
+        FileType lessFile = new FileType("Leaner CSS file", null, MimeType.TEXT_CSS, "less");
         resourceProvider.registerFileType(lessFile);
 
         // JS
-        FileType jsFile = new FileType(null, MimeType.TEXT_JAVASCRIPT, "js");
+        FileType jsFile = new FileType("javaScript", null, MimeType.TEXT_JAVASCRIPT, "js");
         resourceProvider.registerFileType(jsFile);
 
         // HTML
-        FileType htmlFile = new FileType(null, MimeType.TEXT_HTML, "html");
+        FileType htmlFile = new FileType("HTML file", null, MimeType.TEXT_HTML, "html");
         resourceProvider.registerFileType(htmlFile);
 
         // register Editor Provider
