@@ -104,7 +104,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Inject
     public RunnerController(EventBus eventBus,
                             final WorkspaceAgent workspaceAgent,
-                            ResourceProvider resourceProvider,
+                            final ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
                             final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
@@ -182,7 +182,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
                 if (isAnyAppRunning()) {
-                    event.setMessage(constant.appWillBeStopped(activeProject.getName()));
+                    event.setMessage(constant.appWillBeStopped(resourceProvider.getActiveProject().getName()));
                 }
             }
 
