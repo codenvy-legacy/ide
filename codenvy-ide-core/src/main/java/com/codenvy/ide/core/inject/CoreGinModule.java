@@ -72,6 +72,7 @@ import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
+import com.codenvy.ide.core.editor.EditorTypeSelection;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
@@ -233,6 +234,7 @@ public class CoreGinModule extends AbstractGinModule {
 
     /** Configures binding for Editor API */
     protected void editorAPIconfigure() {
+        bind(EditorTypeSelection.class).in(Singleton.class);
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
         bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
