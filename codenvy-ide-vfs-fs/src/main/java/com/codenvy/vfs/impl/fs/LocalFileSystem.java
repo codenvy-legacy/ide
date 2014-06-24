@@ -11,6 +11,7 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
+import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
@@ -40,8 +41,9 @@ public class LocalFileSystem extends VirtualFileSystemImpl {
                            URI baseUri,
                            VirtualFileSystemUserContext userContext,
                            FSMountPoint mountPoint,
-                           SearcherProvider searcherProvider) {
-        super(vfsId, baseUri, userContext, mountPoint, searcherProvider);
+                           SearcherProvider searcherProvider,
+                           VirtualFileSystemRegistry vfsRegistry) {
+        super(vfsId, baseUri, userContext, mountPoint, searcherProvider, vfsRegistry);
         this.vfsId = vfsId;
         this.baseUri = baseUri;
     }

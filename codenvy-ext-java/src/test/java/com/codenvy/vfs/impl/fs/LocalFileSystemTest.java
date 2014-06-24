@@ -132,7 +132,7 @@ public abstract class LocalFileSystemTest {
         testFsIoRoot = WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
 //        assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(), null);
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(), null, virtualFileSystemRegistry);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         ROOT_ID = mountPoint.getRoot().getId();

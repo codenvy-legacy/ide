@@ -32,7 +32,7 @@ public class LocalFileSystemRegistryPlugin {
                                          EventService eventService,
                                          @Nullable SearcherProvider searcherProvider) throws VirtualFileSystemException {
         for (String id : ids) {
-            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, eventService, searcherProvider));
+            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, eventService, searcherProvider, registry));
         }
     }
 }
