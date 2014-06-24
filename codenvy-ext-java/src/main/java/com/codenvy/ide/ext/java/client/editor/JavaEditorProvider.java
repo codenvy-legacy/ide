@@ -17,13 +17,13 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.jdt.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.texteditor.api.ContentFormatter;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -33,14 +33,14 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class JavaEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private final UserActivityManager         activityManager;
-    private final NotificationManager         notificationManager;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private       JavaParserWorker            worker;
-    private       FileSaveWatcher             watcher;
-    private       AnalyticsEventLogger        eventLogger;
-    private       ContentFormatter            contentFormatter;
+    private final DocumentProvider         documentProvider;
+    private final UserActivityManager      activityManager;
+    private final NotificationManager      notificationManager;
+    private final CodenvyTextEditorFactory editorFactory;
+    private JavaParserWorker               worker;
+    private FileSaveWatcher                watcher;
+    private AnalyticsEventLogger           eventLogger;
+    private ContentFormatter               contentFormatter;
 
     /**
      * @param resources
@@ -49,7 +49,7 @@ public class JavaEditorProvider implements EditorProvider {
     @Inject
     public JavaEditorProvider(Resources resources,
                               UserActivityManager activityManager,
-                              Provider<CodenvyTextEditor> editorProvider,
+                              CodenvyTextEditorFactory editorFactory,
                               DocumentFactory documentFactory,
                               NotificationManager notificationManager,
                               JavaParserWorker worker,
@@ -59,13 +59,14 @@ public class JavaEditorProvider implements EditorProvider {
                               AnalyticsEventLogger eventLogger) {
         super();
         this.activityManager = activityManager;
-        this.editorProvider = editorProvider;
+        this.editorFactory = editorFactory;
         this.worker = worker;
         this.watcher = watcher;
         this.eventLogger = eventLogger;
         this.documentProvider =
-                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
-                                                    eventBus);
+                                new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(),
+                                                                    documentFactory,
+                                                                    eventBus);
         this.notificationManager = notificationManager;
         this.contentFormatter = contentFormatter;
     }
@@ -74,10 +75,11 @@ public class JavaEditorProvider implements EditorProvider {
     @Override
     public EditorPartPresenter getEditor() {
 
-        CodenvyTextEditor textEditor = editorProvider.get();
+        CodenvyTextEditor textEditor = editorFactory.get();
         JavaEditorConfiguration configuration =
-                new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
-                                            worker, contentFormatter, eventLogger);
+                                                new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor,
+                                                                            JavaPartitions.JAVA_PARTITIONING,
+                                                                            worker, contentFormatter, eventLogger);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         watcher.editorOpened(textEditor);

@@ -17,7 +17,6 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 
 /**
@@ -25,14 +24,15 @@ import com.google.inject.Provider;
  * @version $Id:
  */
 public class DefaultEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final TextEditorConfiguration     configuration;
-    private final NotificationManager         notificationManager;
+    private final DocumentProvider         documentProvider;
+    private final CodenvyTextEditorFactory editorProvider;
+    private final TextEditorConfiguration  configuration;
+    private final NotificationManager      notificationManager;
 
     @Inject
-    public DefaultEditorProvider(DocumentProvider documentProvider, Provider<CodenvyTextEditor> editorProvider,
-                                 NotificationManager notificationManager) {
+    public DefaultEditorProvider(final DocumentProvider documentProvider,
+                                 final CodenvyTextEditorFactory editorProvider,
+                                 final NotificationManager notificationManager) {
         super();
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;

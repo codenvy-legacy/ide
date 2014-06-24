@@ -15,36 +15,36 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 
 /**
  * EditorProvider for JavaScript css type
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class XmlEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final NotificationManager         notificationManager;
+    private final DocumentProvider         documentProvider;
+    private final CodenvyTextEditorFactory editorFactory;
+    private final NotificationManager      notificationManager;
 
     /** @param documentProvider */
     @Inject
     public XmlEditorProvider(DocumentProvider documentProvider,
-                             Provider<CodenvyTextEditor> editorProvider,
+                             CodenvyTextEditorFactory editorFactory,
                              NotificationManager notificationManager) {
         super();
         this.documentProvider = documentProvider;
-        this.editorProvider = editorProvider;
+        this.editorFactory = editorFactory;
         this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
-        CodenvyTextEditor textEditor = editorProvider.get();
+        CodenvyTextEditor textEditor = editorFactory.get();
         textEditor.initialize(new XmlEditorConfiguration(), documentProvider, notificationManager);
         return textEditor;
     }
