@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.eclipse;
 
+import com.codenvy.api.project.server.DefaultProjectManager;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
 import com.codenvy.api.project.server.ProjectTypeRegistry;
@@ -50,7 +51,7 @@ public class BaseProjectTest extends LocalFileSystemTest {
         typeRegistry.registerProjectType(new ProjectType("test_type", "test type", "test category"));
         ProjectTypeDescriptionRegistry ptdr = new ProjectTypeDescriptionRegistry(typeRegistry);
         Set<ValueProviderFactory> vpf = Collections.EMPTY_SET;
-        pm = new ProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry, mountPoint.getEventService());
+        pm = new DefaultProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry, mountPoint.getEventService());
         folderPath = createDirectory("/", "project");
         URL testproject = Thread.currentThread().getContextClassLoader().getResource("projects/testproject");
         zipProject = zipFolder(testproject.getFile());
