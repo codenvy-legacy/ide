@@ -30,7 +30,6 @@ import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
@@ -125,7 +124,14 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
+import com.codenvy.ide.texteditor.embeddedimpl.codemirror.CodeMirrorEditorWidgetFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EditorWidgetFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EditorWidgetFactoryImpl;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartView;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartViewImpl;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorViewFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.orion.KeyModeInstances;
+import com.codenvy.ide.texteditor.embeddedimpl.orion.OrionEditorWidgetFactory;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
@@ -236,10 +242,17 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configures binding for Editor API */
     protected void editorAPIconfigure() {
         bind(EditorTypeSelection.class).in(Singleton.class);
+
+        install(new GinFactoryModuleBuilder().build(CodeMirrorEditorWidgetFactory.class));
+        install(new GinFactoryModuleBuilder().build(OrionEditorWidgetFactory.class));
+        bind(EditorWidgetFactory.class).to(EditorWidgetFactoryImpl.class);
+
         bind(CodenvyTextEditorFactory.class);
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
+        install(new GinFactoryModuleBuilder().implement(EmbeddedTextEditorPartView.class, EmbeddedTextEditorPartViewImpl.class)
+                                             .build(EmbeddedTextEditorViewFactory.class));
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
+        bind(KeyModeInstances.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
         bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
@@ -276,7 +289,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
-//        bind(PartStackView.class).to(PartStackViewImpl.class);
+        // bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
@@ -307,7 +320,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("defaultFileType")
     @Singleton
     protected FileType provideDefaultFileType() {
-        //TODO add icon for unknown file
+        // TODO add icon for unknown file
         return new FileType(null, null);
     }
 
