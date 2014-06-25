@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -19,13 +18,9 @@ import com.codenvy.ide.util.loging.Log;
 @Singleton
 public class EditorTypeSelection {
 
-    private EditorType               editorType = EditorType.CLASSIC;
-    private final PreferencesManager preferencesManager;
+    public static final String PREFERENCE_PROPERTY_NAME = "editorType";
 
-    @Inject
-    public EditorTypeSelection(final PreferencesManager preferencesManager) {
-        this.preferencesManager = preferencesManager;
-    }
+    private EditorType         editorType               = EditorType.CLASSIC;
 
     public void setEditorType(final EditorType editorType) {
         if (editorType != null) {
@@ -39,7 +34,16 @@ public class EditorTypeSelection {
         return this.editorType;
     }
 
-    private void loadFromPreferences() {
-
+    public void loadFromPreferences(final PreferencesManager preferencesManager) {
+        final String pref = preferencesManager.getValue(PREFERENCE_PROPERTY_NAME);
+        if (pref != null && !pref.isEmpty()) {
+            try {
+                this.editorType = EditorType.valueOf(EditorType.class, pref);
+                Log.info(EditorTypeSelection.class, "Found editor type preference: " + pref);
+            } catch (final IllegalArgumentException e) {
+                Log.error(EditorTypeSelection.class, "Invalid value for editor type preference: " + pref);
+                // keep the previous value
+            }
+        }
     }
 }

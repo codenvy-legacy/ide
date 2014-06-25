@@ -25,6 +25,7 @@ import com.codenvy.api.workspace.shared.dto.Workspace;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -346,6 +347,7 @@ public class BootstrapController {
                                                      preferencesManager.load(profile.getPreferences());
                                                      setTheme();
                                                      styleInjector.inject();
+                                                     setupEditorImplementation(preferencesManager);
 
                                                      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                                          @Override
@@ -546,6 +548,11 @@ public class BootstrapController {
                                             }
                                         });
         }
+    }
+
+    private void setupEditorImplementation(final PreferencesManager preferencesManager) {
+        // try to load from preferences
+        this.editorTypeSelection.loadFromPreferences(preferencesManager);
     }
 
     private void processStartupAction() {
