@@ -20,16 +20,21 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 /**
  * The implementation of {@link CustomRunView}.
@@ -42,9 +47,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @UiField
-    ListBox  environmentField;
+    ListBox    environmentField;
     @UiField
-    TextArea descriptionField;
+    SuggestBox memoryField;
+    @UiField
+    TextArea   descriptionField;
     Button runButton;
     Button cancelButton;
     @UiField(provided = true)
@@ -61,6 +68,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         this.locale = constant;
         setTitle(constant.runConfigurationViewTitle());
         setWidget(uiBinder.createAndBindUi(this));
+        ensureDebugId("customRun-window");
+
         environmentField.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
@@ -69,7 +78,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
             }
         });
         createButtons();
-        ensureDebugId("customRun-window");
+
+        MultiWordSuggestOracle suggestSizes = (MultiWordSuggestOracle)memoryField.getSuggestOracle();
+        String[] memorySizes = {String.valueOf(32), String.valueOf(64), String.valueOf(128), String.valueOf(256), String.valueOf(512),
+                                String.valueOf(1024)};
+        suggestSizes.addAll(Arrays.asList(memorySizes));
     }
 
     private void createButtons() {
@@ -117,7 +130,23 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void showDialog() {
+        clear();
         this.show();
+    }
+
+    @Override
+    public int getMemorySize() throws NumberFormatException{
+        return Integer.parseInt(memoryField.getValue());
+    }
+
+    @Override
+    public void setEnabledRunButton(boolean enabled) {
+        runButton.setEnabled(enabled);
+    }
+
+    @UiHandler("memoryField")
+    public void onMemorySizeChanged(KeyUpEvent event) {
+        delegate.onValueChanged();
     }
 
     @Override
@@ -128,5 +157,10 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @Override
     protected void onClose() {
         //do nothing
+    }
+
+    private void clear() {
+        memoryField.setValue("");
+        descriptionField.setText("");
     }
 }

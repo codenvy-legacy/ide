@@ -131,4 +131,10 @@ public interface RunnerLocalizationConstant extends Messages {
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();
+
+    @Key("view.runConfiguration.environmentLabel")
+    String runConfigurationViewEnvironmentLabel();
+
+    @Key("view.runConfiguration.memorySizeLabel")
+    String runConfigurationViewMemorySizeLabel();
 }

@@ -309,6 +309,48 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                    );
     }
 
+    /**
+     * Run active project.
+     *
+     * @param runOptions
+     *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
+     */
+    public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback) {
+        if (isAnyAppRunning) {
+            final String message = "Launching of another project is in progress now.";
+            Notification notification = new Notification(message, ERROR);
+            notificationManager.showNotification(notification);
+            return;
+        }
+
+        lastApplicationDescriptor = null;
+        activeProject = resourceProvider.getActiveProject();
+
+        notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
+        notificationManager.showNotification(notification);
+        runCallback = callback;
+
+        service.run(activeProject.getPath(), runOptions,
+                    new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                            dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                        @Override
+                        protected void onSuccess(ApplicationProcessDescriptor result) {
+                            lastApplicationDescriptor = result;
+                            isAnyAppRunning = true;
+                            startCheckingStatus(lastApplicationDescriptor);
+                            startCheckingOutput(lastApplicationDescriptor);
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            onFail(constant.startApplicationFailed(activeProject.getName()), exception);
+                        }
+                    }
+                   );
+    }
+
     private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
