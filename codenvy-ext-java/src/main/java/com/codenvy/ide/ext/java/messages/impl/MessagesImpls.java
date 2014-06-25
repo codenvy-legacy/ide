@@ -8,7 +8,6 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-
 // GENERATED SOURCE. DO NOT EDIT.
 package com.codenvy.ide.ext.java.messages.impl;
 

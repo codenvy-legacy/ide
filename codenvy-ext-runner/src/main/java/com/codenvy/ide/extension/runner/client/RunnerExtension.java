@@ -22,15 +22,14 @@ import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
 import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
-import com.codenvy.ide.extension.runner.client.console.indicators.ApplicationURLIndicator;
 import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
+import com.codenvy.ide.extension.runner.client.console.indicators.ApplicationURLIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerFinishedIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerStartedIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTimeoutThresholdIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTotalTimeIndicator;
-import com.codenvy.ide.extension.runner.client.console.indicators.ShellURLIndicator;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,7 +60,6 @@ public class RunnerExtension {
                            UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
                            ApplicationURLIndicator applicationURLIndicator,
-                           ShellURLIndicator shellURLIndicator,
                            RunnerStartedIndicator runnerStartedIndicator,
                            RunnerTimeoutThresholdIndicator runnerTimeoutThresholdIndicator,
                            RunnerFinishedIndicator runnerFinishedIndicator,
@@ -111,8 +109,6 @@ public class RunnerExtension {
         consoleToolbarActionGroup.add(clearConsoleAction);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(applicationURLIndicator);
-        consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(shellURLIndicator);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerStartedIndicator);
         consoleToolbarActionGroup.addSeparator();

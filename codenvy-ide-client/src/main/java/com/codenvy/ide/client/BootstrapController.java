@@ -35,7 +35,6 @@ import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.theme.Style;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
@@ -86,7 +85,6 @@ public class BootstrapController {
     private final UserProfileServiceClient            userProfileService;
     private final WorkspaceServiceClient              workspaceServiceClient;
     private final PreferencesManagerImpl              preferencesManager;
-    private final UserInfo                            userInfo;
     private final StyleInjector                       styleInjector;
     private final EventBus                            eventBus;
     private final ActionManager                       actionManager;
@@ -100,7 +98,6 @@ public class BootstrapController {
                                UserProfileServiceClient userProfileService,
                                WorkspaceServiceClient workspaceServiceClient,
                                PreferencesManagerImpl preferencesManager,
-                               UserInfo userInfo,
                                StyleInjector styleInjector,
 
                                DtoRegistrar dtoRegistrar,
@@ -122,7 +119,6 @@ public class BootstrapController {
         this.userProfileService = userProfileService;
         this.workspaceServiceClient = workspaceServiceClient;
         this.preferencesManager = preferencesManager;
-        this.userInfo = userInfo;
         this.styleInjector = styleInjector;
         this.eventBus = eventBus;
 
@@ -176,7 +172,6 @@ public class BootstrapController {
                  new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
                      @Override
                      protected void onSuccess(final Profile profile) {
-                         userInfo.setProfile(profile);
                          /**
                           * Profile received, restore preferences and theme
                           */

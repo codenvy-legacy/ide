@@ -30,21 +30,19 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 
-
 /**
  * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
- * It's designed to remove child from DOM, when it is hidden. So keeping DOM as small
- * as possible.
  * <p/>
  * PartStack support "focus" (please don't mix with GWT Widget's Focus feature).
  * Focused PartStack will highlight active Part, notifying user what component is
  * currently active.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
@@ -70,19 +68,25 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;
     private   WorkBenchPartController workBenchPartController;
-
+    /** Container for every new PartPresenter which will be added to this PartStack. */
+    protected AcceptsOneWidget        partViewContainer;
     private Array<Double> partsSize = Collections.createArray();
 
-    /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
     public PartStackPresenter(EventBus eventBus,
                               PartStackEventHandler partStackEventHandler,
-                              @Assisted PartStackView view,
+                              @Assisted final PartStackView view,
                               @Assisted WorkBenchPartController workBenchPartController) {
         this.view = view;
         this.eventBus = eventBus;
         partStackHandler = partStackEventHandler;
         this.workBenchPartController = workBenchPartController;
+        partViewContainer = new AcceptsOneWidget() {
+            @Override
+            public void setWidget(IsWidget w) {
+                view.getContentPanel().add(w);
+            }
+        };
         view.setDelegate(this);
     }
 
@@ -104,7 +108,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
         if (activePart != null) {
-            activePart.go(view.getContentPanel());
+            view.setActiveTab(parts.indexOf(activePart));
         }
     }
 
@@ -131,16 +135,17 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
         partsSize.add(partSize);
-        if (workBenchPartController != null)
+        if (workBenchPartController != null) {
             workBenchPartController.setSize(partSize);
+        }
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();
-        TabItem tabItem =
-                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(), part.getTitleWidget(),
-                                  partsClosable);
+        TabItem tabItem = view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                                            part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
-//        setActivePart(part);
+        part.go(partViewContainer);
+        part.onOpen();
         // request focus
         onRequestFocus();
     }
@@ -170,7 +175,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 //            partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
 //            workBenchPartController.setHidden(true);
 //            activePart = null;
-//            view.setActiveTabButton(-1);
+//            view.setActiveTab(-1);
             return;
         }
 
@@ -178,14 +183,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
         }
         activePart = part;
-        AcceptsOneWidget contentPanel = view.getContentPanel();
 
         if (part == null) {
-            view.setActiveTabButton(-1);
+            view.setActiveTab(-1);
             workBenchPartController.setHidden(true);
         } else {
-            view.setActiveTabButton(parts.indexOf(activePart));
-            activePart.go(contentPanel);
+            view.setActiveTab(parts.indexOf(activePart));
         }
         // request part stack to get the focus
         onRequestFocus();
@@ -195,7 +198,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
             workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
-            activePart.onOpen();
         }
         Log.debug(this.getClass(), "SET ACTIVE PART :: " + activePart.getTitle());
     }
@@ -225,14 +227,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // may cancel close
         if (part.onClose()) {
             int partIndex = parts.indexOf(part);
-            view.removeTabButton(partIndex);
+            view.removeTab(partIndex);
             parts.remove(part);
             partsSize.remove(partIndex);
             part.removePropertyListener(propertyListener);
             if (activePart == part) {
-                view.getContentPanel().setWidget(null);
-                //select another part
-//                setActivePart(parts.isEmpty() ? null : parts.get(0));
                 setActivePart(null);
             }
         }
@@ -252,9 +251,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                     partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
                     workBenchPartController.setHidden(true);
                     activePart = null;
-                    view.setActiveTabButton(-1);
-
-                    //workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+                    view.setActiveTab(-1);
                     return;
                 }
 
@@ -271,10 +268,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         });
     }
-    
+
     /**
      * Returns the list of parts.
-     * 
+     *
      * @return {@link Array} array of parts
      */
     protected Array<PartPresenter> getParts() {

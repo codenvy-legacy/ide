@@ -23,10 +23,13 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -34,10 +37,12 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
+import com.codenvy.ide.extension.runner.client.shell.ShellConsolePresenter;
 import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.loging.Log;
@@ -53,6 +58,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static com.codenvy.api.runner.ApplicationStatus.NEW;
+import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -78,6 +85,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private         MessageBus                 messageBus;
     private         WorkspaceAgent             workspaceAgent;
     private         RunnerConsolePresenter     console;
+    private         ShellConsolePresenter      shellConsole;
     private         RunnerServiceClient        service;
     private         UpdateServiceClient        updateService;
     private         RunnerLocalizationConstant constant;
@@ -92,24 +100,25 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
-    private   long                                              startTime;
 
     @Inject
     public RunnerController(EventBus eventBus,
-                            WorkspaceAgent workspaceAgent,
-                            ResourceProvider resourceProvider,
+                            final WorkspaceAgent workspaceAgent,
+                            final ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
-                            RunnerServiceClient service,
+                            final ShellConsolePresenter shellConsole,
+                            final RunnerServiceClient service,
                             UpdateServiceClient updateService,
-                            RunnerLocalizationConstant constant,
-                            NotificationManager notificationManager,
+                            final RunnerLocalizationConstant constant,
+                            final NotificationManager notificationManager,
                             DtoFactory dtoFactory,
                             EditorAgent editorAgent,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                            final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
+        this.shellConsole = shellConsole;
         this.service = service;
         this.updateService = updateService;
         this.constant = constant;
@@ -121,7 +130,37 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
-            public void onProjectOpened(ProjectActionEvent event) {
+            public void onProjectOpened(final ProjectActionEvent event) {
+                Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
+                        dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
+                service.getRunningProcesses(event.getProject().getPath(),
+                                            new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
+                                                @Override
+                                                protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
+                                                    for (ApplicationProcessDescriptor processDescriptor : result.asIterable()) {
+                                                        if (processDescriptor.getStatus() == NEW ||
+                                                            processDescriptor.getStatus() == RUNNING) {
+                                                            onAppLaunched(processDescriptor);
+                                                            getLogs();
+                                                            // open WebShell console
+                                                            Link shellLink = getLink(lastApplicationDescriptor, "shell url");
+                                                            if (shellLink != null) {
+                                                                workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
+                                                                shellConsole.setUrl(shellLink.getHref());
+                                                            }
+                                                            notificationManager.showNotification(new Notification(
+                                                                    "Application " + event.getProject().getName() + " is running now.",
+                                                                    INFO));
+
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                protected void onFailure(Throwable ignore) {
+                                                }
+                                            });
             }
 
             @Override
@@ -136,6 +175,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
+            }
+        });
+
+        eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
+            @Override
+            public void onWindowClosing(WindowActionEvent event) {
+                if (isAnyAppRunning()) {
+                    event.setMessage(constant.appWillBeStopped(resourceProvider.getActiveProject().getName()));
+                }
+            }
+
+            @Override
+            public void onWindowClosed(WindowActionEvent event) {
             }
         });
     }
@@ -156,7 +208,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Run active project. */
     public void runActiveProject() {
-        //Save the files before running if necessary
+        // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
             runActiveProject(null, false, null);
@@ -246,6 +298,45 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
+                            onAppLaunched(result);
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            onFail(constant.startApplicationFailed(activeProject.getName()), exception);
+                        }
+                    }
+                   );
+    }
+
+    /**
+     * Run active project.
+     *
+     * @param runOptions
+     *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
+     */
+    public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback) {
+        if (isAnyAppRunning) {
+            final String message = "Launching of another project is in progress now.";
+            Notification notification = new Notification(message, ERROR);
+            notificationManager.showNotification(notification);
+            return;
+        }
+
+        lastApplicationDescriptor = null;
+        activeProject = resourceProvider.getActiveProject();
+
+        notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
+        notificationManager.showNotification(notification);
+        runCallback = callback;
+
+        service.run(activeProject.getPath(), runOptions,
+                    new AsyncRequestCallback<ApplicationProcessDescriptor>(
+                            dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
+                        @Override
+                        protected void onSuccess(ApplicationProcessDescriptor result) {
                             lastApplicationDescriptor = result;
                             isAnyAppRunning = true;
                             startCheckingStatus(lastApplicationDescriptor);
@@ -314,17 +405,28 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        this.lastApplicationDescriptor = applicationProcessDescriptor;
+        isAnyAppRunning = true;
+        startCheckingStatus(lastApplicationDescriptor);
+        startCheckingOutput(lastApplicationDescriptor);
+    }
+
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
-                startTime = System.currentTimeMillis();
-
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
+
+                Link shellLink = getLink(lastApplicationDescriptor, "shell url");
+                if (shellLink != null) {
+                    workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
+                    shellConsole.setUrl(shellLink.getHref());
+                }
 
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, activeProject);
@@ -346,6 +448,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
+                workspaceAgent.removePart(shellConsole);
                 break;
             case FAILED:
                 isAnyAppRunning = false;
@@ -357,6 +460,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationFailed(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
+                workspaceAgent.removePart(shellConsole);
                 break;
             case CANCELLED:
                 isAnyAppRunning = false;
@@ -367,6 +471,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationCanceled(activeProject.getName()));
 
                 workspaceAgent.setActivePart(console);
+                workspaceAgent.removePart(shellConsole);
                 break;
         }
     }
@@ -469,19 +574,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Returns URL of the application which is currently running. */
-    @Nullable
-    public String getCurrentAppShellURL() {
-        // don't show shell URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
-            Link link = getLink(lastApplicationDescriptor, "shell url");
-            if (link != null) {
-                return link.getHref();
-            }
-        }
-        return null;
-    }
-
     /** Returns startTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStartTime() {
@@ -494,7 +586,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (lastApplicationDescriptor == null) {
             return null;
         }
-        RunnerMetric waitingTime = getRunnerMetric("waitingTimeLimit");
+        RunnerMetric waitingTime = getRunnerMetric("waitingTime");
         if (waitingTime != null) {
             lastAppWaitingTimeLimit = waitingTime;
         }
@@ -517,7 +609,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         // if app is running now, count uptime on the client-side
         if (getCurrentAppStartTime() != null) {
-            final long totalTimeMillis = System.currentTimeMillis() - startTime;
+            final long totalTimeMillis = System.currentTimeMillis() - lastApplicationDescriptor.getStartTime();
             int ss = (int)(totalTimeMillis / 1000);
             int mm = 0;
             if (ss >= 60) {

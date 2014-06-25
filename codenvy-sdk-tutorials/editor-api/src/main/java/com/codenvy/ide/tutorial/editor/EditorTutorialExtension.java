@@ -48,7 +48,7 @@ public class EditorTutorialExtension {
 
         workspaceAgent.openPart(howToPresenter, EDITING);
 
-        FileType groovyFile = new FileType(resource.groovyFile(), GROOVY_MIME_TYPE, "groovy");
+        FileType groovyFile = new FileType("Groovy", resource.groovyFile(), GROOVY_MIME_TYPE, "groovy");
         resourceProvider.registerFileType(groovyFile);
 
         editorRegistry.register(groovyFile, groovyEditorProvider);

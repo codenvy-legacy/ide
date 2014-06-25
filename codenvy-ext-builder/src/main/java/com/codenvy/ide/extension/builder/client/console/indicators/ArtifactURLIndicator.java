@@ -28,7 +28,7 @@ public class ArtifactURLIndicator extends IndicatorAction {
 
     @Inject
     public ArtifactURLIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Artifact URL", true, resources);
+        super("Artifact URL", true, 190, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 

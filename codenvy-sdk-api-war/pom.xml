@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M19-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-sdk-api-war</artifactId>
     <packaging>war</packaging>
@@ -151,5 +151,14 @@
     </dependencies>
     <build>
         <finalName>api</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <packagingExcludes>WEB-INF/lib/gwt-*.jar</packagingExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

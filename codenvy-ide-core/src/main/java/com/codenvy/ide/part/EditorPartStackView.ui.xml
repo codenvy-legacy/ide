@@ -19,7 +19,7 @@
             <g:FlowPanel ui:field="tabsPanel"/>
         </g:north>
         <g:center>
-            <g:SimpleLayoutPanel ui:field="contentPanel"/>
+            <g:DeckPanel ui:field="contentPanel"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

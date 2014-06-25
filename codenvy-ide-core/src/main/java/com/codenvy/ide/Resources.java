@@ -19,6 +19,7 @@ import com.codenvy.ide.menu.MenuResources;
 import com.codenvy.ide.notification.NotificationResources;
 import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.infopanel.InfoPanel;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
@@ -45,7 +46,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * PartStackUIResources,
  * impleList.Resources
  */
-public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
+public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, InfoPanel.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
                                    MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources, DataGridResources,
                                    CellTableResources {

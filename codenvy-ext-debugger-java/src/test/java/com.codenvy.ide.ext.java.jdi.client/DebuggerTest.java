@@ -168,7 +168,7 @@ public class DebuggerTest extends BaseTest {
         verify(gutterManager).removeAllBreakPoints();
         verify(view).setEnableRemoveAllBreakpointsButton(DISABLE_BUTTON);
         verify(view).setEnableDisconnectButton(DISABLE_BUTTON);
-        verify(workspaceAgent).hidePart(presenter);
+        verify(workspaceAgent).removePart(presenter);
     }
 
     @Test

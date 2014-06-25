@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
+import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
@@ -20,6 +21,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -36,10 +38,11 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
-    private final RunnerController           runnerController;
-    private final RunnerServiceClient        runnerServiceClient;
-    private final CustomRunView              view;
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private final RunnerController    runnerController;
+    private final RunnerServiceClient runnerServiceClient;
+    private final CustomRunView       view;
+    private final DtoFactory          dtoFactory;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final NotificationManager        notificationManager;
     private final ResourceProvider           resourceProvider;
     private final RunnerLocalizationConstant constant;
@@ -49,6 +52,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     protected CustomRunPresenter(RunnerController runnerController,
                                  RunnerServiceClient runnerServiceClient,
                                  CustomRunView view,
+                                 DtoFactory dtoFactory,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                  NotificationManager notificationManager,
                                  ResourceProvider resourceProvider,
@@ -56,6 +60,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.runnerController = runnerController;
         this.runnerServiceClient = runnerServiceClient;
         this.view = view;
+        this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.resourceProvider = resourceProvider;
@@ -65,6 +70,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
+        view.setEnabledRunButton(false);
         runnerServiceClient.getRunners(
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
@@ -100,11 +106,28 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     @Override
     public void onRunClicked() {
         view.close();
-        runnerController.runActiveProject(view.getSelectedEnvironment());
+
+        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+        if (view.getSelectedEnvironment() != null) {
+            runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
+        }
+        runOptions.setMemorySize(view.getMemorySize());
+        runnerController.runActiveProject(runOptions, null);
     }
 
     @Override
     public void onCancelClicked() {
         view.close();
+    }
+
+    @Override
+    public void onValueChanged() {
+        boolean isInteger = true;
+        try {
+            view.getMemorySize();
+        } catch (NumberFormatException e) {
+            isInteger = false;
+        }
+        view.setEnabledRunButton(isInteger);
     }
 }

@@ -304,13 +304,11 @@ class for the document-level scrollbars. */
 }
 
 ::-webkit-scrollbar-track:vertical {
-    border-left: 6px solid transparent;
     border-right: 1px solid transparent;
     background-clip:padding-box;
     background-color: transparent;
 }
 ::-webkit-scrollbar-track:horizontal {
-    border-top: 6px solid transparent;
     border-bottom: 1px solid transparent;
     background-clip:padding-box;
     background-color: transparent;
@@ -350,7 +348,6 @@ class for the document-level scrollbars. */
     background-color: rgba(178,178,178,0.5);
 }
 ::-webkit-scrollbar-thumb:vertical {
-    border-left: 6px solid transparent;
     border-right: 1px solid transparent;
     border-top: 0px solid transparent;
     border-bottom: 0px solid transparent;
@@ -358,7 +355,6 @@ class for the document-level scrollbars. */
 ::-webkit-scrollbar-thumb:horizontal {
     border-left: 0px solid transparent;
     border-right: 0px solid transparent;
-    border-top: 6px solid transparent;
     border-bottom: 1px solid transparent;
 }
 

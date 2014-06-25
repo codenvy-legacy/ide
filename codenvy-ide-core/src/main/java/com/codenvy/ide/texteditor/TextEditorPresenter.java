@@ -1,20 +1,13 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.Resources;
@@ -23,7 +16,6 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.user.UserInfo;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.model.File;
@@ -52,7 +44,7 @@ import javax.validation.constraints.NotNull;
 /** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
-//    private final TextListener textListener = new TextListener() {
+    //    private final TextListener textListener = new TextListener() {
 //
 //        @Override
 //        public void onTextChange(TextChange textChange) {
@@ -68,7 +60,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     private   BreakpointGutterManager breakpointGutterManager;
     private   DtoFactory              dtoFactory;
     private   WorkspaceAgent          workspaceAgent;
-    private   UserInfo                userInfo;
 
     @Inject
     public TextEditorPresenter(Resources resources,
@@ -76,14 +67,12 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                                BreakpointGutterManager breakpointGutterManager,
                                DtoFactory dtoFactory,
                                WorkspaceAgent workspaceAgent,
-                               EventBus eventBus,
-                               UserInfo userInfo) {
+                               EventBus eventBus) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
         this.dtoFactory = dtoFactory;
         this.workspaceAgent = workspaceAgent;
-        this.userInfo = userInfo;
 
         eventBus.addHandler(FileEvent.TYPE, this);
     }
@@ -104,12 +93,12 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                         TextEditorPresenter.this.document = document;
                         AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
                         editor.setDocument(document, annotationModel);
-                        editor.setReadOnly(userInfo.isAnonymous());
+                        editor.getView().setInfoPanelExist(true);
+                        editor.getInfoPanel().createDefaultState(input.getContentDescription(), document.getNumberOfLines());
                         firePropertyChange(PROP_INPUT);
                         document.addDocumentListener(new DocumentListener() {
                             @Override
                             public void documentAboutToBeChanged(DocumentEvent event) {
-
                             }
 
                             @Override
@@ -127,7 +116,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-              updateDirtyState(editor.getUndoManager().undoable());
+                updateDirtyState(editor.getUndoManager().undoable());
             }
         });
     }

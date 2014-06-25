@@ -48,26 +48,26 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(5);
-        list.add(new ProjectTemplateDescription("zip",
+        final List<ProjectTemplateDescription> list = new ArrayList<>();
+        list.add(new ProjectTemplateDescription("git",
                                                 "Java Web App",
                                                 "Simple JSP project",
-                                                "templates/MavenWar.zip"));
+                                                "https://github.com/codenvy-templates/web-jsp-java-basic.git"));
         list.add(new ProjectTemplateDescription("git",
                                                 "Java Spring Application",
                                                 "Simple Spring project that uses Maven build system",
                                                 "https://github.com/codenvy-templates/web-spring-java-simple.git"));
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("git",
                                                 "Maven Jar Project",
-                                                "Simple JAR project that uses Maven build system",
-                                                "templates/MavenJar.zip"));
-        list.add(new ProjectTemplateDescription("zip",
+                                                "Simple Java library that uses Maven build system",
+                                                "https://github.com/codenvy-templates/desktop-jar-java.git"));
+        list.add(new ProjectTemplateDescription("git",
                                                 "Java Console App",
                                                 "Simple Java application that writes 'Hello World!' in a console",
-                                                "templates/MavenConsoleApp.zip"));
+                                                "https://github.com/codenvy-templates/desktop-console-java.git"));
         list.add(new ProjectTemplateDescription("git",
                                                 "Swing GUI App",
-                                                "Simple GUI Application that uses Swing components",
+                                                "Simple GUI application built with Swing components",
                                                 "https://github.com/codenvy-templates/desktop-swing-java-basic.git"));
         list.add(new ProjectTemplateDescription("git",
                                                 "GWT Web App",
@@ -75,20 +75,20 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
                                                 "https://github.com/codenvy-templates/web-gwt-java-simple.git"));
         list.add(new ProjectTemplateDescription("git",
                                                 "Play 1 Web App",
-                                                "Simple Application that uses Play v1 Framework",
+                                                "Simple Application that uses Play v1 framework",
                                                 "https://github.com/codenvy-templates/web-play1-java-simple"));
         list.add(new ProjectTemplateDescription("git",
                                                 "Play 2 Web App",
-                                                "Simple Application that uses Play v2 Framework",
+                                                "Simple Application that uses Play v2 framework",
                                                 "https://github.com/codenvy-templates/web-play2-java-simple"));
         list.add(new ProjectTemplateDescription("git",
                                                 "Grails App",
-                                                "Simple Grails Application",
+                                                "Simple Grails application",
                                                 "https://github.com/codenvy-templates/web-grails-java-simple.git"));
 
         list.add(new ProjectTemplateDescription("git",
-                                                "JSF App",
-                                                "Simple JavaServer Faces Application",
+                                                "JavaServer Faces App",
+                                                "Simple JavaServer Faces application",
                                                 "https://github.com/codenvy-templates/web-jsf-java-simple.git"));
 
         list.add(new ProjectTemplateDescription("git",
@@ -98,18 +98,39 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
 
         list.add(new ProjectTemplateDescription("git",
                                                 "Struts App",
-                                                "Simple Struts Application",
+                                                "Simple application that uses Apache Struts framework",
                                                 "https://github.com/codenvy-templates/web-struts-java-simple.git"));
 
         list.add(new ProjectTemplateDescription("git",
                                                 "Vaadin App",
-                                                "Simple Vaadin Application",
+                                                "Simple Vaadin application",
                                                 "https://github.com/codenvy-templates/web-vaadin-java-simple.git"));
 
         list.add(new ProjectTemplateDescription("git",
                                                 "Android App",
-                                                "Simple Android Application built with Maven",
+                                                "Simple Android Application built with Maven and run natively in Android Emulator",
                                                 "https://github.com/codenvy-templates/mobile-android-java-basic.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Tapestry App",
+                                                "Simple application that uses Apache Tapestry web framework",
+                                                "https://github.com/codenvy-templates/web-tapestry-java-simple.git"));
+
+        list.add(new ProjectTemplateDescription("git",
+                                                "Wicket App",
+                                                "Simple application that uses Apache Wicket web framework",
+                                                "https://github.com/codenvy-templates/web-wicket-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Groovy App",
+                                                "Simple Groovy web application",
+                                                "https://github.com/codenvy-templates/web-groovy-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Clojure App",
+                                                "Sample app using Clojure framework",
+                                                "https://github.com/codenvy-templates/desktop-clojure-java-simple.git"));
+        list.add(new ProjectTemplateDescription("git",
+                                                "Scala App",
+                                                "Simple app using Scala object-oriented language",
+                                                "https://github.com/codenvy-templates/desktop-scala-java-simple.git"));
 
         return list;
     }

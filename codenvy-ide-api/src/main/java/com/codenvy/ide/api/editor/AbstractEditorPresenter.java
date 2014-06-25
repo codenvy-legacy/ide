@@ -18,10 +18,10 @@ import com.google.gwt.user.client.Window;
 import javax.validation.constraints.NotNull;
 
 /**
- * Abstract implementation of {@link EditorPartPresenter} that is intended to be used by subclassing instead of directly implementing an
- * interface.
+ * Abstract implementation of {@link EditorPartPresenter} that is intended
+ * to be used by subclassing instead of directly implementing an interface.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 public abstract class AbstractEditorPresenter extends AbstractPartPresenter implements EditorPartPresenter {
     protected boolean     dirtyState;

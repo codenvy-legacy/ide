@@ -13,8 +13,6 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -31,18 +29,15 @@ import com.google.inject.Inject;
 public class RenameResourceAction extends Action {
 
     private final SelectionAgent          selectionAgent;
-    private final ResourceProvider        resourceProvider;
     private final RenameResourcePresenter presenter;
     private final AnalyticsEventLogger    eventLogger;
 
     @Inject
     public RenameResourceAction(RenameResourcePresenter presenter, SelectionAgent selectionAgent,
-                                ResourceProvider resourceProvider,
                                 CoreLocalizationConstant localization, AnalyticsEventLogger eventLogger, Resources resources) {
         super(localization.renameButton(), "Rename resource", null, resources.rename());
 
         this.selectionAgent = selectionAgent;
-        this.resourceProvider = resourceProvider;
         this.presenter = presenter;
         this.eventLogger = eventLogger;
     }
@@ -59,17 +54,16 @@ public class RenameResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
         Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
-        if (activeProject != null && selection != null) {
-            Resource resource = selection.getFirstElement();
-            e.getPresentation().setEnabled(resource != null);
-        } else if (activeProject == null && selection != null) {
-            Resource resource = selection.getFirstElement();
-            e.getPresentation().setEnabled(resource != null);
-        } else {
+        final boolean isAnySelection = selection != null && selection.getFirstElement() != null;
+
+        // TODO: temporary disable renaming Java packages since we don't have java-refactoring feature
+        if (isAnySelection && "java.package".equals(selection.getFirstElement().getResourceType())) {
             e.getPresentation().setEnabled(false);
+            return;
         }
+
+        e.getPresentation().setEnabled(isAnySelection);
     }
 
 }

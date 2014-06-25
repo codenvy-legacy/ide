@@ -23,14 +23,13 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -38,41 +37,44 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
-
+import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 
 /**
  * PartStack view class. Implements UI that manages Parts organized in a Tab-like widget.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class PartStackViewImpl extends Composite implements PartStackView {
     private final PartStackUIResources resources;
     // DOM Handler
-    private final FocusRequestDOMHandler focusRequstHandler = new FocusRequestDOMHandler();
+    private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
     // list of tabs
-    private final Array<TabButton>       tabs               = Collections.createArray();
+    private final Array<TabButton>       tabButtons                = Collections.createArray();
     private InsertPanel         tabsPanel;
-    private SimplePanel         contentPanel;
+    private DeckPanel           contentPanel;
     private ActionDelegate      delegate;
-    private TabButton           activeTab;
+    private TabButton           activeTabButton;
     private boolean             focused;
-    private HandlerRegistration focusRequstHandlerRegistration;
+    private HandlerRegistration focusRequestHandlerRegistration;
     private TabPosition         tabPosition;
     private int                 top;
     private boolean first = true;
 
     /**
-     * Create View
+     * Create View.
      *
      * @param partStackResources
+     * @param tabPosition
+     * @param tabsPanel
      */
     @Inject
     public PartStackViewImpl(PartStackUIResources partStackResources, @Assisted TabPosition tabPosition, @Assisted InsertPanel tabsPanel) {
         resources = partStackResources;
         this.tabPosition = tabPosition;
-//        parent = new DockLayoutPanel(Style.Unit.PX);
         this.tabsPanel = tabsPanel;
-        contentPanel = new SimplePanel();
+        contentPanel = new DeckPanel();
+        contentPanel.setAnimationEnabled(true);
+
         if (tabPosition == LEFT) {
             top += 4;
             SVGImage svgIcon = new SVGImage(resources.arrow());
@@ -110,35 +112,37 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
         tabItem.ensureDebugId("tabButton-" + title);
         tabsPanel.add(tabItem);
-        tabs.add(tabItem);
+        tabButtons.add(tabItem);
         return tabItem;
     }
 
     /** {@inheritDoc} */
     @Override
-    public AcceptsOneWidget getContentPanel() {
+    public ForIsWidget getContentPanel() {
         return contentPanel;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeTabButton(int index) {
-        if (index < tabs.size()) {
-            TabButton removed = tabs.remove(index);
+    public void removeTab(int index) {
+        if (index < tabButtons.size()) {
+            TabButton removed = tabButtons.remove(index);
             tabsPanel.remove(tabsPanel.getWidgetIndex(removed));
+            contentPanel.remove(contentPanel.getWidget(index));
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setActiveTabButton(int index) {
-        if (activeTab != null) {
-            activeTab.removeStyleName(resources.partStackCss().idePartStackToolTabSelected());
+    public void setActiveTab(int index) {
+        if (activeTabButton != null) {
+            activeTabButton.removeStyleName(resources.partStackCss().idePartStackToolTabSelected());
         }
 
-        if (index >= 0 && index < tabs.size()) {
-            activeTab = tabs.get(index);
-            activeTab.addStyleName(resources.partStackCss().idePartStackToolTabSelected());
+        if (index >= 0 && index < tabButtons.size()) {
+            activeTabButton = tabButtons.get(index);
+            activeTabButton.addStyleName(resources.partStackCss().idePartStackToolTabSelected());
+            contentPanel.showWidget(index);
         }
     }
 
@@ -170,21 +174,21 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** Add MouseDown DOM Handler */
     protected void addFocusRequestHandler() {
-        focusRequstHandlerRegistration = addDomHandler(focusRequstHandler, MouseDownEvent.getType());
+        focusRequestHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
     }
 
     /** Remove MouseDown DOM Handler */
     protected void removeFocusRequestHandler() {
-        if (focusRequstHandlerRegistration != null) {
-            focusRequstHandlerRegistration.removeHandler();
-            focusRequstHandlerRegistration = null;
+        if (focusRequestHandlerRegistration != null) {
+            focusRequestHandlerRegistration.removeHandler();
+            focusRequestHandlerRegistration = null;
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
-        TabButton tabButton = tabs.get(index);
+        TabButton tabButton = tabButtons.get(index);
         tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
         tabButton.updateWidget(widget);
@@ -318,8 +322,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
             }
         }
-
-
     }
 
     /** Notifies delegated handler */
@@ -330,11 +332,5 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 delegate.onRequestFocus();
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void clearContentPanel() {
-        getContentPanel().setWidget(null);
     }
 }

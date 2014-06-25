@@ -150,7 +150,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                callback.onSuccess();
+
+                resourceProvider.getProject(name, new AsyncCallback<Project>() {
+                    @Override
+                    public void onSuccess(Project project) {
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+                });
+
             }
 
             @Override

@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
 import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -33,6 +35,7 @@ import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -48,6 +51,8 @@ public class CustomRunTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
     private CustomRunView      view;
+    @Mock
+    private DtoFactory dtoFactory;
     @InjectMocks
     private CustomRunPresenter presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
@@ -107,11 +112,17 @@ public class CustomRunTest extends BaseTest {
 
     @Test
     public void shouldRunProject() throws Exception {
+        RunOptions runOptions = mock(RunOptions.class);
+        when(view.getMemorySize()).thenReturn(128);
+        when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
+
         presenter.onRunClicked();
 
         verify(view).close();
+        verify(dtoFactory).createDto(eq(RunOptions.class));
         verify(view).getSelectedEnvironment();
-        verify(runnerController).runActiveProject((RunnerEnvironment)anyObject());
+        verify(view).getMemorySize();
+        verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject());
     }
 
     @Test

@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M19-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-api</artifactId>
     <packaging>jar</packaging>
@@ -163,13 +163,34 @@
                     <artifactId>license-maven-plugin</artifactId>
                     <configuration>
                         <excludes>
-                            <exclude>**/ide/texteditor/api/**/*.*</exclude>
+                            <exclude>**/*.svg</exclude>
+                            <exclude>**/*.png</exclude>
+                            <exclude>**/*.gif</exclude>
+                            <exclude>**/*.jpg</exclude>
                             <exclude>**/ide/text/TextSelection.java</exclude>
                             <exclude>**/ide/text/TextSelectionImpl.java</exclude>
                             <exclude>**/ide/text/TypedPosition.java</exclude>
                             <exclude>**/ide/text/annotation/AnnotationModelEvent.java</exclude>
                             <exclude>**/ide/text/rules/**/*.*</exclude>
                             <exclude>**/ide/text/undo/**/*.*</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/AbstractOperation.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/DefaultOperationHistory.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/GlobalUndoContext.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/IContextReplacingOperation.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/IOperationHistory.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/IOperationHistoryListener.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/IUndoableOperation.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/IUndoContext.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/ObjectUndoContext.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/OperationHistoryEvent.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/OperationHistoryFactory.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/OperationStatus.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/historymanager/UndoContext.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/parser/*.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/reconciler/DirtyRegion.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/reconciler/DirtyRegionQueue.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/SelectionModel.java</exclude>
+                            <exclude>**/com/codenvy/ide/texteditor/api/UndoManager.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

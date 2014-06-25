@@ -37,7 +37,6 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,7 +46,6 @@ import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-
 
 /** @author Evgen Vidolob */
 @Singleton
@@ -141,7 +139,7 @@ public class EditorAgentImpl implements EditorAgent {
             EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
             EditorPartPresenter editor = editorProvider.getEditor();
             try {
-                editor.init(new EditorInputImpl(file));
+                editor.init(new EditorInputImpl(fileType, file));
                 editor.addCloseHandler(editorClosed);
             } catch (EditorInitException e) {
                 Log.error(getClass(), e);
@@ -174,14 +172,13 @@ public class EditorAgentImpl implements EditorAgent {
         }
         Array<String> keys = openedEditors.getKeys();
         for (int i = 0; i < keys.size(); i++) {
-            String fileId = keys.get(i);
+            final String filePath = keys.get(i);
             // same instance
-            if (openedEditors.get(fileId) == editor) {
-                openedEditors.remove(fileId);
+            if (openedEditors.get(filePath) == editor) {
+                openedEditors.remove(filePath);
                 return;
             }
         }
-
     }
 
     /** {@inheritDoc} */
@@ -201,8 +198,8 @@ public class EditorAgentImpl implements EditorAgent {
         } else {
             doSave(callback);
         }
-
     }
+
     private void doSave(final AsyncCallback callback) {
         final EditorPartPresenter partPresenter = dirtyEditors.get(0);
         partPresenter.doSave(new AsyncCallback<EditorInput>() {
@@ -216,7 +213,7 @@ public class EditorAgentImpl implements EditorAgent {
             @Override
             public void onSuccess(EditorInput result) {
                 dirtyEditors.remove(partPresenter);
-                if(dirtyEditors.isEmpty()) {
+                if (dirtyEditors.isEmpty()) {
                     Notification notification = new Notification(coreLocalizationConstant.allFilesSaved(), INFO);
                     notificationManager.showNotification(notification);
                     callback.onSuccess("Success");
@@ -233,46 +230,4 @@ public class EditorAgentImpl implements EditorAgent {
         return activeEditor;
     }
 
-    /**
-     *
-     */
-    final class EditorInputImpl implements EditorInput {
-        /**
-         *
-         */
-        private File file;
-
-        /** @param file */
-        private EditorInputImpl(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public String getToolTipText() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getName() {
-            return file.getName();
-        }
-
-        @Override
-        public ImageResource getImageResource() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public File getFile() {
-            return file;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void setFile(File file) {
-            this.file = file;
-        }
-    }
 }

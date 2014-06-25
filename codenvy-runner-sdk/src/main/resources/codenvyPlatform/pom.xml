@@ -261,6 +261,13 @@
                     <verifyFail>Warn</verifyFail>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <failIfMissing>false</failIfMissing>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

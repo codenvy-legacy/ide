@@ -101,17 +101,17 @@ public class DarkTheme implements Theme {
     public String getPartToolbarShadow() {
         return "rgba(50,50,50, 0.75)";
     }
-    
+
     @Override
     public String getPartToolbarSeparatorTopColor() {
         return "#232323";
     }
-    
+
     @Override
     public String getPartToolbarSeparatorBottomColor() {
         return "#878787";
     }
-    
+
     @Override
     public String getMainFontColor() {
         return "#dbdbdb";
@@ -261,7 +261,7 @@ public class DarkTheme implements Theme {
     public String getEditorString2() {
         return "#CC7832";
     }
-    
+
     @Override
     public String getCompletionPopupBackgroundColor() {
         return "#303030";
@@ -271,7 +271,7 @@ public class DarkTheme implements Theme {
     public String getCompletionPopupBorderColor() {
         return "#484848";
     }
-    
+
     @Override
     public String getWindowContentBackground() {
         return "#373737";
@@ -281,7 +281,7 @@ public class DarkTheme implements Theme {
     public String getWindowHeaderBackground() {
         return "#656565";
     }
-    
+
     @Override
     public String getWindowSeparatorColor() {
         return "#818181";
@@ -306,12 +306,12 @@ public class DarkTheme implements Theme {
     public String getCaptionFontColor() {
         return "#888888";
     }
-    
+
     @Override
     public String getFactoryLinkColor() {
         return "#60abe0";
     }
-    
+
     @Override
     public String getConsolePanelColor() {
         return "#313131";
@@ -381,7 +381,7 @@ public class DarkTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(0, 0, 0, 0.5)";
     }
-    
+
     @Override
     public String getTreeIconFileColor() {
         return "#b4b4b4";
@@ -426,22 +426,22 @@ public class DarkTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#ffffff";
     }
-    
+
     @Override
     public String getSocialButtonColor() {
         return "#ffffff";
     }
-    
+
     @Override
     public String getToolbarBackgroundColor() {
         return "#484848";
     }
-    
+
     @Override
     public String getToolbarIconColor() {
         return "#dbdbdb";
     }
-        
+
     @Override
     public String getProgressColor() {
         return "#ffffff";
@@ -451,30 +451,54 @@ public class DarkTheme implements Theme {
     public String getSvgUrlShadow() {
         return "url(#shadowDarkTheme)";
     }
-    
+
     @Override
     public String getSuccessEventColor() {
         return "#7dc878";
     }
-    
+
     @Override
     public String getErrorEventColor() {
         return "#e25252";
     }
-    
+
     @Override
     public String getDelimeterColor() {
         return "#2f2f2f";
     }
-    
+
     @Override
     public String getLinkColor() {
         return "#acacac";
     }
-    
+
     @Override
     public String getMinimizeIconColor() {
         return "#dbdbdb";
     }
-    
+
+    @Override
+    public String getOutputFontColor() {
+        return "#e6e6e6";
+    }
+
+    @Override
+    public String getOutputLinkColor() {
+        return "#61b7ef";
+    }
+
+    @Override
+    public String getEditorInfoBackgroundColor() {
+        return "#313335";
+    }
+
+    @Override
+    public String getEditorInfoBorderColor() {
+        return "#282828";
+    }
+
+    @Override
+    public String getEditorInfoBorderShadowColor() {
+        return "#424242";
+    }
 }

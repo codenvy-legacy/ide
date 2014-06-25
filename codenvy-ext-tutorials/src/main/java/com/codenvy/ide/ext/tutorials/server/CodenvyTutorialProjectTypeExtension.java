@@ -53,53 +53,63 @@ public class CodenvyTutorialProjectTypeExtension implements ProjectTypeExtension
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
         final List<ProjectTemplateDescription> list = new ArrayList<>();
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "NOTIFICATION API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Notification API.",
                                                 baseUrl + "/notification-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "ACTION API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Action API.",
                                                 baseUrl + "/action-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "WIZARD API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Wizard API.",
                                                 baseUrl + "/wizard-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "PART API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Part API.",
                                                 baseUrl + "/parts-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "EDITOR API TUTORIAL",
                                                 "Tutorial that is demonstrating how to use Codenvy Editor API.",
                                                 baseUrl + "/editor-api-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "WYSIWYG EDITOR TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to implement " +
                                                 "WYSIWYG editor.",
                                                 baseUrl + "/wysiwyg-editor-tutorial.zip"));
 
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "GIN TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to use GIN with" +
                                                 " Codenvy API.",
                                                 baseUrl + "/gin-tutorial.zip"));
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "THEME API TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to use Theme " +
                                                 "with Codenvy API.",
                                                 baseUrl + "/theme-api-tutorial.zip"));
-        list.add(new ProjectTemplateDescription("zip",
+        list.add(new ProjectTemplateDescription("Samples",
+                                                "zip",
                                                 "ICON REGISTRY API TUTORIAL",
                                                 "The following tutorial will take you through simple example to learn how to use " +
                                                 "IconRegistry.",
                                                 baseUrl + "/icons-registry-api-tutorial.zip"));
-         list.add(new ProjectTemplateDescription("zip",
+         list.add(new ProjectTemplateDescription("Samples",
+                                                 "zip",
                                                 "SERVER SIDE API TUTORIAL",
                                                 "The following tutorial will take you through a simple example demonstrating registration" + 
                                                 "of a server side component and server-client side communication.",

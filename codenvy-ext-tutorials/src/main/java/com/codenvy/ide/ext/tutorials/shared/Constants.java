@@ -15,9 +15,9 @@ public interface Constants {
     // project type ids
     final String TUTORIAL_ID   = "codenvy_tutorial";
     // project type names
-    final String TUTORIAL_NAME = "Codenvy tutorial";
+    final String TUTORIAL_NAME = "Codenvy Tutorial";
 
-    final String CODENVY_TUTORIAL_CATEGORY    = "Codenvy tutorial";
+    final String CODENVY_TUTORIAL_CATEGORY    = "Codenvy Tutorial";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";

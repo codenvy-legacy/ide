@@ -121,6 +121,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.promptSaveFiles")
     String messagePromptSaveFiles();
 
+    @Key("appWillBeStopped")
+    String appWillBeStopped(String appName);
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
@@ -128,4 +131,10 @@ public interface RunnerLocalizationConstant extends Messages {
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();
+
+    @Key("view.runConfiguration.environmentLabel")
+    String runConfigurationViewEnvironmentLabel();
+
+    @Key("view.runConfiguration.memorySizeLabel")
+    String runConfigurationViewMemorySizeLabel();
 }

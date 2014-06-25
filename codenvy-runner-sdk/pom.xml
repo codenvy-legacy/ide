@@ -16,11 +16,14 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M19-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-runner-sdk</artifactId>
     <packaging>jar</packaging>
     <name>Codenvy Runner :: SDK</name>
+    <properties>
+        <org.apache.tomcat.version>7.0.50</org.apache.tomcat.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.commons</groupId>

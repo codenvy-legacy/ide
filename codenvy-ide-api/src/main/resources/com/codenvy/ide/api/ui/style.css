@@ -9,23 +9,6 @@
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
 @CHARSET "UTF-8";
-/*
- * CODENVY CONFIDENTIAL
- * __________________
- *
- * [2012] - [2013] Codenvy, S.A.
- * All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
 
 /*Tabs*/
 
@@ -92,6 +75,9 @@
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
 @eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
 @eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
+@eval editorInfoBorderColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderColor();
+@eval editorInfoBorderShadowColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderShadowColor();
+@eval editorInfoBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBackgroundColor();
 
 /* Listbox, TextBox... */
 @eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
@@ -135,6 +121,7 @@
 @def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
 @def editorLineHeight 15px;
 @def editorFontFamily 'Andale Mono', monospace;
+@def outputFontFamily 'Droid Sans Mono', monospace;
 
 /*Main Menu*/
 @eval mainMenuBkgColor com.codenvy.ide.api.ui.theme.Style.getMainMenuBkgColor();
@@ -204,4 +191,9 @@
 @eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
 @eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
 @eval delimeterColor com.codenvy.ide.api.ui.theme.Style.getDelimeterColor();
+
+/*Events*/
+@eval outputFontColor com.codenvy.ide.api.ui.theme.Style.getOutputFontColor();
+@eval outputLinkColor com.codenvy.ide.api.ui.theme.Style.getOutputLinkColor();
+
 

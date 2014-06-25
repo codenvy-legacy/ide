@@ -66,11 +66,18 @@ public class MavenBuilder extends Builder {
                                                                                      "  <includeBaseDirectory>false</includeBaseDirectory>\n" +
                                                                                      "  <dependencySets>\n" +
                                                                                      "    <dependencySet>\n" +
-                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
-                                                                                     "      <unpack>true</unpack>\n" +
-                                                                                     "      <scope>runtime</scope>\n" +
+                                                                                     "      <outputDirectory>/lib</outputDirectory>\n" +
+                                                                                     "      <unpack>false</unpack>\n" +
+                                                                                     "      <useProjectArtifact>false</useProjectArtifact>\n" +
                                                                                      "    </dependencySet>\n" +
                                                                                      "  </dependencySets>\n" +
+                                                                                     "  <files>\n" +
+                                                                                     "    <file>\n" +
+                                                                                     "      <source>${project.build.directory}/${project.build.finalName}.jar</source>\n" +
+                                                                                     "      <outputDirectory>/</outputDirectory>\n" +
+                                                                                     "      <destName>application.jar</destName>\n" +
+                                                                                     "    </file>\n" +
+                                                                                     "  </files>\n" +
                                                                                      "</assembly>\n";
     private static final String ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE = "jar-with-dependencies-assembly-descriptor.xml";
 
@@ -144,7 +151,7 @@ public class MavenBuilder extends Builder {
                                         commandLine.add("assembly:single");
                                         commandLine.addPair("-Ddescriptor", ASSEMBLY_DESCRIPTOR_FOR_JAR_WITH_DEPENDENCIES_FILE);
                                     }
-                                } catch (IOException e) {
+                                } catch (Exception e) {
                                     throw new IllegalStateException(e);
                                 } finally {
                                     sourcesManager.removeListener(this);
@@ -238,7 +245,7 @@ public class MavenBuilder extends Builder {
                 if (pluginPackaging.containsKey(packaging)) {
                     fileExt = '.' + pluginPackaging.get(packaging);
                 } else {
-                    fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies()
+                    fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies() && !isCodenvyExtensionProject(workDir)
                               ? ".zip"
                               : packaging != null
                                 ? '.' + packaging
@@ -309,14 +316,19 @@ public class MavenBuilder extends Builder {
         return origin;
     }
 
-    private boolean isCodenvyExtensionProject(java.io.File workDir) throws IOException {
-        List<org.apache.maven.model.Dependency> dependencies = MavenUtils.getModel(workDir).getDependencies();
-        for (org.apache.maven.model.Dependency dependency : dependencies) {
-            if (CODENVY_IDE_API_ARTIFACT_ID.equals(dependency.getArtifactId())) {
-                return true;
+    private boolean isCodenvyExtensionProject(java.io.File workDir) throws BuilderException {
+        try {
+            List<org.apache.maven.model.Dependency> dependencies = MavenUtils.getModel(workDir).getDependencies();
+            for (org.apache.maven.model.Dependency dependency : dependencies) {
+                if (CODENVY_IDE_API_ARTIFACT_ID.equals(dependency.getArtifactId())) {
+                    return true;
+                }
             }
+        } catch (IOException e) {
+            throw new BuilderException(e);
         }
         return false;
+
     }
 
     private static class DependencyBuildLogger extends DelegateBuildLogger {

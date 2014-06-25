@@ -19,6 +19,7 @@ import com.google.gwt.resources.client.ImageResource;
  * FileType is meta information about file.
  * It's contains
  * <ul>
+ * <li> <code>contentDescription</code> - string description associated with file content
  * <li> <code>image</code> - image resource associated with file
  * <li> <code>mimeTypes</code> - array of mime types associated with file
  * <li> <code>extension</code> - extension associated with file
@@ -44,26 +45,52 @@ public class FileType {
 
     private String namePattern;
 
+    private String contentDescription;
 
     public FileType(ImageResource image, String mimeType, String extension) {
         this(image, Collections.createArray(mimeType), extension);
+    }
+
+    public FileType(String contentDescription, ImageResource image, String mimeType, String extension) {
+        this(image, Collections.createArray(mimeType), extension);
+        this.contentDescription = contentDescription;
     }
 
     public FileType(ImageResource image, Array<String> mimeTypes, String extension) {
         this(image, mimeTypes, extension, null);
     }
 
+    public FileType(String contentDescription, ImageResource image, Array<String> mimeTypes, String extension) {
+        this(image, mimeTypes, extension, null);
+        this.contentDescription = contentDescription;
+    }
+
     public FileType(ImageResource image, String namePattern) {
         this(image, null, null, namePattern);
     }
 
+    public FileType(String contentDescription, ImageResource image, String namePattern) {
+        this(image, null, null, namePattern);
+        this.contentDescription = contentDescription;
+    }
+
     private FileType(ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
+        this(null, image, mimeTypes, extension, namePattern);
+    }
+
+    private FileType(String contentDescription, ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
         super();
+        this.contentDescription = contentDescription;
         this.image = image;
         this.mimeTypes = mimeTypes;
         this.extension = extension;
         this.namePattern = namePattern;
         id = ++ID;
+    }
+
+    /** @return the contentDescription */
+    public String getContentDescription() {
+        return contentDescription;
     }
 
     /** @return the mimeTypes */

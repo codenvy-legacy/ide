@@ -11,13 +11,12 @@
       Codenvy, S.A. - initial API and implementation
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M19-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-web</artifactId>
     <packaging>jar</packaging>
@@ -98,8 +97,17 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/web/css/editor/**/*.*</exclude>
-                        <exclude>**/web/html/editor/**/*.*</exclude>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CompletionType.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssCompletionQuery.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssPartialParser.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssState.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssToken.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssTokenFactory.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/css/editor/CssTrie.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/html/editor/HtmlState.java</exclude>
+                        <exclude>**/com/codenvy/ide/ext/web/html/editor/HtmlTokenFactory.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

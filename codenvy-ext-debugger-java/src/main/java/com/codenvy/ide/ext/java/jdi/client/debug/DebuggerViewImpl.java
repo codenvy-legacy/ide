@@ -18,14 +18,13 @@ import elemental.html.TableElement;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.debug.Breakpoint;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
-import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.ext.java.jdi.shared.Location;
+import com.codenvy.ide.ext.java.jdi.shared.Variable;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -41,12 +40,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.vectomatic.dom.svg.OMSVGStyleElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.validation.constraints.NotNull;
@@ -81,7 +80,7 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
     @UiField
     Label                           variablesInfo;
     @UiField
-    ScrollPanel                     variablesPanel;
+    SimplePanel                     variablesPanel;
     @UiField
     ScrollPanel                     breakpointsPanel;
     @UiField(provided = true)
@@ -220,9 +219,9 @@ public class DebuggerViewImpl extends BaseView<DebuggerView.ActionDelegate> impl
                 //do nothing
             }
         });
-        Widget widget = variables.asWidget();
-        widget.setHeight("100%");
-        this.variablesPanel.add(widget);
+
+//        variables.asWidget().setSize("100%","100%");
+        this.variablesPanel.add(variables);
         minimizeButton.ensureDebugId("debugger-minimizeBut");
     }
 

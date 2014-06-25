@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.0.0-M18-SNAPSHOT</version>
+        <version>3.0.0-M19-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>wysiwyg-editor-tutorial</artifactId>
@@ -92,6 +92,10 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*.svg</exclude>
+                        <exclude>**/*.png</exclude>
+                        <exclude>**/*.gif</exclude>
+                        <exclude>**/*.jpg</exclude>
                         <exclude>**/tutorial/wysiwyg/editor/RichTextToolbar.java</exclude>
                     </excludes>
                 </configuration>

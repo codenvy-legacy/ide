@@ -183,7 +183,7 @@ public interface Theme {
      * @return the color
      */
     String getButtonColor();
-    
+
     /**
      * Color of the social button for sharing factory.
      *
@@ -407,10 +407,10 @@ public interface Theme {
      * @return the color
      */
     String getWizardStepsBorderColor();
-    
+
     /**
      * Color of the Factory link.
-     * 
+     *
      * @return the color
      */
     String getFactoryLinkColor();
@@ -421,14 +421,14 @@ public interface Theme {
      * @return the color
      */
     String getWelcomeFontColor();
-    
+
     /**
-     * Font color for group captions on view (Example, Share Factory view). 
+     * Font color for group captions on view (Example, Share Factory view).
      *
      * @return the color
      */
     String getCaptionFontColor();
-    
+
     /**
      * Font color for console text
      *
@@ -591,10 +591,34 @@ public interface Theme {
      * @return the color of the event items delimeter
      */
     String getDelimeterColor();
-    
+
     /**
      * @return the color of part minimize button color.
      */
     String getMinimizeIconColor();
 
+    /**
+     * @return the color of the output font.
+     */
+    String getOutputFontColor();
+
+    /**
+     * @return the color of output link.
+     */
+    String getOutputLinkColor();
+
+    /**
+     * @return the background color for editor info panel.
+     */
+    String getEditorInfoBackgroundColor();
+
+    /**
+     * @return the color of border for editor info panel.
+     */
+    String getEditorInfoBorderColor();
+
+    /**
+     * @return the color of border shadow for editor info panel.
+     */
+    String getEditorInfoBorderShadowColor();
 }

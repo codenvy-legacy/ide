@@ -35,6 +35,6 @@ public interface BuilderResources extends ClientBundle {
         String dataLabel();
     }
 
-    @Source({"builder.css"})
+    @Source({"builder.css", "com/codenvy/ide/api/ui/style.css"})
     Css builder();
 }

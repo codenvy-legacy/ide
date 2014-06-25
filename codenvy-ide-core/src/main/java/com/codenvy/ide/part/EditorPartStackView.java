@@ -28,56 +28,54 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
+
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public class EditorPartStackView extends ResizeComposite implements PartStackView {
-    private static final int          COUNTING_ERROR      = 10;
-    
-    private static PartStackUiBinder     uiBinder            = GWT.create(PartStackUiBinder.class);
-    private ActionDelegate               delegate;
+    private static final int COUNTING_ERROR = 10;
 
-    private final PartStackUIResources   partStackUIResources;
+    private static PartStackUiBinder uiBinder = GWT.create(PartStackUiBinder.class);
+    private ActionDelegate delegate;
 
-    private final Resources              resources;
+    private final PartStackUIResources partStackUIResources;
 
-    private TabButton                    activeTab;
+    private TabButton activeTab;
 
-    private boolean                      focused;
+    private boolean focused;
 
     // DOM Handler
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
 
-    private HandlerRegistration          focusRequestHandlerRegistration;
+    private HandlerRegistration focusRequestHandlerRegistration;
 
     // list of tabs
-    private final Array<TabButton>       tabs                = Collections.createArray();
+    private final Array<TabButton> tabs = Collections.createArray();
 
     @UiField
-    DockLayoutPanel                      parent;
+    DockLayoutPanel parent;
 
     @UiField
-    FlowPanel                            tabsPanel;
+    FlowPanel tabsPanel;
 
     @UiField
-    SimpleLayoutPanel                    contentPanel;
+    DeckPanel contentPanel;
 
-    private ListButton                   listTabsButton;
+    private ListButton listTabsButton;
 
-    private ShowListButtonClickHandler   showListButtonClickHandler;
+    private ShowListButtonClickHandler showListButtonClickHandler;
 
 
     interface PartStackUiBinder extends UiBinder<Widget, EditorPartStackView> {
@@ -85,12 +83,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /**
      * Create View
-     * 
+     *
      * @param partStackResources
      */
     @Inject
     public EditorPartStackView(PartStackUIResources partStackResources, Resources resources) {
-        this.resources = resources;
         this.partStackUIResources = partStackResources;
         initWidget(uiBinder.createAndBindUi(this));
         setWidth("100%");
@@ -152,23 +149,24 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public AcceptsOneWidget getContentPanel() {
+    public ForIsWidget getContentPanel() {
         return contentPanel;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removeTabButton(int index) {
+    public void removeTab(int index) {
         if (index < tabs.size()) {
             TabButton removed = tabs.remove(index);
             tabsPanel.remove(removed);
+            contentPanel.remove(contentPanel.getWidget(index));
         }
         setVisible(tabs.size() > 0);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setActiveTabButton(int index) {
+    public void setActiveTab(int index) {
         if (activeTab != null) {
             activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
         }
@@ -176,6 +174,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         if (index >= 0 && index < tabs.size()) {
             activeTab = tabs.get(index);
             activeTab.addStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
+            contentPanel.showWidget(index);
         }
         processPanelSize();
     }
@@ -344,12 +343,12 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             }
             width += tabsPanel.getWidget(i).getOffsetWidth();
             //Check whether active tab is visible
-            if (tabsPanel.getWidget(i) instanceof TabButton && ((TabButton)tabsPanel.getWidget(i)) == activeTab
+            if (tabsPanel.getWidget(i) instanceof TabButton && (tabsPanel.getWidget(i)) == activeTab
                 && width > tabsPanel.getOffsetWidth()) {
                 activeTabIsVisible = false;
             }
         }
-        
+
         //Move not visible active tab to the first place
         if (!activeTabIsVisible) {
             tabsPanel.insert(activeTab, 0);
@@ -375,11 +374,5 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
      */
     public void setShowListButtonHandler(ShowListButtonClickHandler handler) {
         this.showListButtonClickHandler = handler;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void clearContentPanel() {
-        getContentPanel().setWidget(null);
     }
 }

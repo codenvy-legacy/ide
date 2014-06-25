@@ -20,14 +20,6 @@
             margin: 10px;
         }
 
-        .space {
-            margin-right: 5px;
-        }
-
-        .spacing {
-            margin-top: 10px;
-        }
-
         .spacingTop {
             margin-top: 20px;
         }

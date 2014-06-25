@@ -29,6 +29,9 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
+
+        /** Performs any actions appropriate in response to the user having changed something. */
+        void onValueChanged();
     }
 
     /**
@@ -51,4 +54,15 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
     /** Show dialog. */
     void showDialog();
+
+    /** Get memory size from memory field. */
+    int getMemorySize() throws NumberFormatException;
+
+    /**
+     * Change the enable state of the run button.
+     *
+     * @param enabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
+    void setEnabledRunButton(boolean enabled);
 }
