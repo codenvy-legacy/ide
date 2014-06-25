@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.demo.createGist;
 
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.extension.demo.GistExtensionLocalizationConstant;
 import com.google.gwt.http.client.Request;
@@ -34,18 +36,21 @@ public class CreateGistPresenter implements CreateGistView.ActionDelegate {
     private CreateGistView                    view;
     private GistExtensionLocalizationConstant constant;
     private ConsolePart                       console;
+    private NotificationManager               notificationManager
+            ;
 
     /**
      * Create presenter.
-     *
-     * @param view
+     *  @param view
      * @param console
      * @param constant
+     * @param notificationManager
      */
     @Inject
     public CreateGistPresenter(CreateGistView view, ConsolePart console,
-                               GistExtensionLocalizationConstant constant) {
+                               GistExtensionLocalizationConstant constant, NotificationManager notificationManager) {
         this.view = view;
+        this.notificationManager = notificationManager;
         this.view.setDelegate(this);
         this.console = console;
         this.constant = constant;
@@ -119,6 +124,10 @@ public class CreateGistPresenter implements CreateGistView.ActionDelegate {
     private void afterGistCreated(String gistId) {
         UrlBuilder builder = new UrlBuilder();
         final String url = builder.setProtocol("https").setHost(GIT_HUB_ANONYMOUS_GISTS_HOST + "/" + gistId).buildString();
-        console.print("Your Gist available on " + "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>");
+
+        Notification notification = new Notification("Your Gist available on " + "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>", Notification.Type.INFO);
+        notificationManager.showNotification(notification);
+
+
     }
 }

@@ -16,6 +16,9 @@ package com.codenvy.ide.ext.helloworld;
  * imports are obligatory as well for any extension
  */
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.Notification.Type;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Constraints;
@@ -39,7 +42,7 @@ public class HelloWorldExtension
  */
 {
     @Inject
-    public HelloWorldExtension(ActionManager actionManager, HelloWorldAction action, ConsolePart console) {
+    public HelloWorldExtension(ActionManager actionManager, HelloWorldAction action, NotificationManager notificationManager) {
         actionManager.registerAction("HelloWorldID", action);
 
         DefaultActionGroup contextMenu = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);
@@ -49,9 +52,9 @@ public class HelloWorldExtension
          */
         contextMenu.add(action, Constraints.LAST);
 
-        /**
-         * Displaying text in the Console
-         */
-        console.print("Hello World");
+
+        Notification notification = new Notification("Hello World", Type.INFO);
+        notificationManager.showNotification(notification);
+
     }
 }

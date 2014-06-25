@@ -37,7 +37,6 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -140,7 +139,7 @@ public class EditorAgentImpl implements EditorAgent {
             EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
             EditorPartPresenter editor = editorProvider.getEditor();
             try {
-                editor.init(new EditorInputImpl(file));
+                editor.init(new EditorInputImpl(fileType, file));
                 editor.addCloseHandler(editorClosed);
             } catch (EditorInitException e) {
                 Log.error(getClass(), e);
@@ -231,45 +230,4 @@ public class EditorAgentImpl implements EditorAgent {
         return activeEditor;
     }
 
-    final class EditorInputImpl implements EditorInput {
-        private File file;
-
-        /** @param file */
-        private EditorInputImpl(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public String getFileContentDescription() {
-            return provider.getFileType(file).getСontentDescription();
-        }
-
-        @Override
-        public String getToolTipText() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getName() {
-            return file.getName();
-        }
-
-        @Override
-        public ImageResource getImageResource() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public File getFile() {
-            return file;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void setFile(File file) {
-            this.file = file;
-        }
-    }
 }

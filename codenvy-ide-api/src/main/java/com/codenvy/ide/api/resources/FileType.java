@@ -89,7 +89,7 @@ public class FileType {
     }
 
     /** @return the contentDescription */
-    public String getСontentDescription() {
+    public String getContentDescription() {
         return contentDescription;
     }
 

@@ -94,7 +94,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                         AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
                         editor.setDocument(document, annotationModel);
                         editor.getView().setInfoPanelExist(true);
-                        editor.getInfoPanel().createDefaultState(input.getFileContentDescription(), document.getNumberOfLines());
+                        editor.getInfoPanel().createDefaultState(input.getContentDescription(), document.getNumberOfLines());
                         firePropertyChange(PROP_INPUT);
                         document.addDocumentListener(new DocumentListener() {
                             @Override

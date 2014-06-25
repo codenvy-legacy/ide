@@ -48,7 +48,7 @@ public class MavenProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(5);
+        final List<ProjectTemplateDescription> list = new ArrayList<>();
         list.add(new ProjectTemplateDescription("git",
                                                 "Java Web App",
                                                 "Simple JSP project",

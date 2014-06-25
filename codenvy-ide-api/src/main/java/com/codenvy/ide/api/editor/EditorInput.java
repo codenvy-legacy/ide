@@ -31,7 +31,7 @@ public interface EditorInput {
      *
      * @return the content description for this input
      */
-    String getFileContentDescription();
+    String getContentDescription();
 
     /**
      * Returns the image descriptor for this input.
