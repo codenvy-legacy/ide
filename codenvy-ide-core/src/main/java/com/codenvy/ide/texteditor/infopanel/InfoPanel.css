@@ -1,0 +1,47 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+.editorInfo {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.topBorder {
+    width: 100%;
+    border-top: 1px solid editorInfoBorderColor;
+    border-bottom: 1px solid editorInfoBorderShadowColor;
+}
+
+.panelInfo {
+    width: 100%;
+    height: 100%;
+    font-family: Helvetica Neue, Light;
+    font-size: 11px;
+    color: #5c5c5c;
+    background-color: editorInfoBackgroundColor;
+}
+
+.labelPosition {
+    float: left;
+    margin-left: 5px;
+    position: absolute;
+}
+
+.labelTabSize {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+}
+
+.labelFileType {
+    float: right;
+    margin-right: 10px;
+}

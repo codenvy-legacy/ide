@@ -8,129 +8,133 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-    /* Annotated CSS for the Editor presenter. */
+/* Annotated CSS for the Editor presenter. */
 
-    .root {
-        background-color: editorBackgroundColor;
-        bottom: 0;
-        font-family: editorFontFamily;
-        font-size: 13px;
-        left: 0;
-        line-height: editorLineHeight;
-        position: absolute;
-        right: 0;
-        text-wrap: none;
-        top: 0;
-        user-select: none;
-        white-space: pre;
-        color: editorDefaultFontColor;
-    }
+.root {
+    background-color: editorBackgroundColor;
+    bottom: 0;
+    font-family: editorFontFamily;
+    font-size: 13px;
+    left: 0;
+    line-height: editorLineHeight;
+    position: absolute;
+    right: 0;
+    text-wrap: none;
+    top: 0;
+    user-select: none;
+    white-space: pre;
+    color: editorDefaultFontColor;
+}
 
-    .editorFont, .root {
-        font-family: editorFontFamily;
-        font-size: 13px;
-    }
+.editorFont, .root {
+    font-family: editorFontFamily;
+    font-size: 13px;
+}
 
-        /* Same selection colors as the editor's manually drawn selection */
-    ::selection {
-        background: editorSelectionColor;
-    }
+/* Same selection colors as the editor's manually drawn selection */
+::selection {
+    background: editorSelectionColor;
+}
 
-    ::selection:window-inactive {
-        background: editorInactiveSelectionColor;
-    }
+::selection:window-inactive {
+    background: editorInactiveSelectionColor;
+}
 
-        /* FF doesn't support inactive selection */
-    ::-moz-selection {
-        background: editorSelectionColor;
-    }
+/* FF doesn't support inactive selection */
+::-moz-selection {
+    background: editorSelectionColor;
+}
 
-    .scrolled {
-    }
+.scrolled {
+}
 
-    .gutter {
-    }
+.gutter {
+}
 
-    .scrolled > .gutter, .scrolled > .scrollable {
-        box-shadow: inset 0px 4px 2px -2px #DDD;
-    }
+.scrolled > .gutter, .scrolled > .scrollable {
+    box-shadow: inset 0px 4px 2px -2px #DDD;
+}
 
-    .leftGutterBase, .leftGutter, .leftGutterNotification {
-        cursor: default;
-        font-size: 11px;
-        font-face: Verdana;
-        height: 100%;
-        line-height: editorLineHeight;
-        overflow: hidden;
-        /* Allow children to position absolutely against us */
-        position: relative;
+.leftGutterBase, .leftGutter, .leftGutterNotification {
+    cursor: default;
+    font-size: 11px;
+    font-face: Verdana;
+    height: 100%;
+    line-height: editorLineHeight;
+    overflow: hidden;
+    /* Allow children to position absolutely against us */
+    position: relative;
 
-        /* Allow decorations with z-index:-1 such as breakpoints */
-        z-index: 0;
-    }
+    /* Allow decorations with z-index:-1 such as breakpoints */
+    z-index: 0;
+}
 
-    .leftGutterBase {
-        border-right: 1px dotted;
-        color: #bbbbbb;
-    }
+.leftGutterBase {
+    border-right: 1px dotted;
+    color: #bbbbbb;
+}
 
-    .leftGutter {
-        color: #bbbbbb;
-        min-width: 2em;
-        padding-left: 5px;
-        padding-right: 6px;
-        border-right: 1px dotted #888888;
-        text-align: right;
-    }
+.leftGutter {
+    color: #bbbbbb;
+    min-width: 2em;
+    padding-left: 5px;
+    padding-right: 6px;
+    border-right: 1px dotted #888888;
+    text-align: right;
+}
 
-    .leftGutterNotification {
-        width: 14px;
-        background-color: editoGutterColor;
-        text-align: right;
-    }
+.leftGutterNotification {
+    width: 14px;
+    background-color: editoGutterColor;
+    text-align: right;
+}
 
-        /* Empty rule for enabling CSS3 animations for editor changes. */
-    .animationEnabled {
+/* Empty rule for enabling CSS3 animations for editor changes. */
+.animationEnabled {
 
-    }
+}
 
-    @sprite .lineRendererError {
-        gwt-image: "squiggle";
-        background-position: bottom;
-        background-repeat: repeat-x;
-        margin: 0;
-        padding: 0;
-        height: auto;
-        width: auto;
-        overflow: visible;
-    }
+@sprite .lineRendererError {
+    gwt-image: "squiggle";
+    background-position: bottom;
+    background-repeat: repeat-x;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
+}
 
-    @sprite .lineWarning {
-        gwt-image: "squiggleWarning";
-        background-position: bottom;
-        background-repeat: repeat-x;
-        margin: 0;
-        padding: 0;
-        height: auto;
-        width: auto;
-        overflow: visible;
-    }
+@sprite .lineWarning {
+    gwt-image: "squiggleWarning";
+    background-position: bottom;
+    background-repeat: repeat-x;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
+}
 
-    @sprite .lineError {
-        gwt-image: "squiggle";
-        background-position: bottom;
-        background-repeat: repeat-x;
-        margin: 0;
-        padding: 0;
-        height: auto;
-        width: auto;
-        overflow: visible;
-    }
-    
-    @url background imageViewerBackground;
-    
-    .imageViewer {
-    	margin: auto;
-    	background-image: background;
-    	display: block;
-    }
+@sprite .lineError {
+    gwt-image: "squiggle";
+    background-position: bottom;
+    background-repeat: repeat-x;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
+}
+
+@url background imageViewerBackground;
+
+.imageViewer {
+    margin: auto;
+    background-image: background;
+    display: block;
+}
+
+.withEditorInfo {
+    bottom: 16px;
+}

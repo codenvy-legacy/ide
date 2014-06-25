@@ -46,5 +46,6 @@ public class StyleInjector {
         resources.notificationCss().ensureInjected();
         resources.dataGridStyle().ensureInjected();
         resources.cellTableStyle().ensureInjected();
+        resources.infoPanelCss().ensureInjected();
     }
 }

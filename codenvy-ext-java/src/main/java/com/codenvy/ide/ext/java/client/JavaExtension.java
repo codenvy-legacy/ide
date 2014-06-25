@@ -71,7 +71,7 @@ public class JavaExtension {
     private AsyncRequestFactory asyncRequestFactory;
     private EditorAgent         editorAgent;
     private JavaParserWorker    parserWorker;
-    private BuildContext buildContext;
+    private BuildContext        buildContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -149,7 +149,7 @@ public class JavaExtension {
         iconRegistry.registerIcon(new Icon("war/png.file.small.icon", resources.imageIcon()));
         iconRegistry.registerIcon(new Icon("war/pom.xml.file.small.icon", resources.maven()));
 
-        FileType javaFile = new FileType(JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
+        FileType javaFile = new FileType("Java", JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 

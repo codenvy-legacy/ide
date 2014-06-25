@@ -134,7 +134,7 @@ public class LightTheme implements Theme {
     public String getButtonTopColor() {
         return "#D6D6D6";
     }
-    
+
     @Override
     public String getSocialButtonColor() {
         return "#ffffff";
@@ -274,7 +274,7 @@ public class LightTheme implements Theme {
     public String getCompletionPopupBorderColor() {
         return "#484848";
     }
-    
+
     @Override
     public String getWindowContentBackground() {
         return getDialogContentBackground();
@@ -284,7 +284,7 @@ public class LightTheme implements Theme {
     public String getWindowHeaderBackground() {
         return getTabBorderColor();
     }
-    
+
     @Override
     public String getWindowSeparatorColor() {
         return "#818181";
@@ -304,7 +304,7 @@ public class LightTheme implements Theme {
     public String getWelcomeFontColor() {
         return "#5E5E5E";
     }
-    
+
     @Override
     public String getCaptionFontColor() {
         return "#888888";
@@ -379,12 +379,12 @@ public class LightTheme implements Theme {
     public String getTreeTextShadow() {
         return "rgba(255, 255, 255, 0.5)";
     }
-    
+
     @Override
     public String getTreeIconFileColor() {
         return "#606060";
     }
-    
+
     @Override
     public String getBoxBorderColor() {
         return "#aaaaaa";
@@ -444,44 +444,60 @@ public class LightTheme implements Theme {
     public String getSvgUrlShadow() {
         return "url(#shadowLightTheme)";
     }
-    
+
     @Override
     public String getSuccessEventColor() {
         return "#7dc878";
     }
-    
+
     @Override
     public String getErrorEventColor() {
         return "#e25252";
     }
-    
+
     @Override
     public String getDelimeterColor() {
         return "#2f2f2f";
     }
-    
+
     @Override
     public String getLinkColor() {
         return "#acacac";
     }
-    
+
     @Override
     public String getFactoryLinkColor() {
         return "#60abe0";
     }
-    
+
     @Override
     public String getMinimizeIconColor() {
         return "#7b7b7b";
     }
-    
+
     @Override
     public String getOutputFontColor() {
         return "#e6e6e6";
     }
-    
+
     @Override
     public String getOutputLinkColor() {
         return "#61b7ef";
+    }
+
+    @Override
+    public String getEditorInfoBackgroundColor() {
+        return "#ddd";
+    }
+
+
+    @Override
+    public String getEditorInfoBorderColor() {
+        return getTabBorderColor();
+    }
+
+    @Override
+    public String getEditorInfoBorderShadowColor() {
+        return "#f0f0f0";
     }
 }

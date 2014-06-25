@@ -44,7 +44,7 @@ import javax.validation.constraints.NotNull;
 /** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
 
-//    private final TextListener textListener = new TextListener() {
+    //    private final TextListener textListener = new TextListener() {
 //
 //        @Override
 //        public void onTextChange(TextChange textChange) {
@@ -93,6 +93,8 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
                         TextEditorPresenter.this.document = document;
                         AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
                         editor.setDocument(document, annotationModel);
+                        editor.getView().setInfoPanelExist(true);
+                        editor.getInfoPanel().createDefaultState(input.getFileContentDescription(), document.getNumberOfLines());
                         firePropertyChange(PROP_INPUT);
                         document.addDocumentListener(new DocumentListener() {
                             @Override
@@ -114,7 +116,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-              updateDirtyState(editor.getUndoManager().undoable());
+                updateDirtyState(editor.getUndoManager().undoable());
             }
         });
     }
