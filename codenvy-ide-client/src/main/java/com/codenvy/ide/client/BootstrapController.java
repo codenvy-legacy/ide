@@ -163,21 +163,32 @@ public class BootstrapController {
         final Stack<String> scripts = new Stack<String>();
         final String CODEMIRROR_BASE = "codemirror-4.2/";
         final String[] scriptsNames = new String[]{
+
+                // language modes
+                CODEMIRROR_BASE + "mode/htmlmixed/htmlmixed.js", // must be defined after xml - stack so reverse order
                 CODEMIRROR_BASE + "mode/xml/xml.js",
-                CODEMIRROR_BASE + "mode/htmlmixed/htmlmixed.js",
                 CODEMIRROR_BASE + "mode/javascript/javascript.js",
                 CODEMIRROR_BASE + "mode/css/css.js",
                 CODEMIRROR_BASE + "mode/sql/sql.js",
                 CODEMIRROR_BASE + "mode/clike/clike.js",
+                CODEMIRROR_BASE + "mode/markdown/markdown.js",
+                CODEMIRROR_BASE + "mode/gfm/gfm.js", // markdown extension for github
+                CODEMIRROR_BASE + "mode/properties/properties.js",
+                CODEMIRROR_BASE + "mode/php/php.js",
+                CODEMIRROR_BASE + "mode/htmlembedded/htmlembedded.js",
+                CODEMIRROR_BASE + "mode/python/python.js",
+                CODEMIRROR_BASE + "mode/yaml/yaml.js",
+
+                // hints
                 CODEMIRROR_BASE + "addon/hint/show-hint.js",
-                CODEMIRROR_BASE + "addon/hint/html-hint.js",
                 CODEMIRROR_BASE + "addon/hint/xml-hint.js",
+                CODEMIRROR_BASE + "addon/hint/html-hint.js",
                 CODEMIRROR_BASE + "addon/hint/javascript-hint.js",
                 CODEMIRROR_BASE + "addon/hint/css-hint.js",
                 CODEMIRROR_BASE + "addon/hint/anyword-hint.js",
                 CODEMIRROR_BASE + "addon/hint/sql-hint.js",
-                CODEMIRROR_BASE + "addon/fold/xml-fold.js", // required by matchtags and closetag
-                CODEMIRROR_BASE + "addon/edit/closebrackets.js",
+
+                // pair matching
                 CODEMIRROR_BASE + "addon/edit/closebrackets.js",
                 CODEMIRROR_BASE + "addon/edit/closetag.js",
                 CODEMIRROR_BASE + "addon/edit/matchbrackets.js",
@@ -185,6 +196,23 @@ public class BootstrapController {
                 // the two following are added to repair actual functionality in 'classic' editor
                 CODEMIRROR_BASE + "addon/selection/mark-selection.js",
                 CODEMIRROR_BASE + "addon/selection/active-line.js",
+                // editor keymaps
+                CODEMIRROR_BASE + "keymap/emacs.js",
+                CODEMIRROR_BASE + "keymap/vim.js",
+                CODEMIRROR_BASE + "keymap/sublime.js",
+                // for search
+                CODEMIRROR_BASE + "addon/search/search.js",
+                CODEMIRROR_BASE + "addon/dialog/dialog.js",
+                CODEMIRROR_BASE + "addon/search/searchcursor.js",
+                // comment management
+                CODEMIRROR_BASE + "addon/comment/comment.js",
+                CODEMIRROR_BASE + "addon/comment/continuecomment.js",
+                // folding
+                CODEMIRROR_BASE + "addon/fold/foldcode.js",
+                CODEMIRROR_BASE + "addon/fold/foldgutter.js",
+                CODEMIRROR_BASE + "addon/fold/brace-fold.js",
+                CODEMIRROR_BASE + "addon/fold/xml-fold.js", // also required by matchbrackets and closebrackets
+                CODEMIRROR_BASE + "addon/fold/comment-fold.js",
         };
         for (final String script : scriptsNames) {
             scripts.add(script); // not push, it would need to be fed in reverse order
@@ -205,6 +233,9 @@ public class BootstrapController {
                           }
                       }).inject();
         injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "lib/codemirror.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "theme/solarized-mod.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "addon/dialog/dialog.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "addon/fold/foldgutter.css");
     }
 
     private static void injectCssLink(final String url) {
