@@ -10,32 +10,31 @@
  *******************************************************************************/
 package com.codenvy.ide.outline;
 
-import elemental.events.MouseEvent;
-
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.text.TextUtilities;
-import com.codenvy.ide.text.store.LineInfo;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.OutlinableTextEditorView;
 import com.codenvy.ide.texteditor.api.outline.CodeBlock;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
-import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
+import com.codenvy.ide.texteditor.selection.CursorModelWithHandler.CursorHandler;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.Tree.Listener;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+
+import elemental.events.MouseEvent;
 
 
 /**
  * Default implementation of {@link OutlinePresenter}
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -51,25 +50,25 @@ public class OutlineImpl implements OutlinePresenter {
         void selectAndExpand(CodeBlock block);
     }
 
-    private OutlineView view;
+    private OutlineView              view;
 
-    private TextEditorViewImpl editor;
+    private OutlinableTextEditorView editor;
 
-    private final OutlineModel model;
+    private final OutlineModel       model;
 
-    private CodeBlockDataAdapter dataAdapter;
+    private CodeBlockDataAdapter     dataAdapter;
 
-    private CodeBlock blockToSync;
+    private CodeBlock                blockToSync;
 
-    private boolean thisCursorMove;
+    private boolean                  thisCursorMove;
 
     /**
      *
      */
     public OutlineImpl(Resources resources, OutlineModel model,
-                       TextEditorPartView editor, TextEditorPartPresenter editorPresenter) {
+                       OutlinableTextEditorView editor, TextEditorPartPresenter editorPresenter) {
         this.model = model;
-        this.editor = (TextEditorViewImpl)editor;
+        this.editor = editor;
         dataAdapter = new CodeBlockDataAdapter();
         view = new OutlineViewImpl(resources, dataAdapter, model.getRenderer());
         editorPresenter.addPropertyListener(new PropertyListener() {
@@ -77,6 +76,7 @@ public class OutlineImpl implements OutlinePresenter {
             @Override
             public void propertyChanged(PartPresenter source, int propId) {
                 if (EditorPartPresenter.PROP_INPUT == propId) {
+                    Log.debug(OutlineImpl.class, "Binding outline to the source part.");
                     bind();
                 }
             }
@@ -129,8 +129,9 @@ public class OutlineImpl implements OutlinePresenter {
             @Override
             public void onNodeSelected(TreeNodeElement<CodeBlock> node, SignalEvent event) {
                 thisCursorMove = true;
-                CodeBlock data = node.getData();
-                editor.getSelection().setCursorPosition(data.getOffset());
+                final CodeBlock data = node.getData();
+                final int offset = data.getOffset();
+                editor.getCursorModel().setCursorPosition(offset);
             }
 
             @Override
@@ -142,45 +143,48 @@ public class OutlineImpl implements OutlinePresenter {
             }
         });
 
-        editor.getSelection().getCursorListenerRegistrar().add(new CursorListener() {
+        if (editor.getCursorModel() != null) {
+            Log.debug(OutlineImpl.class, "Cursor model available, adding cursor handler");
+            editor.getCursorModel().addCursorHandler(new CursorHandler() {
 
-            @Override
-            public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
-                if (thisCursorMove) {
-                    thisCursorMove = false;
-                    return;
-                }
-                if (model.getRoot() == null) {
-                    return;
-                }
-                int number = lineInfo.number();
-                final int offset = TextUtilities.getOffset(editor.getDocument(), number, column);
-                blockToSync = null;
-                Tree.iterateDfs(model.getRoot(), dataAdapter, new Tree.Visitor<CodeBlock>() {
-
-                    @Override
-                    public boolean shouldVisit(CodeBlock node) {
-                        if (offset + 1 > node.getOffset() && offset - 1 < node.getOffset() + node.getLength()) {
-                            return true;
-                        } else
-                            return false;
-                    }
-
-                    @Override
-                    public void visit(CodeBlock node, boolean willVisitChildren) {
-                        blockToSync = node;
-                    }
-
-                });
-                if (blockToSync != null) {
-                    if (!CodeBlock.ROOT_TYPE.equals(blockToSync.getType())) {
-                        view.selectAndExpand(blockToSync);
+                @Override
+                public void onCursorChange(int line, int column, boolean isExplicitChange) {
+                    if (thisCursorMove) {
+                        thisCursorMove = false;
                         return;
                     }
-                }
-            }
-        });
+                    if (model.getRoot() == null) {
+                        return;
+                    }
+                    final int offset = TextUtilities.getOffset(editor.getDocument(), line, column);
+                    blockToSync = null;
+                    Tree.iterateDfs(model.getRoot(), dataAdapter, new Tree.Visitor<CodeBlock>() {
 
+                        @Override
+                        public boolean shouldVisit(CodeBlock node) {
+                            if (offset + 1 > node.getOffset() && offset - 1 < node.getOffset() + node.getLength()) {
+                                return true;
+                            } else
+                                return false;
+                        }
+
+                        @Override
+                        public void visit(CodeBlock node, boolean willVisitChildren) {
+                            blockToSync = node;
+                        }
+
+                    });
+                    if (blockToSync != null) {
+                        if (!CodeBlock.ROOT_TYPE.equals(blockToSync.getType())) {
+                            view.selectAndExpand(blockToSync);
+                            return;
+                        }
+                    }
+                }
+            });
+        } else {
+            Log.debug(OutlineImpl.class, "No cursor model !!");
+        }
     }
 
     /** {@inheritDoc} */

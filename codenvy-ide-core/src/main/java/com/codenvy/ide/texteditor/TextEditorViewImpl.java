@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor;
 
-import elemental.dom.Element;
+import java.util.Iterator;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -72,6 +72,7 @@ import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineRenderer;
 import com.codenvy.ide.texteditor.renderer.RenderTimeExecutor;
 import com.codenvy.ide.texteditor.renderer.Renderer;
+import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.texteditor.selection.CursorView;
 import com.codenvy.ide.texteditor.selection.LocalCursorController;
 import com.codenvy.ide.texteditor.selection.SelectionLineRenderer;
@@ -92,24 +93,20 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.RequiresResize;
 
-import java.util.Iterator;
+import elemental.dom.Element;
 
 /**
- * The Display for the text editor presenter.
- * This is default implementation for {@link TextEditorPartView}
- * This class composes many of the other classes that together form the editor.
- * For example, the area where the text is displayed, the {@link Buffer}, is a
- * nested presenter. Other components are not presenters, such as the input
- * mechanism which is handled by the {@link InputController}.
+ * The Display for the text editor presenter. This is default implementation for {@link TextEditorPartView} This class composes many of the
+ * other classes that together form the editor. For example, the area where the text is displayed, the {@link Buffer}, is a nested
+ * presenter. Other components are not presenters, such as the input mechanism which is handled by the {@link InputController}.
  * <p/>
- * If an added element wants native browser selection, you must not inherit the
- * "user-select" CSS property. See
+ * If an added element wants native browser selection, you must not inherit the "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView, RequiresResize {
+public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements OutlinableTextEditorView, RequiresResize {
 
-    public static final int ANIMATION_DURATION = 100;
-    private static      int idCounter          = 0;
+    public static final int                                   ANIMATION_DURATION            = 100;
+    private static int                                        idCounter                     = 0;
     private final Buffer                                      buffer;
     private final EditorTextStoreMutator                      editorDocumentMutator;
     private final FontDimensionsCalculator                    editorFontDimensionsCalculator;
@@ -200,22 +197,20 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          }
 
     /**
-     * Hook called on receipt of a <code>EditorDocumentMutator</code>. The event has
-     * been translated into a <code>DocumentCommand</code> which can now be
-     * manipulated by interested parties. By default, the hook forwards the command
-     * to the installed instances of <code>AutoEditStrategy</code>.
-     *
-     * @param command
-     *         the document command representing the verify event
+     * Hook called on receipt of a <code>EditorDocumentMutator</code>. The event has been translated into a <code>DocumentCommand</code>
+     * which can now be manipulated by interested parties. By default, the hook forwards the command to the installed instances of
+     * <code>AutoEditStrategy</code>.
+     * 
+     * @param command the document command representing the verify event
      */
     public void customizeDocumentCommand(DocumentCommand command) {
-//        if (isIgnoringAutoEditStrategies())
-//            return;
+        // if (isIgnoringAutoEditStrategies())
+        // return;
 
         Document document = getDocument();
 
-//        if (fTabsToSpacesConverter != null)
-//            fTabsToSpacesConverter.customizeDocumentCommand(document, command);
+        // if (fTabsToSpacesConverter != null)
+        // fTabsToSpacesConverter.customizeDocumentCommand(document, command);
         Array<AutoEditStrategy> strategies = null;
         try {
             String contentType = TextUtilities.getContentType(document, getDocumentPartitioning(), command.offset, true);
@@ -228,7 +223,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             return;
 
         switch (strategies.size()) {
-            // optimization
+        // optimization
             case 0:
                 break;
 
@@ -239,7 +234,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             // make iterator robust against adding/removing strategies from within strategies
             default:
                 strategies = Collections.createArray(strategies.asIterable());
-                for (final Iterator<AutoEditStrategy> iterator = strategies.asIterable().iterator(); iterator.hasNext(); )
+                for (final Iterator<AutoEditStrategy> iterator = strategies.asIterable().iterator(); iterator.hasNext();)
                     iterator.next().customizeDocumentCommand(document, command);
 
                 break;
@@ -249,18 +244,16 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private void handleFontDimensionsChanged() {
         buffer.repositionAnchoredElementsWithColumn();
         if (renderer != null) {
-         /*
-          * TODO: think about a scheme where we don't have to render
-          * the whole viewport (currently we do because of the right-side gap
-          * fillers)
-          */
+            /*
+             * TODO: think about a scheme where we don't have to render the whole viewport (currently we do because of the right-side gap
+             * fillers)
+             */
             renderer.renderAll();
         }
     }
 
     /**
-     * Adds a scroll handler to the buffer scrollableElement so that a drop shadow
-     * can be added and removed when scrolled.
+     * Adds a scroll handler to the buffer scrollableElement so that a drop shadow can be added and removed when scrolled.
      */
     private void addBoxShadowOnScrollHandler() {
         if (true) {
@@ -268,30 +261,29 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             return;
         }
 
-        //      this.buffer.getScrollListenerRegistrar().add(new ScrollListener()
-        //      {
+        // this.buffer.getScrollListenerRegistrar().add(new ScrollListener()
+        // {
         //
-        //         @Override
-        //         public void onScroll(Buffer buffer, int scrollTop)
-        //         {
-        //            if (scrollTop < 20)
-        //            {
-        //               getElement().removeClassName(getView().css.scrolled());
-        //            }
-        //            else
-        //            {
-        //               getElement().addClassName(getView().css.scrolled());
-        //            }
-        //         }
-        //      });
+        // @Override
+        // public void onScroll(Buffer buffer, int scrollTop)
+        // {
+        // if (scrollTop < 20)
+        // {
+        // getElement().removeClassName(getView().css.scrolled());
+        // }
+        // else
+        // {
+        // getElement().addClassName(getView().css.scrolled());
+        // }
+        // }
+        // });
     }
 
     public void addLineRenderer(LineRenderer lineRenderer) {
-      /*
-       * TODO: Because the line renderer is document-scoped, line
-       * renderers have to re-add themselves whenever the document changes. This
-       * is unexpected.
-       */
+        /*
+         * TODO: Because the line renderer is document-scoped, line renderers have to re-add themselves whenever the document changes. This
+         * is unexpected.
+         */
         renderer.addLineRenderer(lineRenderer);
     }
 
@@ -377,6 +369,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return selectionManager.getSelectionModel();
     }
 
+    @Override
+    public CursorModelWithHandler getCursorModel() {
+        return selectionManager.getSelectionModel();
+    }
+
     public LocalCursorController getCursorController() {
         return localCursorController;
     }
@@ -406,11 +403,10 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         this.document = document;
         textStore = ((DocumentImpl)document).getTextStore();
 
-      /*
-       * TODO: dig into each component, figure out dependencies,
-       * break apart components so we can reduce circular dependencies which
-       * require the multiple stages of initialization
-       */
+        /*
+         * TODO: dig into each component, figure out dependencies, break apart components so we can reduce circular dependencies which
+         * require the multiple stages of initialization
+         */
         // Core editor components
         buffer.handleDocumentChanged(textStore);
         leftGutterManager.handleDocumentChanged(textStore);
@@ -436,14 +432,14 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
             gutters.get(i).handleDocumentChanged(viewport, renderer);
         }
 
-        //    // Non-core editor components
-        //    editorUndoManager = EditorUndoManager.create(this, document, selection);
-        //    searchModel = SearchModel.create(appContext,
-        //        document,
-        //        renderer,
-        //        viewport,
-        //        selection,
-        //        editorDocumentMutator);
+        // // Non-core editor components
+        // editorUndoManager = EditorUndoManager.create(this, document, selection);
+        // searchModel = SearchModel.create(appContext,
+        // document,
+        // renderer,
+        // viewport,
+        // selection,
+        // editorDocumentMutator);
         localCursorController = LocalCursorController.create(resources, focusManager, selection, buffer, this);
         ParenMatchHighlighter.create(textStore, getViewport(), textStore.getAnchorManager(), getView().getResources(),
                                      getRenderer(), getSelection());
@@ -469,10 +465,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     public void scrollTo(int lineNumber, int column) {
         if (textStore != null) {
             LineInfo lineInfo = textStore.getLineFinder().findLine(lineNumber);
-         /*
-          * TODO: the cursor will be the last line in the viewport,
-          * fix this
-          */
+            /*
+             * TODO: the cursor will be the last line in the viewport, fix this
+             */
             SelectionModel selectionModel = getSelection();
             selectionModel.deselect();
             selectionModel.setCursorPosition(lineInfo, column);
@@ -603,7 +598,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     /**
      * Returns the document partitioning for this viewer.
-     *
+     * 
      * @return the document partitioning for this viewer
      */
     protected String getDocumentPartitioning() {
@@ -611,8 +606,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     }
 
     /**
-     * Sets the document partitioning of this viewer. The partitioning is used by this viewer to
-     * access partitioning information of the viewers input document.
+     * Sets the document partitioning of this viewer. The partitioning is used by this viewer to access partitioning information of the
+     * viewers input document.
      */
     private void setDocumentPartitioning(String documentPartitioning) {
         this.documentPartitioning = documentPartitioning;
@@ -620,11 +615,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     /**
      * Sets the given edit strategy as the only strategy for the given content type.
-     *
-     * @param strategies
-     *         the auto edit strategies
-     * @param contentType
-     *         the content type
+     * 
+     * @param strategies the auto edit strategies
+     * @param contentType the content type
      */
     protected final void setAutoEditStrategies(AutoEditStrategy[] strategies, String contentType) {
         if (autoEditStrategies == null)
@@ -658,7 +651,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         syntaxHighlighter = SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(),
                                                      documentParser, resources.workspaceEditorCss());
         addLineRenderer(syntaxHighlighter.getRenderer());
-        //            Autoindenter.create(documentParser, this);
+        // Autoindenter.create(documentParser, this);
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#canDoOperation(int) */
@@ -740,7 +733,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     /**
      * Internal API. Set specific quick assistant implementation.
-     *
+     * 
      * @param quickAssistAssistant
      */
     public void setQuickAssistAssistant(QuickAssistAssistant quickAssistAssistant) {
@@ -780,7 +773,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         String lineWarning();
 
         String lineError();
-        
+
         String imageViewer();
 
         String withEditorInfo();
@@ -788,7 +781,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     /** ClientBundle for the editor. */
     public interface Resources
-            extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources, ParenMatchHighlighter.Resources {
+                              extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources,
+                              ParenMatchHighlighter.Resources {
         @Source({"Editor.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceEditorCss();
 
@@ -797,22 +791,20 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         @Source("squiggle-warning.png")
         ImageResource squiggleWarning();
-        
+
         @Source("image-viewer-bg.png")
         ImageResource imageViewerBackground();
     }
 
     /**
-     * A listener that is called when the editor becomes or is no longer
-     * read-only.
+     * A listener that is called when the editor becomes or is no longer read-only.
      */
     public interface ReadOnlyListener {
         void onReadOnlyChanged(boolean isReadOnly);
     }
 
     /**
-     * The view for the editor, containing gutters and the buffer. This exposes
-     * only the ability to enable or disable animations.
+     * The view for the editor, containing gutters and the buffer. This exposes only the ability to enable or disable animations.
      */
     public static class View extends CompositeView<Void> {
         final         Css       css;
