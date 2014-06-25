@@ -130,6 +130,9 @@ import com.codenvy.ide.texteditor.embeddedimpl.common.EditorWidgetFactoryImpl;
 import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartView;
 import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartViewImpl;
 import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorViewFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferencePresenter;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferenceView;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferenceViewImpl;
 import com.codenvy.ide.texteditor.embeddedimpl.orion.KeyModeInstances;
 import com.codenvy.ide.texteditor.embeddedimpl.orion.OrionEditorWidgetFactory;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
@@ -273,6 +276,7 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);
+        prefBinder.addBinding().to(EditorTypePreferencePresenter.class);
 
         GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
         themeBinder.addBinding().to(DarkTheme.class);
@@ -307,6 +311,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
+        bind(EditorTypePreferenceView.class).to(EditorTypePreferenceViewImpl.class).in(Singleton.class);
 
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
     }
