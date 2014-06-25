@@ -39,8 +39,10 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.core.editor.EditorTypeSelection;
 import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.requirejs.RequireJsLoader;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.toolbar.PresentationFactory;
@@ -93,6 +95,8 @@ public class BootstrapController {
     private final StyleInjector                       styleInjector;
     private final EventBus                            eventBus;
     private final ActionManager                       actionManager;
+    private final EditorTypeSelection                 editorTypeSelection;
+    private final RequireJsLoader                     requireJsLoader;
 
     /** Create controller. */
     @Inject
@@ -115,7 +119,9 @@ public class BootstrapController {
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
-                               ActionManager actionManager) {
+                               ActionManager actionManager,
+                               final EditorTypeSelection editorTypeSelection,
+                               final RequireJsLoader requireJsLoader) {
 
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
@@ -133,7 +139,10 @@ public class BootstrapController {
         this.themeAgent = themeAgent;
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.editorTypeSelection = editorTypeSelection;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
+
+        this.requireJsLoader = requireJsLoader;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -197,24 +206,6 @@ public class BootstrapController {
         injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "lib/codemirror.css");
     }
 
-    protected void injectOrionScripts() {
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.js").setWindow(ScriptInjector.TOP_WINDOW)
-            .setCallback(new Callback<Void, Exception>() {
-                @Override
-                public void onSuccess(Void result) {
-                    Log.info(BootstrapController.class, "Finished loading CodeMirror scripts.");
-                    loadUserProfile();
-                }
-                @Override
-                public void onFailure(Exception e) {
-                    Log.error(BootstrapController.class, "Unable to inject Orion", e);
-                    initializationFailed("Unable to inject Orion");
-                }
-            }).inject();
-
-        injectCssLink(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.css");
-    }
-
     private static void injectCssLink(final String url) {
         LinkElement link = Document.get().createLinkElement();
         link.setRel("stylesheet");
@@ -228,7 +219,7 @@ public class BootstrapController {
      * @param scriptElement the element to attach
      */
     private static native void nativeAttachToHead(JavaScriptObject scriptElement) /*-{
-		$doc.getElementsByTagName("head")[0].appendChild(scriptElement);
+        $doc.getElementsByTagName("head")[0].appendChild(scriptElement);
     }-*/;
 
     private void injectCodeMirrorExtensions(final Stack<String> scripts) {
@@ -254,18 +245,107 @@ public class BootstrapController {
         }
     }
 
+    protected void injectOrionScripts() {
+        final Stack<String> scripts = new Stack<String>();
+        final String[] scriptsNames = new String[]{
+                // inject orions'
+                "orion/editor/stylers/text_x-java-source/syntax.js",
+                "orion/editor/stylers/application_javascript/syntax.js",
+                "orion/editor/stylers/application_json/syntax.js",
+                "orion/editor/stylers/application_schema_json/syntax.js",
+                "orion/editor/stylers/application_x-ejs/syntax.js",
+                "orion/editor/stylers/application_xml/syntax.js",
+                "orion/editor/stylers/lib/syntax.js",
+                "orion/editor/stylers/text_css/syntax.js",
+                "orion/editor/stylers/text_html/syntax.js",
+                "orion/editor/stylers/text_x-arduino/syntax.js",
+                "orion/editor/stylers/text_x-c__src/syntax.js",
+                "orion/editor/stylers/text_x-csrc/syntax.js",
+                "orion/editor/stylers/text_x-lua/syntax.js",
+                "orion/editor/stylers/text_x-php/syntax.js",
+                "orion/editor/stylers/text_x-python/syntax.js",
+                "orion/editor/stylers/text_x-ruby/syntax.js",
+                "orion/editor/stylers/text_x-yaml/syntax.js",
+                "orion/emacs.js",
+                "orion/vi.js",
+        };
+
+        for (final String script : scriptsNames) {
+            scripts.add(script); // not push, it would need to be fed in reverse order
+        }
+
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.js").setWindow(ScriptInjector.TOP_WINDOW)
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onSuccess(Void result) {
+                              Log.info(BootstrapController.class, "Finished loading Orion scripts.");
+                              injectOrionExtensions(scripts);
+                          }
+
+                          @Override
+                          public void onFailure(Exception e) {
+                              Log.error(BootstrapController.class, "Unable to inject Orion", e);
+                              initializationFailed("Unable to inject Orion");
+                          }
+                      }).inject();
+
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.css");
+    }
+
+    private void injectOrionExtensions(final Stack<String> scripts) {
+        if (scripts.isEmpty()) {
+            Log.info(BootstrapController.class, "Finished loading Orion Extension scripts.");
+            initializeOrion();
+        } else {
+            final String script = scripts.pop();
+            ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + script)
+                          .setWindow(ScriptInjector.TOP_WINDOW)
+                          .setCallback(new Callback<Void, Exception>() {
+                              @Override
+                              public void onSuccess(final Void aVoid) {
+                                  injectOrionExtensions(scripts);
+                              }
+
+                              @Override
+                              public void onFailure(final Exception e) {
+                                  Log.error(BootstrapController.class, "Unable to inject Orion script " + script, e);
+                                  initializationFailed("Unable to inject Orion script");
+                              }
+                          }).inject();
+        }
+    }
+
+    private void initializeOrion() {
+        this.requireJsLoader.require(
+                                     new Callback<Void, Throwable>() {
+
+                                         @Override
+                                         public void onFailure(final Throwable reason) {
+                                             Log.error(BootstrapController.class, "Unable to initialize Orion ", reason);
+                                             initializationFailed("Unable to initialize Orion.");
+                                         }
+
+                                         @Override
+                                         public void onSuccess(final Void result) {
+                                             loadUserProfile();
+                                         }
+                                     },
+                                     new String[]{"orion/editor/edit", "orion/editor/emacs", "orion/editor/vi", "orion/keyBinding"},
+                                     new String[]{"OrionEditor", "OrionEmacs", "OrionVi", "OrionKeyBinding"});
+    }
+
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
-                 new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
-                     @Override
-                     protected void onSuccess(final Profile profile) {
-                         /**
-                          * Profile received, restore preferences and theme
-                          */
-                         preferencesManager.load(profile.getPreferences());
-                         setTheme();
-                         styleInjector.inject();
+                                             new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+                                                 @Override
+                                                 protected void onSuccess(final Profile profile) {
+                                                     /**
+                                                      * Profile received, restore preferences and theme
+                                                      */
+                                                     preferencesManager.load(profile.getPreferences());
+                                                     setTheme();
+                                                     styleInjector.inject();
 
                                                      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                                          @Override
