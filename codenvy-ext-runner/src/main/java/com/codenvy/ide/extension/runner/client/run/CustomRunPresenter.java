@@ -111,7 +111,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         if (view.getSelectedEnvironment() != null) {
             runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
         }
-        runOptions.setMemorySize(Integer.valueOf(view.getMemorySize()));
+        runOptions.setMemorySize(view.getMemorySize());
         runnerController.runActiveProject(runOptions, null);
     }
 
