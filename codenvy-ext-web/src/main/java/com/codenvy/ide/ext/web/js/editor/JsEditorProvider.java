@@ -15,20 +15,21 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
 /**
  * EditorProvider for JavaScript css type
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class JsEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final NotificationManager         notificationManager;
+    private final DocumentProvider          documentProvider;
+    private CodenvyTextEditorFactory        editorProvider;
+    private final NotificationManager       notificationManager;
 
     /**
      * JS editor configuration.
@@ -38,7 +39,7 @@ public class JsEditorProvider implements EditorProvider {
     /** @param documentProvider */
     @Inject
     public JsEditorProvider(DocumentProvider documentProvider,
-                            Provider<CodenvyTextEditor> editorProvider,
+                            CodenvyTextEditorFactory editorProvider,
                             NotificationManager notificationManager,
                             Provider<JsEditorConfiguration> jsEditorConfigurationProvider) {
         super();

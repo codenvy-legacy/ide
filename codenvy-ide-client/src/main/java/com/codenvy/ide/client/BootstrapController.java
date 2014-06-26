@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.client;
 
-import elemental.client.Browser;
-import elemental.events.Event;
-import elemental.events.EventListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
@@ -24,6 +25,7 @@ import com.codenvy.api.workspace.shared.dto.Workspace;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -38,8 +40,10 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.core.editor.EditorTypeSelection;
 import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
+import com.codenvy.ide.requirejs.RequireJsLoader;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.toolbar.PresentationFactory;
@@ -49,9 +53,12 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
@@ -62,12 +69,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.HashMap;
-import java.util.Map;
+import elemental.client.Browser;
+import elemental.events.Event;
+import elemental.events.EventListener;
 
 /**
  * Performs initial application startup.
- *
+ * 
  * @author Nikolay Zamosenchuk
  */
 public class BootstrapController {
@@ -88,6 +96,8 @@ public class BootstrapController {
     private final StyleInjector                       styleInjector;
     private final EventBus                            eventBus;
     private final ActionManager                       actionManager;
+    private final EditorTypeSelection                 editorTypeSelection;
+    private final RequireJsLoader                     requireJsLoader;
 
     /** Create controller. */
     @Inject
@@ -110,7 +120,9 @@ public class BootstrapController {
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
-                               ActionManager actionManager) {
+                               ActionManager actionManager,
+                               final EditorTypeSelection editorTypeSelection,
+                               final RequireJsLoader requireJsLoader) {
 
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
@@ -128,7 +140,10 @@ public class BootstrapController {
         this.themeAgent = themeAgent;
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.editorTypeSelection = editorTypeSelection;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
+
+        this.requireJsLoader = requireJsLoader;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -137,70 +152,256 @@ public class BootstrapController {
         registerDefaultIcons(resources);
 
         // Inject CodeMirror scripts
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
+        injectCodeMirror();
+    }
+
+    private void injectCodeMirror() {
+        /*
+         * This could be simplified and optimized with a all-in-one minified js from http://codemirror.net/doc/compress.html but at least
+         * while debugging, unmodified source is necessary. Another option would be to include all-in-one minified along with a source map
+         */
+        final Stack<String> scripts = new Stack<String>();
+        final String CODEMIRROR_BASE = "codemirror-4.2/";
+        final String[] scriptsNames = new String[]{
+
+                // language modes
+                CODEMIRROR_BASE + "mode/htmlmixed/htmlmixed.js", // must be defined after xml - stack so reverse order
+                CODEMIRROR_BASE + "mode/xml/xml.js",
+                CODEMIRROR_BASE + "mode/javascript/javascript.js",
+                CODEMIRROR_BASE + "mode/css/css.js",
+                CODEMIRROR_BASE + "mode/sql/sql.js",
+                CODEMIRROR_BASE + "mode/clike/clike.js",
+                CODEMIRROR_BASE + "mode/markdown/markdown.js",
+                CODEMIRROR_BASE + "mode/gfm/gfm.js", // markdown extension for github
+                CODEMIRROR_BASE + "mode/properties/properties.js",
+                CODEMIRROR_BASE + "mode/php/php.js",
+                CODEMIRROR_BASE + "mode/htmlembedded/htmlembedded.js",
+                CODEMIRROR_BASE + "mode/python/python.js",
+                CODEMIRROR_BASE + "mode/yaml/yaml.js",
+
+                // hints
+                CODEMIRROR_BASE + "addon/hint/show-hint.js",
+                CODEMIRROR_BASE + "addon/hint/xml-hint.js",
+                CODEMIRROR_BASE + "addon/hint/html-hint.js",
+                CODEMIRROR_BASE + "addon/hint/javascript-hint.js",
+                CODEMIRROR_BASE + "addon/hint/css-hint.js",
+                CODEMIRROR_BASE + "addon/hint/anyword-hint.js",
+                CODEMIRROR_BASE + "addon/hint/sql-hint.js",
+
+                // pair matching
+                CODEMIRROR_BASE + "addon/edit/closebrackets.js",
+                CODEMIRROR_BASE + "addon/edit/closetag.js",
+                CODEMIRROR_BASE + "addon/edit/matchbrackets.js",
+                CODEMIRROR_BASE + "addon/edit/matchtags.js",
+                // the two following are added to repair actual functionality in 'classic' editor
+                CODEMIRROR_BASE + "addon/selection/mark-selection.js",
+                CODEMIRROR_BASE + "addon/selection/active-line.js",
+                // editor keymaps
+                CODEMIRROR_BASE + "keymap/emacs.js",
+                CODEMIRROR_BASE + "keymap/vim.js",
+                CODEMIRROR_BASE + "keymap/sublime.js",
+                // for search
+                CODEMIRROR_BASE + "addon/search/search.js",
+                CODEMIRROR_BASE + "addon/dialog/dialog.js",
+                CODEMIRROR_BASE + "addon/search/searchcursor.js",
+                // comment management
+                CODEMIRROR_BASE + "addon/comment/comment.js",
+                CODEMIRROR_BASE + "addon/comment/continuecomment.js",
+                // folding
+                CODEMIRROR_BASE + "addon/fold/foldcode.js",
+                CODEMIRROR_BASE + "addon/fold/foldgutter.js",
+                CODEMIRROR_BASE + "addon/fold/brace-fold.js",
+                CODEMIRROR_BASE + "addon/fold/xml-fold.js", // also required by matchbrackets and closebrackets
+                CODEMIRROR_BASE + "addon/fold/comment-fold.js",
+        };
+        for (final String script : scriptsNames) {
+            scripts.add(script); // not push, it would need to be fed in reverse order
+        }
+
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "lib/codemirror.js")
+                      .setWindow(ScriptInjector.TOP_WINDOW)
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onSuccess(final Void result) {
+                              injectCodeMirrorExtensions(scripts);
+                          }
+
+                          @Override
+                          public void onFailure(final Exception e) {
+                              Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
+                              initializationFailed("Unable to inject CodeMirror");
+                          }
+                      }).inject();
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "lib/codemirror.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "theme/solarized-mod.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "addon/dialog/dialog.css");
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + CODEMIRROR_BASE + "addon/fold/foldgutter.css");
+    }
+
+    private static void injectCssLink(final String url) {
+        LinkElement link = Document.get().createLinkElement();
+        link.setRel("stylesheet");
+        link.setHref(url);
+        nativeAttachToHead(link);
+    }
+
+    /**
+     * Attach an element to document head.
+     * 
+     * @param scriptElement the element to attach
+     */
+    private static native void nativeAttachToHead(JavaScriptObject scriptElement) /*-{
+        $doc.getElementsByTagName("head")[0].appendChild(scriptElement);
+    }-*/;
+
+    private void injectCodeMirrorExtensions(final Stack<String> scripts) {
+        if (scripts.isEmpty()) {
+            Log.info(BootstrapController.class, "Finished loading CodeMirror scripts.");
+            injectOrionScripts();
+        } else {
+            final String script = scripts.pop();
+            ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + script)
+                          .setWindow(ScriptInjector.TOP_WINDOW)
+                          .setCallback(new Callback<Void, Exception>() {
+                              @Override
+                              public void onSuccess(final Void aVoid) {
+                                  injectCodeMirrorExtensions(scripts);
+                              }
+
+                              @Override
+                              public void onFailure(final Exception e) {
+                                  Log.error(BootstrapController.class, "Unable to inject CodeMirror script " + script, e);
+                                  initializationFailed("Unable to inject CodeMirror script");
+                              }
+                          }).inject();
+        }
+    }
+
+    protected void injectOrionScripts() {
+        final Stack<String> scripts = new Stack<String>();
+        final String[] scriptsNames = new String[]{
+                // inject orions'
+                "orion/editor/stylers/text_x-java-source/syntax.js",
+                "orion/editor/stylers/application_javascript/syntax.js",
+                "orion/editor/stylers/application_json/syntax.js",
+                "orion/editor/stylers/application_schema_json/syntax.js",
+                "orion/editor/stylers/application_x-ejs/syntax.js",
+                "orion/editor/stylers/application_xml/syntax.js",
+                "orion/editor/stylers/lib/syntax.js",
+                "orion/editor/stylers/text_css/syntax.js",
+                "orion/editor/stylers/text_html/syntax.js",
+                "orion/editor/stylers/text_x-arduino/syntax.js",
+                "orion/editor/stylers/text_x-c__src/syntax.js",
+                "orion/editor/stylers/text_x-csrc/syntax.js",
+                "orion/editor/stylers/text_x-lua/syntax.js",
+                "orion/editor/stylers/text_x-php/syntax.js",
+                "orion/editor/stylers/text_x-python/syntax.js",
+                "orion/editor/stylers/text_x-ruby/syntax.js",
+                "orion/editor/stylers/text_x-yaml/syntax.js",
+                "orion/emacs.js",
+                "orion/vi.js",
+        };
+
+        for (final String script : scriptsNames) {
+            scripts.add(script); // not push, it would need to be fed in reverse order
+        }
+
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
                           @Override
                           public void onSuccess(Void result) {
-                              ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
-                                            .setWindow(ScriptInjector.TOP_WINDOW).
-                                      setCallback(new Callback<Void, Exception>() {
-                                          @Override
-                                          public void onSuccess(Void aVoid) {
-                                              loadUserProfile();
-                                              loadWorkspace();
-                                          }
+                              Log.info(BootstrapController.class, "Finished loading Orion scripts.");
+                              injectOrionExtensions(scripts);
+                          }
 
-                                          @Override
-                            public void onFailure(Exception e) {
-                                Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
-                                initializationFailed("Unable to inject CodeMirror parsers");
-                            }
-                        }).inject();
-                }
+                          @Override
+                          public void onFailure(Exception e) {
+                              Log.error(BootstrapController.class, "Unable to inject Orion", e);
+                              initializationFailed("Unable to inject Orion");
+                          }
+                      }).inject();
 
-                @Override
-                public void onFailure(Exception e) {
-                    Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
-                    initializationFailed("Unable to inject CodeMirror");
-                }
-            }).inject();
+        injectCssLink(GWT.getModuleBaseForStaticFiles() + "orion/built-editor.css");
+    }
+
+    private void injectOrionExtensions(final Stack<String> scripts) {
+        if (scripts.isEmpty()) {
+            Log.info(BootstrapController.class, "Finished loading Orion Extension scripts.");
+            initializeOrion();
+        } else {
+            final String script = scripts.pop();
+            ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + script)
+                          .setWindow(ScriptInjector.TOP_WINDOW)
+                          .setCallback(new Callback<Void, Exception>() {
+                              @Override
+                              public void onSuccess(final Void aVoid) {
+                                  injectOrionExtensions(scripts);
+                              }
+
+                              @Override
+                              public void onFailure(final Exception e) {
+                                  Log.error(BootstrapController.class, "Unable to inject Orion script " + script, e);
+                                  initializationFailed("Unable to inject Orion script");
+                              }
+                          }).inject();
+        }
+    }
+
+    private void initializeOrion() {
+        this.requireJsLoader.require(
+                                     new Callback<Void, Throwable>() {
+
+                                         @Override
+                                         public void onFailure(final Throwable reason) {
+                                             Log.error(BootstrapController.class, "Unable to initialize Orion ", reason);
+                                             initializationFailed("Unable to initialize Orion.");
+                                         }
+
+                                         @Override
+                                         public void onSuccess(final Void result) {
+                                             loadUserProfile();
+                                         }
+                                     },
+                                     new String[]{"orion/editor/edit", "orion/editor/emacs", "orion/editor/vi", "orion/keyBinding"},
+                                     new String[]{"OrionEditor", "OrionEmacs", "OrionVi", "OrionKeyBinding"});
     }
 
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
-                 new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
-                     @Override
-                     protected void onSuccess(final Profile profile) {
-                         /**
-                          * Profile received, restore preferences and theme
-                          */
-                         preferencesManager.load(profile.getPreferences());
-                         setTheme();
-                         styleInjector.inject();
+                                             new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+                                                 @Override
+                                                 protected void onSuccess(final Profile profile) {
+                                                     /**
+                                                      * Profile received, restore preferences and theme
+                                                      */
+                                                     preferencesManager.load(profile.getPreferences());
+                                                     setTheme();
+                                                     styleInjector.inject();
+                                                     setupEditorImplementation(preferencesManager);
 
-                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                             @Override
-                             public void execute() {
-                                 initializeComponentRegistry();
-                             }
-                         });
-                     }
+                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                         @Override
+                                                         public void execute() {
+                                                             initializeComponentRegistry();
+                                                         }
+                                                     });
+                                                 }
 
-                     @Override
-                     protected void onFailure(Throwable exception) {
-                         // load Codenvy for anonymous user
-                         setTheme();
-                         styleInjector.inject();
-                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                             @Override
-                             public void execute() {
-                                 initializeComponentRegistry();
-                             }
-                         });
-                     }
-                 }
-            );
+                                                 @Override
+                                                 protected void onFailure(Throwable exception) {
+                                                     // load Codenvy for anonymous user
+                                                     setTheme();
+                                                     styleInjector.inject();
+                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                         @Override
+                                                         public void execute() {
+                                                             initializeComponentRegistry();
+                                                         }
+                                                     });
+                                                 }
+                                             }
+                          );
     }
 
     /**
@@ -219,7 +420,7 @@ public class BootstrapController {
                                                     Log.error(getClass(), exception);
                                                 }
                                             }
-                                           );
+                              );
     }
 
     /** Initialize Component Registry, start extensions */
@@ -245,7 +446,7 @@ public class BootstrapController {
     /** Register project types */
     private void registerProjectTypes() {
         projectTypeDescriptionServiceClient.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
+                                                                                                                   dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
             @Override
             protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
@@ -285,6 +486,21 @@ public class BootstrapController {
         workspacePresenter.go(mainPanel);
 
         processStartupParameters();
+        if (Config.getProjectName() == null) {
+            resourceProvider.refreshRoot();
+        } else {
+            resourceProvider.getProject(Config.getProjectName(),
+                                        new AsyncCallback<Project>() {
+                                            @Override
+                                            public void onFailure(Throwable throwable) {
+                                                resourceProvider.refreshRoot();
+                                            }
+
+                                            @Override
+                                            public void onSuccess(Project project) {
+                                            }
+                                        });
+        }
 
         // Bind browser's window events
         Window.addWindowClosingHandler(new Window.ClosingHandler() {
@@ -317,7 +533,7 @@ public class BootstrapController {
             }
         }, true);
 
-        //This is necessary to forcibly print the first log
+        // This is necessary to forcibly print the first log
         sessionIsStarted(sessionID);
     }
 
@@ -365,6 +581,11 @@ public class BootstrapController {
         }
     }
 
+    private void setupEditorImplementation(final PreferencesManager preferencesManager) {
+        // try to load from preferences
+        this.editorTypeSelection.loadFromPreferences(preferencesManager);
+    }
+
     private void processStartupAction() {
         final String startupAction = Config.getStartupParam("action");
         if (startupAction != null) {
@@ -396,9 +617,8 @@ public class BootstrapController {
     }
 
     /**
-     * Handles any of initialization errors.
-     * Tries to call predefined IDE.eventHandlers.ideInitializationFailed function.
-     *
+     * Handles any of initialization errors. Tries to call predefined IDE.eventHandlers.ideInitializationFailed function.
+     * 
      * @param message error message
      */
     private native void initializationFailed(String message) /*-{

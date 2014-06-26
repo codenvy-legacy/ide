@@ -14,6 +14,7 @@
 
 package com.codenvy.ide.texteditor.selection;
 
+import com.codenvy.ide.outline.OutlinableSelectionModel;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
@@ -38,6 +39,7 @@ import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator.Roundi
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
+import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.UnicodeUtils;
@@ -60,7 +62,7 @@ import static com.codenvy.ide.text.store.util.LineUtils.rubberbandColumn;
  * document is replaced, a new instance of this class is created for the new
  * document.
  */
-public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide.texteditor.api.SelectionModel {
+public class SelectionModel implements Buffer.MouseDragListener, OutlinableSelectionModel, CursorModelWithListener, CursorModelWithHandler {
 
     /** Enumeration of movement actions. */
     public enum MoveAction {
@@ -68,17 +70,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
     }
 
     private static final AnchorType SELECTION_ANCHOR_TYPE = AnchorType.create(SelectionModel.class, "selection");
-
-    /** Listener that is called when the user's cursor changes position. */
-    public interface CursorListener {
-        /**
-         * @param isExplicitChange
-         *         true if this change was a result of either the
-         *         user moving his cursor or through programatic setting, or false if
-         *         it was caused by text mutations in the document
-         */
-        void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange);
-    }
 
     /**
      * Listener that is called when the user changes his selection. This will not
@@ -229,7 +220,8 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
     /** The cursor of the selection */
     private final Anchor cursorAnchor;
 
-    private final ListenerManager<CursorListener> cursorListenerManager;
+    private final ListenerManager<CursorListener>    cursorListenerManager;
+    private final ListenerManager<CursorHandler>     cursorHandlerManager;
 
     private final DocumentModel document;
 
@@ -277,6 +269,7 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
         cursorAnchor = createSelectionAnchor(document.getFirstLine(), 0, 0, document, anchorListener);
         baseAnchor = createSelectionAnchor(document.getFirstLine(), 0, 0, document, anchorListener);
         cursorListenerManager = ListenerManager.create();
+        cursorHandlerManager = ListenerManager.create();
         selectionListenerManager = ListenerManager.create();
     }
 
@@ -334,6 +327,14 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
 
     public ListenerRegistrar<CursorListener> getCursorListenerRegistrar() {
         return cursorListenerManager;
+    }
+
+    public Remover addCursorListener(final CursorListener listener) {
+        return this.cursorListenerManager.add(listener);
+    }
+
+    public Remover addCursorHandler(final CursorHandler listener) {
+        return this.cursorHandlerManager.add(listener);
     }
 
     public ListenerRegistrar<SelectionListener> getSelectionListenerRegistrar() {
@@ -811,6 +812,12 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
             @Override
             public void dispatch(CursorListener listener) {
                 listener.onCursorChange(cursorAnchor.getLineInfo(), cursorAnchor.getColumn(), isExplicitChange);
+            }
+        });
+        cursorHandlerManager.dispatch(new Dispatcher<SelectionModel.CursorHandler>() {
+            @Override
+            public void dispatch(CursorHandler listener) {
+                listener.onCursorChange(cursorAnchor.getLineInfo().number(), cursorAnchor.getColumn(), isExplicitChange);
             }
         });
     }

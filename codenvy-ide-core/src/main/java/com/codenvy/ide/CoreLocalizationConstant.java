@@ -232,4 +232,7 @@ public interface CoreLocalizationConstant extends Messages {
     
     @Key("project.opened.title")
     String projectOpenedTitle(String name);
+
+    @Key("editortype.title")
+    String editorTypeTitle();
 }

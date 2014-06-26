@@ -30,7 +30,6 @@ import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
@@ -69,9 +68,11 @@ import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
+import com.codenvy.ide.core.editor.EditorTypeSelection;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
@@ -115,13 +116,25 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
+import com.codenvy.ide.requirejs.ModuleHolder;
+import com.codenvy.ide.requirejs.RequireJsLoader;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
+import com.codenvy.ide.texteditor.embeddedimpl.codemirror.CodeMirrorEditorWidgetFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EditorWidgetFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EditorWidgetFactoryImpl;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartView;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorPartViewImpl;
+import com.codenvy.ide.texteditor.embeddedimpl.common.EmbeddedTextEditorViewFactory;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferencePresenter;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferenceView;
+import com.codenvy.ide.texteditor.embeddedimpl.common.preference.EditorTypePreferenceViewImpl;
+import com.codenvy.ide.texteditor.embeddedimpl.orion.KeyModeInstances;
+import com.codenvy.ide.texteditor.embeddedimpl.orion.OrionEditorWidgetFactory;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
@@ -204,6 +217,7 @@ public class CoreGinModule extends AbstractGinModule {
         resourcesAPIconfigure();
         coreUiConfigure();
         editorAPIconfigure();
+        requirejsConfigure();
     }
 
     /** API Bindings, binds API interfaces to the implementations */
@@ -230,9 +244,18 @@ public class CoreGinModule extends AbstractGinModule {
 
     /** Configures binding for Editor API */
     protected void editorAPIconfigure() {
+        bind(EditorTypeSelection.class).in(Singleton.class);
+
+        install(new GinFactoryModuleBuilder().build(CodeMirrorEditorWidgetFactory.class));
+        install(new GinFactoryModuleBuilder().build(OrionEditorWidgetFactory.class));
+        bind(EditorWidgetFactory.class).to(EditorWidgetFactoryImpl.class);
+
+        bind(CodenvyTextEditorFactory.class);
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
+        install(new GinFactoryModuleBuilder().implement(EmbeddedTextEditorPartView.class, EmbeddedTextEditorPartViewImpl.class)
+                                             .build(EmbeddedTextEditorViewFactory.class));
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
+        bind(KeyModeInstances.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
         bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
@@ -253,6 +276,7 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);
+        prefBinder.addBinding().to(EditorTypePreferencePresenter.class);
 
         GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
         themeBinder.addBinding().to(DarkTheme.class);
@@ -269,7 +293,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
-//        bind(PartStackView.class).to(PartStackViewImpl.class);
+        // bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
@@ -287,15 +311,21 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
+        bind(EditorTypePreferenceView.class).to(EditorTypePreferenceViewImpl.class).in(Singleton.class);
 
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
+    }
+
+    protected void requirejsConfigure() {
+        bind(ModuleHolder.class).in(javax.inject.Singleton.class);
+        bind(RequireJsLoader.class);
     }
 
     @Provides
     @Named("defaultFileType")
     @Singleton
     protected FileType provideDefaultFileType() {
-        //TODO add icon for unknown file
+        // TODO add icon for unknown file
         return new FileType(null, null);
     }
 

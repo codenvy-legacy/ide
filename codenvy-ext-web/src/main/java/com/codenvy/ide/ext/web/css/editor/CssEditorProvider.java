@@ -15,25 +15,25 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.core.editor.CodenvyTextEditorFactory;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 
 /**
  * EditorProvider for Css css type
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class CssEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final CssResources                cssRes;
-    private final NotificationManager         notificationManager;
+    private final DocumentProvider    documentProvider;
+    private CodenvyTextEditorFactory  editorProvider;
+    private final CssResources        cssRes;
+    private final NotificationManager notificationManager;
 
     /** @param documentProvider */
     @Inject
-    public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider,
+    public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, CodenvyTextEditorFactory editorProvider,
                              NotificationManager notificationManager) {
         this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
