@@ -117,6 +117,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(expectedPath, event.getPath());
     }
 
@@ -131,6 +132,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertTrue(event.isFolder());
         assertEquals(expectedPath, event.getPath());
     }
 
@@ -145,6 +147,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.CREATED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(expectedPath, event.getPath());
     }
 
@@ -160,6 +163,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.MOVED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(expectedPath, event.getPath());
         assertEquals(filePath, ((MoveEvent)event).getOldPath());
     }
@@ -176,6 +180,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.CONTENT_UPDATED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(filePath, event.getPath());
     }
 
@@ -190,6 +195,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.PROPERTIES_UPDATED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(filePath, event.getPath());
     }
 
@@ -205,6 +211,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.ACL_UPDATED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(filePath, event.getPath());
     }
 
@@ -217,6 +224,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.DELETED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(filePath, event.getPath());
     }
 
@@ -232,6 +240,7 @@ public class EventsTest extends LocalFileSystemTest {
         assertEquals(1, events.size());
         VirtualFileEvent event = events.get(0);
         assertEquals(VirtualFileEvent.ChangeType.RENAMED, event.getType());
+        assertFalse(event.isFolder());
         assertEquals(expectedPath, event.getPath());
         assertEquals(filePath, ((RenameEvent)event).getOldPath());
     }
