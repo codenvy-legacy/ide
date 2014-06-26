@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.sample;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 /**
@@ -19,16 +19,14 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class MyImplementation implements MyInterface {
-    private ConsolePart console;
 
     @Inject
-    public MyImplementation(ConsolePart console) {
-        this.console = console;
+    public MyImplementation() {
     }
 
     /** {@inheritDoc} */
     @Override
     public void doSomething() {
-        console.print("my implementation");
+        Log.info(MyImplementation.class, "my implementation");
     }
 }

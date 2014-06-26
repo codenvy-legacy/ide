@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.named;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -20,16 +20,14 @@ import com.google.inject.name.Named;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class MyClassWithNamedParam {
-    private ConsolePart console;
     private String      someText;
 
     @Inject
-    public MyClassWithNamedParam(ConsolePart console, @Named("myString") String someText) {
-        this.console = console;
+    public MyClassWithNamedParam(@Named("myString") String someText) {
         this.someText = someText;
     }
 
     public void doSomething() {
-        console.print(someText);
+        Log.info(MyClassWithNamedParam.class, someText);
     }
 }

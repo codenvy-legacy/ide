@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.annotation;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 /**
@@ -19,18 +19,16 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class SimpleImplementation implements SimpleInterface {
-    private ConsolePart console;
     private String      text;
 
     @Inject
-    public SimpleImplementation(ConsolePart console) {
-        this.console = console;
+    public SimpleImplementation() {
         this.text = "my string value from SimpleImplementation class";
     }
 
     /** {@inheritDoc} */
     @Override
     public void doSomething() {
-        console.print(text);
+        Log.info(SimpleImplementation.class, text);
     }
 }

@@ -11,7 +11,6 @@
 package com.codenvy.ide.tutorial.gin;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.gin.annotation.MyClassWithAnnotationParam;
 import com.codenvy.ide.tutorial.gin.annotation.SimpleClass;
@@ -24,6 +23,7 @@ import com.codenvy.ide.tutorial.gin.part.TutorialHowToPresenter;
 import com.codenvy.ide.tutorial.gin.sample.MyClass;
 import com.codenvy.ide.tutorial.gin.sample.MyClassWithProvideParam;
 import com.codenvy.ide.tutorial.gin.singleton.MySingletonClass;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.inject.client.AsyncProvider;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -38,8 +38,7 @@ import static com.codenvy.ide.api.ui.workspace.PartStackType.EDITING;
 public class GinExtension {
 
     @Inject
-    public GinExtension(final ConsolePart console,
-                        MyClass myClass,
+    public GinExtension(MyClass myClass,
                         MySingletonClass mySingletonClass,
                         Provider<MyClass> myClassProvider,
                         Provider<MySingletonClass> mySingletonClassProvider,
@@ -78,7 +77,7 @@ public class GinExtension {
 
             @Override
             public void onFailure(Throwable caught) {
-                console.print(caught.getMessage());
+                Log.info(GinExtension.class, caught.getMessage());
             }
         });
 

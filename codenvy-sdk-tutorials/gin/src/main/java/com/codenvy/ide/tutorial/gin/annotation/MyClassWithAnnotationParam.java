@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.annotation;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 /**
@@ -19,16 +19,14 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class MyClassWithAnnotationParam {
-    private ConsolePart console;
     private String      text;
 
     @Inject
-    public MyClassWithAnnotationParam(ConsolePart console, @MyString String text) {
-        this.console = console;
+    public MyClassWithAnnotationParam(@MyString String text) {
         this.text = text;
     }
 
     public void doSomething() {
-        console.print(text);
+        Log.info(MyClassWithAnnotationParam.class, text);
     }
 }

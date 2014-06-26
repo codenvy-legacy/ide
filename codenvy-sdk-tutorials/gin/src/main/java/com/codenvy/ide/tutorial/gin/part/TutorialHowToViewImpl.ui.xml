@@ -64,7 +64,7 @@
             </li>
         </ul>
 
-        Running this extension will result in printing out messages in a Console. However, we used different approaches to showing each
+        Running this extension will result in printing out messages in a browser's console. However, we used different approaches to showing each
         message. Code of the following class is executed step by step:<b>com.codenvy.ide.tutorial.gin.GinExtension</b>:
 
         <h1 id="1">Example 1</h1>
@@ -75,14 +75,14 @@
         </pre>
 
         The following code is executed:
-        <pre>console.print("my implementation");</pre>
+        <pre>Log.info("my implementation");</pre>
 
         Full code:
         <b>com.codenvy.ide.tutorial.gin.sample.MyImplementation#doSomething</b>
 
         Well see
         <b>my implementation</b>
-        message in Console
+        message in browser's console
 
         <h1 id="2">Example 2</h1>
 
@@ -90,14 +90,14 @@
         <pre>mySingletonClass.doSomething();</pre>
 
         The following code is executed:
-        <pre>console.print("my singleton class");</pre>
+        <pre>Log.info("my singleton class");</pre>
 
         Fulle code:
         <b>com.codenvy.ide.tutorial.gin.singleton.MySingletonImplementation#doSomething</b>
 
         Well see
         <b>my singleton class</b>
-        message in Console.
+        message in browser's console.
 
         <h1 id="3">Example 3</h1>
 
@@ -126,14 +126,14 @@
             assert mySingletonClass == mySingletonClass2;
         </pre>
 
-        Asserts in this case verify that this is one instance, unlike the abovementioned case.
+        Asserts in this case verify that this is one instance, unlike the above mentioned case.
 
         <h1 id="5">Example 5</h1>
 
         In this example, we get an instance with AsyncProvider. When this code loads,
         <b>onSuccess</b>
         method will be triggered, and the following code will work:
-        <b>console.print("my implementation");</b>
+        <b>Log.info("my implementation");</b>
         (com.codenvy.ide.tutorial.gin.sample.MyImplementation#doSomething)
 
         <pre>
@@ -145,7 +145,7 @@
 
             @Override
             public void onFailure(Throwable caught) {
-            console.print(caught.getMessage());
+            Log.info(caught.getMessage());
             }
             });
         </pre>
@@ -155,7 +155,7 @@
 
         In this example, we create two objects through a Factory, and call
         <b>doSomething</b>
-        methods on them. When this method is called, the text that weve passed over to Factory, will be printed out in Console:
+        methods on them. When this method is called, the text that weve passed over to Factory, will be printed out in browser's console:
 
         <pre>
             MyFactoryClass myFactoryClass1 = myFactory.createMyFactoryClass("my factory class 1");
@@ -171,7 +171,7 @@
 
         <h1 id="7">Example 7</h1>
 
-        Here we have created an object through a Factory, and print out the same message to Console. The difference with the previous
+        Here we have created an object through a Factory, and print out the same message to browser's console. The difference with the previous
         example is that in this case we have bound an interface with its implementation:
 
         <pre>
@@ -187,13 +187,13 @@
         <h1 id="8">Example 8</h1>
 
         In this example, we use an instance of a class that gets parameters from a named annotation. It prints out these parameters to a
-        console when
+        browser's console when
         <b>doSomething</b>
         method is triggered:
         <pre>myClassWithNamedParam.doSomething();</pre>
 
         This is what happens inside the method:
-        <pre>console.print(someText);</pre>
+        <pre>Log.info(someText);</pre>
 
         The following message is printed out:
         <pre>"my string value from named annotation"</pre>
@@ -204,12 +204,12 @@
         <pre>myClassWithProvideParam.doSomething();</pre>
 
         The following code is executed:
-        <pre>console.print(someText);</pre>
+        <pre>Log.info(someText);</pre>
 
         Full code:
         <b>com.codenvy.ide.tutorial.gin.sample.MyClassWithProvideParam#doSomething</b>
 
-        It prints out the following message to Console:
+        It prints out the following message to browser's console:
         <pre>"my string value from provider method"</pre>
 
         When
@@ -217,7 +217,7 @@
         is initialized it gets an instance of a String parameter from ProvidedMethod
         (com.codenvy.ide.tutorial.gin.inject.GinModule#provideStringValue). When this parameter is created, the following code is
         executed:
-        <pre>console.print("initialize string value in gin module");</pre>
+        <pre>Log.info("initialize string value in gin module");</pre>
 
         <h1 id="10">Example 10</h1>
 
@@ -227,11 +227,11 @@
 
         The following code is executed:
         <pre>
-            console.print(text);
+            Log.info(text);
         </pre>
 
         Reference to class: com.codenvy.ide.tutorial.gin.annotation.MyClassWithAnnotationParam#doSomething
-        Message printed out to Console:
+        Message printed out to browser's console:
         <pre>"my string value from MyStringProvider class"</pre>
 
         <h1 id="11">Example 11</h1>
@@ -240,14 +240,14 @@
         <pre>simpleInterface.doSomething();</pre>
 
         Code that is executed:
-        <pre>console.print(text);</pre>
+        <pre>Log.info(text);</pre>
 
         Reference to a class: com.codenvy.ide.tutorial.gin.annotation.SimpleImplementation#doSomething
 
-        Message printed out to Console:
+        Message printed out to browser's console:
         <pre>"my string value from SimpleImplementation class"</pre>
 
-        <h1 id="list">Full list of messages printed out to Console</h1>
+        <h1 id="list">Full list of messages printed out to browser's console</h1>
 
         my implementation
         my singleton class

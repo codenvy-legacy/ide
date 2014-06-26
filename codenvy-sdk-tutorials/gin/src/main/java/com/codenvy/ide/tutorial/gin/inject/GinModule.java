@@ -11,7 +11,6 @@
 package com.codenvy.ide.tutorial.gin.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.tutorial.gin.annotation.MyString;
 import com.codenvy.ide.tutorial.gin.annotation.MyStringProvider;
 import com.codenvy.ide.tutorial.gin.annotation.SimpleClass;
@@ -24,6 +23,7 @@ import com.codenvy.ide.tutorial.gin.sample.MyImplementation;
 import com.codenvy.ide.tutorial.gin.sample.MyInterface;
 import com.codenvy.ide.tutorial.gin.singleton.MySingletonImplementation;
 import com.codenvy.ide.tutorial.gin.singleton.MySingletonInterface;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
@@ -52,8 +52,8 @@ public class GinModule extends AbstractGinModule {
 
     @Provides
     @Singleton
-    protected String provideStringValue(ConsolePart console) {
-        console.print("initialize string value in gin module");
+    protected String provideStringValue(/*ConsolePart console*/) {
+        Log.info(GinModule.class, "initialize string value in gin module");
         return "my string value from provider method";
     }
 }

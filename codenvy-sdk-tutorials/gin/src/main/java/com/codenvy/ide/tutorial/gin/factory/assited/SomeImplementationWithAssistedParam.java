@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.factory.assited;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -21,18 +21,16 @@ import com.google.inject.assistedinject.Assisted;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class SomeImplementationWithAssistedParam implements SomeInterface {
-    private ConsolePart console;
     private String      text;
 
     @Inject
-    public SomeImplementationWithAssistedParam(ConsolePart console, @Assisted String text) {
-        this.console = console;
+    public SomeImplementationWithAssistedParam(@Assisted String text) {
         this.text = text;
     }
 
     /** {@inheritDoc} */
     @Override
     public void doSomething() {
-        console.print(text);
+        Log.info(SomeImplementationWithAssistedParam.class, text);
     }
 }
