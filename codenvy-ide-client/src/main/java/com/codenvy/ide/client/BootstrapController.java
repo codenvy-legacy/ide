@@ -146,7 +146,6 @@ public class BootstrapController {
                                       setCallback(new Callback<Void, Exception>() {
                                           @Override
                                           public void onSuccess(Void aVoid) {
-                                              loadUserProfile();
                                               loadWorkspace();
                                           }
 
@@ -166,12 +165,35 @@ public class BootstrapController {
             }).inject();
     }
 
+    /**
+     * Fetches current workspace and saves it to Config.
+     */
+    private void loadWorkspace() {
+        workspaceServiceClient.getWorkspace(Config.getWorkspaceId(),
+                    new AsyncRequestCallback<Workspace>(dtoUnmarshallerFactory.newUnmarshaller(Workspace.class)) {
+                        @Override
+                        protected void onSuccess(Workspace result) {
+                            Config.setCurrentWorkspace(result);
+                            loadUserProfile();
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable throwable) {
+                            Log.error(BootstrapController.class, "Unable to get Workspace", throwable);
+                            initializationFailed("Unable to get Workspace");
+                        }
+                    }
+               );
+    }
+
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
                  new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
                      @Override
                      protected void onSuccess(final Profile profile) {
+                         Config.setCurrentProfile(profile);
+
                          /**
                           * Profile received, restore preferences and theme
                           */
@@ -188,39 +210,14 @@ public class BootstrapController {
                      }
 
                      @Override
-                     protected void onFailure(Throwable exception) {
-                         // load Codenvy for anonymous user
-                         setTheme();
-                         styleInjector.inject();
-                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                             @Override
-                             public void execute() {
-                                 initializeComponentRegistry();
-                             }
-                         });
+                     protected void onFailure(Throwable error) {
+                         Log.error(BootstrapController.class, "Unable to get Profile", error);
+                         initializationFailed("Unable to get Profile");
                      }
                  }
             );
     }
 
-    /**
-     * Fetches current workspace and saves it to Config.
-     */
-    private void loadWorkspace() {
-        workspaceServiceClient.getWorkspace(Config.getWorkspaceId(),
-                                            new AsyncRequestCallback<Workspace>(dtoUnmarshallerFactory.newUnmarshaller(Workspace.class)) {
-                                                @Override
-                                                protected void onSuccess(Workspace result) {
-                                                    Config.setCurrentWorkspace(result);
-                                                }
-
-                                                @Override
-                                                protected void onFailure(Throwable exception) {
-                                                    Log.error(getClass(), exception);
-                                                }
-                                            }
-                                           );
-    }
 
     /** Initialize Component Registry, start extensions */
     private void initializeComponentRegistry() {
