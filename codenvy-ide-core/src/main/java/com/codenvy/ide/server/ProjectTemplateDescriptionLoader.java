@@ -15,31 +15,20 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.dto.shared.JsonArray;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.util.List;
 
 /**
- * Reads project template descriptions that may be described in separate .json file
- * for every project type. This file should be named as project_type_id.json and
- * must be placed in folder defined by project.templates_directory configuration property.
+ * Reads project template descriptions that may be described in separate .json files
+ * for every project type. This file should be named as project_type_id.json.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ProjectTemplateDescriptionLoader {
-    private final String templatesDirectory;
-
-    @Inject
-    public ProjectTemplateDescriptionLoader(@Named("project.templates_directory") String templatesDirectory) {
-        this.templatesDirectory = templatesDirectory;
-    }
 
     /**
      * Load project template descriptions for the specified project type.
@@ -52,9 +41,9 @@ public class ProjectTemplateDescriptionLoader {
      *         if i/o error occurs while reading file with templates
      */
     public void load(String projectTypeId, List<ProjectTemplateDescription> list) throws IOException {
-        final Path templatesFilePath = Paths.get(templatesDirectory, projectTypeId + ".json");
-        if (Files.exists(templatesFilePath)) {
-            InputStream inputStream = Files.newInputStream(templatesFilePath);
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(projectTypeId + ".json");
+        if (url != null) {
+            InputStream inputStream = url.openStream();
             JsonArray<ProjectTemplateDescriptor> templates =
                     DtoFactory.getInstance().createListDtoFromJson(inputStream, ProjectTemplateDescriptor.class);
             for (ProjectTemplateDescriptor template : templates) {
