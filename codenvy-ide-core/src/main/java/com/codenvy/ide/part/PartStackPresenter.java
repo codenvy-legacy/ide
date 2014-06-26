@@ -133,11 +133,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
         parts.add(part);
 
-        double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
+        final double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
         partsSize.add(partSize);
-        if (workBenchPartController != null) {
-            workBenchPartController.setSize(partSize);
-        }
+
         part.addPropertyListener(propertyListener);
         // include close button
         ImageResource titleImage = part.getTitleImage();
@@ -179,9 +177,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             return;
         }
 
+        // remember size of the previous active part
         if (activePart != null && workBenchPartController != null) {
             partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
         }
+
         activePart = part;
 
         if (part == null) {
