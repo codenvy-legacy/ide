@@ -23,11 +23,10 @@ import java.util.Set;
  */
 @ImplementedBy(MainPageViewImpl.class)
 public interface MainPageView extends View<MainPageView.ActionDelegate> {
-    String SAMPLES = "Samples";
 
     void selectProjectType(String projectTypeId);
 
-    void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories, Map<String, Set<ProjectTypeDescriptor>> samples);
+    void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories, Map<String, Set<ProjectTemplateDescriptor>> samples);
 
     void reset();
 

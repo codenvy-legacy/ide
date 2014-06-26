@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -33,11 +34,11 @@ import java.util.Set;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private       MainPageView                  view;
-    private       ProjectTypeDescriptorRegistry registry;
-    private       ProjectTypeWizardRegistry     wizardRegistry;
-    private       ProjectTypeDescriptor         typeDescriptor;
-    private       ProjectTemplateDescriptor     template;
+    private MainPageView                  view;
+    private ProjectTypeDescriptorRegistry registry;
+    private ProjectTypeWizardRegistry     wizardRegistry;
+    private ProjectTypeDescriptor         typeDescriptor;
+    private ProjectTemplateDescriptor     template;
 
     @Inject
     public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry) {
@@ -79,7 +80,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         view.reset();
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
-        Map<String, Set<ProjectTypeDescriptor>> samples = new HashMap<>();
+        Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
             if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
@@ -90,11 +91,14 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             }
             if (project == null) {
                 if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
-                    if (!samples.containsKey(descriptor.getProjectTypeCategory())) {
-                        samples.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
+                    for (ProjectTemplateDescriptor templateDescriptor : descriptor.getTemplates()) {
+                        String category = templateDescriptor.getCategory() == null ? ProjectTemplateDescription.defaultCategory
+                                                                                   : templateDescriptor.getCategory();
+                        if (!samples.containsKey(category)) {
+                            samples.put(category, new HashSet<ProjectTemplateDescriptor>());
+                        }
+                        samples.get(category).add(templateDescriptor);
                     }
-                    samples.get(descriptor.getProjectTypeCategory()).add(descriptor);
-
                 }
             }
         }

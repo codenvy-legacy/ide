@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class MainPageViewImpl implements MainPageView {
     private static final String DESCRIPTOR = "Descriptors";
     private static final String TEMPLATE   = "Temp";
     private static final String CATEGORIES = "Categories";
+    private static final String SAMPLES    = "Samples";
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
@@ -98,20 +100,16 @@ public class MainPageViewImpl implements MainPageView {
 
         }
     };
-
-    private Tree<String> categoriesTree;
     @UiField
     SimplePanel categoriesPanel;
-//    @UiField
-//    SimplePanel     projectsPanel;
-
     @UiField
-    HTMLPanel descriptionArea;
-    private ActionDelegate                          delegate;
-    private Map<String, Set<ProjectTypeDescriptor>> categories;
-    private Map<String, Set<ProjectTypeDescriptor>> samples;
-    private Map<String, Object>                     templateOrType;
-    private Resources resources;
+    HTMLPanel   descriptionArea;
+    private Tree<String>                                categoriesTree;
+    private ActionDelegate                              delegate;
+    private Map<String, Set<ProjectTypeDescriptor>>     categories;
+    private Map<String, Set<ProjectTemplateDescriptor>> samples;
+    private Map<String, Object>                         templateOrType;
+    private Resources                                   resources;
 
     @Inject
     public MainPageViewImpl(Resources resources) {
@@ -121,7 +119,6 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     private void selectNextWizardType(Object itemData) {
-//        projectTypeList.getSelectionModel().setSelectedItem(itemData);
         if (itemData instanceof ProjectTemplateDescriptor) {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
@@ -158,19 +155,18 @@ public class MainPageViewImpl implements MainPageView {
         }
         if (typeDescriptor != null) {
             for (String key : templateOrType.keySet()) {
-                        if (templateOrType.get(key) == typeDescriptor) {
-                            categoriesTree.getSelectionModel().selectSingleNode(key);
-//                            treeEventHandler.onNodeSelected(categoriesTree.getNode(key), null);
-                            selectNextWizardType(typeDescriptor);
+                if (templateOrType.get(key) == typeDescriptor) {
+                    categoriesTree.getSelectionModel().selectSingleNode(key);
+                    selectNextWizardType(typeDescriptor);
 
-                        }
-                    }
                 }
+            }
+        }
     }
 
     @Override
     public void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories,
-                                         Map<String, Set<ProjectTypeDescriptor>> samples) {
+                                         Map<String, Set<ProjectTemplateDescriptor>> samples) {
         this.categories = categories;
         this.samples = samples;
         templateOrType = new HashMap<>();
@@ -191,24 +187,29 @@ public class MainPageViewImpl implements MainPageView {
         style.setHeight(100, Style.Unit.PCT);
         style.setPosition(Style.Position.RELATIVE);
         categoriesTree.setTreeEventHandler(treeEventHandler);
+        descriptionArea.clear();
     }
 
     interface MainPageViewImplUiBinder
             extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
     }
 
-    private class CategoriesDataAdapter implements NodeDataAdapter<String> {
+    private class CategoriesDataAdapter implements NodeDataAdapter<String> , Comparator<String>{
 
         private Map<String, TreeNodeElement<String>> elements = new HashMap<>();
 
         @Override
         public int compare(String a, String b) {
-            return 0;
+            if (a.startsWith(SAMPLES) && !b.startsWith(SAMPLES)) {
+                return -1;
+            }
+            return a.compareTo(b);
+
         }
 
         @Override
         public boolean hasChildren(String data) {
-            return SAMPLES.equals(data) || data.startsWith(SAMPLES) || data.startsWith(CATEGORIES);
+            return data.startsWith(SAMPLES) || data.startsWith(CATEGORIES);
         }
 
         @Override
@@ -220,18 +221,15 @@ public class MainPageViewImpl implements MainPageView {
                         array.add(CATEGORIES + s);
                     }
                     if (!samples.isEmpty()) {
-                        array.add(SAMPLES);
+                        for (String s : samples.keySet()) {
+                            array.add(SAMPLES + s);
+                        }
                     }
+                    array.sort(this);
                     return array;
 
                 }
-                if (SAMPLES.equals(data)) {
-                    Array<String> array = Collections.createArray();
-                    for (String s : samples.keySet()) {
-                        array.add(SAMPLES + s);
-                    }
-                    return array;
-                }
+
                 if (data.startsWith(CATEGORIES)) {
                     String key = data.substring(CATEGORIES.length());
                     Array<String> array = Collections.createArray();
@@ -243,21 +241,22 @@ public class MainPageViewImpl implements MainPageView {
                             templateOrType.put(itemKey, typeDescriptor);
                         }
                     }
+                    array.sort(this);
                     return array;
                 }
             }
             if (data.startsWith(SAMPLES)) {
                 String key = data.substring(SAMPLES.length());
                 if (samples.containsKey(key)) {
-                    Set<ProjectTypeDescriptor> descriptors = samples.get(key);
+                    Set<ProjectTemplateDescriptor> descriptors = samples.get(key);
                     Array<String> array = Collections.createArray();
-                    for (ProjectTypeDescriptor descriptor : descriptors) {
-                        for (ProjectTemplateDescriptor templateDescriptor : descriptor.getTemplates()) {
-                            String itemKey = TEMPLATE + key + '!' + descriptor.getProjectTypeId() + "@" + templateDescriptor.hashCode();
-                            templateOrType.put(itemKey, templateDescriptor);
-                            array.add(itemKey);
-                        }
+                    for (ProjectTemplateDescriptor descriptor : descriptors) {
+                        String itemKey = TEMPLATE + descriptor.getDisplayName();
+                        templateOrType.put(itemKey, descriptor);
+                        array.add(itemKey);
+
                     }
+                    array.sort(this);
                     return array;
                 }
             }
@@ -322,7 +321,7 @@ public class MainPageViewImpl implements MainPageView {
         @Override
         public SpanElement renderNodeContents(String data) {
             SpanElement spanElement = Elements.createSpanElement();
-            if (!SAMPLES.equals(data) && data.startsWith(SAMPLES)) {
+            if (data.startsWith(SAMPLES)) {
                 data = data.substring(SAMPLES.length());
                 spanElement.getStyle().setFontWeight("bold");
             }
@@ -330,7 +329,7 @@ public class MainPageViewImpl implements MainPageView {
                 data = data.substring(CATEGORIES.length());
                 spanElement.getStyle().setFontWeight("bold");
             }
-            if (data.equals(SAMPLES)) {
+            if (samples.containsKey(data)) {
                 spanElement.getStyle().setFontWeight("bold");
             }
             if (templateOrType.containsKey(data)) {
