@@ -43,15 +43,16 @@ public class ProjectTemplateDescriptionLoader {
     public void load(String projectTypeId, List<ProjectTemplateDescription> list) throws IOException {
         final URL url = Thread.currentThread().getContextClassLoader().getResource(projectTypeId + ".json");
         if (url != null) {
-            InputStream inputStream = url.openStream();
-            JsonArray<ProjectTemplateDescriptor> templates =
-                    DtoFactory.getInstance().createListDtoFromJson(inputStream, ProjectTemplateDescriptor.class);
-            for (ProjectTemplateDescriptor template : templates) {
-                list.add(new ProjectTemplateDescription(template.getCategory(),
-                                                        template.getSources().getType(),
-                                                        template.getDisplayName(),
-                                                        template.getDescription(),
-                                                        template.getSources().getLocation()));
+            try (InputStream inputStream = url.openStream()) {
+                JsonArray<ProjectTemplateDescriptor> templates =
+                        DtoFactory.getInstance().createListDtoFromJson(inputStream, ProjectTemplateDescriptor.class);
+                for (ProjectTemplateDescriptor template : templates) {
+                    list.add(new ProjectTemplateDescription(template.getCategory(),
+                                                            template.getSources().getType(),
+                                                            template.getDisplayName(),
+                                                            template.getDescription(),
+                                                            template.getSources().getLocation()));
+                }
             }
         }
     }
