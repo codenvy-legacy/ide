@@ -16,27 +16,39 @@ import com.codenvy.api.project.shared.Attribute;
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.server.ProjectTemplateDescriptionLoader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /** @author Artem Zatsarynnyy */
 @Singleton
 public class CodenvyPluginProjectTypeExtension implements ProjectTypeExtension {
-    private String baseUrl;
+    private static final Logger LOG = LoggerFactory.getLogger(CodenvyPluginProjectTypeExtension.class);
+    private final ProjectTemplateDescriptionLoader projectTemplateDescriptionLoader;
+    private final String                           baseUrl;
+    private final ProjectType                      projectType;
 
     @Inject
-    public CodenvyPluginProjectTypeExtension(@Named("extension-url") String baseUrl, ProjectTypeDescriptionRegistry registry) {
+    public CodenvyPluginProjectTypeExtension(@Named("extension-url") String baseUrl,
+                                             ProjectTemplateDescriptionLoader projectTemplateDescriptionLoader,
+                                             ProjectTypeDescriptionRegistry registry) {
         this.baseUrl = baseUrl;
+        this.projectTemplateDescriptionLoader = projectTemplateDescriptionLoader;
+        projectType = new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME, Constants.CODENVY_CATEGORY);
         registry.registerProjectType(this);
     }
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.CODENVY_PLUGIN_ID, Constants.CODENVY_PLUGIN_NAME, Constants.CODENVY_CATEGORY);
+        return projectType;
     }
 
     @Override
@@ -51,19 +63,29 @@ public class CodenvyPluginProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
-        final List<ProjectTemplateDescription> list = new ArrayList<>(3);
+        final List<ProjectTemplateDescription> list = new ArrayList<>();
+
+        try {
+            projectTemplateDescriptionLoader.load(getProjectType().getId(), list);
+        } catch (IOException e) {
+            LOG.error("Unable to load external templates for project type: {}", getProjectType().getId());
+        }
+
         list.add(new ProjectTemplateDescription("zip",
                                                 "GIST EXAMPLE",
                                                 "Simple Codenvy extension project is demonstrating basic usage Codenvy API.",
                                                 baseUrl + "/gist-extension.zip"));
+
         list.add(new ProjectTemplateDescription("zip",
                                                 "EMPTY EXTENSION PROJECT",
                                                 "This is a ready to use structure of a Codenvy extension with a minimal set of files and dependencies.",
                                                 baseUrl + "/empty-extension.zip"));
+
         list.add(new ProjectTemplateDescription("zip",
                                                 "HELLO WORLD EXTENSION",
                                                 "This is a simple Codenvy Extension that prints Hello World in Output console and adds Hello World item to a content menu.",
                                                 baseUrl + "/helloworld-extension.zip"));
+
         list.add(new ProjectTemplateDescription("zip",
                                                 "ANALYTICS EVENT LOGGER EXTENSION",
                                                 "This is a simple Codenvy Extension that logs an event for the Analytics.",
