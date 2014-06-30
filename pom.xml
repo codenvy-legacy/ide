@@ -41,6 +41,7 @@
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-java</module>
+        <module>codenvy-ext-java-codeassistant</module>
         <module>codenvy-ext-debugger-java</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-security</module>

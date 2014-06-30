@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.core.dom;
 
-import com.codenvy.ide.ext.java.jdt.core.dom.AST;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;

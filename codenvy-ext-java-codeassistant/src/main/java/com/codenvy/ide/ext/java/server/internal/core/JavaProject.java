@@ -10,16 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core;
 
-import com.codenvy.api.project.server.FolderEntry;
-import com.codenvy.api.project.server.Project;
-import com.codenvy.api.project.server.ProjectManager;
-import com.codenvy.api.project.shared.Attribute;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
-import com.codenvy.ide.ext.java.shared.Constants;
-import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -71,30 +65,30 @@ import java.util.Map;
 public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
-    private final VirtualFileImpl virtualFile;
-    private final JavaSearchNameEnvironment nameEnvironment;
-    private Project             project;
-    private Map<String, String> options;
-    private IClasspathEntry[]   rawClassPath;
-    private ResolvedClasspath   resolvedClasspath;
-    private IndexManager        indexManager;
+    private JavaSearchNameEnvironment nameEnvironment;
+    private ProjectDescriptor         project;
+    private File                      projectFile;
+    private Map<String, String>       options;
+    private IClasspathEntry[]         rawClassPath;
+    private ResolvedClasspath         resolvedClasspath;
+    private IndexManager              indexManager;
 
-    public JavaProject(Project project, String tempDir, ProjectManager projectManager, String ws, Map<String, String> options) {
+    public JavaProject(ProjectDescriptor project, File projectFile, String tempDir, ProjectApiRestClient projectManager, String ws,
+                       Map<String, String> options) {
         super(null);
         this.project = project;
+        this.projectFile = projectFile;
         this.options = options;
-        if (!(project.getBaseFolder().getVirtualFile() instanceof VirtualFileImpl)) {
-            throw new IllegalArgumentException("Project must be based on com.codenvy.vfs.impl.fs.VirtualFileImpl");
-        }
-        virtualFile = (VirtualFileImpl)project.getBaseFolder().getVirtualFile();
+
         List<IClasspathEntry> paths = new ArrayList<>();
         try {
-            if (project.getBaseFolder().getParent().getPath().equals("/")) {
+            String path = project.getPath();
+            if (path.equals("/" + project.getName())) {
                 addSources(project, paths);
             } else {
-                FolderEntry parentFolder = project.getBaseFolder().getParent();
-                Project parentProject = projectManager.getProject(ws, parentFolder.getPath());
-                for (Project module : parentProject.getModules()) {
+                ProjectDescriptor parentProject = projectManager.getProject(ws, path.substring(0, path.indexOf(project.getName())));
+                List<ProjectDescriptor> modules = projectManager.getModules(ws, parentProject.getPath());
+                for (ProjectDescriptor module : modules) {
                     addSources(module, paths);
                 }
             }
@@ -105,8 +99,8 @@ public class JavaProject extends Openable implements IJavaProject {
         paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
         String path = "";
         try {
-            path = virtualFile.getPath();
-            File depDir = new File(tempDir, virtualFile.getId());
+            path = project.getPath();
+            File depDir = new File(tempDir, project.getId());
             if (depDir.exists()) {
                 DirectoryStream<java.nio.file.Path> deps =
                         Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
@@ -121,7 +115,7 @@ public class JavaProject extends Openable implements IJavaProject {
                 }
             }
             rawClassPath = paths.toArray(new IClasspathEntry[paths.size()]);
-        } catch (VirtualFileSystemException | IOException e) {
+        } catch (IOException e) {
             LOG.error("Can't find jar dependency's: ", e);
         }
 
@@ -138,20 +132,22 @@ public class JavaProject extends Openable implements IJavaProject {
         return nameEnvironment;
     }
 
-    private void addSources(Project project, List<IClasspathEntry> paths) throws IOException {
-        final String builderName = project.getDescription().getAttributeValue(Constants.BUILDER_NAME);
-        if (builderName != null) {
-            final String sourceFolders = Constants.BUILDER_SOURCE_FOLDERS.replace("${builder}", builderName);
-            Attribute attribute = project.getDescription().getAttribute(sourceFolders);
+    private void addSources(ProjectDescriptor project, List<IClasspathEntry> paths) throws IOException {
+        List<String> strings = project.getAttributes().get("builder.name");
+
+        final String builderName;
+        if (strings != null && (builderName = strings.get(0)) != null) {
+            final String sourceFolders = "builder.${builder}.source_folders".replace("${builder}", builderName);
+            List<String> attribute = project.getAttributes().get(sourceFolders);
             if (attribute != null) {
-                for (String path : attribute.getValues()) {
+                for (String path : attribute) {
                     paths.add(JavaCore.newSourceEntry(
-                            new Path(((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/" + path)));
+                            new Path(projectFile.getPath() + "/" + path)));
                 }
             }
-        } else{
-            String s = ((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile().getPath() + "/src/main/java";
-            if(new File(s).exists()) {
+        } else {
+            String s = projectFile.getPath() + "/src/main/java";
+            if (new File(s).exists()) {
                 paths.add(JavaCore.newSourceEntry(new Path(s)));
             }
         }
@@ -385,7 +381,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public IPath getFullPath() {
-        return new Path(virtualFile.getIoFile().getPath());
+        return new Path(projectFile.getPath());
     }
 
     @Override
@@ -589,12 +585,12 @@ public class JavaProject extends Openable implements IJavaProject {
             case IClasspathEntry.CPE_SOURCE:
 
 //                if (projectPath.isPrefixOf(entryPath)) {
-                    Object target1 = JavaModelManager.getTarget(entryPath, true/*check existency*/);
-                    if (target1 == null) return;
+                Object target1 = JavaModelManager.getTarget(entryPath, true/*check existency*/);
+                if (target1 == null) return;
 
-                    if (target1 instanceof File && ((File)target1).isDirectory()) {
-                        root = getPackageFragmentRoot((File)target1);
-                    }
+                if (target1 instanceof File && ((File)target1).isDirectory()) {
+                    root = getPackageFragmentRoot((File)target1);
+                }
 //                }
                 break;
 
@@ -806,12 +802,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public IPath getPath() {
-        try {
-            return new Path(virtualFile.getPath());
-        } catch (VirtualFileSystemException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new Path(project.getPath());
     }
 
     @Override
@@ -856,8 +847,8 @@ public class JavaProject extends Openable implements IJavaProject {
 
     @Override
     public void close() throws JavaModelException {
-       indexManager.shutdown();
-       nameEnvironment.cleanup();
+        indexManager.shutdown();
+        nameEnvironment.cleanup();
     }
 
     @Override
@@ -940,11 +931,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getVfsId() {
-        try {
-            return project.getBaseFolder().getVirtualFile().getId();
-        } catch (VirtualFileSystemException e) {
-            return null;
-        }
+        return project.getId();
     }
 
     public static class ResolvedClasspath {

@@ -15,18 +15,16 @@ import com.codenvy.ide.ext.java.server.projecttypes.AntSourceFoldersValueProvide
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
-import com.google.inject.name.Names;
 
 /**
  * @author Evgen Vidolob
  */
 @DynaModule
 public class JavaModule extends AbstractModule {
+
     @Override
     protected void configure() {
         Multibinder<ValueProviderFactory> multiBinder = Multibinder.newSetBinder(binder(), ValueProviderFactory.class);
         multiBinder.addBinding().to(AntSourceFoldersValueProviderFactory.class);
-        bind(RestNameEnvironment.class);
-        bindConstant().annotatedWith(Names.named("project.temp")).to(System.getProperty("java.io.tmpdir"));
     }
 }

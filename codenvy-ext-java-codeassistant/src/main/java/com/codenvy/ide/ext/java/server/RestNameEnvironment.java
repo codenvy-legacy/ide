@@ -16,7 +16,6 @@ import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.util.Pair;
-import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.commons.user.User;
@@ -70,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Rest service for {@link com.codenvy.ide.ext.java.worker.WorkerNameEnvironment}
+ * Rest service for WorkerNameEnvironment
  *
  * @author Evgen Vidolob
  */
@@ -80,7 +79,7 @@ public class RestNameEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(RestNameEnvironment.class);
 
     @Inject
-    private ProjectManager projectManager;
+    private WorkspaceHashLocalFSMountStrategy fsMountStrategy;
 
     @Inject
     private JavaProjectService javaProjectService;
@@ -225,10 +224,11 @@ public class RestNameEnvironment {
     @GET
     @javax.ws.rs.Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateDependency(@QueryParam("projectpath") String projectPath, @Context UriInfo uriInfo) throws Exception {
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-
-        if (project == null) {
+    public void updateDependency(@QueryParam("projectpath") String projectPath, @QueryParam("projectid") String projectId,  @Context UriInfo uriInfo) throws Exception {
+//        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
+        File workspace = fsMountStrategy.getMountPath(wsId);
+        File project = new File(workspace, projectPath);
+        if (!project.exists()) {
             LOG.warn("Project doesn't exist in workspace: " + wsId + ", path: " + projectPath);
             throw new CodeAssistantException(500, "Project doesn't exist");
         }
@@ -251,7 +251,7 @@ public class RestNameEnvironment {
         if (buildStatus.getStatus() == BuildStatus.FAILED) {
             buildFailed(buildStatus);
         }
-        File projectDepDir = new File(temp, project.getBaseFolder().getVirtualFile().getId());
+        File projectDepDir = new File(temp, projectId);
         if (projectDepDir.exists()) {
             JavaProjectService.removeRecursive(projectDepDir.toPath());
         }
@@ -298,8 +298,9 @@ public class RestNameEnvironment {
         return null;
     }
 
-    private boolean hasPom(com.codenvy.api.project.server.Project project) {
-        return project.getBaseFolder().getChild("pom.xml") != null;
+    private boolean hasPom(File project) {
+        return new File(project, "pom.xml").exists();
+//        return project.getBaseFolder().getChild("pom.xml") != null;
     }
 
     private void buildFailed(@Nullable BuildTaskDescriptor buildStatus) throws BuilderException {

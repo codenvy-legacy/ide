@@ -44,8 +44,8 @@ public class WorkerNameEnvironment implements INameEnvironment {
     /**
      *
      */
-    public WorkerNameEnvironment(String restContext, String wsName) {
-        restServiceContext = restContext + "/java-name-environment" + wsName;
+    public WorkerNameEnvironment(String context, String restContext, String wsName) {
+        restServiceContext = context + "/java-name-environment" + wsName;
     }
 
     public void setProjectPath(String projectPath) {

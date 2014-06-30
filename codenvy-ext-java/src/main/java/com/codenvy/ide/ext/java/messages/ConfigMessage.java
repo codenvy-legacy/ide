@@ -20,6 +20,8 @@ import com.google.gwt.webworker.client.messages.Message;
 @RoutingType(type = RoutingTypes.CONFIG)
 public interface ConfigMessage extends Message{
 
+    String caPath();
+
     String restContext();
 
     String wsId();

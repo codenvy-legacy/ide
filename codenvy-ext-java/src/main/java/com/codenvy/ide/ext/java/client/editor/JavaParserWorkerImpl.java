@@ -58,27 +58,30 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * The type Java parser worker impl.
+ * @author  <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id :
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
-    private final MessageFilter                messageFilter;
-    private final String                       workspaceId;
-    private       Worker                       worker;
-    private       ResourceProvider             resourceProvider;
-    private       String                       restContext;
-    private       StringMap<WorkerCallback<?>> callbacks;
+    private final MessageFilter messageFilter;
+    private final String        workspaceId;
+    private String javaCAPath;
+    private Worker                       worker;
+    private ResourceProvider             resourceProvider;
+    private String                       restContext;
+    private StringMap<WorkerCallback<?>> callbacks;
     private StringMap<ApplyCallback>                   applyCallback        = Collections.createStringMap();
     private StringMap<WorkerCallback<WorkerCodeBlock>> outlineCallbacks     = Collections.createStringMap();
     private StringMap<FormatResultCallback>            formatResultCallback = Collections.createStringMap();
 
     @Inject
     public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext,
-                                @Named("workspaceId") String workspaceId) {
+                                @Named("workspaceId") String workspaceId, @Named("javaCA") String javaCAPath) {
         this.resourceProvider = resourceProvider;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
+        this.javaCAPath = javaCAPath;
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
         messageFilter = new MessageFilter();
         callbacks = Collections.createStringMap();
@@ -357,6 +360,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
             MessagesImpls.ConfigMessageImpl config = MessagesImpls.ConfigMessageImpl.make();
             config.setRestContext(restContext);
             config.setWsId("/" + workspaceId);
+            config.setCaPath(javaCAPath);
             config.setProjectName(event.getProject().getName());
             config.setJavaDocContext(""); //TODO configure doc context
             worker.postMessage(config.serialize());

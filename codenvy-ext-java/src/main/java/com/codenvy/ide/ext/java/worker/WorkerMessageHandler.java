@@ -105,7 +105,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
             @Override
             public void onMessageReceived(ConfigMessage config) {
                 nameEnvironment =
-                        new WorkerNameEnvironment(config.restContext(), config.wsId());
+                        new WorkerNameEnvironment(config.caPath(), config.restContext(), config.wsId());
                 projectName = config.projectName();
                 WorkerProposalApplier applier = new WorkerProposalApplier(WorkerMessageHandler.this.worker, messageFilter);
                 workerCodeAssist =

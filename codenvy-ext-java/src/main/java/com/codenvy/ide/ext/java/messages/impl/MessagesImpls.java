@@ -18,7 +18,7 @@ public class MessagesImpls {
 
   private  MessagesImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "a193df51915e70e03d32c6e7edc09966ec92b9d7";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f6a2016161435fd72e05fbd1fa92205ac328a2ab";
 
 
   public static class ApplyProposalMessageImpl extends com.google.gwt.webworker.client.messages.MessageImpl implements com.codenvy.ide.ext.java.messages.ApplyProposalMessage {
@@ -217,20 +217,6 @@ public class MessagesImpls {
     protected ComputeCorrMessageImpl() {}
 
     @Override
-    public final native boolean updatedOffset() /*-{
-      return this["updatedOffset"];
-    }-*/;
-
-    public final native ComputeCorrMessageImpl setUpdatedOffset(boolean updatedOffset) /*-{
-      this["updatedOffset"] = updatedOffset;
-      return this;
-    }-*/;
-
-    public final native boolean hasUpdatedOffset() /*-{
-      return this.hasOwnProperty("updatedOffset");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.ProblemLocationMessage> problemLocations() /*-{
       return this["problemLocations"];
     }-*/;
@@ -270,6 +256,20 @@ public class MessagesImpls {
 
     public final native boolean hasDocumentOffset() /*-{
       return this.hasOwnProperty("documentOffset");
+    }-*/;
+
+    @Override
+    public final native boolean updatedOffset() /*-{
+      return this["updatedOffset"];
+    }-*/;
+
+    public final native ComputeCorrMessageImpl setUpdatedOffset(boolean updatedOffset) /*-{
+      this["updatedOffset"] = updatedOffset;
+      return this;
+    }-*/;
+
+    public final native boolean hasUpdatedOffset() /*-{
+      return this.hasOwnProperty("updatedOffset");
     }-*/;
 
     @Override
@@ -378,6 +378,20 @@ public class MessagesImpls {
 
     public final native boolean hasRestContext() /*-{
       return this.hasOwnProperty("restContext");
+    }-*/;
+
+    @Override
+    public final native java.lang.String caPath() /*-{
+      return this["caPath"];
+    }-*/;
+
+    public final native ConfigMessageImpl setCaPath(java.lang.String caPath) /*-{
+      this["caPath"] = caPath;
+      return this;
+    }-*/;
+
+    public final native boolean hasCaPath() /*-{
+      return this.hasOwnProperty("caPath");
     }-*/;
 
     public static native ConfigMessageImpl make() /*-{
@@ -757,20 +771,6 @@ public class MessagesImpls {
     protected ProblemLocationMessageImpl() {}
 
     @Override
-    public final native int getProblemId() /*-{
-      return this["problemId"];
-    }-*/;
-
-    public final native ProblemLocationMessageImpl setProblemId(int problemId) /*-{
-      this["problemId"] = problemId;
-      return this;
-    }-*/;
-
-    public final native boolean hasProblemId() /*-{
-      return this.hasOwnProperty("problemId");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.collections.Array<java.lang.String> getProblemArguments() /*-{
       return this["problemArguments"];
     }-*/;
@@ -796,6 +796,20 @@ public class MessagesImpls {
 
     public final native boolean hasMarkerType() /*-{
       return this.hasOwnProperty("markerType");
+    }-*/;
+
+    @Override
+    public final native int getProblemId() /*-{
+      return this["problemId"];
+    }-*/;
+
+    public final native ProblemLocationMessageImpl setProblemId(int problemId) /*-{
+      this["problemId"] = problemId;
+      return this;
+    }-*/;
+
+    public final native boolean hasProblemId() /*-{
+      return this.hasOwnProperty("problemId");
     }-*/;
 
     @Override
@@ -903,20 +917,6 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String id() /*-{
-      return this["id"];
-    }-*/;
-
-    public final native ProposalAppliedMessageImpl setId(java.lang.String id) /*-{
-      this["id"] = id;
-      return this;
-    }-*/;
-
-    public final native boolean hasId() /*-{
-      return this.hasOwnProperty("id");
-    }-*/;
-
-    @Override
     public final native com.codenvy.ide.collections.Array<com.codenvy.ide.ext.java.messages.Change> changes() /*-{
       return this["changes"];
     }-*/;
@@ -928,6 +928,20 @@ public class MessagesImpls {
 
     public final native boolean hasChanges() /*-{
       return this.hasOwnProperty("changes");
+    }-*/;
+
+    @Override
+    public final native java.lang.String id() /*-{
+      return this["id"];
+    }-*/;
+
+    public final native ProposalAppliedMessageImpl setId(java.lang.String id) /*-{
+      this["id"] = id;
+      return this;
+    }-*/;
+
+    public final native boolean hasId() /*-{
+      return this.hasOwnProperty("id");
     }-*/;
 
     public static native ProposalAppliedMessageImpl make() /*-{
