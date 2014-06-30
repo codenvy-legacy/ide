@@ -29,7 +29,7 @@ public class WysiwygExtension {
     @Inject
     public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry,
                             WorkspaceAgent workspaceAgent, TutorialHowToPresenter howToPresenter) {
-        FileType htmlFileType = new FileType(null, "text/html", "html");
+        FileType htmlFileType = new FileType(null, "text/htm", "htm");
         resourceProvider.registerFileType(htmlFileType);
         editorRegistry.register(htmlFileType, editorProvider);
 

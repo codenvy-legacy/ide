@@ -13,10 +13,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <g:HTMLPanel>
-        <p>This is a tutoriual how to:</p>
+        <p>This is a tutorial how to:</p>
         <ul>
             <li>create any project</li>
-            <li>create HTML file in it</li>
+            <li>create HTM file in it</li>
             <li>open this file</li></ul>
 
         <p>It will be opened in WYSIWYG editor where you can make use of a WYSIWYG toolbar.</p>

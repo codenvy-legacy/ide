@@ -19,7 +19,7 @@ body, td {
     font-size: 13px;
     font-family: mainFontFamily;
     color: mainFontColor;
-    -moz-user-select: none;
+    -moz-user-select: -moz-none;
     -webkit-user-select: none;
     user-select: none;
 
