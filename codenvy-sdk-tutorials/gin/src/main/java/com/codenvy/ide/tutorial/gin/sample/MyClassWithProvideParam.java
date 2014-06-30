@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.gin.sample;
 
-import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
 /**
@@ -19,16 +19,14 @@ import com.google.inject.Inject;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class MyClassWithProvideParam {
-    private ConsolePart console;
     private String      someText;
 
     @Inject
-    public MyClassWithProvideParam(ConsolePart console, String someText) {
-        this.console = console;
+    public MyClassWithProvideParam(String someText) {
         this.someText = someText;
     }
 
     public void doSomething() {
-        console.print(someText);
+        Log.info(MyClassWithProvideParam.class, someText);
     }
 }

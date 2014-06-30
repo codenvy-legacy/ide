@@ -534,7 +534,7 @@ public class FSMountPoint implements MountPoint {
                     LOG.error(e.getMessage(), e);
                 }
             }
-            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath()));
+            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath(), false));
             return newVirtualFile;
         } finally {
             parentLock.release();
@@ -578,7 +578,7 @@ public class FSMountPoint implements MountPoint {
             // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
             // If folder1 already exists then return folder2 as first created in hierarchy.
             final VirtualFileImpl newVirtualFile = new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
-            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath()));
+            eventService.publish(new CreateEvent(workspaceId, newVirtualFile.getPath(), true));
             return newVirtualFile;
         } finally {
             parentLock.release();
@@ -609,7 +609,7 @@ public class FSMountPoint implements MountPoint {
                 throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
             }
             doCopy(source, destination);
-            eventService.publish(new CreateEvent(workspaceId, destination.getPath()));
+            eventService.publish(new CreateEvent(workspaceId, destination.getPath(), source.isFolder()));
             return destination;
         } finally {
             if (sourceLock != null) {
@@ -738,7 +738,7 @@ public class FSMountPoint implements MountPoint {
                     LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
                 }
             }
-            eventService.publish(new RenameEvent(workspaceId, renamed.getPath(), sourcePath));
+            eventService.publish(new RenameEvent(workspaceId, renamed.getPath(), sourcePath, renamed.isFolder()));
             return renamed;
         } finally {
             parentLock.release();
@@ -787,7 +787,7 @@ public class FSMountPoint implements MountPoint {
             // use copy and delete
             doCopy(source, destination);
             doDelete(source, lockToken);
-            eventService.publish(new MoveEvent(workspaceId, destination.getPath(), sourcePath));
+            eventService.publish(new MoveEvent(workspaceId, destination.getPath(), sourcePath, destination.isFolder()));
             return destination;
         } finally {
             if (sourceLock != null) {
@@ -903,17 +903,17 @@ public class FSMountPoint implements MountPoint {
         }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         final String myPath = virtualFile.getPath();
+        final boolean folder = virtualFile.isFolder();
         try {
             if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable delete item '%s'. Operation not permitted. ", myPath));
+                throw new PermissionDeniedException(String.format("Unable delete item '%s'. Operation not permitted. ", myPath));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
                 throw new LockException(String.format("Unable delete item '%s'. Item is locked. ", myPath));
             }
 
             doDelete(virtualFile, lockToken);
-            eventService.publish(new DeleteEvent(workspaceId, myPath));
+            eventService.publish(new DeleteEvent(workspaceId, myPath, folder));
         } finally {
             lock.release();
         }
@@ -1370,7 +1370,7 @@ public class FSMountPoint implements MountPoint {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
 
-            eventService.publish(new UpdateACLEvent(workspaceId, virtualFile.getPath()));
+            eventService.publish(new UpdateACLEvent(workspaceId, virtualFile.getPath(), virtualFile.isFolder()));
         } finally {
             lock.release();
         }
@@ -1483,7 +1483,7 @@ public class FSMountPoint implements MountPoint {
             if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis())) {
                 LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
             }
-            eventService.publish(new UpdatePropertiesEvent(workspaceId, virtualFile.getPath()));
+            eventService.publish(new UpdatePropertiesEvent(workspaceId, virtualFile.getPath(), virtualFile.isFolder()));
         } finally {
             lock.release();
         }
