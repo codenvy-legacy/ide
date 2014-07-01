@@ -31,23 +31,32 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
+    private static final String INFO         = "[INFO]";
+    private static final String DOCKER       = "[DOCKER]";
+    private static final String DOCKER_ERROR = "[DOCKER] [ERROR]";
+
+    private static final String PRE_STYLE          = "style='margin:0px; font-weight:700;'";
+    private static final String INFO_COLOR         = "lightgreen'";
+    private static final String DOCKER_COLOR       = "#00B7EC'";
+    private static final String DOCKER_ERROR_COLOR = "#F62217'";
+
     interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
     }
 
     @UiField
     SimplePanel toolbarPanel;
     @UiField
-    FlowPanel   consoleArea;
-    @UiField
     ScrollPanel scrollPanel;
+    @UiField
+    FlowPanel   consoleArea;
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerConsoleViewImplUiBinder uiBinder) {
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
-        
-        //this hack used for adding box shadow effect to toolbar
+
+        // this hack used for adding box shadow effect to toolbar
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setZIndex(1);
     }
@@ -67,8 +76,20 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /** {@inheritDoc} */
     @Override
     public void print(String message) {
-        HTML html = new HTML(message);
-        html.setHTML("<pre style='margin:0px; font-weight:700;'> " + message + "</pre>");
+        HTML html = new HTML();
+        if (message.startsWith(INFO)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
+                         message.substring(INFO.length()) + "</pre>");
+        } else if (message.startsWith(DOCKER_ERROR)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
+                         " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
+                         message.substring(DOCKER_ERROR.length()) + "</pre>");
+        } else if (message.startsWith(DOCKER)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
+                         message.substring(DOCKER.length()) + "</pre>");
+        } else {
+            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
+        }
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
     }

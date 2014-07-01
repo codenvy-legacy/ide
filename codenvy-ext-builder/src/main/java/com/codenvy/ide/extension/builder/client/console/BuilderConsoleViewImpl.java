@@ -31,10 +31,14 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
-    private final String PRE_STYLE   = "style='margin:0px; font-weight:700;'";
-    private final String INFO_COLOR  = "lightgreen'";
-    private final String WARN_COLOR  = "cyan'";
-    private final String ERROR_COLOR = "#F62217'";
+    private static final String INFO  = "[INFO]";
+    private static final String ERROR = "[ERROR]";
+    private static final String WARN  = "[WARNING]";
+
+    private static final String PRE_STYLE   = "style='margin:0px; font-weight:700;'";
+    private static final String INFO_COLOR  = "lightgreen'";
+    private static final String WARN_COLOR  = "cyan'";
+    private static final String ERROR_COLOR = "#F62217'";
 
     interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
     }
@@ -51,7 +55,7 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("builder-console-minimizeButton");
-        
+
         // this hack used for adding box shadow effect to toolbar
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setZIndex(1);
@@ -74,15 +78,15 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     public void print(String message) {
         HTML html = new HTML();
         final String capMessage = message.toUpperCase();
-        if (capMessage.startsWith("[INFO]")) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + message.substring(6) +
-                         "</pre>");
-        } else if (capMessage.startsWith("[ERROR]")) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + message.substring(7) +
-                         "</pre>");
-        } else if (capMessage.startsWith("[WARNING]")) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>] " + message.substring(9) +
-                         "</pre>");
+        if (capMessage.startsWith(INFO)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
+                         message.substring(INFO.length()) + "</pre>");
+        } else if (capMessage.startsWith(ERROR)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
+                         message.substring(ERROR.length()) + "</pre>");
+        } else if (capMessage.startsWith(WARN)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
+                         message.substring(WARN.length()) + "</pre>");
         } else {
             html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
         }
