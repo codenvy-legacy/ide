@@ -10,12 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineUpdater;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -23,6 +26,8 @@ import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.reconciler.DirtyRegion;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
 import com.codenvy.ide.util.loging.Log;
+
+import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 
 
 /**
@@ -34,13 +39,24 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     private final TextEditorPartPresenter editor;
     private       Document                document;
     private       JavaParserWorker        worker;
-    private OutlineModel outlineModel;
-    private File file;
+    private       OutlineModel            outlineModel;
+    private       NotificationManager     notificationManager;
+    private JavaCodeAssistProcessor codeAssistProcessor;
+    private File             file;
+    private EditorWithErrors editorWithErrors;
+    private boolean first = true;
+    private Notification notification;
 
-    public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaParserWorker worker, OutlineModel outlineModel) {
+    public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaParserWorker worker, OutlineModel outlineModel,
+                                  NotificationManager notificationManager, JavaCodeAssistProcessor codeAssistProcessor) {
         this.editor = editor;
         this.worker = worker;
         this.outlineModel = outlineModel;
+        this.notificationManager = notificationManager;
+        this.codeAssistProcessor = codeAssistProcessor;
+        if (editor instanceof EditorWithErrors) {
+            editorWithErrors = ((EditorWithErrors)editor);
+        }
     }
 
     /** {@inheritDoc} */
@@ -61,7 +77,12 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
      *
      */
     public void parse() {
-        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(),file.getProject().getPath(), this);
+        if (first) {
+            notification = new Notification("Parsing File...", Notification.Status.PROGRESS);
+            codeAssistProcessor.disableCodeAssistant();
+            notificationManager.showNotification(notification);
+        }
+        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), file.getProject().getPath(), this);
     }
 
     /** {@inheritDoc} */
@@ -77,6 +98,11 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
 
     @Override
     public void onResult(Array<IProblem> problems) {
+        if (first) {
+            notification.setStatus(FINISHED);
+            codeAssistProcessor.enableCodeAssistant();
+            first = false;
+        }
         AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
         if (annotationModel == null)
             return;
@@ -84,10 +110,32 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
         if (annotationModel instanceof IProblemRequestor) {
             problemRequestor = (IProblemRequestor)annotationModel;
             problemRequestor.beginReporting();
-        } else return;
+        } else {
+            if (editorWithErrors != null) {
+                editorWithErrors.setErrorState(EditorWithErrors.EditorState.NONE);
+            }
+            return;
+        }
         try {
+            boolean error = false;
+            boolean warning = false;
             for (IProblem problem : problems.asIterable()) {
-                  problemRequestor.acceptProblem(problem);
+                if (!error) {
+                    error = problem.isError();
+                }
+                if (!warning) {
+                    warning = problem.isWarning();
+                }
+                problemRequestor.acceptProblem(problem);
+            }
+            if (editorWithErrors != null) {
+                if (error) {
+                    editorWithErrors.setErrorState(EditorWithErrors.EditorState.ERROR);
+                } else if (warning) {
+                    editorWithErrors.setErrorState(EditorWithErrors.EditorState.WARNING);
+                } else {
+                    editorWithErrors.setErrorState(EditorWithErrors.EditorState.NONE);
+                }
             }
         } catch (Exception e) {
             Log.error(getClass(), e);
