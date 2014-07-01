@@ -342,6 +342,10 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     @Override
     public void showLoader() {
+        showMassage("Processing...");
+    }
+
+    private void showMassage(String message) {
         this.anchor = editor.getSelection().getCursorAnchor();
 
         boolean showingFromHidden = !autoHideController.isShowing();
@@ -350,7 +354,7 @@ public class AutocompleteUiController implements AutocompleteBox {
         }
 
         final Array<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal>create();
-        String hintText = "Processing...";//items.getHint();
+
 
         list.render(itemsToDisplay);
 
@@ -360,7 +364,7 @@ public class AutocompleteUiController implements AutocompleteBox {
             infoTimer.schedule(DELAY_MILLIS);
         }
 
-        hint.setTextContent(hintText);
+        hint.setTextContent(message);
         CssUtils.setDisplayVisibility2(hint, true);
         CssUtils.setDisplayVisibility2(container, false);
 
@@ -369,6 +373,11 @@ public class AutocompleteUiController implements AutocompleteBox {
         editor.getBuffer().addAnchoredElement(anchor, box);
 
         ensureRootElementWillBeOnScreen(showingFromHidden);
+    }
+
+    @Override
+    public void showError(String message) {
+        showMassage(message);
     }
 
     private void ensureRootElementWillBeOnScreen(boolean showingFromHidden) {

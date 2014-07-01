@@ -64,18 +64,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     /** List Menu Bar items. */
     private Map<Element, MenuBarItem> menuBarItems   = new LinkedHashMap<>();
     private Map<Action, MenuBarItem>  action2barItem = new HashMap<>();
+
     /** Store selected Menu Bar item. */
     private MenuBarItem  selectedMenuBarItem;
+
     /** Working table, cells of which are contains element of Menu. */
     private MenuBarTable table;
-
-    private Timer timer = new Timer() {
-        @Override
-        public void run() {
-            updateMenuActions();
-            schedule(1000);
-        }
-    };
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
@@ -92,6 +86,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         table.setCellSpacing(0);
         DOM.setElementAttribute(table.getElement(), "border", "0");
         absolutePanel.add(table);
+
         visibleActions = Collections.createArray();
         newVisibleActions = Collections.createArray();
         presentationFactory = new MenuItemPresentationFactory();
@@ -100,9 +95,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
-        // ok
-        // there are no events for now
-        timer.schedule(2000);
+        new Timer() {
+            @Override
+            public void run() {
+                updateMenuActions();
+            }
+        }.scheduleRepeating(1000);
     }
 
     /** Handle closing of all popup windows. */
@@ -113,12 +111,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     }
 
     void updateMenuActions() {
-        newVisibleActions.clear();
+        if (selectedMenuBarItem != null) {
+            return;
+        }
 
-//        if (!myDisabled) {
-//            DataContext dataContext = ((DataManagerImpl)myDataManager).getDataContextTest(this);
+        newVisibleActions.clear();
         expandActionGroup(newVisibleActions, actionManager);
-//        }
 
         if (!newVisibleActions.equals(visibleActions)) {
             // should rebuild UI

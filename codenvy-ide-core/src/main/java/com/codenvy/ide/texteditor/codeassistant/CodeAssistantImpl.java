@@ -240,6 +240,9 @@ public class CodeAssistantImpl implements CodeAssistant {
         if (p != null) {
             p.computeCompletionProposals(view, offset, callback);
             lastErrorMessage = p.getErrorMessage();
+            if(lastErrorMessage != null){
+                box.showError(lastErrorMessage);
+            }
         }
     }
 
