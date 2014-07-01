@@ -165,4 +165,9 @@ public class MenuBarItem implements ActionSelectedHandler {
         setNormalState();
         actionSelectedHandler.onActionSelected(action);
     }
+
+    public String getTitle() {
+        return title;
+    }
+
 }
