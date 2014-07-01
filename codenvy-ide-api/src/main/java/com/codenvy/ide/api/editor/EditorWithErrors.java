@@ -8,25 +8,23 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.java.messages;
 
-import com.codenvy.ide.dto.shared.RoutingType;
-import com.google.gwt.webworker.client.messages.Message;
+package com.codenvy.ide.api.editor;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * Extension interface to editor. Add indication if editor has errors or warnings.
+ * May use for change icons in editor tab.
+ *
+ * @author Evgen Vidolob
  */
-@RoutingType(type = RoutingTypes.CONFIG)
-public interface ConfigMessage extends Message{
+public interface EditorWithErrors {
+    int ERROR_STATE = 0x110;
 
-    String caPath();
+    EditorState getErrorState();
 
-    String restContext();
+    void setErrorState(EditorState errorState);
 
-    String wsId();
-
-    String projectName();
-
-    String javaDocContext();
+    public enum EditorState {
+        ERROR, WARNING, NONE
+    }
 }

@@ -12,23 +12,23 @@ package com.codenvy.ide.ext.java.server;
 
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
-import com.codenvy.api.project.server.ProjectEvent;
-import com.codenvy.api.project.server.ProjectEventListener;
-import com.codenvy.api.project.server.ProjectEventService;
-import com.codenvy.api.project.server.ProjectManager;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
-import com.codenvy.ide.ext.java.jdt.core.JavaCore;
-import com.codenvy.ide.ext.java.jdt.internal.codeassist.impl.AssistOptions;
-import com.codenvy.ide.ext.java.jdt.internal.compiler.impl.CompilerOptions;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
+import com.codenvy.ide.ext.java.server.internal.core.ProjectApiRestClient;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.codeassist.impl.AssistOptions;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.WebApplicationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -39,6 +39,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Maintenance and create JavaProjects
@@ -51,22 +52,22 @@ public class JavaProjectService {
     private static final Logger LOG =
             LoggerFactory.getLogger(JavaProjectService.class);
 
-    private ConcurrentHashMap<String, JavaProject> cache =
+    private ConcurrentHashMap<String, JavaProject>                 cache       =
             new ConcurrentHashMap<>();
-
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, ProjectEventListener>> eventListeners =
-            new ConcurrentHashMap<>();
-
-    private ProjectEventService projectEventService;
-    private ProjectManager      projectManager;
-    private String              tempDir;
+    private ConcurrentHashMap<String, CopyOnWriteArraySet<String>> projectInWs = new ConcurrentHashMap<>();
+    private WorkspaceHashLocalFSMountStrategy fsMountStrategy;
+    private ProjectApiRestClient              apiRestClient;
+    private String                            tempDir;
     private Map<String, String> options = new HashMap<>();
 
     @Inject
-    public JavaProjectService(ProjectEventService projectEventService, ProjectManager projectManager, EventService eventService,
+    public JavaProjectService(EventService eventService,
+                              WorkspaceHashLocalFSMountStrategy fsMountStrategy,
+                              ProjectApiRestClient apiRestClient,
                               @Named("project.temp") String temp) {
-        this.projectEventService = projectEventService;
-        this.projectManager = projectManager;
+        eventService.subscribe(new VirtualFileEventSubscriber());
+        this.fsMountStrategy = fsMountStrategy;
+        this.apiRestClient = apiRestClient;
         tempDir = temp;
         options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
         options.put(JavaCore.CORE_ENCODING, "UTF-8");
@@ -81,7 +82,6 @@ public class JavaProjectService {
         options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
         options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
         options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
-        eventService.subscribe(new VirtualFileEventSubscriber());
     }
 
     public static void removeRecursive(Path path) throws IOException {
@@ -120,25 +120,28 @@ public class JavaProjectService {
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
-
-        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
-        JavaProject javaProject = new JavaProject(project, tempDir, projectManager, wsId, new HashMap<>(options));
-        cache.put(key, javaProject);
-        if (!eventListeners.containsKey(wsId)) {
-            eventListeners.put(wsId, new ConcurrentHashMap<String, ProjectEventListener>());
+        ProjectDescriptor project = apiRestClient.getProject(wsId, projectPath);
+        try {
+            File mountPath = fsMountStrategy.getMountPath(wsId);
+            JavaProject javaProject =
+                    new JavaProject(project, new File(mountPath, projectPath), tempDir, apiRestClient, wsId, new HashMap<>(options));
+            cache.put(key, javaProject);
+            if (!projectInWs.containsKey(wsId)) {
+                projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
+            }
+            projectInWs.get(wsId).add(projectPath);
+            return javaProject;
+        } catch (VirtualFileSystemException e) {
+            throw new WebApplicationException(e);
         }
-        ConcurrentHashMap<String, ProjectEventListener> map = eventListeners.get(wsId);
-        if (!map.containsKey(projectPath)) {
-            ProjectEventListenerImpl listener = new ProjectEventListenerImpl(wsId, projectPath);
-            map.put(projectPath, listener);
-            projectEventService.addListener(wsId, projectPath, listener);
-        }
-        return javaProject;
     }
 
 
     public void removeProject(String wsId, String projectPath) {
         JavaProject javaProject = cache.remove(wsId + projectPath);
+        if (projectInWs.containsKey(wsId)) {
+            projectInWs.get(wsId).remove(projectPath);
+        }
         if (javaProject != null) {
             try {
                 javaProject.close();
@@ -159,9 +162,10 @@ public class JavaProjectService {
             final VirtualFileEvent.ChangeType eventType = event.getType();
             final String eventWorkspace = event.getWorkspaceId();
             final String eventPath = event.getPath();
-            if (eventType == VirtualFileEvent.ChangeType.DELETED) {
-                if (cache.containsKey(eventWorkspace + eventPath)) {
-                    JavaProject javaProject = cache.remove(eventWorkspace + eventPath);
+
+            if (cache.containsKey(eventWorkspace + eventPath)) {
+                JavaProject javaProject = cache.remove(eventWorkspace + eventPath);
+                if (eventType == VirtualFileEvent.ChangeType.DELETED) {
                     javaProject.getIndexManager().deleteIndexFiles();
                     javaProject.getIndexManager().shutdown();
                     String vfsId = javaProject.getVfsId();
@@ -174,33 +178,19 @@ public class JavaProjectService {
                                 LOG.error("Can't delete project dependency directory: " + projectDepDir.getPath());
                             }
                         }
-                        if (eventListeners.containsKey(eventWorkspace)) {
-                            ConcurrentHashMap<String, ProjectEventListener> map =
-                                    eventListeners.get(eventWorkspace);
-                            if(map.containsKey(eventPath)) {
-                                ProjectEventListener listener = map.remove(eventPath);
-                                projectEventService.removeListener(eventWorkspace, eventPath, listener);
-                            }
+                    }
+                }
+            } else {
+                if (projectInWs.containsKey(eventWorkspace)) {
+                    for (String path : projectInWs.get(eventWorkspace)) {
+                        if (eventPath.startsWith(path)) {
+                            JavaProject javaProject = cache.get(eventWorkspace + path);
+                            if (javaProject != null)
+                                javaProject.getIndexManager().indexAll(javaProject);
+                            break;
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private class ProjectEventListenerImpl implements ProjectEventListener {
-
-        private final String key;
-
-        private ProjectEventListenerImpl(String wsId, String projectPath) {
-            key = wsId + projectPath;
-        }
-
-        @Override
-        public void onEvent(ProjectEvent event) {
-            if (cache.containsKey(key)) {
-                JavaProject project = cache.get(key);
-                project.getIndexManager().indexAll(project);
             }
         }
     }

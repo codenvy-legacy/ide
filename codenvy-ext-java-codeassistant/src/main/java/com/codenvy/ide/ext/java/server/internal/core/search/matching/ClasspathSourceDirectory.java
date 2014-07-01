@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core.search.matching;
 
-import com.codenvy.ide.ext.java.jdt.internal.core.util.Util;
 import com.codenvy.ide.ext.java.server.internal.core.builder.CodenvyClasspathLocation;
 import com.codenvy.ide.ext.java.server.internal.core.util.ResourceCompilationUnit;
+import com.codenvy.ide.ext.java.server.internal.core.util.Util;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.internal.codeassist.ISearchRequestor;

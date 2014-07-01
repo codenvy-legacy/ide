@@ -14,6 +14,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -42,7 +43,7 @@ import javax.validation.constraints.NotNull;
 
 
 /** @author Evgen Vidolob */
-public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler {
+public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors {
 
     //    private final TextListener textListener = new TextListener() {
 //
@@ -60,6 +61,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     private   BreakpointGutterManager breakpointGutterManager;
     private   DtoFactory              dtoFactory;
     private   WorkspaceAgent          workspaceAgent;
+    private EditorState errorState;
 
     @Inject
     public TextEditorPresenter(Resources resources,
@@ -219,5 +221,16 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     @Override
     protected void afterSave() {
         editor.resetHistory();
+    }
+
+    @Override
+    public EditorState getErrorState() {
+        return errorState;
+    }
+
+    @Override
+    public void setErrorState(EditorState errorState) {
+        this.errorState = errorState;
+        firePropertyChange(ERROR_STATE);
     }
 }

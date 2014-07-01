@@ -211,7 +211,7 @@ public class JavaExtension {
 
     public void updateDependencies(Project project) {
         String projectPath = project.getPath();
-        String url = restContext + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath;
+        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +"&projectid=" +project.getId();
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
         notificationManager.showNotification(notification);
@@ -254,4 +254,13 @@ public class JavaExtension {
             }
         });
     }
+
+    public static native String getJavaCAPath() /*-{
+        try{
+            return $wnd.IDE.config.javaCodeAssistant;
+        } catch (e){
+            return null;
+        }
+
+    }-*/;
 }
