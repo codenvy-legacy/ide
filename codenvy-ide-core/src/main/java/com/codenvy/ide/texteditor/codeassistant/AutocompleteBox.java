@@ -20,19 +20,6 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 /** Interface used to isolate {@link CodeAssistantImpl} from UI implementation. */
 public interface AutocompleteBox {
 
-    /**
-     * Interface that allows {@link AutocompleteBox} implementations
-     * to fire back (UI event based) notifications.
-     */
-    interface Events {
-
-        /** Performs autocompletion selected by user. */
-        void onSelect(CompletionProposal proposal);
-
-        /** Closes autocompletion box. */
-        void onCancel();
-    }
-
     /** Tests if box is shown. */
     boolean isShowing();
 
@@ -52,6 +39,21 @@ public interface AutocompleteBox {
     /** Shows component (if hidden) and updates proposals list. */
     void positionAndShow(CompletionProposal[] items);
 
-    /** Shows component with loader image*/
+    /** Shows component with loader image */
     void showLoader();
+
+    void showError(String message);
+
+    /**
+     * Interface that allows {@link AutocompleteBox} implementations
+     * to fire back (UI event based) notifications.
+     */
+    interface Events {
+
+        /** Performs autocompletion selected by user. */
+        void onSelect(CompletionProposal proposal);
+
+        /** Closes autocompletion box. */
+        void onCancel();
+    }
 }

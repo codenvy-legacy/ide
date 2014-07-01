@@ -12,6 +12,7 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.ext.java.client.JavaResources;
@@ -65,7 +66,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
                                    String documentPartitioning,
                                    JavaParserWorker worker,
                                    ContentFormatter contentFormatter,
-                                   AnalyticsEventLogger eventLogger) {
+                                   AnalyticsEventLogger eventLogger,
+                                   NotificationManager notificationManager) {
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
@@ -73,8 +75,10 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         this.javaResources = resources;
         this.eventLogger = eventLogger;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel);
+        codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources, eventLogger);
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel, notificationManager, codeAssistProcessor);
         this.contentFormatter = contentFormatter;
+
 
     }
 
@@ -95,19 +99,12 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
         return reconciler;
     }
 
-    private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
-        if (codeAssistProcessor == null) {
-            codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources, eventLogger);
-        }
-        return codeAssistProcessor;
-    }
-
     /** {@inheritDoc} */
     @Override
     public StringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
 
         StringMap<CodeAssistProcessor> map = Collections.createStringMap();
-        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+        map.put(Document.DEFAULT_CONTENT_TYPE, codeAssistProcessor);
         return map;
     }
 

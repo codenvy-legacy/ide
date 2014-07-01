@@ -33,6 +33,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
     private AnalyticsEventLogger    eventLogger;
+    private String                  errorMessage;
 
     public JavaCodeAssistProcessor(TextEditorPartPresenter editor,
                                    JavaParserWorker worker,
@@ -44,30 +45,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
         this.eventLogger = eventLogger;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void computeCompletionProposals(TextEditorPartView view, int offset, final CodeAssistCallback callback) {
-        eventLogger.log("Autocompleting");
-        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(),
-                                  editor.getEditorInput().getFile().getProject().getPath(),
-                                  new JavaParserWorker.WorkerCallback<WorkerProposal>() {
-                                      @Override
-                                      public void onResult(Array<WorkerProposal> problems) {
-                                          CompletionProposal[] proposals = new CompletionProposal[problems.size()];
-                                          for (int i = 0; i < problems.size(); i++) {
-                                              WorkerProposal proposal = problems.get(i);
-                                              proposals[i] = new CompletionProposalImpl(proposal.id(),
-                                                                                        insertStyle(javaResources, proposal.displayText()),
-                                                                                        new Icon("", getImage(javaResources, proposal.image())),
-                                                                                        proposal.autoInsertable(), worker);
-                                          }
-
-                                          callback.proposalComputed(proposals);
-                                      }
-                                  });
-    }
-
-    public  static String insertStyle(JavaResources javaResources, String display) {
+    public static String insertStyle(JavaResources javaResources, String display) {
         if (display.contains("#FQN#"))
             return display.replace("#FQN#", javaResources.css().fqnStyle());
         else if (display.contains("#COUNTER#"))
@@ -172,6 +150,33 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
 
     /** {@inheritDoc} */
     @Override
+    public void computeCompletionProposals(TextEditorPartView view, int offset, final CodeAssistCallback callback) {
+        if(errorMessage != null){
+            return;
+        }
+        eventLogger.log("Autocompleting");
+        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(),
+                                  editor.getEditorInput().getFile().getProject().getPath(),
+                                  new JavaParserWorker.WorkerCallback<WorkerProposal>() {
+                                      @Override
+                                      public void onResult(Array<WorkerProposal> problems) {
+                                          CompletionProposal[] proposals = new CompletionProposal[problems.size()];
+                                          for (int i = 0; i < problems.size(); i++) {
+                                              WorkerProposal proposal = problems.get(i);
+                                              proposals[i] = new CompletionProposalImpl(proposal.id(),
+                                                                                        insertStyle(javaResources, proposal.displayText()),
+                                                                                        new Icon("",
+                                                                                                 getImage(javaResources, proposal.image())),
+                                                                                        proposal.autoInsertable(), worker);
+                                          }
+
+                                          callback.proposalComputed(proposals);
+                                      }
+                                  });
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public char[] getCompletionProposalAutoActivationCharacters() {
         return null;
     }
@@ -179,7 +184,14 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
     /** {@inheritDoc} */
     @Override
     public String getErrorMessage() {
-        return null;
+        return errorMessage;
     }
 
+    public void disableCodeAssistant() {
+        errorMessage = "Code Assistant unavailable. Waiting for file parsing to finish.";
+    }
+
+    public void enableCodeAssistant() {
+        errorMessage = null;
+    }
 }

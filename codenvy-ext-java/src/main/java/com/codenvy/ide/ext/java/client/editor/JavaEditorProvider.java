@@ -77,7 +77,7 @@ public class JavaEditorProvider implements EditorProvider {
         CodenvyTextEditor textEditor = editorProvider.get();
         JavaEditorConfiguration configuration =
                 new JavaEditorConfiguration(activityManager, JavaResources.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING,
-                                            worker, contentFormatter, eventLogger);
+                                            worker, contentFormatter, eventLogger, notificationManager);
 
         textEditor.initialize(configuration, documentProvider, notificationManager);
         watcher.editorOpened(textEditor);
