@@ -81,6 +81,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.clearRunnerConsole.description")
     String clearConsoleControlDescription();
 
+    @Key("control.viewRecipe.id")
+    String viewRecipeActionId();
+
+    @Key("control.viewRecipe.text")
+    String viewRecipeText();
+
+    @Key("control.viewRecipe.description")
+    String viewRecipeDescription();
+
     /* Messages */
     @Key("appStarting")
     String applicationStarting(String name);

@@ -19,6 +19,7 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -28,6 +29,7 @@ import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -50,6 +52,10 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -75,9 +81,11 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** WebSocket channel to get application's status. */
-    public static final String RUNNER_STATUS_CHANNEL = "runner:status:";
+    public static final String STATUS_CHANNEL     = "runner:status:";
     /** WebSocket channel to get runner output. */
-    public static final String RUNNER_OUTPUT_CHANNEL = "runner:output:";
+    public static final String OUTPUT_CHANNEL     = "runner:output:";
+    /** WebSocket channel to get application's URL availability status. */
+    public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
     protected final ResourceProvider           resourceProvider;
     private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private final   DtoFactory                 dtoFactory;
@@ -272,8 +280,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      */
     public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback) {
         if (isAnyAppRunning) {
-            final String message = "Launching of another project is in progress now.";
-            Notification notification = new Notification(message, ERROR);
+            Notification notification = new Notification("Another project is running now.", ERROR);
             notificationManager.showNotification(notification);
             return;
         }
@@ -319,8 +326,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      */
     public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback) {
         if (isAnyAppRunning) {
-            final String message = "Launching of another project is in progress now.";
-            Notification notification = new Notification(message, ERROR);
+            Notification notification = new Notification("Another project is running now.", ERROR);
             notificationManager.showNotification(notification);
             return;
         }
@@ -351,7 +357,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                    );
     }
 
-    private void startCheckingStatus(final ApplicationProcessDescriptor buildTaskDescriptor) {
+    private void startCheckingStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
@@ -374,7 +380,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
 
                 try {
-                    messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), this);
+                    messageBus.unsubscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
                 } catch (WebSocketException e) {
                     Log.error(RunnerController.class, e);
                 }
@@ -382,7 +388,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
 
         try {
-            messageBus.subscribe(RUNNER_STATUS_CHANNEL + buildTaskDescriptor.getProcessId(), runnerStatusHandler);
+            messageBus.subscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -390,7 +396,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private void stopCheckingStatus() {
         try {
-            messageBus.unsubscribe(RUNNER_STATUS_CHANNEL + lastApplicationDescriptor.getProcessId(), runnerStatusHandler);
+            messageBus.unsubscribe(STATUS_CHANNEL + lastApplicationDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -399,7 +405,30 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void startCheckingOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
         runnerOutputHandler = new LogMessagesHandler(applicationProcessDescriptor, console, messageBus);
         try {
-            messageBus.subscribe(RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
+            messageBus.subscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunnerController.class, e);
+        }
+    }
+
+    private void startCheckingUrlAvailability(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        final String channel = APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId();
+        try {
+            messageBus.subscribe(channel, new SubscriptionHandler<Void>() {
+                @Override
+                protected void onMessageReceived(Void result) {
+//                    try {
+//                        messageBus.unsubscribe(channel, this);
+//                    } catch (WebSocketException e) {
+//                        Log.error(RunnerController.class, e);
+//                    }
+                }
+
+                @Override
+                protected void onErrorReceived(Throwable exception) {
+                    Log.error(RunnerController.class, exception);
+                }
+            });
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -416,6 +445,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
+//                startCheckingUrlAvailability(descriptor);
+
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
@@ -564,11 +595,51 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
+    public boolean isRecipeLinkExists() {
+        if (isAnyAppRunning() && lastApplicationDescriptor != null) {
+            Link recipeLink = getLink(lastApplicationDescriptor, "runner recipe");
+            return recipeLink != null;
+        }
+        return false;
+    }
+
+    /** Opens runner recipe file in editor. */
+    public void showRecipe() {
+        if (lastApplicationDescriptor != null) {
+            final Link recipeLink = getLink(lastApplicationDescriptor, "runner recipe");
+            if (recipeLink != null) {
+                RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, recipeLink.getHref());
+                try {
+                    builder.sendRequest("", new com.google.gwt.http.client.RequestCallback() {
+                        public void onResponseReceived(Request request, Response response) {
+                            File recipeFile = new RecipeFile(response.getText());
+                            editorAgent.openEditor(recipeFile);
+                            EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
+                            if (editor instanceof CodenvyTextEditor) {
+                                ((CodenvyTextEditor)editor).getView().setReadOnly(true);
+                            }
+                        }
+
+                        public void onError(Request request, Throwable exception) {
+                            notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                            Log.error(RunnerController.class, exception);
+                        }
+                    });
+                } catch (RequestException e) {
+                    notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                    Log.error(RunnerController.class, e);
+                }
+            }
+        }
+    }
+
     /** Returns URL of the application which is currently running. */
     @Nullable
     public String getCurrentAppURL() {
-        // don't show app URL in console when app is stopped. After some time this URL may be used by other app.
+        // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
         if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
+            // TODO: check application's URL availability
             return getAppLink(lastApplicationDescriptor);
         }
         return null;
@@ -721,6 +792,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 doubleDigitI = Integer.toString(i);
         }
         return doubleDigitI;
+    }
+
+    private class RecipeFile extends File {
+        public RecipeFile(String content) {
+            super();
+            name = "Runner Recipe";
+            mimeType = "text/plain";
+            setContent(content);
+        }
+
+        @Override
+        public String getPath() {
+            return "runner_recipe";
+        }
     }
 
 }

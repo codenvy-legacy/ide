@@ -10,11 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.console;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -27,19 +28,29 @@ import com.google.inject.Singleton;
 public class ClearConsoleAction extends Action {
 
     private final BuilderConsolePresenter presenter;
+    private final ResourceProvider        resourceProvider;
 
     @Inject
     public ClearConsoleAction(BuilderConsolePresenter presenter,
+                              ResourceProvider resourceProvider,
                               BuilderResources resources,
                               BuilderLocalizationConstant localizationConstant) {
         super(localizationConstant.clearConsoleControlTitle(), localizationConstant.clearConsoleControlDescription(), null,
               resources.clear());
         this.presenter = presenter;
+        this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         presenter.clear();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void update(ActionEvent e) {
+        Project activeProject = resourceProvider.getActiveProject();
+        e.getPresentation().setEnabledAndVisible(activeProject != null);
     }
 }

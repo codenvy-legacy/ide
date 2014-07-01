@@ -8,49 +8,47 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.console;
+package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to clear Runner console.
+ * Action to view the runner 'recipe' file being used for running app.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ClearConsoleAction extends Action {
-
-    private final RunnerConsolePresenter presenter;
-    private final ResourceProvider       resourceProvider;
+public class ViewRecipeAction extends Action {
+    private final ResourceProvider resourceProvider;
+    private final RunnerController controller;
 
     @Inject
-    public ClearConsoleAction(RunnerConsolePresenter presenter,
-                              ResourceProvider resourceProvider,
-                              RunnerResources resources,
-                              RunnerLocalizationConstant localizationConstant) {
-        super(localizationConstant.clearConsoleControlTitle(), localizationConstant.clearConsoleControlDescription(), null,
-              resources.clear());
-        this.presenter = presenter;
+    public ViewRecipeAction(RunnerController controller,
+                            RunnerResources resources,
+                            ResourceProvider resourceProvider,
+                            RunnerLocalizationConstant localizationConstants) {
+        super(localizationConstants.viewRecipeText(), localizationConstants.viewRecipeDescription(), null, resources.viewRecipe());
+        this.controller = controller;
         this.resourceProvider = resourceProvider;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        presenter.clear();
+        controller.showRecipe();
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        e.getPresentation().setEnabledAndVisible(activeProject != null);
+        e.getPresentation().setVisible(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabled(controller.isRecipeLinkExists());
     }
 }

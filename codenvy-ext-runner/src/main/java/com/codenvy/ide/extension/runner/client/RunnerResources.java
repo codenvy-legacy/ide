@@ -38,6 +38,9 @@ public interface RunnerResources extends ClientBundle {
     @Source("clear-logs.svg")
     SVGResource clear();
 
+    @Source("view-recipe.svg")
+    SVGResource viewRecipe();
+
     public interface Css extends CssResource {
         @ClassName("info-panel")
         String infoPanel();
