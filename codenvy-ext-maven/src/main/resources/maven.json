@@ -161,6 +161,24 @@
             "location": "https://github.com/codenvy-templates/desktop-clojure-java-simple.git"
         }
     },
+       {
+        "displayName": "JRuby Hello World",
+        "category": "Samples - Hello World",
+        "description": "A basic JRuby application compiled into JAR with JRuby Maven plugin. Outputs a simple message into a console",
+        "source": {
+             "type": "git",
+             "location": "https://github.com/codenvy-templates/desktop-jruby-java-simple.git"
+        }
+    },
+    {
+        "displayName": "JRuby Spring Hello World",
+        "category": "Samples - Hello World",
+        "description": "A basic JRuby application compiled into WAR with JRuby Maven plugin and run in an application server",
+        "source": {
+             "type": "git",
+             "location": "https://github.com/codenvy-templates/web-jruby-java-simple.git"
+        }
+    },
     {
         "displayName": "Scala",
         "category": "Samples - Hello World",
