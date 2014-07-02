@@ -23,6 +23,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
@@ -34,11 +36,11 @@ import static com.codenvy.ide.api.notification.Notification.State.READ;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NotificationManagerImpl extends BasePresenter   implements NotificationManager,
-                                                                        NotificationItem.ActionDelegate,
-                                                                        Notification.NotificationObserver,
-                                                                        NotificationManagerView.ActionDelegate,
-                                                                        NotificationMessageStack.ActionDelegate {
+public class NotificationManagerImpl extends BasePresenter implements NotificationManager,
+                                                                      NotificationItem.ActionDelegate,
+                                                                      Notification.NotificationObserver,
+                                                                      NotificationManagerView.ActionDelegate,
+                                                                      NotificationMessageStack.ActionDelegate {
     private static final String TITLE = "Events";
     private NotificationManagerView  view;
     private NotificationContainer    notificationContainer;
@@ -183,7 +185,13 @@ public class NotificationManagerImpl extends BasePresenter   implements Notifica
     public ImageResource getTitleImage() {
         return null;
     }
-    
+
+    @Nullable
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return null;
+    }
+
     /** {@inheritDoc} */
     @Override
     public IsWidget getTitleWidget() {

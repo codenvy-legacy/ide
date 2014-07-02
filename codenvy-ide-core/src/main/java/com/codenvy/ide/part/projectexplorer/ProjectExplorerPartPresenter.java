@@ -40,6 +40,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -221,6 +223,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

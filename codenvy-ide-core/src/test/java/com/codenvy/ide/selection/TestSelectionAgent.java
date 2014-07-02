@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -112,6 +113,11 @@ public class TestSelectionAgent {
             }
 
             @Override
+            public SVGResource getTitleSVGImage() {
+                return null;
+            }
+
+            @Override
             public String getTitle() {
                 return null;
             }
@@ -146,6 +152,11 @@ public class TestSelectionAgent {
 
             @Override
             public ImageResource getTitleImage() {
+                return null;
+            }
+
+            @Override
+            public SVGResource getTitleSVGImage() {
                 return null;
             }
 

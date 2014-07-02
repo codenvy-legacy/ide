@@ -16,6 +16,9 @@ import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -27,7 +30,7 @@ import com.google.inject.Inject;
 
 /**
  * Is used for displaying images in editor area.
- * 
+ *
  * @author Ann Shumilova
  */
 public class ImageViewer extends AbstractEditorPresenter {
@@ -35,7 +38,7 @@ public class ImageViewer extends AbstractEditorPresenter {
     private Resources resources;
 
     /**
-     * 
+     *
      */
     @Inject
     public ImageViewer(Resources resources) {
@@ -49,7 +52,7 @@ public class ImageViewer extends AbstractEditorPresenter {
 
     @Override
     public void doSave(AsyncCallback<EditorInput> callback) {
-        
+
     }
 
     /** {@inheritDoc} */
@@ -76,6 +79,12 @@ public class ImageViewer extends AbstractEditorPresenter {
 
     /** {@inheritDoc} */
     @Override
+    public SVGResource getTitleSVGImage() {
+        return input.getSVGResource();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String getTitleToolTip() {
         return null;
     }
@@ -95,7 +104,7 @@ public class ImageViewer extends AbstractEditorPresenter {
 
     /**
      * Image to display file with image type.
-     * 
+     *
      * @return {@link Image}
      */
     private Image getImage() {

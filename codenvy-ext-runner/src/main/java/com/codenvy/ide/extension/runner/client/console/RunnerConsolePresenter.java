@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Runner console.
  *
@@ -26,8 +28,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
     private static final String TITLE = "Runner";
-    private RunnerConsoleView view;
-    private final ToolbarPresenter consoleToolbar;
+    private       RunnerConsoleView view;
+    private final ToolbarPresenter  consoleToolbar;
 
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar) {
@@ -46,6 +48,12 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

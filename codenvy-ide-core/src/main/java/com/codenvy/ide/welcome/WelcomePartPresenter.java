@@ -21,6 +21,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.validation.constraints.NotNull;
 
 
@@ -65,6 +67,12 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
     @Override
     public ImageResource getTitleImage() {
         return resources.welcome();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return null;
     }
 
     /** {@inheritDoc} */
