@@ -78,7 +78,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
      */
     public void parse() {
         if (first) {
-            notification = new Notification("Parsing File...", Notification.Status.PROGRESS);
+            notification = new Notification("Parsing file...", Notification.Status.PROGRESS);
             codeAssistProcessor.disableCodeAssistant();
             notificationManager.showNotification(notification);
         }

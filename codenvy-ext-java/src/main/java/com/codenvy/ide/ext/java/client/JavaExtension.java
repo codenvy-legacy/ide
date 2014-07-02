@@ -65,6 +65,8 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
+    boolean updating      = false;
+    boolean needForUpdate = false;
     private NotificationManager notificationManager;
     private String              restContext;
     private String              workspaceId;
@@ -209,16 +211,32 @@ public class JavaExtension {
     public JavaExtension() {
     }
 
-    public void updateDependencies(Project project) {
+    public static native String getJavaCAPath() /*-{
+        try {
+            return $wnd.IDE.config.javaCodeAssistant;
+        } catch (e) {
+            return null;
+        }
+
+    }-*/;
+
+    public void updateDependencies(final Project project) {
+        if (updating) {
+            needForUpdate = true;
+            return;
+        }
         String projectPath = project.getPath();
-        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +"&projectid=" +project.getId();
+        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +
+                     "&projectid=" + project.getId();
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
+        updating = true;
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
+                updating = false;
                 notification.setMessage("Dependencies successfully updated ");
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
@@ -236,12 +254,18 @@ public class JavaExtension {
                                 }
                             }
                         }
+                        if (needForUpdate) {
+                            needForUpdate = false;
+                            updateDependencies(project);
+                        }
                     }
                 });
             }
 
             @Override
             protected void onFailure(Throwable exception) {
+                updating = false;
+                needForUpdate = false;
                 JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
                 if (object.containsKey("message")) {
                     notification.setMessage(object.get("message").isString().stringValue());
@@ -254,13 +278,4 @@ public class JavaExtension {
             }
         });
     }
-
-    public static native String getJavaCAPath() /*-{
-        try{
-            return $wnd.IDE.config.javaCodeAssistant;
-        } catch (e){
-            return null;
-        }
-
-    }-*/;
 }
