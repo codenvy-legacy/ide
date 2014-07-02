@@ -29,7 +29,7 @@ public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
 
     @Inject
     public RunnerTimeoutThresholdIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Timeout Threshold", false, 300, resources);
+        super("Runner Timeout Threshold", false, 215, resources);
         this.runnerController = runnerController;
     }
 
