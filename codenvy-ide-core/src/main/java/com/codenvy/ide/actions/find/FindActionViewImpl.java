@@ -187,14 +187,15 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
             popupPanel.hide();
         }
         popupPanel.clear();
-//        DomUtils.preventExcessiveScrollingPropagation((Element)popupPanel.getElement());
+        HTML container = new HTML();
+        popupPanel.add(container);
         TableElement itemHolder = Elements.createTableElement();
         itemHolder.setClassName(css.items());
         HTML html = new HTML();
         html.setStyleName(css.container());
         html.getElement().appendChild(((com.google.gwt.dom.client.Element)itemHolder));
-        popupPanel.add(html);
-        list = SimpleList.create((SimpleList.View)popupPanel.getElement().cast(), (Element)html.getElement(), itemHolder,
+        container.getElement().appendChild(html.getElement());
+        list = SimpleList.create((SimpleList.View)container.getElement().cast(), (Element)html.getElement(), itemHolder,
                                  resources.defaultSimpleListCss(), listItemRenderer, eventDelegate);
         html.getElement().getStyle().setOverflow(Style.Overflow.AUTO);
         ((Element)html.getElement()).getStyle().setProperty("max-height", "200px");
@@ -208,7 +209,7 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
             }
         });
         if (!actions.isEmpty()) {
-           list.getSelectionModel().setSelectedItem(0);
+            list.getSelectionModel().setSelectedItem(0);
         }
     }
 

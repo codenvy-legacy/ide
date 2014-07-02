@@ -36,27 +36,38 @@
             z-index: 6;
         }
 
+        .noToolbarPanel {
+            background-color: tabBorder;
+        }
+
         .dockLayoutPanel > div {
             overflow: visible !important;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.dockLayoutPanel}">
+    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.dockLayoutPanel}" debugId="ideMainDockPanel" ui:field="ideMainDockPanel">
+
         <g:north size="21">
-            <g:DockLayoutPanel>
+            <g:DockLayoutPanel ui:field="topMenuLayoutPanel">
                 <g:east size="170">
-                    <g:FlowPanel addStyleNames="{style.buttonsPanel}">
-                        <g:Button ui:field="btnUpdate" text="Update extension" addStyleNames="{style.space}"
-                                  width="150px" height="21px"/>
+                    <g:FlowPanel addStyleNames="{style.buttonsPanel}" debugId="updateExtensionPanel" ui:field="updateExtensionPanel">
+                        <g:Button ui:field="btnUpdate" text="Update extension" addStyleNames="{style.space}" width="150px" height="21px"/>
                     </g:FlowPanel>
                 </g:east>
+
                 <g:center>
-                    <g:SimplePanel width="100%" ui:field="menuPanel"/>
+                    <g:SimplePanel width="100%" ui:field="menuPanel" debugId="mainMenuPanel" />
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>
+
         <g:north size="26">
             <g:SimplePanel width="100%" height="26" ui:field="toolbarPanel" addStyleNames="{style.toolbarPanel}"/>
         </g:north>
+
+        <g:north size="1">
+            <g:SimplePanel width="100%" height="1" ui:field="noToolbarPanel" addStyleNames="{style.noToolbarPanel}"/>
+        </g:north>
+
         <g:south size="22">
             <g:SimplePanel width="100%" ui:field="statusPanel" addStyleNames="{style.bottomPanel}"/>
         </g:south>

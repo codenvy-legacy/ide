@@ -47,11 +47,12 @@ public class ProjectTemplateDescriptionLoader {
                 JsonArray<ProjectTemplateDescriptor> templates =
                         DtoFactory.getInstance().createListDtoFromJson(inputStream, ProjectTemplateDescriptor.class);
                 for (ProjectTemplateDescriptor template : templates) {
-                    list.add(new ProjectTemplateDescription(template.getCategory() ==  null ? ProjectTemplateDescription.defaultCategory: template.getCategory(),
-                                                            template.getSources().getType(),
-                                                            template.getDisplayName(),
-                                                            template.getDescription(),
-                                                            template.getSources().getLocation()));
+                    list.add(new ProjectTemplateDescription(
+                            template.getCategory() == null ? ProjectTemplateDescription.defaultCategory : template.getCategory(),
+                            template.getSource().getType(),
+                            template.getDisplayName(),
+                            template.getDescription(),
+                            template.getSource().getLocation()));
                 }
             }
         }

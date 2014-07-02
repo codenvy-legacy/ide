@@ -99,7 +99,7 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
     @Override
     protected void onErrorReceived(Throwable throwable) {
         try {
-            messageBus.unsubscribe(RunnerController.RUNNER_OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
+            messageBus.unsubscribe(RunnerController.OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
             Log.error(LogMessagesHandler.class, throwable);
         } catch (WebSocketException e) {
             Log.error(LogMessagesHandler.class, e);

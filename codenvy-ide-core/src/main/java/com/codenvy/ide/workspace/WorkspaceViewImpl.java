@@ -15,12 +15,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 
 /**
@@ -36,10 +31,19 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
 
     @UiField
     SimpleLayoutPanel perspectivePanel;
+
+    @UiField
+    DockLayoutPanel ideMainDockPanel;
+
+    @UiField
+    DockLayoutPanel topMenuLayoutPanel;
+    @UiField
+    FlowPanel updateExtensionPanel;
     @UiField
     SimplePanel menuPanel;
+
     @UiField
-    SimplePanel toolbarPanel;
+    SimplePanel toolbarPanel, noToolbarPanel;
     @UiField
     SimplePanel  statusPanel;
     @UiField
@@ -51,6 +55,8 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
     protected WorkspaceViewImpl() {
         add(uiBinder.createAndBindUi(this));
         getElement().setId("codenvyIdeWorkspaceViewImpl");
+        topMenuLayoutPanel.setWidgetHidden(updateExtensionPanel, true);
+        ideMainDockPanel.setWidgetHidden(noToolbarPanel, true);
     }
     
     /** {@inheritDoc} */
@@ -77,14 +83,22 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
         return toolbarPanel;
     }
 
+    @Override
+    public void setToolbarVisible(boolean visible) {
+        ideMainDockPanel.setWidgetHidden(toolbarPanel, !visible);
+        ideMainDockPanel.setWidgetHidden(noToolbarPanel, visible);
+    }
+
     /** {@inheritDoc} */
     @Override
-    public AcceptsOneWidget getStatusPanel() { return statusPanel;
+    public AcceptsOneWidget getStatusPanel() {
+        return statusPanel;
     }
 
     /** {@inheritDoc} */
     @Override
     public void setUpdateButtonVisibility(boolean visible) {
+        topMenuLayoutPanel.setWidgetHidden(updateExtensionPanel, !visible);
         btnUpdate.setVisible(visible);
     }
 
