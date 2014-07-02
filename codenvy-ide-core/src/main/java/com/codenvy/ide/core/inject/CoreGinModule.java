@@ -156,6 +156,7 @@ import com.codenvy.ide.workspace.PartStackViewFactory;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.codenvy.ide.workspace.WorkspaceView;
 import com.codenvy.ide.workspace.WorkspaceViewImpl;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
@@ -296,7 +297,8 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected FileType provideDefaultFileType() {
         //TODO add icon for unknown file
-        return new FileType(null, null);
+        Resources res = GWT.create(Resources.class);
+        return new FileType(res.defaultFile(), null);
     }
 
     @Provides

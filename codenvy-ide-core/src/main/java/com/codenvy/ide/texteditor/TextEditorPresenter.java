@@ -61,7 +61,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     private   BreakpointGutterManager breakpointGutterManager;
     private   DtoFactory              dtoFactory;
     private   WorkspaceAgent          workspaceAgent;
-    private EditorState errorState;
+    private   EditorState             errorState;
 
     @Inject
     public TextEditorPresenter(Resources resources,
