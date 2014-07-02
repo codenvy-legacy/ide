@@ -15,6 +15,9 @@ import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 
@@ -95,6 +98,12 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     /** {@inheritDoc} */
     @Override
     public IsWidget getTitleWidget() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 }
