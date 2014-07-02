@@ -51,7 +51,6 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -112,6 +111,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    protected SubscriptionHandler<String>                       runnerHealthHandler;
     private   boolean                                           isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
@@ -427,7 +427,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private void startCheckingAppHealth(ApplicationProcessDescriptor applicationProcessDescriptor) {
+    private void startCheckingAppHealth(final ApplicationProcessDescriptor applicationProcessDescriptor) {
         isLastAppHealthOk = false;
 
         setAppHealthOkTimer = new Timer() {
@@ -438,31 +438,27 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
         setAppHealthOkTimer.schedule(30 * 1000);
 
-        final String channel = APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId();
-        try {
-            messageBus.subscribe(channel, new SubscriptionHandler<String>(new StringUnmarshallerWS()) {
-                @Override
-                protected void onMessageReceived(String result) {
-                    JSONObject jsonObject = JSONParser.parseStrict(result).isObject();
-                    if (jsonObject != null && jsonObject.containsKey("url") && jsonObject.containsKey("status")) {
-                        final String urlStatus = jsonObject.get("status").isString().stringValue();
-                        if (urlStatus.equals("OK")) {
-                            isLastAppHealthOk = true;
-                            setAppHealthOkTimer.cancel();
-                            try {
-                                messageBus.unsubscribe(channel, this);
-                            } catch (WebSocketException e) {
-                                Log.error(RunnerController.class, e);
-                            }
-                        }
+        runnerHealthHandler = new SubscriptionHandler<String>() {
+            @Override
+            protected void onMessageReceived(String result) {
+                JSONObject jsonObject = JSONParser.parseStrict(result).isObject();
+                if (jsonObject != null && jsonObject.containsKey("url") && jsonObject.containsKey("status")) {
+                    final String urlStatus = jsonObject.get("status").isString().stringValue();
+                    if (urlStatus.equals("OK")) {
+                        isLastAppHealthOk = true;
+                        stopCheckingAppHealth(applicationProcessDescriptor);
                     }
                 }
+            }
 
-                @Override
-                protected void onErrorReceived(Throwable exception) {
-                    Log.error(RunnerController.class, exception);
-                }
-            });
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                Log.error(RunnerController.class, exception);
+            }
+        };
+
+        try {
+            messageBus.subscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -471,7 +467,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void stopCheckingAppHealth(ApplicationProcessDescriptor applicationProcessDescriptor) {
         setAppHealthOkTimer.cancel();
         try {
-            messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), null);
+            messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -510,7 +506,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                stopCheckingAppHealth(descriptor);
 
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
@@ -530,7 +525,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                stopCheckingAppHealth(descriptor);
                 getLogs();
 
                 notification.setStatus(FINISHED);
@@ -544,7 +538,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                stopCheckingAppHealth(descriptor);
 
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);
