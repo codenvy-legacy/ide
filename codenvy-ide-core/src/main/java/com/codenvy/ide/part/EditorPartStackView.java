@@ -15,7 +15,9 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -32,12 +34,17 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.gwt.dom.client.Element;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 
@@ -139,7 +146,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+    public TabItem addTabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
         setVisible(true);
         TabButton tabItem = new TabButton(icon, title, toolTip, closable);
         tabsPanel.add(tabItem);
@@ -220,36 +227,47 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
+    public void updateTabItem(int index, SVGResource icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabs.get(index);
         tabButton.tabItemTittle.setText(title);
         tabButton.setTitle(toolTip);
     }
 
     /** Special button for tab title. */
-    private class TabButton extends Composite implements PartStackView.TabItem {
+    public class TabButton extends Composite implements PartStackView.TabItem {
 
-        private Image       image;
+        private Image image;
 
-        private FlowPanel   tabItem;
+        private FlowPanel tabItem;
 
         private InlineLabel tabItemTittle;
 
+        private Element elementOfGroupOfIcons;
+
+        private boolean isVisibilityOfWarningMark;
+
+        private boolean isVisibilityOfErrorMark;
+
+
         /**
          * Create button.
-         * 
+         *
          * @param icon
          * @param title
          * @param toolTip
          * @param closable
          */
-        public TabButton(Image icon, String title, String toolTip, boolean closable) {
+        public TabButton(SVGImage icon, String title, String toolTip, boolean closable) {
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
             this.setStyleName(partStackUIResources.partStackCss().idePartStackTab());
             if (icon != null) {
-                tabItem.add(icon);
+                elementOfGroupOfIcons =
+                        (Element)Elements.createDivElement(partStackUIResources.partStackCss().idePartStackElementOfGroupOfIcons());
+                icon.getElement().setAttribute("class", partStackUIResources.partStackCss().idePartStackTabIcon());
+                elementOfGroupOfIcons.appendChild(icon.getElement());
+                tabItem.getElement().appendChild(elementOfGroupOfIcons);
             }
             tabItemTittle = new InlineLabel(title);
             tabItem.add(tabItemTittle);
@@ -280,6 +298,29 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 }
             });
         }
+
+        public void setMrkError(boolean isVisible) {
+            if (isVisibilityOfErrorMark != isVisible) {
+                isVisibilityOfErrorMark = isVisible;
+                if (isVisible) {
+                    tabItemTittle.addStyleName(partStackUIResources.partStackCss().lineError());
+                } else {
+                    tabItemTittle.removeStyleName(partStackUIResources.partStackCss().lineError());
+                }
+            }
+        }
+
+        public void setMarkWarning(boolean isVisible) {
+            if (isVisibilityOfWarningMark != isVisible) {
+                isVisibilityOfWarningMark = isVisible;
+                if (isVisible) {
+                    tabItemTittle.addStyleName(partStackUIResources.partStackCss().lineWarning());
+                } else {
+                    tabItemTittle.removeStyleName(partStackUIResources.partStackCss().lineWarning());
+                }
+            }
+        }
+
     }
 
     /** Button for listing all opened tabs. */
@@ -329,13 +370,13 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     }
 
     /**
-     * This method analyzes the tabs panel size and the size of its components and 
+     * This method analyzes the tabs panel size and the size of its components and
      * displays the show list button, when all tabs can not be placed.
      */
     private void processPanelSize() {
         boolean activeTabIsVisible = true;
         int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : COUNTING_ERROR;
-        
+
         for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
             //Do not count list buttons width
             if (tabsPanel.getWidget(i) instanceof ListButton) {
@@ -369,7 +410,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /**
      * Sets the handler for list all tabs button click event.
-     * 
+     *
      * @param handler
      */
     public void setShowListButtonHandler(ShowListButtonClickHandler handler) {

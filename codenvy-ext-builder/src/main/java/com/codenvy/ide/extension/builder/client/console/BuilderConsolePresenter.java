@@ -15,6 +15,9 @@ import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,6 +49,12 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

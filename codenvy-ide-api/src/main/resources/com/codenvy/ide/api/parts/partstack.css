@@ -51,16 +51,61 @@
 .ide-PartStack .ide-PartStack-Tab span {
     /* margin between text and image */
     margin-right: 6px;
+    padding-bottom: 2px;
     white-space: nowrap;
     font-size: 11px;
     line-height: 14px;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
 }
 
-.ide-PartStack .ide-PartStack-Tab img {
+.ide-PartStack .ide-PartStack-Tab img,
+.ide-PartStack .ide-PartStack-Tab svg {
     /*vertical-align: bottom;*/
     vertical-align: middle;
 
+}
+
+.ide-PartStack-Tab-Icon {
+    max-width: 16px;
+    max-height: 16px;
+    margin-right: 2px;
+    opacity: 0.6;
+}
+
+.ide-PartStack-Tab-Icons-Group-Element {
+    display: inline;
+    position: relative;
+}
+
+.ide-PartStack-Tab-Icon-Image {
+    max-width: 7px;
+    max-height: 7px;
+    float: left;
+    position: absolute;
+    right: 10px;
+    top: 1px;
+}
+
+@sprite .ide-PartStack-Tab-Line-Error {
+    gwt-image: "squiggle";
+    background-position: bottom;
+    background-repeat: repeat-x;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
+}
+
+@sprite .ide-PartStack-Tab-Line-Warning {
+    gwt-image: "squiggleWarning";
+    background-position: bottom;
+    background-repeat: repeat-x;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    overflow: visible;
 }
 
 .ide-PartStack .ide-PartStack-Tab .CloseButton {

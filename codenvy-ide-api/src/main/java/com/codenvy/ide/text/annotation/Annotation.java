@@ -85,7 +85,7 @@ public class Annotation {
      *         <code>true</code> if persistent, <code>false</code> otherwise
      */
     public Annotation(boolean isPersistent) {
-        this(null, isPersistent, null);
+        this(null, isPersistent, null, 0, null, null);
     }
 
     /**
@@ -104,9 +104,7 @@ public class Annotation {
      *         image associated with this annotation
      */
     public Annotation(String type, boolean isPersistent, String text, int layer, ImageResource image) {
-        this(type, isPersistent, text);
-        this.layer = layer;
-        this.image = image;
+        this(type, isPersistent, text, 0, image, null);
     }
 
     /**
@@ -125,8 +123,32 @@ public class Annotation {
      *         image associated with this annotation
      */
     public Annotation(String type, boolean isPersistent, String text, int layer, SVGResource imageSVG) {
-        this(type, isPersistent, text);
+        this(type, isPersistent, text, layer, null, imageSVG);
+    }
+
+    /**
+     * Creates a new annotation with the given properties.
+     *
+     * @param type
+     *         the unique name of this annotation type
+     * @param isPersistent
+     *         <code>true</code> if this annotation is
+     *         persistent, <code>false</code> otherwise
+     * @param text
+     *         the text associated with this annotation
+     * @param layer
+     *         annotation draw layer
+     * @param image
+     *         image associated with this annotation
+     * @param imageSVG
+     *         image associated with this annotation
+     */
+    public Annotation(String type, boolean isPersistent, String text, int layer, ImageResource image, SVGResource imageSVG) {
+        this.type = type;
+        this.isPersistent = isPersistent;
+        this.text = text;
         this.layer = layer;
+        this.image = image;
         this.imageSVG = imageSVG;
     }
 

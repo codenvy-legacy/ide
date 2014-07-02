@@ -14,7 +14,6 @@ import elemental.dom.Element;
 
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.FocusManager;
@@ -91,7 +90,7 @@ public class InfoPanel extends UiComponent<InfoPanel.View> {
 
 
     /**
-
+     * The view for the editor info panel.
      */
     public static class View extends CompositeView<Void> {
         private Resources    res;

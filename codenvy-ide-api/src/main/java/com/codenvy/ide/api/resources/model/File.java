@@ -54,7 +54,6 @@ public class File extends Resource {
         this.length = length;
     }
 
-    // ===
 
     private void fixMimeType() {
         // Firefox adds ";charset=utf-8" to mime-type. Lets clear it.

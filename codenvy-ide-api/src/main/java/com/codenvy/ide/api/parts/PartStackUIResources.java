@@ -94,12 +94,33 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-PartStack-Button-Left")
         String idePartStackButtonLeft();
+
+        @ClassName("ide-PartStack-Tab-Icons-Group-Element")
+        String idePartStackElementOfGroupOfIcons();
+
+        @ClassName("ide-PartStack-Tab-Icon")
+        String idePartStackTabIcon();
+
+        @ClassName("ide-PartStack-Tab-Icon-Image")
+        String markImage();
+
+        @ClassName("ide-PartStack-Tab-Line-Warning")
+        String lineWarning();
+
+        @ClassName("ide-PartStack-Tab-Line-Error")
+        String lineError();
     }
 
     @Source({"partstack.css", "com/codenvy/ide/api/ui/style.css"})
     PartStackCss partStackCss();
 
     ImageResource close();
+
+    @Source("squiggle.gif")
+    ImageResource squiggle();
+
+    @Source("squiggle-warning.png")
+    ImageResource squiggleWarning();
 
     @Source("minimize.svg")
     SVGResource minimize();

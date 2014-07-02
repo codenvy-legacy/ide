@@ -17,6 +17,8 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -56,6 +58,12 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return input.getSVGResource();
     }
 
     /** {@inheritDoc} */

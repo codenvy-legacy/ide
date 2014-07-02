@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * The presenter that represent general part for showing part API.
  *
@@ -49,6 +51,12 @@ public class MyPartPresenter extends BasePresenter implements MyPartView.ActionD
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

@@ -21,6 +21,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RichTextArea;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
@@ -39,7 +41,7 @@ public class WysiwygEditor extends AbstractEditorPresenter {
         textArea = new RichTextArea();
 
         //use or load content of the file
-        if(input.getFile().getContent() == null){
+        if (input.getFile().getContent() == null) {
             input.getFile().getProject().getContent(input.getFile(), new AsyncCallback<File>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -51,9 +53,8 @@ public class WysiwygEditor extends AbstractEditorPresenter {
                     textArea.setHTML(input.getFile().getContent());
                 }
             });
-        }
-        else{
-           textArea.setHTML(input.getFile().getContent());
+        } else {
+            textArea.setHTML(input.getFile().getContent());
         }
     }
 
@@ -88,6 +89,12 @@ public class WysiwygEditor extends AbstractEditorPresenter {
     @Override
     public ImageResource getTitleImage() {
         return input.getImageResource();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return input.getSVGResource();
     }
 
     /** {@inheritDoc} */

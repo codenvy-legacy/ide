@@ -20,6 +20,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * WebShell to runner instance.
  *
@@ -50,6 +52,12 @@ public class ShellConsolePresenter extends BasePresenter implements ShellConsole
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

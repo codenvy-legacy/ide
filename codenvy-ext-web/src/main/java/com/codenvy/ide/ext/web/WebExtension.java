@@ -14,10 +14,12 @@ import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.resources.FileType;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
 import com.codenvy.ide.ext.web.css.NewLessFileAction;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
@@ -46,6 +48,18 @@ public class WebExtension {
     public interface ParserResource extends ClientBundle {
         @Source("com/codenvy/ide/ext/web/web_parser.js")
         TextResource webParser();
+
+        @Source("com/codenvy/ide/ext/web/css.svg")
+        SVGResource cssFile();
+
+        @Source("com/codenvy/ide/ext/web/less.svg")
+        SVGResource lessFile();
+
+        @Source("com/codenvy/ide/ext/web/html.svg")
+        SVGResource htmlFile();
+
+        @Source("com/codenvy/ide/ext/web/js.svg")
+        SVGResource jsFile();
     }
 
     /**
@@ -79,19 +93,19 @@ public class WebExtension {
 
         // Create and register new File types
         // CSS
-        FileType cssFile = new FileType("CSS file", null, MimeType.TEXT_CSS, "css");
+        FileType cssFile = new FileType("CSS file", res.cssFile(), MimeType.TEXT_CSS, "css");
         resourceProvider.registerFileType(cssFile);
 
         // Also register .less files
-        FileType lessFile = new FileType("Leaner CSS file", null, MimeType.TEXT_CSS, "less");
+        FileType lessFile = new FileType("Leaner CSS file", res.lessFile(), MimeType.TEXT_CSS, "less");
         resourceProvider.registerFileType(lessFile);
 
         // JS
-        FileType jsFile = new FileType("javaScript", null, MimeType.TEXT_JAVASCRIPT, "js");
+        FileType jsFile = new FileType("javaScript", res.jsFile(), MimeType.TEXT_JAVASCRIPT, "js");
         resourceProvider.registerFileType(jsFile);
 
         // HTML
-        FileType htmlFile = new FileType("HTML file", null, MimeType.TEXT_HTML, "html");
+        FileType htmlFile = new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
         resourceProvider.registerFileType(htmlFile);
 
         // register Editor Provider
