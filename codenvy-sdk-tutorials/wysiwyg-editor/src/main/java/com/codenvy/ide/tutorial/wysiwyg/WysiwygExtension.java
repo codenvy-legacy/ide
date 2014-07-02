@@ -17,6 +17,10 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.wysiwyg.part.TutorialHowToPresenter;
+import com.google.gwt.resources.client.ClientBundle;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.inject.Inject;
 
 /**
@@ -25,11 +29,16 @@ import com.google.inject.Inject;
  */
 @Extension(title = "WYSIWYG Editor Extension", version = "1.0")
 public class WysiwygExtension {
+    public interface WysiwygResource extends ClientBundle {
+        @Source("com/codenvy/ide/tutorial/wysiwyg/html.svg")
+        SVGResource htmlFile();
+    }
 
     @Inject
-    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygEditorProvider editorProvider, EditorRegistry editorRegistry,
+    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygResource res, WysiwygEditorProvider editorProvider,
+                            EditorRegistry editorRegistry,
                             WorkspaceAgent workspaceAgent, TutorialHowToPresenter howToPresenter) {
-        FileType htmlFileType = new FileType(null, "text/htm", "htm");
+        FileType htmlFileType = new FileType(res.htmlFile(), "text/htm", "htm");
         resourceProvider.registerFileType(htmlFileType);
         editorRegistry.register(htmlFileType, editorProvider);
 
