@@ -19,7 +19,7 @@
         <version>3.0.0-M19-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-java-codeassistant</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>Codenvy Extension :: Java : Codeassistant</name>
     <dependencies>
         <dependency>
