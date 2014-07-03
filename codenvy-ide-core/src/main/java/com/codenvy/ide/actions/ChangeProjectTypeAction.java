@@ -31,7 +31,7 @@ public class ChangeProjectTypeAction extends Action {
 
     @Inject
     public ChangeProjectTypeAction(ResourceProvider resourceProvider, NewProjectWizardPresenter wizardPresenter) {
-        super("Change project type", "Change project type", null, null);
+        super("Change Project Type", "Change project type", null, null);
         this.resourceProvider = resourceProvider;
         this.wizardPresenter = wizardPresenter;
     }
