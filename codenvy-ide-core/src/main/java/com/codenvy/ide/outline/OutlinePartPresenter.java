@@ -23,6 +23,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 
 /**
  * Part presenter for Outline.
@@ -69,6 +71,12 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     @Override
     public ImageResource getTitleImage() {
         // TODO need to add an image
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

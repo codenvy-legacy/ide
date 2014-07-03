@@ -62,6 +62,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,6 +232,12 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 
@@ -573,7 +581,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             @Override
                             public void onSuccess(DebuggerInfo result) {
                                 debuggerInfo = result;
-                                Notification notification = new Notification(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort(), INFO);
+                                Notification notification =
+                                        new Notification(appDescriptor.getDebugHost() + ':' + appDescriptor.getDebugPort(), INFO);
                                 notificationManager.showNotification(notification);
                                 showDialog(debuggerInfo);
                                 startCheckingEvents();
@@ -647,7 +656,8 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
         debuggerInfo = null;
         gutterManager.unmarkCurrentBreakpoint();
         gutterManager.removeAllBreakPoints();
-        Notification notification = new Notification(constant.debuggerDisconnected(appDescriptor.getDebugHost()) + ':' + appDescriptor.getDebugPort(), INFO);
+        Notification notification =
+                new Notification(constant.debuggerDisconnected(appDescriptor.getDebugHost()) + ':' + appDescriptor.getDebugPort(), INFO);
         notificationManager.showNotification(notification);
         appDescriptor = null;
     }

@@ -18,6 +18,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -54,6 +57,12 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
 
     /** {@inheritDoc} */
     @Override
+    public SVGResource getTitleSVGImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String getTitleToolTip() {
         return "Displays console output";
     }
@@ -79,7 +88,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
      *         text that need to be shown
      */
     public void print(String text) {
-        String []lines = text.split("\n");
+        String[] lines = text.split("\n");
         for (String line : lines) {
             view.print(line.isEmpty() ? " " : line);
         }
@@ -97,7 +106,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     public void onClearClicked() {
         clear();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onOpen() {

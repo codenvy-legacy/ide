@@ -13,6 +13,8 @@ package com.codenvy.ide.api.editor;
 import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -36,10 +38,18 @@ public interface EditorInput {
     /**
      * Returns the image descriptor for this input.
      *
-     * @return the image resource for this input; never <code>null</code>
+     * @return the image resource for this input.
      */
     @NotNull
     ImageResource getImageResource();
+
+    /**
+     * Returns the image descriptor for this input.
+     *
+     * @return the SVG image resource for this input.
+     */
+    @NotNull
+    SVGResource getSVGResource();
 
     /**
      * Returns the name of this editor input for display purposes.

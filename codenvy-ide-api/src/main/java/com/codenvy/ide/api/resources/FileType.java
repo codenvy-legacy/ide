@@ -14,6 +14,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * FileType is meta information about file.
@@ -39,6 +40,8 @@ public class FileType {
 
     private ImageResource image;
 
+    private SVGResource imageSVG;
+
     private Array<String> mimeTypes;
 
     private String extension;
@@ -48,45 +51,73 @@ public class FileType {
     private String contentDescription;
 
     public FileType(ImageResource image, String mimeType, String extension) {
-        this(image, Collections.createArray(mimeType), extension);
+        this(null, image, null, Collections.createArray(mimeType), extension, null);
+    }
+
+    public FileType(SVGResource imageSVG, String mimeType, String extension) {
+        this(null, null, imageSVG, Collections.createArray(mimeType), extension, null);
     }
 
     public FileType(String contentDescription, ImageResource image, String mimeType, String extension) {
-        this(image, Collections.createArray(mimeType), extension);
-        this.contentDescription = contentDescription;
+        this(contentDescription, image, null, Collections.createArray(mimeType), extension, null);
+    }
+
+    public FileType(String contentDescription, SVGResource imageSVG, String mimeType, String extension) {
+        this(contentDescription, null, imageSVG, Collections.createArray(mimeType), extension, null);
     }
 
     public FileType(ImageResource image, Array<String> mimeTypes, String extension) {
-        this(image, mimeTypes, extension, null);
+        this(null, image, null, mimeTypes, extension, null);
+    }
+
+    public FileType(SVGResource imageSVG, Array<String> mimeTypes, String extension) {
+        this(null, null, imageSVG, mimeTypes, extension, null);
     }
 
     public FileType(String contentDescription, ImageResource image, Array<String> mimeTypes, String extension) {
-        this(image, mimeTypes, extension, null);
-        this.contentDescription = contentDescription;
+        this(contentDescription, image, null, mimeTypes, extension, null);
+    }
+
+    public FileType(String contentDescription, SVGResource imageSVG, Array<String> mimeTypes, String extension) {
+        this(contentDescription, null, imageSVG, mimeTypes, extension, null);
     }
 
     public FileType(ImageResource image, String namePattern) {
-        this(image, null, null, namePattern);
+        this(null, image, null, null, null, namePattern);
+    }
+
+    public FileType(SVGResource imageSVG, String namePattern) {
+        this(null, null, imageSVG, null, null, namePattern);
     }
 
     public FileType(String contentDescription, ImageResource image, String namePattern) {
-        this(image, null, null, namePattern);
-        this.contentDescription = contentDescription;
+        this(contentDescription, image, null, null, null, namePattern);
+    }
+
+    public FileType(String contentDescription, SVGResource imageSVG, String namePattern) {
+        this(contentDescription, null, imageSVG, null, null, namePattern);
     }
 
     private FileType(ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
-        this(null, image, mimeTypes, extension, namePattern);
+        this(null, image, null, mimeTypes, extension, namePattern);
     }
 
-    private FileType(String contentDescription, ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
+    private FileType(SVGResource imageSVG, Array<String> mimeTypes, String extension, String namePattern) {
+        this(null, null, imageSVG, mimeTypes, extension, namePattern);
+    }
+
+    private FileType(String contentDescription, ImageResource image, SVGResource imageSVG, Array<String> mimeTypes, String extension,
+                     String namePattern) {
         super();
         this.contentDescription = contentDescription;
         this.image = image;
+        this.imageSVG = imageSVG;
         this.mimeTypes = mimeTypes;
         this.extension = extension;
         this.namePattern = namePattern;
         id = ++ID;
     }
+
 
     /** @return the contentDescription */
     public String getContentDescription() {
@@ -108,9 +139,14 @@ public class FileType {
         return namePattern;
     }
 
-    /** @return the image */
+    /** @return the image resource */
     public ImageResource getImage() {
         return image;
+    }
+
+    /** @return the SVG resource */
+    public SVGResource getSVGImage() {
+        return imageSVG;
     }
 
     public int getId() {

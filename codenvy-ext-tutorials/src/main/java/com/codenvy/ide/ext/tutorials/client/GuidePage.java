@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
 
 /**
@@ -72,6 +74,12 @@ public class GuidePage extends AbstractPartPresenter {
     @Override
     public ImageResource getTitleImage() {
         return resources.guide();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return null;
     }
 
     /** {@inheritDoc} */
