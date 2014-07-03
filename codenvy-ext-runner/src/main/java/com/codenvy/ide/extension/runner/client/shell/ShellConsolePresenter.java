@@ -29,7 +29,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class ShellConsolePresenter extends BasePresenter implements ShellConsoleView.ActionDelegate, ActivePartChangedHandler {
-    private static final String TITLE = "WebShell";
+    private static final String TITLE = "Terminal";
     private HandlerRegistration handlerRegistration;
     private ShellConsoleView    view;
     private EventBus            eventBus;
@@ -64,7 +64,7 @@ public class ShellConsolePresenter extends BasePresenter implements ShellConsole
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        return "WebShell";
+        return "Terminal";
     }
 
     /** {@inheritDoc} */
