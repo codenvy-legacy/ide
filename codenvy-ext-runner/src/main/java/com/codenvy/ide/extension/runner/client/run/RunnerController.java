@@ -51,6 +51,7 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -438,7 +439,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         };
         setAppHealthOkTimer.schedule(30 * 1000);
 
-        runnerHealthHandler = new SubscriptionHandler<String>() {
+        runnerHealthHandler = new SubscriptionHandler<String>(new StringUnmarshallerWS()) {
             @Override
             protected void onMessageReceived(String result) {
                 JSONObject jsonObject = JSONParser.parseStrict(result).isObject();
