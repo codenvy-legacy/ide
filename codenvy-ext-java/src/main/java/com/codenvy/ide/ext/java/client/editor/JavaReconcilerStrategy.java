@@ -100,6 +100,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     public void onResult(Array<IProblem> problems) {
         if (first) {
             notification.setStatus(FINISHED);
+            notification.setMessage("File successfully parsed");
             codeAssistProcessor.enableCodeAssistant();
             first = false;
         }
