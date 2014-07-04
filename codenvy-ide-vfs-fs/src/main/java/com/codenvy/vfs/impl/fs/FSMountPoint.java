@@ -11,7 +11,6 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.core.notification.EventService;
-import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
 import com.codenvy.api.vfs.server.MountPoint;
@@ -48,6 +47,7 @@ import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.commons.lang.NameGenerator;
+import com.codenvy.commons.lang.Pair;
 import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
 import com.codenvy.commons.lang.cache.SynchronizedCache;

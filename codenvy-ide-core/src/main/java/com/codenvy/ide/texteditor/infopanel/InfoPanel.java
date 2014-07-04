@@ -50,7 +50,7 @@ public class InfoPanel extends UiComponent<InfoPanel.View> {
             @Override
             public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
                 getView().setLineNumber(lineInfo.number() + 1);
-                getView().setCharPosition(column + 1);
+                getView().setCharPosition(column);
             }
         });
     }
