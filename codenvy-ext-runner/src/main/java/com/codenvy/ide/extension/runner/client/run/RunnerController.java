@@ -51,11 +51,15 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -84,7 +88,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String STATUS_CHANNEL     = "runner:status:";
     /** WebSocket channel to get runner output. */
     public static final String OUTPUT_CHANNEL     = "runner:output:";
-    /** WebSocket channel to get application's URL availability status. */
+    /** WebSocket channel to check application's health. */
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
     protected final ResourceProvider           resourceProvider;
     private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
@@ -108,6 +112,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    protected SubscriptionHandler<String>                       runnerHealthHandler;
+    private   boolean                                           isLastAppHealthOk;
+    // The server makes the limited quantity of tries checking application's health,
+    // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
+    private   Timer                                             setAppHealthOkTimer;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -345,8 +354,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         protected void onSuccess(ApplicationProcessDescriptor result) {
                             lastApplicationDescriptor = result;
                             isAnyAppRunning = true;
-                            startCheckingStatus(lastApplicationDescriptor);
-                            startCheckingOutput(lastApplicationDescriptor);
+                            startCheckingAppStatus(lastApplicationDescriptor);
+                            startCheckingAppOutput(lastApplicationDescriptor);
                         }
 
                         @Override
@@ -357,7 +366,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                    );
     }
 
-    private void startCheckingStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+    private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
@@ -394,15 +403,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private void stopCheckingStatus() {
+    private void stopCheckingAppStatus(ApplicationProcessDescriptor applicationProcessDescriptor) {
         try {
-            messageBus.unsubscribe(STATUS_CHANNEL + lastApplicationDescriptor.getProcessId(), runnerStatusHandler);
+            messageBus.unsubscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
     }
 
-    private void startCheckingOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
+    private void startCheckingAppOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
         runnerOutputHandler = new LogMessagesHandler(applicationProcessDescriptor, console, messageBus);
         try {
             messageBus.subscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
@@ -411,24 +420,55 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
-    private void startCheckingUrlAvailability(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        final String channel = APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId();
+    private void stopCheckingAppOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
         try {
-            messageBus.subscribe(channel, new SubscriptionHandler<Void>() {
-                @Override
-                protected void onMessageReceived(Void result) {
-//                    try {
-//                        messageBus.unsubscribe(channel, this);
-//                    } catch (WebSocketException e) {
-//                        Log.error(RunnerController.class, e);
-//                    }
-                }
+            messageBus.unsubscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunnerController.class, e);
+        }
+    }
 
-                @Override
-                protected void onErrorReceived(Throwable exception) {
-                    Log.error(RunnerController.class, exception);
+    private void startCheckingAppHealth(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+        isLastAppHealthOk = false;
+
+        setAppHealthOkTimer = new Timer() {
+            @Override
+            public void run() {
+                isLastAppHealthOk = true;
+            }
+        };
+        setAppHealthOkTimer.schedule(30 * 1000);
+
+        runnerHealthHandler = new SubscriptionHandler<String>(new StringUnmarshallerWS()) {
+            @Override
+            protected void onMessageReceived(String result) {
+                JSONObject jsonObject = JSONParser.parseStrict(result).isObject();
+                if (jsonObject != null && jsonObject.containsKey("url") && jsonObject.containsKey("status")) {
+                    final String urlStatus = jsonObject.get("status").isString().stringValue();
+                    if (urlStatus.equals("OK")) {
+                        isLastAppHealthOk = true;
+                        stopCheckingAppHealth(applicationProcessDescriptor);
+                    }
                 }
-            });
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                Log.error(RunnerController.class, exception);
+            }
+        };
+
+        try {
+            messageBus.subscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunnerController.class, e);
+        }
+    }
+
+    private void stopCheckingAppHealth(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        setAppHealthOkTimer.cancel();
+        try {
+            messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
         } catch (WebSocketException e) {
             Log.error(RunnerController.class, e);
         }
@@ -437,15 +477,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
         this.lastApplicationDescriptor = applicationProcessDescriptor;
         isAnyAppRunning = true;
-        startCheckingStatus(lastApplicationDescriptor);
-        startCheckingOutput(lastApplicationDescriptor);
+        startCheckingAppStatus(lastApplicationDescriptor);
+        startCheckingAppOutput(lastApplicationDescriptor);
     }
 
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case RUNNING:
-//                startCheckingUrlAvailability(descriptor);
+                startCheckingAppHealth(descriptor);
 
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
@@ -465,7 +505,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 break;
             case STOPPED:
                 isAnyAppRunning = false;
-                stopCheckingStatus();
+                stopCheckingAppStatus(descriptor);
+                stopCheckingAppOutput(descriptor);
 
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
@@ -483,7 +524,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 break;
             case FAILED:
                 isAnyAppRunning = false;
-                stopCheckingStatus();
+                stopCheckingAppStatus(descriptor);
+                stopCheckingAppOutput(descriptor);
                 getLogs();
 
                 notification.setStatus(FINISHED);
@@ -495,7 +537,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 break;
             case CANCELLED:
                 isAnyAppRunning = false;
-                stopCheckingStatus();
+                stopCheckingAppStatus(descriptor);
+                stopCheckingAppOutput(descriptor);
 
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);
@@ -638,8 +681,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public String getCurrentAppURL() {
         // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null) {
-            // TODO: check application's URL availability
+        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null && isLastAppHealthOk) {
             return getAppLink(lastApplicationDescriptor);
         }
         return null;

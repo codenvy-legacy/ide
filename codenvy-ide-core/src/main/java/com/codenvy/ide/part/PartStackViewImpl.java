@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -34,6 +33,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
@@ -49,7 +49,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     // DOM Handler
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
     // list of tabs
-    private final Array<TabButton>       tabButtons                = Collections.createArray();
+    private final Array<TabButton>       tabButtons          = Collections.createArray();
     private InsertPanel         tabsPanel;
     private DeckPanel           contentPanel;
     private ActionDelegate      delegate;
@@ -77,9 +77,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
         if (tabPosition == LEFT) {
             top += 4;
-            SVGImage svgIcon = new SVGImage(resources.arrow());
-
-            TabButton dashboardTabButton = new TabButton(svgIcon, "Dashboard");
+            TabButton dashboardTabButton = new TabButton(new SVGImage(resources.arrow()), "Dashboard");
             dashboardTabButton.setStyleName(resources.partStackCss().idePartStackButtonLeft());
             dashboardTabButton.addClickHandler(new ClickHandler() {
                 @Override
@@ -108,7 +106,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+    public TabItem addTabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
         TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
         tabItem.ensureDebugId("tabButton-" + title);
         tabsPanel.add(tabItem);
@@ -187,7 +185,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, ImageResource icon, String title, String toolTip, IsWidget widget) {
+    public void updateTabItem(int index, SVGResource icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabButtons.get(index);
         tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
@@ -200,7 +198,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         private Image       image;
         private FlowPanel   tabItem;
         private InlineLabel tabItemTitle;
-        private Image       icon;
+        private SVGImage    icon;
         private IsWidget    widget;
 
         /**
@@ -211,7 +209,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
          * @param toolTip
          * @param closable
          */
-        public TabButton(Image icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        public TabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
             this.icon = icon;
             this.widget = widget;
             tabItem = new FlowPanel();
@@ -250,16 +248,16 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         /**
          * Create button.
          *
-         * @param svgIcon
+         * @param icon
          * @param title
          */
-        public TabButton(SVGImage svgIcon, String title) {
+        public TabButton(SVGImage icon, String title) {
             tabItem = new FlowPanel();
             if (title != null) {
                 tabItem.setTitle(title);
             }
             initWidget(tabItem);
-            tabItem.add(svgIcon);
+            tabItem.add(icon);
         }
 
         @Override

@@ -174,7 +174,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void importProject(final WizardPage.CommitCallback callback, ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
-        projectService.importProject(projectName, templateDescriptor.getSources(),
+        projectService.importProject(projectName, templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override

@@ -65,6 +65,8 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 /** @author Evgen Vidolob */
 @Extension(title = "Java syntax highlighting and code autocompletion.", version = "3.0.0")
 public class JavaExtension {
+    boolean updating      = false;
+    boolean needForUpdate = false;
     private NotificationManager notificationManager;
     private String              restContext;
     private String              workspaceId;
@@ -106,50 +108,21 @@ public class JavaExtension {
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
+        iconRegistry.registerIcon(new Icon("maven.projecttype.big.icon", "java-extension/jar_64.png"));
+        iconRegistry.registerIcon(new Icon("maven.folder.small.icon", resources.packageIcon()));
+        iconRegistry.registerIcon(new Icon("maven/java.file.small.icon", resources.javaFile()));
+        iconRegistry.registerIcon(new Icon("maven/xml.file.small.icon", resources.xmlFile()));
+        iconRegistry.registerIcon(new Icon("maven/css.file.small.icon", resources.cssFile()));
+        iconRegistry.registerIcon(new Icon("maven/js.file.small.icon", resources.jsFile()));
+        iconRegistry.registerIcon(new Icon("maven/json.file.small.icon", resources.jsonFile()));
+        iconRegistry.registerIcon(new Icon("maven/html.file.small.icon", resources.htmlFile()));
+        iconRegistry.registerIcon(new Icon("maven/jsp.file.small.icon", resources.jspFile()));
+        iconRegistry.registerIcon(new Icon("maven/gif.file.small.icon", resources.imageIcon()));
+        iconRegistry.registerIcon(new Icon("maven/jpg.file.small.icon", resources.imageIcon()));
+        iconRegistry.registerIcon(new Icon("maven/png.file.small.icon", resources.imageIcon()));
+        iconRegistry.registerIcon(new Icon("maven/pom.xml.file.small.icon", resources.maven()));
 
-        iconRegistry.registerIcon(new Icon("jar.projecttype.big.icon", "java-extension/jar_64.png"));
-        iconRegistry.registerIcon(new Icon("jar.folder.small.icon", resources.packageIcon()));
-        iconRegistry.registerIcon(new Icon("jar/java.file.small.icon", resources.javaFile()));
-        iconRegistry.registerIcon(new Icon("jar/xml.file.small.icon", resources.xmlFile()));
-        iconRegistry.registerIcon(new Icon("jar/css.file.small.icon", resources.cssFile()));
-        iconRegistry.registerIcon(new Icon("jar/js.file.small.icon", resources.jsFile()));
-        iconRegistry.registerIcon(new Icon("jar/json.file.small.icon", resources.jsonFile()));
-        iconRegistry.registerIcon(new Icon("jar/html.file.small.icon", resources.htmlFile()));
-        iconRegistry.registerIcon(new Icon("jar/jsp.file.small.icon", resources.jspFile()));
-        iconRegistry.registerIcon(new Icon("jar/gif.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("jar/jpg.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("jar/png.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("jar/pom.xml.file.small.icon", resources.maven()));
-
-        iconRegistry.registerIcon(new Icon("spring.projecttype.big.icon", "java-extension/Spring-Logo.png"));
-        iconRegistry.registerIcon(new Icon("spring.folder.small.icon", resources.packageIcon()));
-        iconRegistry.registerIcon(new Icon("spring/java.file.small.icon", resources.javaFile()));
-        iconRegistry.registerIcon(new Icon("spring/xml.file.small.icon", resources.xmlFile()));
-        iconRegistry.registerIcon(new Icon("spring/html.file.small.icon", resources.htmlFile()));
-        iconRegistry.registerIcon(new Icon("spring/jsp.file.small.icon", resources.jspFile()));
-        iconRegistry.registerIcon(new Icon("spring/css.file.small.icon", resources.cssFile()));
-        iconRegistry.registerIcon(new Icon("spring/js.file.small.icon", resources.jsFile()));
-        iconRegistry.registerIcon(new Icon("spring/json.file.small.icon", resources.jsonFile()));
-        iconRegistry.registerIcon(new Icon("spring/gif.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("spring/jpg.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("spring/png.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("spring/pom.xml.file.small.icon", resources.maven()));
-
-        iconRegistry.registerIcon(new Icon("war.projecttype.big.icon", "java-extension/web_app_big.png"));
-        iconRegistry.registerIcon(new Icon("war.folder.small.icon", resources.packageIcon()));
-        iconRegistry.registerIcon(new Icon("war/java.file.small.icon", resources.javaFile()));
-        iconRegistry.registerIcon(new Icon("war/xml.file.small.icon", resources.xmlFile()));
-        iconRegistry.registerIcon(new Icon("war/html.file.small.icon", resources.htmlFile()));
-        iconRegistry.registerIcon(new Icon("war/jsp.file.small.icon", resources.jspFile()));
-        iconRegistry.registerIcon(new Icon("war/css.file.small.icon", resources.cssFile()));
-        iconRegistry.registerIcon(new Icon("war/js.file.small.icon", resources.jsFile()));
-        iconRegistry.registerIcon(new Icon("war/json.file.small.icon", resources.jsonFile()));
-        iconRegistry.registerIcon(new Icon("war/gif.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("war/jpg.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("war/png.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("war/pom.xml.file.small.icon", resources.maven()));
-
-        FileType javaFile = new FileType("Java", JavaResources.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
+        FileType javaFile = new FileType("Java", JavaResources.INSTANCE.javaFile(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
@@ -209,16 +182,32 @@ public class JavaExtension {
     public JavaExtension() {
     }
 
-    public void updateDependencies(Project project) {
+    public static native String getJavaCAPath() /*-{
+        try {
+            return $wnd.IDE.config.javaCodeAssistant;
+        } catch (e) {
+            return null;
+        }
+
+    }-*/;
+
+    public void updateDependencies(final Project project) {
+        if (updating) {
+            needForUpdate = true;
+            return;
+        }
         String projectPath = project.getPath();
-        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +"&projectid=" +project.getId();
+        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +
+                     "&projectid=" + project.getId();
 
         final Notification notification = new Notification("Updating dependencies...", PROGRESS);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
+        updating = true;
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
+                updating = false;
                 notification.setMessage("Dependencies successfully updated ");
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
@@ -236,12 +225,18 @@ public class JavaExtension {
                                 }
                             }
                         }
+                        if (needForUpdate) {
+                            needForUpdate = false;
+                            updateDependencies(project);
+                        }
                     }
                 });
             }
 
             @Override
             protected void onFailure(Throwable exception) {
+                updating = false;
+                needForUpdate = false;
                 JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
                 if (object.containsKey("message")) {
                     notification.setMessage(object.get("message").isString().stringValue());
@@ -254,13 +249,4 @@ public class JavaExtension {
             }
         });
     }
-
-    public static native String getJavaCAPath() /*-{
-        try{
-            return $wnd.IDE.config.javaCodeAssistant;
-        } catch (e){
-            return null;
-        }
-
-    }-*/;
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.part.projectexplorer;
 
+import elemental.client.Browser;
+
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -28,13 +30,17 @@ import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.validation.constraints.NotNull;
 
@@ -103,8 +109,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
+                // change browser URL here
+                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
+                                                              Config.getContext() +
+                                                              "/" + Config.getWorkspaceName() +
+                                                              "/" + event.getProject().getName());
                 setContent(event.getProject().getParent());
-
                 //List of projects is displaying (need find better sign, that the list of projects is shown):
                 if (event.getProject().getProject() == null) {
                     view.hideProjectHeader();
@@ -119,6 +129,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
+                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
+                                                              Config.getContext() +
+                                                              "/" + Config.getWorkspaceName());
                 setContent(null);
                 view.hideProjectHeader();
             }
@@ -210,6 +223,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SVGResource getTitleSVGImage() {
         return null;
     }
 

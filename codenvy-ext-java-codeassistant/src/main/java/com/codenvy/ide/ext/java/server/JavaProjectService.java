@@ -15,6 +15,7 @@ import com.codenvy.api.core.notification.EventSubscriber;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
+import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
 import com.codenvy.ide.ext.java.server.internal.core.ProjectApiRestClient;
 import com.google.inject.Inject;
@@ -30,12 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.WebApplicationException;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -82,37 +77,6 @@ public class JavaProjectService {
         options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
         options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
         options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
-    }
-
-    public static void removeRecursive(Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                // try to delete the file anyway, even if its attributes
-                // could not be read, since delete-only access is
-                // theoretically possible
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc == null) {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                } else {
-                    // directory iteration failed; propagate exception
-                    throw exc;
-                }
-            }
-        });
     }
 
     public JavaProject getOrCreateJavaProject(String wsId, String projectPath) {
@@ -165,17 +129,15 @@ public class JavaProjectService {
 
             if (cache.containsKey(eventWorkspace + eventPath)) {
                 JavaProject javaProject = cache.remove(eventWorkspace + eventPath);
-                if (eventType == VirtualFileEvent.ChangeType.DELETED) {
-                    javaProject.getIndexManager().deleteIndexFiles();
-                    javaProject.getIndexManager().shutdown();
-                    String vfsId = javaProject.getVfsId();
-                    if (vfsId != null) {
-                        File projectDepDir = new File(tempDir, vfsId);
-                        if (projectDepDir.exists()) {
-                            try {
-                                removeRecursive(projectDepDir.toPath());
-                            } catch (IOException e) {
-                                LOG.error("Can't delete project dependency directory: " + projectDepDir.getPath());
+                if (javaProject != null) {
+                    if (eventType == VirtualFileEvent.ChangeType.DELETED) {
+                        javaProject.getIndexManager().deleteIndexFiles();
+                        javaProject.getIndexManager().shutdown();
+                        String vfsId = javaProject.getVfsId();
+                        if (vfsId != null) {
+                            File projectDepDir = new File(tempDir, vfsId);
+                            if (projectDepDir.exists()) {
+                                IoUtil.deleteRecursive(projectDepDir);
                             }
                         }
                     }

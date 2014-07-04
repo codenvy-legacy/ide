@@ -20,6 +20,8 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * WebShell to runner instance.
  *
@@ -27,7 +29,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  */
 @Singleton
 public class ShellConsolePresenter extends BasePresenter implements ShellConsoleView.ActionDelegate, ActivePartChangedHandler {
-    private static final String TITLE = "WebShell";
+    private static final String TITLE = "Terminal";
     private HandlerRegistration handlerRegistration;
     private ShellConsoleView    view;
     private EventBus            eventBus;
@@ -55,8 +57,14 @@ public class ShellConsolePresenter extends BasePresenter implements ShellConsole
 
     /** {@inheritDoc} */
     @Override
+    public SVGResource getTitleSVGImage() {
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String getTitleToolTip() {
-        return "WebShell";
+        return "Terminal";
     }
 
     /** {@inheritDoc} */

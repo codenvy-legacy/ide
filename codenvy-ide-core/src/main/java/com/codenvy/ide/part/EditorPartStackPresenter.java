@@ -11,6 +11,7 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -20,14 +21,18 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.part.projectexplorer.TabItemWithMarks;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.resources.client.ImageResource;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -128,10 +133,33 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         parts.add(part);
         part.addPropertyListener(propertyListener);
         // include close button
-        ImageResource titleImage = part.getTitleImage();
+        SVGResource titleSVGImage = part.getTitleSVGImage();
         PartStackView.TabItem tabItem =
-                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(), null,
+                view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(), part.getTitleToolTip(), null,
                                   partsClosable);
+
+        if (part instanceof TextEditorPresenter) {
+            final TextEditorPresenter presenter = ((TextEditorPresenter)part);
+            final TabItemWithMarks tab = (TabItemWithMarks)tabItem;
+            part.addPropertyListener(new PropertyListener() {
+                @Override
+                public void propertyChanged(PartPresenter source, int propId) {
+                    if (view instanceof EditorPartStackView) {
+                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.ERROR)) {
+                            tab.setErrorMark(true);
+                        } else {
+                            tab.setErrorMark(false);
+                        }
+                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.WARNING)) {
+                            tab.setWarningMark(true);
+                        } else {
+                            tab.setWarningMark(false);
+                        }
+                    }
+                }
+            });
+        }
+
         bindEvents(tabItem, part);
         part.go(partViewContainer);
 

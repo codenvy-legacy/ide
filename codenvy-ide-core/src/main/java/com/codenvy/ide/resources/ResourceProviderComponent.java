@@ -123,9 +123,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         projectServiceClient.getProject(name, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                // change browser URL here
-                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(), "/ide/" + Config.getWorkspaceName() + "/" + name);
-
                 // do post actions
                 Folder rootFolder = getRoot();
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);

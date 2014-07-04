@@ -41,8 +41,8 @@ public class ProjectApiRestClient {
     private String projectApiUrl;
 
     @Inject
-    public ProjectApiRestClient(@Named("api.project.url") String projectApiUrl) {
-        this.projectApiUrl = projectApiUrl;
+    public ProjectApiRestClient(@Named("api.endpoint") String apiUrl) {
+        this.projectApiUrl = apiUrl +"/project";
     }
 
     public ProjectDescriptor getProject(String wsId, String path) {

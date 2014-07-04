@@ -14,6 +14,7 @@ import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.resources.client.ImageResource;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
 * @author Vitaly Parfonov
@@ -46,8 +47,12 @@ final class EditorInputImpl implements EditorInput {
 
     @Override
     public ImageResource getImageResource() {
-        // TODO Auto-generated method stub
-        return null;
+        return fileType.getImage();
+    }
+
+    @Override
+    public SVGResource getSVGResource() {
+        return fileType.getSVGImage();
     }
 
     @Override

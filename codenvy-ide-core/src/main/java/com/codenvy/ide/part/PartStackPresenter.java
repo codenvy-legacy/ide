@@ -27,13 +27,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
@@ -100,7 +101,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
         }
         int index = parts.indexOf(part);
-        view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip(), part.getTitleWidget());
+        view.updateTabItem(index, part.getTitleSVGImage(), part.getTitle(), part.getTitleToolTip(),
+                           part.getTitleWidget());
     }
 
     /** {@inheritDoc} */
@@ -138,9 +140,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         part.addPropertyListener(propertyListener);
         // include close button
-        ImageResource titleImage = part.getTitleImage();
-        TabItem tabItem = view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
-                                            part.getTitleWidget(), partsClosable);
+        SVGResource titleSVGImage = part.getTitleSVGImage();
+        TabItem tabItem =
+                view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(), part.getTitleToolTip(),
+                                  part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
         part.go(partViewContainer);
         part.onOpen();

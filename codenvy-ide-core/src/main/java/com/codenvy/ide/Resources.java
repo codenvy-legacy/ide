@@ -121,8 +121,8 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
     @Source("texteditor/open-list.png")
     ImageResource listOpenedEditors();
 
-    @Source("xml/xml_file.png")
-    ImageResource xmlFile();
+    @Source("xml/xml.svg")
+    SVGResource xmlFile();
 
     @Source("about/logo.png")
     ImageResource logo();
@@ -186,4 +186,7 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("defaulticons/project.svg")
     SVGResource defaultProject();
+
+    @Source("defaulticons/image-icon.svg")
+    SVGResource defaultImage();
 }
