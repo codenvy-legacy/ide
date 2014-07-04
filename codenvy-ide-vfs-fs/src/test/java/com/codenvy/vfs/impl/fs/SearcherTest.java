@@ -14,6 +14,7 @@ import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.api.vfs.shared.dto.ItemList;
+import com.codenvy.commons.lang.Pair;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.index.Term;
@@ -114,21 +115,21 @@ public class SearcherTest extends LocalFileSystemTest {
         Map<String, List<String>> h = new HashMap<>(1);
         h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
         for (Pair<String[], String> pair : queryToResult) {
-            ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, pair.b.getBytes(), writer, null);
+            ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, pair.second.getBytes(), writer, null);
             //log.info(new String(writer.getBody()));
             assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
             List<Item> result = ((ItemList)response.getEntity()).getItems();
             assertEquals(String.format(
-                    "Expected %d but found %d for query %s", pair.a.length, result.size(), pair.b),
-                         pair.a.length,
+                    "Expected %d but found %d for query %s", pair.first.length, result.size(), pair.second),
+                         pair.first.length,
                          result.size());
             List<String> resultPaths = new ArrayList<>(result.size());
             for (Item item : result) {
                 resultPaths.add(item.getPath());
             }
             List<String> copy = new ArrayList<>(resultPaths);
-            copy.removeAll(Arrays.asList(pair.a));
-            assertTrue(String.format("Expected result is %s but found %s", Arrays.toString(pair.a), resultPaths), copy.isEmpty());
+            copy.removeAll(Arrays.asList(pair.first));
+            assertTrue(String.format("Expected result is %s but found %s", Arrays.toString(pair.first), resultPaths), copy.isEmpty());
             writer.reset();
         }
     }
