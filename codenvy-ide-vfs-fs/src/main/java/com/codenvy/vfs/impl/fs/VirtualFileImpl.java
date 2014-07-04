@@ -11,7 +11,6 @@
 package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.core.util.ContentTypeGuesser;
-import com.codenvy.api.core.util.Pair;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
 import com.codenvy.api.vfs.server.Path;
@@ -26,6 +25,7 @@ import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.commons.lang.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;

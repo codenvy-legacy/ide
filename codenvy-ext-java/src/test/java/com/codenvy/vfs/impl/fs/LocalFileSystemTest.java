@@ -21,6 +21,7 @@ import com.codenvy.api.vfs.shared.dto.ItemList;
 import com.codenvy.api.vfs.shared.dto.Link;
 import com.codenvy.api.vfs.shared.dto.Property;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
+import com.codenvy.commons.lang.Pair;
 import com.codenvy.commons.user.UserImpl;
 
 import org.apache.commons.codec.binary.Base64;
@@ -272,8 +273,8 @@ public abstract class LocalFileSystemTest {
         q.add(new Pair<>(a, b));
         while (!q.isEmpty()) {
             Pair<java.io.File, java.io.File> current = q.pop();
-            java.io.File[] files1 = current.a.listFiles(checkServiceDirs ? null : SERVICE_DIR_FILTER);
-            java.io.File[] files2 = current.b.listFiles(checkServiceDirs ? null : SERVICE_DIR_FILTER);
+            java.io.File[] files1 = current.first.listFiles(checkServiceDirs ? null : SERVICE_DIR_FILTER);
+            java.io.File[] files2 = current.second.listFiles(checkServiceDirs ? null : SERVICE_DIR_FILTER);
             if (files1 == null || files2 == null || files1.length != files2.length) {
                 fail();
             }
@@ -293,16 +294,6 @@ public abstract class LocalFileSystemTest {
                     q.push(new Pair<>(file1, file2));
                 }
             }
-        }
-    }
-
-    static class Pair<A, B> {
-        final A a;
-        final B b;
-
-        Pair(A a, B b) {
-            this.a = a;
-            this.b = b;
         }
     }
 
