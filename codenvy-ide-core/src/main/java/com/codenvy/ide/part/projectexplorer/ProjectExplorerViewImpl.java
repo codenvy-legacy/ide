@@ -50,14 +50,9 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     private FlowPanel                      projectHeader;
     private final CoreLocalizationConstant locale;
 
-    /**
-     * Create view.
-     *
-     * @param resources
-     * @param iconRegistry
-     */
+    /** Create view. */
     @Inject
-    public ProjectExplorerViewImpl(Resources resources, IconRegistry iconRegistry, CoreLocalizationConstant locale) {
+    public ProjectExplorerViewImpl(Resources resources, FileTreeNodeRenderer fileTreeNodeRenderer, CoreLocalizationConstant locale) {
         super(resources);
         this.resources = resources;
         this.locale = locale;
@@ -65,7 +60,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
-        tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources, iconRegistry));
+        tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), fileTreeNodeRenderer);
         container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
@@ -151,9 +146,9 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         }
         projectHeader.clear();
 
-        FlowPanel delimeter = new FlowPanel();
-        delimeter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
-        projectHeader.add(delimeter);
+        FlowPanel delimiter = new FlowPanel();
+        delimiter.setStyleName(resources.partStackCss().idePartStackToolbarSeparator());
+        projectHeader.add(delimiter);
 
         projectVisibilityImage = new SVGImage("private".equals(project.getVisibility()) ? resources.privateProject()
                                                                                         : resources.publicProject());
