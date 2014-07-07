@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.resources;
+package com.codenvy.ide.api.filetypes;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -30,7 +30,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * "application/javascript", "application/x-javascript", "text/javascript" mime types)
  * <p/>
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 public class FileType {
 

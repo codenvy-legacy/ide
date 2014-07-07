@@ -10,15 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.resources;
 
-import elemental.client.Browser;
-
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
@@ -27,8 +24,6 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
@@ -36,19 +31,14 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.List;
@@ -63,50 +53,31 @@ import static com.codenvy.ide.api.resources.model.ProjectDescription.LANGUAGE_AT
 @Singleton
 public class ResourceProviderComponent implements ResourceProvider, Component {
     protected final ModelProvider            genericModelProvider;
-    /** Fully qualified URL to root folder of VFS */
-    private final   String                   workspaceURL;
     private final   StringMap<ModelProvider> modelProviders;
-    private final   IntegerMap<FileType>     fileTypes;
     private final   EventBus                 eventBus;
-    private final   FileType                 defaultFile;
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
+    private         Project                  activeProject;
 
-    @SuppressWarnings("unused")
-    private boolean initialized = false;
-
-    private Project activeProject;
-
-    /**
-     * Resources API for client application.
-     * It deals with VFS to retrieve the content of  the files
-     */
+    /** Resources API for client application. */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
                                      EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaultFile,
-                                     @Named("restContext") String restContext,
-                                     @Named("workspaceId") String workspaceId,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      AsyncRequestFactory asyncRequestFactory,
                                      ProjectServiceClient projectServiceClient) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
-        this.defaultFile = defaultFile;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
-        this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.createStringMap();
-        this.fileTypes = Collections.createIntegerMap();
     }
 
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
-        initialized = true;
-
         // notify Component started
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -206,7 +177,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
                 String language = null;
                 if (attr != null && !attr.isEmpty())
-                  language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                    language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
                 Log.info(ResourceProviderComponent.class, " :: " + project.getName());
                 project.setId(result.getId());
@@ -282,79 +253,19 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.activeProject = project;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void registerFileType(FileType fileType) {
-        fileTypes.put(fileType.getId(), fileType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public FileType getFileType(File file) {
-        String mimeType = file.getMimeType();
-        final String name = file.getName();
-        final Array<FileType> filtered = Collections.createArray();
-        final Array<FileType> nameMatch = Collections.createArray();
-        fileTypes.iterate(new IterationCallback<FileType>() {
-
-            @Override
-            public void onIteration(int key, FileType val) {
-                if (val.getNamePattern() != null) {
-                    RegExp regExp = RegExp.compile(val.getNamePattern());
-                    if (regExp.test(name)) {
-                        nameMatch.add(val);
-                    }
-                } else {
-                    filtered.add(val);
-                }
-            }
-        });
-        if (!nameMatch.isEmpty()) {
-            //TODO what if name matches more than one
-            return nameMatch.get(0);
-        }
-        for (FileType type : filtered.asIterable()) {
-            if (type.getMimeTypes().contains(mimeType)) {
-                return type;
-            }
-        }
-        String extension = getFileExtension(name);
-        if (extension != null) {
-            for (FileType type : filtered.asIterable()) {
-                if (extension.equals(type.getExtension())) {
-                    return type;
-                }
-            }
-        }
-        return defaultFile;
-
-    }
-
     @Override
     public Folder getRoot() { //TODO: need rework logic and remove this method
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", new JSONString(getRootId()));
         jsonObject.put("name", new JSONString(""));
         jsonObject.put("mimeType", new JSONString("text/directory"));
-        Folder folder = new Folder(jsonObject);
-        return folder;
+        return new Folder(jsonObject);
     }
 
     @Override
     public String getRootId() { //TODO: need rework logic and remove this method
         return "_root_";
     }
-
-
-    private String getFileExtension(String name) {
-        int lastDotPos = name.lastIndexOf('.');
-        //file has no extension
-        if (lastDotPos < 0) {
-            return null;
-        }
-        return name.substring(lastDotPos + 1);
-    }
-
 
     /** {@inheritDoc} */
     @Override
@@ -457,7 +368,5 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         });
             }
         });
-
     }
-
 }

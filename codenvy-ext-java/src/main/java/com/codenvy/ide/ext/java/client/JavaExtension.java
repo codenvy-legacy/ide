@@ -21,11 +21,12 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
@@ -77,6 +78,7 @@ public class JavaExtension {
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
+                         FileTypeRegistry fileTypeRegistry,
                          NotificationManager notificationManager,
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
@@ -124,7 +126,7 @@ public class JavaExtension {
 
         FileType javaFile = new FileType("Java", JavaResources.INSTANCE.javaFile(), MimeType.APPLICATION_JAVA, "java");
         editorRegistry.register(javaFile, javaEditorProvider);
-        resourceProvider.registerFileType(javaFile);
+        fileTypeRegistry.registerFileType(javaFile);
 
         resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
                                                                                     dtoUnmarshallerFactory));

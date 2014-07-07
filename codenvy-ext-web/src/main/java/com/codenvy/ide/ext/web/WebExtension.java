@@ -13,11 +13,8 @@ package com.codenvy.ide.ext.web;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.resources.FileType;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
@@ -32,6 +29,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
@@ -67,7 +66,7 @@ public class WebExtension {
      * It provides syntax highlighting for CSS, JS, HTML files and code completion features for CSS files to IDE.
      */
     @Inject
-    public WebExtension(ResourceProvider resourceProvider,
+    public WebExtension(FileTypeRegistry fileTypeRegistry,
                         HtmlEditorProvider htmlEditorProvider,
                         JsEditorProvider jsEditorProvider,
                         CssEditorProvider cssEditorProvider,
@@ -94,19 +93,19 @@ public class WebExtension {
         // Create and register new File types
         // CSS
         FileType cssFile = new FileType("CSS file", res.cssFile(), MimeType.TEXT_CSS, "css");
-        resourceProvider.registerFileType(cssFile);
+        fileTypeRegistry.registerFileType(cssFile);
 
         // Also register .less files
         FileType lessFile = new FileType("Leaner CSS file", res.lessFile(), MimeType.TEXT_CSS, "less");
-        resourceProvider.registerFileType(lessFile);
+        fileTypeRegistry.registerFileType(lessFile);
 
         // JS
         FileType jsFile = new FileType("javaScript", res.jsFile(), MimeType.TEXT_JAVASCRIPT, "js");
-        resourceProvider.registerFileType(jsFile);
+        fileTypeRegistry.registerFileType(jsFile);
 
         // HTML
         FileType htmlFile = new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
-        resourceProvider.registerFileType(htmlFile);
+        fileTypeRegistry.registerFileType(htmlFile);
 
         // register Editor Provider
         editorRegistry.register(cssFile, cssEditorProvider);

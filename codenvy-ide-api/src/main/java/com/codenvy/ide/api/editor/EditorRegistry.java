@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 
 import javax.validation.constraints.NotNull;
 
 
 /**
- * Editor Registry allows to registed new Editor for given FileType. This editor will be used as default to open such kind of Files.
+ * Editor Registry allows to register new Editor for given FileType. This editor will be used as default to open such kind of Files.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */

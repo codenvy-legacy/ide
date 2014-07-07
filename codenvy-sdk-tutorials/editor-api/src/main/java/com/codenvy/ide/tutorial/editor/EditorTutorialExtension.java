@@ -12,8 +12,8 @@ package com.codenvy.ide.tutorial.editor;
 
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -37,7 +37,7 @@ public class EditorTutorialExtension {
     public EditorTutorialExtension(WorkspaceAgent workspaceAgent,
                                    TutorialHowToPresenter howToPresenter,
                                    EditorRegistry editorRegistry,
-                                   ResourceProvider resourceProvider,
+                                   FileTypeRegistry fileTypeRegistry,
                                    GroovyEditorProvider groovyEditorProvider,
                                    EditorTutorialResource editorTutorialResource,
                                    ActionManager actionManager,
@@ -49,7 +49,7 @@ public class EditorTutorialExtension {
         workspaceAgent.openPart(howToPresenter, EDITING);
 
         FileType groovyFile = new FileType("Groovy", resource.groovyFile(), GROOVY_MIME_TYPE, "groovy");
-        resourceProvider.registerFileType(groovyFile);
+        fileTypeRegistry.registerFileType(groovyFile);
 
         editorRegistry.register(groovyFile, groovyEditorProvider);
 

@@ -241,7 +241,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     @Override
     public void onResourceSelected(@NotNull Resource resource) {
-        setSelection(new Selection<Resource>(resource));
+        setSelection(new Selection<>(resource));
         if (resource != null) {
             resourceProvider.setActiveProject(resource.getProject());
         }
