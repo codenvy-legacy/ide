@@ -177,12 +177,14 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     public void setActiveTab(int index) {
         if (activeTab != null) {
             activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
+            activeTab.ensureDebugId("tabButton-" + activeTab.tabItemTittle.getText());
         }
 
         if (index >= 0 && index < tabs.size()) {
             activeTab = tabs.get(index);
             activeTab.addStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
             contentPanel.showWidget(index);
+            activeTab.ensureDebugId("activeTabButton-" + activeTab.tabItemTittle.getText());
         }
         processPanelSize();
     }

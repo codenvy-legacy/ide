@@ -180,6 +180,33 @@
         }
     },
     {
+         "displayName": "Jython HttpServlet",
+         "category": "Samples - Hello World",
+         "description": "A simple Jython web application packaged with Maven",
+         "source": {
+              "type": "git",
+               "location": "https://github.com/codenvy-templates/web-jython-java-simple.git"
+         }
+     },
+     {
+         "displayName": "Jython Console",
+         "category": "Samples - Hello World",
+         "description": "A basic Jython app that writes Hello World to a console",
+         "source": {
+               "type": "git",
+               "location": "https://github.com/codenvy-templates/desktop-jython-java-simple.git"
+         }
+     },
+     {
+         "displayName": "Shale Simple Form",
+         "category": "Samples - Hello World",
+         "description": "An application using Shale web framework. Returns user's input",
+         "source": {
+               "type": "git",
+               "location": "https://github.com/codenvy-templates/web-shale-java-simple.git"
+         }
+     },
+    {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",
