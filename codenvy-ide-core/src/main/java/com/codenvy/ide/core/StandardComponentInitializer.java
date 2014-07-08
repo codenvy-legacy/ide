@@ -16,6 +16,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteResourceAction;
+import com.codenvy.ide.actions.ExpandEditorAction;
 import com.codenvy.ide.actions.FindActionAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
@@ -140,6 +141,9 @@ public class StandardComponentInitializer {
     @Inject
     private ChangeProjectTypeAction changeProjectTypeAction;
 
+    @Inject
+    private ExpandEditorAction expandEditorAction;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
@@ -221,6 +225,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
         fileGroup.add(importProjectGroup);
         fileGroup.add(newGroup);
+        fileGroup.add(closeProjectAction);
         fileGroup.add(changeProjectTypeAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
@@ -263,6 +268,9 @@ public class StandardComponentInitializer {
         mainContextMenuGroup.add(resourceOperation);
         mainContextMenuGroup.add(closeProjectGroup);
 
+        actionManager.registerAction("expandEditor", expandEditorAction);
+        DefaultActionGroup rightMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RIGHT_MAIN_MENU);
+        rightMenuGroup.add(expandEditorAction);
 
         // Compose main toolbar
         DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);

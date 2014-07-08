@@ -73,6 +73,10 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
         String cursorPointer();
 
         String line();
+
+        String editorFullScreenSvg();
+
+        String editorFullScreenSvgDown();
     }
 
     @Source({"Core.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
@@ -165,6 +169,9 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
 
     @Source("actions/upload-file.svg")
     SVGResource uploadFile();
+
+    @Source("actions/resize-icon.svg")
+    SVGResource fullscreen();
 
     @Source("project/private-project.svg")
     SVGResource privateProject();

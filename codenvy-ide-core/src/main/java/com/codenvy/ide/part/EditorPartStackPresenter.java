@@ -28,15 +28,14 @@ import com.codenvy.ide.part.projectexplorer.TabItemWithMarks;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * EditorPartStackPresenter is a special PartStackPresenter that is shared among all
@@ -71,7 +70,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             public void onProjectClosed(ProjectActionEvent event) {
                 for (int i = parts.size() - 1; i >= 0; i--) {
                     PartPresenter part = parts.get(i);
-                    if (part instanceof TextEditorPresenter) {
+                    if (part instanceof EditorPartPresenter) {
                         removePart(part);
                     }
                 }
@@ -97,10 +96,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 if (event.getResource() instanceof Project) {
                     for (int i = parts.size() - 1; i >= 0; i--) {
                         PartPresenter part = parts.get(i);
-                        if (part instanceof TextEditorPresenter
-                            && ((TextEditorPresenter)part).getEditorInput().getFile().getProject().equals((Project)event.getResource())) {
+                        if (part instanceof EditorPartPresenter
+                            && ((EditorPartPresenter)part).getEditorInput().getFile().getProject().equals((Project)event.getResource())) {
                             //Set file's project to null for not to refer to non existing project:
-                            ((TextEditorPresenter)part).getEditorInput().getFile().setProject(null);
+                            ((EditorPartPresenter)part).getEditorInput().getFile().setProject(null);
                         }
                     }
                 }

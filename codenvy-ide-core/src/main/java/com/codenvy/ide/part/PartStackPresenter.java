@@ -21,7 +21,6 @@ import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -202,13 +201,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             workBenchPartController.setHidden(false);
             workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
         }
-        Log.debug(this.getClass(), "SET ACTIVE PART :: " + activePart.getTitle());
     }
 
     /** {@inheritDoc} */
     @Override
     public void hidePart(PartPresenter part) {
-        Log.debug(this.getClass(), "hide part :: " + part.getTitle());
         if (activePart == part) {
             setActivePart(null);
         }
@@ -217,7 +214,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void removePart(PartPresenter part) {
-        Log.debug(this.getClass(), "close part :: " + part.getTitle());
         close(part);
     }
 

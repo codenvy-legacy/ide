@@ -30,7 +30,7 @@ public class ShowInfoNotification extends Action {
 
     @Inject
     public ShowInfoNotification(NotificationManager notificationManager) {
-        super("Show INFO notification", "This action shows INFO notification", null);
+        super("Show INFO notification", "This action shows INFO notification");
         this.notificationManager = notificationManager;
     }
 

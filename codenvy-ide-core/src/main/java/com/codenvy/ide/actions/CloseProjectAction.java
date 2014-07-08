@@ -34,7 +34,7 @@ public class CloseProjectAction extends Action {
                               Resources resources,
                               AnalyticsEventLogger eventLogger,
                               EventBus eventBus) {
-        super("Close", "Close project", null, resources.closeProject());
+        super("Close Project", "Close project", null, resources.closeProject());
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
         this.eventBus = eventBus;

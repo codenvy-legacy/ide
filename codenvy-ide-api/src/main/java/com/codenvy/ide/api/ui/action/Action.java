@@ -58,7 +58,21 @@ public abstract class Action {
     public Action(String text) {
         this(text, null, null, null);
     }
-    
+
+    /**
+     * Constructs a new action with the specified text, description.
+     *
+     * @param text
+     *         Serves as a tooltip when the presentation is a button and the name of the
+     *         menu item when the presentation is a menu item
+     * @param description
+     *         Describes current action, this description will appear on
+     *         the status bar when presentation has focus
+     */
+    public Action(String text, String description) {
+        this(text, description, null, null);
+    }
+
     /**
      * Constructs a new action with the specified text, description and icon.
      *

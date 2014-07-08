@@ -30,7 +30,8 @@ public interface IdeActions {
     String GROUP_BUILD_CONTEXT_MENU = "BuildGroupContextMenu";
     String GROUP_RUN_CONTEXT_MENU   = "RunGroupContextMenu";
 
-    String GROUP_EDITOR_POPUP = "EditorPopupMenu";
-    String GROUP_EDITOR       = "EditorActions";
-    String GROUP_OTHER_MENU   = "OtherMenu";
+    String GROUP_EDITOR_POPUP    = "EditorPopupMenu";
+    String GROUP_EDITOR          = "EditorActions";
+    String GROUP_OTHER_MENU      = "OtherMenu";
+    String GROUP_RIGHT_MAIN_MENU = "RightMainMenu";
 }

@@ -419,3 +419,14 @@ class for the document-level scrollbars. */
 .gwt-SuggestBoxPopup .item-selected {
     background-color: keyboardSelectionBackgroundColor;
 }
+.editorFullScreenSvg{
+    fill: mainMenuFontColor;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    cursor: pointer;
+}
+.editorFullScreenSvgDown{
+    box-shadow: 0 0 1px 0 socialButtonColor;
+    cursor: pointer;
+}
