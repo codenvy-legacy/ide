@@ -206,6 +206,15 @@
                "location": "https://github.com/codenvy-templates/web-shale-java-simple.git"
          }
      },
+     {
+         "displayName": "Rhino Arithmetic Function",
+         "category": "Samples - Hello World",
+         "description": "A basic Rhino application that does arithmetic calculations",
+         "source": {
+                "type": "git",
+                "location": "https://github.com/codenvy-templates/desktop-rhino-java-simple"
+         }
+     },
     {
         "displayName": "Scala",
         "category": "Samples - Hello World",
