@@ -38,6 +38,13 @@ public class Info extends Window {
     TextArea message;
 
 
+    /**
+     * Create view.
+     *
+     * @param message
+     *         the message for popup window
+     */
+
     public Info(String message) {
         Widget widget = ourUiBinder.createAndBindUi(this);
         this.setWidget(widget);
@@ -79,13 +86,32 @@ public class Info extends Window {
     /**
      * Create view.
      *
+     * @param title
+     *         the title for popup window
+     * @param message
+     *         the message for popup window
      * @param handler
      *         the handler that call after user interact
      */
 
-    public Info(final InfoHandler handler, String message) {
+    public Info(String title, String message, final InfoHandler handler) {
         this(handler);
+        this.setTitle(title);
         this.message.setText(message);
+    }
+
+    /**
+     * Create view.
+     *
+     * @param title
+     *         the title for popup window
+     * @param message
+     *         the message for popup window
+     */
+
+    public Info(String title, String message) {
+        this(message);
+        this.setTitle(title);
     }
 
     public void setMessage(String message) {

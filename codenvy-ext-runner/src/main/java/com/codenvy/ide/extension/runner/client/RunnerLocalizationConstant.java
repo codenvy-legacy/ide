@@ -133,9 +133,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("appWillBeStopped")
     String appWillBeStopped(String appName);
 
+    @Key("enteredValueNotCorrect")
+    String enteredValueNotCorrect();
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
+
+    @Key("titles.warning")
+    String titlesWarning();
 
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
