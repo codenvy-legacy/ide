@@ -29,7 +29,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -65,7 +64,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     private       ActionManager               actionManager;
     private       KeyBindingAgent             keyBindingAgent;
     /** Panel, which contains top menu. */
-    private       AbsolutePanel               absolutePanel;
+    private       FlowPanel                   rootPanel;
     /** Lock layer for displaying popup menus. */
     private       MenuLockLayer               lockLayer;
     /** List Menu Bar items. */
@@ -85,19 +84,19 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     public MainMenuViewImpl(ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
         this.actionManager = actionManager;
         this.keyBindingAgent = keyBindingAgent;
-        absolutePanel = new AbsolutePanel();
-        initWidget(absolutePanel);
-        absolutePanel.setStyleName(resources.menuCss().menuBar());
+        rootPanel = new FlowPanel();
+        initWidget(rootPanel);
+        rootPanel.setStyleName(resources.menuCss().menuBar());
 
         table = new MenuBarTable();
         table.setStyleName(resources.menuCss().menuBarTable());
         table.setCellPadding(0);
         table.setCellSpacing(0);
         table.getElement().setAttribute("border", "0");
-        absolutePanel.add(table);
+        rootPanel.add(table);
         rightPanel = new FlowPanel();
         rightPanel.addStyleName(resources.menuCss().rightPanel());
-        absolutePanel.add(rightPanel);
+        rootPanel.add(rightPanel);
 
         menuVisibleActions = new ArrayList<>();
         newMenuVisibleActions = new ArrayList<>();
