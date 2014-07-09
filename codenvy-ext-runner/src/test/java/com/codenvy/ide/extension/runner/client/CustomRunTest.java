@@ -113,7 +113,7 @@ public class CustomRunTest extends BaseTest {
     @Test
     public void shouldRunProject() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getMemorySize()).thenReturn(128);
+        when(view.getMemorySize()).thenReturn("128");
         when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
 
         presenter.onRunClicked();
@@ -121,7 +121,8 @@ public class CustomRunTest extends BaseTest {
         verify(view).close();
         verify(dtoFactory).createDto(eq(RunOptions.class));
         verify(view).getSelectedEnvironment();
-        verify(view).getMemorySize();
+        verify(view, times(2)).getMemorySize();
+        verify(runOptions).setMemorySize(eq(128));
         verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject());
     }
 

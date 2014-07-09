@@ -13,6 +13,7 @@
      ***********************************************************************************************/
 
     .menuBarTable {
+        float: left;
     }
 
     .menuBar,
@@ -62,9 +63,5 @@
     }
 
     .rightPanel {
-        right: 0;
-        width: 300px;
-        top: 0;
-        bottom: 0;
-        position: absolute;
+        float: right;
     }
