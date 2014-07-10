@@ -36,6 +36,8 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
+import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -43,7 +45,7 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -191,15 +193,19 @@ public class CoreGinModule extends AbstractGinModule {
         bind(DtoUnmarshallerFactory.class).in(Singleton.class);
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
+        bind(FileTypeRegistry.class).to(FileTypeRegistryImpl.class).in(Singleton.class);
+
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
-        // client services
+
+        // GWT-clients for Codenvy API services
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
         bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
+
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         apiBindingConfigure();
         resourcesAPIconfigure();

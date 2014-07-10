@@ -22,19 +22,19 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -97,7 +97,7 @@ public class EditorAgentImpl implements EditorAgent {
         }
     };
     private final EventBus                 eventBus;
-    private       ResourceProvider         provider;
+    private       FileTypeRegistry         fileTypeRegistry;
     private       EditorRegistry           editorRegistry;
     private final WorkspaceAgent           workspace;
     private       EditorPartPresenter      activeEditor;
@@ -106,14 +106,14 @@ public class EditorAgentImpl implements EditorAgent {
 
     @Inject
     public EditorAgentImpl(EventBus eventBus,
-                           ResourceProvider provider,
+                           FileTypeRegistry fileTypeRegistry,
                            EditorRegistry editorRegistry,
                            final WorkspaceAgent workspace,
                            final NotificationManager notificationManager,
                            CoreLocalizationConstant coreLocalizationConstant) {
         super();
         this.eventBus = eventBus;
-        this.provider = provider;
+        this.fileTypeRegistry = fileTypeRegistry;
         this.editorRegistry = editorRegistry;
         this.workspace = workspace;
         this.notificationManager = notificationManager;
@@ -135,8 +135,8 @@ public class EditorAgentImpl implements EditorAgent {
         if (openedEditors.containsKey(file.getPath())) {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {
-            FileType fileType = provider.getFileType(file);
-            EditorProvider editorProvider = editorRegistry.getEditor(fileType);
+            FileType fileType = fileTypeRegistry.getFileTypeByFile(file);
+            EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
             EditorPartPresenter editor = editorProvider.getEditor();
             try {
                 editor.init(new EditorInputImpl(fileType, file));

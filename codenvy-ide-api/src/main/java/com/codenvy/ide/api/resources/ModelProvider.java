@@ -13,7 +13,7 @@ package com.codenvy.ide.api.resources;
 import com.codenvy.ide.api.resources.model.Project;
 
 /**
- * Model provider, is an entity responsible for creating a nature-specific project model.
+ * Model provider, is an entity responsible for creating a language-specific project model.
  * Class itself creates an empty project of desired type.
  *
  * @author Nikolay Zamosenchuk

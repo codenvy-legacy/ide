@@ -65,41 +65,26 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
+    private         Project                  activeProject;
 
-    @SuppressWarnings("unused")
-    private boolean initialized = false;
-
-    private Project activeProject;
-
-    /**
-     * Resources API for client application.
-     * It deals with VFS to retrieve the content of  the files
-     */
+    /** Resources API for client application. */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
                                      EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaultFile,
-                                     @Named("restContext") String restContext,
-                                     @Named("workspaceId") String workspaceId,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      AsyncRequestFactory asyncRequestFactory,
                                      ProjectServiceClient projectServiceClient) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
-        this.defaultFile = defaultFile;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
-        this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.createStringMap();
-        this.fileTypes = Collections.createStringMap();
     }
 
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
-        initialized = true;
-
         // notify Component started
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
@@ -199,7 +184,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
                 String language = null;
                 if (attr != null && !attr.isEmpty())
-                  language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
+                    language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
                 Log.info(ResourceProviderComponent.class, " :: " + project.getName());
                 project.setId(result.getId());
@@ -275,79 +260,19 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.activeProject = project;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void registerFileType(FileType fileType) {
-        fileTypes.put(fileType.getId(), fileType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public FileType getFileType(File file) {
-        String mimeType = file.getMimeType();
-        final String name = file.getName();
-        final Array<FileType> filtered = Collections.createArray();
-        final Array<FileType> nameMatch = Collections.createArray();
-        fileTypes.iterate(new StringMap.IterationCallback<FileType>() {
-
-            @Override
-            public void onIteration(String key, FileType val) {
-                if (val.getNamePattern() != null) {
-                    RegExp regExp = RegExp.compile(val.getNamePattern());
-                    if (regExp.test(name)) {
-                        nameMatch.add(val);
-                    }
-                } else {
-                    filtered.add(val);
-                }
-            }
-        });
-        if (!nameMatch.isEmpty()) {
-            //TODO what if name matches more than one
-            return nameMatch.get(0);
-        }
-        for (FileType type : filtered.asIterable()) {
-            if (type.getMimeTypes().contains(mimeType)) {
-                return type;
-            }
-        }
-        String extension = getFileExtension(name);
-        if (extension != null) {
-            for (FileType type : filtered.asIterable()) {
-                if (extension.equals(type.getExtension())) {
-                    return type;
-                }
-            }
-        }
-        return defaultFile;
-
-    }
-
     @Override
     public Folder getRoot() { //TODO: need rework logic and remove this method
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", new JSONString(getRootId()));
         jsonObject.put("name", new JSONString(""));
         jsonObject.put("mimeType", new JSONString("text/directory"));
-        Folder folder = new Folder(jsonObject);
-        return folder;
+        return new Folder(jsonObject);
     }
 
     @Override
     public String getRootId() { //TODO: need rework logic and remove this method
         return "_root_";
     }
-
-
-    private String getFileExtension(String name) {
-        int lastDotPos = name.lastIndexOf('.');
-        //file has no extension
-        if (lastDotPos < 0) {
-            return null;
-        }
-        return name.substring(lastDotPos + 1);
-    }
-
 
     /** {@inheritDoc} */
     @Override
@@ -450,7 +375,5 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                         });
             }
         });
-
     }
-
 }

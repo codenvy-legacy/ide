@@ -179,7 +179,6 @@ public class Project extends Folder {
                         @Override
                         public void onSuccess(Folder result) {
                             File file = (File)result.findChildByName(name);
-                            file.getParent().setTag(parent.getTag());
                             eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(file));
                             callback.onSuccess(file);
                         }
@@ -515,9 +514,6 @@ public class Project extends Folder {
                         public void onSuccess(Folder result) {
                             Resource renamed = (resource instanceof Project && resource.getParent().getId().equals("_root_"))
                                                ? resource : result.findChildByName(newName);
-                            if (!renamed.getParent().getId().equals("_root_")) {
-                                renamed.getParent().setTag(folderToRefresh.getTag());
-                            }
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
                             callback.onSuccess(renamed);
                         }

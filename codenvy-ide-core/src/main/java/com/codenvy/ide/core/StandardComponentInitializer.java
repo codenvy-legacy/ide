@@ -28,9 +28,9 @@ import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
@@ -63,7 +63,7 @@ public class StandardComponentInitializer {
     private EditorRegistry editorRegistry;
 
     @Inject
-    private ResourceProvider resourceProvider;
+    private FileTypeRegistry fileTypeRegistry;
 
     @Inject
     private XmlEditorProvider xmlEditorProvider;

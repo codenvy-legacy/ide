@@ -15,10 +15,6 @@
 package com.codenvy.ide.tree;
 
 import elemental.dom.Element;
-import elemental.events.Event;
-import elemental.events.EventListener;
-import elemental.events.MouseEvent;
-import elemental.html.AnchorElement;
 import elemental.html.SpanElement;
 
 import com.codenvy.ide.api.resources.model.File;
@@ -31,23 +27,118 @@ import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.ui.tree.TreeNodeMutator;
-import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
-
-/** Renderer for nodes in the file tree. */
+/** {@link NodeRenderer} for the project explorer tree. */
 public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
+    private final Css          css;
+    private       IconRegistry iconRegistry;
 
-    private static IconRegistry iconRegistry;
+    @Inject
+    public FileTreeNodeRenderer(Resources resources, IconRegistry iconRegistry) {
+        this.iconRegistry = iconRegistry;
+        this.css = resources.workspaceNavigationFileTreeNodeRendererCss();
+    }
 
-    public static FileTreeNodeRenderer create(Resources res, IconRegistry iconRegistry) {
-        FileTreeNodeRenderer.iconRegistry = iconRegistry;
-        return new FileTreeNodeRenderer(res, iconRegistry);
+    @Override
+    public Element getNodeKeyTextContainer(SpanElement treeNodeLabel) {
+        return (Element)treeNodeLabel.getChildNodes().item(1);
+    }
+
+    @Override
+    public SpanElement renderNodeContents(Resource data) {
+        return renderNodeContents(css, data, true);
+    }
+
+    /** Renders the given information as a node. */
+    private SpanElement renderNodeContents(Css css, Resource item, boolean renderIcon) {
+        SpanElement root = Elements.createSpanElement(css.root());
+
+        if (renderIcon) {
+            SVGImage icon = detectIcon(item);
+            if (icon != null) {
+                icon.getElement().setAttribute("class", css.icon());
+                root.appendChild((Element)icon.getElement());
+            }
+        }
+
+        Elements.addClassName(css.label(), root);
+
+        if (item.isFolder()) {
+            Elements.addClassName(css.folderFont(), root);
+        } else if (item.isFile()) {
+            Elements.addClassName(css.fileFont(), root);
+        } else {
+            Elements.addClassName(css.defaultFont(), root);
+        }
+
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + item.getName());
+
+        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)root, "projectTree-" + TextUtils.md5(item.getPath()));
+
+        return root;
+    }
+
+    private SVGImage detectIcon(Resource item) {
+        Project project = item.getProject();
+        Icon icon = null;
+
+        if (project == null) return null;
+        final String projectTypeId = project.getDescription().getProjectTypeId();
+        if (item instanceof Project) {
+            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof Folder) {
+            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
+        } else if (item instanceof File) {
+            String filename = item.getName();
+
+            // search exact match first
+            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
+                String[] split = item.getName().split("\\.");
+                String ext = split[split.length - 1];
+                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
+        }
+        if (icon == null) {
+            return null;
+        }
+        return icon.getSVGImage();
+    }
+
+    @Override
+    public void updateNodeContents(TreeNodeElement<Resource> treeNode) {
+//        if (treeNode.getData() instanceof Project) {
+//            // Update folder icon based on icon state.
+//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//            icon.setClassName(css.icon());
+//            if (treeNode.isOpen()) {
+//                icon.addClassName(css.projectOpen());
+//            } else {
+//                icon.addClassName(css.project());
+//            }
+//        } else if (treeNode.getData() instanceof Folder) {
+//            // Update folder icon based on icon state.
+//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//            icon.setClassName(css.icon());
+        //      if (treeNode.getData().isLoading()) {
+        //        icon.addClassName(css.folderLoading());
+        //      } else
+//            if (treeNode.isOpen()) {
+//                icon.addClassName(css.folderOpen());
+//            } else {
+//                icon.addClassName(css.folder());
+//            }
+
+//        }
     }
 
     public interface Css extends TreeNodeMutator.Css {
@@ -77,7 +168,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
         @Override
         String nodeNameInput();
-        
+
         String treeFileIcon();
     }
 
@@ -102,141 +193,6 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
 
         @Source("project.png")
         ImageResource project();
-
     }
 
-    /**
-     * Renders the given information as a node.
-     *
-     * @param mouseDownListener
-     *         an optional listener to be attached to the anchor. If not given, the
-     *         label will not be an anchor.
-     */
-    public static SpanElement renderNodeContents(Css css, String name, Resource item, EventListener mouseDownListener,
-                                                 boolean renderIcon) {
-        SpanElement root = Elements.createSpanElement(css.root());
-
-        if (renderIcon) {
-            SVGImage icon = detectIcon(item);
-            if (icon != null) {
-                icon.getElement().setAttribute("class", css.icon());
-                root.appendChild((Element)icon.getElement());
-            }
-        }
-
-        Elements.addClassName(css.label(), root);
-
-        if (item.isFolder()) {
-            Elements.addClassName(css.folderFont(), root);
-        } else if (item.isFile()) {
-            Elements.addClassName(css.fileFont(), root);
-        } else {
-            Elements.addClassName(css.defaultFont(), root);
-        }
-
-        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + name);
-
-        if (mouseDownListener != null) {
-            root.addEventListener(Event.MOUSEDOWN, mouseDownListener, false);
-        }
-
-        UIObject.ensureDebugId((com.google.gwt.dom.client.Element)root, "projectTree-" + TextUtils.md5(item.getPath()));
-
-        return root;
-    }
-
-    private static SVGImage detectIcon(Resource item) {
-        Project project = item.getProject();
-        Icon icon = null;
-
-        if (project == null) return null;
-        final String projectTypeId = project.getDescription().getProjectTypeId();
-        if (item instanceof Project) {
-            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
-        } else if (item instanceof Folder) {
-            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
-        } else if (item instanceof File) {
-            String filename = item.getName();
-
-            // search exact match first
-            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
-
-            // not found, try with extension
-            if (icon == null) {
-                String[] split = item.getName().split("\\.");
-                String ext = split[split.length - 1];
-                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
-            }
-        }
-        if (icon == null) {
-            return null;
-        }
-        return icon.getSVGImage();
-    }
-
-    private final EventListener mouseDownListener = new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-            MouseEvent event = (MouseEvent)evt;
-            AnchorElement anchor = (AnchorElement)evt.getTarget();
-
-            if (event.getButton() == MouseEvent.Button.AUXILIARY) {
-                Element parent = CssUtils.getAncestorOrSelfWithClassName(anchor, res.treeCss().treeNode());
-
-                if (parent != null) {
-                    @SuppressWarnings({"unchecked", "unused"}) TreeNodeElement<Resource> fileNode = (TreeNodeElement<Resource>)parent;
-                    // TODO ????
-                    //          anchor.setHref(
-                    //              WorkspaceUtils.createDeepLinkToFile(fileNode.getData().getNodePath()));
-                }
-            }
-        }
-    };
-
-    private final Css css;
-
-    private final Resources res;
-
-    private FileTreeNodeRenderer(Resources resources, IconRegistry iconRegistry) {
-        this.iconRegistry = iconRegistry;
-        this.res = resources;
-        this.css = res.workspaceNavigationFileTreeNodeRendererCss();
-    }
-
-    @Override
-    public Element getNodeKeyTextContainer(SpanElement treeNodeLabel) {
-        return (Element)treeNodeLabel.getChildNodes().item(1);
-    }
-
-    @Override
-    public SpanElement renderNodeContents(Resource data) {
-        return renderNodeContents(css, data.getName(), data, mouseDownListener, true);
-    }
-
-    @Override
-    public void updateNodeContents(TreeNodeElement<Resource> treeNode) {
-//        if (treeNode.getData() instanceof Project) {
-//            // Update folder icon based on icon state.
-//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
-//            icon.setClassName(css.icon());
-//            if (treeNode.isOpen()) {
-//                icon.addClassName(css.projectOpen());
-//            } else {
-//                icon.addClassName(css.project());
-//            }
-//        } else if (treeNode.getData() instanceof Folder) {
-//            // Update folder icon based on icon state.
-//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
-//            icon.setClassName(css.icon());
-        //      if (treeNode.getData().isLoading()) {
-        //        icon.addClassName(css.folderLoading());
-        //      } else
-//            if (treeNode.isOpen()) {
-//                icon.addClassName(css.folderOpen());
-//            } else {
-//                icon.addClassName(css.folder());
-//            }
-
-//        }
-    }
 }

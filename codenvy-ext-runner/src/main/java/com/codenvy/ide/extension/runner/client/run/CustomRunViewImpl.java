@@ -20,10 +20,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -135,18 +133,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
-    public int getMemorySize() throws NumberFormatException{
-        return Integer.parseInt(memoryField.getValue());
-    }
-
-    @Override
-    public void setEnabledRunButton(boolean enabled) {
-        runButton.setEnabled(enabled);
-    }
-
-    @UiHandler("memoryField")
-    public void onMemorySizeChanged(KeyUpEvent event) {
-        delegate.onValueChanged();
+    public String getMemorySize() {
+        return memoryField.getValue();
     }
 
     @Override

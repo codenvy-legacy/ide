@@ -12,7 +12,10 @@ package com.codenvy.ide.ext.web;
 
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
@@ -28,6 +31,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 import com.google.inject.name.Named;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -66,7 +71,7 @@ public class WebExtension {
      * It provides syntax highlighting for CSS, JS, HTML files and code completion features for CSS files to IDE.
      */
     @Inject
-    public WebExtension(ResourceProvider resourceProvider,
+    public WebExtension(FileTypeRegistry fileTypeRegistry,
                         HtmlEditorProvider htmlEditorProvider,
                         JsEditorProvider jsEditorProvider,
                         CssEditorProvider cssEditorProvider,
