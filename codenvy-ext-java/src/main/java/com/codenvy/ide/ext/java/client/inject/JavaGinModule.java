@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.java.client.inject;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.ext.java.client.JavaExtension;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.JavaFormatter;

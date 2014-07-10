@@ -16,7 +16,6 @@ import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
@@ -37,11 +36,9 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.List;
@@ -57,11 +54,8 @@ import static com.codenvy.ide.api.resources.model.ProjectDescription.LANGUAGE_AT
 public class ResourceProviderComponent implements ResourceProvider, Component {
     protected final ModelProvider            genericModelProvider;
     /** Fully qualified URL to root folder of VFS */
-    private final   String                   workspaceURL;
     private final   StringMap<ModelProvider> modelProviders;
-    private final   StringMap<FileType>     fileTypes;
     private final   EventBus                 eventBus;
-    private final   FileType                 defaultFile;
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;

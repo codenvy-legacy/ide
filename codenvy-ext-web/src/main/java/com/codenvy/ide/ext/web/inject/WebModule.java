@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.web.inject;
 
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.ext.web.WebExtension;
 import com.codenvy.ide.ext.web.html.editor.HTMLEditorConfigurationProvider;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorConfiguration;

@@ -14,9 +14,6 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.api.resources.FileType;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 

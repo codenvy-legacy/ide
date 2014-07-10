@@ -94,6 +94,7 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
+                         @Named("JavaFileType") FileType javaFile,
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController, BuildContext buildContext) {
@@ -122,7 +123,7 @@ public class JavaExtension {
         iconRegistry.registerIcon(new Icon("maven/pom.xml.file.small.icon", resources.maven()));
 
         editorRegistry.registerDefaultEditor(javaFile, javaEditorProvider);
-        resourceProvider.registerFileType(javaFile);
+        fileTypeRegistry.registerFileType(javaFile);
 
         resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
                                                                                     dtoUnmarshallerFactory));

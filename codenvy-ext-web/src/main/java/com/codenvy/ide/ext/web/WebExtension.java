@@ -14,9 +14,6 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
@@ -31,8 +28,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
 import com.google.inject.name.Named;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -101,17 +96,17 @@ public class WebExtension {
 
         // Register new File types
         // CSS
-        resourceProvider.registerFileType(cssFile);
+        fileTypeRegistry.registerFileType(cssFile);
 
         // Also register .less files
-        resourceProvider.registerFileType(lessFile);
+        fileTypeRegistry.registerFileType(lessFile);
 
         // JS
-        resourceProvider.registerFileType(jsFile);
+        fileTypeRegistry.registerFileType(jsFile);
 
         // HTML
 //        FileType htmlFile = new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
-        resourceProvider.registerFileType(htmlFile);
+        fileTypeRegistry.registerFileType(htmlFile);
 
         // register Editor Provider
         editorRegistry.registerDefaultEditor(cssFile, cssEditorProvider);

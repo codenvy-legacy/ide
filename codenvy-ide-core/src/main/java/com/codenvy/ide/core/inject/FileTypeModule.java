@@ -14,7 +14,7 @@ package com.codenvy.ide.core.inject;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;

@@ -186,31 +186,31 @@ public class StandardComponentInitializer {
     }
 
     public void initialize() {
-        resourceProvider.registerFileType(xmlFile);
+        fileTypeRegistry.registerFileType(xmlFile);
         editorRegistry.registerDefaultEditor(xmlFile, xmlEditorProvider);
 
-        resourceProvider.registerFileType(pngFile);
+        fileTypeRegistry.registerFileType(pngFile);
         editorRegistry.registerDefaultEditor(pngFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(bmpFile);
+        fileTypeRegistry.registerFileType(bmpFile);
         editorRegistry.registerDefaultEditor(bmpFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(gifFile);
+        fileTypeRegistry.registerFileType(gifFile);
         editorRegistry.registerDefaultEditor(gifFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(iconFile);
+        fileTypeRegistry.registerFileType(iconFile);
         editorRegistry.registerDefaultEditor(iconFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(svgFile);
+        fileTypeRegistry.registerFileType(svgFile);
         editorRegistry.registerDefaultEditor(svgFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(jpeFile);
+        fileTypeRegistry.registerFileType(jpeFile);
         editorRegistry.registerDefaultEditor(jpeFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(jpegFile);
+        fileTypeRegistry.registerFileType(jpegFile);
         editorRegistry.registerDefaultEditor(jpegFile, imageViewerProvider);
 
-        resourceProvider.registerFileType(jpgFile);
+        fileTypeRegistry.registerFileType(jpgFile);
         editorRegistry.registerDefaultEditor(jpgFile, imageViewerProvider);
 
         // Compose Import Project group

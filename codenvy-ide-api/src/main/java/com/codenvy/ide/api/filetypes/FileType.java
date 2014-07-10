@@ -147,6 +147,31 @@ public class FileType {
         return imageSVG;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileType fileType = (FileType)o;
+
+        if (contentDescription != null ? !contentDescription.equals(fileType.contentDescription) : fileType.contentDescription != null)
+            return false;
+        if (extension != null ? !extension.equals(fileType.extension) : fileType.extension != null) return false;
+        if (mimeTypes != null ? !mimeTypes.equals(fileType.mimeTypes) : fileType.mimeTypes != null) return false;
+        if (namePattern != null ? !namePattern.equals(fileType.namePattern) : fileType.namePattern != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mimeTypes != null ? mimeTypes.hashCode() : 0;
+        result = 31 * result + (extension != null ? extension.hashCode() : 0);
+        result = 31 * result + (namePattern != null ? namePattern.hashCode() : 0);
+        result = 31 * result + (contentDescription != null ? contentDescription.hashCode() : 0);
+        return result;
+    }
+
     public String getId() {
         return id;
     }
