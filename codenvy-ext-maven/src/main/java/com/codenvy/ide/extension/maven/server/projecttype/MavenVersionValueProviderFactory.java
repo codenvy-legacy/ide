@@ -14,6 +14,7 @@ import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.ide.maven.tools.MavenUtils;
 import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 
@@ -64,15 +65,15 @@ public class MavenVersionValueProviderFactory implements ValueProviderFactory {
                     Model model;
                     if (pomFile != null) {
                         model = MavenUtils.readModel(pomFile.getInputStream());
-                    } else{
-                        model= new Model();
+                    } else {
+                        model = new Model();
                         model.setModelVersion("4.0.0");
                         MavenProjectGenerator.generateProjectStructure(project.getBaseFolder());
+                        pomFile = project.getBaseFolder().createFile("pom.xml", new byte[0], "text/xml");
                     }
                     model.setVersion(value.get(0));
-                    File file = ((VirtualFileImpl)project.getBaseFolder().getVirtualFile()).getIoFile();
-                    MavenUtils.writeModel(model, new File(file, "pom.xml"));
-                } catch (IOException e) {
+                    MavenUtils.writeModel(model, pomFile.getVirtualFile());
+                } catch (IOException | VirtualFileSystemException e) {
                     throw new IllegalStateException(e);
                 }
             }
