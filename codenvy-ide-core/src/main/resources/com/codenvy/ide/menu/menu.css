@@ -13,6 +13,7 @@
      ***********************************************************************************************/
 
     .menuBarTable {
+        float: left;
     }
 
     .menuBar,
@@ -58,4 +59,8 @@
 
     .menuBarItemDisabled {
         color: disabledMenuItemColor;
+    }
+
+    .rightPanel {
+        float: right;
     }

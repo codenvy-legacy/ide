@@ -29,7 +29,7 @@ public class RunnerFinishedIndicator extends IndicatorAction {
 
     @Inject
     public RunnerFinishedIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Finished At", false, 300, resources);
+        super("Runner Finished At", false, 215, resources);
         this.runnerController = runnerController;
     }
 

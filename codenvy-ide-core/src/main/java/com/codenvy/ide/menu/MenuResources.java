@@ -31,6 +31,8 @@ public interface MenuResources extends ClientBundle {
         String menuBarItemDisabled();
 
         String menuBarItemOver();
+
+        String rightPanel();
     }
 
     @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})

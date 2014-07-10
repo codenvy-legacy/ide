@@ -25,6 +25,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -38,11 +39,11 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
-    private final RunnerController    runnerController;
-    private final RunnerServiceClient runnerServiceClient;
-    private final CustomRunView       view;
-    private final DtoFactory          dtoFactory;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final RunnerController           runnerController;
+    private final RunnerServiceClient        runnerServiceClient;
+    private final CustomRunView              view;
+    private final DtoFactory                 dtoFactory;
+    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private final NotificationManager        notificationManager;
     private final ResourceProvider           resourceProvider;
     private final RunnerLocalizationConstant constant;
@@ -70,7 +71,6 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
-        view.setEnabledRunButton(false);
         runnerServiceClient.getRunners(
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
@@ -105,13 +105,25 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     @Override
     public void onRunClicked() {
-        view.close();
-
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+
+        if (!view.getMemorySize().isEmpty()) {
+            try {
+                int memorySize = Integer.valueOf(view.getMemorySize());
+                if (memorySize <= 0) {
+                    throw new NumberFormatException();
+                }
+                runOptions.setMemorySize(memorySize);
+            } catch (NumberFormatException e) {
+                Info infoWindow = new Info(constant.titlesWarning(), constant.enteredValueNotCorrect());
+                infoWindow.show();
+                return;
+            }
+        }
         if (view.getSelectedEnvironment() != null) {
             runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
         }
-        runOptions.setMemorySize(view.getMemorySize());
+        view.close();
         runnerController.runActiveProject(runOptions, null);
     }
 
@@ -120,14 +132,4 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         view.close();
     }
 
-    @Override
-    public void onValueChanged() {
-        boolean isInteger = true;
-        try {
-            view.getMemorySize();
-        } catch (NumberFormatException e) {
-            isInteger = false;
-        }
-        view.setEnabledRunButton(isInteger);
-    }
 }

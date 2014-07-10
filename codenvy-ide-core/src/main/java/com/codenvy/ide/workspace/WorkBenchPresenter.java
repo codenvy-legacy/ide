@@ -25,6 +25,9 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * General-purpose, displaying all the PartStacks in a default manner:
@@ -39,7 +42,8 @@ import com.google.inject.Singleton;
 public class WorkBenchPresenter implements Presenter {
 
     protected final StringMap<PartStack> partStacks = Collections.createStringMap();
-    private WorkBenchViewImpl   view;
+    private WorkBenchViewImpl view;
+    private List<PartPresenter> activeParts;
 
     /**
      * Instantiates the Perspective
@@ -99,6 +103,31 @@ public class WorkBenchPresenter implements Presenter {
         PartStack destPartStack = findPartStackByPart(part);
         if (destPartStack != null) {
             destPartStack.hidePart(part);
+        }
+    }
+
+    public void expandEditorPart() {
+        activeParts = new ArrayList<>();
+        for(PartStack value : partStacks.getValues().asIterable()){
+            if (!(value instanceof EditorPartStack)) {
+                PartPresenter part = value.getActivePart();
+                if(part != null) {
+                    activeParts.add(part);
+                    value.hidePart(part);
+                }
+            }
+        }
+//        partStacks.iterate(new StringMap.IterationCallback<PartStack>() {
+//            @Override
+//            public void onIteration(String key, PartStack value) {
+//
+//            }
+//        });
+    }
+
+    public void restoreEditorPart() {
+        for (PartPresenter activePart : activeParts) {
+            setActivePart(activePart);
         }
     }
 

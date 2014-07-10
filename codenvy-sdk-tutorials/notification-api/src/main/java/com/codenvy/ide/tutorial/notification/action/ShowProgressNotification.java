@@ -49,7 +49,7 @@ public class ShowProgressNotification extends Action
 
     @Inject
     public ShowProgressNotification(NotificationManager notificationManager) {
-        super("Show progress notification", "This action shows progress notification", null);
+        super("Show progress notification", "This action shows progress notification");
         this.notificationManager = notificationManager;
     }
 

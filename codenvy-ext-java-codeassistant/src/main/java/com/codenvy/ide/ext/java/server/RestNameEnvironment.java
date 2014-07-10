@@ -15,8 +15,9 @@ import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.api.core.rest.HttpJsonHelper;
 import com.codenvy.api.core.rest.shared.dto.Link;
-import com.codenvy.api.core.util.Pair;
 import com.codenvy.commons.env.EnvironmentContext;
+import com.codenvy.commons.lang.IoUtil;
+import com.codenvy.commons.lang.Pair;
 import com.codenvy.commons.lang.ZipUtils;
 import com.codenvy.commons.user.User;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
@@ -92,6 +93,9 @@ public class RestNameEnvironment {
     @Inject
     private String wsId;
 
+    @Inject
+    @Named("api.endpoint")
+    private String apiUrl;
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Path("findTypeCompound")
@@ -239,13 +243,8 @@ public class RestNameEnvironment {
         }
 
 
-        URI uri = uriInfo.getBaseUri();
-        String url = uri.getScheme() + "://" + uri.getHost();
-        int port = uri.getPort();
-        if (port > 0 && port != 80) {
-            url += ":" + port;
-        }
-        url += "/api/builder/" + wsId + "/dependencies";
+
+        String url = apiUrl +  "/builder/" + wsId + "/dependencies";
         BuildTaskDescriptor buildStatus = getDependencies(url, projectPath, "copy");
 
         if (buildStatus.getStatus() == BuildStatus.FAILED) {
@@ -253,7 +252,7 @@ public class RestNameEnvironment {
         }
         File projectDepDir = new File(temp, projectId);
         if (projectDepDir.exists()) {
-            JavaProjectService.removeRecursive(projectDepDir.toPath());
+            IoUtil.deleteRecursive(projectDepDir);
         }
 
         projectDepDir.mkdirs();

@@ -29,7 +29,7 @@ public class BuildTotalTimeIndicator extends IndicatorAction {
 
     @Inject
     public BuildTotalTimeIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Total Time", false, 160, resources);
+        super("Build Total Time", false, 170, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 

@@ -14,12 +14,7 @@ import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.User;
 import com.codenvy.commons.user.UserImpl;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
@@ -91,7 +86,7 @@ public class SingleEnvironmentFilter implements Filter {
 
         //return new UserImpl(Constants.USER.getEmail(), Constants.USER.getId(), Constants.TOKEN.getValue(), roles);
 
-        return new UserImpl("Chuck", "codenvy",  "dummy_token",
-                            Arrays.asList("workspace/admin", "workspace/developer", "system/admin", "system/manager", "user"));
+        return new UserImpl("Chuck", "codenvy", "dummy_token",
+                            Arrays.asList("workspace/admin", "workspace/developer", "system/admin", "system/manager", "user"), false);
     }
 }

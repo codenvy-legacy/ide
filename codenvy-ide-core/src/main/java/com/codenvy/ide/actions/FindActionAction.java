@@ -27,7 +27,7 @@ public class FindActionAction extends Action {
 
     @Inject
     public FindActionAction(FindActionPresenter presenter) {
-        super("Find Action","Find Action by name", null);
+        super("Find Action","Find Action by name");
         this.presenter = presenter;
     }
 

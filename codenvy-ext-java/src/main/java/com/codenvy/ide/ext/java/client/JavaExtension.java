@@ -50,8 +50,6 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
@@ -239,12 +237,7 @@ public class JavaExtension {
             protected void onFailure(Throwable exception) {
                 updating = false;
                 needForUpdate = false;
-                JSONObject object = JSONParser.parseLenient(exception.getMessage()).isObject();
-                if (object.containsKey("message")) {
-                    notification.setMessage(object.get("message").isString().stringValue());
-                } else {
-                    notification.setMessage("Updating dependencies failed");
-                }
+                notification.setMessage(exception.getMessage());
                 notification.setType(ERROR);
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);

@@ -30,7 +30,7 @@ public class ShowWarningNotification extends Action {
 
     @Inject
     public ShowWarningNotification(NotificationManager notificationManager) {
-        super("Show WARNING notification", "This action shows WARNING notification", null);
+        super("Show WARNING notification", "This action shows WARNING notification");
         this.notificationManager = notificationManager;
     }
 

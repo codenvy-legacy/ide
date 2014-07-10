@@ -30,7 +30,7 @@ public class ShowErrorNotification extends Action {
 
     @Inject
     public ShowErrorNotification(NotificationManager notificationManager) {
-        super("Show ERROR notification", "This action shows ERROR notification", null);
+        super("Show ERROR notification", "This action shows ERROR notification");
         this.notificationManager = notificationManager;
     }
 

@@ -29,7 +29,7 @@ public class BuildTimeoutThresholdIndicator extends IndicatorAction {
 
     @Inject
     public BuildTimeoutThresholdIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Timeout Threshold", false, 300, resources);
+        super("Build Timeout Threshold", false, 245, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
