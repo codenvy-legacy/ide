@@ -48,6 +48,16 @@ public class HtmlEditorProvider implements EditorProvider {
         this.htmlEditorConfigurationProvider = htmlEditorConfigurationProvider;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyHTMLEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy HTML Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

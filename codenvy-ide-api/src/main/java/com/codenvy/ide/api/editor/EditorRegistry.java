@@ -13,12 +13,14 @@ package com.codenvy.ide.api.editor;
 import com.codenvy.ide.api.resources.FileType;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 /**
  * Editor Registry allows to registed new Editor for given FileType. This editor will be used as default to open such kind of Files.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
+ * @author Evgen Vidolob
  */
 public interface EditorRegistry {
     /**
@@ -30,12 +32,30 @@ public interface EditorRegistry {
     void register(@NotNull FileType fileType, @NotNull EditorProvider provider);
 
     /**
-     * Get default editor provide assigned for file type;
+     * Register default editor.
+     *
+     * @param fileType the file type
+     * @param provider the provider
+     */
+    void registerDefaultEditor(@NotNull FileType fileType, @NotNull EditorProvider provider);
+
+    /**
+     * Get editor provide assigned for file type;
      *
      * @param fileType
      *         resource file type
      * @return editor provider
      */
     @NotNull
-    EditorProvider getDefaultEditor(@NotNull FileType fileType);
+    EditorProvider getEditor(@NotNull FileType fileType);
+
+
+    /**
+     * Gets all editors for file type.
+     *
+     * @param fileType the file type
+     * @return the all editors for file type
+     */
+    @NotNull
+    List<EditorProvider> getAllEditorsForFileType(@NotNull FileType fileType);
 }

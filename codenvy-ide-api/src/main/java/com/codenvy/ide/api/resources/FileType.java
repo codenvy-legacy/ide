@@ -34,9 +34,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 public class FileType {
 
-    private static int ID = 0;
-
-    private int id;
+    private String id;
 
     private ImageResource image;
 
@@ -115,7 +113,7 @@ public class FileType {
         this.mimeTypes = mimeTypes;
         this.extension = extension;
         this.namePattern = namePattern;
-        id = ++ID;
+        id = contentDescription + (mimeTypes == null ? "noMimeType" :mimeTypes.join(",")) + namePattern;
     }
 
 
@@ -149,7 +147,7 @@ public class FileType {
         return imageSVG;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

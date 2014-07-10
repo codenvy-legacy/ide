@@ -40,6 +40,16 @@ public class DefaultEditorProvider implements EditorProvider {
         this.configuration = new TextEditorConfiguration();
     }
 
+    @Override
+    public String getId() {
+        return "codenvyDefaultEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy Default Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

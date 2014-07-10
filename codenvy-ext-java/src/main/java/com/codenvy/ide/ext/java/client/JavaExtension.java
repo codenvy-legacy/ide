@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.client;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -93,6 +92,7 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
+                         @Named("JavaFileType") FileType javaFile,
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController, BuildContext buildContext) {
@@ -120,8 +120,7 @@ public class JavaExtension {
         iconRegistry.registerIcon(new Icon("maven/png.file.small.icon", resources.imageIcon()));
         iconRegistry.registerIcon(new Icon("maven/pom.xml.file.small.icon", resources.maven()));
 
-        FileType javaFile = new FileType("Java", JavaResources.INSTANCE.javaFile(), MimeType.APPLICATION_JAVA, "java");
-        editorRegistry.register(javaFile, javaEditorProvider);
+        editorRegistry.registerDefaultEditor(javaFile, javaEditorProvider);
         resourceProvider.registerFileType(javaFile);
 
         resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,

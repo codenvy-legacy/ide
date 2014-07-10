@@ -23,11 +23,20 @@ import com.google.inject.Provider;
 public class ImageViewerProvider implements EditorProvider {
     private Provider<ImageViewer>     editorProvider;
 
-    /** @param documentProvider */
     @Inject
     public ImageViewerProvider(Provider<ImageViewer> editorProvider) {
         super();
         this.editorProvider = editorProvider;
+    }
+
+    @Override
+    public String getId() {
+        return "codenvyImageViewer";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy Image Viewer";
     }
 
     /** {@inheritDoc} */

@@ -11,7 +11,6 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Constants;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
@@ -48,6 +47,7 @@ import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
@@ -144,47 +144,74 @@ public class StandardComponentInitializer {
     @Inject
     private ExpandEditorAction expandEditorAction;
 
+    @Inject
+    @Named("XMLFileType")
+    private FileType xmlFile;
+
+    @Inject
+    @Named("PNGFileType")
+    private FileType pngFile;
+
+    @Inject
+    @Named("BMPFileType")
+    private FileType bmpFile;
+
+    @Inject
+    @Named("GIFFileType")
+    private FileType gifFile;
+
+    @Inject
+    @Named("ICOFileType")
+    private FileType iconFile;
+
+    @Inject
+    @Named("SVGFileType")
+    private FileType svgFile;
+
+    @Inject
+    @Named("JPEFileType")
+    private FileType jpeFile;
+
+    @Inject
+    @Named("JPEGFileType")
+    private FileType jpegFile;
+
+    @Inject
+    @Named("JPGFileType")
+    private FileType jpgFile;
+
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer() {
     }
 
     public void initialize() {
-        FileType xmlFile = new FileType("XML file", resources.xmlFile(), MimeType.TEXT_XML, "xml");
         resourceProvider.registerFileType(xmlFile);
-        editorRegistry.register(xmlFile, xmlEditorProvider);
+        editorRegistry.registerDefaultEditor(xmlFile, xmlEditorProvider);
 
-        FileType pngFile = new FileType("GIF Image", resources.defaultImage(), MimeType.IMAGE_PNG, "png");
         resourceProvider.registerFileType(pngFile);
-        editorRegistry.register(pngFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(pngFile, imageViewerProvider);
 
-        FileType bmpFile = new FileType("Bitmap Image", resources.defaultImage(), MimeType.IMAGE_BMP, "bmp");
         resourceProvider.registerFileType(bmpFile);
-        editorRegistry.register(bmpFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(bmpFile, imageViewerProvider);
 
-        FileType gifFile = new FileType("GIF Image", resources.defaultImage(), MimeType.IMAGE_GIF, "gif");
         resourceProvider.registerFileType(gifFile);
-        editorRegistry.register(gifFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(gifFile, imageViewerProvider);
 
-        FileType iconFile = new FileType("ICO Image", resources.defaultImage(), MimeType.IMAGE_X_ICON, "ico");
         resourceProvider.registerFileType(iconFile);
-        editorRegistry.register(iconFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(iconFile, imageViewerProvider);
 
-        FileType svgFile = new FileType("SVG Image", resources.defaultImage(), MimeType.IMAGE_SVG_XML, "svg");
         resourceProvider.registerFileType(svgFile);
-        editorRegistry.register(svgFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(svgFile, imageViewerProvider);
 
-        FileType jpeFile = new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpe");
         resourceProvider.registerFileType(jpeFile);
-        editorRegistry.register(jpeFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(jpeFile, imageViewerProvider);
 
-        FileType jpegFile = new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpeg");
         resourceProvider.registerFileType(jpegFile);
-        editorRegistry.register(jpegFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(jpegFile, imageViewerProvider);
 
-        FileType jpgFile = new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpg");
         resourceProvider.registerFileType(jpgFile);
-        editorRegistry.register(jpgFile, imageViewerProvider);
+        editorRegistry.registerDefaultEditor(jpgFile, imageViewerProvider);
 
         // Compose Import Project group
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);

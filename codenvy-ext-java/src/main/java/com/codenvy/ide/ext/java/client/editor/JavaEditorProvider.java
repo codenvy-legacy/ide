@@ -70,6 +70,16 @@ public class JavaEditorProvider implements EditorProvider {
         this.contentFormatter = contentFormatter;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyJavaEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy Java Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

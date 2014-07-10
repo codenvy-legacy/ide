@@ -18,10 +18,9 @@ import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.wysiwyg.part.TutorialHowToPresenter;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
-
-import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -40,7 +39,7 @@ public class WysiwygExtension {
                             WorkspaceAgent workspaceAgent, TutorialHowToPresenter howToPresenter) {
         FileType htmlFileType = new FileType(res.htmlFile(), "text/htm", "htm");
         resourceProvider.registerFileType(htmlFileType);
-        editorRegistry.register(htmlFileType, editorProvider);
+        editorRegistry.registerDefaultEditor(htmlFileType, editorProvider);
 
         workspaceAgent.openPart(howToPresenter, PartStackType.EDITING);
     }

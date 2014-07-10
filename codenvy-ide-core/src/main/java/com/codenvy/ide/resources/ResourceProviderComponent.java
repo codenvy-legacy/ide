@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.resources;
 
-import elemental.client.Browser;
-
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
@@ -27,8 +25,6 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.IntegerMap;
-import com.codenvy.ide.collections.IntegerMap.IterationCallback;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
@@ -36,15 +32,12 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -66,7 +59,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     /** Fully qualified URL to root folder of VFS */
     private final   String                   workspaceURL;
     private final   StringMap<ModelProvider> modelProviders;
-    private final   IntegerMap<FileType>     fileTypes;
+    private final   StringMap<FileType>     fileTypes;
     private final   EventBus                 eventBus;
     private final   FileType                 defaultFile;
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
@@ -100,7 +93,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.projectServiceClient = projectServiceClient;
         this.workspaceURL = restContext + "/vfs/" + workspaceId + "/v2";
         this.modelProviders = Collections.createStringMap();
-        this.fileTypes = Collections.createIntegerMap();
+        this.fileTypes = Collections.createStringMap();
     }
 
     @Override
@@ -295,10 +288,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         final String name = file.getName();
         final Array<FileType> filtered = Collections.createArray();
         final Array<FileType> nameMatch = Collections.createArray();
-        fileTypes.iterate(new IterationCallback<FileType>() {
+        fileTypes.iterate(new StringMap.IterationCallback<FileType>() {
 
             @Override
-            public void onIteration(int key, FileType val) {
+            public void onIteration(String key, FileType val) {
                 if (val.getNamePattern() != null) {
                     RegExp regExp = RegExp.compile(val.getNamePattern());
                     if (regExp.test(name)) {

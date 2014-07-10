@@ -51,7 +51,7 @@ public class EditorTutorialExtension {
         FileType groovyFile = new FileType("Groovy", resource.groovyFile(), GROOVY_MIME_TYPE, "groovy");
         resourceProvider.registerFileType(groovyFile);
 
-        editorRegistry.register(groovyFile, groovyEditorProvider);
+        editorRegistry.registerDefaultEditor(groovyFile, groovyEditorProvider);
 
         actionManager.registerAction("newGroovyFileActionId", newGroovyFileAction);
         DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);

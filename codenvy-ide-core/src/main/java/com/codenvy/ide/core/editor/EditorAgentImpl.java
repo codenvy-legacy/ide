@@ -136,7 +136,7 @@ public class EditorAgentImpl implements EditorAgent {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {
             FileType fileType = provider.getFileType(file);
-            EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
+            EditorProvider editorProvider = editorRegistry.getEditor(fileType);
             EditorPartPresenter editor = editorProvider.getEditor();
             try {
                 editor.init(new EditorInputImpl(fileType, file));
