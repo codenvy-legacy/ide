@@ -224,6 +224,15 @@
                 "location": "https://github.com/codenvy-templates/web-velocity-java-simple.git"
          }
      },
+     {
+         "displayName": "Thymeleaf User List",
+         "category": "Samples - Hello World",
+         "description": "A web application using Thymeleaf framework. Returns a urser list in a browser",
+         "source": {
+                "type": "git",
+                "location": "https://github.com/codenvy-templates/web-thymeleaf-java-simple.git"
+         }
+     },
     {
         "displayName": "Scala",
         "category": "Samples - Hello World",
