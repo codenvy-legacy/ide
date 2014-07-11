@@ -50,6 +50,8 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void focusOnName();
 
+    void disableAllExceptName();
+
     public interface ActionDelegate{
         /** Performs any actions appropriate in response to the user having pressed the Next button */
         void onNextClicked();

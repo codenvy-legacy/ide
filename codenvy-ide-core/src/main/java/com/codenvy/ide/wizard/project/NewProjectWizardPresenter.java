@@ -261,7 +261,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                             Constants.UNKNOWN_ID) && currentPage.isCompleted()));
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-
+            view.disableAllExceptName();
+        } else{
+            view.enableInput();
         }
     }
 
