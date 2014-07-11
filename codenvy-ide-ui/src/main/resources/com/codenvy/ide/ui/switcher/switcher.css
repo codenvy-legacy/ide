@@ -43,7 +43,7 @@
 	height: 20px;
 	padding: 0;
 	line-height: 20px;
-	font-size: 10px;
+	font-size: 9px;
 	color: white;
 	font-family: mainFontFamily;
 	font-weight: bold;
@@ -61,7 +61,7 @@
 
 .onoffswitchInner:after {
 	content: "OFF";
-	padding-right: 5px;
+	padding-right: 3px;
 	background-color: #EEEEEE;
 	color: #999999;
 	text-align: right;
