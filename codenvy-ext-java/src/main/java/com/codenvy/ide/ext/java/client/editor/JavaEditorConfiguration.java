@@ -15,6 +15,7 @@ import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.ext.java.client.JavaLocalizationConstant;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.ext.java.client.projectmodel.JavaProject;
@@ -56,8 +57,9 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     private JavaParserWorker        worker;
     private JavaResources           javaResources;
     private AnalyticsEventLogger    eventLogger;
-    private JavaProject             project;
-    private ContentFormatter        contentFormatter;
+    private JavaLocalizationConstant localizationConstant;
+    private JavaProject      project;
+    private ContentFormatter contentFormatter;
 
 
     public JavaEditorConfiguration(UserActivityManager manager,
@@ -67,16 +69,18 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
                                    JavaParserWorker worker,
                                    ContentFormatter contentFormatter,
                                    AnalyticsEventLogger eventLogger,
-                                   NotificationManager notificationManager) {
+                                   NotificationManager notificationManager,
+                                   JavaLocalizationConstant localizationConstant) {
         this.manager = manager;
         this.javaEditor = javaEditor;
         this.documentPartitioning = documentPartitioning;
         this.worker = worker;
         this.javaResources = resources;
         this.eventLogger = eventLogger;
+        this.localizationConstant = localizationConstant;
         outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
         codeAssistProcessor = new JavaCodeAssistProcessor(javaEditor, worker, javaResources, eventLogger);
-        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel, notificationManager, codeAssistProcessor);
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor, worker, outlineModel, notificationManager, codeAssistProcessor, localizationConstant);
         this.contentFormatter = contentFormatter;
 
 
