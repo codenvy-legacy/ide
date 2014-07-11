@@ -12,9 +12,9 @@ package com.codenvy.ide.extension.maven.server;
 
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ProjectManager;
+import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.maven.tools.MavenUtils;
-import com.codenvy.vfs.impl.fs.VirtualFileImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -27,7 +27,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.io.File;
 
 /**
  * @author Evgen Vidolob
@@ -48,10 +47,10 @@ public class MavenPomReaderService {
     @Produces("application/json")
     public String readPomAttributes(@QueryParam("projectpath") String projectPath) throws Exception {
         Project project = projectManager.getProject(wsId, projectPath);
-        VirtualFileImpl virtualFile = (VirtualFileImpl)project.getBaseFolder().getVirtualFile();
+        VirtualFile projectFolder = project.getBaseFolder().getVirtualFile();
 
-        File pomFile = new File(virtualFile.getIoFile(), "pom.xml");
-        if (pomFile.exists()) {
+        VirtualFile pomFile = projectFolder.getChild("pom.xml");
+        if (pomFile != null) {
             Model model = MavenUtils.readModel(pomFile);
             JsonObject object = new JsonObject();
             object.addProperty(MavenAttributes.MAVEN_ARTIFACT_ID, model.getArtifactId());

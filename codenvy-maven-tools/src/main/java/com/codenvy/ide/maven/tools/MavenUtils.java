@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.maven.tools;
 
+import com.codenvy.api.vfs.server.VirtualFile;
+import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -20,6 +23,8 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -108,6 +113,25 @@ public class MavenUtils {
     }
 
     /**
+     * Read description of maven project.
+     *
+     * @param pom
+     *         {@link VirtualFile} to read content of pom.xml file.
+     * @return description of maven project
+     * @throws IOException
+     *         if an i/o error occurs
+     * @throws VirtualFileSystemException
+     *         if virtual file system exception occurs
+     */
+    public static Model readModel(VirtualFile pom) throws IOException, VirtualFileSystemException {
+        try (InputStream stream = pom.getContent().getStream()) {
+            return pomReader.read(stream, true);
+        } catch (XmlPullParserException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
      * Writes a specified {@link Model} to the path from which this model has been read.
      *
      * @param model
@@ -170,6 +194,24 @@ public class MavenUtils {
     }
 
     /**
+     * Writes a specified {@link Model} to the specified {@link VirtualFile}.
+     *
+     * @param model
+     *         model to write
+     * @param output
+     *         {@link VirtualFile} to write a model
+     * @throws IOException
+     *         if an i/o error occurs
+     * @throws VirtualFileSystemException
+     *         if virtual file system exception occurs
+     */
+    public static void writeModel(Model model, VirtualFile output) throws IOException, VirtualFileSystemException {
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        pomWriter.write(bout, model);
+        output.updateContent(output.getMediaType(), new ByteArrayInputStream(bout.toByteArray()), null);
+    }
+
+    /**
      * Add dependency to the specified pom.xml.
      *
      * @param pom
@@ -202,6 +244,24 @@ public class MavenUtils {
     }
 
     /**
+     * Add dependency to the specified pom.xml.
+     *
+     * @param pom
+     *         pom.xml file
+     * @param dependency
+     *         POM of artifact to add as dependency
+     * @throws IOException
+     *         if an i/o error occurs
+     * @throws VirtualFileSystemException
+     *         if virtual file system exception occurs
+     */
+    public static void addDependency(VirtualFile pom, Dependency dependency) throws IOException, VirtualFileSystemException {
+        final Model model = readModel(pom);
+        model.getDependencies().add(dependency);
+        writeModel(model, pom);
+    }
+
+    /**
      * Add set of dependencies to the specified pom.xml.
      *
      * @param pom
@@ -220,6 +280,24 @@ public class MavenUtils {
     }
 
     /**
+     * Add set of dependencies to the specified pom.xml.
+     *
+     * @param pom
+     *         pom.xml file
+     * @param dependencies
+     *         POM of artifact to add as dependency
+     * @throws IOException
+     *         if an i/o error occurs
+     * @throws VirtualFileSystemException
+     *         if virtual file system exception occurs
+     */
+    public static void addDependencies(VirtualFile pom, Dependency... dependencies) throws IOException, VirtualFileSystemException {
+        final Model model = readModel(pom);
+        model.getDependencies().addAll(Arrays.asList(dependencies));
+        writeModel(model, pom);
+    }
+
+    /**
      * Add dependency to the specified pom.xml.
      *
      * @param pom
@@ -234,6 +312,27 @@ public class MavenUtils {
      *         if an i/o error occurs
      */
     public static void addDependency(java.io.File pom, String groupId, String artifactId, String version, String scope) throws IOException {
+        addDependency(pom, newDependency(groupId, artifactId, version, scope));
+    }
+
+    /**
+     * Add dependency to the specified pom.xml.
+     *
+     * @param pom
+     *         pom.xml file
+     * @param groupId
+     *         groupId
+     * @param artifactId
+     *         artifactId
+     * @param version
+     *         artifact version
+     * @throws IOException
+     *         if an i/o error occurs
+     * @throws VirtualFileSystemException
+     *         if virtual file system exception occurs
+     */
+    public static void addDependency(VirtualFile pom, String groupId, String artifactId, String version, String scope)
+            throws IOException, VirtualFileSystemException {
         addDependency(pom, newDependency(groupId, artifactId, version, scope));
     }
 
