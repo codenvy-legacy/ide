@@ -65,13 +65,14 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 public class JavaExtension {
     boolean updating      = false;
     boolean needForUpdate = false;
-    private NotificationManager notificationManager;
-    private String              restContext;
-    private String              workspaceId;
-    private AsyncRequestFactory asyncRequestFactory;
-    private EditorAgent         editorAgent;
-    private JavaParserWorker    parserWorker;
-    private BuildContext        buildContext;
+    private NotificationManager      notificationManager;
+    private String                   restContext;
+    private String                   workspaceId;
+    private AsyncRequestFactory      asyncRequestFactory;
+    private EditorAgent              editorAgent;
+    private JavaLocalizationConstant localizationConstant;
+    private JavaParserWorker parserWorker;
+    private BuildContext buildContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -103,6 +104,7 @@ public class JavaExtension {
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
+        this.localizationConstant = localizationConstant;
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
 
@@ -199,7 +201,7 @@ public class JavaExtension {
         String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +
                      "&projectid=" + project.getId();
 
-        final Notification notification = new Notification("Updating dependencies...", PROGRESS);
+        final Notification notification = new Notification(localizationConstant.updatingDependencies(), PROGRESS);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
@@ -207,7 +209,7 @@ public class JavaExtension {
             @Override
             protected void onSuccess(String result) {
                 updating = false;
-                notification.setMessage("Dependencies successfully updated ");
+                notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
                 parserWorker.dependenciesUpdated();

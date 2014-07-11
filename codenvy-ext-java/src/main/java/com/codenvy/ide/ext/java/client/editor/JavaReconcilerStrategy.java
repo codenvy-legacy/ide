@@ -16,6 +16,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.java.client.JavaLocalizationConstant;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineUpdater;
 import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
@@ -41,19 +42,25 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     private       JavaParserWorker        worker;
     private       OutlineModel            outlineModel;
     private       NotificationManager     notificationManager;
-    private JavaCodeAssistProcessor codeAssistProcessor;
+    private       JavaCodeAssistProcessor codeAssistProcessor;
+    private JavaLocalizationConstant localizationConstant;
     private File             file;
     private EditorWithErrors editorWithErrors;
     private boolean first = true;
     private Notification notification;
 
-    public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaParserWorker worker, OutlineModel outlineModel,
-                                  NotificationManager notificationManager, JavaCodeAssistProcessor codeAssistProcessor) {
+    public JavaReconcilerStrategy(TextEditorPartPresenter editor,
+                                  JavaParserWorker worker,
+                                  OutlineModel outlineModel,
+                                  NotificationManager notificationManager,
+                                  JavaCodeAssistProcessor codeAssistProcessor,
+                                  JavaLocalizationConstant localizationConstant) {
         this.editor = editor;
         this.worker = worker;
         this.outlineModel = outlineModel;
         this.notificationManager = notificationManager;
         this.codeAssistProcessor = codeAssistProcessor;
+        this.localizationConstant = localizationConstant;
         if (editor instanceof EditorWithErrors) {
             editorWithErrors = ((EditorWithErrors)editor);
         }
@@ -100,7 +107,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     public void onResult(Array<IProblem> problems) {
         if (first) {
             notification.setStatus(FINISHED);
-            notification.setMessage("File successfully parsed");
+            notification.setMessage(localizationConstant.fileFuccessfullyParsed());
             codeAssistProcessor.enableCodeAssistant();
             first = false;
         }
