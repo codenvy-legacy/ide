@@ -4,7 +4,7 @@
         "category": "Samples - Hello World",
         "description": "A simple JSP application that returns user's input.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-jsp-java-basic.git"
         }
     },
@@ -13,7 +13,7 @@
         "category": "Samples - Hello World",
         "description": "A basic example using Spring servlets. The app returns values entered into a submit form.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-spring-java-simple.git"
         }
     },
@@ -22,7 +22,7 @@
         "category": "Samples - Hello World",
         "description": "A basic JAR project built with Maven.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-jar-java.git"
         }
     },
@@ -31,7 +31,7 @@
         "category": "Samples - Hello World",
         "description": "A simple JAR project.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-console-java.git"
         }
     },
@@ -40,7 +40,7 @@
         "category": "Samples - Hello World",
         "description": "A simple Java Swing application.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-swing-java-basic.git"
         }
     },
@@ -49,7 +49,7 @@
         "category": "Samples - Hello World",
         "description": "A GWT 2.6.1 application that returns user's input and information on application server and user agent.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-gwt-java-simple.git"
         }
     },
@@ -58,7 +58,7 @@
         "category": "Samples - Hello World",
         "description": "Play 1.2.7 start-up application which is a part of the Play distribution.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-play1-java-simple"
         }
     },
@@ -67,7 +67,7 @@
         "category": "Samples - Hello World",
         "description": "Play 2.10 application with basic functionality. Returns user's input with simple preferences.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-play2-java-simple"
         }
     },
@@ -76,7 +76,7 @@
         "category": "Samples - Hello World",
         "description": "Default Grails application welcoming a user and providing information on application status and installed plug-ins.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-grails-java-simple.git"
         }
     },
@@ -85,7 +85,7 @@
         "category": "Samples - Hello World",
         "description": "A basic 'What's Your Name' application that returns user's input.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-jsf-java-simple.git"
         }
     },
@@ -94,7 +94,7 @@
         "category": "Samples - Hello World",
         "description": "Application demonstrating a simple user account, login, edit account, password recovery and logout procedures.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-lift-java-simple.git"
         }
     },
@@ -103,7 +103,7 @@
         "category": "Samples - Hello World",
         "description": "A simple Struts app with a simple 'What's Your Name?' box that returns user's input.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-struts-java-simple.git"
         }
     },
@@ -112,7 +112,7 @@
         "category": "Samples - Hello World",
         "description": "An online address book built with Vaadin.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-vaadin-java-simple.git"
         }
     },
@@ -121,7 +121,7 @@
         "category": "Samples - Hello World",
         "description": "A simple Android application natively laucnhed in an emulator.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/mobile-android-java-basic.git"
         }
     },
@@ -130,7 +130,7 @@
         "category": "Samples - Hello World",
         "description": "A simple application demonstrating the Tapestry web framework.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-tapestry-java-simple.git"
         }
     },
@@ -139,7 +139,7 @@
         "category": "Samples - Hello World",
         "description": "Quick Start Wicket web application which is a part of the Wicket bundle.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-wicket-java-simple.git"
         }
     },
@@ -148,7 +148,7 @@
         "category": "Samples - Hello World",
         "description": "A basic scripting console to run JavaScript",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/web-groovy-java-simple.git"
         }
     },
@@ -157,17 +157,17 @@
         "category": "Samples - Hello World",
         "description": "A basic example of using Clojure.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-clojure-java-simple.git"
         }
     },
-       {
+    {
         "displayName": "JRuby Hello World",
         "category": "Samples - Hello World",
         "description": "A basic JRuby application compiled into JAR with JRuby Maven plugin. Outputs a simple message into a console",
         "source": {
-             "type": "git",
-             "location": "https://github.com/codenvy-templates/desktop-jruby-java-simple.git"
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-jruby-java-simple.git"
         }
     },
     {
@@ -175,61 +175,52 @@
         "category": "Samples - Hello World",
         "description": "A basic JRuby application compiled into WAR with JRuby Maven plugin and run in an application server",
         "source": {
-             "type": "git",
-             "location": "https://github.com/codenvy-templates/web-jruby-java-simple.git"
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/web-jruby-java-simple.git"
         }
     },
     {
-         "displayName": "Jython HttpServlet",
-         "category": "Samples - Hello World",
-         "description": "A simple Jython web application packaged with Maven",
-         "source": {
-              "type": "git",
-               "location": "https://github.com/codenvy-templates/web-jython-java-simple.git"
-         }
-     },
-     {
-         "displayName": "Jython Console",
-         "category": "Samples - Hello World",
-         "description": "A basic Jython app that writes Hello World to a console",
-         "source": {
-               "type": "git",
-               "location": "https://github.com/codenvy-templates/desktop-jython-java-simple.git"
-         }
-     },
-     {
-         "displayName": "Shale Simple Form",
-         "category": "Samples - Hello World",
-         "description": "An application using Shale web framework. Returns user's input",
-         "source": {
-               "type": "git",
-               "location": "https://github.com/codenvy-templates/web-shale-java-simple.git"
-         }
-     },
-     {
-         "displayName": "Rhino Arithmetic Function",
-         "category": "Samples - Hello World",
-         "description": "A basic Rhino application that does arithmetic calculations",
-         "source": {
-                "type": "git",
-                "location": "https://github.com/codenvy-templates/desktop-rhino-java-simple"
-         }
-     },
-     {
-         "displayName": "Velocity Spring MVC",
-         "category": "Samples - Hello World",
-         "description": "A simple Spring MVC application that uses Velocity library",
-         "source": {
-                "type": "git",
-                "location": "https://github.com/codenvy-templates/web-velocity-java-simple.git"
-         }
-     },
+        "displayName": "Jython HttpServlet",
+        "category": "Samples - Hello World",
+        "description": "A simple Jython web application packaged with Maven",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/web-jython-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Jython Console",
+        "category": "Samples - Hello World",
+        "description": "A basic Jython app that writes Hello World to a console",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-jython-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Shale Simple Form",
+        "category": "Samples - Hello World",
+        "description": "An application using Shale web framework. Returns user's input",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/web-shale-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Rhino Arithmetic Function",
+        "category": "Samples - Hello World",
+        "description": "A basic Rhino application that does arithmetic calculations",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-rhino-java-simple"
+        }
+    },
     {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",
         "source": {
-            "type": "git",
+            "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-scala-java-simple.git"
         }
     }

@@ -48,4 +48,16 @@ public interface JavaLocalizationConstant extends Messages {
     @Key("action.newPackage.description")
     String actionNewPackageDescription();
 
+    @Key("messages.file.successfully.parsed")
+    String fileFuccessfullyParsed();
+
+    @Key("messages.parsing.file")
+    String parsingFile();
+
+    @Key("messages.dependencies.successfully.updated")
+    String dependenciesSuccessfullyUpdated();
+
+    @Key("messages.dependencies.updating.dependencies")
+    String updatingDependencies();
+
 }
