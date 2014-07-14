@@ -109,7 +109,7 @@ textarea {
     padding: 0px 10px;
     color: mainFontColor;
     border: 1px solid tabBorder;
-    font-weight: 500;
+    font-weight: 700;
     font-size: buttonFontSize;
     height: 22px;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
@@ -141,14 +141,16 @@ textarea {
 
 .gwt-PushButton-up,.gwt-ToggleButton-up{
     color: mainFontColor;
+    font-family: mainFontFamily;
     border-radius: 1px;
     border: 1px solid tabBorder;
-    font-weight: 500;
+    font-weight: 700;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
 }
 .gwt-PushButton-up-hovering, .gwt-ToggleButton-up-hovering{
     border: 1px solid tabBorder;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
+	font-weight: 700;
 }
 .gwt-PushButton-up-disabled, .gwt-ToggleButton-up-disabled{
 
@@ -157,7 +159,7 @@ textarea {
     color: mainFontColor;
     border-radius: 1px;
     border: 1px solid tabBorder;
-    font-weight: 500;
+    font-weight: 700;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
     border-radius: 1px;
@@ -167,7 +169,7 @@ textarea {
     color: mainFontColor;
     border-radius: 1px;
     border: 1px solid tabBorder;
-    font-weight: 500;
+    font-weight: 700;
     background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
     box-shadow:  0 0 4px 2px selectionBackground;
     border-radius: 1px;
