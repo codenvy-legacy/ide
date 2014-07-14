@@ -130,7 +130,6 @@ import com.codenvy.ide.theme.AppearancePresenter;
 import com.codenvy.ide.theme.AppearanceView;
 import com.codenvy.ide.theme.AppearanceViewImpl;
 import com.codenvy.ide.theme.DarkTheme;
-import com.codenvy.ide.theme.LightTheme;
 import com.codenvy.ide.theme.ThemeAgentImpl;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarMainPresenter;
@@ -263,7 +262,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
         themeBinder.addBinding().to(DarkTheme.class);
-        themeBinder.addBinding().to(LightTheme.class);
+//        themeBinder.addBinding().to(LightTheme.class);
 
         // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
