@@ -131,20 +131,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             return;
         }
 
-
-        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                Info info = new Info("Project already exist");
-                info.show();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                //project doesn't exist
-                importProject(callback, templateDescriptor, projectName);
-            }
-        });
+        importProject(callback, templateDescriptor, projectName);
     }
 
     private void updateProject(final Project project, final WizardPage.CommitCallback callback) {
