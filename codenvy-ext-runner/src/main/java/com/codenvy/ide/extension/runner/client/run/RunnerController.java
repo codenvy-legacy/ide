@@ -31,6 +31,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
@@ -117,6 +118,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
     private   Timer                                             setAppHealthOkTimer;
+    private   String                                            theme;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -131,7 +133,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             DtoFactory dtoFactory,
                             EditorAgent editorAgent,
                             final DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                            MessageBus messageBus) {
+                            MessageBus messageBus,
+                            ThemeAgent themeAgent) {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
@@ -144,6 +147,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
+        theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -309,6 +313,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             runOptions.setEnvironmentId(environment.getId());
         }
 
+        addShellConsoleThemeOption(runOptions);
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -347,6 +352,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
         runCallback = callback;
 
+        addShellConsoleThemeOption(runOptions);
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -364,6 +370,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
                     }
                    );
+    }
+
+    private void addShellConsoleThemeOption(RunOptions runOptions) {
+        runOptions.getOptions().put("ShellConsoleTheme", theme);
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
