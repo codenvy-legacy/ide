@@ -20,6 +20,16 @@ import com.codenvy.ide.tutorial.wysiwyg.editor.WysiwygEditor;
  */
 public class WysiwygEditorProvider implements EditorProvider {
 
+    @Override
+    public String getId() {
+        return "demoWYSIWYGEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Demo WYSIWYG Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

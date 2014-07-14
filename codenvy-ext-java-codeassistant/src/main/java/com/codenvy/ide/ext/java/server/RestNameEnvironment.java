@@ -238,8 +238,8 @@ public class RestNameEnvironment {
         }
 
         if (!hasPom(project)) {
-            LOG.warn("Doesn't have pom.xml file");
-            throw new CodeAssistantException(500, "Doesn't have pom.xml file");
+            LOG.warn("Project doesn't have pom.xml file");
+            throw new CodeAssistantException(500, "Project doesn't have pom.xml file");
         }
 
 

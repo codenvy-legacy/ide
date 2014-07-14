@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.client;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -21,11 +20,12 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
@@ -65,16 +65,18 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 public class JavaExtension {
     boolean updating      = false;
     boolean needForUpdate = false;
-    private NotificationManager notificationManager;
-    private String              restContext;
-    private String              workspaceId;
-    private AsyncRequestFactory asyncRequestFactory;
-    private EditorAgent         editorAgent;
-    private JavaParserWorker    parserWorker;
-    private BuildContext        buildContext;
+    private NotificationManager      notificationManager;
+    private String                   restContext;
+    private String                   workspaceId;
+    private AsyncRequestFactory      asyncRequestFactory;
+    private EditorAgent              editorAgent;
+    private JavaLocalizationConstant localizationConstant;
+    private JavaParserWorker parserWorker;
+    private BuildContext buildContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
+                         FileTypeRegistry fileTypeRegistry,
                          NotificationManager notificationManager,
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
@@ -93,6 +95,7 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
+                         @Named("JavaFileType") FileType javaFile,
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController, BuildContext buildContext) {
@@ -101,6 +104,7 @@ public class JavaExtension {
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
+        this.localizationConstant = localizationConstant;
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
 
@@ -120,9 +124,8 @@ public class JavaExtension {
         iconRegistry.registerIcon(new Icon("maven/png.file.small.icon", resources.imageIcon()));
         iconRegistry.registerIcon(new Icon("maven/pom.xml.file.small.icon", resources.maven()));
 
-        FileType javaFile = new FileType("Java", JavaResources.INSTANCE.javaFile(), MimeType.APPLICATION_JAVA, "java");
-        editorRegistry.register(javaFile, javaEditorProvider);
-        resourceProvider.registerFileType(javaFile);
+        editorRegistry.registerDefaultEditor(javaFile, javaEditorProvider);
+        fileTypeRegistry.registerFileType(javaFile);
 
         resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
                                                                                     dtoUnmarshallerFactory));
@@ -198,7 +201,7 @@ public class JavaExtension {
         String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +
                      "&projectid=" + project.getId();
 
-        final Notification notification = new Notification("Updating dependencies...", PROGRESS);
+        final Notification notification = new Notification(localizationConstant.updatingDependencies(), PROGRESS);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
@@ -206,7 +209,7 @@ public class JavaExtension {
             @Override
             protected void onSuccess(String result) {
                 updating = false;
-                notification.setMessage("Dependencies successfully updated ");
+                notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
                 parserWorker.dependenciesUpdated();

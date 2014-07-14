@@ -41,6 +41,16 @@ public class CssEditorProvider implements EditorProvider {
         this.notificationManager = notificationManager;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyCSSEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy CSS Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

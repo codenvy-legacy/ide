@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.resources;
+package com.codenvy.ide.api.filetypes;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -30,13 +30,11 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * "application/javascript", "application/x-javascript", "text/javascript" mime types)
  * <p/>
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 public class FileType {
 
-    private static int ID = 0;
-
-    private int id;
+    private String id;
 
     private ImageResource image;
 
@@ -115,7 +113,7 @@ public class FileType {
         this.mimeTypes = mimeTypes;
         this.extension = extension;
         this.namePattern = namePattern;
-        id = ++ID;
+        id = contentDescription + (mimeTypes == null ? "noMimeType" :mimeTypes.join(",")) + namePattern;
     }
 
 
@@ -149,7 +147,32 @@ public class FileType {
         return imageSVG;
     }
 
-    public int getId() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileType fileType = (FileType)o;
+
+        if (contentDescription != null ? !contentDescription.equals(fileType.contentDescription) : fileType.contentDescription != null)
+            return false;
+        if (extension != null ? !extension.equals(fileType.extension) : fileType.extension != null) return false;
+        if (mimeTypes != null ? !mimeTypes.equals(fileType.mimeTypes) : fileType.mimeTypes != null) return false;
+        if (namePattern != null ? !namePattern.equals(fileType.namePattern) : fileType.namePattern != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mimeTypes != null ? mimeTypes.hashCode() : 0;
+        result = 31 * result + (extension != null ? extension.hashCode() : 0);
+        result = 31 * result + (namePattern != null ? namePattern.hashCode() : 0);
+        result = 31 * result + (contentDescription != null ? contentDescription.hashCode() : 0);
+        return result;
+    }
+
+    public String getId() {
         return id;
     }
 }

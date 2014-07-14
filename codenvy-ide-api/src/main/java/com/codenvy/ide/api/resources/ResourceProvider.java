@@ -12,7 +12,6 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -87,22 +86,6 @@ public interface ResourceProvider {
      * @return
      */
     public ModelProvider getModelProvider(String language);
-
-    /**
-     * Register file type.
-     *
-     * @param fileType
-     */
-    public void registerFileType(FileType fileType);
-
-    /**
-     * Get file type matched for file
-     *
-     * @param file
-     * @return
-     */
-    public FileType getFileType(File file);
-
 
     /**
      * Returns root folder.

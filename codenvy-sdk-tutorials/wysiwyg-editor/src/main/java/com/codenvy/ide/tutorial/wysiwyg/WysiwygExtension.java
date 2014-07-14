@@ -12,16 +12,15 @@ package com.codenvy.ide.tutorial.wysiwyg;
 
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.resources.FileType;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.tutorial.wysiwyg.part.TutorialHowToPresenter;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
-
-import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -35,12 +34,13 @@ public class WysiwygExtension {
     }
 
     @Inject
-    public WysiwygExtension(ResourceProvider resourceProvider, WysiwygResource res, WysiwygEditorProvider editorProvider,
+    public WysiwygExtension(FileTypeRegistry fileTypeRegistry, WysiwygResource res, WysiwygEditorProvider editorProvider,
                             EditorRegistry editorRegistry,
                             WorkspaceAgent workspaceAgent, TutorialHowToPresenter howToPresenter) {
         FileType htmlFileType = new FileType(res.htmlFile(), "text/htm", "htm");
-        resourceProvider.registerFileType(htmlFileType);
-        editorRegistry.register(htmlFileType, editorProvider);
+        fileTypeRegistry.registerFileType(htmlFileType);
+        editorRegistry.registerDefaultEditor(htmlFileType, editorProvider);
+        
 
         workspaceAgent.openPart(howToPresenter, PartStackType.EDITING);
     }

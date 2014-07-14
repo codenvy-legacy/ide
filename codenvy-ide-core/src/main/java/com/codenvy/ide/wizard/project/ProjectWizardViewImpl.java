@@ -166,7 +166,8 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     public void reset() {
         projectName.setText("");
         projectDescription.setText("");
-        projectPublic.setValue(true, true);
+        projectPublic.setValue(true);
+        projectPrivate.setValue(false);
         changeEnabledState(true);
     }
 
@@ -210,8 +211,17 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         }.schedule(300);
     }
 
+    @Override
+    public void disableAllExceptName() {
+        changeEnabledStateAll(false);
+    }
+
     void changeEnabledState(boolean enabled) {
         projectName.setEnabled(enabled);
+        changeEnabledStateAll(enabled);
+    }
+
+    private void changeEnabledStateAll(boolean enabled) {
         projectDescription.setEnabled(enabled);
         projectPublic.setEnabled(enabled);
         projectPrivate.setEnabled(enabled);

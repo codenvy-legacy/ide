@@ -41,6 +41,16 @@ public class XmlEditorProvider implements EditorProvider {
         this.notificationManager = notificationManager;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyXMLEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy XML editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

@@ -48,6 +48,16 @@ public class JsEditorProvider implements EditorProvider {
         this.jsEditorConfigurationProvider = jsEditorConfigurationProvider;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyJavaScriptEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy JavaScript Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

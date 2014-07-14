@@ -37,6 +37,16 @@ public class GroovyEditorProvider implements EditorProvider {
         this.notificationManager = notificationManager;
     }
 
+    @Override
+    public String getId() {
+        return "codenvyGroovyEditor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Codenvy Groovy Editor";
+    }
+
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {

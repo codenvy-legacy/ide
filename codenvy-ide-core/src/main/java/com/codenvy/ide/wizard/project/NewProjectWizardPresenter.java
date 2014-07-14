@@ -113,7 +113,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 info.show();
             }
         };
-        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null &&
+
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        if (project != null && projectName.equals(project.getName())) {
+            updateProject(project, callback);
+            return;
+        }
+        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
             Constants.UNKNOWN_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
             createUnknownProject(callback);
             return;
@@ -123,7 +130,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.close();
             return;
         }
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+
 
         projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
@@ -136,6 +143,35 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 //project doesn't exist
                 importProject(callback, templateDescriptor, projectName);
+            }
+        });
+    }
+
+    private void updateProject(final Project project, final WizardPage.CommitCallback callback) {
+        final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
+        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
+        boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+        projectDescriptor.setVisibility(visibility ? "public" : "private");
+        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(Project result) {
+                        callback.onSuccess();
+                    }
+                });
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
             }
         });
     }
@@ -172,7 +208,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
-    private void importProject(final WizardPage.CommitCallback callback, ProjectTemplateDescriptor templateDescriptor,
+    private void importProject(final WizardPage.CommitCallback callback,
+                               ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         projectService.importProject(projectName, templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
@@ -261,7 +298,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                             Constants.UNKNOWN_ID) && currentPage.isCompleted()));
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-
+            view.disableAllExceptName();
+        } else {
+            view.enableInput();
         }
     }
 
@@ -282,7 +321,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setName(project.getName());
             boolean aPublic = project.getVisibility().equals("public") ? true : false;
             view.setVisibility(aPublic);
-            wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY,aPublic);
+            wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
         }
         setPage(mainPage);

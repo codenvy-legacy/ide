@@ -10,8 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.inject;
 
+import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.ext.java.client.JavaExtension;
+import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.JavaFormatter;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
@@ -39,5 +42,12 @@ public class JavaGinModule extends AbstractGinModule {
     @Named("javaCA")
     protected String getJavaCAPath(){
         return JavaExtension.getJavaCAPath();
+    }
+
+    @Provides
+    @Singleton
+    @Named("JavaFileType")
+    protected FileType provideJavaFile() {
+        return  new FileType("Java", JavaResources.INSTANCE.javaFile(), MimeType.APPLICATION_JAVA, "java");
     }
 }
