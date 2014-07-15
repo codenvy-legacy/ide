@@ -131,7 +131,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         newMenuVisibleActions.clear();
         expandActionGroup(IdeActions.GROUP_MAIN_MENU, newMenuVisibleActions, actionManager);
 
-//        if (!newMenuVisibleActions.equals(menuVisibleActions)) {
+        if (!newMenuVisibleActions.equals(menuVisibleActions)) {
             final List<Action> temp = menuVisibleActions;
             menuVisibleActions = newMenuVisibleActions;
             newMenuVisibleActions = temp;
@@ -140,7 +140,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             for (final Action action : menuVisibleActions) {
                 add(ActionPlaces.MAIN_MENU, action, presentationFactory);
             }
-//        }
+        }
         newRightVisibleActions.clear();
         expandActionGroup(IdeActions.GROUP_RIGHT_MAIN_MENU, newRightVisibleActions, actionManager);
         if (!newRightVisibleActions.equals(rightVisibleActions)) {
