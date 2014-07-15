@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
@@ -37,15 +38,15 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
  */
 public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWorker.WorkerCallback<IProblem> {
 
-    private final TextEditorPartPresenter editor;
-    private       Document                document;
-    private       JavaParserWorker        worker;
-    private       OutlineModel            outlineModel;
-    private       NotificationManager     notificationManager;
-    private       JavaCodeAssistProcessor codeAssistProcessor;
-    private JavaLocalizationConstant localizationConstant;
-    private File             file;
-    private EditorWithErrors editorWithErrors;
+    private final TextEditorPartPresenter  editor;
+    private       Document                 document;
+    private       JavaParserWorker         worker;
+    private       OutlineModel             outlineModel;
+    private       NotificationManager      notificationManager;
+    private       JavaCodeAssistProcessor  codeAssistProcessor;
+    private       JavaLocalizationConstant localizationConstant;
+    private       File                     file;
+    private       EditorWithErrors         editorWithErrors;
     private boolean first = true;
     private Notification notification;
 
@@ -64,6 +65,17 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
         if (editor instanceof EditorWithErrors) {
             editorWithErrors = ((EditorWithErrors)editor);
         }
+        editor.addCloseHandler(new EditorPartPresenter.EditorPartCloseHandler() {
+            @Override
+            public void onClose(EditorPartPresenter editor) {
+                if (notification != null && !notification.isFinished()) {
+                    notification.setStatus(FINISHED);
+                    notification.setType(Notification.Type.WARNING);
+                    notification.setMessage("Parsing file canceled");
+                    notification = null;
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -88,6 +100,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
             notification = new Notification("Parsing file...", Notification.Status.PROGRESS);
             codeAssistProcessor.disableCodeAssistant();
             notificationManager.showNotification(notification);
+            first = false;
         }
         worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), file.getProject().getPath(), this);
     }
@@ -105,11 +118,13 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
 
     @Override
     public void onResult(Array<IProblem> problems) {
-        if (first) {
-            notification.setStatus(FINISHED);
-            notification.setMessage(localizationConstant.fileFuccessfullyParsed());
+        if (!first) {
+            if (notification != null) {
+                notification.setStatus(FINISHED);
+                notification.setMessage(localizationConstant.fileFuccessfullyParsed());
+                notification = null;
+            }
             codeAssistProcessor.enableCodeAssistant();
-            first = false;
         }
         AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
         if (annotationModel == null)

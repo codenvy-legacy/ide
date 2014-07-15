@@ -216,6 +216,15 @@
         }
     },
     {
+        "displayName": "Kotlin Hello World",
+        "category": "Samples - Hello World",
+        "description": "A console Kotlin app that outputs Hello World to a console",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-kotlin-java-simple.git"
+        }
+    },
+    {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",
