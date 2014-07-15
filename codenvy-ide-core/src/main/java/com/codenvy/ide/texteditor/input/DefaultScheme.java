@@ -133,8 +133,8 @@ public class DefaultScheme extends InputScheme {
                     return true;
                 }
 
-                if (!((event.getAltKey() && event.getCtrlKey()) || UserAgent.isMac())) {
-                    if (event.getAltKey()) {
+                if (!((event.getAltKey() && event.getCtrlKey()))) {
+                    if (event.getAltKey() && !UserAgent.isMac()) {
                         // Don't process Alt+* combinations.
                         return false;
                     }
