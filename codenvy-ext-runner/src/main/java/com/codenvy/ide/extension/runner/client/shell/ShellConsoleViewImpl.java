@@ -38,6 +38,7 @@ public class ShellConsoleViewImpl extends BaseView<ShellConsoleView.ActionDelega
         super(resources);
         container.add(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("runner-shell-console-minimizeButton");
+        webShellFrame.removeStyleName("gwt-Frame");
     }
 
     @Override
