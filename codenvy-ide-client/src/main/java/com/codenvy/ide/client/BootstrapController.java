@@ -20,7 +20,7 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
-import com.codenvy.api.workspace.shared.dto.Workspace;
+import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.WindowActionEvent;
@@ -170,9 +170,9 @@ public class BootstrapController {
      */
     private void loadWorkspace() {
         workspaceServiceClient.getWorkspace(Config.getWorkspaceId(),
-                    new AsyncRequestCallback<Workspace>(dtoUnmarshallerFactory.newUnmarshaller(Workspace.class)) {
+                    new AsyncRequestCallback<WorkspaceDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(WorkspaceDescriptor.class)) {
                         @Override
-                        protected void onSuccess(Workspace result) {
+                        protected void onSuccess(WorkspaceDescriptor result) {
                             Config.setCurrentWorkspace(result);
                             loadUserProfile();
                         }
