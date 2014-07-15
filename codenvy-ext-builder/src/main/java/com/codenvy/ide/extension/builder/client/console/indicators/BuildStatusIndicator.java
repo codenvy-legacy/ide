@@ -28,7 +28,7 @@ public class BuildStatusIndicator extends IndicatorAction {
 
     @Inject
     public BuildStatusIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Status", false, 160, resources);
+        super("Status", false, 160, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 

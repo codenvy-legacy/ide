@@ -119,9 +119,9 @@ public class RunnerExtension {
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerStartedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(runnerTimeoutThresholdIndicator);
-        consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerFinishedIndicator);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(runnerTimeoutThresholdIndicator);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerTotalTimeIndicator);
         runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);

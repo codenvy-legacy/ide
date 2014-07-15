@@ -29,7 +29,7 @@ public class RunnerStartedIndicator extends IndicatorAction {
 
     @Inject
     public RunnerStartedIndicator(RunnerController runnerController, RunnerResources resources) {
-        super("Runner Started At", false, 215, resources);
+        super("Started", false, 215, resources);
         this.runnerController = runnerController;
     }
 

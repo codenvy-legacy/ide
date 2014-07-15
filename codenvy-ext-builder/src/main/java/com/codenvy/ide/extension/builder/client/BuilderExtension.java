@@ -103,9 +103,9 @@ public class BuilderExtension {
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildStartedIndicator);
         consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(buildTimeoutThresholdIndicator);
-        consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildFinishedIndicator);
+        consoleToolbarActionGroup.addSeparator();
+        consoleToolbarActionGroup.add(buildTimeoutThresholdIndicator);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(buildTotalTimeIndicator);
         consoleToolbarActionGroup.addSeparator();

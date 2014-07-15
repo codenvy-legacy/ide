@@ -29,7 +29,7 @@ public class BuildStartedIndicator extends IndicatorAction {
 
     @Inject
     public BuildStartedIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
-        super("Build Started At", false, 215, resources);
+        super("Started", false, 215, resources);
         this.buildProjectPresenter = buildProjectPresenter;
     }
 
