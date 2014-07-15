@@ -40,7 +40,7 @@ public class BaseProjectTypeExtension implements ProjectTypeExtension {
 
     @Override
     public ProjectType getProjectType() {
-        return new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_PROJECT_TYPE, Constants.UNKNOWN_CATEGORY);
+        return new ProjectType(Constants.BLANK_ID, Constants.BLANK_PROJECT_TYPE, Constants.BLANK_CATEGORY);
     }
 
     @Override

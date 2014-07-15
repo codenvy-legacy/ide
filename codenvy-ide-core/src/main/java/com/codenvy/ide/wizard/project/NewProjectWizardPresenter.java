@@ -121,8 +121,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             return;
         }
         if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-            Constants.UNKNOWN_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
-            createUnknownProject(callback);
+            Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+            createBlankProject(callback);
             return;
         }
         if (templateDescriptor == null && wizard != null) {
@@ -163,7 +163,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
-    private void createUnknownProject(final WizardPage.CommitCallback callback) {
+    private void createBlankProject(final WizardPage.CommitCallback callback) {
         final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
@@ -282,7 +282,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && currentPage.isCompleted()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
-                                            Constants.UNKNOWN_ID) && currentPage.isCompleted()));
+                                            Constants.BLANK_ID) && currentPage.isCompleted()));
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
             view.disableAllExceptName();

@@ -34,8 +34,8 @@ public class ProjectTypeDescriptionsExtension implements ProjectTypeDescriptionE
     @Override
     public List<ProjectType> getProjectTypes() {
         final List<ProjectType> list = new ArrayList<>(1);
-        list.add(new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.UNKNOWN_CATEGORY));
-        list.add(new ProjectType(Constants.UNKNOWN_ID, Constants.UNKNOWN_PROJECT_TYPE, Constants.UNKNOWN_CATEGORY));
+        list.add(new ProjectType(Constants.NAMELESS_ID, Constants.NAMELESS_NAME, Constants.BLANK_CATEGORY));
+        list.add(new ProjectType(Constants.BLANK_ID, Constants.BLANK_PROJECT_TYPE, Constants.BLANK_CATEGORY));
         return list;
     }
 

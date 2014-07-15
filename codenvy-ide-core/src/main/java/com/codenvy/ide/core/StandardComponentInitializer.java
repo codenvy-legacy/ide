@@ -327,6 +327,6 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
-        wizardRegistry.addWizard(Constants.UNKNOWN_ID, new ProjectWizard(notificationManager));
+        wizardRegistry.addWizard(Constants.BLANK_ID, new ProjectWizard(notificationManager));
     }
 }

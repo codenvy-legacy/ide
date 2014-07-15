@@ -15,12 +15,12 @@ public interface Constants {
     // project type ids
     final String NAMELESS_ID                  = "nameless";
     final String NAMELESS_CATEGORY            = "nameless";
-    final String UNKNOWN_CATEGORY             = "Unknown";
-    final String UNKNOWN_ID                   = "unknown";
+    final String BLANK_CATEGORY               = "Blank";
+    final String BLANK_ID                     = "blank";
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
     final String NAMELESS_NAME                = "nameless";
-    final String UNKNOWN_PROJECT_TYPE         = "Unknown Project Type";
+    final String BLANK_PROJECT_TYPE           = "Blank Project Type";
     final String CODENVY_PLUGIN_NAME          = "Codenvy Extension";
     final String CODENVY_CATEGORY             = "Codenvy Extension";
     // project attribute names
