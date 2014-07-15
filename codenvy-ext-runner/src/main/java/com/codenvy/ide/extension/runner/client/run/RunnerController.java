@@ -313,7 +313,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             runOptions.setEnvironmentId(environment.getId());
         }
 
-        addShellConsoleThemeOption(runOptions);
+        runOptions.getShellOptions().put("WebShellTheme", theme);
+
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -352,7 +353,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
         runCallback = callback;
 
-        addShellConsoleThemeOption(runOptions);
+        runOptions.getShellOptions().put("WebShellTheme", theme);
+
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -370,10 +372,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
                     }
                    );
-    }
-
-    private void addShellConsoleThemeOption(RunOptions runOptions) {
-        runOptions.getOptions().put("ShellConsoleTheme", theme);
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
