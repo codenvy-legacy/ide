@@ -16,11 +16,13 @@ import javax.inject.Singleton;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
+import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
@@ -68,6 +70,9 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the document storage
         bind(DocumentStorage.class);
+
+        // bind the default editor
+        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
     }
 
     // no real need to make it a singleton, it's a simple instantiation
