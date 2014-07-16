@@ -95,8 +95,10 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
             @Override
             protected void onSuccess(Array<ProjectImporterDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
-                    importers.put(result.get(i).getId(), result.get(i));
-                    importersList.add(result.get(i).getId());
+                    if (!result.get(i).isInternal()) {
+                        importers.put(result.get(i).getId(), result.get(i));
+                        importersList.add(result.get(i).getId());
+                    }
                 }
                 view.setImporters(importersList);
                 view.setEnabledImportButton(false);
