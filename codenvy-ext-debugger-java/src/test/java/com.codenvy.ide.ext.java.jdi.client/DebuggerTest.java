@@ -163,7 +163,7 @@ public class DebuggerTest extends BaseTest {
 
         verifySetEnableButtons(DISABLE_BUTTON);
 
-        verify(runnerController).stopActiveProject();
+        verify(runnerController).stopActiveProject(false);
         verify(gutterManager).unmarkCurrentBreakpoint();
         verify(gutterManager).removeAllBreakPoints();
         verify(view).setEnableRemoveAllBreakpointsButton(DISABLE_BUTTON);

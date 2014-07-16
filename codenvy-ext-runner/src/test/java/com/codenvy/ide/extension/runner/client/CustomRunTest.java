@@ -33,6 +33,7 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -123,7 +124,7 @@ public class CustomRunTest extends BaseTest {
         verify(view).getSelectedEnvironment();
         verify(view, times(2)).getMemorySize();
         verify(runOptions).setMemorySize(eq(128));
-        verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject());
+        verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test

@@ -60,7 +60,7 @@ public class DebugAction extends Action {
             public void onRun(ApplicationProcessDescriptor appDescriptor, Project project) {
                 debuggerPresenter.attachDebugger(appDescriptor, project);
             }
-        });
+        }, true);
     }
 
     /** {@inheritDoc} */

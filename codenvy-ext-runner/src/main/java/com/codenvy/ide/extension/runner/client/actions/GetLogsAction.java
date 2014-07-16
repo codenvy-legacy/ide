@@ -47,7 +47,7 @@ public class GetLogsAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Show application logs");
-        controller.getLogs();
+        controller.getLogs(true);
     }
 
     /** {@inheritDoc} */

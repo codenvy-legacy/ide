@@ -133,12 +133,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         workspaceAgent.setActivePart(console);
     }
 
-    /** Build active project. */
-    public void buildActiveProject() {
+    /** Build active project.
+     * @param isUserAction points whether the build is started directly by user interaction
+     */
+    public void buildActiveProject(final boolean isUserAction) {
         //Save the files before building if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            buildActiveProject(null);
+            buildActiveProject(null, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -151,14 +153,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                         @Override
                         public void onSuccess(Object result) {
-                            buildActiveProject(null);
+                            buildActiveProject(null, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    buildActiveProject(null);
+                    buildActiveProject(null, isUserAction);
                 }
             });
             askWindow.show();
@@ -170,8 +172,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
      *
      * @param buildOptions
      *         options to configure build process
+     * @param isUserAction points whether the build is started directly by user interaction        
      */
-    public void buildActiveProject(BuildOptions buildOptions) {
+    public void buildActiveProject(BuildOptions buildOptions, boolean isUserAction) {
         if (isBuildInProgress) {
             final String message = constant.buildInProgress(activeProject.getName());
             Notification notification = new Notification(message, ERROR);
@@ -185,6 +188,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
+        if (isUserAction){
+            console.setActive();
+        }
         service.build(activeProject.getPath(),
                       buildOptions,
                       new AsyncRequestCallback<BuildTaskDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(BuildTaskDescriptor.class)) {
@@ -274,7 +280,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(activeProject.getName()));
                 buildContext.setBuilding(false);
-                workspaceAgent.setActivePart(console);
                 break;
             case FAILED:
                 isBuildInProgress = false;
@@ -284,7 +289,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setType(ERROR);
                 notification.setMessage(constant.buildFailed());
                 buildContext.setBuilding(false);
-                workspaceAgent.setActivePart(console);
                 break;
             case CANCELLED:
                 isBuildInProgress = false;
@@ -294,7 +298,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setType(WARNING);
                 notification.setMessage(constant.buildCanceled());
                 buildContext.setBuilding(false);
-                workspaceAgent.setActivePart(console);
                 break;
         }
     }

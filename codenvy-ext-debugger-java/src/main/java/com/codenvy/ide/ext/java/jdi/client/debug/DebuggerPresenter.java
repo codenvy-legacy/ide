@@ -166,7 +166,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                             (com.codenvy.ide.websocket.rest.exceptions.ServerException)exception;
                     if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("not found")) {
-                        runnerController.stopActiveProject();
+                        runnerController.stopActiveProject(false);
                         onDebuggerDisconnected();
                         return;
                     }
@@ -604,7 +604,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                 @Override
                 protected void onSuccess(Void result) {
                     changeButtonsEnableState(false);
-                    runnerController.stopActiveProject();
+                    runnerController.stopActiveProject(false);
                     onDebuggerDisconnected();
                     closeView();
                 }

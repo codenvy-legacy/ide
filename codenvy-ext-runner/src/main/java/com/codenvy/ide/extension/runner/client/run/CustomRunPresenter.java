@@ -124,7 +124,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
             runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
         }
         view.close();
-        runnerController.runActiveProject(runOptions, null);
+        runnerController.runActiveProject(runOptions, null, true);
     }
 
     @Override

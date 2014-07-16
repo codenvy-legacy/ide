@@ -10,16 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.console;
 
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Builder console.
@@ -28,22 +32,38 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
-    private static final String TITLE = "Builder";
+    private static final String      TITLE   = "Builder";
     private final BuilderConsoleView view;
     private final ToolbarPresenter   consoleToolbar;
+    private boolean                  isUnread = false;
 
     @Inject
-    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar) {
+    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
+        
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
+            
+            @Override
+            public void onActivePartChanged(ActivePartChangedEvent event) {
+                onPartActivated(event.getActivePart());;
+            }
+        });
+    }
+    
+    private void onPartActivated(PartPresenter part){
+        if (part != null && part.equals(this) && isUnread){
+            isUnread = false;
+            firePropertyChange(TITLE_PROPERTY);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return TITLE;
+        return TITLE + (isUnread ? " *" : "");
     }
 
     /** {@inheritDoc} */
@@ -78,17 +98,27 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
      *         message that need to be print
      */
     public void print(String message) {
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
-        }
-
         String[] lines = message.split("\n");
         for (String line : lines) {
             view.print(line);
         }
-
         view.scrollBottom();
+        
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            isUnread = true;
+            firePropertyChange(TITLE_PROPERTY);
+        }
+    }
+    
+    /**
+     * Set the console active (selected) in the parts stack.
+     */
+    public void setActive() {
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
     }
 
     /** Clear console. Remove all messages. */
