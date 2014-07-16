@@ -162,7 +162,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                         if (processDescriptor.getStatus() == NEW ||
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
-                                                            getLogs();
+                                                            getLogs(false);
                                                             // open WebShell console
                                                             Link shellLink = getLink(lastApplicationDescriptor, "shell url");
                                                             if (shellLink != null) {
@@ -187,7 +187,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 if (isAnyAppRunning()) {
-                    stopActiveProject();
+                    stopActiveProject(false);
                 }
                 console.clear();
                 activeProject = null;
@@ -228,11 +228,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Run active project. */
-    public void runActiveProject() {
+    public void runActiveProject(final boolean isUserAction) {
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            runActiveProject(null, false, null);
+            runActiveProject(null, false, null, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -245,14 +245,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         @Override
                         public void onSuccess(Object result) {
-                            runActiveProject(null, false, null);
+                            runActiveProject(null, false, null, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    runActiveProject(null, false, null);
+                    runActiveProject(null, false, null, isUserAction);
                 }
             });
             askWindow.show();
@@ -264,9 +264,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param environment
      *         environment which will be used to run project
+     * @param isUserAction points whether the build is started directly by user interaction       
      */
-    public void runActiveProject(RunnerEnvironment environment) {
-        runActiveProject(environment, false, null);
+    public void runActiveProject(RunnerEnvironment environment, boolean isUserAction) {
+        runActiveProject(environment, false, null, isUserAction);
     }
 
     /**
@@ -276,9 +277,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
+     * @param isUserAction points whether the build is started directly by user interaction        
      */
-    public void runActiveProject(boolean debug, final ProjectRunCallback callback) {
-        runActiveProject(null, debug, callback);
+    public void runActiveProject(boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
+        runActiveProject(null, debug, callback, isUserAction);
     }
 
     /**
@@ -290,8 +292,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
+     * @param isUserAction points whether the build is started directly by user interaction        
      */
-    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback) {
+    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         if (isAnyAppRunning) {
             Notification notification = new Notification("Another project is running now.", ERROR);
             notificationManager.showNotification(notification);
@@ -315,6 +318,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
 
+        if (isUserAction){
+            console.setActive();
+        }
+        
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -339,7 +346,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @param callback
      *         callback that will be notified when project will be run
      */
-    public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback) {
+    public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback, boolean isUserAction) {
         if (isAnyAppRunning) {
             Notification notification = new Notification("Another project is running now.", ERROR);
             notificationManager.showNotification(notification);
@@ -352,6 +359,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         runCallback = callback;
+        
+        if (isUserAction){
+            console.setActive();
+        }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
 
@@ -499,8 +510,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
-                workspaceAgent.setActivePart(console);
-
                 Link shellLink = getLink(lastApplicationDescriptor, "shell url");
                 if (shellLink != null) {
                     workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
@@ -519,7 +528,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
                     notification.setType(ERROR);
-                    getLogs();
+                    getLogs(false);
                 } else {
                     notification.setType(INFO);
                 }
@@ -527,20 +536,18 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
 
-                workspaceAgent.setActivePart(console);
                 workspaceAgent.removePart(shellConsole);
                 break;
             case FAILED:
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                getLogs();
+                getLogs(false);
 
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(constant.applicationFailed(activeProject.getName()));
 
-                workspaceAgent.setActivePart(console);
                 workspaceAgent.removePart(shellConsole);
                 break;
             case CANCELLED:
@@ -552,17 +559,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setType(WARNING);
                 notification.setMessage(constant.applicationCanceled(activeProject.getName()));
 
-                workspaceAgent.setActivePart(console);
                 workspaceAgent.removePart(shellConsole);
                 break;
         }
     }
 
     /** Get logs of the currently launched application. */
-    public void getLogs() {
+    public void getLogs(boolean isUserAction) {
         final Link viewLogsLink = getLink(lastApplicationDescriptor, Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
+        }
+        
+        if (isUserAction){
+            console.setActive();
         }
 
         service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
@@ -592,13 +602,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /** Stop the currently running application. */
-    public void stopActiveProject() {
+    public void stopActiveProject(boolean isUserAction) {
         final Link stopLink = getLink(lastApplicationDescriptor, Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(activeProject.getName()), null);
             return;
         }
-
+        
+        if (isUserAction){
+            console.setActive();
+        }
+        
         service.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override

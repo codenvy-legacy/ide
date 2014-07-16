@@ -70,7 +70,7 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
 
     @Override
     public void onStartBuildClicked() {
-        buildActiveProject(getBuildOptions());
+        buildActiveProject(getBuildOptions(), true);
         view.close();
     }
 
