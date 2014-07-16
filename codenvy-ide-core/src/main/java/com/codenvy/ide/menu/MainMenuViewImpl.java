@@ -192,6 +192,9 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             if (presentation.isVisible()) { // add only visible items
                 newVisibleActions.add(action);
             }
+            if(action2barItem.containsKey(action)){
+                action2barItem.get(action).update();
+            }
         }
     }
 

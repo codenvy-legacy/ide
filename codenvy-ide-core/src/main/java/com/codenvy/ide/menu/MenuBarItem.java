@@ -170,4 +170,7 @@ public class MenuBarItem implements ActionSelectedHandler {
         return title;
     }
 
+    public void update() {
+        setEnabled(Utils.hasVisibleChildren(group, presentationFactory, actionManager, place));
+    }
 }
