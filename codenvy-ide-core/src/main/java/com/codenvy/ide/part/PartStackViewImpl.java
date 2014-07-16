@@ -35,6 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
@@ -124,6 +125,11 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public void removeTab(int index) {
         if (index < tabButtons.size()) {
+            //if remove Tab on the left or right position, then calculate the new value of variable top
+            if (tabPosition != BELOW) {
+                top -= tabButtons.get(index).getElement().getOffsetWidth() - 16;
+                if (tabPosition == LEFT) top += 4;
+            }
             TabButton removed = tabButtons.remove(index);
             tabsPanel.remove(tabsPanel.getWidgetIndex(removed));
             contentPanel.remove(contentPanel.getWidget(index));
