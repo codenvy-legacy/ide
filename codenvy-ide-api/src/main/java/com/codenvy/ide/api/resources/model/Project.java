@@ -69,7 +69,6 @@ public class Project extends Folder {
     }
 
     public void init(ItemReference itemReference) {
-        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
         setLinks(itemReference.getLinks());
@@ -77,7 +76,6 @@ public class Project extends Folder {
 
     @Override
     public void init(JSONObject itemObject) {
-        id = itemObject.get("id").isString().stringValue();
         name = itemObject.get("name").isString().stringValue();
         mimeType = itemObject.get("mimeType").isString().stringValue();
     }
@@ -503,16 +501,16 @@ public class Project extends Folder {
             projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
-                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getId().equals("_root_"))
+                    final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getName().equals(""))
                                                    ? (Project)resource : resource.getParent();
-                    if (resource instanceof Project && resource.getParent().getId().equals("_root_")) {
+                    if (resource instanceof Project && resource.getParent().getName().equals("")) {
                         resource.setName(newName);
                     }
 
                     refreshChildren(folderToRefresh, new AsyncCallback<Folder>() {
                         @Override
                         public void onSuccess(Folder result) {
-                            Resource renamed = (resource instanceof Project && resource.getParent().getId().equals("_root_"))
+                            Resource renamed = (resource instanceof Project && resource.getParent().getName().equals(""))
                                                ? resource : result.findChildByName(newName);
                             eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(renamed));
                             callback.onSuccess(renamed);

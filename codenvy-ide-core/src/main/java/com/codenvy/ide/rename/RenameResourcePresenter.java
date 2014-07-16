@@ -101,7 +101,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                     if (result instanceof File) {
                         // change renamed file for all opened editors
                         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                            if (editor.getEditorInput().getFile().getId().equals(resource.getId())) {
+                            if (editor.getEditorInput().getFile().getPath().equals(resource.getPath())) {
                                 editor.getEditorInput().setFile((File)result);
                                 editor.onFileChanged();
                                 break;
@@ -112,7 +112,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
                         // because rename changes the path of the file too.
                         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
                             // find parent of the opened file by its old id
-                            Folder parent = getParentById(resource.getId(), editor.getEditorInput().getFile());
+                            Folder parent = getParentByPath(resource.getPath(), editor.getEditorInput().getFile());
                             if (parent != null) {
                                 // new path of the file
                                 String path = editor.getEditorInput().getFile().getPath().replaceFirst(parent.getPath(), result.getPath());
@@ -136,18 +136,18 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     }
 
     /**
-     * Find parent of the resource by id going to upper levels.
+     * Find parent of the resource by path going to upper levels.
      *
-     * @param id
-     *         parent's id
+     * @param oldPath
+     *         parent's path before rename
      * @param resource
      *         resource for which to find parent
      * @return {@link Folder} found parent or <code>null</code>
      */
-    private Folder getParentById(String id, Resource resource) {
+    private Folder getParentByPath(String oldPath, Resource resource) {
         Folder parent = resource.getParent();
         while (parent != null) {
-            if (parent.getId().equals(id)) {
+            if (parent.getPath().equals(oldPath)) {
                 return parent;
             }
             parent = parent.getParent();

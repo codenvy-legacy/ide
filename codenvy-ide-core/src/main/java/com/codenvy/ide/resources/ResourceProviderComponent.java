@@ -103,7 +103,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
 
-                project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
                 project.setName(result.getName());
@@ -154,7 +153,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             public void onSuccess(Folder result) {
                 eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
                 Resource f = result.findChildByName(folder.getName());
-                if (f != null && !f.getId().equals(result.getId())) {
+                if (f != null && !f.getPath().equals(result.getPath())) {
                     eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(f));
                 }
             }
@@ -181,7 +180,6 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     language = result.getAttributes().get(LANGUAGE_ATTRIBUTE).get(0);
                 final Project project = getModelProvider(language).createProjectInstance();
                 Log.info(ResourceProviderComponent.class, " :: " + project.getName());
-                project.setId(result.getId());
                 project.setAttributes(result.getAttributes());
                 project.setProjectType(result.getProjectTypeId());
                 project.setName(name);

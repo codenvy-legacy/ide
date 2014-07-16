@@ -100,7 +100,7 @@ public class JavaProject extends Openable implements IJavaProject {
         String path = "";
         try {
             path = project.getPath();
-            File depDir = new File(tempDir, project.getId());
+            File depDir = new File(tempDir, path);
             if (depDir.exists()) {
                 DirectoryStream<java.nio.file.Path> deps =
                         Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
@@ -931,7 +931,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getVfsId() {
-        return project.getId();
+        return project.getPath();
     }
 
     public static class ResolvedClasspath {

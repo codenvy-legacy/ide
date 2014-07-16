@@ -22,12 +22,12 @@ public class OutlineUpdateMessage extends MessageImpl {
     protected OutlineUpdateMessage() {
     }
 
-    public native final String getFileId() /*-{
-        return this.fileId;
+    public native final String getFilePath() /*-{
+        return this.filePath;
     }-*/;
 
-    public native final OutlineUpdateMessage setFileId(String fileId) /*-{
-        this.fileId = fileId;
+    public native final OutlineUpdateMessage setFilePath(String filePath) /*-{
+        this.filePath = filePath;
         return this;
     }-*/;
 

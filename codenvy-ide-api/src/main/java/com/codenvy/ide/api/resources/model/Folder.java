@@ -52,14 +52,12 @@ public class Folder extends Resource {
     }
 
     public void init(ItemReference itemReference) {
-        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
         setLinks(itemReference.getLinks());
     }
 
     public void init(JSONObject itemObject) {
-        id = itemObject.containsKey("id") ? itemObject.get("id").isString().stringValue() : null;
         name = itemObject.containsKey("name") ? itemObject.get("name").isString().stringValue() : null;
         if (itemObject.containsKey("mimeType") && itemObject.get("mimeType").isString() != null) {
             mimeType = itemObject.get("mimeType").isString().stringValue();
@@ -83,21 +81,21 @@ public class Folder extends Resource {
     /**
      * Recursively looks for the Resource
      *
-     * @param id
+     * @param path
+     *         resource's path to find
      * @return resource or null if not found
      */
     @Nullable
-    public Resource findResourceById(String id) {
-        for (int i = 0; i < children.size(); i++) {
-            Resource child = children.get(i);
-            if (child.getId().equals(id)) {
+    public Resource findResourceByPath(String path) {
+        for (Resource child : children.asIterable()) {
+            if (child.getPath().equals(path)) {
                 return child;
             }
 
             if (child instanceof Folder) {
-                Resource resourceById = ((Folder)child).findResourceById(id);
-                if (resourceById != null) {
-                    return resourceById;
+                Resource resourceByPath = ((Folder)child).findResourceByPath(path);
+                if (resourceByPath != null) {
+                    return resourceByPath;
                 }
             }
         }
@@ -112,8 +110,7 @@ public class Folder extends Resource {
      */
     @Nullable
     public Resource findChildByName(String name) {
-        for (int i = 0; i < children.size(); i++) {
-            Resource child = children.get(i);
+        for (Resource child:children.asIterable()) {
             if (child.getName().equals(name)) {
                 return child;
             }
@@ -130,8 +127,7 @@ public class Folder extends Resource {
      */
     @Nullable
     public Resource findResourceByName(String name, String type) {
-        for (int i = 0; i < children.size(); i++) {
-            Resource child = children.get(i);
+        for (Resource child:children.asIterable()) {
             if (child.getName().equals(name) && child.getResourceType().equals(type)) {
                 return child;
             }

@@ -27,13 +27,13 @@ public interface JavaParserWorker {
 
     void dependenciesUpdated();
 
-    void parse(String content, String fileName, String fileId, String packageName, String projectPath, WorkerCallback<IProblem> callback);
+    void parse(String content, String fileName, String filePath, String packageName, String projectPath, WorkerCallback<IProblem> callback);
 
     void computeCAProposals(String content, int offset, String fileName, String projectPath, WorkerCallback<WorkerProposal> callback);
 
     void applyCAProposal(String id, ApplyCallback callback);
 
-    void addOutlineUpdateHandler(String fileId, WorkerCallback<WorkerCodeBlock> callback);
+    void addOutlineUpdateHandler(String filePath, WorkerCallback<WorkerCodeBlock> callback);
 
     void computeQAProposals(String content, int offset, int selectionLength, boolean updatedContent,
                             JsoArray<ProblemLocationMessage> problems,

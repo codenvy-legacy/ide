@@ -228,7 +228,7 @@ public class RestNameEnvironment {
     @GET
     @javax.ws.rs.Path("/update-dependencies")
     @Produces(MediaType.APPLICATION_JSON)
-    public void updateDependency(@QueryParam("projectpath") String projectPath, @QueryParam("projectid") String projectId,  @Context UriInfo uriInfo) throws Exception {
+    public void updateDependency(@QueryParam("projectpath") String projectPath, @Context UriInfo uriInfo) throws Exception {
 //        com.codenvy.api.project.server.Project project = projectManager.getProject(wsId, projectPath);
         File workspace = fsMountStrategy.getMountPath(wsId);
         File project = new File(workspace, projectPath);
@@ -250,7 +250,7 @@ public class RestNameEnvironment {
         if (buildStatus.getStatus() == BuildStatus.FAILED) {
             buildFailed(buildStatus);
         }
-        File projectDepDir = new File(temp, projectId);
+        File projectDepDir = new File(temp, projectPath);
         if (projectDepDir.exists()) {
             IoUtil.deleteRecursive(projectDepDir);
         }

@@ -57,7 +57,7 @@ public class UploadFileAction extends Action {
         Selection<?> select = selectionAgent.getSelection();
         if (select != null && select.getFirstElement() != null && select.getFirstElement() instanceof Resource) {
             Selection<Resource> selection = (Selection<Resource>)select;
-            event.getPresentation().setEnabled(selection.getFirstElement().getId() != null);
+            event.getPresentation().setEnabled(selection.getFirstElement().getPath() != null);
         } else event.getPresentation().setEnabled(false);
     }
 }

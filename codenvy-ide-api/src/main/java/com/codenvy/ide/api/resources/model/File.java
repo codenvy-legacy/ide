@@ -71,7 +71,6 @@ public class File extends Resource {
      * @param itemReference
      */
     public void init(ItemReference itemReference) {
-        id = itemReference.getId();
         name = itemReference.getName();
         mimeType = itemReference.getMediaType();
         setLinks(itemReference.getLinks());

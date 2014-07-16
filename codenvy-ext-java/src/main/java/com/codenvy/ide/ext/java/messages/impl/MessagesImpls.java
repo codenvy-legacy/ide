@@ -533,17 +533,17 @@ public class MessagesImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String fileId() /*-{
-      return this["fileId"];
+    public final native java.lang.String filePath() /*-{
+      return this["filePath"];
     }-*/;
 
-    public final native ParseMessageImpl setFileId(java.lang.String fileId) /*-{
-      this["fileId"] = fileId;
+    public final native ParseMessageImpl setFilePath(java.lang.String filePath) /*-{
+      this["filePath"] = filePath;
       return this;
     }-*/;
 
-    public final native boolean hasFileId() /*-{
-      return this.hasOwnProperty("fileId");
+    public final native boolean hasFilePath() /*-{
+      return this.hasOwnProperty("filePath");
     }-*/;
 
     @Override

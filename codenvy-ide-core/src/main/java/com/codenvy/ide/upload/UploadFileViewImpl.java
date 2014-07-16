@@ -138,6 +138,8 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     @Override
     public void submit() {
         uploadForm.submit();
+        uploadForm.clear();
+        btnUpload.setEnabled(false);
     }
 
     /** {@inheritDoc} */

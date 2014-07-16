@@ -141,7 +141,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onResourceRenamed(ResourceChangedEvent event) {
                 if (event.getResource() instanceof Project &&
-                    event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+                    event.getResource().getParent().isFolder() && event.getResource().getParent().getName().equals("")) {
                     setContent(event.getResource().getParent());
                 } else {
                     updateItem(event.getResource().getParent());
@@ -169,7 +169,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 final Resource resource = event.getResource();
 
                 if (resource.getProject() == null) {
-                    if (resource.getId().equals(resourceProvider.getRootId())) {
+                    if (resource.isFolder() && ((Folder)resource).getName().equals("")) {
                         setContent(resource);
                         view.hideProjectHeader();
                     }
@@ -181,7 +181,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 } else if (resource instanceof Folder && ((Folder)resource).getChildren().isEmpty()) {
                     return;
                 } else if (resource.getProject() != null) {
-                    Resource oldResource = resource.getProject().findResourceById(resource.getId());
+                    Resource oldResource = resource.getProject().findResourceByPath(resource.getPath());
                     if (oldResource != null) {
                         view.updateItem(oldResource, resource);
                     }
@@ -198,7 +198,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      */
     private void updateItem(@NotNull final Resource resource) {
         Project project = resource.getProject();
-        if (resource.getParent().getId().equals(resourceProvider.getRootId())) {
+        if (resource.isFolder() && ((Folder)resource).getName().equals("")) {
             view.updateItem(project, resource);
         } else {
             project.findResourceByPath(resource.getPath(), new AsyncCallback<Resource>() {

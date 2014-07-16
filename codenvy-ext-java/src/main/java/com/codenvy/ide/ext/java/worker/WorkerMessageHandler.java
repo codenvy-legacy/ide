@@ -308,7 +308,7 @@ public class WorkerMessageHandler implements MessageHandler, MessageFilter.Messa
                 problemsMessage.setProblems(problemsArray);
                 problemsMessage.setId(message.id());
                 worker.sendMessage(problemsMessage.serialize());
-                outlineModelUpdater.onCompilationUnitChanged(unit, message.fileId());
+                outlineModelUpdater.onCompilationUnitChanged(unit, message.filePath());
             }
         });
 

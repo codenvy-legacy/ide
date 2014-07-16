@@ -44,7 +44,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
 
     @Override
     public String getNodeId(Resource data) {
-        return data.getId();
+        return data.getPath();
     }
 
     @Override
@@ -81,11 +81,11 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
     public Array<String> getNodePath(Resource data) {
         Array<String> list = Collections.createArray();
         Array<String> result = Collections.createArray();
-        list.add(data.getId());
+        list.add(data.getPath());
 
         Resource localData = data;
         while (localData.getParent() != null) {
-            localData.getParent().getId();
+            localData.getParent().getPath();
             localData = localData.getParent();
         }
 
@@ -100,7 +100,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
         if (root instanceof Folder) {
             Folder localRoot = (Folder)root;
             for (int i = 0; i < relativeNodePath.size(); i++) {
-                Resource foundResource = localRoot.findResourceById(relativeNodePath.get(i));
+                Resource foundResource = localRoot.findResourceByPath(relativeNodePath.get(i));
                 if (foundResource instanceof Folder) {
                     localRoot = (Folder)foundResource;
                 }

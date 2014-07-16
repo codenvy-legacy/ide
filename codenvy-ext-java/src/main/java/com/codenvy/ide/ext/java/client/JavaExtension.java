@@ -198,8 +198,7 @@ public class JavaExtension {
             return;
         }
         String projectPath = project.getPath();
-        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath +
-                     "&projectid=" + project.getId();
+        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath;
 
         final Notification notification = new Notification(localizationConstant.updatingDependencies(), PROGRESS);
         notificationManager.showNotification(notification);

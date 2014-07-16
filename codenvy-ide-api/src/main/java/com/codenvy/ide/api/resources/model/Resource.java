@@ -22,8 +22,6 @@ import java.util.List;
  * @author Nikolay Zamosenchuk
  */
 public abstract class Resource {
-    /** Id of object. */
-    protected String id;
 
     /** Name of object. */
     protected String name;
@@ -50,19 +48,6 @@ public abstract class Resource {
      */
     protected Resource(String itemType) {
         this.resourceType = itemType;
-    }
-
-    /** @return id of object */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     *         the id of object
-     */
-    public void setId(String id) {
-        this.id = id;
     }
 
     /** @return name of object */
@@ -122,7 +107,7 @@ public abstract class Resource {
     /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
-        return "Resource [id=" + id + ", name=" + name + ", type=" + resourceType + ']';
+        return "Resource [name=" + name + ", path=" + getPath() + ", type=" + resourceType + ']';
     }
 
     /**
