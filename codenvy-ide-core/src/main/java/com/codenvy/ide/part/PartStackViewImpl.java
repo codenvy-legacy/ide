@@ -51,6 +51,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
     // list of tabs
     private final Array<TabButton>       tabButtons          = Collections.createArray();
+    final         int                    margin              = 8;//tabButtons text margin
     private InsertPanel         tabsPanel;
     private DeckPanel           contentPanel;
     private ActionDelegate      delegate;
@@ -59,7 +60,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     private HandlerRegistration focusRequestHandlerRegistration;
     private TabPosition         tabPosition;
     private int                 top;
-    private boolean first = true;
 
     /**
      * Create View.
@@ -125,12 +125,11 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public void removeTab(int index) {
         if (index < tabButtons.size()) {
-            //if remove Tab on the left or right position, then calculate the new value of variable top
+            TabButton removed = tabButtons.remove(index);
             if (tabPosition != BELOW) {
-                top -= tabButtons.get(index).getElement().getOffsetWidth() - 16;
+                top -= removed.getElement().getOffsetWidth() - margin * 2 - 1;
                 if (tabPosition == LEFT) top += 4;
             }
-            TabButton removed = tabButtons.remove(index);
             tabsPanel.remove(tabsPanel.getWidgetIndex(removed));
             contentPanel.remove(contentPanel.getWidget(index));
         }
@@ -288,7 +287,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         @Override
         protected void onLoad() {
             final int padding = 15;//div(button) padding
-            final int margin = 8;//text margin
             final int marginPicture = 4;//picture margin
             int offsetWidth;
             super.onLoad();
@@ -301,13 +299,8 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 } else {
                     getElement().getStyle().setWidth(offsetWidth - padding * 2, Style.Unit.PX);
                 }
-                if (first) {
-                    first = false;
-                }
                 getElement().getStyle().setTop(top, Style.Unit.PX);
-                if (!first) {
-                    top += (offsetWidth - margin * 2);
-                }
+                top += (offsetWidth - margin * 2);
             } else if (tabPosition == LEFT) {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
                 offsetWidth = getElement().getOffsetWidth();
@@ -316,9 +309,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                     offsetWidth -= marginPicture;
                 } else {
                     getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
-                }
-                if (first) {
-                    first = false;
                 }
                 top += offsetWidth - margin * 2 - 4;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
