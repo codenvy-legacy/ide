@@ -13,6 +13,8 @@ package com.codenvy.ide.resources;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -59,7 +61,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final   AsyncRequestFactory      asyncRequestFactory;
     private final   ProjectServiceClient     projectServiceClient;
-    private         Project                  activeProject;
+    private AppContext appContext;
+    private Project activeProject;
 
     /** Resources API for client application. */
     @Inject
@@ -67,13 +70,15 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                                      EventBus eventBus,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      AsyncRequestFactory asyncRequestFactory,
-                                     ProjectServiceClient projectServiceClient) {
+                                     ProjectServiceClient projectServiceClient,
+                                     AppContext appContext) {
         super();
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
+        this.appContext = appContext;
         this.modelProviders = Collections.createStringMap();
     }
 
@@ -97,6 +102,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             protected void onSuccess(ProjectDescriptor result) {
                 // do post actions
                 Folder rootFolder = getRoot();
+                appContext.setCurrentProject(new CurrentProject(result));
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
                 String language = null;
                 if (attr != null && !attr.isEmpty())
@@ -198,6 +204,8 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     }
                 }
                 activeProject = project;
+
+                appContext.setCurrentProject(new CurrentProject(result));
 
                 // get project structure
                 project.refreshChildren(new AsyncCallback<Project>() {

@@ -10,8 +10,53 @@
  *******************************************************************************/
 package com.codenvy.ide.api;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+
 /**
+ * Describe current state of project
+ *
  * @author Vitaly Parfonov
  */
 public class CurrentProject {
+
+    public CurrentProject(ProjectDescriptor projectDescription, Boolean isProjectRunning, Boolean isRunningEnabled) {
+        this.projectDescription = projectDescription;
+        this.isProjectRunning = isProjectRunning;
+        this.isRunningEnabled = isRunningEnabled;
+    }
+
+
+    public CurrentProject(ProjectDescriptor projectDescription) {
+        this(projectDescription, false, true);
+    }
+
+    private ProjectDescriptor projectDescription;
+
+    private Boolean isProjectRunning;
+
+    private Boolean isRunningEnabled;
+
+    public ProjectDescriptor getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(ProjectDescriptor projectDescription) {
+        this.projectDescription = projectDescription;
+    }
+
+    public Boolean getIsProjectRunning() {
+        return isProjectRunning;
+    }
+
+    public void setIsProjectRunning(Boolean isProjectRunning) {
+        this.isProjectRunning = isProjectRunning;
+    }
+
+    public Boolean getIsRunningEnabled() {
+        return isRunningEnabled;
+    }
+
+    public void setIsRunningEnabled(Boolean isRunningEnabled) {
+        this.isRunningEnabled = isRunningEnabled;
+    }
 }

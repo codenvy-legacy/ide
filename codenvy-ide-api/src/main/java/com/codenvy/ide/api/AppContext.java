@@ -12,11 +12,8 @@ package com.codenvy.ide.api;
 
 import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
-import com.codenvy.ide.api.resources.model.Project;
 
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Describe current state of application.
@@ -27,13 +24,11 @@ import java.util.Map;
 @Singleton
 public class AppContext {
 
-    private Project currentProject;
+    private CurrentProject currentProject;
 
     private User currentUser;
 
     private WorkspaceDescriptor workspace;
-
-    private Map<String, Object> states;
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;
@@ -43,22 +38,11 @@ public class AppContext {
         this.workspace = workspace;
     }
 
-    public Object getState(String stateId) {
-        if (states != null)
-            return states.get(stateId);
-        return null;
-    }
-
-    public void setState(String stateId, Object state) {
-        if (states == null) states = new HashMap<>();
-        states.put(stateId, state);
-    }
-
-    public Project getCurrentProject() {
+    public CurrentProject getCurrentProject() {
         return currentProject;
     }
 
-    public void setCurrentProject(Project currentProject) {
+    public void setCurrentProject(CurrentProject currentProject) {
         this.currentProject = currentProject;
     }
 

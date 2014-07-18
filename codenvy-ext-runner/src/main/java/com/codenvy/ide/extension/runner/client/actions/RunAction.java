@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -32,13 +33,15 @@ public class RunAction extends Action {
     private final ResourceProvider     resourceProvider;
     private final RunnerController     runnerController;
     private final AnalyticsEventLogger eventLogger;
+    private AppContext appContext;
 
     @Inject
     public RunAction(RunnerController runnerController,
                      RunnerResources resources,
                      ResourceProvider resourceProvider,
                      RunnerLocalizationConstant localizationConstants,
-                     AnalyticsEventLogger eventLogger) {
+                     AnalyticsEventLogger eventLogger,
+                     AppContext appContext) {
         super(localizationConstants.runAppActionText(),
               localizationConstants.runAppActionDescription(),
               null,
@@ -46,6 +49,7 @@ public class RunAction extends Action {
         this.runnerController = runnerController;
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -63,7 +67,7 @@ public class RunAction extends Action {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
                                            || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning());
+            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning() && appContext.getCurrentProject().getIsRunningEnabled());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

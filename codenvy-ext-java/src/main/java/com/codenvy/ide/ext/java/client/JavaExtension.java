@@ -209,7 +209,7 @@ public class JavaExtension {
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
-        appContext.setState("isRunEnabled", false);
+        appContext.getCurrentProject().setIsRunningEnabled(false);
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -217,7 +217,7 @@ public class JavaExtension {
                 notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
-                appContext.setState("isRunEnabled", true);
+                appContext.getCurrentProject().setIsRunningEnabled(true);
                 parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override
