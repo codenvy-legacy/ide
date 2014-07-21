@@ -53,9 +53,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class NavigateToFileTest {
 
-    public static final String PROJECT_ID            = "projectID";
     public static final String PROJECT_PATH          = "/test";
-    public static final String VFS_ID                = "vfsid";
     public static final String PROJECT_NAME          = "test";
     public static final String FOLDER_NAME           = "folder";
     public static final String FILE_1_IN_FOLDER_NAME = "file1.txt";
@@ -100,12 +98,11 @@ public class NavigateToFileTest {
         Mockito.when(fileInRoot.getPath()).thenReturn(PROJECT_PATH + "/" + FILE_IN_ROOT_NAME);
 
         Folder parentFolder = mock(Folder.class);
-        when(parentFolder.getId()).thenReturn(VFS_ID);
 
         when(project.getChildren()).thenReturn(children);
         when(project.getParent()).thenReturn(parentFolder);
         when(resourceProvider.getActiveProject()).thenReturn(project);
-        when(resourceProvider.getRootId()).thenReturn(VFS_ID);
+        when(parentFolder.getName()).thenReturn("");
 
         presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, messageBus, anyString(), dtoUnmarshallerFactory,
                                                 notificationManager);

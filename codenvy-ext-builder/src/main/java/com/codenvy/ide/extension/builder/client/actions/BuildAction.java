@@ -50,7 +50,7 @@ public class BuildAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Build project");
-        presenter.buildActiveProject();
+        presenter.buildActiveProject(true);
     }
 
     /** {@inheritDoc} */

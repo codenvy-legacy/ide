@@ -49,7 +49,7 @@ public class StopAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Stop application");
-        controller.stopActiveProject();
+        controller.stopActiveProject(true);
     }
 
     /** {@inheritDoc} */

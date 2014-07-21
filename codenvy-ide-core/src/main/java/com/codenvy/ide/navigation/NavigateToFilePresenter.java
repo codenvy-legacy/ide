@@ -134,7 +134,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     /** Makes sense for multi-module projects. */
     private Project getRootProject(Project project) {
         Folder parentFolder = project;
-        while (!resourceProvider.getRootId().equals(parentFolder.getParent().getId())) {
+        while (!parentFolder.getParent().getName().equals("")) {
             parentFolder = parentFolder.getParent();
         }
         return (Project)parentFolder;

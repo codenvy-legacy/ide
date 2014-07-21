@@ -93,9 +93,8 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
 
         //TODO Temporarily used vfs service. Should be changed to api service.
-        view.setAction(restContext + "/vfs/" + workspaceId + "/v2/uploadfile/" + getParent().getId());
+        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParent().getPath());
         view.submit();
-
     }
 
     /** {@inheritDoc} */

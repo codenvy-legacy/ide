@@ -418,12 +418,10 @@ public class JavaProject extends Project {
                 if (parent.getPath().equals(sourceFolder.getPath())) {
                     return sourceFolder;
                 } else if (parent.getPath().startsWith(sourceFolder.getPath())) {
-                    String id = parent.getId();
                     String name = parent.getPath().replaceFirst(sourceFolder.getPath(), "");
                     name = (name.startsWith("/")) ? name.replaceFirst("/", "").replaceAll("/", ".") : name.replaceAll("/", ".");
 
                     parent = new Package();
-                    parent.setId(id);
                     parent.setName(name);
                     parent.setParent(sourceFolder);
                     parent.setProject(this);

@@ -86,7 +86,6 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
         projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                project.setId(result.getId());
                 project.setProjectType(result.getProjectTypeId());
                 project.setAttributes(result.getAttributes());
                 view.close();

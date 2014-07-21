@@ -73,7 +73,7 @@ public class BreakpointGutterManager {
 
         final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         final LineNumberRenderer renderer = getRendererForFile(activeFile);
-        final Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getId());
+        final Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null && !breakPoints.isEmpty()) {
             for (int i = 0; i < breakPoints.size(); i++) {
                 Breakpoint breakpoint = breakPoints.get(i);
@@ -111,7 +111,7 @@ public class BreakpointGutterManager {
                 if (breakPoints != null) {
                     breakPoints.add(result);
                 } else {
-                    BreakpointGutterManager.this.breakpoints.put(activeFile.getId(), Collections.createArray(result));
+                    BreakpointGutterManager.this.breakpoints.put(activeFile.getPath(), Collections.createArray(result));
                 }
                 renderer.fillOrUpdateLines(lineNumber, lineNumber);
             }
@@ -155,7 +155,7 @@ public class BreakpointGutterManager {
      */
     public boolean isBreakPointExist(int lineNumber) {
         File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
-        Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getId());
+        Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null) {
             for (int i = 0; i < breakPoints.size(); i++) {
                 Breakpoint breakpoint = breakPoints.get(i);
@@ -248,7 +248,7 @@ public class BreakpointGutterManager {
         StringMap<EditorPartPresenter> openedEditors = editorAgent.getOpenedEditors();
         for (String key : openedEditors.getKeys().asIterable()) {
             EditorPartPresenter editor = openedEditors.get(key);
-            if (file.getId().equals(editor.getEditorInput().getFile().getId())) {
+            if (file.getPath().equals(editor.getEditorInput().getFile().getPath())) {
                 if (editor instanceof CodenvyTextEditor) {
                     TextEditorPartView view = ((CodenvyTextEditor)editor).getView();
                     if (view instanceof TextEditorViewImpl) {

@@ -218,8 +218,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         return edits;
     }
     private void handleUpdateOutline(OutlineUpdateMessage message) {
-        if (outlineCallbacks.containsKey(message.getFileId())) {
-            WorkerCallback<WorkerCodeBlock> callback = outlineCallbacks.get(message.getFileId());
+        if (outlineCallbacks.containsKey(message.getFilePath())) {
+            WorkerCallback<WorkerCodeBlock> callback = outlineCallbacks.get(message.getFilePath());
             callback.onResult(message.getBlocks());
         }
     }
@@ -276,7 +276,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
 
     /** {@inheritDoc} */
     @Override
-    public void parse(String content, String fileName, String fileId, String packageName, String projectPath,
+    public void parse(String content, String fileName, String filePath, String packageName, String projectPath,
                       WorkerCallback<IProblem> callback) {
         if (worker == null) {
             return;
@@ -285,7 +285,7 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
         MessagesImpls.ParseMessageImpl parseMessage = MessagesImpls.ParseMessageImpl.make();
         String uuid = UUID.uuid();
         callbacks.put(uuid, callback);
-        parseMessage.setSource(content).setFileName(fileName).setFileId(fileId).setId(uuid).setPackageName(packageName)
+        parseMessage.setSource(content).setFileName(fileName).setFilePath(filePath).setId(uuid).setPackageName(packageName)
                     .setProjectPath(projectPath);
         worker.postMessage(parseMessage.serialize());
     }
@@ -317,8 +317,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     }
 
     @Override
-    public void addOutlineUpdateHandler(String fileId, WorkerCallback<WorkerCodeBlock> callback) {
-        outlineCallbacks.put(fileId, callback);
+    public void addOutlineUpdateHandler(String filePath, WorkerCallback<WorkerCodeBlock> callback) {
+        outlineCallbacks.put(filePath, callback);
     }
 
     @Override

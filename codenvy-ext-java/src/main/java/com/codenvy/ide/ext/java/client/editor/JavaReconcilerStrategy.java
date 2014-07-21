@@ -83,7 +83,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     public void setDocument(Document document) {
         this.document = document;
         file = editor.getEditorInput().getFile();
-        new OutlineUpdater(file.getId(), outlineModel, worker);
+        new OutlineUpdater(file.getPath(), outlineModel, worker);
     }
 
     /** {@inheritDoc} */
@@ -102,7 +102,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
             notificationManager.showNotification(notification);
             first = false;
         }
-        worker.parse(document.get(), file.getName(), file.getId(), file.getParent().getName(), file.getProject().getPath(), this);
+        worker.parse(document.get(), file.getName(), file.getPath(), file.getParent().getName(), file.getProject().getPath(), this);
     }
 
     /** {@inheritDoc} */

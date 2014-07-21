@@ -109,14 +109,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             public void onFailure(@NotNull Throwable exception) {
-                Info info = new Info("Project already exist");
+                Info info = new Info(exception.getMessage());
                 info.show();
             }
         };
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
-        if (project != null && projectName.equals(project.getName())) {
+        if (project != null && projectName.equals(project.getName()) && wizard == null) {
             updateProject(project, callback);
             return;
         }

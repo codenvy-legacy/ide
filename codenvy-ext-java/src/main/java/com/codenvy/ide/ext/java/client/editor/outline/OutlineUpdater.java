@@ -27,9 +27,9 @@ public class OutlineUpdater implements JavaParserWorker.WorkerCallback<WorkerCod
     private final OutlineModel        outlineModel;
     private final JavaCodeBlock root;
 
-    public OutlineUpdater(String fileId, OutlineModel outlineModel, JavaParserWorker worker) {
+    public OutlineUpdater(String filePath, OutlineModel outlineModel, JavaParserWorker worker) {
         this.outlineModel = outlineModel;
-        worker.addOutlineUpdateHandler(fileId, this);
+        worker.addOutlineUpdateHandler(filePath, this);
         root = JavaCodeBlock.make();
         root.setType(CodeBlock.ROOT_TYPE);
         root.setOffset(0);

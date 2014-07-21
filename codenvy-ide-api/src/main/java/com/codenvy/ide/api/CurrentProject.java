@@ -8,26 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.java.messages;
-
-import com.codenvy.ide.dto.shared.RoutingType;
-import com.google.gwt.webworker.client.messages.Message;
+package com.codenvy.ide.api;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Vitaly Parfonov
  */
-@RoutingType(type = RoutingTypes.PARSE)
-public interface ParseMessage extends Message {
-    String source();
-
-    String fileName();
-
-    String id();
-
-    String filePath();
-
-    String packageName();
-
-    String projectPath();
+public class CurrentProject {
 }

@@ -12,6 +12,7 @@ package com.codenvy.vfs.impl.fs.exceptions;
 
 import com.codenvy.api.vfs.shared.ExitCodes;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -19,6 +20,7 @@ import javax.ws.rs.ext.Provider;
 
 /** @author Vitaly Parfonov */
 @Provider
+@Singleton
 public class GitUrlResolveExceptionMapper implements ExceptionMapper<GitUrlResolveException> {
     @Override
     public Response toResponse(GitUrlResolveException exception) {

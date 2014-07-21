@@ -49,7 +49,7 @@ public class WorkerOutlineModelUpdater {
         this.worker = worker;
     }
 
-    public void onCompilationUnitChanged(CompilationUnit cUnit, String id) {
+    public void onCompilationUnitChanged(CompilationUnit cUnit, String path) {
         if (this.root == null) {
             root = WorkerCodeBlock.make();
 //            root.setType(CodeBlock.ROOT_TYPE);
@@ -60,7 +60,7 @@ public class WorkerOutlineModelUpdater {
         OutlineAstVisitor v = new OutlineAstVisitor(root, cUnit);
         cUnit.accept(v);
         OutlineUpdateMessage message = OutlineUpdateMessage.make();
-        message.setFileId(id).setBlocks(v.childrens);
+        message.setFilePath(path).setBlocks(v.childrens);
         worker.sendMessage(message.serialize());
     }
 

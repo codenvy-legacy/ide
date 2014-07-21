@@ -35,6 +35,7 @@ import com.google.inject.assistedinject.Assisted;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
 import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
@@ -50,6 +51,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
     // list of tabs
     private final Array<TabButton>       tabButtons          = Collections.createArray();
+    final         int                    margin              = 8;//tabButtons text margin
     private InsertPanel         tabsPanel;
     private DeckPanel           contentPanel;
     private ActionDelegate      delegate;
@@ -58,7 +60,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     private HandlerRegistration focusRequestHandlerRegistration;
     private TabPosition         tabPosition;
     private int                 top;
-    private boolean first = true;
 
     /**
      * Create View.
@@ -125,6 +126,10 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     public void removeTab(int index) {
         if (index < tabButtons.size()) {
             TabButton removed = tabButtons.remove(index);
+            if (tabPosition != BELOW) {
+                top -= removed.getElement().getOffsetWidth() - margin * 2 - 1;
+                if (tabPosition == LEFT) top += 4;
+            }
             tabsPanel.remove(tabsPanel.getWidgetIndex(removed));
             contentPanel.remove(contentPanel.getWidget(index));
         }
@@ -282,7 +287,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         @Override
         protected void onLoad() {
             final int padding = 15;//div(button) padding
-            final int margin = 8;//text margin
             final int marginPicture = 4;//picture margin
             int offsetWidth;
             super.onLoad();
@@ -295,13 +299,8 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 } else {
                     getElement().getStyle().setWidth(offsetWidth - padding * 2, Style.Unit.PX);
                 }
-                if (first) {
-                    first = false;
-                }
                 getElement().getStyle().setTop(top, Style.Unit.PX);
-                if (!first) {
-                    top += (offsetWidth - margin * 2);
-                }
+                top += (offsetWidth - margin * 2);
             } else if (tabPosition == LEFT) {
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
                 offsetWidth = getElement().getOffsetWidth();
@@ -310,9 +309,6 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                     offsetWidth -= marginPicture;
                 } else {
                     getElement().getStyle().setWidth((offsetWidth - padding * 2), Style.Unit.PX);
-                }
-                if (first) {
-                    first = false;
                 }
                 top += offsetWidth - margin * 2 - 4;
                 tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);

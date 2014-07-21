@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -17,6 +19,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -27,22 +30,38 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
-    private static final String TITLE = "Runner";
-    private       RunnerConsoleView view;
-    private final ToolbarPresenter  consoleToolbar;
+    private static final String    TITLE    = "Runner";
+    private RunnerConsoleView      view;
+    private final ToolbarPresenter consoleToolbar;
+    private boolean                isUnread = false;
 
     @Inject
-    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar) {
+    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
+        
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
+
+            @Override
+            public void onActivePartChanged(ActivePartChangedEvent event) {
+                onPartActivated(event.getActivePart());
+            }
+        });
+    }
+    
+    private void onPartActivated(PartPresenter part){
+        if (part != null && part.equals(this) && isUnread){
+            isUnread = false;
+            firePropertyChange(TITLE_PROPERTY);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return TITLE;
+        return TITLE + (isUnread ? " *" : "");
     }
 
     /** {@inheritDoc} */
@@ -79,10 +98,21 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     public void print(String message) {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
+            isUnread = true;
+            firePropertyChange(TITLE_PROPERTY);
         }
         view.print(message);
         view.scrollBottom();
+    }
+    
+    /**
+     * Sets the console active (selected) in the parts stack.
+     */
+    public void setActive(){
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            partStack.setActivePart(this);
+        }
     }
 
     /** Clear console. Remove all messages. */
