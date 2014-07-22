@@ -21,7 +21,7 @@ import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.infopanel.InfoPanel;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
-import com.codenvy.ide.tree.FileTreeNodeRenderer;
+import com.codenvy.ide.tree.ProjectTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.cellview.CellTableResources;
 import com.codenvy.ide.ui.cellview.DataGridResources;
@@ -34,19 +34,17 @@ import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-
 /**
  * Interface for resources, e.g., css, images, text files, etc.
  * <p/>
  * Tree.Resources,
- * FileTreeNodeRenderer.Resources,
+ * ProjectTreeNodeRenderer.Resources,
  * Editor.Resources,
  * LineNumberRenderer.Resources,
  * EditableContentArea.Resources,
  * PartStackUIResources,
- * impleList.Resources
  */
-public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, InfoPanel.Resources,
+public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, InfoPanel.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
                                    MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources, DataGridResources,
                                    CellTableResources {

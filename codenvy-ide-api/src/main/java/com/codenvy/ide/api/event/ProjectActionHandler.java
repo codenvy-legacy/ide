@@ -16,7 +16,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Resource API fires ProjectAction Events when project any kind of operations that
  * changes the project invoked. Those are opening, closing, changing the description.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface ProjectActionHandler extends EventHandler {
     /**

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.openedfiles;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.api.resources.model.File;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,14 +30,14 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
          * 
          * @param file selected file
          */
-        void onFileSelected(File file);
+        void onFileSelected(ItemReference file);
 
         /**
          * Performs any actions appropriate in response to the user having clicked close the file.
          * 
          * @param file file to be closed
          */
-        void onCloseFile(File file);
+        void onCloseFile(ItemReference file);
 
         /** Performs any actions appropriate in response to the user having closed the view. */
         void onClose();
@@ -48,7 +48,7 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
      * 
      * @param f
      */
-    void setOpenedFiles(@NotNull Array<File> files);
+    void setOpenedFiles(@NotNull Array<ItemReference> files);
 
     /** Close dialog. */
     void close();

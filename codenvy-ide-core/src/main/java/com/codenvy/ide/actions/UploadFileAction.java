@@ -13,7 +13,7 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
@@ -33,15 +33,20 @@ public class UploadFileAction extends Action {
     private final UploadFilePresenter  presenter;
     private final SelectionAgent       selectionAgent;
     private final AnalyticsEventLogger eventLogger;
+    private final ProjectsManager      projectsManager;
 
     @Inject
     public UploadFileAction(UploadFilePresenter presenter,
                             CoreLocalizationConstant locale,
-                            SelectionAgent selectionAgent, AnalyticsEventLogger eventLogger, Resources resources) {
+                            SelectionAgent selectionAgent,
+                            AnalyticsEventLogger eventLogger,
+                            Resources resources,
+                            ProjectsManager projectsManager) {
         super(locale.uploadFileName(), locale.uploadFileDescription(), null, resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
+        this.projectsManager = projectsManager;
     }
 
     /** {@inheritDoc} */
@@ -54,10 +59,13 @@ public class UploadFileAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent event) {
-        Selection<?> select = selectionAgent.getSelection();
-        if (select != null && select.getFirstElement() != null && select.getFirstElement() instanceof Resource) {
-            Selection<Resource> selection = (Selection<Resource>)select;
-            event.getPresentation().setEnabled(selection.getFirstElement().getPath() != null);
-        } else event.getPresentation().setEnabled(false);
+        boolean enabled = false;
+        if (projectsManager.getActiveProject() != null) {
+            Selection<?> selection = selectionAgent.getSelection();
+            if (selection != null) {
+                enabled = selection.getFirstElement() != null;
+            }
+        }
+        event.getPresentation().setEnabled(enabled);
     }
 }

@@ -124,7 +124,7 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
             @Override
             public void onSuccess(CompilationUnit result) {
                 if (result.isFile()) {
-                    editorAgent.openEditor(result);
+//                    editorAgent.openEditor(result);
                 }
             }
 

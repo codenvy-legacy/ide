@@ -10,21 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.resources.client.ImageResource;
+
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-/**
-* @author Vitaly Parfonov
-*/
+/** @author Vitaly Parfonov */
 final class EditorInputImpl implements EditorInput {
-    private File            file;
-    private FileType fileType;
+    private ItemReference file;
+    private FileType      fileType;
 
-    /** @param file */
-    EditorInputImpl(FileType fileType, File file) {
+    EditorInputImpl(FileType fileType, ItemReference file) {
         this.fileType = fileType;
         this.file = file;
     }
@@ -36,7 +34,6 @@ final class EditorInputImpl implements EditorInput {
 
     @Override
     public String getToolTipText() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -56,13 +53,12 @@ final class EditorInputImpl implements EditorInput {
     }
 
     @Override
-    public File getFile() {
+    public ItemReference getFile() {
         return file;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void setFile(File file) {
+    public void setFile(ItemReference file) {
         this.file = file;
     }
 }

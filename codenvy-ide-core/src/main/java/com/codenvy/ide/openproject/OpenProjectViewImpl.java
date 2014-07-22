@@ -14,6 +14,7 @@ import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.SimpleList;
@@ -50,12 +51,12 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
     com.codenvy.ide.Resources res;
     private CoreLocalizationConstant localization;
     private ActionDelegate     delegate;
-    private SimpleList<String> list;
-    private SimpleList.ListItemRenderer<String>  listItemRenderer = new SimpleList.ListItemRenderer<String>() {
+    private SimpleList<ProjectReference> list;
+    private SimpleList.ListItemRenderer<ProjectReference>  listItemRenderer = new SimpleList.ListItemRenderer<ProjectReference>() {
         @Override
-        public void render(Element itemElement, String itemData) {
+        public void render(Element itemElement, ProjectReference itemData) {
             TableCellElement label = Elements.createTDElement();
-            label.setInnerHTML(itemData);
+            label.setInnerHTML(itemData.getName());
             itemElement.appendChild(label);
             UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "file-openProject-" + itemData);
         }
@@ -65,13 +66,13 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
             return Elements.createTRElement();
         }
     };
-    private SimpleList.ListEventDelegate<String> listDelegate     = new SimpleList.ListEventDelegate<String>() {
-        public void onListItemClicked(Element itemElement, String itemData) {
+    private SimpleList.ListEventDelegate<ProjectReference> listDelegate     = new SimpleList.ListEventDelegate<ProjectReference>() {
+        public void onListItemClicked(Element itemElement, ProjectReference itemData) {
             list.getSelectionModel().setSelectedItem(itemData);
             delegate.selectedProject(itemData);
         }
 
-        public void onListItemDoubleClicked(Element listItemBase, String itemData) {
+        public void onListItemDoubleClicked(Element listItemBase, ProjectReference itemData) {
         }
     };
 
@@ -137,7 +138,7 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
 
     /** {@inheritDoc} */
     @Override
-    public void setProjects(Array<String> projects) {
+    public void setProjects(Array<ProjectReference> projects) {
         list.render(projects);
     }
 

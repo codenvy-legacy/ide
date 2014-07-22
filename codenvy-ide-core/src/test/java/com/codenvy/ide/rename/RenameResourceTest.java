@@ -11,9 +11,11 @@
 package com.codenvy.ide.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -51,11 +53,11 @@ public class RenameResourceTest {
     @Mock
     private RenameResourceView      view;
     @Mock
-    private Project                 project;
+    private ProjectDescriptor       project;
     @Mock
     private Resource                resource;
     @Mock
-    private ResourceProvider        resourceProvider;
+    private ProjectsManager         projectsManager;
     @Mock
     private NotificationManager     notificationManager;
     @Mock
@@ -68,9 +70,9 @@ public class RenameResourceTest {
     @Before
     public void setUp() {
         when(resource.getName()).thenReturn(FOLDER_NAME);
-        when(resourceProvider.getActiveProject()).thenReturn(project);
+        when(projectsManager.getActiveProject()).thenReturn(project);
 
-        presenter = new RenameResourcePresenter(view, editorAgent, resourceProvider, notificationManager, projectServiceClient);
+        presenter = new RenameResourcePresenter(view, editorAgent, notificationManager, projectServiceClient, projectsManager);
     }
 
     @Test
@@ -129,7 +131,7 @@ public class RenameResourceTest {
         presenter.onRenameClicked();
 
         verify(view).getName();
-        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+        verify(projectsManager.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
 
         verify(view).close();
     }

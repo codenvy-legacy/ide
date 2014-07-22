@@ -18,10 +18,9 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
@@ -29,10 +28,11 @@ import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,36 +49,36 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private final ProjectServiceClient                   projectServiceClient;
-    private       ResourceProvider                       resourceProvider;
-    private       NotificationManager                    notificationManager;
-    private       CoreLocalizationConstant               locale;
-    private       DtoFactory                             dtoFactory;
-    private       ImportProjectView                      view;
-    private       ProjectImportersServiceClient          projectImportersService;
-    private       DtoUnmarshallerFactory                 dtoUnmarshallerFactory;
-    private       NewProjectWizardPresenter              wizardPresenter;
-    private       Map<String, ProjectImporterDescriptor> importers;
+    private ProjectServiceClient                   projectServiceClient;
+    private NotificationManager                    notificationManager;
+    private CoreLocalizationConstant               locale;
+    private DtoFactory                             dtoFactory;
+    private ImportProjectView                      view;
+    private ProjectImportersServiceClient          projectImportersService;
+    private DtoUnmarshallerFactory                 dtoUnmarshallerFactory;
+    private NewProjectWizardPresenter              wizardPresenter;
+    private EventBus                               eventBus;
+    private Map<String, ProjectImporterDescriptor> importers;
 
     @Inject
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
                                   NotificationManager notificationManager,
-                                  ResourceProvider resourceProvider,
                                   CoreLocalizationConstant locale,
                                   DtoFactory dtoFactory,
                                   ImportProjectView view,
                                   ProjectImportersServiceClient projectImportersService,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                  NewProjectWizardPresenter wizardPresenter) {
+                                  NewProjectWizardPresenter wizardPresenter,
+                                  EventBus eventBus) {
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
-        this.resourceProvider = resourceProvider;
         this.locale = locale;
         this.dtoFactory = dtoFactory;
         this.view = view;
         this.projectImportersService = projectImportersService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.wizardPresenter = wizardPresenter;
+        this.eventBus = eventBus;
 
         this.view.setDelegate(this);
     }
@@ -130,27 +130,28 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         view.close();
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                resourceProvider.getProject(projectName, new AsyncCallback<Project>() {
+                projectServiceClient.getProject(result.getPath(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                     @Override
-                    public void onSuccess(Project result) {
+                    protected void onSuccess(ProjectDescriptor result) {
+                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
                         Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
                         notificationManager.showNotification(notification);
-                        if (result.getDescription().getProjectTypeId() == null || Constants.NAMELESS_ID.equals(result.getDescription().getProjectTypeId())) {
+                        if (result.getProjectTypeId() == null || Constants.NAMELESS_ID.equals(result.getProjectTypeId())) {
                             WizardContext context = new WizardContext();
                             context.putData(ProjectWizard.PROJECT, result);
                             wizardPresenter.show(context);
                         }
-
                     }
 
                     @Override
-                    public void onFailure(Throwable caught) {
+                    protected void onFailure(Throwable exception) {
                         Log.error(ImportProjectPresenter.class, "can not get project " + projectName);
 
-                        Notification notification = new Notification(caught.getMessage(), ERROR);
+                        Notification notification = new Notification(exception.getMessage(), ERROR);
                         notificationManager.showNotification(notification);
                     }
                 });
@@ -174,22 +175,13 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     }
 
     private void deleteFolder(String name) {
-        resourceProvider.getProject(name, new AsyncCallback<Project>() {
+        projectServiceClient.delete(name, new AsyncRequestCallback<Void>() {
             @Override
-            public void onSuccess(Project result) {
-                resourceProvider.delete(result, new AsyncCallback<String>() {
-                    @Override
-                    public void onSuccess(String result) {
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                });
+            protected void onSuccess(Void result) {
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            protected void onFailure(Throwable exception) {
             }
         });
     }

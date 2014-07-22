@@ -13,9 +13,9 @@ package com.codenvy.ide.api.parts;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 /**
- * Part with Project Explorer view
+ * Part with Project Explorer view.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface ProjectExplorerPart extends PartPresenter {
 

@@ -12,6 +12,8 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.ui.Icon;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
@@ -37,7 +39,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Extension(title = "Codenvy tutorial projects", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME = "guide.html";
+    public static final String DEFAULT_GUIDE_FILE_NAME = ".guide/guide.html";
 
     @Inject
     public TutorialsExtension(TutorialsResources resources,
@@ -49,14 +51,13 @@ public class TutorialsExtension {
                               Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
 
-        Map<String, String> icons = new HashMap<>(1);
-        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
-
         // register actions
-        DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);
-
         actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
+
+        DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);
         windowMenuActionGroup.add(showAction);
+
+        // set pages for project wizard
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(extensionPagePresenter);
         wizardRegistry.addWizard(Constants.TUTORIAL_ID, wizard);

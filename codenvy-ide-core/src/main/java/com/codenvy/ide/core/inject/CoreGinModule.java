@@ -36,8 +36,8 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -45,9 +45,9 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -80,6 +80,7 @@ import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
+import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
@@ -117,6 +118,7 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
+import com.codenvy.ide.resources.ProjectsManagerImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -193,6 +195,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(FileTypeRegistry.class).to(FileTypeRegistryImpl.class).in(Singleton.class);
+        bind(ProjectsManager.class).to(ProjectsManagerImpl.class).in(Singleton.class);
 
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
@@ -301,7 +304,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("defaultFileType")
     @Singleton
     protected FileType provideDefaultFileType() {
-        //TODO add icon for unknown file
         Resources res = GWT.create(Resources.class);
         return new FileType(res.defaultFile(), null);
     }

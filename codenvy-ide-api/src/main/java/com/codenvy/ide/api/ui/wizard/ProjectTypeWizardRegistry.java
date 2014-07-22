@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Registry that store wizards for creating new projects
+ *
  * @author Evgen Vidolob
  */
 public interface ProjectTypeWizardRegistry {
@@ -22,15 +23,18 @@ public interface ProjectTypeWizardRegistry {
     /**
      * Add wizard for project type.
      *
-     * @param projectTypeId the project type id
-     * @param wizard the wizard
+     * @param projectTypeId
+     *         the project type id
+     * @param wizard
+     *         the wizard
      */
-    void addWizard(@NotNull String projectTypeId,@NotNull ProjectWizard wizard);
+    void addWizard(@NotNull String projectTypeId, @NotNull ProjectWizard wizard);
 
     /**
      * Gets wizard wizard for project type.
      *
-     * @param projectTypeId the project type id
+     * @param projectTypeId
+     *         the project type id
      * @return the wizard
      */
     @Nullable

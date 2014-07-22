@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.wysiwyg;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.tutorial.wysiwyg.editor.WysiwygEditor;
@@ -19,6 +20,11 @@ import com.codenvy.ide.tutorial.wysiwyg.editor.WysiwygEditor;
  * @version $Id:
  */
 public class WysiwygEditorProvider implements EditorProvider {
+    private final ProjectServiceClient projectServiceClient;
+
+    public WysiwygEditorProvider(ProjectServiceClient projectServiceClient) {
+        this.projectServiceClient = projectServiceClient;
+    }
 
     @Override
     public String getId() {
@@ -33,6 +39,6 @@ public class WysiwygEditorProvider implements EditorProvider {
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
-        return new WysiwygEditor();
+        return new WysiwygEditor(projectServiceClient);
     }
 }

@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -46,14 +46,14 @@ public abstract class BaseTest extends GwtTestWithMockito {
     @Mock
     protected DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     @Mock
-    protected ResourceProvider           resourceProvider;
+    protected ProjectsManager            projectsManager;
     @Mock
     protected RunnerLocalizationConstant constant;
     @Mock
-    protected Project                    activeProject;
+    protected ProjectDescriptor          activeProject;
 
     @Before
     public void setUp() {
-        when(resourceProvider.getActiveProject()).thenReturn(activeProject);
+        when(projectsManager.getActiveProject()).thenReturn(activeProject);
     }
 }

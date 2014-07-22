@@ -11,10 +11,10 @@
 package com.codenvy.ide.wizard.project.main;
 
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
@@ -81,7 +81,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
-        Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
             if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
                 if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
@@ -106,7 +106,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
         view.setProjectTypeCategories(descriptorsByCategory, samples);
         if (project != null) {
-            view.selectProjectType(project.getDescription().getProjectTypeId());
+            view.selectProjectType(project.getProjectTypeId());
         }
     }
 

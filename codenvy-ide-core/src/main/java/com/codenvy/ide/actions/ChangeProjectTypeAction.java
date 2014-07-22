@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
@@ -21,30 +21,31 @@ import com.google.inject.Singleton;
 
 /**
  * Call Project wizard to change project type
+ *
  * @author Evgen Vidolob
  */
 @Singleton
 public class ChangeProjectTypeAction extends Action {
 
-    private ResourceProvider resourceProvider;
+    private ProjectsManager           projectsManager;
     private NewProjectWizardPresenter wizardPresenter;
 
     @Inject
-    public ChangeProjectTypeAction(ResourceProvider resourceProvider, NewProjectWizardPresenter wizardPresenter) {
+    public ChangeProjectTypeAction(ProjectsManager projectsManager, NewProjectWizardPresenter wizardPresenter) {
         super("Change Project Type", "Change project type", null, null);
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.wizardPresenter = wizardPresenter;
     }
 
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabled(projectsManager.getActiveProject() != null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         WizardContext context = new WizardContext();
-        context.putData(ProjectWizard.PROJECT, resourceProvider.getActiveProject());
+        context.putData(ProjectWizard.PROJECT, projectsManager.getActiveProject());
         wizardPresenter.show(context);
     }
 }

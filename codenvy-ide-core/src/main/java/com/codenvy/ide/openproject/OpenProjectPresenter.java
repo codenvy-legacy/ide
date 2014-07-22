@@ -11,19 +11,17 @@
 package com.codenvy.ide.openproject;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Provides opening project.
@@ -32,33 +30,23 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final ProjectServiceClient   projectServiceClient;
-    private SelectProjectTypePresenter projectTypePresenter;
-    private OpenProjectView  view;
-    private ResourceProvider resourceProvider;
-    private String selectedProject = null;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private ProjectServiceClient   projectServiceClient;
+    private EventBus               eventBus;
+    private OpenProjectView        view;
+    private ProjectReference       selectedProject;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param resourceProvider
-     * @param dtoUnmarshallerFactory
-     * @param projectServiceClient
-     */
+    /** Create presenter. */
     @Inject
     protected OpenProjectPresenter(OpenProjectView view,
-                                   ResourceProvider resourceProvider,
                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                    ProjectServiceClient projectServiceClient,
-                                   SelectProjectTypePresenter projectTypePresenter) {
+                                   EventBus eventBus) {
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
-        this.projectTypePresenter = projectTypePresenter;
+        this.eventBus = eventBus;
         this.view.setDelegate(this);
-        this.resourceProvider = resourceProvider;
 
         updateComponents();
     }
@@ -71,28 +59,17 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
-        resourceProvider.getProject(selectedProject, new AsyncCallback<Project>() {
+        projectServiceClient.getProject(selectedProject.getName(), new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
-            public void onSuccess(Project result) {
+            protected void onSuccess(ProjectDescriptor result) {
                 view.close();
-                if (result.getDescription().getProjectTypeId().equals(Constants.NAMELESS_ID)) {
-                    projectTypePresenter.showDialog(result, new AsyncCallback<Project>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-
-                        }
-
-                        @Override
-                        public void onSuccess(Project result) {
-
-                        }
-                    });
-                }
+                eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                Log.error(OpenProjectPresenter.class, "Can't open project", caught);
+            protected void onFailure(Throwable exception) {
+                Log.error(OpenProjectPresenter.class, "Can't open project", exception);
             }
         });
     }
@@ -105,7 +82,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void selectedProject(String projectName) {
+    public void selectedProject(ProjectReference projectName) {
         this.selectedProject = projectName;
 
         updateComponents();
@@ -117,9 +94,9 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        Array<String> array = Collections.createArray();
+                        Array<ProjectReference> array = Collections.createArray();
                         for (ProjectReference projectReference : result.asIterable()) {
-                            array.add(projectReference.getName());
+                            array.add(projectReference);
                         }
                         view.setProjects(array);
                         view.showDialog();

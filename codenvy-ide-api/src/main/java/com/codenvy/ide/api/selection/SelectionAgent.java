@@ -14,7 +14,6 @@ import com.codenvy.ide.api.event.SelectionChangedEvent;
 import com.codenvy.ide.api.extension.SDK;
 import com.google.web.bindery.event.shared.EventBus;
 
-
 /**
  * Selection API allows to provide a way of data-based communication, when Parts provide a static
  * access to the data selected in active Part.

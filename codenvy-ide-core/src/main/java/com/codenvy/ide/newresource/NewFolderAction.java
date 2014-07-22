@@ -10,23 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.newresource.DefaultNewResourceAction;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import static com.codenvy.ide.api.resources.model.Folder.TYPE;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new folder.
@@ -35,41 +33,42 @@ import static com.codenvy.ide.api.resources.model.Folder.TYPE;
  */
 @Singleton
 public class NewFolderAction extends DefaultNewResourceAction {
-    private ResourceProvider         resourceProvider;
     private CoreLocalizationConstant localizationConstant;
-    private SelectionAgent           selectionAgent;
+    private EventBus eventBus;
 
     @Inject
-    public NewFolderAction(ResourceProvider resourceProvider,
+    public NewFolderAction(ProjectsManager projectsManager,
                            CoreLocalizationConstant localizationConstant,
                            SelectionAgent selectionAgent,
-                           Resources resources) {
+                           Resources resources,
+                           ProjectServiceClient projectServiceClient,
+                           EventBus eventBus) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
               resources.defaultFolder(),
-              resourceProvider,
+              projectsManager,
               selectionAgent,
-              null);
-        this.resourceProvider = resourceProvider;
+              null,
+              projectServiceClient);
         this.localizationConstant = localizationConstant;
-        this.selectionAgent = selectionAgent;
+        this.eventBus = eventBus;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         new AskValueDialog(localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
-                localizationConstant.newResourceLabel(), new AskValueCallback() {
+                           localizationConstant.newResourceLabel(), new AskValueCallback() {
             @Override
             public void onOk(String value) {
-                Project activeProject = resourceProvider.getActiveProject();
-                activeProject.createFolder(getParent(), value, new AsyncCallback<Folder>() {
+                projectServiceClient.createFolder(getParentPath() + '/' + value, new AsyncRequestCallback<Void>() {
                     @Override
-                    public void onSuccess(Folder result) {
+                    protected void onSuccess(Void result) {
                     }
 
                     @Override
-                    public void onFailure(Throwable caught) {
+                    protected void onFailure(Throwable exception) {
+                        Log.error(NewFolderAction.class, exception);
                     }
                 });
             }
@@ -80,16 +79,12 @@ public class NewFolderAction extends DefaultNewResourceAction {
     @Override
     public void update(ActionEvent e) {
         boolean enabled = false;
-        Selection<?> selection = selectionAgent.getSelection();
-        if (resourceProvider.getActiveProject() != null && selection != null) {
-            if (selection.getFirstElement() instanceof Resource) {
-                Resource resource = (Resource)selection.getFirstElement();
-                if (resource.isFile()) {
-                    resource = resource.getParent();
-                }
-                enabled = resource instanceof Project || resource instanceof Folder && resource.getResourceType().equals(TYPE);
+        if (projectsManager.getActiveProject() != null) {
+            Selection<?> selection = selectionAgent.getSelection();
+            if (selection != null) {
+                enabled = selection.getFirstElement() != null;
             }
         }
-        e.getPresentation().setEnabledAndVisible(enabled);
+        e.getPresentation().setEnabled(enabled);
     }
 }

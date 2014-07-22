@@ -11,13 +11,13 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,17 +29,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class GetLogsAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
+    private final ProjectsManager      projectsManager;
     private final RunnerController     controller;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public GetLogsAction(RunnerController controller, RunnerResources resources, ResourceProvider resourceProvider,
+    public GetLogsAction(RunnerController controller, RunnerResources resources, ProjectsManager projectsManager,
                          RunnerLocalizationConstant localizationConstants, AnalyticsEventLogger eventLogger) {
         super(localizationConstants.getAppLogsActionText(),
               localizationConstants.getAppLogsActionDescription(), null, resources.getAppLogs());
         this.controller = controller;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.eventLogger = eventLogger;
     }
 
@@ -53,10 +53,10 @@ public class GetLogsAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
         if (activeProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null);
+            e.getPresentation().setVisible(activeProject.getAttributes().get("runner.name") != null);
             e.getPresentation().setEnabled(controller.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

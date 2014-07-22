@@ -14,7 +14,6 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.api.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -40,8 +39,7 @@ public class DebuggerManager {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                Project project = event.getProject();
-                currentDebugger = debuggers.get(project.getDescription().getProjectTypeId());
+                currentDebugger = debuggers.get(event.getProject().getProjectTypeId());
             }
 
             @Override

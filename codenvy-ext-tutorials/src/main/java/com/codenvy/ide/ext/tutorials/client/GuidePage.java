@@ -10,11 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.tutorials.client;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
@@ -22,46 +25,47 @@ import com.google.inject.Singleton;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
+import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_GUIDE_FILE_NAME;
 
 /**
  * Displays a page that contains a tutorial guide.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: GuidePage.java Sep 13, 2013 12:48:08 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class GuidePage extends AbstractPartPresenter {
 
-    private final ResourceProvider   resourceProvider;
-    private       TutorialsResources resources;
+    private ProjectsManager      projectsManager;
+    private TutorialsResources   resources;
+    private ProjectServiceClient projectServiceClient;
 
     @Inject
-    public GuidePage(ResourceProvider resourceProvider, TutorialsResources resources) {
-        this.resourceProvider = resourceProvider;
+    public GuidePage(ProjectsManager projectsManager, TutorialsResources resources, ProjectServiceClient projectServiceClient) {
+        this.projectsManager = projectsManager;
         this.resources = resources;
+        this.projectServiceClient = projectServiceClient;
     }
 
     /** {@inheritDoc} */
     @Override
     public void go(final AcceptsOneWidget container) {
-        final StringBuilder builder = new StringBuilder();
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        if (activeProject != null) {
+            projectServiceClient.getFileContent(activeProject.getPath() + '/' + DEFAULT_GUIDE_FILE_NAME,
+                                                new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                                                    @Override
+                                                    protected void onSuccess(String result) {
+                                                        HTMLPanel htmlPanel = new HTMLPanel(result);
+                                                        htmlPanel.setStyleName(resources.tutorialsCss().scrollPanel());
+                                                        container.setWidget(htmlPanel);
+                                                    }
 
-        File resource =
-                (File)resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE);
-        resourceProvider.getActiveProject().getContent(resource, new AsyncCallback<File>() {
-            @Override
-            public void onSuccess(File result) {
-                builder.append(result.getContent());
-                HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
-                htmlPanel.setStyleName(resources.tutorialsCss().scrollPanel());
-                container.setWidget(htmlPanel);
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-        });
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        Log.error(GuidePage.class, exception);
+                                                    }
+                                                });
+        }
     }
 
     /** {@inheritDoc} */

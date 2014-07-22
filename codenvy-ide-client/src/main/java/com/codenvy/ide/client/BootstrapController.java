@@ -15,7 +15,9 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
@@ -23,10 +25,9 @@ import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.Action;
@@ -55,7 +56,6 @@ import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
@@ -81,8 +81,8 @@ public class BootstrapController {
     private final Provider<ComponentRegistry>         componentRegistry;
     private final Provider<WorkspacePresenter>        workspaceProvider;
     private final ExtensionInitializer                extensionInitializer;
-    private final ResourceProvider                    resourceProvider;
     private final UserProfileServiceClient            userProfileService;
+    private final ProjectServiceClient                projectServiceClient;
     private final WorkspaceServiceClient              workspaceServiceClient;
     private final PreferencesManagerImpl              preferencesManager;
     private final StyleInjector                       styleInjector;
@@ -94,8 +94,8 @@ public class BootstrapController {
     public BootstrapController(Provider<ComponentRegistry> componentRegistry,
                                Provider<WorkspacePresenter> workspaceProvider,
                                ExtensionInitializer extensionInitializer,
-                               ResourceProvider resourceProvider,
                                UserProfileServiceClient userProfileService,
+                               ProjectServiceClient projectServiceClient,
                                WorkspaceServiceClient workspaceServiceClient,
                                PreferencesManagerImpl preferencesManager,
                                StyleInjector styleInjector,
@@ -115,8 +115,8 @@ public class BootstrapController {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
-        this.resourceProvider = resourceProvider;
         this.userProfileService = userProfileService;
+        this.projectServiceClient = projectServiceClient;
         this.workspaceServiceClient = workspaceServiceClient;
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
@@ -310,7 +310,7 @@ public class BootstrapController {
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                sessionIsStoped(sessionID);
+                sessionIsStopped(sessionID);
             }
         }, true);
 
@@ -329,7 +329,7 @@ public class BootstrapController {
         }
     }
 
-    private void sessionIsStoped(String sessionID) {
+    private void sessionIsStopped(String sessionID) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("SESSION-ID", sessionID);
 
@@ -342,23 +342,22 @@ public class BootstrapController {
 
     private void processStartupParameters() {
         final String projectToOpen = Config.getProjectName();
-        if (projectToOpen == null) {
-            resourceProvider.refreshRoot();
-            processStartupAction();
-        } else {
-            resourceProvider.getProject(projectToOpen,
-                                        new AsyncCallback<Project>() {
-                                            @Override
-                                            public void onSuccess(Project project) {
-                                                processStartupAction();
-                                            }
+        if (projectToOpen != null) {
+            projectServiceClient.getProject(projectToOpen, new AsyncRequestCallback<ProjectDescriptor>(
+                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                @Override
+                protected void onSuccess(ProjectDescriptor result) {
+                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                    processStartupAction();
+                }
 
-                                            @Override
-                                            public void onFailure(Throwable throwable) {
-                                                resourceProvider.refreshRoot();
-                                                processStartupAction();
-                                            }
-                                        });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    processStartupAction();
+                }
+            });
+        } else {
+            processStartupAction();
         }
     }
 

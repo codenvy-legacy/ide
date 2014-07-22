@@ -22,7 +22,7 @@ import com.codenvy.ide.collections.Collections;
  * <br/>
  * Multiselection can be created with the help of {@link Selection#Selection(com.codenvy.ide.collections.Array)}.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class Selection<T> {
     Array<T> elements;

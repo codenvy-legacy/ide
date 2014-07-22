@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.collections.Array;
@@ -155,8 +156,9 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor {
             return;
         }
         eventLogger.log("Autocompleting");
-        worker.computeCAProposals(view.getDocument().get(), offset, editor.getEditorInput().getFile().getName(),
-                                  editor.getEditorInput().getFile().getProject().getPath(),
+        final ItemReference file = editor.getEditorInput().getFile();
+        final String projectPath = file.getPath().substring(1).split("/")[0];
+        worker.computeCAProposals(view.getDocument().get(), offset, file.getName(), projectPath,
                                   new JavaParserWorker.WorkerCallback<WorkerProposal>() {
                                       @Override
                                       public void onResult(Array<WorkerProposal> problems) {

@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,18 +29,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class UpdateAction extends Action {
 
-    private final ResourceProvider resourceProvider;
+    private final ProjectsManager  projectsManager;
     private final RunnerController runnerController;
 
     @Inject
     public UpdateAction(RunnerController runnerController,
                         RunnerResources resources,
-                        ResourceProvider resourceProvider,
+                        ProjectsManager projectsManager,
                         RunnerLocalizationConstant localizationConstants) {
-        super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(),
-              resources.updateApp());
+        super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(), resources.updateApp());
         this.runnerController = runnerController;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
     }
 
     /** {@inheritDoc} */
@@ -52,11 +51,10 @@ public class UpdateAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
         if (activeProject != null) {
             // this action is specific for the Codenvy Extension project only
-            e.getPresentation()
-             .setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getDescription().getProjectTypeId()));
+            e.getPresentation().setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getProjectTypeId()));
             e.getPresentation().setEnabled(runnerController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

@@ -12,7 +12,7 @@ package com.codenvy.ide.part.projectexplorer;
 
 import elemental.client.Browser;
 
-import com.codenvy.ide.Constants;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -20,16 +20,16 @@ import com.codenvy.ide.api.event.ResourceChangedEvent;
 import com.codenvy.ide.api.event.ResourceChangedHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.FileEvent.FileOperation;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
-import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.tree.AbstractTreeNode;
+import com.codenvy.ide.tree.GenericTreeStructure;
+import com.codenvy.ide.tree.ProjectsListTreeStructure;
+import com.codenvy.ide.tree.TreeStructure;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -45,42 +45,36 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import javax.validation.constraints.NotNull;
 
 /**
- * Project Explorer display Project Model in a dedicated Part (view).
+ * Project Explorer displays project's tree in a dedicated Part (view).
  *
  * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView        view;
-    protected EventBus                   eventBus;
-    private   ResourceProvider           resourceProvider;
-    private   ContextMenuPresenter       contextMenuPresenter;
-    private   SelectProjectTypePresenter selectProjectTypePresenter;
-    private   CoreLocalizationConstant   coreLocalizationConstant;
+    protected ProjectExplorerView      view;
+    protected EventBus                 eventBus;
+    private   ContextMenuPresenter     contextMenuPresenter;
+    private   ProjectServiceClient     projectServiceClient;
+    private   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private   CoreLocalizationConstant coreLocalizationConstant;
+    /** Tree that is currently showing. */
+    private   TreeStructure            currentTreeStructure;
 
-    /**
-     * Instantiates the ProjectExplorer Presenter.
-     *
-     * @param view
-     * @param eventBus
-     * @param resourceProvider
-     * @param contextMenuPresenter
-     * @param selectProjectTypePresenter
-     * @param coreLocalizationConstant
-     */
+    /** Instantiates the ProjectExplorer Presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view,
                                         EventBus eventBus,
-                                        ResourceProvider resourceProvider,
+                                        ProjectServiceClient projectServiceClient,
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        SelectProjectTypePresenter selectProjectTypePresenter,
                                         CoreLocalizationConstant coreLocalizationConstant) {
         this.view = view;
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
-        this.resourceProvider = resourceProvider;
         this.contextMenuPresenter = contextMenuPresenter;
-        this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -92,126 +86,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         container.setWidget(view);
     }
 
-    /**
-     * Sets content.
-     *
-     * @param resource
-     */
-    private void setContent(@NotNull Resource resource) {
-        view.setItems(resource);
-        onResourceSelected(null);
-    }
-
-    /** Adds behavior to view components */
-    protected void bind() {
-        view.setDelegate(this);
-
-        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                // change browser URL here
-                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
-                                                              Config.getContext() +
-                                                              "/" + Config.getWorkspaceName() +
-                                                              "/" + event.getProject().getName());
-                setContent(event.getProject().getParent());
-                //List of projects is displaying (need find better sign, that the list of projects is shown):
-                if (event.getProject().getProject() == null) {
-                    view.hideProjectHeader();
-                } else {
-                    view.setProjectHeader(event.getProject());
-                }
-            }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-            }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
-                                                              Config.getContext() +
-                                                              "/" + Config.getWorkspaceName());
-                setContent(null);
-                view.hideProjectHeader();
-            }
-        });
-
-        eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
-            @Override
-            public void onResourceRenamed(ResourceChangedEvent event) {
-                if (event.getResource() instanceof Project &&
-                    event.getResource().getParent().isFolder() && event.getResource().getParent().getName().equals("")) {
-                    setContent(event.getResource().getParent());
-                } else {
-                    updateItem(event.getResource().getParent());
-                }
-            }
-
-            @Override
-            public void onResourceMoved(ResourceChangedEvent event) {
-            }
-
-            @Override
-            public void onResourceDeleted(ResourceChangedEvent event) {
-                if (!(event.getResource() instanceof Project)) {
-                    updateItem(event.getResource().getParent());
-                }
-            }
-
-            @Override
-            public void onResourceCreated(ResourceChangedEvent event) {
-                updateItem(event.getResource().getParent());
-            }
-
-            @Override
-            public void onResourceTreeRefreshed(ResourceChangedEvent event) {
-                final Resource resource = event.getResource();
-
-                if (resource.getProject() == null) {
-                    if (resource.isFolder() && ((Folder)resource).getName().equals("")) {
-                        setContent(resource);
-                        view.hideProjectHeader();
-                    }
-                    return;
-                }
-
-                if (resource instanceof Project && resource.getProject() != null) {
-                    view.updateItem(resource.getProject(), resource);
-                } else if (resource instanceof Folder && ((Folder)resource).getChildren().isEmpty()) {
-                    return;
-                } else if (resource.getProject() != null) {
-                    Resource oldResource = resource.getProject().findResourceByPath(resource.getPath());
-                    if (oldResource != null) {
-                        view.updateItem(oldResource, resource);
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Update item in the project explorer.
-     *
-     * @param resource
-     *         the resource that need to be updated
-     */
-    private void updateItem(@NotNull final Resource resource) {
-        Project project = resource.getProject();
-        if (resource.isFolder() && ((Folder)resource).getName().equals("")) {
-            view.updateItem(project, resource);
-        } else {
-            project.findResourceByPath(resource.getPath(), new AsyncCallback<Resource>() {
-                @Override
-                public void onSuccess(Resource result) {
-                    view.updateItem(result, resource);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                }
-            });
-        }
+    /** {@inheritDoc} */
+    @Override
+    public void onOpen() {
+        // show list of all projects
+        setContent(new ProjectsListTreeStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
     }
 
     /** {@inheritDoc} */
@@ -239,32 +118,161 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                + "\n\t- view project's tree" + "\n\t- select and open project's file";
     }
 
+    /** Adds behavior to view's components. */
+    protected void bind() {
+        view.setDelegate(this);
+
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+//                TreeStructure t = treeStructureRegistry.getTreeStructure(event.getProject().getProjectTypeId());
+                setContent(new GenericTreeStructure(event.getProject(), eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                view.setProjectHeader(event.getProject());
+                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
+                                                              Config.getContext() +
+                                                              "/" + Config.getWorkspaceName() +
+                                                              "/" + event.getProject().getName());
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                setContent(new ProjectsListTreeStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+                view.hideProjectHeader();
+                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
+                                                              Config.getContext() + "/" + Config.getWorkspaceName());
+            }
+        });
+
+        eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
+            @Override
+            public void onResourceRenamed(ResourceChangedEvent event) {
+//                if (event.getResource() instanceof Project &&
+//                    event.getResource().getParent().getId().equals(resourceProvider.getRootId())) {
+//                    setContent(event.getResource().getParent());
+//                } else {
+//                    updateItem(event.getResource().getParent());
+//                }
+            }
+
+            @Override
+            public void onResourceMoved(ResourceChangedEvent event) {
+            }
+
+            @Override
+            public void onResourceDeleted(ResourceChangedEvent event) {
+//                if (!(event.getResource() instanceof Project)) {
+//                    updateItem(event.getResource().getParent());
+//                }
+            }
+
+            @Override
+            public void onResourceCreated(ResourceChangedEvent event) {
+                updateItem(event.getResource().getParent());
+            }
+
+            @Override
+            public void onResourceTreeRefreshed(ResourceChangedEvent event) {
+//                final Resource resource = event.getResource();
+//
+//                if (resource.getProject() == null) {
+//                    if (resource.getId().equals(resourceProvider.getRootId())) {
+//                        setContent(resource);
+//                        view.hideProjectHeader();
+//                    }
+//                    return;
+//                }
+//
+//                if (resource instanceof Project && resource.getProject() != null) {
+//                    view.updateItem(resource.getProject(), resource);
+//                } else if (resource instanceof Folder && ((Folder)resource).getChildren().isEmpty()) {
+//                    return;
+//                } else if (resource.getProject() != null) {
+//                    Resource oldResource = resource.getProject().findResourceById(resource.getId());
+//                    if (oldResource != null) {
+//                        view.updateItem(oldResource, resource);
+//                    }
+//                }
+            }
+        });
+    }
+
+    /**
+     * Set tree structure to show.
+     *
+     * @param treeStructure
+     *         tree structure to show
+     */
+    private void setContent(@NotNull final TreeStructure treeStructure) {
+        treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
+            @Override
+            public void onSuccess(Array<AbstractTreeNode<?>> result) {
+                currentTreeStructure = treeStructure;
+                view.setItems(result);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ProjectExplorerPartPresenter.class, caught.getMessage());
+            }
+        });
+
+        onResourceSelected(null);
+    }
+
+    /**
+     * Update item in the project explorer.
+     *
+     * @param resource
+     *         the resource that need to be updated
+     */
+    private void updateItem(@NotNull final Resource resource) {
+        Project project = resource.getProject();
+//        if (resource.getParent().getId().equals(resourceProvider.getRootId())) {
+//            view.updateItem(project, resource);
+//        } else {
+//            project.findResourceByPath(resource.getPath(), new AsyncCallback<Resource>() {
+//                @Override
+//                public void onSuccess(Resource result) {
+//                    view.updateItem(result, resource);
+//                }
+//
+//                @Override
+//                public void onFailure(Throwable caught) {
+//                }
+//            });
+//        }
+    }
+
+    /** {@inheritDoc} */
     @Override
-    public void onResourceSelected(@NotNull Resource resource) {
-        setSelection(new Selection<>(resource));
-        if (resource != null) {
-            resourceProvider.setActiveProject(resource.getProject());
+    public void onResourceSelected(@NotNull AbstractTreeNode<?> node) {
+        if (node == null) {
+            setSelection(null);
+        } else {
+            setSelection(new Selection<>(node.getData()));
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceAction(@NotNull Resource resource) {
-        // open file
-        if (resource.isFile()) {
-            eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
-        }
-
-        // open project
-        if (resource.getResourceType().equals(Project.TYPE) && resourceProvider.getActiveProject() == null) {
-            resourceProvider.getProject(resource.getName(), new AsyncCallback<Project>() {
+    public void onResourceOpened(final AbstractTreeNode<?> node) {
+        // if children is empty then may be it doesn't refreshed yet
+        if (node.getChildren().isEmpty()) {
+            currentTreeStructure.refreshChildren(node, new AsyncCallback<AbstractTreeNode<?>>() {
                 @Override
-                public void onSuccess(Project result) {
+                public void onSuccess(AbstractTreeNode<?> result) {
+                    if (!result.getChildren().isEmpty()) {
+                        view.updateItem(node, result);
+                    }
                 }
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, "Unable to get project", caught);
+                    Log.error(ProjectExplorerPartPresenter.class, caught.getMessage());
                 }
             });
         }
@@ -272,60 +280,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onContextMenu(int mouseX, int mouseY) {
-        contextMenuPresenter.show(mouseX, mouseY);
+    public void onResourceAction(@NotNull AbstractTreeNode node) {
+        // delegate processing an action
+        currentTreeStructure.processNodeAction(node);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceOpened(final Resource resource) {
-        if (resource instanceof Folder && (((Folder)resource).getChildren().isEmpty())) {
-            if (resource.getResourceType().equals(Project.TYPE)) {
-                checkProjectType((Project)resource, new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        refreshChildren(result);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not set project type.", caught);
-                    }
-                });
-            } else {
-                refreshChildren((Folder)resource);
-            }
-        }
+    public void onContextMenu(int mouseX, int mouseY) {
+        contextMenuPresenter.show(mouseX, mouseY);
     }
-
-    /**
-     * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
-     *
-     * @param project
-     *         project to check it's type
-     * @param callback
-     *         callback
-     */
-    private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
-        if (Constants.NAMELESS_ID.equals(project.getDescription().getProjectTypeId())) {
-            selectProjectTypePresenter.showDialog(project, callback);
-        } else {
-            callback.onSuccess(project);
-        }
-    }
-
-    private void refreshChildren(Folder folder) {
-        folder.getProject().refreshChildren(folder, new AsyncCallback<Folder>() {
-            @Override
-            public void onSuccess(Folder result) {
-                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(ProjectExplorerPartPresenter.class, "Can not refresh project tree.", caught);
-            }
-        });
-    }
-
 }

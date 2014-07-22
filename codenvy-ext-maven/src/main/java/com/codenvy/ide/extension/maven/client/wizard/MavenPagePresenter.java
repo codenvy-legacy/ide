@@ -12,8 +12,7 @@ package com.codenvy.ide.extension.maven.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.collections.Jso;
@@ -21,13 +20,15 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -42,20 +43,22 @@ import java.util.Map;
 @Singleton
 public class MavenPagePresenter extends AbstractWizardPage implements MavenPageView.ActionDelegate {
 
-    private MavenPageView        view;
-    private ProjectServiceClient projectServiceClient;
-    private ResourceProvider     resourceProvider;
-    private DtoFactory           factory;
-    private MavenPomReaderClient pomReaderClient;
+    private MavenPageView          view;
+    private ProjectServiceClient   projectServiceClient;
+    private EventBus               eventBus;
+    private DtoFactory             dtoFactory;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private MavenPomReaderClient   pomReaderClient;
 
     @Inject
-    public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, ResourceProvider resourceProvider,
-                              DtoFactory factory, MavenPomReaderClient pomReaderClient) {
+    public MavenPagePresenter(MavenPageView view, ProjectServiceClient projectServiceClient, EventBus eventBus,
+                              DtoFactory dtoFactory, DtoUnmarshallerFactory dtoUnmarshallerFactory, MavenPomReaderClient pomReaderClient) {
         super("Maven project settings", null);
         this.view = view;
         this.projectServiceClient = projectServiceClient;
-        this.resourceProvider = resourceProvider;
-        this.factory = factory;
+        this.eventBus = eventBus;
+        this.dtoFactory = dtoFactory;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.pomReaderClient = pomReaderClient;
         view.setDelegate(this);
     }
@@ -73,25 +76,25 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
 
     @Override
     public void focusComponent() {
-
     }
 
     @Override
     public void removeOptions() {
-
     }
 
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
         view.reset();
-        Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
-            if (project.hasAttribute(MavenAttributes.MAVEN_ARTIFACT_ID)) {
-                view.setArtifactId(project.getAttributeValue(MavenAttributes.MAVEN_ARTIFACT_ID));
-                view.setGroupId(project.getAttributeValue(MavenAttributes.MAVEN_GROUP_ID));
-                view.setVersion(project.getAttributeValue(MavenAttributes.MAVEN_VERSION));
-                view.setPackaging(project.getAttributeValue(MavenAttributes.MAVEN_PACKAGING));
+            Map<String, List<String>> attributes = project.getAttributes();
+            List<String> artifactIdAttr = attributes.get(MavenAttributes.MAVEN_ARTIFACT_ID);
+            if (artifactIdAttr != null) {
+                view.setArtifactId(artifactIdAttr.get(0));
+                view.setGroupId(attributes.get(MavenAttributes.MAVEN_GROUP_ID).get(0));
+                view.setVersion(attributes.get(MavenAttributes.MAVEN_VERSION).get(0));
+                view.setPackaging(attributes.get(MavenAttributes.MAVEN_PACKAGING).get(0));
                 scheduleTextChanges();
             } else {
                 pomReaderClient.readPomAttributes(project.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
@@ -136,24 +139,24 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         if ("jar".equals(view.getPackaging())) {
             options.put(Constants.RUNNER_NAME, Arrays.asList("JavaStandalone"));
         }
-        final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
-        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
-        projectDescriptor.setAttributes(options);
+        final ProjectDescriptor projectDescriptorToUpdate = dtoFactory.createDto(ProjectDescriptor.class);
+        projectDescriptorToUpdate.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
+        projectDescriptorToUpdate.setAttributes(options);
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility ? "public" : "private");
-        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectDescriptorToUpdate.setVisibility(visibility ? "public" : "private");
+        projectDescriptorToUpdate.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        final Project project = wizardContext.getData(ProjectWizard.PROJECT);
+        final ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             if (project.getName().equals(name)) {
-                updateProject(project, projectDescriptor, callback);
+                updateProject(project, projectDescriptorToUpdate, callback);
             } else {
                 projectServiceClient.rename(project.getPath(), name, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         project.setName(name);
 
-                        updateProject(project, projectDescriptor, callback);
+                        updateProject(project, projectDescriptorToUpdate, callback);
                     }
 
                     @Override
@@ -164,25 +167,18 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
             }
 
         } else {
-            createProject(callback, projectDescriptor, name);
+            createProject(callback, projectDescriptorToUpdate, name);
         }
     }
 
-    private void updateProject(final Project project, ProjectDescriptor projectDescriptor, final CommitCallback callback) {
-        projectServiceClient.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+    private void updateProject(final ProjectDescriptor project, ProjectDescriptor projectDescriptorToUpdate,
+                               final CommitCallback callback) {
+        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                resourceProvider.getProject(project.getName(), new AsyncCallback<Project>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(Project result) {
-                        callback.onSuccess();
-                    }
-                });
+                eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                callback.onSuccess();
             }
 
             @Override
@@ -195,22 +191,11 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     private void createProject(final CommitCallback callback, ProjectDescriptor projectDescriptor, final String name) {
         projectServiceClient
                 .createProject(name, projectDescriptor,
-                               new AsyncRequestCallback<ProjectDescriptor>() {
-
-
+                               new AsyncRequestCallback<ProjectDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                    @Override
                                    protected void onSuccess(ProjectDescriptor result) {
-                                       resourceProvider.getProject(name, new AsyncCallback<Project>() {
-                                           @Override
-                                           public void onSuccess(Project project) {
-                                               callback.onSuccess();
-                                           }
-
-                                           @Override
-                                           public void onFailure(Throwable caught) {
-                                               callback.onFailure(caught);
-                                           }
-                                       });
+                                       eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                                       callback.onSuccess();
                                    }
 
                                    @Override

@@ -11,12 +11,10 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -57,6 +55,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private final NotificationManager    notificationManager;
     private       Project                rootProject;
     final private String                 SEARCH_URL;
+    private Array<ItemReference>         lastSearchResult;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view,
@@ -93,6 +92,8 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         search(query + "*", new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
+                lastSearchResult = result.copy();
+
                 Array<String> suggestions = Collections.createArray();
                 for (ItemReference item : result.asIterable()) {
                     // skip hidden items
@@ -149,12 +150,16 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
             @Override
             public void onSuccess(Resource result) {
-                eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
+                for (ItemReference itemReference : lastSearchResult.asIterable()) {
+                    if (path.equals(itemReference.getPath())) {
+                        eventBus.fireEvent(new FileEvent(itemReference, FileOperation.OPEN));
+                    }
+                }
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(NavigateToFilePresenter.class, "Unable to open a file " + path);
+                Log.error(NavigateToFilePresenter.class, "Unable to open file " + path);
             }
         });
     }
@@ -166,32 +171,32 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
      *         relative path to file. If user need to open file located in
      *         <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
      */
-    public void openFile(final String path) {
-        rootProject = getRootProject(resourceProvider.getActiveProject());
-        if (rootProject != null) {
-            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
-                                           new AsyncCallback<Resource>() {
-                                               @Override
-                                               public void onSuccess(Resource resource) {
-                                                   if (resource.isFile()) {
-                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
-                                                   } else {
-                                                       notificationManager
-                                                               .showNotification(
-                                                                       new Notification("Unable to open " + path + ". It's not a file.",
-                                                                                        Notification.Type.WARNING)
-                                                                                );
-                                                   }
-                                               }
-
-                                               @Override
-                                               public void onFailure(Throwable caught) {
-                                                   notificationManager.showNotification(
-                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
-                                               }
-                                           }
-                                          );
-        }
-    }
+//    public void openFile(final String path) {
+//        rootProject = getRootProject(resourceProvider.getActiveProject());
+//        if (rootProject != null) {
+//            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
+//                                           new AsyncCallback<Resource>() {
+//                                               @Override
+//                                               public void onSuccess(Resource resource) {
+//                                                   if (resource.isFile()) {
+//                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+//                                                   } else {
+//                                                       notificationManager
+//                                                               .showNotification(
+//                                                                       new Notification("Unable to open " + path + ". It's not a file.",
+//                                                                                        Notification.Type.WARNING)
+//                                                                                );
+//                                                   }
+//                                               }
+//
+//                                               @Override
+//                                               public void onFailure(Throwable caught) {
+//                                                   notificationManager.showNotification(
+//                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
+//                                               }
+//                                           }
+//                                          );
+//        }
+//    }
 
 }

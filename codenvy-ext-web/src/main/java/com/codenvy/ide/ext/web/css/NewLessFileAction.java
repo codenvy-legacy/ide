@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
@@ -30,18 +31,20 @@ public class NewLessFileAction extends DefaultNewResourceAction {
     private static final String DEFAULT_CONTENT = "@CHARSET \"UTF-8\"\n;";
 
     @Inject
-    public NewLessFileAction(ResourceProvider resourceProvider,
+    public NewLessFileAction(ProjectsManager projectsManager,
                              WebExtensionResource webExtensionResource,
                              WebLocalizationConstant localizationConstant,
                              SelectionAgent selectionAgent,
-                             EditorAgent editorAgent) {
+                             EditorAgent editorAgent,
+                             ProjectServiceClient projectServiceClient) {
         super(localizationConstant.newLessFileActionTitle(),
               localizationConstant.newLessFileActionDescription(),
               webExtensionResource.css(),
               null,
-              resourceProvider,
+              projectsManager,
               selectionAgent,
-              editorAgent);
+              editorAgent,
+              projectServiceClient);
     }
 
     @Override

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.ide.api.resources.model.Project;
 
 /**
  * Notified when app will be launched.
@@ -27,5 +27,5 @@ public interface ProjectRunCallback {
      * @param project
      *         project that was run
      */
-    void onRun(ApplicationProcessDescriptor appDescriptor, Project project);
+    void onRun(ApplicationProcessDescriptor appDescriptor, ProjectDescriptor project);
 }

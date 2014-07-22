@@ -21,6 +21,7 @@ import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
+import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
@@ -104,6 +105,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private RenameResourceAction renameResourceAction;
+
+    @Inject
+    private OpenProjectAction openProjectAction;
 
     @Inject
     private CloseProjectAction closeProjectAction;
@@ -252,6 +256,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
         fileGroup.add(importProjectGroup);
         fileGroup.add(newGroup);
+        fileGroup.add(openProjectAction);
         fileGroup.add(closeProjectAction);
         fileGroup.add(changeProjectTypeAction);
         fileGroup.add(uploadFileAction);
@@ -302,6 +307,7 @@ public class StandardComponentInitializer {
         // Compose main toolbar
         DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
+        actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("deleteItem", deleteResourceAction);
         actionManager.registerAction("renameResource", renameResourceAction);

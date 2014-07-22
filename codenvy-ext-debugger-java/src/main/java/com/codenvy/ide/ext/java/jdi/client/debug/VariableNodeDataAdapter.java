@@ -25,7 +25,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class VariableNodeDataAdapter implements NodeDataAdapter<Variable> {
-    private HashMap<Variable, TreeNodeElement<Variable>> treeNodeElements = new HashMap<Variable, TreeNodeElement<Variable>>();
+    private HashMap<Variable, TreeNodeElement<Variable>> treeNodeElements = new HashMap<>();
 
     /** {@inheritDoc} */
     @Override
@@ -56,7 +56,7 @@ public class VariableNodeDataAdapter implements NodeDataAdapter<Variable> {
     @Override
     public Array<Variable> getChildren(Variable data) {
         List<Variable> variables = data.getVariables();
-        return variables != null ? Collections.<Variable>createArray(variables) : Collections.<Variable>createArray();
+        return variables != null ? Collections.createArray(variables) : Collections.<Variable>createArray();
     }
 
     /** {@inheritDoc} */
@@ -104,7 +104,7 @@ public class VariableNodeDataAdapter implements NodeDataAdapter<Variable> {
     /** {@inheritDoc} */
     @Override
     public Array<String> getNodePath(Variable data) {
-        return Collections.<String>createArray(data.getVariablePath().getPath());
+        return Collections.createArray(data.getVariablePath().getPath());
     }
 
     /** {@inheritDoc} */
@@ -114,7 +114,7 @@ public class VariableNodeDataAdapter implements NodeDataAdapter<Variable> {
         for (int i = 0; i < relativeNodePath.size(); i++) {
             String path = relativeNodePath.get(i);
             if (localRoot != null) {
-                Array<Variable> variables = Collections.<Variable>createArray(localRoot.getVariables());
+                Array<Variable> variables = Collections.createArray(localRoot.getVariables());
                 localRoot = null;
                 for (int j = 0; j < variables.size(); j++) {
                     Variable variable = variables.get(i);

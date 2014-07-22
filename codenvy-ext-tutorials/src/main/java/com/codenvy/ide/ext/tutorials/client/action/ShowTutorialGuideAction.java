@@ -11,8 +11,8 @@
 package com.codenvy.ide.ext.tutorials.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.tutorials.client.GuidePageController;
@@ -25,25 +25,24 @@ import com.google.inject.Singleton;
 /**
  * Action to open a tutorial guide.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: ShowTutorialGuideAction.java Sep 16, 2013 1:58:47 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ShowTutorialGuideAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
-    private final GuidePageController  guidePageController;
-    private final AnalyticsEventLogger eventLogger;
+    private ProjectsManager      projectsManager;
+    private GuidePageController  guidePageController;
+    private AnalyticsEventLogger eventLogger;
 
     @Inject
     public ShowTutorialGuideAction(GuidePageController guidePageController, TutorialsResources resources,
-                                   ResourceProvider resourceProvider,
+                                   ProjectsManager projectsManager,
                                    TutorialsLocalizationConstant localizationConstants,
                                    AnalyticsEventLogger eventLogger) {
         super(localizationConstants.showTutorialGuideActionText(),
               localizationConstants.showTutorialGuideActionDescription(), resources.guide());
         this.guidePageController = guidePageController;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.eventLogger = eventLogger;
     }
 
@@ -51,16 +50,15 @@ public class ShowTutorialGuideAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Show tutorial");
-        guidePageController.openTutorialPage();
+        guidePageController.openTutorialGuide();
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
         if (activeProject != null) {
-            e.getPresentation()
-             .setEnabledAndVisible(activeProject.getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID));
+            e.getPresentation().setEnabledAndVisible(activeProject.getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

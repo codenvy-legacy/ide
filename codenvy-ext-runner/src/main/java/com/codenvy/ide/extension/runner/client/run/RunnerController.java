@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
@@ -28,9 +29,8 @@ import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -78,7 +78,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
- * Controls launching application.
+ * Controls launching an application.
  *
  * @author Artem Zatsarynnyy
  */
@@ -91,29 +91,29 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    protected final ResourceProvider           resourceProvider;
-    private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private final   DtoFactory                 dtoFactory;
-    private         EditorAgent                editorAgent;
-    private         MessageBus                 messageBus;
-    private         WorkspaceAgent             workspaceAgent;
-    private         RunnerConsolePresenter     console;
-    private         ShellConsolePresenter      shellConsole;
-    private         RunnerServiceClient        service;
-    private         UpdateServiceClient        updateService;
-    private         RunnerLocalizationConstant constant;
-    private         NotificationManager        notificationManager;
-    private         Notification               notification;
+    protected final ProjectsManager        projectsManager;
+    private final   DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final   DtoFactory             dtoFactory;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning = false;
-    protected Project                                           activeProject;
+    protected ProjectDescriptor                                 activeProject;
+    protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
+    protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    protected SubscriptionHandler<String>                       runnerHealthHandler;
+    private   EditorAgent                                       editorAgent;
+    private   MessageBus                                        messageBus;
+    private   WorkspaceAgent                                    workspaceAgent;
+    private   RunnerConsolePresenter                            console;
+    private   ShellConsolePresenter                             shellConsole;
+    private   RunnerServiceClient                               service;
+    private   UpdateServiceClient                               updateService;
+    private   RunnerLocalizationConstant                        constant;
+    private   NotificationManager                               notificationManager;
+    private   Notification                                      notification;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
     private   RunnerMetric                                      lastAppWaitingTimeLimit;
     private   ProjectRunCallback                                runCallback;
-    protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
-    protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
-    protected SubscriptionHandler<String>                       runnerHealthHandler;
     private   boolean                                           isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
@@ -123,7 +123,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Inject
     public RunnerController(EventBus eventBus,
                             final WorkspaceAgent workspaceAgent,
-                            final ResourceProvider resourceProvider,
+                            final ProjectsManager projectsManager,
                             final RunnerConsolePresenter console,
                             final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
@@ -136,7 +136,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             MessageBus messageBus,
                             ThemeAgent themeAgent) {
         this.workspaceAgent = workspaceAgent;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.console = console;
         this.shellConsole = shellConsole;
         this.service = service;
@@ -154,7 +154,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             public void onProjectOpened(final ProjectActionEvent event) {
                 Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
                         dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
-                service.getRunningProcesses(event.getProject().getPath(),
+                service.getRunningProcesses(event.getProject().getName(),
                                             new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
                                                 @Override
                                                 protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
@@ -203,7 +203,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
                 if (isAnyAppRunning()) {
-                    event.setMessage(constant.appWillBeStopped(resourceProvider.getActiveProject().getName()));
+                    event.setMessage(constant.appWillBeStopped(projectsManager.getActiveProject().getName()));
                 }
             }
 
@@ -264,7 +264,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param environment
      *         environment which will be used to run project
-     * @param isUserAction points whether the build is started directly by user interaction       
+     * @param isUserAction points whether the build is started directly by user interaction
      */
     public void runActiveProject(RunnerEnvironment environment, boolean isUserAction) {
         runActiveProject(environment, false, null, isUserAction);
@@ -277,7 +277,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
-     * @param isUserAction points whether the build is started directly by user interaction        
+     * @param isUserAction points whether the build is started directly by user interaction
      */
     public void runActiveProject(boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         runActiveProject(null, debug, callback, isUserAction);
@@ -292,7 +292,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
-     * @param isUserAction points whether the build is started directly by user interaction        
+     * @param isUserAction points whether the build is started directly by user interaction
      */
     public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         if (isAnyAppRunning) {
@@ -302,7 +302,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         lastApplicationDescriptor = null;
-        activeProject = resourceProvider.getActiveProject();
+        activeProject = projectsManager.getActiveProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
@@ -321,7 +321,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (isUserAction){
             console.setActive();
         }
-        
+
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -354,12 +354,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         lastApplicationDescriptor = null;
-        activeProject = resourceProvider.getActiveProject();
+        activeProject = projectsManager.getActiveProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
         runCallback = callback;
-        
+
         if (isUserAction){
             console.setActive();
         }
@@ -570,7 +570,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
-        
+
         if (isUserAction){
             console.setActive();
         }
@@ -608,11 +608,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             onFail(constant.stopApplicationFailed(activeProject.getName()), null);
             return;
         }
-        
+
         if (isUserAction){
             console.setActive();
         }
-        
+
         service.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
@@ -679,7 +679,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     builder.sendRequest("", new com.google.gwt.http.client.RequestCallback() {
                         public void onResponseReceived(Request request, Response response) {
                             File recipeFile = new RecipeFile(response.getText());
-                            editorAgent.openEditor(recipeFile);
+//                            editorAgent.openEditor(recipeFile);
                             EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
                             if (editor instanceof CodenvyTextEditor) {
                                 ((CodenvyTextEditor)editor).getView().setReadOnly(true);

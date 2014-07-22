@@ -11,9 +11,9 @@
 package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.client.JavaExtension;
@@ -24,35 +24,36 @@ import com.codenvy.ide.ext.java.shared.Constants;
 public class UpdateDependencyAction extends Action {
 
     private final JavaExtension        javaExtension;
-    private final ResourceProvider     resourceProvider;
+    private final ProjectsManager      projectsManager;
     private final AnalyticsEventLogger eventLogger;
-    private BuildContext buildContext;
+    private       BuildContext         buildContext;
 
-    public UpdateDependencyAction(JavaExtension javaExtension, ResourceProvider resourceProvider,
+    public UpdateDependencyAction(JavaExtension javaExtension, ProjectsManager projectsManager,
                                   AnalyticsEventLogger eventLogger, JavaResources resources, BuildContext buildContext) {
         super("Update Dependencies", "Update Dependencies", null, resources.updateDependencies());
         this.javaExtension = javaExtension;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Update project dependencies");
-        javaExtension.updateDependencies(resourceProvider.getActiveProject());
+        javaExtension.updateDependencies(projectsManager.getActiveProject().getName());
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        if(buildContext.isBuilding()) {
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        if (buildContext.isBuilding()) {
             e.getPresentation().setEnabled(false);
             return;
         }
         if (activeProject != null) {
-            final String builder = activeProject.getAttributeValue(Constants.BUILDER_NAME);
+            final String builder = activeProject.getAttributes().get(Constants.BUILDER_NAME).get(0);
             if ("maven".equals(builder)) {
                 e.getPresentation().setEnabledAndVisible(true);
             } else {

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.openproject;
 
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 
@@ -28,7 +29,7 @@ public interface OpenProjectView extends View<OpenProjectView.ActionDelegate> {
         void onCancelClicked();
 
         /** Returns selected project. */
-        void selectedProject(String projectName);
+        void selectedProject(ProjectReference projectName);
     }
 
     /**
@@ -44,7 +45,7 @@ public interface OpenProjectView extends View<OpenProjectView.ActionDelegate> {
      *
      * @param projects
      */
-    void setProjects(Array<String> projects);
+    void setProjects(Array<ProjectReference> projects);
 
     /** Close dialog. */
     void close();

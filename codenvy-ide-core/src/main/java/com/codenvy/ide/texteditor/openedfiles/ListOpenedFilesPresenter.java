@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.openedfiles;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -48,23 +48,22 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
      * @param y y coordinate of the right top corner of the list view 
      * @param callback
      */
-    public void showDialog(@NotNull Array<File> files, int x, int y, @NotNull AsyncCallback<Void> callback) {
+    public void showDialog(@NotNull Array<ItemReference> files, int x, int y, @NotNull AsyncCallback<Void> callback) {
         this.callback = callback;
         view.setOpenedFiles(files);
         view.showDialog(x, y);
     }
 
-
     /** {@inheritDoc} */
     @Override
-    public void onFileSelected(File file) {
+    public void onFileSelected(ItemReference file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.OPEN));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseFile(File file) {
+    public void onCloseFile(ItemReference file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.CLOSE));
     }

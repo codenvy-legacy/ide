@@ -11,16 +11,19 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Action to run project on runner.
@@ -30,7 +33,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
+    private final ProjectsManager      projectsManager;
     private final RunnerController     runnerController;
     private final CustomRunPresenter   customRunPresenter;
     private final AnalyticsEventLogger eventLogger;
@@ -39,7 +42,7 @@ public class CustomRunAction extends Action {
     public CustomRunAction(RunnerController runnerController,
                            CustomRunPresenter customRunPresenter,
                            RunnerResources resources,
-                           ResourceProvider resourceProvider,
+                           ProjectsManager projectsManager,
                            RunnerLocalizationConstant localizationConstants,
                            AnalyticsEventLogger eventLogger) {
         super(localizationConstants.customRunAppActionText(),
@@ -47,7 +50,7 @@ public class CustomRunAction extends Action {
               null, resources.launchApp());
         this.runnerController = runnerController;
         this.customRunPresenter = customRunPresenter;
-        this.resourceProvider = resourceProvider;
+        this.projectsManager = projectsManager;
         this.eventLogger = eventLogger;
     }
 
@@ -61,11 +64,11 @@ public class CustomRunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
+        ProjectDescriptor activeProject = projectsManager.getActiveProject();
         if (activeProject != null) {
+            Map<String, List<String>> attributes = activeProject.getAttributes();
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
-                                           || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setVisible(attributes.get("runner.name") != null || attributes.get("runner.user_defined_launcher") != null);
             e.getPresentation().setEnabled(!runnerController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
