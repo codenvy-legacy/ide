@@ -13,6 +13,7 @@ package com.codenvy.ide.ext.java.client;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -72,12 +73,12 @@ public class JavaExtension {
     private AsyncRequestFactory      asyncRequestFactory;
     private EditorAgent              editorAgent;
     private JavaLocalizationConstant localizationConstant;
-    private JavaParserWorker parserWorker;
-    private BuildContext buildContext;
+    private JavaParserWorker         parserWorker;
+    private BuildContext             buildContext;
+    private AppContext appContext;
 
     @Inject
-    public JavaExtension(ProjectsManager projectsManager,
-                         ResourceProvider resourceProvider,
+    public JavaExtension(ResourceProvider resourceProvider,
                          FileTypeRegistry fileTypeRegistry,
                          NotificationManager notificationManager,
                          EditorRegistry editorRegistry,
@@ -97,6 +98,7 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
+                         ProjectsManager projectsManager,
                          @Named("JavaFileType") FileType javaFile,
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */

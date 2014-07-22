@@ -109,6 +109,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVisibility(result.getVisibility());
+                project.setCurrentUserPermissions(result.getCurrentUserPermissions());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);

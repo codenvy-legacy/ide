@@ -225,6 +225,24 @@
         }
     },
     {
+        "displayName": "Velocity Spring MVC",
+        "category": "Samples - Hello World",
+        "description": "A simple web application using Velocity Framework",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/web-velocity-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Thymeleaf Online Address Book",
+        "category": "Samples - Hello World",
+        "description": "A basic web application that uses Thymeleaf engine",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/web-thymeleaf-java-simple.git"
+        }
+    },
+    {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",

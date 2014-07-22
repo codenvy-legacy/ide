@@ -113,6 +113,9 @@ public class StandardComponentInitializer {
     private CloseProjectAction closeProjectAction;
 
     @Inject
+    private OpenProjectAction  openProjectAction;
+
+    @Inject
     private FormatterAction formatterAction;
 
     @Inject
@@ -232,6 +235,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newFile", newFileAction);
         actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newXmlFile", newXmlFileAction);
+
         newGroup.addAction(newProjectWizardAction);
         newGroup.addSeparator();
         newGroup.addAction(newFileAction);
