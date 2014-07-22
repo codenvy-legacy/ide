@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.resources.model;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -48,6 +49,8 @@ public class Project extends Folder {
     private         ProjectServiceClient      projectServiceClient;
     private         String                    projectTypeId;
     private         String                    visibility;
+
+    private         List<String>              currentUserPermissions;
 
     /**
      * Constructor for empty project. Used for serialization only.
@@ -564,4 +567,13 @@ public class Project extends Folder {
     String getProjectTypeId() {
         return projectTypeId;
     }
+
+    public List<String> getCurrentUserPermissions() {
+        return currentUserPermissions;
+    }
+
+    public void setCurrentUserPermissions(List<String> currentUserPermissions) {
+        this.currentUserPermissions = currentUserPermissions;
+    }
+
 }
