@@ -12,7 +12,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -32,14 +32,14 @@ import java.util.Map;
 @Singleton
 public class RunAction extends Action {
 
-    private final ProjectsManager      projectsManager;
-    private final RunnerController     runnerController;
-    private final AnalyticsEventLogger eventLogger;
+    private AppContext           appContext;
+    private RunnerController     runnerController;
+    private AnalyticsEventLogger eventLogger;
 
     @Inject
     public RunAction(RunnerController runnerController,
                      RunnerResources resources,
-                     ProjectsManager projectsManager,
+                     AppContext appContext,
                      RunnerLocalizationConstant localizationConstants,
                      AnalyticsEventLogger eventLogger) {
         super(localizationConstants.runAppActionText(),
@@ -47,7 +47,7 @@ public class RunAction extends Action {
               null,
               resources.launchApp());
         this.runnerController = runnerController;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -61,7 +61,7 @@ public class RunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             Map<String, List<String>> attributes = activeProject.getAttributes();
             // If project has defined a runner, let see the action

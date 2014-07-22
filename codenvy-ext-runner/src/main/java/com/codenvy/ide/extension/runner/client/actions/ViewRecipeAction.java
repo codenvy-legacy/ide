@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -26,17 +26,17 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ViewRecipeAction extends Action {
-    private ProjectsManager  projectsManager;
+    private AppContext       appContext;
     private RunnerController controller;
 
     @Inject
     public ViewRecipeAction(RunnerController controller,
                             RunnerResources resources,
-                            ProjectsManager projectsManager,
+                            AppContext appContext,
                             RunnerLocalizationConstant localizationConstants) {
         super(localizationConstants.viewRecipeText(), localizationConstants.viewRecipeDescription(), null, resources.viewRecipe());
         this.controller = controller;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -48,7 +48,7 @@ public class ViewRecipeAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(projectsManager.getActiveProject() != null);
+        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
         e.getPresentation().setEnabled(controller.isRecipeLinkExists());
     }
 }

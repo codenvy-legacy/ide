@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -35,13 +35,13 @@ import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_GU
 @Singleton
 public class GuidePage extends AbstractPartPresenter {
 
-    private ProjectsManager      projectsManager;
+    private AppContext           appContext;
     private TutorialsResources   resources;
     private ProjectServiceClient projectServiceClient;
 
     @Inject
-    public GuidePage(ProjectsManager projectsManager, TutorialsResources resources, ProjectServiceClient projectServiceClient) {
-        this.projectsManager = projectsManager;
+    public GuidePage(AppContext appContext, TutorialsResources resources, ProjectServiceClient projectServiceClient) {
+        this.appContext = appContext;
         this.resources = resources;
         this.projectServiceClient = projectServiceClient;
     }
@@ -49,7 +49,7 @@ public class GuidePage extends AbstractPartPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(final AcceptsOneWidget container) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             projectServiceClient.getFileContent(activeProject.getPath() + '/' + DEFAULT_GUIDE_FILE_NAME,
                                                 new AsyncRequestCallback<String>(new StringUnmarshaller()) {

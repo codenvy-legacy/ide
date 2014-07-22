@@ -12,7 +12,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.navigation.NavigateToFilePresenter;
@@ -28,16 +28,16 @@ import com.google.inject.Singleton;
 public class NavigateToFileAction extends Action {
 
     private final NavigateToFilePresenter presenter;
-    private final ProjectsManager         projectsManager;
+    private final AppContext              appContext;
     private final AnalyticsEventLogger    eventLogger;
 
     @Inject
     public NavigateToFileAction(NavigateToFilePresenter presenter,
-                                ProjectsManager projectsManager,
+                                AppContext appContext,
                                 AnalyticsEventLogger eventLogger, Resources resources) {
         super("Navigate to File", "Navigate to file", null, resources.navigateToFile());
         this.presenter = presenter;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -52,6 +52,6 @@ public class NavigateToFileAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(projectsManager.getActiveProject() != null);
+        e.getPresentation().setEnabled(appContext.getCurrentProject() != null);
     }
 }

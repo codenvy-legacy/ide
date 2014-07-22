@@ -12,18 +12,14 @@ package com.codenvy.ide.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,19 +40,19 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     private EditorAgent          editorAgent;
     private Resource             resource;
     private NotificationManager  notificationManager;
-    private ProjectsManager projectsManager;
+    private AppContext           appContext;
 
     @Inject
     public RenameResourcePresenter(RenameResourceView view,
                                    EditorAgent editorAgent,
                                    NotificationManager notificationManager,
                                    ProjectServiceClient projectServiceClient,
-                                   ProjectsManager projectsManager) {
+                                   AppContext appContext) {
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.editorAgent = editorAgent;
         this.notificationManager = notificationManager;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
 
         view.setDelegate(this);
     }
@@ -81,7 +77,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     @Override
     public void onRenameClicked() {
         final String newName = view.getName();
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
 
         // rename project in project list (when no active project)
         if (activeProject == null) {

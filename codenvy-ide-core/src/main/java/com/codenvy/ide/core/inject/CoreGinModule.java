@@ -48,7 +48,6 @@ import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -119,7 +118,6 @@ import com.codenvy.ide.projecttype.SelectProjectTypeView;
 import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
-import com.codenvy.ide.resources.ProjectsManagerImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -196,7 +194,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(FileTypeRegistry.class).to(FileTypeRegistryImpl.class).in(Singleton.class);
-        bind(ProjectsManager.class).to(ProjectsManagerImpl.class).in(Singleton.class);
 
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);

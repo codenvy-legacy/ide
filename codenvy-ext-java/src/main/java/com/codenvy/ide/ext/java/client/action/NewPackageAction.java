@@ -11,8 +11,8 @@
 package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -34,7 +34,7 @@ public class NewPackageAction extends DefaultNewResourceAction {
     @Inject
     public NewPackageAction(JavaResources javaResources,
                             JavaLocalizationConstant localizationConstant,
-                            ProjectsManager projectsManager,
+                            AppContext appContext,
                             SelectionAgent selectionAgent,
                             EditorAgent editorAgent,
                             ProjectServiceClient projectServiceClient) {
@@ -42,7 +42,7 @@ public class NewPackageAction extends DefaultNewResourceAction {
               localizationConstant.actionNewPackageDescription(),
               null,
               javaResources.packageIcon(),
-              projectsManager,
+              appContext,
               selectionAgent,
               editorAgent,
               projectServiceClient);

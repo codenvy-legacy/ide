@@ -20,6 +20,7 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -29,7 +30,6 @@ import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -91,7 +91,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    protected final ProjectsManager        projectsManager;
+    protected final AppContext             appContext;
     private final   DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final   DtoFactory             dtoFactory;
     /** Whether any app is running now? */
@@ -123,7 +123,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Inject
     public RunnerController(EventBus eventBus,
                             final WorkspaceAgent workspaceAgent,
-                            final ProjectsManager projectsManager,
+                            final AppContext appContext,
                             final RunnerConsolePresenter console,
                             final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
@@ -136,7 +136,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             MessageBus messageBus,
                             ThemeAgent themeAgent) {
         this.workspaceAgent = workspaceAgent;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.console = console;
         this.shellConsole = shellConsole;
         this.service = service;
@@ -203,7 +203,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
                 if (isAnyAppRunning()) {
-                    event.setMessage(constant.appWillBeStopped(projectsManager.getActiveProject().getName()));
+                    event.setMessage(constant.appWillBeStopped(appContext.getCurrentProject().getName()));
                 }
             }
 
@@ -302,7 +302,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         lastApplicationDescriptor = null;
-        activeProject = projectsManager.getActiveProject();
+        activeProject = appContext.getCurrentProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
@@ -354,7 +354,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         lastApplicationDescriptor = null;
-        activeProject = projectsManager.getActiveProject();
+        activeProject = appContext.getCurrentProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);

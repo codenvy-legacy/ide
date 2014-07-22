@@ -14,8 +14,8 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewFileAction extends DefaultNewResourceAction {
     @Inject
-    public NewFileAction(ProjectsManager projectsManager,
+    public NewFileAction(AppContext appContext,
                          CoreLocalizationConstant localizationConstant,
                          SelectionAgent selectionAgent,
                          EditorAgent editorAgent,
@@ -38,7 +38,7 @@ public class NewFileAction extends DefaultNewResourceAction {
               localizationConstant.actionNewFileDescription(),
               null,
               resources.defaultFile(),
-              projectsManager,
+              appContext,
               selectionAgent,
               editorAgent,
               projectServiceClient);

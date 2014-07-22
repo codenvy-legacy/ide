@@ -13,7 +13,7 @@ package com.codenvy.ide.ext.java.jdi.client.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
@@ -38,20 +38,20 @@ public class DebugAction extends Action {
 
     private final RunnerController     runnerController;
     private final DebuggerPresenter    debuggerPresenter;
-    private final ProjectsManager      projectsManager;
+    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public DebugAction(RunnerController runnerController,
                        DebuggerPresenter debuggerPresenter,
                        JavaRuntimeResources resources,
-                       ProjectsManager projectsManager,
+                       AppContext appContext,
                        JavaRuntimeLocalizationConstant localizationConstants,
                        AnalyticsEventLogger eventLogger) {
         super(localizationConstants.debugAppActionText(), localizationConstants.debugAppActionDescription(), null, resources.debug());
         this.runnerController = runnerController;
         this.debuggerPresenter = debuggerPresenter;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -70,7 +70,7 @@ public class DebugAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             final String projectTypeId = activeProject.getProjectTypeId();
             Map<String, List<String>> attributes = activeProject.getAttributes();

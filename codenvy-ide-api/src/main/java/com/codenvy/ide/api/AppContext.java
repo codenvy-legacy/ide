@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.api;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -27,13 +31,35 @@ import java.util.Map;
 @Singleton
 public class AppContext {
 
-    private Project currentProject;
+    private ProjectDescriptor currentProject;
 
     private User currentUser;
 
     private WorkspaceDescriptor workspace;
 
     private Map<String, Object> states;
+
+    @Inject
+    public AppContext(final EventBus eventBus) {
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                if (currentProject != null) {
+                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(currentProject));
+                }
+                currentProject = event.getProject();
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                currentProject = null;
+            }
+
+            @Override
+            public void onProjectDescriptionChanged(ProjectActionEvent event) {
+            }
+        });
+    }
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;
@@ -54,12 +80,8 @@ public class AppContext {
         states.put(stateId, state);
     }
 
-    public Project getCurrentProject() {
+    public ProjectDescriptor getCurrentProject() {
         return currentProject;
-    }
-
-    public void setCurrentProject(Project currentProject) {
-        this.currentProject = currentProject;
     }
 
     public User getCurrentUser() {

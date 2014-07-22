@@ -12,7 +12,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -29,17 +29,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class UpdateAction extends Action {
 
-    private final ProjectsManager  projectsManager;
-    private final RunnerController runnerController;
+    private AppContext       appContext;
+    private RunnerController runnerController;
 
     @Inject
     public UpdateAction(RunnerController runnerController,
                         RunnerResources resources,
-                        ProjectsManager projectsManager,
+                        AppContext appContext,
                         RunnerLocalizationConstant localizationConstants) {
         super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(), resources.updateApp());
         this.runnerController = runnerController;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -51,7 +51,7 @@ public class UpdateAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             // this action is specific for the Codenvy Extension project only
             e.getPresentation().setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getProjectTypeId()));

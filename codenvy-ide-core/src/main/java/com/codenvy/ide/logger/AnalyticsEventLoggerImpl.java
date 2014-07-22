@@ -14,7 +14,7 @@ import com.codenvy.api.analytics.shared.dto.EventParameters;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.User;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
@@ -59,7 +59,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
 
     private final DtoFactory             dtoFactory;
     private final UserServiceClient      user;
-    private final ProjectsManager        projectsManager;
+    private final AppContext             appContext;
     private final MessageBus             messageBus;
     private final ExtensionRegistry      extensionRegistry;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
@@ -70,12 +70,12 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
                                     ExtensionRegistry extensionRegistry,
                                     UserServiceClient user,
-                                    ProjectsManager projectsManager,
+                                    AppContext appContext,
                                     MessageBus messageBus,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.dtoFactory = dtoFactory;
         this.user = user;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.messageBus = messageBus;
         this.extensionRegistry = extensionRegistry;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -119,7 +119,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private void putReservedParameters(@Nullable String action,
                                        @Nullable String source,
                                        Map<String, String> additionalParams) {
-        ProjectDescriptor project = projectsManager.getActiveProject();
+        ProjectDescriptor project = appContext.getCurrentProject();
         if (project != null) {
             putIfNotNull(PROJECT_NAME_PARAM, project.getName(), additionalParams);
             putIfNotNull(PROJECT_TYPE_PARAM, project.getDescription(), additionalParams);

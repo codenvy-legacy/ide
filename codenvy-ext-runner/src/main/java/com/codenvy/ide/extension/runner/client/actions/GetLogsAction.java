@@ -12,7 +12,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -29,17 +29,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class GetLogsAction extends Action {
 
-    private final ProjectsManager      projectsManager;
-    private final RunnerController     controller;
-    private final AnalyticsEventLogger eventLogger;
+    private AppContext           appContext;
+    private RunnerController     controller;
+    private AnalyticsEventLogger eventLogger;
 
     @Inject
-    public GetLogsAction(RunnerController controller, RunnerResources resources, ProjectsManager projectsManager,
+    public GetLogsAction(RunnerController controller, RunnerResources resources, AppContext appContext,
                          RunnerLocalizationConstant localizationConstants, AnalyticsEventLogger eventLogger) {
         super(localizationConstants.getAppLogsActionText(),
               localizationConstants.getAppLogsActionDescription(), null, resources.getAppLogs());
         this.controller = controller;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -53,7 +53,7 @@ public class GetLogsAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(activeProject.getAttributes().get("runner.name") != null);

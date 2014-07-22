@@ -13,7 +13,7 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
@@ -33,7 +33,7 @@ public class UploadFileAction extends Action {
     private final UploadFilePresenter  presenter;
     private final SelectionAgent       selectionAgent;
     private final AnalyticsEventLogger eventLogger;
-    private final ProjectsManager      projectsManager;
+    private final AppContext           appContext;
 
     @Inject
     public UploadFileAction(UploadFilePresenter presenter,
@@ -41,12 +41,12 @@ public class UploadFileAction extends Action {
                             SelectionAgent selectionAgent,
                             AnalyticsEventLogger eventLogger,
                             Resources resources,
-                            ProjectsManager projectsManager) {
+                            AppContext appContext) {
         super(locale.uploadFileName(), locale.uploadFileDescription(), null, resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -60,7 +60,7 @@ public class UploadFileAction extends Action {
     @Override
     public void update(ActionEvent event) {
         boolean enabled = false;
-        if (projectsManager.getActiveProject() != null) {
+        if (appContext.getCurrentProject() != null) {
             Selection<?> selection = selectionAgent.getSelection();
             if (selection != null) {
                 enabled = selection.getFirstElement() != null;

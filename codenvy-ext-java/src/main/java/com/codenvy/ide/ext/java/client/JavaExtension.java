@@ -28,7 +28,6 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
@@ -68,14 +67,13 @@ public class JavaExtension {
     boolean updating      = false;
     boolean needForUpdate = false;
     private NotificationManager      notificationManager;
-    private String                   restContext;
     private String                   workspaceId;
     private AsyncRequestFactory      asyncRequestFactory;
     private EditorAgent              editorAgent;
     private JavaLocalizationConstant localizationConstant;
     private JavaParserWorker         parserWorker;
     private BuildContext             buildContext;
-    private AppContext appContext;
+    private AppContext               appContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -84,7 +82,6 @@ public class JavaExtension {
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
                          EventBus eventBus,
-                         @Named("restContext") String restContext,
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
@@ -98,19 +95,20 @@ public class JavaExtension {
                          NewPackageAction newPackageAction,
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
-                         ProjectsManager projectsManager,
                          @Named("JavaFileType") FileType javaFile,
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
-                         FormatController formatController, BuildContext buildContext) {
+                         FormatController formatController,
+                         BuildContext buildContext,
+                         AppContext appContext) {
         this.notificationManager = notificationManager;
-        this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
         this.localizationConstant = localizationConstant;
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
+        this.appContext = appContext;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -147,7 +145,7 @@ public class JavaExtension {
         // add actions in context menu
         DefaultActionGroup buildContextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextMenuGroup.addSeparator();
-        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, projectsManager, eventLogger, resources, buildContext);
+        UpdateDependencyAction dependencyAction = new UpdateDependencyAction(this, appContext, eventLogger, resources, buildContext);
         actionManager.registerAction("updateDependency", dependencyAction);
         buildContextMenuGroup.addAction(dependencyAction);
 
@@ -209,6 +207,7 @@ public class JavaExtension {
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
+        appContext.setState("isRunEnabled", false);
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -216,6 +215,7 @@ public class JavaExtension {
                 notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
+                appContext.setState("isRunEnabled", true);
                 parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override

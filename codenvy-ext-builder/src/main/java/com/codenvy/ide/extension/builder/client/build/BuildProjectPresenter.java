@@ -18,6 +18,7 @@ import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -25,7 +26,6 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
@@ -62,7 +62,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 @Singleton
 public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
 
-    protected final ProjectsManager                          projectsManager;
+    protected final AppContext                               appContext;
     protected final BuilderConsolePresenter                  console;
     protected final BuilderServiceClient                     service;
     protected final BuilderLocalizationConstant              constant;
@@ -87,7 +87,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     @Inject
     protected BuildProjectPresenter(EventBus eventBus,
                                     WorkspaceAgent workspaceAgent,
-                                    ProjectsManager projectsManager,
+                                    AppContext appContext,
                                     final BuilderConsolePresenter console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
@@ -98,7 +98,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                                     MessageBus messageBus,
                                     BuildContext buildContext) {
         this.workspaceAgent = workspaceAgent;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.console = console;
         this.service = service;
         this.constant = constant;
@@ -182,7 +182,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
 
         lastBuildTaskDescriptor = null;
-        activeProject = projectsManager.getActiveProject();
+        activeProject = appContext.getCurrentProject();
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);

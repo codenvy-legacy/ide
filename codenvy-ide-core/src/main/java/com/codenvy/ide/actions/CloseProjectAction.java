@@ -12,8 +12,8 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -24,17 +24,17 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class CloseProjectAction extends Action {
 
-    private final ProjectsManager      projectsManager;
+    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
     private final EventBus             eventBus;
 
     @Inject
-    public CloseProjectAction(ProjectsManager projectsManager,
+    public CloseProjectAction(AppContext appContext,
                               Resources resources,
                               AnalyticsEventLogger eventLogger,
                               EventBus eventBus) {
         super("Close Project", "Close project", null, resources.closeProject());
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.eventBus = eventBus;
     }
@@ -42,7 +42,7 @@ public class CloseProjectAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(projectsManager.getActiveProject() != null);
+        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
     }
 
     /** {@inheritDoc} */
@@ -50,8 +50,8 @@ public class CloseProjectAction extends Action {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Close project");
 
-        if (projectsManager.getActiveProject() != null) {
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(projectsManager.getActiveProject()));
+        if (appContext.getCurrentProject() != null) {
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject()));
         }
     }
 }

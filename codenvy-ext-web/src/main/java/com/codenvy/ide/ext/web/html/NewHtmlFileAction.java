@@ -12,8 +12,8 @@ package com.codenvy.ide.ext.web.html;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
@@ -39,7 +39,7 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
                                                   "</html>";
 
     @Inject
-    public NewHtmlFileAction(ProjectsManager projectsManager,
+    public NewHtmlFileAction(AppContext appContext,
                              WebExtensionResource webExtensionResource,
                              WebLocalizationConstant localizationConstant,
                              SelectionAgent selectionAgent,
@@ -49,7 +49,7 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
               localizationConstant.newHtmlFileActionDescription(),
               webExtensionResource.html(),
               null,
-              projectsManager,
+              appContext,
               selectionAgent,
               editorAgent,
               projectServiceClient);
@@ -57,7 +57,7 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
 
     @Override
     protected String getExtension() {
-        return  "html";
+        return "html";
     }
 
     @Override

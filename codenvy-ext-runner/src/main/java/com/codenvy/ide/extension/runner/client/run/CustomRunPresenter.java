@@ -16,9 +16,9 @@ import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
@@ -45,7 +45,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     private DtoFactory                 dtoFactory;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private NotificationManager        notificationManager;
-    private ProjectsManager            projectsManager;
+    private AppContext                 appContext;
     private RunnerLocalizationConstant constant;
 
     /** Create presenter. */
@@ -56,7 +56,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  DtoFactory dtoFactory,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                  NotificationManager notificationManager,
-                                 ProjectsManager projectsManager,
+                                 AppContext appContext,
                                  RunnerLocalizationConstant constant) {
         this.runnerController = runnerController;
         this.runnerServiceClient = runnerServiceClient;
@@ -64,7 +64,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.constant = constant;
         this.view.setDelegate(this);
     }
@@ -75,7 +75,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<RunnerDescriptor> result) {
-                        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+                        ProjectDescriptor activeProject = appContext.getCurrentProject();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         view.showDialog();
                     }

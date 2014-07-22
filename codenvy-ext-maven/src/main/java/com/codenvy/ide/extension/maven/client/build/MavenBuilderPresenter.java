@@ -12,10 +12,10 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.api.builder.dto.BuildOptions;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -46,7 +46,7 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
     @Inject
     protected MavenBuilderPresenter(EventBus eventBus,
                                     MavenBuildView view,
-                                    ProjectsManager projectsManager,
+                                    AppContext appContext,
                                     BuilderConsolePresenter console,
                                     BuilderServiceClient service,
                                     BuilderLocalizationConstant constant,
@@ -57,7 +57,7 @@ public class MavenBuilderPresenter extends BuildProjectPresenter implements Mave
                                     EditorAgent editorAgent,
                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                     BuildContext buildContext) {
-        super(eventBus, workspaceAgent, projectsManager, console, service, constant, notificationManager, dtoFactory, editorAgent,
+        super(eventBus, workspaceAgent, appContext, console, service, constant, notificationManager, dtoFactory, editorAgent,
               dtoUnmarshallerFactory, messageBus, buildContext);
         this.view = view;
         this.view.setDelegate(this);

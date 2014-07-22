@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension.builder.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -29,19 +29,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class BuildAction extends Action {
 
-    private final ProjectsManager       projectsManager;
+    private final AppContext appContext;
     private final BuildProjectPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
     private       BuildContext          buildContext;
 
     @Inject
     public BuildAction(BuildProjectPresenter presenter, BuilderResources resources,
-                       BuilderLocalizationConstant localizationConstant, ProjectsManager projectsManager,
+                       BuilderLocalizationConstant localizationConstant, AppContext appContext,
                        AnalyticsEventLogger eventLogger, BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
     }
@@ -61,6 +61,6 @@ public class BuildAction extends Action {
             e.getPresentation().setVisible(true);
             return;
         }
-        e.getPresentation().setEnabledAndVisible(projectsManager.getActiveProject() != null);
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 }

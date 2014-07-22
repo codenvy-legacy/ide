@@ -13,9 +13,8 @@ package com.codenvy.ide.newresource;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
@@ -43,7 +42,7 @@ import javax.annotation.Nullable;
  */
 public class DefaultNewResourceAction extends Action {
     protected String               title;
-    protected ProjectsManager      projectsManager;
+    protected AppContext           appContext;
     protected SelectionAgent       selectionAgent;
     protected EditorAgent          editorAgent;
     protected ProjectServiceClient projectServiceClient;
@@ -59,8 +58,8 @@ public class DefaultNewResourceAction extends Action {
      *         action's icon
      * @param svgIcon
      *         action's SVG icon
-     * @param projectsManager
-     *         {@link com.codenvy.ide.api.resources.ProjectsManager} instance
+     * @param appContext
+     *         {@link com.codenvy.ide.api.AppContext} instance
      * @param selectionAgent
      *         {@link com.codenvy.ide.api.selection.SelectionAgent} instance
      * @param editorAgent
@@ -72,13 +71,13 @@ public class DefaultNewResourceAction extends Action {
                                     String description,
                                     @Nullable ImageResource icon,
                                     @Nullable SVGResource svgIcon,
-                                    ProjectsManager projectsManager,
+                                    AppContext appContext,
                                     SelectionAgent selectionAgent,
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient) {
         super(title, description, icon, svgIcon);
         this.title = title;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.selectionAgent = selectionAgent;
         this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
@@ -108,7 +107,7 @@ public class DefaultNewResourceAction extends Action {
 
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(projectsManager.getActiveProject() != null);
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 
     /** Returns extension for a new resource, e.g. html. Default implementation returns an empty string. */
@@ -147,6 +146,6 @@ public class DefaultNewResourceAction extends Action {
                 }
             }
         }
-        return projectsManager.getActiveProject().getPath();
+        return appContext.getCurrentProject().getPath();
     }
 }

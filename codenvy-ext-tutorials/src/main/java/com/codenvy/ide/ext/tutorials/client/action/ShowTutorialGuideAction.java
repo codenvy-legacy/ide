@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.tutorials.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.resources.ProjectsManager;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.tutorials.client.GuidePageController;
@@ -30,19 +30,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class ShowTutorialGuideAction extends Action {
 
-    private ProjectsManager      projectsManager;
+    private AppContext           appContext;
     private GuidePageController  guidePageController;
     private AnalyticsEventLogger eventLogger;
 
     @Inject
     public ShowTutorialGuideAction(GuidePageController guidePageController, TutorialsResources resources,
-                                   ProjectsManager projectsManager,
+                                   AppContext appContext,
                                    TutorialsLocalizationConstant localizationConstants,
                                    AnalyticsEventLogger eventLogger) {
         super(localizationConstants.showTutorialGuideActionText(),
               localizationConstants.showTutorialGuideActionDescription(), resources.guide());
         this.guidePageController = guidePageController;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -56,7 +56,7 @@ public class ShowTutorialGuideAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             e.getPresentation().setEnabledAndVisible(activeProject.getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {

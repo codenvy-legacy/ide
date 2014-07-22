@@ -12,12 +12,10 @@ package com.codenvy.ide.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ProjectsManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -57,7 +55,7 @@ public class RenameResourceTest {
     @Mock
     private Resource                resource;
     @Mock
-    private ProjectsManager         projectsManager;
+    private AppContext              appContext;
     @Mock
     private NotificationManager     notificationManager;
     @Mock
@@ -70,9 +68,9 @@ public class RenameResourceTest {
     @Before
     public void setUp() {
         when(resource.getName()).thenReturn(FOLDER_NAME);
-        when(projectsManager.getActiveProject()).thenReturn(project);
+        when(appContext.getCurrentProject()).thenReturn(project);
 
-        presenter = new RenameResourcePresenter(view, editorAgent, notificationManager, projectServiceClient, projectsManager);
+        presenter = new RenameResourcePresenter(view, editorAgent, notificationManager, projectServiceClient, appContext);
     }
 
     @Test
@@ -131,7 +129,7 @@ public class RenameResourceTest {
         presenter.onRenameClicked();
 
         verify(view).getName();
-        verify(projectsManager.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+        verify(appContext.getCurrentProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
 
         verify(view).close();
     }
@@ -152,7 +150,7 @@ public class RenameResourceTest {
         presenter.onRenameClicked();
 
         verify(view).getName();
-        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+        verify(appContext.getCurrentProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view).close();
     }

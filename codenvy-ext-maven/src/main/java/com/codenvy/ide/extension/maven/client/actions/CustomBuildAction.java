@@ -12,8 +12,8 @@ package com.codenvy.ide.extension.maven.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.resources.ProjectsManager;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.maven.client.MavenLocalizationConstant;
@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomBuildAction extends Action {
 
-    private final ProjectsManager       projectsManager;
+    private final AppContext            appContext;
     private final MavenBuilderPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
     private       BuildContext          buildContext;
@@ -39,13 +39,13 @@ public class CustomBuildAction extends Action {
     public CustomBuildAction(MavenBuilderPresenter presenter,
                              MavenResources resources,
                              MavenLocalizationConstant localizationConstant,
-                             ProjectsManager projectsManager,
+                             AppContext appContext,
                              AnalyticsEventLogger eventLogger,
                              BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
         this.presenter = presenter;
-        this.projectsManager = projectsManager;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
     }
@@ -60,7 +60,7 @@ public class CustomBuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = projectsManager.getActiveProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
             final String builder = activeProject.getAttributes().get("builder.name").get(0);
             if ("maven".equals(builder)) {
