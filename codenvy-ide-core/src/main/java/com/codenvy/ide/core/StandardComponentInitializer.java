@@ -113,9 +113,6 @@ public class StandardComponentInitializer {
     private CloseProjectAction closeProjectAction;
 
     @Inject
-    private OpenProjectAction  openProjectAction;
-
-    @Inject
     private FormatterAction formatterAction;
 
     @Inject
