@@ -50,7 +50,7 @@
 }
 
 svg[name="workBenchIconMinimize"] {
-    margin: 2px auto;
+    margin: 2px 5px;
     width: 14px;
     height: 11px;
     fill: minimizeIconColor; 
@@ -61,11 +61,12 @@ svg[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);
+    margin-left: 3px;
 }
 
 .ide-work-bench-split-panel-bottom svg[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     transform: rotate(90deg);
-    margin: 2px 1px;
+    margin: 2px 4px;
 }
