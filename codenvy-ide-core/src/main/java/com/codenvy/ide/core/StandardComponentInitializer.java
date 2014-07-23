@@ -21,6 +21,7 @@ import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
+import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
@@ -107,6 +108,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
+
+    @Inject
+    private OpenProjectAction  openProjectAction;
 
     @Inject
     private FormatterAction formatterAction;
@@ -228,6 +232,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newFile", newFileAction);
         actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newXmlFile", newXmlFileAction);
+
         newGroup.addAction(newProjectWizardAction);
         newGroup.addSeparator();
         newGroup.addAction(newFileAction);
@@ -252,6 +257,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup fileGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_FILE);
         fileGroup.add(importProjectGroup);
         fileGroup.add(newGroup);
+        fileGroup.add(openProjectAction);
         fileGroup.add(closeProjectAction);
         fileGroup.add(changeProjectTypeAction);
         fileGroup.add(uploadFileAction);
