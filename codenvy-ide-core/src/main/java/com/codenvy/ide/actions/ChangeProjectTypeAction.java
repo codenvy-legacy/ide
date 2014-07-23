@@ -45,7 +45,7 @@ public class ChangeProjectTypeAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         WizardContext context = new WizardContext();
-        context.putData(ProjectWizard.PROJECT, appContext.getCurrentProject());
+        context.putData(ProjectWizard.PROJECT, appContext.getCurrentProject().getProjectDescription());
         wizardPresenter.show(context);
     }
 }

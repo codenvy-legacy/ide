@@ -60,7 +60,7 @@ public class CustomBuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
         if (activeProject != null) {
             final String builder = activeProject.getAttributes().get("builder.name").get(0);
             if ("maven".equals(builder)) {

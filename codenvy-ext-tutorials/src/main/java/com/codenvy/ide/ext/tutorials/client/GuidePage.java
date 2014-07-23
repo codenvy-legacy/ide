@@ -49,7 +49,7 @@ public class GuidePage extends AbstractPartPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(final AcceptsOneWidget container) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
         if (activeProject != null) {
             projectServiceClient.getFileContent(activeProject.getPath() + '/' + DEFAULT_GUIDE_FILE_NAME,
                                                 new AsyncRequestCallback<String>(new StringUnmarshaller()) {

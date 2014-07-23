@@ -75,7 +75,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<RunnerDescriptor> result) {
-                        ProjectDescriptor activeProject = appContext.getCurrentProject();
+                        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         view.showDialog();
                     }

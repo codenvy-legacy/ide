@@ -11,13 +11,14 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,18 +30,21 @@ import com.google.inject.Singleton;
 @Singleton
 public class GetLogsAction extends Action {
 
-    private AppContext           appContext;
-    private RunnerController     controller;
-    private AnalyticsEventLogger eventLogger;
+    private final RunnerController     controller;
+    private final AnalyticsEventLogger eventLogger;
+    private AppContext appContext;
 
     @Inject
-    public GetLogsAction(RunnerController controller, RunnerResources resources, AppContext appContext,
-                         RunnerLocalizationConstant localizationConstants, AnalyticsEventLogger eventLogger) {
+    public GetLogsAction(RunnerController controller,
+                         RunnerResources resources,
+                         RunnerLocalizationConstant localizationConstants,
+                         AnalyticsEventLogger eventLogger,
+                         AppContext appContext) {
         super(localizationConstants.getAppLogsActionText(),
               localizationConstants.getAppLogsActionDescription(), null, resources.getAppLogs());
         this.controller = controller;
-        this.appContext = appContext;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -53,11 +57,13 @@ public class GetLogsAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
-        if (activeProject != null) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributes().get("runner.name") != null);
-            e.getPresentation().setEnabled(controller.isAnyAppRunning());
+            e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null ||
+                                           currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setEnabled(currentProject.getProcessDescriptor()!= null && currentProject.getProcessDescriptor().getStatus().equals(
+                    ApplicationStatus.RUNNING));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

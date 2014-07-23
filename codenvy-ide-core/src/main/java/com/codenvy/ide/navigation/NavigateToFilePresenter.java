@@ -11,10 +11,13 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -53,9 +56,9 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private final MessageBus             wsMessageBus;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final NotificationManager    notificationManager;
-    private       Project                rootProject;
-    final private String                 SEARCH_URL;
-    private Array<ItemReference>         lastSearchResult;
+    private CoreLocalizationConstant localizationConstant;
+    private       Project rootProject;
+    final private String  SEARCH_URL;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view,
@@ -64,13 +67,15 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                   NotificationManager notificationManager) {
+                                   NotificationManager notificationManager,
+                                   CoreLocalizationConstant localizationConstant) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
+        this.localizationConstant = localizationConstant;
         SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
@@ -92,8 +97,6 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         search(query + "*", new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
-                lastSearchResult = result.copy();
-
                 Array<String> suggestions = Collections.createArray();
                 for (ItemReference item : result.asIterable()) {
                     // skip hidden items
@@ -145,23 +148,19 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     @Override
     public void onFileSelected() {
         view.close();
-
-        final String path = view.getItemPath();
-        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
-            @Override
-            public void onSuccess(Resource result) {
-                for (ItemReference itemReference : lastSearchResult.asIterable()) {
-                    if (path.equals(itemReference.getPath())) {
-                        eventBus.fireEvent(new FileEvent(itemReference, FileOperation.OPEN));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(NavigateToFilePresenter.class, "Unable to open file " + path);
-            }
-        });
+//
+//        final String path = view.getItemPath();
+//        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
+//            @Override
+//            public void onSuccess(Resource result) {
+//                eventBus.fireEvent(new FileEvent(result., FileOperation.OPEN));
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                Log.error(NavigateToFilePresenter.class, localizationConstant.unableOpenFile(path));
+//            }
+//        });
     }
 
     /**
@@ -171,7 +170,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
      *         relative path to file. If user need to open file located in
      *         <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
      */
-//    public void openFile(final String path) {
+    public void openFile(final String path) {
 //        rootProject = getRootProject(resourceProvider.getActiveProject());
 //        if (rootProject != null) {
 //            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
@@ -183,7 +182,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 //                                                   } else {
 //                                                       notificationManager
 //                                                               .showNotification(
-//                                                                       new Notification("Unable to open " + path + ". It's not a file.",
+//                                                                       new Notification(localizationConstant.unableOpenNotFile(path),
 //                                                                                        Notification.Type.WARNING)
 //                                                                                );
 //                                                   }
@@ -192,11 +191,11 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 //                                               @Override
 //                                               public void onFailure(Throwable caught) {
 //                                                   notificationManager.showNotification(
-//                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
+//                                                           new Notification(localizationConstant.unableOpenFile(path), Notification.Type.WARNING));
 //                                               }
 //                                           }
 //                                          );
 //        }
-//    }
+    }
 
 }

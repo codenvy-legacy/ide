@@ -11,18 +11,18 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Action to stop application server where app is launched.
@@ -32,20 +32,20 @@ import java.util.Map;
 @Singleton
 public class StopAction extends Action {
 
-    private AppContext           appContext;
-    private RunnerController     controller;
-    private AnalyticsEventLogger eventLogger;
+    private final RunnerController     controller;
+    private final AnalyticsEventLogger eventLogger;
+    private AppContext appContext;
 
     @Inject
     public StopAction(RunnerController controller,
                       RunnerResources resources,
-                      AppContext appContext,
                       RunnerLocalizationConstant localizationConstants,
-                      AnalyticsEventLogger eventLogger) {
+                      AnalyticsEventLogger eventLogger,
+                      AppContext appContext) {
         super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
         this.controller = controller;
-        this.appContext = appContext;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -58,12 +58,13 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
-        if (activeProject != null) {
-            Map<String, List<String>> attributes = activeProject.getAttributes();
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(attributes.get("runner.name") != null || attributes.get("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(controller.isAnyAppRunning());
+            e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
+                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setEnabled(currentProject.getProcessDescriptor()!= null && currentProject.getProcessDescriptor().getStatus().equals(
+                    ApplicationStatus.RUNNING));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

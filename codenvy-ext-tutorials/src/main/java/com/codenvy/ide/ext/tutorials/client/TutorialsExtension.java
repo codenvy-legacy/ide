@@ -12,13 +12,12 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.ui.Icon;
-import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.ext.tutorials.client.action.ShowTutorialGuideAction;
+import com.codenvy.ide.ext.tutorials.client.action.UpdateAction;
 import com.codenvy.ide.ext.tutorials.client.wizard.ExtensionPagePresenter;
 import com.codenvy.ide.ext.tutorials.shared.Constants;
 import com.google.inject.Inject;
@@ -28,6 +27,7 @@ import com.google.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN;
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 
 /**
@@ -46,18 +46,22 @@ public class TutorialsExtension {
                               TutorialsLocalizationConstant localizationConstants,
                               ActionManager actionManager,
                               ShowTutorialGuideAction showAction,
+                              UpdateAction updateAction,
                               ProjectTypeWizardRegistry wizardRegistry,
                               NotificationManager notificationManager,
                               Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
 
         // register actions
-        actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
-
         DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);
+
+        actionManager.registerAction(localizationConstants.showTutorialGuideActionId(), showAction);
         windowMenuActionGroup.add(showAction);
 
-        // set pages for project wizard
+        actionManager.registerAction(localizationConstants.updateExtensionActionId(), updateAction);
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
+        runMenuActionGroup.add(updateAction);
+
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(extensionPagePresenter);
         wizardRegistry.addWizard(Constants.TUTORIAL_ID, wizard);

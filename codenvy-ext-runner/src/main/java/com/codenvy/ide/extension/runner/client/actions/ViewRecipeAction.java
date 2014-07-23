@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -26,14 +27,14 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ViewRecipeAction extends Action {
-    private AppContext       appContext;
-    private RunnerController controller;
+    private final RunnerController controller;
+    private AppContext appContext;
 
     @Inject
     public ViewRecipeAction(RunnerController controller,
                             RunnerResources resources,
-                            AppContext appContext,
-                            RunnerLocalizationConstant localizationConstants) {
+                            RunnerLocalizationConstant localizationConstants,
+                            AppContext appContext) {
         super(localizationConstants.viewRecipeText(), localizationConstants.viewRecipeDescription(), null, resources.viewRecipe());
         this.controller = controller;
         this.appContext = appContext;

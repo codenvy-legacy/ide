@@ -77,7 +77,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     @Override
     public void onRenameClicked() {
         final String newName = view.getName();
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
 
         // rename project in project list (when no active project)
         if (activeProject == null) {

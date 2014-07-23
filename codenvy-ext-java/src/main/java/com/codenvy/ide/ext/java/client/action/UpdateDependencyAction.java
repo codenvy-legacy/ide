@@ -41,13 +41,13 @@ public class UpdateDependencyAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Update project dependencies");
-        javaExtension.updateDependencies(appContext.getCurrentProject().getName());
+        javaExtension.updateDependencies(appContext.getCurrentProject().getProjectDescription().getName());
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
         if (buildContext.isBuilding()) {
             e.getPresentation().setEnabled(false);
             return;

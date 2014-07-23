@@ -116,7 +116,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor, project);
+        presenter.attachDebugger(applicationProcessDescriptor);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verifySetEnableButtons(DISABLE_BUTTON);
@@ -139,7 +139,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor, project);
+        presenter.attachDebugger(applicationProcessDescriptor);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());

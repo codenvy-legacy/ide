@@ -119,7 +119,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private void putReservedParameters(@Nullable String action,
                                        @Nullable String source,
                                        Map<String, String> additionalParams) {
-        ProjectDescriptor project = appContext.getCurrentProject();
+        ProjectDescriptor project = appContext.getCurrentProject().getProjectDescription();
         if (project != null) {
             putIfNotNull(PROJECT_NAME_PARAM, project.getName(), additionalParams);
             putIfNotNull(PROJECT_TYPE_PARAM, project.getDescription(), additionalParams);

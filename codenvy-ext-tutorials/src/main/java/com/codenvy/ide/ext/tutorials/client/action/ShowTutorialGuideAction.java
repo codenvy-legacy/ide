@@ -56,7 +56,7 @@ public class ShowTutorialGuideAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject();
+        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
         if (activeProject != null) {
             e.getPresentation().setEnabledAndVisible(activeProject.getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {

@@ -41,13 +41,9 @@ import java.util.Map;
 @Singleton
 public class AppContext {
 
-    private ProjectDescriptor currentProject;
-
-    private User currentUser;
+    private CurrentProject currentProject;
 
     private WorkspaceDescriptor workspace;
-
-    private Map<String, Object> states;
 
     @Inject
     public AppContext(final EventBus eventBus,
@@ -59,7 +55,7 @@ public class AppContext {
             public void onOpenProject(OpenProjectEvent event) {
                 // previously opened project should be correctly closed
                 if (currentProject != null) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(currentProject));
+                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(currentProject.getProjectDescription()));
                 }
 
                 Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
@@ -97,17 +93,6 @@ public class AppContext {
         this.workspace = workspace;
     }
 
-    public Object getState(String stateId) {
-        if (states != null)
-            return states.get(stateId);
-        return null;
-    }
-
-    public void setState(String stateId, Object state) {
-        if (states == null) states = new HashMap<>();
-        states.put(stateId, state);
-    }
-
     /**
      * Returns the project that is currently opened or <code>null</code> if none opened.
      *
@@ -118,11 +103,4 @@ public class AppContext {
         return currentProject;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
 }

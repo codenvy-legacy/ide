@@ -11,6 +11,7 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
@@ -67,7 +68,8 @@ public class NavigateToFileTest {
     @Mock
     private Project                 project;
     @Mock
-    private EventBus                eventBus;
+    private EventBus
+            eventBus;
     private NavigateToFilePresenter presenter;
     @Mock
     private MessageBus              messageBus;
@@ -77,6 +79,9 @@ public class NavigateToFileTest {
     private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     @Mock
     private NotificationManager     notificationManager;
+
+    @Mock
+    private CoreLocalizationConstant localizationConstant;
 
     @Before
     public void setUp() {
@@ -105,7 +110,7 @@ public class NavigateToFileTest {
         when(parentFolder.getName()).thenReturn("");
 
         presenter = new NavigateToFilePresenter(view, resourceProvider, eventBus, messageBus, anyString(), dtoUnmarshallerFactory,
-                                                notificationManager);
+                                                notificationManager, localizationConstant);
     }
 
     @Test

@@ -96,8 +96,7 @@ public class JavaExtension {
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController,
-                         BuildContext buildContext,
-                         AppContext appContext) {
+                         BuildContext buildContext) {
         this.notificationManager = notificationManager;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
@@ -105,7 +104,6 @@ public class JavaExtension {
         this.localizationConstant = localizationConstant;
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
-        this.appContext = appContext;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -201,7 +199,6 @@ public class JavaExtension {
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
-        appContext.setState("isRunEnabled", false);
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -209,7 +206,6 @@ public class JavaExtension {
                 notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
-                appContext.setState("isRunEnabled", true);
                 parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override

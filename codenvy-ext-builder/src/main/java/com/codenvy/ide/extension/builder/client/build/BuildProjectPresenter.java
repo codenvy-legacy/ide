@@ -182,7 +182,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
 
         lastBuildTaskDescriptor = null;
-        activeProject = appContext.getCurrentProject();
+        activeProject = appContext.getCurrentProject().getProjectDescription();
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
