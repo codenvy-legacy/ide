@@ -12,51 +12,41 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.ext.tutorials.shared.Constants;
-import com.codenvy.ide.api.resources.model.File;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.ext.tutorials.client.TutorialsExtension.DEFAULT_README_FILE_NAME;
-
 /**
- * Controls a tutorial page state: can shows or hides it. Automatically shows a tutorial page when project has opened
- * and closes it when project has closed.
+ * Controls a tutorial page state: shows or hides it.
+ * Automatically shows a tutorial page when project opening and closes page when project closing.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class GuidePageController {
-    private final ResourceProvider resourceProvider;
-    private final WorkspaceAgent   workspaceAgent;
-    private final GuidePage        guidePage;
+    private WorkspaceAgent workspaceAgent;
+    private GuidePage      guidePage;
 
     @Inject
-    public GuidePageController(ResourceProvider resourceProvider, EventBus eventBus,
-                               WorkspaceAgent workspaceAgent,
-                               GuidePage guidePage) {
-        this.resourceProvider = resourceProvider;
+    public GuidePageController(EventBus eventBus, WorkspaceAgent workspaceAgent, GuidePage guidePage) {
         this.workspaceAgent = workspaceAgent;
         this.guidePage = guidePage;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID)) {
-                    openTutorialPage();
+                if (event.getProject().getProjectTypeId().equals(Constants.TUTORIAL_ID)) {
+                    openTutorialGuide();
                 }
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (event.getProject() != null &&
-                    event.getProject().getDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID)) {
-                    closeTutorialPage();
+                if (event.getProject().getDescription().equals(Constants.TUTORIAL_ID)) {
+                    closeTutorialGuide();
                 }
             }
 
@@ -67,22 +57,13 @@ public class GuidePageController {
         });
     }
 
-    /** Open tutorial description page. */
-    public void openTutorialPage() {
-        if (isTutorialContainsGuide()) {
-            workspaceAgent.openPart(guidePage, PartStackType.EDITING);
-        }
+    /** Open tutorial guide page. */
+    public void openTutorialGuide() {
+        workspaceAgent.openPart(guidePage, PartStackType.EDITING);
     }
 
-    /** Close tutorial description page. */
-    public void closeTutorialPage() {
+    /** Close tutorial guide page. */
+    public void closeTutorialGuide() {
         workspaceAgent.removePart(guidePage);
-    }
-
-    private boolean isTutorialContainsGuide() {
-        if (resourceProvider.getActiveProject() != null) {
-            return resourceProvider.getActiveProject().findResourceByName(DEFAULT_README_FILE_NAME, File.TYPE) != null;
-        }
-        return false;
     }
 }

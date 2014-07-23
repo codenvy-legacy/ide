@@ -14,8 +14,6 @@ import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;

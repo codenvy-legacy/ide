@@ -12,6 +12,8 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import elemental.dom.Element;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -23,7 +25,6 @@ import com.codenvy.ide.ext.java.jdt.core.IProblemRequestor;
 import com.codenvy.ide.ext.java.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.ide.ext.java.jdt.core.compiler.IProblem;
 import com.codenvy.ide.ext.java.jdt.internal.ui.text.FastJavaPartitionScanner;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -64,16 +65,19 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     };
 
     private TextEditorViewImpl.Css css;
-    private Map<File, AnnotationModel> modelStringMap = new HashMap<File, AnnotationModel>();
+    private Map<ItemReference, AnnotationModel> modelStringMap = new HashMap<>();
     private JavaCss javaCss;
 
     /**
      * @param css
      * @param javaCss
      * @param documentFactory
+     * @param eventBus
+     * @param projectServiceClient
      */
-    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory, EventBus eventBus) {
-        super(documentFactory, eventBus);
+    public CompilationUnitDocumentProvider(Css css, JavaCss javaCss, DocumentFactory documentFactory, EventBus eventBus,
+                                           ProjectServiceClient projectServiceClient) {
+        super(documentFactory, eventBus, projectServiceClient);
         this.css = css;
         this.javaCss = javaCss;
     }
@@ -81,7 +85,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     /** {@inheritDoc} */
     @Override
     public AnnotationModel getAnnotationModel(@Nullable EditorInput input) {
-        File file = input.getFile();
+        ItemReference file = input.getFile();
         if (!modelStringMap.containsKey(file)) {
             modelStringMap.put(file, new JavaAnnotationModel());
         }

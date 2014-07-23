@@ -530,7 +530,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
 
                 if (runCallback != null) {
-                    runCallback.onRun(descriptor);
+                    runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
                 }
                 break;
             case STOPPED:
@@ -666,7 +666,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     builder.sendRequest("", new com.google.gwt.http.client.RequestCallback() {
                         public void onResponseReceived(Request request, Response response) {
                             File recipeFile = new RecipeFile(response.getText());
-                            editorAgent.openEditor(recipeFile);
+//                            editorAgent.openEditor(recipeFile);
                             EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
                             if (editor instanceof CodenvyTextEditor) {
                                 ((CodenvyTextEditor)editor).getView().setReadOnly(true);

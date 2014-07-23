@@ -67,7 +67,7 @@ public class CustomRunTest extends BaseTest {
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
         runnerDescriptors.add(runnerDescriptor);
 
-        when(activeProject.getAttributeValue(anyString())).thenReturn(RUNNER_NAME);
+//        when(activeProject.getAttributeValue(anyString())).thenReturn(RUNNER_NAME);
     }
 
     @Test

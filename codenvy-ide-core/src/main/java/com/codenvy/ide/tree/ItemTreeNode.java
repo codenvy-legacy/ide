@@ -8,17 +8,29 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.java.jdi.client.fqn;
+package com.codenvy.ide.tree;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.api.resources.model.File;
-
-import javax.validation.constraints.NotNull;
 
 /**
- * @author Evgen Vidolob
+ * Tree node to for {@link ItemReference}.
+ *
+ * @author Artem Zatsarynnyy
  */
-public interface FqnResolver {
-    @NotNull
-    String resolveFqn(@NotNull ItemReference file);
+public class ItemTreeNode extends AbstractTreeNode<ItemReference> {
+    public ItemTreeNode(AbstractTreeNode parent, ItemReference data) {
+        super(parent, data);
+    }
+
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    @Override
+    public boolean isAlwaysLeaf() {
+        return "file".equals(data.getType());
+    }
 }
+
+// TODO: consider boolean isAlwaysExpand() method

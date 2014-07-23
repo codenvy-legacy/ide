@@ -10,14 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.part;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.api.event.ResourceChangedHandler;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.workspace.EditorPartStack;
 import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.api.ui.workspace.PartStackView;
@@ -79,38 +76,6 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             @Override
             public void onProjectDescriptionChanged(ProjectActionEvent event) {
                 //do nothing
-            }
-        });
-
-        eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler() {
-            @Override
-            public void onResourceRenamed(ResourceChangedEvent event) {
-            }
-
-            @Override
-            public void onResourceMoved(ResourceChangedEvent event) {
-            }
-
-            @Override
-            public void onResourceDeleted(ResourceChangedEvent event) {
-                if (event.getResource() instanceof Project) {
-                    for (int i = parts.size() - 1; i >= 0; i--) {
-                        PartPresenter part = parts.get(i);
-                        if (part instanceof EditorPartPresenter
-                            && ((EditorPartPresenter)part).getEditorInput().getFile().getProject().equals((Project)event.getResource())) {
-                            //Set file's project to null for not to refer to non existing project:
-                            ((EditorPartPresenter)part).getEditorInput().getFile().setProject(null);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onResourceCreated(ResourceChangedEvent event) {
-            }
-
-            @Override
-            public void onResourceTreeRefreshed(ResourceChangedEvent event) {
             }
         });
     }
@@ -207,7 +172,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     public void onShowListClicked(int x, int y, AsyncCallback<Void> callback) {
-        Array<File> openedFiles = Collections.createArray();
+        Array<ItemReference> openedFiles = Collections.createArray();
         for (PartPresenter part : getParts().asIterable()) {
             if (part instanceof EditorPartPresenter) {
                 openedFiles.add(((EditorPartPresenter)part).getEditorInput().getFile());

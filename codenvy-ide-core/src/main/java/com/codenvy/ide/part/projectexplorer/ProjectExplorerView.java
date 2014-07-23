@@ -10,33 +10,35 @@
  *******************************************************************************/
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.tree.AbstractTreeNode;
 
 import javax.validation.constraints.NotNull;
 
 /**
  * Interface of project tree view.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
+ * @author Artem Zatsarynnyy
  */
 public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDelegate> {
     /**
      * Sets items into tree.
      *
-     * @param resource
+     * @param rootNodes
      *         The root resource item
      */
-    void setItems(@NotNull Resource resource);
-    
+    void setItems(@NotNull Array<AbstractTreeNode<?>> rootNodes);
+
     /**
      * Updates the pointed item.
-     * 
+     *
      * @param resource
      */
-    void updateItem(@NotNull Resource oldResource, @NotNull Resource newResource);
+    void updateItem(@NotNull AbstractTreeNode<?> oldResource, @NotNull AbstractTreeNode<?> newResource);
 
     /**
      * Sets title of part.
@@ -45,14 +47,14 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      *         title of part
      */
     void setTitle(@NotNull String title);
-    
+
     /**
      * Sets project's name and visibility icon.
      *
      * @param project
      */
-    void setProjectHeader(@NotNull Project project);
-    
+    void setProjectHeader(@NotNull ProjectDescriptor project);
+
     /**
      * Hide the project's header panel.
      */
@@ -63,25 +65,26 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
         /**
          * Performs any actions in response to node selection.
          *
-         * @param resource
-         *         node
+         * @param node
+         *         selected node
          */
-        void onResourceSelected(@NotNull Resource resource);
-        
+        void onResourceSelected(@NotNull AbstractTreeNode<?> node);
+
         /**
          * Performs any actions in response to node expanded (opened) action.
-         * 
-         * @param resource
+         *
+         * @param node
+         *         expanded node
          */
-        void onResourceOpened(@NotNull Resource resource);
+        void onResourceOpened(@NotNull AbstractTreeNode<?> node);
 
         /**
          * Performs any actions in response to some node action.
          *
-         * @param resource
+         * @param node
          *         node
          */
-        void onResourceAction(@NotNull Resource resource);
+        void onResourceAction(@NotNull AbstractTreeNode<?> node);
 
         /**
          * Performs any actions appropriate in response to the user having clicked right button on mouse.

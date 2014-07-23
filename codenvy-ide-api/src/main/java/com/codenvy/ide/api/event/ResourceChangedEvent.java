@@ -13,7 +13,6 @@ package com.codenvy.ide.api.event;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.google.gwt.event.shared.GwtEvent;
 
-
 /**
  * Event that describes the fact that Project Action has be performed
  *
@@ -21,7 +20,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler> {
 
-    public static Type<ResourceChangedHandler> TYPE = new Type<ResourceChangedHandler>();
+    public static Type<ResourceChangedHandler> TYPE = new Type<>();
 
     public static enum ResourceAction {
         CREATED, DELETED, TREE_REFRESHED, RENAMED, MOVED;

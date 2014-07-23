@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInitException;
@@ -131,7 +132,7 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void openEditor(@NotNull final File file) {
+    public void openEditor(@NotNull final ItemReference file) {
         if (openedEditors.containsKey(file.getPath())) {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {

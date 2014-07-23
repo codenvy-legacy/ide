@@ -10,33 +10,29 @@
  *******************************************************************************/
 package com.codenvy.ide.api.resources;
 
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.google.gwt.event.shared.GwtEvent;
 
-
 /**
- * Event that describes the fact that file is going to be opened
+ * Event that describes the fact that file is going to be opened.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
- * @version $Id: OpenFileEvent.java 34360 2009-07-22 23:58:59Z nzamosenchuk $
+ * @author Nikolay Zamosenchuk
  */
 public class FileEvent extends GwtEvent<FileEventHandler> {
 
-    public static Type<FileEventHandler> TYPE = new Type<FileEventHandler>();
-
-    public static enum FileOperation {
-        OPEN, SAVE, CLOSE;
-    }
-
-    private File file;
-
+    public static Type<FileEventHandler> TYPE = new Type<>();
+    private ItemReference file;
     private FileOperation fileOperation;
 
     /**
-     * @param fileName
-     *         name of the file
+     * Creates new {@link FileEvent}.
+     *
+     * @param file
+     *         {@link ItemReference} that represents an affected file
+     * @param fileOperation
+     *         file operation
      */
-    public FileEvent(File file, FileOperation fileOperation) {
+    public FileEvent(ItemReference file, FileOperation fileOperation) {
         this.fileOperation = fileOperation;
         this.file = file;
     }
@@ -47,8 +43,8 @@ public class FileEvent extends GwtEvent<FileEventHandler> {
         return TYPE;
     }
 
-    /** @return the name of the file // should return the model object */
-    public File getFile() {
+    /** @return {@link ItemReference} that represents an affected file */
+    public ItemReference getFile() {
         return file;
     }
 
@@ -60,5 +56,9 @@ public class FileEvent extends GwtEvent<FileEventHandler> {
     @Override
     protected void dispatch(FileEventHandler handler) {
         handler.onFileOperation(this);
+    }
+
+    public static enum FileOperation {
+        OPEN, SAVE, CLOSE
     }
 }

@@ -10,14 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.event.ActivePartChangedEvent;
-import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -71,7 +68,7 @@ public class BreakpointGutterManager {
             return;
         }
 
-        final File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        final ItemReference activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         final LineNumberRenderer renderer = getRendererForFile(activeFile);
         final Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null && !breakPoints.isEmpty()) {
@@ -154,7 +151,7 @@ public class BreakpointGutterManager {
      * @return <code>true</code> if the breakpoint exist, and <code>false</code> otherwise
      */
     public boolean isBreakPointExist(int lineNumber) {
-        File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        ItemReference activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null) {
             for (int i = 0; i < breakPoints.size(); i++) {
@@ -191,7 +188,7 @@ public class BreakpointGutterManager {
             oldLineNumber = currentBreakpoint.getLineNumber();
         }
 
-        File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        ItemReference activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         LineNumberRenderer renderer = getRendererForFile(activeFile);
         currentBreakpoint = new Breakpoint(Breakpoint.Type.CURRENT, lineNumber, activeFile.getPath(), activeFile);
 
@@ -236,7 +233,7 @@ public class BreakpointGutterManager {
      */
     public boolean isMarkedLine(int lineNumber) {
         if (currentBreakpoint != null) {
-            File activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+            ItemReference activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
             boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(currentBreakpoint.getPath());
             boolean isCurrentLine = lineNumber == currentBreakpoint.getLineNumber();
             return isFileWithMarkBreakPoint && isCurrentLine;
@@ -244,7 +241,7 @@ public class BreakpointGutterManager {
         return false;
     }
 
-    private LineNumberRenderer getRendererForFile(File file) {
+    private LineNumberRenderer getRendererForFile(ItemReference file) {
         StringMap<EditorPartPresenter> openedEditors = editorAgent.getOpenedEditors();
         for (String key : openedEditors.getKeys().asIterable()) {
             EditorPartPresenter editor = openedEditors.get(key);

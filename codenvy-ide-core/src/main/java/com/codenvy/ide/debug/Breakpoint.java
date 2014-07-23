@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.api.project.shared.dto.ItemReference;
 
 /** @author Evgen Vidolob */
 public class Breakpoint {
@@ -22,7 +22,7 @@ public class Breakpoint {
     private   Type   type;
     private   String message;
     private   String path;
-    protected File   file;
+    protected ItemReference   file;
 
     /**
      * @param type
@@ -30,7 +30,7 @@ public class Breakpoint {
      * @param path
      * @param file
      */
-    public Breakpoint(Type type, int lineNumber, String path, File file) {
+    public Breakpoint(Type type, int lineNumber, String path, ItemReference file) {
         this(type, lineNumber, path, file, null);
     }
 
@@ -41,7 +41,7 @@ public class Breakpoint {
      * @param file
      * @param message
      */
-    public Breakpoint(Type type, int lineNumber, String path, File file, String message) {
+    public Breakpoint(Type type, int lineNumber, String path, ItemReference file, String message) {
         super();
         this.type = type;
         this.lineNumber = lineNumber;
@@ -75,7 +75,7 @@ public class Breakpoint {
      *
      * @return file with which this breakpoint is associated
      */
-    public File getFile() {
+    public ItemReference getFile() {
         return file;
     }
 }

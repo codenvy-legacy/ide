@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -19,7 +20,6 @@ import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
@@ -212,10 +212,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
             return;
         }
 
-        File eventFile = event.getFile();
-        File file = input.getFile();
-        if (file.equals(eventFile))
+        ItemReference eventFile = event.getFile();
+        ItemReference file = input.getFile();
+        if (file.equals(eventFile)) {
             workspaceAgent.removePart(this);
+        }
     }
 
     @Override

@@ -39,7 +39,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_WINDOW;
 @Extension(title = "Codenvy tutorial projects", version = "3.0.0")
 public class TutorialsExtension {
     /** Default name of the file that contains tutorial description. */
-    public static final String DEFAULT_README_FILE_NAME = "guide.html";
+    public static final String DEFAULT_GUIDE_FILE_NAME = ".guide/guide.html";
 
     @Inject
     public TutorialsExtension(TutorialsResources resources,
@@ -51,9 +51,6 @@ public class TutorialsExtension {
                               NotificationManager notificationManager,
                               Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
-
-        Map<String, String> icons = new HashMap<>(1);
-        icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
 
         // register actions
         DefaultActionGroup windowMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_WINDOW);

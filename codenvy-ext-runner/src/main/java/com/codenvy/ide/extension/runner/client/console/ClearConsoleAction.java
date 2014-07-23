@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -27,18 +26,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class ClearConsoleAction extends Action {
 
-    private final RunnerConsolePresenter presenter;
-    private final ResourceProvider       resourceProvider;
+    private RunnerConsolePresenter presenter;
+    private AppContext             appContext;
 
     @Inject
     public ClearConsoleAction(RunnerConsolePresenter presenter,
-                              ResourceProvider resourceProvider,
+                              AppContext appContext,
                               RunnerResources resources,
                               RunnerLocalizationConstant localizationConstant) {
         super(localizationConstant.clearConsoleControlTitle(), localizationConstant.clearConsoleControlDescription(), null,
               resources.clear());
         this.presenter = presenter;
-        this.resourceProvider = resourceProvider;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -50,7 +49,6 @@ public class ClearConsoleAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        e.getPresentation().setEnabledAndVisible(activeProject != null);
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 }

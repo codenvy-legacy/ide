@@ -10,39 +10,42 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.tree.AbstractTreeNode;
+import com.codenvy.ide.tree.ItemTreeNode;
+import com.codenvy.ide.tree.ProjectRootTreeNode;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nullable;
 
 /**
- * Implementation of an {@link Action} that provides ability to create new resource.
- * After performing this action, it asks user for the new resource's name with {@link AskValueDialog}
- * and then creates new file in the selected folder.
+ * Implementation of an {@link Action} that provides ability to create new file.
+ * After performing this action, it asks user for the new file's name with {@link AskValueDialog}
+ * and then creates new file in the user selected folder.
  * By default, this action enabled and visible when any project is opened.
  *
  * @author Artem Zatsarynnyy
  */
 public class DefaultNewResourceAction extends Action {
-    protected String           title;
-    protected ResourceProvider resourceProvider;
-    protected SelectionAgent   selectionAgent;
-    protected EditorAgent      editorAgent;
+    protected String               title;
+    protected AppContext           appContext;
+    protected SelectionAgent       selectionAgent;
+    protected EditorAgent          editorAgent;
+    protected ProjectServiceClient projectServiceClient;
 
     /**
      * Creates new action.
@@ -55,25 +58,29 @@ public class DefaultNewResourceAction extends Action {
      *         action's icon
      * @param svgIcon
      *         action's SVG icon
-     * @param resourceProvider
-     *         {@link com.codenvy.ide.api.resources.ResourceProvider}
+     * @param appContext
+     *         {@link com.codenvy.ide.api.AppContext} instance
      * @param selectionAgent
-     *         {@link com.codenvy.ide.api.selection.SelectionAgent}
+     *         {@link com.codenvy.ide.api.selection.SelectionAgent} instance
      * @param editorAgent
-     *         {@link com.codenvy.ide.api.editor.EditorAgent}
+     *         {@link com.codenvy.ide.api.editor.EditorAgent} instance. Need for opening created file in editor
+     * @param projectServiceClient
+     *         {@link com.codenvy.api.project.gwt.client.ProjectServiceClient} instance
      */
     public DefaultNewResourceAction(String title,
                                     String description,
                                     @Nullable ImageResource icon,
                                     @Nullable SVGResource svgIcon,
-                                    ResourceProvider resourceProvider,
+                                    AppContext appContext,
                                     SelectionAgent selectionAgent,
-                                    EditorAgent editorAgent) {
+                                    @Nullable EditorAgent editorAgent,
+                                    ProjectServiceClient projectServiceClient) {
         super(title, description, icon, svgIcon);
         this.title = title;
-        this.resourceProvider = resourceProvider;
+        this.appContext = appContext;
         this.selectionAgent = selectionAgent;
         this.editorAgent = editorAgent;
+        this.projectServiceClient = projectServiceClient;
     }
 
     @Override
@@ -81,70 +88,64 @@ public class DefaultNewResourceAction extends Action {
         new AskValueDialog("New " + title, "Name:", new AskValueCallback() {
             @Override
             public void onOk(String value) {
-                Project activeProject = resourceProvider.getActiveProject();
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
-                activeProject.createFile(getParent(), name, getDefaultContent(), getMimeType(), new AsyncCallback<File>() {
-                    @Override
-                    public void onSuccess(File result) {
-                        if (result.isFile()) {
-                            editorAgent.openEditor(result);
-                        }
-                    }
+                projectServiceClient
+                        .createFile(getParentPath(), name, getDefaultContent(), getMimeType(), new AsyncRequestCallback<Void>() {
+                            @Override
+                            protected void onSuccess(Void result) {
+//                                editorAgent.openEditor(itemReference);
+                            }
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                });
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(DefaultNewResourceAction.class, exception);
+                            }
+                        });
             }
         }).show();
     }
 
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(resourceProvider.getActiveProject() != null);
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 
-    /**
-     * Returns extension for a new resource, e.g. html.
-     * By default, this method returns an empty string.
-     */
+    /** Returns extension for a new resource, e.g. html. Default implementation returns an empty string. */
     protected String getExtension() {
         return "";
     }
 
-    /**
-     * Returns default content for a new resource.
-     * By default, this method returns an empty string.
-     */
+    /** Returns default content for a new resource. Default implementation returns an empty string. */
     protected String getDefaultContent() {
         return "";
     }
 
-    /**
-     * Returns MIME-type for a new resource.
-     * By default, this method returns text/plain.
-     */
+    /** Returns MIME-type for a new resource. Default implementation returns <code>text/plain</code>. */
     protected String getMimeType() {
         return MimeType.TEXT_PLAIN;
     }
 
-    /** Returns parent folder for creating new resource. */
-    protected Folder getParent() {
-        Project activeProject = resourceProvider.getActiveProject();
-        Folder parent = null;
+    /** Returns path to the parent folder for creating new resource. */
+    protected String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
-            if (selection.getFirstElement() instanceof Resource) {
-                Resource resource = (Resource)selection.getFirstElement();
-                if (resource.isFile()) {
-                    parent = resource.getParent();
-                } else {
-                    parent = (Folder)resource;
+            if (selection.getFirstElement() instanceof AbstractTreeNode) {
+                AbstractTreeNode node = (AbstractTreeNode)selection.getFirstElement();
+                if (node instanceof ItemTreeNode) {
+                    ItemReference data = ((ItemTreeNode)node).getData();
+                    switch (data.getType()) {
+                        case "folder":
+                            return data.getPath();
+                        case "file":
+                            if (node.getParent() instanceof ItemTreeNode) {
+                                return ((ItemTreeNode)node.getParent()).getData().getPath();
+                            } else if (node.getParent() instanceof ProjectRootTreeNode) {
+                                return ((ProjectRootTreeNode)node.getParent()).getData().getPath();
+                            }
+                    }
                 }
             }
-        } else {
-            parent = activeProject;
         }
-        return parent;
+        return appContext.getCurrentProject().getProjectDescription().getPath();
     }
 }

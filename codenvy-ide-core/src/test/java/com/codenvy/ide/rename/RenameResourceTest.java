@@ -65,93 +65,93 @@ public class RenameResourceTest {
     @Mock
     private RenameResourcePresenter presenter;
 
-    @Before
-    public void setUp() {
-        when(resource.getName()).thenReturn(FOLDER_NAME);
-        when(resourceProvider.getActiveProject()).thenReturn(project);
-
-        presenter = new RenameResourcePresenter(view, editorAgent, resourceProvider, notificationManager, projectServiceClient);
-    }
-
-    @Test
-    public void testShowDialog() throws Exception {
-        presenter.renameResource(resource);
-
-        verify(view).setName(anyString());
-        verify(view).setEnableRenameButton(eq(!ENABLE_STATE));
-        verify(view).showDialog();
-        verify(view).selectText(anyString());
-    }
-
-    @Test
-    public void testCancelClicked() throws Exception {
-        presenter.renameResource(resource);
-        presenter.onCancelClicked();
-        verify(view).close();
-    }
-
-    @Test
-    public void testValueChanged() throws Exception {
-        presenter.renameResource(resource);
-
-        // Disable rename button, when new name is empty:
-        when(view.getName()).thenReturn(EMPTY);
-        presenter.onValueChanged();
-        verify(view, atLeastOnce()).getName();
-        verify(view, times(2)).setEnableRenameButton(eq(!ENABLE_STATE));
-
-        // Disable rename button, when new name is the same as old one:
-        when(view.getName()).thenReturn(FOLDER_NAME);
-        presenter.onValueChanged();
-        verify(view, atLeastOnce()).getName();
-        verify(view, times(3)).setEnableRenameButton(eq(!ENABLE_STATE));
-
-        // Enable rename button, when new name is not empty:
-        when(view.getName()).thenReturn(NEW_NAME);
-        presenter.onValueChanged();
-        verify(view, atLeastOnce()).getName();
-        verify(view).setEnableRenameButton(eq(ENABLE_STATE));
-    }
-
-    @Test
-    public void testRenameClicked() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Resource> callback = (AsyncCallback<Resource>)arguments[2];
-                callback.onSuccess(resource);
-                return callback;
-            }
-        }).when(project).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
-
-        presenter.renameResource(resource);
-        presenter.onRenameClicked();
-
-        verify(view).getName();
-        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
-
-        verify(view).close();
-    }
-
-    @Test
-    public void testRenameFailed() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncCallback<Resource> callback = (AsyncCallback<Resource>)arguments[2];
-                callback.onFailure(mock(Throwable.class));
-                return callback;
-            }
-        }).when(project).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
-
-        presenter.renameResource(resource);
-        presenter.onRenameClicked();
-
-        verify(view).getName();
-        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(view).close();
-    }
+//    @Before
+//    public void setUp() {
+//        when(resource.getName()).thenReturn(FOLDER_NAME);
+//        when(resourceProvider.getActiveProject()).thenReturn(project);
+//
+//        presenter = new RenameResourcePresenter(view, editorAgent, resourceProvider, notificationManager, projectServiceClient);
+//    }
+//
+//    @Test
+//    public void testShowDialog() throws Exception {
+//        presenter.renameResource(resource);
+//
+//        verify(view).setName(anyString());
+//        verify(view).setEnableRenameButton(eq(!ENABLE_STATE));
+//        verify(view).showDialog();
+//        verify(view).selectText(anyString());
+//    }
+//
+//    @Test
+//    public void testCancelClicked() throws Exception {
+//        presenter.renameResource(resource);
+//        presenter.onCancelClicked();
+//        verify(view).close();
+//    }
+//
+//    @Test
+//    public void testValueChanged() throws Exception {
+//        presenter.renameResource(resource);
+//
+//        // Disable rename button, when new name is empty:
+//        when(view.getName()).thenReturn(EMPTY);
+//        presenter.onValueChanged();
+//        verify(view, atLeastOnce()).getName();
+//        verify(view, times(2)).setEnableRenameButton(eq(!ENABLE_STATE));
+//
+//        // Disable rename button, when new name is the same as old one:
+//        when(view.getName()).thenReturn(FOLDER_NAME);
+//        presenter.onValueChanged();
+//        verify(view, atLeastOnce()).getName();
+//        verify(view, times(3)).setEnableRenameButton(eq(!ENABLE_STATE));
+//
+//        // Enable rename button, when new name is not empty:
+//        when(view.getName()).thenReturn(NEW_NAME);
+//        presenter.onValueChanged();
+//        verify(view, atLeastOnce()).getName();
+//        verify(view).setEnableRenameButton(eq(ENABLE_STATE));
+//    }
+//
+//    @Test
+//    public void testRenameClicked() throws Exception {
+//        doAnswer(new Answer() {
+//            @Override
+//            public Object answer(InvocationOnMock invocation) throws Throwable {
+//                Object[] arguments = invocation.getArguments();
+//                AsyncCallback<Resource> callback = (AsyncCallback<Resource>)arguments[2];
+//                callback.onSuccess(resource);
+//                return callback;
+//            }
+//        }).when(project).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+//
+//        presenter.renameResource(resource);
+//        presenter.onRenameClicked();
+//
+//        verify(view).getName();
+//        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+//
+//        verify(view).close();
+//    }
+//
+//    @Test
+//    public void testRenameFailed() throws Exception {
+//        doAnswer(new Answer() {
+//            @Override
+//            public Object answer(InvocationOnMock invocation) throws Throwable {
+//                Object[] arguments = invocation.getArguments();
+//                AsyncCallback<Resource> callback = (AsyncCallback<Resource>)arguments[2];
+//                callback.onFailure(mock(Throwable.class));
+//                return callback;
+//            }
+//        }).when(project).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+//
+//        presenter.renameResource(resource);
+//        presenter.onRenameClicked();
+//
+//        verify(view).getName();
+//        verify(resourceProvider.getActiveProject()).rename((Resource)anyObject(), anyString(), (AsyncCallback<Resource>)anyObject());
+//        verify(notificationManager).showNotification((Notification)anyObject());
+//        verify(view).close();
+//    }
 }

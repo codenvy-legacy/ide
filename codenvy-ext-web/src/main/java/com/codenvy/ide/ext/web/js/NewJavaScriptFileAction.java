@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
@@ -29,23 +30,25 @@ import com.google.inject.Singleton;
 public class NewJavaScriptFileAction extends DefaultNewResourceAction {
 
     @Inject
-    public NewJavaScriptFileAction(ResourceProvider resourceProvider,
+    public NewJavaScriptFileAction(AppContext appContext,
                                    WebExtensionResource webExtensionResource,
                                    WebLocalizationConstant localizationConstant,
                                    SelectionAgent selectionAgent,
-                                   EditorAgent editorAgent) {
+                                   EditorAgent editorAgent,
+                                   ProjectServiceClient projectServiceClient) {
         super(localizationConstant.newJavaScriptFileActionTitle(),
               localizationConstant.newJavaScriptFileActionDescription(),
               webExtensionResource.js(),
               null,
-              resourceProvider,
+              appContext,
               selectionAgent,
-              editorAgent);
+              editorAgent,
+              projectServiceClient);
     }
 
     @Override
     protected String getExtension() {
-        return  "js";
+        return "js";
     }
 
     @Override

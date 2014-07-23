@@ -67,8 +67,8 @@ public class DebugAction extends Action {
         eventLogger.log("IDE: Debug application");
         runnerController.runActiveProject(true, new ProjectRunCallback() {
             @Override
-            public void onRun(ApplicationProcessDescriptor appDescriptor) {
-                debuggerPresenter.attachDebugger(appDescriptor);
+            public void onRun(ApplicationProcessDescriptor appDescriptor, ProjectDescriptor projectDescriptor) {
+                debuggerPresenter.attachDebugger(appDescriptor, projectDescriptor);
             }
         }, true);
     }

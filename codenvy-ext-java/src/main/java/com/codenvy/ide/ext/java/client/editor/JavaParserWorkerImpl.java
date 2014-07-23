@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.Jso;
@@ -68,7 +67,6 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private final String        workspaceId;
     private String javaCAPath;
     private Worker                       worker;
-    private ResourceProvider             resourceProvider;
     private String                       restContext;
     private StringMap<WorkerCallback<?>> callbacks;
     private StringMap<ApplyCallback>                   applyCallback        = Collections.createStringMap();
@@ -76,9 +74,8 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
     private StringMap<FormatResultCallback>            formatResultCallback = Collections.createStringMap();
 
     @Inject
-    public JavaParserWorkerImpl(ResourceProvider resourceProvider, EventBus eventBus, @Named("restContext") String restContext,
+    public JavaParserWorkerImpl(EventBus eventBus, @Named("restContext") String restContext,
                                 @Named("workspaceId") String workspaceId, @Named("javaCA") String javaCAPath) {
-        this.resourceProvider = resourceProvider;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.javaCAPath = javaCAPath;

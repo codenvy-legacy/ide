@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -77,12 +77,12 @@ public interface EditorInput {
      * @return the File; never <code>null</code>
      */
     @NotNull
-    File getFile();
+    ItemReference getFile();
 
     /**
      * Sets file of this input.
      *
      * @param file
      */
-    void setFile(@NotNull File file);
+    void setFile(@NotNull ItemReference file);
 }

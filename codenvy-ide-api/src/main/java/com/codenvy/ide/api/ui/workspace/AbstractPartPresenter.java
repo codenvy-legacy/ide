@@ -94,7 +94,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     public int getSize() {
         return 0;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public IsWidget getTitleWidget() {

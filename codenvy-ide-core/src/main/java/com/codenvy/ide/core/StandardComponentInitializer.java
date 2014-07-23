@@ -107,10 +107,10 @@ public class StandardComponentInitializer {
     private RenameResourceAction renameResourceAction;
 
     @Inject
-    private CloseProjectAction closeProjectAction;
+    private OpenProjectAction openProjectAction;
 
     @Inject
-    private OpenProjectAction  openProjectAction;
+    private CloseProjectAction closeProjectAction;
 
     @Inject
     private FormatterAction formatterAction;
@@ -308,6 +308,7 @@ public class StandardComponentInitializer {
         // Compose main toolbar
         DefaultActionGroup changeResourceGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
+        actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("deleteItem", deleteResourceAction);
         actionManager.registerAction("renameResource", renameResourceAction);

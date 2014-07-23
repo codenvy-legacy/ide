@@ -13,8 +13,8 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
@@ -32,10 +32,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends Action {
 
-    private final RunnerController     runnerController;
-    private final CustomRunPresenter   customRunPresenter;
-    private final AnalyticsEventLogger eventLogger;
-    private AppContext appContext;
+    private AppContext           appContext;
+    private RunnerController     runnerController;
+    private CustomRunPresenter   customRunPresenter;
+    private AnalyticsEventLogger eventLogger;
 
     @Inject
     public CustomRunAction(RunnerController runnerController,

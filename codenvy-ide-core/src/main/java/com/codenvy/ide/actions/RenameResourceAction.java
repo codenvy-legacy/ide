@@ -11,6 +11,9 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.model.Resource;
@@ -54,16 +57,12 @@ public class RenameResourceAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Selection<Resource> selection = (Selection<Resource>)selectionAgent.getSelection();
-        final boolean isAnySelection = selection != null && selection.getFirstElement() != null;
-
-        // TODO: temporary disable renaming Java packages since we don't have java-refactoring feature
-        if (isAnySelection && "java.package".equals(selection.getFirstElement().getResourceType())) {
-            e.getPresentation().setEnabled(false);
-            return;
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            Object firstElement = selection.getFirstElement();
+            e.getPresentation().setEnabled(firstElement instanceof ItemReference ||
+                                           firstElement instanceof ProjectReference ||
+                                           firstElement instanceof ProjectDescriptor);
         }
-
-        e.getPresentation().setEnabled(isAnySelection);
     }
-
 }

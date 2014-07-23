@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.client.editor;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.java.client.JavaLocalizationConstant;
 import com.codenvy.ide.ext.java.client.editor.outline.OutlineUpdater;
@@ -45,7 +45,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     private       NotificationManager      notificationManager;
     private       JavaCodeAssistProcessor  codeAssistProcessor;
     private       JavaLocalizationConstant localizationConstant;
-    private       File                     file;
+    private       ItemReference            file;
     private       EditorWithErrors         editorWithErrors;
     private boolean first = true;
     private Notification notification;
@@ -102,7 +102,10 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
             notificationManager.showNotification(notification);
             first = false;
         }
-        worker.parse(document.get(), file.getName(), file.getPath(), file.getParent().getName(), file.getProject().getPath(), this);
+        String[] path = file.getPath().substring(1).split("/");
+        final String projectPath = path[0];
+        final String parentName = path[path.length - 2];
+        worker.parse(document.get(), file.getName(), file.getPath(), parentName, projectPath, this);
     }
 
     /** {@inheritDoc} */
@@ -112,7 +115,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, JavaParserWo
     }
 
     /** @return the file */
-    public File getFile() {
+    public ItemReference getFile() {
         return file;
     }
 

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.openedfiles;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.api.resources.model.File;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -48,9 +48,9 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
 
         private Image closeButton;
 
-        private File  file;
+        private ItemReference  file;
 
-        public FileItem(File file) {
+        public FileItem(ItemReference file) {
             this.file = file;
             FlowPanel panel = new FlowPanel();
             panel.setStyleName(partStackResources.partStackCss().idePartStackMultipleTabsItem());
@@ -80,7 +80,7 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
             });
         }
 
-        public File getFile() {
+        public ItemReference getFile() {
             return file;
         }
 
@@ -131,14 +131,13 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
 
     /** {@inheritDoc} */
     @Override
-    public void setOpenedFiles(Array<File> files) {
+    public void setOpenedFiles(Array<ItemReference> files) {
         container.clear();
-        for (File file : files.asIterable()) {
+        for (ItemReference file : files.asIterable()) {
             FileItem fileItem = new FileItem(file);
             bindEvents(fileItem);
             container.add(fileItem);
         }
-
     }
 
     private void bindEvents(final FileItem fileItem) {
@@ -158,6 +157,4 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
             }
         });
     }
-
-
 }

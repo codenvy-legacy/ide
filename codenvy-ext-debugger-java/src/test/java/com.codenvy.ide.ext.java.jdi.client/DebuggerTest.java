@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdi.client;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.resources.model.File;
@@ -78,7 +79,7 @@ public class DebuggerTest extends BaseTest {
     @Mock
     private BreakpointGutterManager      gutterManager;
     @Mock
-    private File                         file;
+    private ItemReference                file;
     @Mock
     private FqnResolverFactory           resolverFactory;
     @Mock
@@ -93,7 +94,7 @@ public class DebuggerTest extends BaseTest {
         super.setUp();
         when(applicationProcessDescriptor.getDebugHost()).thenReturn(DEBUG_HOST);
         when(applicationProcessDescriptor.getDebugPort()).thenReturn(DEBUG_PORT);
-        when(file.getMimeType()).thenReturn(MIME_TYPE);
+        when(file.getMediaType()).thenReturn(MIME_TYPE);
         when(dtoFactory.createDto(Location.class)).thenReturn(mock(Location.class));
         when(dtoFactory.createDto(BreakPoint.class)).thenReturn(mock(BreakPoint.class));
         when(resolverFactory.getResolver(anyString())).thenReturn(mock(FqnResolver.class));

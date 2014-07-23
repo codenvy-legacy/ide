@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.tutorial.wysiwyg.editor;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.resources.client.ImageResource;
@@ -29,9 +31,11 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 public class WysiwygEditor extends AbstractEditorPresenter {
 
+    private ProjectServiceClient projectServiceClient;
     private RichTextArea textArea;
 
-    public WysiwygEditor() {
+    public WysiwygEditor(ProjectServiceClient projectServiceClient) {
+        this.projectServiceClient = projectServiceClient;
     }
 
     /** {@inheritDoc} */
@@ -40,22 +44,17 @@ public class WysiwygEditor extends AbstractEditorPresenter {
         //create editor
         textArea = new RichTextArea();
 
-        //use or load content of the file
-        if (input.getFile().getContent() == null) {
-            input.getFile().getProject().getContent(input.getFile(), new AsyncCallback<File>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    Log.error(WysiwygEditor.class, caught);
-                }
+        projectServiceClient.getFileContent(input.getFile().getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+            @Override
+            protected void onSuccess(String result) {
+                textArea.setHTML(result);
+            }
 
-                @Override
-                public void onSuccess(File result) {
-                    textArea.setHTML(input.getFile().getContent());
-                }
-            });
-        } else {
-            textArea.setHTML(input.getFile().getContent());
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(WysiwygEditor.class, exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */

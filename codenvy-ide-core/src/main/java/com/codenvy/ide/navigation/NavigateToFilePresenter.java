@@ -148,19 +148,19 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     @Override
     public void onFileSelected() {
         view.close();
-
-        final String path = view.getItemPath();
-        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
-            @Override
-            public void onSuccess(Resource result) {
-                eventBus.fireEvent(new FileEvent((File)result, FileOperation.OPEN));
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(NavigateToFilePresenter.class, localizationConstant.unableOpenFile(path));
-            }
-        });
+//
+//        final String path = view.getItemPath();
+//        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
+//            @Override
+//            public void onSuccess(Resource result) {
+//                eventBus.fireEvent(new FileEvent(result., FileOperation.OPEN));
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                Log.error(NavigateToFilePresenter.class, localizationConstant.unableOpenFile(path));
+//            }
+//        });
     }
 
     /**
@@ -171,31 +171,31 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
      *         <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
      */
     public void openFile(final String path) {
-        rootProject = getRootProject(resourceProvider.getActiveProject());
-        if (rootProject != null) {
-            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
-                                           new AsyncCallback<Resource>() {
-                                               @Override
-                                               public void onSuccess(Resource resource) {
-                                                   if (resource.isFile()) {
-                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
-                                                   } else {
-                                                       notificationManager
-                                                               .showNotification(
-                                                                       new Notification(localizationConstant.unableOpenNotFile(path),
-                                                                                        Notification.Type.WARNING)
-                                                                                );
-                                                   }
-                                               }
-
-                                               @Override
-                                               public void onFailure(Throwable caught) {
-                                                   notificationManager.showNotification(
-                                                           new Notification(localizationConstant.unableOpenFile(path), Notification.Type.WARNING));
-                                               }
-                                           }
-                                          );
-        }
+//        rootProject = getRootProject(resourceProvider.getActiveProject());
+//        if (rootProject != null) {
+//            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
+//                                           new AsyncCallback<Resource>() {
+//                                               @Override
+//                                               public void onSuccess(Resource resource) {
+//                                                   if (resource.isFile()) {
+//                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+//                                                   } else {
+//                                                       notificationManager
+//                                                               .showNotification(
+//                                                                       new Notification(localizationConstant.unableOpenNotFile(path),
+//                                                                                        Notification.Type.WARNING)
+//                                                                                );
+//                                                   }
+//                                               }
+//
+//                                               @Override
+//                                               public void onFailure(Throwable caught) {
+//                                                   notificationManager.showNotification(
+//                                                           new Notification(localizationConstant.unableOpenFile(path), Notification.Type.WARNING));
+//                                               }
+//                                           }
+//                                          );
+//        }
     }
 
 }

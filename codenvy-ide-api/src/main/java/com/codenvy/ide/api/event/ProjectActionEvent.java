@@ -10,27 +10,28 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.google.gwt.event.shared.GwtEvent;
 
-
 /**
- * Event that describes the fact that Project Action has be performed
+ * Event that describes the fact that Project Action has be performed.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
 
-    public static Type<ProjectActionHandler> TYPE = new Type<ProjectActionHandler>();
+    public static Type<ProjectActionHandler> TYPE = new Type<>();
+    private final ProjectDescriptor project;
+    private final ProjectAction     projectAction;
 
-    /** Set of possible Project Actions */
-    public static enum ProjectAction {
-        OPENED, CLOSED, DESCRIPTION_CHANGED, RESOURCE_CHANGED;
+    /**
+     * @param project
+     * @param projectAction
+     */
+    protected ProjectActionEvent(ProjectDescriptor project, ProjectAction projectAction) {
+        this.project = project;
+        this.projectAction = projectAction;
     }
-
-    private final Project project;
-
-    private final ProjectAction projectAction;
 
     /**
      * Creates a Project Opened Event
@@ -39,7 +40,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *         - an instance of affected project
      * @return
      */
-    public static ProjectActionEvent createProjectOpenedEvent(Project project) {
+    public static ProjectActionEvent createProjectOpenedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.OPENED);
     }
 
@@ -50,7 +51,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *         - an instance of affected project
      * @return
      */
-    public static ProjectActionEvent createProjectClosedEvent(Project project) {
+    public static ProjectActionEvent createProjectClosedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.CLOSED);
     }
 
@@ -61,17 +62,8 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *         - an instance of affected project
      * @return
      */
-    public static ProjectActionEvent createProjectDescriptionChangedEvent(Project project) {
+    public static ProjectActionEvent createProjectDescriptionChangedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.DESCRIPTION_CHANGED);
-    }
-
-    /**
-     * @param project
-     * @param projectAction
-     */
-    protected ProjectActionEvent(Project project, ProjectAction projectAction) {
-        this.project = project;
-        this.projectAction = projectAction;
     }
 
     @Override
@@ -80,7 +72,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
     }
 
     /** @return the instance of affected project */
-    public Project getProject() {
+    public ProjectDescriptor getProject() {
         return project;
     }
 
@@ -104,5 +96,10 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
             default:
                 break;
         }
+    }
+
+    /** Set of possible Project Actions */
+    public static enum ProjectAction {
+        OPENED, CLOSED, DESCRIPTION_CHANGED
     }
 }

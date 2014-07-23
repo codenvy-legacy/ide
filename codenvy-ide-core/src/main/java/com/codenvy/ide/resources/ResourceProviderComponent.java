@@ -123,12 +123,13 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVisibility(result.getVisibility());
+                project.setCurrentUserPermissions(result.getCurrentUserPermissions());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);
                 if (activeProject != null) {
                     try {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+//                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
                     } catch (Exception e) {
                         Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectClosedEvent", e);
                     }
@@ -140,7 +141,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                     @Override
                     public void onSuccess(Project result) {
                         try {
-                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+//                            eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                         } catch (Exception e) {
                             Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectOpenedEvent", e);
                         }
@@ -206,7 +207,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
                 if (activeProject != null) {
                     try {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+//                        eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
                     } catch (Exception e) {
                         Log.error(ResourceProviderComponent.class, "An error occurred while firing ProjectClosedEvent", e);
                     }
@@ -219,7 +220,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.refreshChildren(new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project project) {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+//                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                         callback.onSuccess(project);
                     }
 
@@ -329,7 +330,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                             @Override
                             public void onSuccess(Folder result) {
                                 if (item instanceof File) {
-                                    eventBus.fireEvent(new FileEvent((File)item, FileEvent.FileOperation.CLOSE));
+//                                    eventBus.fireEvent(new FileEvent((File)item, FileEvent.FileOperation.CLOSE));
                                 }
                                 callback.onSuccess(result.toString());
                             }
@@ -357,7 +358,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             @Override
             public void execute() {
                 if (activeProject != null) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
+//                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(activeProject));
                     activeProject = null;
                 }
 

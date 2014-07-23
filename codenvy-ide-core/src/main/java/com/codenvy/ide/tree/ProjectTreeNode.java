@@ -8,19 +8,27 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.resources;
+package com.codenvy.ide.tree;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 
 /**
- * Handles OpenFileEvent.
+ * Tree node to for {@link ProjectReference}.
  *
- * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
-public interface FileEventHandler extends EventHandler {
-    /**
-     * @param event
-     *         OpenFileEvent
-     */
-    void onFileOperation(FileEvent event);
+public class ProjectTreeNode extends AbstractTreeNode<ProjectReference> {
+    public ProjectTreeNode(AbstractTreeNode parent, ProjectReference data) {
+        super(parent, data);
+    }
+
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    @Override
+    public boolean isAlwaysLeaf() {
+        return true;
+    }
 }

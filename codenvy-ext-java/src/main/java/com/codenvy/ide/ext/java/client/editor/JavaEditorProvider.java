@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.java.client.editor;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -59,7 +60,8 @@ public class JavaEditorProvider implements EditorProvider {
                               FileSaveWatcher watcher,
                               ContentFormatter contentFormatter,
                               AnalyticsEventLogger eventLogger,
-                              JavaLocalizationConstant localizationConstant) {
+                              JavaLocalizationConstant localizationConstant,
+                              ProjectServiceClient projectServiceClient) {
         super();
         this.activityManager = activityManager;
         this.editorProvider = editorProvider;
@@ -69,7 +71,7 @@ public class JavaEditorProvider implements EditorProvider {
         this.localizationConstant = localizationConstant;
         this.documentProvider =
                 new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), JavaResources.INSTANCE.css(), documentFactory,
-                                                    eventBus);
+                                                    eventBus, projectServiceClient);
         this.notificationManager = notificationManager;
         this.contentFormatter = contentFormatter;
     }

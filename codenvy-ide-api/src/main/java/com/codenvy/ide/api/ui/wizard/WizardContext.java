@@ -70,7 +70,7 @@ public class WizardContext {
     /** Create wizard context. */
     @Inject
     public WizardContext() {
-        this.dates = new HashMap<Key<Object>, Object>();
+        this.dates = new HashMap<>();
     }
 
     /**

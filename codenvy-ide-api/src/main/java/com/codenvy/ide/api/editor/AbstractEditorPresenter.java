@@ -72,7 +72,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
     /** {@inheritDoc} */
     @Override
     public boolean onClose() {
-        if (isDirty() && getEditorInput().getFile().getProject() != null) {
+        if (isDirty()) {
             if (Window.confirm("'" + getEditorInput().getName() + "' has been modified. Save changes?")) {
                 doSave();
             }

@@ -14,8 +14,6 @@ import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -26,30 +24,25 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class CloseProjectAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
+    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
     private final EventBus             eventBus;
-    private AppContext appContext;
 
     @Inject
-    public CloseProjectAction(ResourceProvider resourceProvider,
+    public CloseProjectAction(AppContext appContext,
                               Resources resources,
                               AnalyticsEventLogger eventLogger,
-                              EventBus eventBus,
-                              AppContext appContext) {
+                              EventBus eventBus) {
         super("Close Project", "Close project", null, resources.closeProject());
-        this.resourceProvider = resourceProvider;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.eventBus = eventBus;
-        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        //e.getPresentation().setEnabled(activeProject != null);
-        e.getPresentation().setVisible(activeProject != null);
+        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
     }
 
     /** {@inheritDoc} */
@@ -57,13 +50,9 @@ public class CloseProjectAction extends Action {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Close project");
 
-        if (resourceProvider.getActiveProject() != null) {
-            ProjectActionEvent event = ProjectActionEvent.createProjectClosedEvent(resourceProvider.getActiveProject());
-            resourceProvider.setActiveProject(null);
-            appContext.setCurrentProject(null);
-            eventBus.fireEvent(event);
+        if (appContext.getCurrentProject() != null) {
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject().getProjectDescription()));
         }
 
-        resourceProvider.refreshRoot();
     }
 }

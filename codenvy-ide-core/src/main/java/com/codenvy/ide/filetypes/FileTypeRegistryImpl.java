@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.filetypes;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.regexp.shared.RegExp;
@@ -47,13 +47,13 @@ public class FileTypeRegistryImpl implements FileTypeRegistry {
     }
 
     @Override
-    public FileType getFileTypeByFile(File file) {
+    public FileType getFileTypeByFile(ItemReference file) {
         FileType fileType = getFileTypeByNamePattern(file.getName());
         if (fileType == unknownFileType) {
-            fileType = getFileTypeByMimeType(file.getMimeType());
+            fileType = getFileTypeByMimeType(file.getMediaType());
         }
         if (fileType == unknownFileType) {
-            fileType = getFileTypeByExtension(getFileExtension(file.getMimeType()));
+            fileType = getFileTypeByExtension(getFileExtension(file.getMediaType()));
         }
         return fileType != null ? fileType : unknownFileType;
     }

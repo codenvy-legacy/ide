@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
@@ -39,14 +39,14 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
-    private final RunnerController           runnerController;
-    private final RunnerServiceClient        runnerServiceClient;
-    private final CustomRunView              view;
-    private final DtoFactory                 dtoFactory;
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private final NotificationManager        notificationManager;
-    private final ResourceProvider           resourceProvider;
-    private final RunnerLocalizationConstant constant;
+    private RunnerController           runnerController;
+    private RunnerServiceClient        runnerServiceClient;
+    private CustomRunView              view;
+    private DtoFactory                 dtoFactory;
+    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private NotificationManager        notificationManager;
+    private AppContext                 appContext;
+    private RunnerLocalizationConstant constant;
 
     /** Create presenter. */
     @Inject
@@ -56,7 +56,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  DtoFactory dtoFactory,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                  NotificationManager notificationManager,
-                                 ResourceProvider resourceProvider,
+                                 AppContext appContext,
                                  RunnerLocalizationConstant constant) {
         this.runnerController = runnerController;
         this.runnerServiceClient = runnerServiceClient;
@@ -64,7 +64,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
-        this.resourceProvider = resourceProvider;
+        this.appContext = appContext;
         this.constant = constant;
         this.view.setDelegate(this);
     }
@@ -75,7 +75,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<RunnerDescriptor> result) {
-                        Project activeProject = resourceProvider.getActiveProject();
+                        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         view.showDialog();
                     }
@@ -89,9 +89,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                       );
     }
 
-    private Array<RunnerEnvironment> getEnvironmentsForProject(Project project, Array<RunnerDescriptor> runners) {
+    private Array<RunnerEnvironment> getEnvironmentsForProject(ProjectDescriptor project, Array<RunnerDescriptor> runners) {
         Array<RunnerEnvironment> environments = Collections.createArray();
-        final String runnerName = project.getAttributeValue(Constants.RUNNER_NAME);
+        final String runnerName = project.getAttributes().get(Constants.RUNNER_NAME).get(0);
         for (RunnerDescriptor runnerDescriptor : runners.asIterable()) {
             if (runnerName.equals(runnerDescriptor.getName())) {
                 for (RunnerEnvironment environment : runnerDescriptor.getEnvironments().values()) {
