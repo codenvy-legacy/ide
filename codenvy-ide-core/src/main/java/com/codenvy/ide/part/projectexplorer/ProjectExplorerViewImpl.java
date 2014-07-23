@@ -17,7 +17,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
 import com.codenvy.ide.tree.ProjectTreeNodeDataAdapter;
 import com.codenvy.ide.tree.ProjectTreeNodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;

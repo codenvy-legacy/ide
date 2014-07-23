@@ -28,7 +28,6 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -41,7 +40,6 @@ import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.ext.java.client.format.FormatController;
-import com.codenvy.ide.ext.java.client.projectmodel.JavaProjectModelProvider;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
@@ -76,8 +74,7 @@ public class JavaExtension {
     private AppContext               appContext;
 
     @Inject
-    public JavaExtension(ResourceProvider resourceProvider,
-                         FileTypeRegistry fileTypeRegistry,
+    public JavaExtension(FileTypeRegistry fileTypeRegistry,
                          NotificationManager notificationManager,
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
@@ -128,9 +125,6 @@ public class JavaExtension {
 
         editorRegistry.registerDefaultEditor(javaFile, javaEditorProvider);
         fileTypeRegistry.registerFileType(javaFile);
-
-        resourceProvider.registerModelProvider("java", new JavaProjectModelProvider(eventBus, asyncRequestFactory, projectServiceClient,
-                                                                                    dtoUnmarshallerFactory));
 
         JavaResources.INSTANCE.css().ensureInjected();
 

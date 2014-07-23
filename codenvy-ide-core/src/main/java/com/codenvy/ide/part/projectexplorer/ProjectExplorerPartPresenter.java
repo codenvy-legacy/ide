@@ -14,6 +14,7 @@ import elemental.client.Browser;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -23,13 +24,12 @@ import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.tree.TreeStructure;
+import com.codenvy.ide.api.ui.tree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.tree.AbstractTreeNode;
-import com.codenvy.ide.tree.GenericTreeStructure;
-import com.codenvy.ide.tree.ProjectsListTreeStructure;
-import com.codenvy.ide.tree.TreeStructure;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -52,14 +52,16 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
-    protected ProjectExplorerView      view;
-    protected EventBus                 eventBus;
-    private   ContextMenuPresenter     contextMenuPresenter;
-    private   ProjectServiceClient     projectServiceClient;
-    private   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private   CoreLocalizationConstant coreLocalizationConstant;
+    protected ProjectExplorerView           view;
+    protected EventBus                      eventBus;
+    private   ContextMenuPresenter          contextMenuPresenter;
+    private   TreeStructureProviderRegistry treeStructureProviderRegistry;
+    private   AppContext                    appContext;
+    private   ProjectServiceClient          projectServiceClient;
+    private   DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private   CoreLocalizationConstant      coreLocalizationConstant;
     /** Tree that is currently showing. */
-    private   TreeStructure            currentTreeStructure;
+    private   TreeStructure                 currentTreeStructure;
 
     /** Instantiates the ProjectExplorer Presenter. */
     @Inject
@@ -68,13 +70,17 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        CoreLocalizationConstant coreLocalizationConstant) {
+                                        CoreLocalizationConstant coreLocalizationConstant,
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry,
+                                        AppContext appContext) {
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;
+        this.treeStructureProviderRegistry = treeStructureProviderRegistry;
+        this.appContext = appContext;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -90,7 +96,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onOpen() {
         // show list of all projects
-        setContent(new ProjectsListTreeStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+        setContent(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
     }
 
     /** {@inheritDoc} */
@@ -114,8 +120,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
-        return "This View helps you to do basic operation with your projects. Following features are currently available:"
-               + "\n\t- view project's tree" + "\n\t- select and open project's file";
+        return "This View helps you to do basic operation with your projects.";
     }
 
     /** Adds behavior to view's components. */
@@ -125,8 +130,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-//                TreeStructure t = treeStructureRegistry.getTreeStructure(event.getProject().getProjectTypeId());
-                setContent(new GenericTreeStructure(event.getProject(), eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                TreeStructure treeStructure =
+                        treeStructureProviderRegistry.getTreeStructureProvider(event.getProject().getProjectTypeId()).getTreeStructure();
+                setContent(treeStructure);
                 view.setProjectHeader(event.getProject());
                 Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
                                                               Config.getContext() +
@@ -140,10 +146,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                setContent(new ProjectsListTreeStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
-                view.hideProjectHeader();
-                Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
-                                                              Config.getContext() + "/" + Config.getWorkspaceName());
+                // if no previously opened project
+                if (appContext.getCurrentProject() == null) {
+                    setContent(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+                    view.hideProjectHeader();
+                    Browser.getWindow().getHistory().replaceState(null, Window.getTitle(),
+                                                                  Config.getContext() + "/" + Config.getWorkspaceName());
+                }
             }
         });
 

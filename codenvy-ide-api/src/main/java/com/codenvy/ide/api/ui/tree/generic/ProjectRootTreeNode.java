@@ -8,17 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.api.ui.tree.generic;
 
-import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
 
 /**
- * Tree node to for {@link ProjectReference}.
+ * Tree node to for {@link ProjectDescriptor}.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectTreeNode extends AbstractTreeNode<ProjectReference> {
-    public ProjectTreeNode(AbstractTreeNode parent, ProjectReference data) {
+public class ProjectRootTreeNode extends AbstractTreeNode<ProjectDescriptor> {
+    public ProjectRootTreeNode(AbstractTreeNode parent, ProjectDescriptor data) {
         super(parent, data);
     }
 
@@ -29,6 +30,6 @@ public class ProjectTreeNode extends AbstractTreeNode<ProjectReference> {
 
     @Override
     public boolean isAlwaysLeaf() {
-        return true;
+        return false;
     }
 }

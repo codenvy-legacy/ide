@@ -13,30 +13,16 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Resource API fires ProjectAction Events when project any kind of operations that
- * changes the project invoked. Those are opening, closing, changing the description.
+ * A handler for handling {@link CloseCurrentProjectEvent}.
  *
- * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
-public interface ProjectActionHandler extends EventHandler {
+public interface CloseCurrentProjectHandler extends EventHandler {
     /**
-     * Called when project is opened.
+     * Called when {@link CloseCurrentProjectEvent} is fired.
      *
      * @param event
+     *         the fired {@link CloseCurrentProjectEvent}
      */
-    void onProjectOpened(ProjectActionEvent event);
-
-    /**
-     * Called when project is closed.
-     *
-     * @param event
-     */
-    void onProjectClosed(ProjectActionEvent event);
-
-    /**
-     * Project Description Changed
-     *
-     * @param event
-     */
-    void onProjectDescriptionChanged(ProjectActionEvent event);
+    void onClose(CloseCurrentProjectEvent event);
 }

@@ -15,9 +15,8 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.Profile;
@@ -25,7 +24,7 @@ import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.ui.Icon;
@@ -39,6 +38,7 @@ import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -72,22 +72,22 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt             analyticsEventLoggerExt;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt analyticsEventLoggerExt;
+    private final DtoFactory              dtoFactory;
     private final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
-    private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private final IconRegistry                        iconRegistry;
-    private final ThemeAgent                          themeAgent;
-    private final Provider<ComponentRegistry>         componentRegistry;
-    private final Provider<WorkspacePresenter>        workspaceProvider;
-    private final ExtensionInitializer                extensionInitializer;
-    private final UserProfileServiceClient            userProfileService;
-    private final ProjectServiceClient                projectServiceClient;
-    private final WorkspaceServiceClient              workspaceServiceClient;
-    private final PreferencesManagerImpl              preferencesManager;
-    private final StyleInjector                       styleInjector;
-    private final EventBus                            eventBus;
-    private final ActionManager                       actionManager;
+    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private final IconRegistry                  iconRegistry;
+    private final ThemeAgent                    themeAgent;
+    private final Provider<ComponentRegistry>   componentRegistry;
+    private final Provider<WorkspacePresenter>  workspaceProvider;
+    private final ExtensionInitializer          extensionInitializer;
+    private final UserProfileServiceClient      userProfileService;
+    private final WorkspaceServiceClient        workspaceServiceClient;
+    private final PreferencesManagerImpl        preferencesManager;
+    private final StyleInjector                 styleInjector;
+    private final EventBus                      eventBus;
+    private final ActionManager                 actionManager;
 
     /** Create controller. */
     @Inject
@@ -95,7 +95,6 @@ public class BootstrapController {
                                Provider<WorkspacePresenter> workspaceProvider,
                                ExtensionInitializer extensionInitializer,
                                UserProfileServiceClient userProfileService,
-                               ProjectServiceClient projectServiceClient,
                                WorkspaceServiceClient workspaceServiceClient,
                                PreferencesManagerImpl preferencesManager,
                                StyleInjector styleInjector,
@@ -105,23 +104,22 @@ public class BootstrapController {
                                AnalyticsEventLoggerExt analyticsEventLoggerExt,
                                Resources resources,
                                EventBus eventBus,
+                               DtoFactory dtoFactory,
 
                                final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager) {
-
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
         this.userProfileService = userProfileService;
-        this.projectServiceClient = projectServiceClient;
         this.workspaceServiceClient = workspaceServiceClient;
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
         this.eventBus = eventBus;
-
+        this.dtoFactory = dtoFactory;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
@@ -341,21 +339,11 @@ public class BootstrapController {
     }
 
     private void processStartupParameters() {
-        final String projectToOpen = Config.getProjectName();
-        if (projectToOpen != null) {
-            projectServiceClient.getProject(projectToOpen, new AsyncRequestCallback<ProjectDescriptor>(
-                    dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-                @Override
-                protected void onSuccess(ProjectDescriptor result) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
-                    processStartupAction();
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    processStartupAction();
-                }
-            });
+        final String projectNameToOpen = Config.getProjectName();
+        if (projectNameToOpen != null) {
+            ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(projectNameToOpen);
+            eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+            processStartupAction();
         } else {
             processStartupAction();
         }

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.api.ui.tree;
 
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;

@@ -11,9 +11,8 @@
 package com.codenvy.ide.openproject;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -59,19 +58,8 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
-        projectServiceClient.getProject(selectedProject.getName(), new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                view.close();
-                eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(OpenProjectPresenter.class, "Can't open project", exception);
-            }
-        });
+        eventBus.fireEvent(new OpenProjectEvent(selectedProject));
+        view.close();
     }
 
     /** {@inheritDoc} */

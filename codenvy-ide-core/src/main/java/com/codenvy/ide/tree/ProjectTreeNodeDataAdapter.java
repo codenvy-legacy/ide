@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.tree;
 
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;

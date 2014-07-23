@@ -8,29 +8,21 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.api.event;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Tree node to for {@link ItemReference}.
+ * A handler for handling {@link OpenProjectEvent}.
  *
  * @author Artem Zatsarynnyy
  */
-public class ItemTreeNode extends AbstractTreeNode<ItemReference> {
-    public ItemTreeNode(AbstractTreeNode parent, ItemReference data) {
-        super(parent, data);
-    }
-
-    @Override
-    public String getName() {
-        return data.getName();
-    }
-
-    @Override
-    public boolean isAlwaysLeaf() {
-        return "file".equals(data.getType());
-    }
+public interface OpenProjectHandler extends EventHandler {
+    /**
+     * Called when {@link OpenProjectEvent} is fired.
+     *
+     * @param event
+     *         the {@link OpenProjectEvent} that contains project to open
+     */
+    void onOpenProject(OpenProjectEvent event);
 }
-
-// TODO: consider boolean isAlwaysExpand() method

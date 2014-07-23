@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.api.ui.tree;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -108,7 +108,7 @@ public abstract class AbstractTreeNode<T> {
      *
      * @return the rendered {@link TreeNodeElement}
      */
-    TreeNodeElement<AbstractTreeNode<?>> getTreeNodeElement() {
+    public TreeNodeElement<AbstractTreeNode<?>> getTreeNodeElement() {
         return treeNodeElement;
     }
 
@@ -117,7 +117,7 @@ public abstract class AbstractTreeNode<T> {
      *
      * @param treeNodeElement
      */
-    void setTreeNodeElement(TreeNodeElement<AbstractTreeNode<?>> treeNodeElement) {
+    public void setTreeNodeElement(TreeNodeElement<AbstractTreeNode<?>> treeNodeElement) {
         this.treeNodeElement = treeNodeElement;
     }
 }

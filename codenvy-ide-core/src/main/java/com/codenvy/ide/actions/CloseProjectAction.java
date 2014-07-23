@@ -13,7 +13,7 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
@@ -51,7 +51,7 @@ public class CloseProjectAction extends Action {
         eventLogger.log("IDE: Close project");
 
         if (appContext.getCurrentProject() != null) {
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject()));
+            eventBus.fireEvent(new CloseCurrentProjectEvent());
         }
     }
 }

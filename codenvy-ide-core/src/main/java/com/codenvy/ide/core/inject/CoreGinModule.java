@@ -58,6 +58,9 @@ import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.ui.theme.Theme;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.api.ui.tree.TreeStructureProvider;
+import com.codenvy.ide.api.ui.tree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.ui.tree.generic.GenericTreeStructureProvider;
 import com.codenvy.ide.api.ui.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
@@ -137,6 +140,7 @@ import com.codenvy.ide.toolbar.ToolbarMainPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.tree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.upload.UploadFileView;
@@ -206,7 +210,11 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
 
+        bind(TreeStructureProviderRegistry.class).to(TreeStructureProviderRegistryImpl.class).in(Singleton.class);
+        bind(TreeStructureProvider.class).to(GenericTreeStructureProvider.class).in(Singleton.class);
+
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
+
         apiBindingConfigure();
         resourcesAPIconfigure();
         coreUiConfigure();

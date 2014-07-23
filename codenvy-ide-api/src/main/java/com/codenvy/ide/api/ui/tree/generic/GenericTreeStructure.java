@@ -8,12 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.api.ui.tree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.resources.FileEvent;
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.tree.TreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -33,27 +35,17 @@ public class GenericTreeStructure implements TreeStructure {
     private EventBus                   eventBus;
     private ProjectServiceClient       projectServiceClient;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private AppContext                 appContext;
 
-    public GenericTreeStructure(ProjectDescriptor projectDescriptor,
-                                EventBus eventBus,
+    public GenericTreeStructure(EventBus eventBus,
                                 ProjectServiceClient projectServiceClient,
-                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                AppContext appContext) {
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-
-        AbstractTreeNode<?> extLibrariesNode = new AbstractTreeNode<String>(null, null) {
-            @Override
-            public String getName() {
-                return "External Libraries";
-            }
-
-            @Override
-            public boolean isAlwaysLeaf() {
-                return false;
-            }
-        };
-        roots = Collections.<AbstractTreeNode<?>>createArray(new ProjectRootTreeNode(null, projectDescriptor), extLibrariesNode);
+        this.appContext = appContext;
+        roots = Collections.createArray();
     }
 
     // TODO: find node by absolute path
@@ -65,13 +57,26 @@ public class GenericTreeStructure implements TreeStructure {
                 // find node
             }
         }
-
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
+        if (roots.isEmpty()) {
+            AbstractTreeNode<?> extLibrariesNode = new AbstractTreeNode<String>(null, null) {
+                @Override
+                public String getName() {
+                    return "External Libraries";
+                }
+
+                @Override
+                public boolean isAlwaysLeaf() {
+                    return false;
+                }
+            };
+            roots = Collections.createArray(new ProjectRootTreeNode(null, appContext.getCurrentProject()), extLibrariesNode);
+        }
         callback.onSuccess(roots);
     }
 

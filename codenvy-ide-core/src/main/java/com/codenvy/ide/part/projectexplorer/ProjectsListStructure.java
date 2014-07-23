@@ -8,12 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.tree.TreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -24,19 +27,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Structure for the tree that displays list of projects.
+ * Structure for displaying list of projects.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectsListTreeStructure implements TreeStructure {
+public class ProjectsListStructure implements TreeStructure {
     private Array<AbstractTreeNode<?>> roots;
     private ProjectServiceClient       projectServiceClient;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private EventBus                   eventBus;
 
-    public ProjectsListTreeStructure(ProjectServiceClient projectServiceClient,
-                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                     EventBus eventBus) {
+    public ProjectsListStructure(ProjectServiceClient projectServiceClient,
+                                 DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                 EventBus eventBus) {
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.eventBus = eventBus;
@@ -57,7 +60,7 @@ public class ProjectsListTreeStructure implements TreeStructure {
                 protected void onSuccess(Array<ProjectReference> result) {
                     Array<AbstractTreeNode<?>> array = Collections.createArray();
                     for (ProjectReference projectReference : result.asIterable()) {
-                        array.add(new ProjectTreeNode(null, projectReference));
+                        array.add(new ProjectNode(null, projectReference));
                     }
                     callback.onSuccess(array);
                 }
@@ -80,21 +83,8 @@ public class ProjectsListTreeStructure implements TreeStructure {
     @Override
     public void processNodeAction(AbstractTreeNode<?> node) {
         // open project
-        if (node instanceof ProjectTreeNode) {
-            final String projectName = ((ProjectTreeNode)node).getData().getName();
-            final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-
-            projectServiceClient.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
-                @Override
-                protected void onSuccess(ProjectDescriptor result) {
-                    eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
-                }
-
-                @Override
-                protected void onFailure(Throwable exception) {
-                    Log.error(ProjectsListTreeStructure.class, exception);
-                }
-            });
+        if (node instanceof ProjectNode) {
+            eventBus.fireEvent(new OpenProjectEvent(((ProjectNode)node).getData()));
         }
     }
 }

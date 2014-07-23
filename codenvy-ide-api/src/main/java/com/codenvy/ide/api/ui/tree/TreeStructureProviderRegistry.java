@@ -8,27 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
-
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+package com.codenvy.ide.api.ui.tree;
 
 /**
- * Tree node to for {@link ProjectDescriptor}.
+ * //
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectRootTreeNode extends AbstractTreeNode<ProjectDescriptor> {
-    public ProjectRootTreeNode(AbstractTreeNode parent, ProjectDescriptor data) {
-        super(parent, data);
-    }
+public interface TreeStructureProviderRegistry {
+    void registerTreeStructureProvider(String id, TreeStructureProvider treeStructureProvider);
 
-    @Override
-    public String getName() {
-        return data.getName();
-    }
-
-    @Override
-    public boolean isAlwaysLeaf() {
-        return false;
-    }
+    TreeStructureProvider getTreeStructureProvider(String id);
 }
