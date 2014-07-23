@@ -125,7 +125,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
                 NotificationMessage.this.delegate.onCloseMessageClicked(NotificationMessage.this.notification);
             }
         });
-        mainPanel.addEast(closeIcon, 18);
+        mainPanel.addEast(closeIcon, 38);
 
         //If notification message is formated HTML - need to display only plain text from it.
         title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
