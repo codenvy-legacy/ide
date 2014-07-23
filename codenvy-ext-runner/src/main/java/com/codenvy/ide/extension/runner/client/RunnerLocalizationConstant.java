@@ -63,15 +63,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.stopApp.description")
     String stopAppActionDescription();
 
-    @Key("control.updateExtension.id")
-    String updateExtensionActionId();
-
-    @Key("control.updateExtension.text")
-    String updateExtensionText();
-
-    @Key("control.updateExtension.description")
-    String updateExtensionDescription();
-
     @Key("control.clearRunnerConsole.id")
     String clearConsoleControlId();
 
@@ -91,6 +82,12 @@ public interface RunnerLocalizationConstant extends Messages {
     String viewRecipeDescription();
 
     /* Messages */
+    @Key("another.project.running.now")
+    String anotherProjectRunningNow();
+
+    @Key("project.running.now")
+    String projectRunningNow(String project);
+
     @Key("appStarting")
     String applicationStarting(String name);
 
@@ -115,15 +112,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("appCanceled")
     String applicationCanceled(String name);
 
-    @Key("appUpdating")
-    String applicationUpdating(String name);
-
-    @Key("appUpdated")
-    String applicationUpdated(String name);
-
-    @Key("updateAppFailed")
-    String updateApplicationFailed(String name);
-
     @Key("gettingEnvironmentsFailed")
     String gettingEnvironmentsFailed();
 
@@ -135,6 +123,9 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("enteredValueNotCorrect")
     String enteredValueNotCorrect();
+
+    @Key("get-recipe.failed")
+    String getRecipeFailed();
 
     /* Titles */
     @Key("titles.promptSaveFiles")

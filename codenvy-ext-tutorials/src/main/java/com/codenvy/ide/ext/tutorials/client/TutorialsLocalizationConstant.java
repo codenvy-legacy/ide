@@ -29,4 +29,23 @@ public interface TutorialsLocalizationConstant extends Messages {
 
     @Key("control.showTutorialGuide.description")
     String showTutorialGuideActionDescription();
+
+
+    @Key("control.updateExtension.id")
+    String updateExtensionActionId();
+
+    @Key("control.updateExtension.text")
+    String updateExtensionText();
+
+    @Key("control.updateExtension.description")
+    String updateExtensionDescription();
+
+    @Key("appUpdating")
+    String applicationUpdating(String name);
+
+    @Key("appUpdated")
+    String applicationUpdated(String name);
+
+    @Key("updateAppFailed")
+    String updateApplicationFailed(String name);
 }

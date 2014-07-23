@@ -11,6 +11,9 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.runner.ApplicationStatus;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -29,20 +32,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class StopAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
     private final RunnerController     controller;
     private final AnalyticsEventLogger eventLogger;
+    private AppContext appContext;
 
     @Inject
     public StopAction(RunnerController controller,
                       RunnerResources resources,
-                      ResourceProvider resourceProvider,
                       RunnerLocalizationConstant localizationConstants,
-                      AnalyticsEventLogger eventLogger) {
+                      AnalyticsEventLogger eventLogger,
+                      AppContext appContext) {
         super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
         this.controller = controller;
-        this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -55,12 +58,13 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        if (activeProject != null) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
-                                           || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(controller.isAnyAppRunning());
+            e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
+                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setEnabled(currentProject.getProcessDescriptor()!= null && currentProject.getProcessDescriptor().getStatus().equals(
+                    ApplicationStatus.RUNNING));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

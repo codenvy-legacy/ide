@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.api.runner.dto.RunnerMetric;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.api.ui.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -26,22 +27,26 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
     private final RunnerController runnerController;
+    private AppContext appContext;
 
     @Inject
-    public RunnerTimeoutThresholdIndicator(RunnerController runnerController, RunnerResources resources) {
+    public RunnerTimeoutThresholdIndicator(RunnerController runnerController, RunnerResources resources, AppContext appContext) {
         super("Timeout", false, 240, resources);
         this.runnerController = runnerController;
+        this.appContext = appContext;
     }
 
     @Override
     public void update(ActionEvent e) {
-        final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
-        if (metric != null) {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
-            presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
-        } else {
-            presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
+        if (appContext.getCurrentProject() != null) {
+            final Presentation presentation = e.getPresentation();
+            final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
+            if (metric != null) {
+                presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
+                presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
+            } else {
+                presentation.putClientProperty(Properties.DATA_PROPERTY, "--:--:--");
+            }
         }
     }
 }

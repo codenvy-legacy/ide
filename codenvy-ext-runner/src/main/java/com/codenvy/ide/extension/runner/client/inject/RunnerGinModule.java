@@ -20,8 +20,6 @@ import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
 import com.codenvy.ide.extension.runner.client.shell.ShellConsoleView;
 import com.codenvy.ide.extension.runner.client.shell.ShellConsoleViewImpl;
-import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
-import com.codenvy.ide.extension.runner.client.update.UpdateServiceClientImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
@@ -33,7 +31,6 @@ public class RunnerGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
-        bind(UpdateServiceClient.class).to(UpdateServiceClientImpl.class).in(Singleton.class);
         bind(CustomRunView.class).to(CustomRunViewImpl.class).in(Singleton.class);
         bind(RunnerConsoleView.class).to(RunnerConsoleViewImpl.class).in(Singleton.class);
         bind(ToolbarPresenter.class).annotatedWith(RunnerConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);

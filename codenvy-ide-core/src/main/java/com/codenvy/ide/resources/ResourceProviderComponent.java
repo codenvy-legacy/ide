@@ -13,6 +13,7 @@ package com.codenvy.ide.resources;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -29,6 +30,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -59,16 +61,18 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
     private final   StringMap<ModelProvider> modelProviders;
     private final   EventBus                 eventBus;
     private final   DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private final   AsyncRequestFactory      asyncRequestFactory;
-    private final   ProjectServiceClient     projectServiceClient;
-    private AppContext appContext;
-    private Project activeProject;
+    private         DtoFactory               dtoFactory;
+    private final AsyncRequestFactory asyncRequestFactory;
+    private final ProjectServiceClient projectServiceClient;
+    private       AppContext           appContext;
+    private       Project              activeProject;
 
     /** Resources API for client application. */
     @Inject
     public ResourceProviderComponent(ModelProvider genericModelProvider,
                                      EventBus eventBus,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                     DtoFactory dtoFactory,
                                      AsyncRequestFactory asyncRequestFactory,
                                      ProjectServiceClient projectServiceClient,
                                      AppContext appContext) {
@@ -76,6 +80,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
         this.genericModelProvider = genericModelProvider;
         this.eventBus = eventBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dtoFactory = dtoFactory;
         this.asyncRequestFactory = asyncRequestFactory;
         this.projectServiceClient = projectServiceClient;
         this.appContext = appContext;
@@ -102,7 +107,10 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
             protected void onSuccess(ProjectDescriptor result) {
                 // do post actions
                 Folder rootFolder = getRoot();
-                appContext.setCurrentProject(new CurrentProject(result));
+                CurrentProject currentProject = new CurrentProject(result);
+                currentProject.setProcessDescriptor(dtoFactory.createDto(ApplicationProcessDescriptor.class));
+                appContext.setCurrentProject(currentProject);
+
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
                 String language = null;
                 if (attr != null && !attr.isEmpty())

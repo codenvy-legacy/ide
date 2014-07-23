@@ -21,6 +21,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView.TabItem;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.workspace.WorkBenchPartController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -226,13 +227,19 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // may cancel close
         if (part.onClose()) {
             int partIndex = parts.indexOf(part);
+            if (activePart == part) {
+                PartPresenter newPart = null;
+                for (int i = parts.size() - 1; i >= 0; i--) {
+                    if (parts.get(i) instanceof ProjectExplorerPartPresenter) {
+                        newPart = parts.get(i);
+                    }
+                }
+                setActivePart(newPart);
+            }
             view.removeTab(partIndex);
             parts.remove(part);
             partsSize.remove(partIndex);
             part.removePropertyListener(propertyListener);
-            if (activePart == part) {
-                setActivePart(null);
-            }
         }
     }
 

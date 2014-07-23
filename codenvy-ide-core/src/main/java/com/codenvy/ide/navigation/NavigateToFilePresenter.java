@@ -11,6 +11,7 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
@@ -55,8 +56,9 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private final MessageBus             wsMessageBus;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final NotificationManager    notificationManager;
-    private       Project                rootProject;
-    final private String                 SEARCH_URL;
+    private CoreLocalizationConstant localizationConstant;
+    private       Project rootProject;
+    final private String  SEARCH_URL;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view,
@@ -65,13 +67,15 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                   NotificationManager notificationManager) {
+                                   NotificationManager notificationManager,
+                                   CoreLocalizationConstant localizationConstant) {
         this.resourceProvider = resourceProvider;
         this.view = view;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
+        this.localizationConstant = localizationConstant;
         SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
@@ -154,7 +158,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
             @Override
             public void onFailure(Throwable caught) {
-                Log.error(NavigateToFilePresenter.class, "Unable to open a file " + path);
+                Log.error(NavigateToFilePresenter.class, localizationConstant.unableOpenFile(path));
             }
         });
     }
@@ -178,7 +182,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                                    } else {
                                                        notificationManager
                                                                .showNotification(
-                                                                       new Notification("Unable to open " + path + ". It's not a file.",
+                                                                       new Notification(localizationConstant.unableOpenNotFile(path),
                                                                                         Notification.Type.WARNING)
                                                                                 );
                                                    }
@@ -187,7 +191,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                                @Override
                                                public void onFailure(Throwable caught) {
                                                    notificationManager.showNotification(
-                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
+                                                           new Notification(localizationConstant.unableOpenFile(path), Notification.Type.WARNING));
                                                }
                                            }
                                           );

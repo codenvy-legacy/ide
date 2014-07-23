@@ -12,8 +12,11 @@ package com.codenvy.ide.part.projectexplorer;
 
 import elemental.client.Browser;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -26,9 +29,11 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.resources.model.ProjectDescription;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
@@ -56,7 +61,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private   ResourceProvider           resourceProvider;
     private   ContextMenuPresenter       contextMenuPresenter;
     private   SelectProjectTypePresenter selectProjectTypePresenter;
-    private   CoreLocalizationConstant   coreLocalizationConstant;
+    private   DtoFactory                 dtoFactory;
+    private AppContext appContext;
+    private CoreLocalizationConstant coreLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
@@ -74,13 +81,17 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
                                         SelectProjectTypePresenter selectProjectTypePresenter,
-                                        CoreLocalizationConstant coreLocalizationConstant) {
+                                        CoreLocalizationConstant coreLocalizationConstant,
+                                        DtoFactory dtoFactory,
+                                        AppContext appContext) {
         this.view = view;
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.contextMenuPresenter = contextMenuPresenter;
         this.selectProjectTypePresenter = selectProjectTypePresenter;
+        this.dtoFactory = dtoFactory;
+        this.appContext = appContext;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -244,6 +255,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         setSelection(new Selection<>(resource));
         if (resource != null) {
             resourceProvider.setActiveProject(resource.getProject());
+            ProjectDescriptor projectDescriptor =
+                    dtoFactory.createDto(ProjectDescriptor.class).withAttributes(resource.getProject().getAttributes())
+                              .withName(resource.getProject().getName())
+                              .withProjectTypeId(resource.getProject().getDescription().getProjectTypeId());
+
+            appContext.setCurrentProject(new CurrentProject(projectDescriptor));
         }
     }
 

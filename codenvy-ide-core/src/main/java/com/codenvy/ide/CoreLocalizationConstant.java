@@ -197,6 +197,12 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.someFilesCanNotBeSaved")
     String someFilesCanNotBeSaved();
 
+    @Key("messages.unable-open-not-file")
+    String unableOpenNotFile(String path);
+
+    @Key("messages.unable-open-file")
+    String unableOpenFile(String path);
+
     /* Buttons */
     @Key("ok")
     String ok();

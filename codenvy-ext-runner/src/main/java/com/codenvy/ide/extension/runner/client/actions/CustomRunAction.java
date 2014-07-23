@@ -11,6 +11,8 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
@@ -30,25 +32,25 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends Action {
 
-    private final ResourceProvider     resourceProvider;
     private final RunnerController     runnerController;
     private final CustomRunPresenter   customRunPresenter;
     private final AnalyticsEventLogger eventLogger;
+    private AppContext appContext;
 
     @Inject
     public CustomRunAction(RunnerController runnerController,
                            CustomRunPresenter customRunPresenter,
                            RunnerResources resources,
-                           ResourceProvider resourceProvider,
                            RunnerLocalizationConstant localizationConstants,
-                           AnalyticsEventLogger eventLogger) {
+                           AnalyticsEventLogger eventLogger,
+                           AppContext appContext) {
         super(localizationConstants.customRunAppActionText(),
               localizationConstants.customRunAppActionDescription(),
               null, resources.launchApp());
         this.runnerController = runnerController;
         this.customRunPresenter = customRunPresenter;
-        this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -61,12 +63,12 @@ public class CustomRunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        if (activeProject != null) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(activeProject.getAttributeValue("runner.name") != null
-                                           || activeProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning());
+            e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
+                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning() && currentProject.getIsRunningEnabled());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

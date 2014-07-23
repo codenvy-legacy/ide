@@ -21,7 +21,6 @@ import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
-import com.codenvy.ide.extension.runner.client.actions.UpdateAction;
 import com.codenvy.ide.extension.runner.client.actions.ViewRecipeAction;
 import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
@@ -58,7 +57,6 @@ public class RunnerExtension {
                            CustomRunAction customRunAction,
                            GetLogsAction getLogsAction,
                            StopAction stopAction,
-                           UpdateAction updateAction,
                            ClearConsoleAction clearConsoleAction,
                            ViewRecipeAction viewRecipeAction,
                            ApplicationURLIndicator applicationURLIndicator,
@@ -77,7 +75,6 @@ public class RunnerExtension {
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
-        actionManager.registerAction(localizationConstants.updateExtensionActionId(), updateAction);
         actionManager.registerAction(localizationConstants.viewRecipeActionId(), viewRecipeAction);
 
         // add actions in main menu
@@ -87,7 +84,6 @@ public class RunnerExtension {
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
         runMenuActionGroup.add(clearConsoleAction);
-        runMenuActionGroup.add(updateAction);
         runMenuActionGroup.add(viewRecipeAction);
 
         // add actions on main toolbar

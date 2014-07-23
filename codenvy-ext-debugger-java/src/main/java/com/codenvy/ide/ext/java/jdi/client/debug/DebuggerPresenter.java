@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.jdi.client.debug;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -295,7 +296,7 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     @Override
                     public void onFailure(Throwable caught) {
                         Notification notification =
-                                new Notification("Source not found for class " + finalLocation.getClassName(), WARNING);
+                                new Notification(constant.errorSourceNotFoundForClass(finalLocation.getClassName()), WARNING);
                         notificationManager.showNotification(notification);
                     }
                 });
@@ -569,11 +570,10 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
      *
      * @param appDescriptor
      *         descriptor of application to debug
-     * @param project
-     *         project to debug
+     *
      */
-    public void attachDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor, Project project) {
-        this.project = project;
+    public void attachDebugger(@NotNull final ApplicationProcessDescriptor appDescriptor) {
+
 
         this.appDescriptor = appDescriptor;
         service.connect(appDescriptor.getDebugHost(), appDescriptor.getDebugPort(),

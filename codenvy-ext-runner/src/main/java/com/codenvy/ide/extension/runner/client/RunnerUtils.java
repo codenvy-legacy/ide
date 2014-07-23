@@ -10,22 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.api.runner.dto.RunnerMetric;
+
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 /**
- * Notified when app will be launched.
- *
- * @author Artem Zatsarynnyy
+ * @author Vitaly Parfonov
  */
-public interface ProjectRunCallback {
-    /**
-     * Notified when app will be launched.
-     *
-     * @param processDescriptor
-     *         descriptor of application that was run
-     *
-     */
-    void onRun(ApplicationProcessDescriptor processDescriptor);
+public class RunnerUtils {
+
+    @Nullable
+    public static RunnerMetric getRunnerMetric(@NotNull ApplicationProcessDescriptor processDescriptor, String metricName) {
+        for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
+            if (metricName.equals(runnerStat.getName())) {
+                return runnerStat;
+            }
+        }
+        return null;
+    }
 }

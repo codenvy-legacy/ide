@@ -12,6 +12,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -27,17 +28,20 @@ public class CloseProjectAction extends Action {
 
     private final ResourceProvider     resourceProvider;
     private final AnalyticsEventLogger eventLogger;
-    private final EventBus eventBus;
+    private final EventBus             eventBus;
+    private AppContext appContext;
 
     @Inject
     public CloseProjectAction(ResourceProvider resourceProvider,
                               Resources resources,
                               AnalyticsEventLogger eventLogger,
-                              EventBus eventBus) {
+                              EventBus eventBus,
+                              AppContext appContext) {
         super("Close Project", "Close project", null, resources.closeProject());
         this.resourceProvider = resourceProvider;
         this.eventLogger = eventLogger;
         this.eventBus = eventBus;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -56,6 +60,7 @@ public class CloseProjectAction extends Action {
         if (resourceProvider.getActiveProject() != null) {
             ProjectActionEvent event = ProjectActionEvent.createProjectClosedEvent(resourceProvider.getActiveProject());
             resourceProvider.setActiveProject(null);
+            appContext.setCurrentProject(null);
             eventBus.fireEvent(event);
         }
 

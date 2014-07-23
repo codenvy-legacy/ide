@@ -8,15 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.actions;
+package com.codenvy.ide.ext.tutorials.client.action;
 
+import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
-import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
+import com.codenvy.ide.ext.tutorials.client.update.ExtensionUpdater;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,35 +30,38 @@ import com.google.inject.Singleton;
 @Singleton
 public class UpdateAction extends Action {
 
-    private final ResourceProvider resourceProvider;
-    private final RunnerController runnerController;
+
+    private ExtensionUpdater extensionsUpdater;
+    private AppContext       appContext;
 
     @Inject
-    public UpdateAction(RunnerController runnerController,
+    public UpdateAction(ExtensionUpdater extensionsUpdater,
                         RunnerResources resources,
-                        ResourceProvider resourceProvider,
-                        RunnerLocalizationConstant localizationConstants) {
+                        TutorialsLocalizationConstant localizationConstants,
+                        AppContext appContext) {
         super(localizationConstants.updateExtensionText(), localizationConstants.updateExtensionDescription(),
               resources.updateApp());
-        this.runnerController = runnerController;
-        this.resourceProvider = resourceProvider;
+        this.extensionsUpdater = extensionsUpdater;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        runnerController.updateExtension();
+        extensionsUpdater.updateExtension();
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        Project activeProject = resourceProvider.getActiveProject();
-        if (activeProject != null) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
             // this action is specific for the Codenvy Extension project only
             e.getPresentation()
-             .setVisible(Constants.CODENVY_PLUGIN_ID.equals(activeProject.getDescription().getProjectTypeId()));
-            e.getPresentation().setEnabled(runnerController.isAnyAppRunning());
+             .setVisible(Constants.CODENVY_PLUGIN_ID.equals(currentProject.getProjectDescription().getProjectTypeId()));
+            e.getPresentation()
+             .setEnabled(currentProject.getProcessDescriptor() != null && currentProject.getProcessDescriptor().getStatus().equals(
+                     ApplicationStatus.RUNNING));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

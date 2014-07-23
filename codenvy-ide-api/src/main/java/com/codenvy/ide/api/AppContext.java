@@ -26,8 +26,6 @@ public class AppContext {
 
     private CurrentProject currentProject;
 
-    private User currentUser;
-
     private WorkspaceDescriptor workspace;
 
     public WorkspaceDescriptor getWorkspace() {
@@ -46,11 +44,5 @@ public class AppContext {
         this.currentProject = currentProject;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
 }
