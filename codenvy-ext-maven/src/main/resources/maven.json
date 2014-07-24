@@ -243,6 +243,15 @@
         }
     },
     {
+        "displayName": "Desktop MongoDB",
+        "category": "Samples - Hello World",
+        "description": "A simple desktop application that creates a DB and updates it in the runtime",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-mongodb-java-simple.git"
+        }
+    },
+    {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",
