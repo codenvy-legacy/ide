@@ -109,7 +109,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 Folder rootFolder = getRoot();
                 CurrentProject currentProject = new CurrentProject(result);
                 currentProject.setProcessDescriptor(dtoFactory.createDto(ApplicationProcessDescriptor.class));
-                appContext.setCurrentProject(currentProject);
+//                appContext.setCurrentProject(currentProject);
 
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);
                 String language = null;
@@ -214,7 +214,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 }
                 activeProject = project;
 
-                appContext.setCurrentProject(new CurrentProject(result));
+//                appContext.setCurrentProject(new CurrentProject(result));
 
                 // get project structure
                 project.refreshChildren(new AsyncCallback<Project>() {
