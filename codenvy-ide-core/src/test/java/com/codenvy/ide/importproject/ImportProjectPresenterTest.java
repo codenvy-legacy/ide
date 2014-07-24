@@ -99,7 +99,7 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onImportClickedWhenImportProjectIsSuccessfulShouldBeExecuted() {
+    public void onImportClickedAndImportProjectIsSuccessful() {
         ProjectDescription projectDescription = mock(ProjectDescription.class);
 
         doAnswer(new Answer() {
@@ -151,7 +151,74 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onImportClickedWhenImportProjectIsFailedShouldBeExecuted() {
+    public void testUriWithoutPrefix() {
+        //Uri without https:// or ssh:// or git://
+        when(view.getUri()).thenReturn("github.com/codenvy/hello.git");
+
+        presenter.onImportClicked();
+
+        verify(view).showWarning();
+        verify(view, never()).getImporter();
+    }
+
+    @Test
+    public void testUriWithIncorrectCharacter() {
+        //Uri has incorrect character after https:// such as  \@:;, (//)
+        when(view.getUri()).thenReturn("https://user@github.com/codenvy/hello.git");
+
+        presenter.onImportClicked();
+
+        verify(view).showWarning();
+        verify(view, never()).getImporter();
+    }
+
+    @Test
+    public void testUriWithoutSeparatorOfHostAndLogin() {
+        when(view.getUri()).thenReturn("https://github.comcodenvy/hello.git");
+
+        presenter.onImportClicked();
+
+        verify(view).showWarning();
+        verify(view, never()).getImporter();
+    }
+
+    @Test
+    public void testSshUriWithHostBetweenDoubleSlashAndSlash() {
+        //Check for type uri with host between // and /
+        when(view.getUri()).thenReturn("ssh://host.com/some/path");
+        baseTestForImportProjectIsSuccessful();
+    }
+
+    @Test
+    public void testSshUriWithHostBetweenDoubleSlashAndColon() {
+        //Check for type uri with host between // and :
+        when(view.getUri()).thenReturn("ssh://host.com:port/some/path");
+        baseTestForImportProjectIsSuccessful();
+    }
+
+    @Test
+    public void testSshUriWithHostBetweenAtAndSlash() {
+        //Check for type uri with host between a and /
+        when(view.getUri()).thenReturn("ssh://user@host.com/some/path");
+        baseTestForImportProjectIsSuccessful();
+    }
+
+    @Test
+    public void testGitUriWithHostBetweenDoubleSlashAndSlash() {
+        //Check for type uri with host between // and /
+        when(view.getUri()).thenReturn("git://host.com/user/repo");
+        baseTestForImportProjectIsSuccessful();
+    }
+
+    @Test
+    public void testSshUriWithHostBetweenAtAndColon() {
+        //Check for type uri with host between @ and :
+        when(view.getUri()).thenReturn("user@host.com:login/repo");
+        baseTestForImportProjectIsSuccessful();
+    }
+
+    @Test
+    public void onImportClickedWhenImportProjectIsFailed() {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -199,7 +266,7 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onImportClickedWhenImportProjectIsSuccessfulButGetProjectIsFailedShouldBeExecuted() {
+    public void onImportClickedWhenImportProjectIsSuccessfulButGetProjectIsFailed() {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -245,7 +312,7 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsEmptyShouldBeExecuted() {
+    public void onValueChangedWhenProjectNameIsEmpty() {
         when(view.getProjectName()).thenReturn("");
         when(view.getUri()).thenReturn(URI);
 
@@ -258,7 +325,7 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsNotEmptyShouldBeExecuted() {
+    public void onValueChangedWhenProjectNameIsNotEmpty() {
         when(view.getProjectName()).thenReturn(PROJECT_Name);
         when(view.getUri()).thenReturn(URI);
 
@@ -269,4 +336,56 @@ public class ImportProjectPresenterTest {
         verify(view, never()).setProjectName(anyString());
         verify(view).setEnabledImportButton(eq(true));
     }
+
+    private void baseTestForImportProjectIsSuccessful() {
+        ProjectDescription projectDescription = mock(ProjectDescription.class);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, projectDescriptor);
+                return callback;
+            }
+        }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
+                                                    (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Project> callback = (AsyncCallback<Project>)arguments[1];
+                callback.onSuccess(project);
+                return callback;
+            }
+        }).when(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
+        view.showDialog();
+
+        when(view.getImporter()).thenReturn(IMPORTER);
+        when(view.getProjectName()).thenReturn(PROJECT_Name);
+        when(dtoFactory.createDto(ImportSourceDescriptor.class)).thenReturn(importSourceDescriptor);
+        when(importSourceDescriptor.withType(IMPORTER)).thenReturn(importSourceDescriptor);
+        when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
+        when(locale.importProjectMessageSuccess()).thenReturn("Success!");
+        when(project.getDescription()).thenReturn(projectDescription);
+        when(projectDescription.getProjectTypeId()).thenReturn(Constants.NAMELESS_ID);
+
+        presenter.onImportClicked();
+
+        verify(view).getUri();
+        verify(view).getImporter();
+        verify(view).getProjectName();
+        verify(view).close();
+        verify(dtoFactory).createDto(ImportSourceDescriptor.class);
+        verify(importSourceDescriptor).withType(anyString());
+        verify(importSourceDescriptor).withLocation(anyString());
+        verify(projectServiceClient)
+                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+        verify(resourceProvider).getProject(eq(PROJECT_Name), (AsyncCallback<Project>)anyObject());
+        verify(locale).importProjectMessageSuccess();
+        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(projectWizardPresenter).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
+    }
+
 }
