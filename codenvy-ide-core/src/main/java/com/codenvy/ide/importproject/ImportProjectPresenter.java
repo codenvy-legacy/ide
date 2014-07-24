@@ -16,8 +16,10 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -131,13 +133,15 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+        projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 projectServiceClient.getProject(result.getPath(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                     @Override
                     protected void onSuccess(ProjectDescriptor result) {
-                        eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                        ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                        eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+
                         Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
                         notificationManager.showNotification(notification);
                         if (result.getProjectTypeId() == null || Constants.NAMELESS_ID.equals(result.getProjectTypeId())) {

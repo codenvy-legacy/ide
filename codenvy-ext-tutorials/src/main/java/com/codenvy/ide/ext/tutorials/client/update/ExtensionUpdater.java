@@ -19,6 +19,7 @@ import com.codenvy.ide.ext.tutorials.client.TutorialsLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.google.inject.Singleton;
 
 import javax.inject.Inject;
 
@@ -29,6 +30,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * @author Vitaly Parfonov
  */
+@Singleton
 public class ExtensionUpdater implements Notification.OpenNotificationHandler  {
 
     private UpdateServiceClient    updateServiceClient;

@@ -11,8 +11,8 @@
 package com.codenvy.ide.ext.tutorials.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.tutorials.client.GuidePageController;
@@ -56,9 +56,9 @@ public class ShowTutorialGuideAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
+        CurrentProject activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
-            e.getPresentation().setEnabledAndVisible(activeProject.getProjectTypeId().equals(Constants.TUTORIAL_ID));
+            e.getPresentation().setEnabledAndVisible(activeProject.getProjectDescription().getProjectTypeId().equals(Constants.TUTORIAL_ID));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

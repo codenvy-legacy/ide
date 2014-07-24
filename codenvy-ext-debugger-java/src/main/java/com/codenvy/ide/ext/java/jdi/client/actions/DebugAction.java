@@ -15,22 +15,16 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeLocalizationConstant;
 import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
-import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Action to run project on runner in debug mode.
@@ -49,7 +43,6 @@ public class DebugAction extends Action {
     public DebugAction(RunnerController runnerController,
                        DebuggerPresenter debuggerPresenter,
                        JavaRuntimeResources resources,
-                       ResourceProvider resourceProvider,
                        JavaRuntimeLocalizationConstant localizationConstants,
                        AnalyticsEventLogger eventLogger,
                        AppContext appContext) {

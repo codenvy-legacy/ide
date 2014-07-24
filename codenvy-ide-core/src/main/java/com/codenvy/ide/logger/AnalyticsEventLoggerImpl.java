@@ -11,10 +11,10 @@
 package com.codenvy.ide.logger;
 
 import com.codenvy.api.analytics.shared.dto.EventParameters;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
@@ -119,10 +119,10 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private void putReservedParameters(@Nullable String action,
                                        @Nullable String source,
                                        Map<String, String> additionalParams) {
-        ProjectDescriptor project = appContext.getCurrentProject().getProjectDescription();
+        CurrentProject project = appContext.getCurrentProject();
         if (project != null) {
-            putIfNotNull(PROJECT_NAME_PARAM, project.getName(), additionalParams);
-            putIfNotNull(PROJECT_TYPE_PARAM, project.getDescription(), additionalParams);
+            putIfNotNull(PROJECT_NAME_PARAM, project.getProjectDescription().getName(), additionalParams);
+            putIfNotNull(PROJECT_TYPE_PARAM, project.getProjectDescription().getDescription(), additionalParams);
         }
 
         putIfNotNull(USER_PARAM, currentUser, additionalParams);

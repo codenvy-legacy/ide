@@ -11,8 +11,8 @@
 package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -49,9 +49,9 @@ public class GuidePage extends AbstractPartPresenter {
     /** {@inheritDoc} */
     @Override
     public void go(final AcceptsOneWidget container) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
+        CurrentProject activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
-            projectServiceClient.getFileContent(activeProject.getPath() + '/' + DEFAULT_GUIDE_FILE_NAME,
+            projectServiceClient.getFileContent(activeProject.getProjectDescription().getPath() + '/' + DEFAULT_GUIDE_FILE_NAME,
                                                 new AsyncRequestCallback<String>(new StringUnmarshaller()) {
                                                     @Override
                                                     protected void onSuccess(String result) {

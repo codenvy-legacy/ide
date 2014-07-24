@@ -10,13 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.api;
 
-import com.codenvy.api.builder.dto.BuilderMetric;
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.api.runner.dto.RunnerMetric;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -29,9 +26,9 @@ public class CurrentProject {
 
     private ProjectDescriptor projectDescription;
 
-    private Boolean isProjectRunning;
+    private boolean isProjectRunning;
 
-    private Boolean isRunningEnabled;
+    private boolean isRunningEnabled;
 
     private ApplicationProcessDescriptor processDescriptor;
 
@@ -74,21 +71,21 @@ public class CurrentProject {
     /**
      * @return true if current project already running otherwise false
      */
-    public Boolean getIsProjectRunning() {
+    public boolean getIsProjectRunning() {
         return isProjectRunning;
     }
 
     /**
      * @return true if current project available to run otherwise false
      */
-    public Boolean getIsRunningEnabled() {
+    public boolean getIsRunningEnabled() {
         return isRunningEnabled;
     }
 
     /**
      * @param isRunningEnabled set true if current available to run
      */
-    public void setIsRunningEnabled(Boolean isRunningEnabled) {
+    public void setIsRunningEnabled(boolean isRunningEnabled) {
         this.isRunningEnabled = isRunningEnabled;
     }
 
@@ -100,6 +97,7 @@ public class CurrentProject {
      *         attribute name
      * @return value of attribute with specified name or <code>null</code> if attribute does not exists
      */
+    @Nullable
     public String getAttributeValue(String attributeName) {
         List<String> attributeValues = getAttributeValues(attributeName);
         if (attributeValues != null && !attributeValues.isEmpty()) {

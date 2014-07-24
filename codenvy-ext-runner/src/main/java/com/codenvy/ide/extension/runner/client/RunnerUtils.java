@@ -23,9 +23,11 @@ public class RunnerUtils {
 
     @Nullable
     public static RunnerMetric getRunnerMetric(@NotNull ApplicationProcessDescriptor processDescriptor, String metricName) {
-        for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
-            if (metricName.equals(runnerStat.getName())) {
-                return runnerStat;
+        if (processDescriptor != null) {
+            for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
+                if (metricName.equals(runnerStat.getName())) {
+                    return runnerStat;
+                }
             }
         }
         return null;

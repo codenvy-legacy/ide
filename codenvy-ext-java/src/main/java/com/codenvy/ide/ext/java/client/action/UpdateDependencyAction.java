@@ -13,6 +13,7 @@ package com.codenvy.ide.ext.java.client.action;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -47,13 +48,13 @@ public class UpdateDependencyAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
         if (buildContext.isBuilding()) {
             e.getPresentation().setEnabled(false);
             return;
         }
+        CurrentProject activeProject = appContext.getCurrentProject();
         if (activeProject != null) {
-            final String builder = activeProject.getAttributes().get(Constants.BUILDER_NAME).get(0);
+            final String builder = activeProject.getAttributeValue(Constants.BUILDER_NAME);
             if ("maven".equals(builder)) {
                 e.getPresentation().setEnabledAndVisible(true);
             } else {

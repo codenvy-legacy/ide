@@ -75,7 +75,7 @@ public class GenericTreeStructure implements TreeStructure {
                     return false;
                 }
             };
-            roots = Collections.createArray(new ProjectRootTreeNode(null, appContext.getCurrentProject()), extLibrariesNode);
+            roots = Collections.createArray(new ProjectRootTreeNode(null, appContext.getCurrentProject().getProjectDescription()), extLibrariesNode);
         }
         callback.onSuccess(roots);
     }

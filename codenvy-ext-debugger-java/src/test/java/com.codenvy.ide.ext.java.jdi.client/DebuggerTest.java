@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.java.jdi.client;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.resources.model.File;
@@ -85,7 +86,7 @@ public class DebuggerTest extends BaseTest {
     @Mock
     private AsyncCallback<Breakpoint>    asyncCallbackBreakpoint;
     @Mock
-    private Project                      project;
+    private ProjectDescriptor            project;
     @Mock
     private AsyncCallback<Void>          asyncCallbackVoid;
 
@@ -116,7 +117,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor);
+        presenter.attachDebugger(applicationProcessDescriptor, project);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verifySetEnableButtons(DISABLE_BUTTON);
@@ -139,7 +140,7 @@ public class DebuggerTest extends BaseTest {
             }
         }).when(service).connect(anyString(), anyInt(), (AsyncRequestCallback<DebuggerInfo>)anyObject());
 
-        presenter.attachDebugger(applicationProcessDescriptor);
+        presenter.attachDebugger(applicationProcessDescriptor, project);
 
         verify(service).connect(eq(DEBUG_HOST), eq(DEBUG_PORT), (AsyncRequestCallback<DebuggerInfo>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());

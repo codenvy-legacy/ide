@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.client;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
@@ -43,7 +42,6 @@ import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
@@ -71,7 +69,6 @@ public class JavaExtension {
     private JavaLocalizationConstant localizationConstant;
     private JavaParserWorker         parserWorker;
     private BuildContext             buildContext;
-    private AppContext               appContext;
 
     @Inject
     public JavaExtension(FileTypeRegistry fileTypeRegistry,
@@ -82,9 +79,7 @@ public class JavaExtension {
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
-                         ProjectServiceClient projectServiceClient,
                          IconRegistry iconRegistry,
-                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          EditorAgent editorAgent,
                          AnalyticsEventLogger eventLogger,
                          JavaResources resources,
@@ -96,7 +91,8 @@ public class JavaExtension {
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController,
-                         BuildContext buildContext) {
+                         BuildContext buildContext,
+                         AppContext appContext) {
         this.notificationManager = notificationManager;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;

@@ -12,6 +12,8 @@ package com.codenvy.ide.ext.tutorials.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
@@ -174,7 +176,8 @@ public class ExtensionPagePresenter extends AbstractWizardPage implements Extens
         projectServiceClient.updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
                 callback.onSuccess();
             }
 
@@ -192,7 +195,8 @@ public class ExtensionPagePresenter extends AbstractWizardPage implements Extens
                                new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                                    @Override
                                    protected void onSuccess(ProjectDescriptor result) {
-                                       eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(result));
+                                       ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                                       eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
                                        callback.onSuccess();
                                    }
 

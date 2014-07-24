@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
@@ -50,7 +50,7 @@ public abstract class BaseTest extends GwtTestWithMockito {
     @Mock
     protected RunnerLocalizationConstant constant;
     @Mock
-    protected ProjectDescriptor          activeProject;
+    protected CurrentProject             activeProject;
 
     @Before
     public void setUp() {

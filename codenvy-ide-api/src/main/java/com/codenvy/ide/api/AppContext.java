@@ -12,14 +12,12 @@ package com.codenvy.ide.api;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.user.shared.dto.User;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.event.CloseCurrentProjectHandler;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -29,8 +27,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Describe current state of application.
@@ -46,10 +42,9 @@ public class AppContext {
     private WorkspaceDescriptor workspace;
 
     @Inject
-    public AppContext(final EventBus eventBus,
-                      final ProjectServiceClient projectServiceClient,
-                      final DtoFactory dtoFactory,
+    public AppContext(final EventBus eventBus, final ProjectServiceClient projectServiceClient,
                       final DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+
         eventBus.addHandler(OpenProjectEvent.TYPE, new OpenProjectHandler() {
             @Override
             public void onOpenProject(OpenProjectEvent event) {
@@ -62,7 +57,7 @@ public class AppContext {
                 projectServiceClient.getProject(event.getProject().getName(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                     @Override
                     protected void onSuccess(ProjectDescriptor projectDescriptor) {
-                        currentProject = projectDescriptor;
+                        currentProject = new CurrentProject(projectDescriptor);
                         eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(projectDescriptor));
                     }
 
@@ -77,7 +72,7 @@ public class AppContext {
         eventBus.addHandler(CloseCurrentProjectEvent.TYPE, new CloseCurrentProjectHandler() {
             @Override
             public void onClose(CloseCurrentProjectEvent event) {
-                ProjectDescriptor closedProject = dtoFactory.createDtoFromJson(dtoFactory.toJson(currentProject), ProjectDescriptor.class);
+                ProjectDescriptor closedProject = currentProject.getProjectDescription();
                 // Important: currentProject must be null BEFORE firing ProjectClosedEvent
                 currentProject = null;
                 eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject));
@@ -99,8 +94,12 @@ public class AppContext {
      * @return opened project or <code>null</code> if none opened
      */
     @Nullable
-    public ProjectDescriptor getCurrentProject() {
+    public CurrentProject getCurrentProject() {
         return currentProject;
+    }
+
+    public void setCurrentProject(CurrentProject currentProject) {
+        this.currentProject = currentProject;
     }
 
 }

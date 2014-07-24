@@ -42,7 +42,7 @@ public class ApplicationURLIndicator extends IndicatorAction {
     @Override
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null && currentProject.getProjectDescription() != null) {
+        if (currentProject != null && currentProject.getProcessDescriptor() != null) {
             ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
             final Presentation presentation = e.getPresentation();
             presentation.putClientProperty(Properties.DATA_PROPERTY, getAppLink(processDescriptor));

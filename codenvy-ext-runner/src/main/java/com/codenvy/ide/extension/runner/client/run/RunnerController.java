@@ -187,7 +187,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     stopActiveProject(false);
                 }
                 console.clear();
-                appContext.setCurrentProject(null);
             }
 
             @Override
