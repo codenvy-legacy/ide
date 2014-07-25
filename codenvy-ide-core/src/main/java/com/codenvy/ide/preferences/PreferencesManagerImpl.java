@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
-import com.codenvy.api.user.gwt.client.UserServiceClient;
-import com.codenvy.api.user.shared.dto.Profile;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -72,13 +71,13 @@ public class PreferencesManagerImpl implements PreferencesManager {
 
     /** {@inheritDoc} */
     @Override
-    public void flushPreferences(final AsyncCallback<Profile> callback) {
+    public void flushPreferences(final AsyncCallback<ProfileDescriptor> callback) {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
-       userProfileService.updatePreferences(attributes, new AsyncRequestCallback<Profile>() {
+       userProfileService.updatePreferences(attributes, new AsyncRequestCallback<ProfileDescriptor>() {
             @Override
-            protected void onSuccess(Profile result) {
+            protected void onSuccess(ProfileDescriptor result) {
                 persistedPreferences.putAll(changedPreferences);
                 changedPreferences.clear();
                 callback.onSuccess(result);

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.preferences;
 
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.codenvy.api.user.shared.dto.Profile;
 
 
 /**
@@ -53,5 +53,5 @@ public interface PreferencesManager {
      *
      * @param callback
      */
-    void flushPreferences(AsyncCallback<Profile> callback);
+    void flushPreferences(AsyncCallback<ProfileDescriptor> callback);
 }
