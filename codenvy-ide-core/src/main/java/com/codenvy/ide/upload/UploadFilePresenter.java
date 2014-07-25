@@ -10,14 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.upload;
 
-import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Resource;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -32,25 +29,25 @@ import javax.validation.constraints.NotNull;
  */
 public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
-    private UploadFileView   view;
-    private SelectionAgent   selectionAgent;
-    private ResourceProvider resourceProvider;
-    private String           restContext;
-    private String           workspaceId;
-    private EventBus         eventBus;
+    private UploadFileView view;
+    private SelectionAgent selectionAgent;
+    private AppContext     appContext;
+    private String         restContext;
+    private String         workspaceId;
+    private EventBus       eventBus;
 
     @Inject
     public UploadFilePresenter(UploadFileView view,
                                @Named("restContext") String restContext,
                                @Named("workspaceId") String workspaceId,
                                SelectionAgent selectionAgent,
-                               ResourceProvider resourceProvider,
+                               AppContext appContext,
                                EventBus eventBus) {
 
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.selectionAgent = selectionAgent;
-        this.resourceProvider = resourceProvider;
+        this.appContext = appContext;
         this.eventBus = eventBus;
         this.view = view;
         this.view.setDelegate(this);
@@ -72,28 +69,14 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onSubmitComplete(@NotNull String result) {
         view.close();
-        Folder folder = getParent();
-        resourceProvider.getActiveProject().refreshChildren(folder, new AsyncCallback<Folder>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(UploadFilePresenter.class, caught);
-            }
-
-            @Override
-            public void onSuccess(Folder result) {
-                eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(result));
-            }
-        });
-
+        eventBus.fireEvent(new RefreshProjectTreeEvent());
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-
-        //TODO Temporarily used vfs service. Should be changed to api service.
-        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParent().getPath());
+        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParentPath());
         view.submit();
     }
 
@@ -105,25 +88,19 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
         view.setEnabledUploadButton(enabled);
     }
 
-    /**
-     * Gets the selected resource or
-     * the parent folder if the file has been allocated.
-     *
-     * @return the selected resource or
-     * the parent folder if the file has been allocated
-     */
-    private Folder getParent() {
-        Selection<?> select = selectionAgent.getSelection();
-        Folder parent = null;
-
-        if (select != null && select.getFirstElement() instanceof Resource) {
-            Selection<Resource> selection = (Selection<Resource>)select;
-            Resource resource = selection.getFirstElement();
-
-            if (resource.isFile()) {
-                parent = resource.getParent();
-            } else parent = (Folder)resource;
+    private String getParentPath() {
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            if (selection.getFirstElement() instanceof ItemReference) {
+                ItemReference item = (ItemReference)selection.getFirstElement();
+                final String path = item.getPath();
+                if ("file".equals(item.getType())) {
+                    return path.substring(0, path.length() - item.getName().length());
+                } else if ("folder".equals(item.getType())) {
+                    return item.getPath();
+                }
+            }
         }
-        return parent;
+        return appContext.getCurrentProject().getProjectDescription().getPath();
     }
 }

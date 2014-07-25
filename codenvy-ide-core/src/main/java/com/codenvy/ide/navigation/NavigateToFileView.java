@@ -32,7 +32,7 @@ public interface NavigateToFileView extends View<NavigateToFileView.ActionDelega
          * @param callback
          *         callback
          */
-        void onRequestSuggestions(String query, AsyncCallback<Array<String>> callback);
+        void onRequestSuggestions(String query, AsyncCallback<Array<ItemReference>> callback);
 
         /** Called when file selected. */
         void onFileSelected();
@@ -44,9 +44,6 @@ public interface NavigateToFileView extends View<NavigateToFileView.ActionDelega
      * @return chosen item's path
      */
     String getItemPath();
-
-    /** Put cursor in input field. */
-    void focusInput();
 
     /** Clear input. */
     void clearInput();

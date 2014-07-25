@@ -12,19 +12,14 @@ package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.FileEvent.FileOperation;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -50,19 +45,21 @@ import static com.google.gwt.http.client.RequestBuilder.GET;
 @Singleton
 public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegate {
 
-    private       NavigateToFileView     view;
-    private       ResourceProvider       resourceProvider;
-    private       EventBus               eventBus;
-    private final MessageBus             wsMessageBus;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final NotificationManager    notificationManager;
-    private CoreLocalizationConstant localizationConstant;
-    private       Project rootProject;
-    final private String  SEARCH_URL;
+    private final MessageBus               wsMessageBus;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final NotificationManager      notificationManager;
+    private final String                   SEARCH_URL;
+    private       NavigateToFileView       view;
+    private       ResourceProvider         resourceProvider;
+    private       AppContext               appContext;
+    private       EventBus                 eventBus;
+    private       CoreLocalizationConstant localizationConstant;
+    private       StringMap<ItemReference> resultMap;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view,
                                    ResourceProvider resourceProvider,
+                                   AppContext appContext,
                                    EventBus eventBus,
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
@@ -71,40 +68,41 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    CoreLocalizationConstant localizationConstant) {
         this.resourceProvider = resourceProvider;
         this.view = view;
+        this.appContext = appContext;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.localizationConstant = localizationConstant;
+
+        resultMap = Collections.createStringMap();
+
         SEARCH_URL = "/project/" + workspaceId + "/search";
         view.setDelegate(this);
     }
 
     /** Show dialog with view for navigation. */
     public void showDialog() {
-        // Get root-project path in order to allow to search for files
-        // in the entire project, not just in the current sub-module.
-        rootProject = getRootProject(resourceProvider.getActiveProject());
         view.showDialog();
         view.clearInput();
-        view.focusInput();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onRequestSuggestions(String query, final AsyncCallback<Array<String>> callback) {
+    public void onRequestSuggestions(String query, final AsyncCallback<Array<ItemReference>> callback) {
+        resultMap = Collections.createStringMap();
+
         // add '*' to allow search files by first letters
         search(query + "*", new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
-                Array<String> suggestions = Collections.createArray();
                 for (ItemReference item : result.asIterable()) {
                     // skip hidden items
                     if (!item.getPath().contains("/.")) {
-                        suggestions.add(item.getPath());
+                        resultMap.put(item.getPath(), item);
                     }
                 }
-                callback.onSuccess(suggestions);
+                callback.onSuccess(resultMap.getValues());
             }
 
             @Override
@@ -114,8 +112,17 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         });
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onFileSelected() {
+        view.close();
+        ItemReference selectedItem = resultMap.get(view.getItemPath());
+        eventBus.fireEvent(new FileEvent(selectedItem, FileEvent.FileOperation.OPEN));
+    }
+
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
-        final String url = SEARCH_URL + rootProject.getPath() + "?name=" + fileName;
+        final String projectPath = appContext.getCurrentProject().getProjectDescription().getPath();
+        final String url = SEARCH_URL + projectPath + "?name=" + fileName;
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
         try {
@@ -134,68 +141,4 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
             callback.onFailure(e);
         }
     }
-
-    /** Makes sense for multi-module projects. */
-    private Project getRootProject(Project project) {
-        Folder parentFolder = project;
-        while (!parentFolder.getParent().getName().equals("")) {
-            parentFolder = parentFolder.getParent();
-        }
-        return (Project)parentFolder;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onFileSelected() {
-        view.close();
-//
-//        final String path = view.getItemPath();
-//        rootProject.findResourceByPath(path, new AsyncCallback<Resource>() {
-//            @Override
-//            public void onSuccess(Resource result) {
-//                eventBus.fireEvent(new FileEvent(result., FileOperation.OPEN));
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                Log.error(NavigateToFilePresenter.class, localizationConstant.unableOpenFile(path));
-//            }
-//        });
-    }
-
-    /**
-     * Open file from current opened project.
-     *
-     * @param path
-     *         relative path to file. If user need to open file located in
-     *         <code>/project/path/to/some/file.ext</code> path parameter should be <code>path/to/some/file.ext</code>.
-     */
-    public void openFile(final String path) {
-//        rootProject = getRootProject(resourceProvider.getActiveProject());
-//        if (rootProject != null) {
-//            rootProject.findResourceByPath(rootProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path),
-//                                           new AsyncCallback<Resource>() {
-//                                               @Override
-//                                               public void onSuccess(Resource resource) {
-//                                                   if (resource.isFile()) {
-//                                                       eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
-//                                                   } else {
-//                                                       notificationManager
-//                                                               .showNotification(
-//                                                                       new Notification(localizationConstant.unableOpenNotFile(path),
-//                                                                                        Notification.Type.WARNING)
-//                                                                                );
-//                                                   }
-//                                               }
-//
-//                                               @Override
-//                                               public void onFailure(Throwable caught) {
-//                                                   notificationManager.showNotification(
-//                                                           new Notification(localizationConstant.unableOpenFile(path), Notification.Type.WARNING));
-//                                               }
-//                                           }
-//                                          );
-//        }
-    }
-
 }

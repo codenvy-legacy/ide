@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.navigation;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.window.Window;
@@ -21,6 +22,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -99,19 +101,19 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
     @Override
     public void showDialog() {
         this.files.setEnabled(true);
-        this.show();
+        new Timer() {
+            @Override
+            public void run() {
+                files.setFocus(true);
+            }
+        }.schedule(300);
+        super.show();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getItemPath() {
         return files.getValue();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void focusInput() {
-        files.setFocus(true);
     }
 
     /** {@inheritDoc} */
@@ -129,12 +131,12 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
 
         @Override
         public void requestSuggestions(final Request request, final Callback callback) {
-            delegate.onRequestSuggestions(request.getQuery(), new AsyncCallback<Array<String>>() {
+            delegate.onRequestSuggestions(request.getQuery(), new AsyncCallback<Array<ItemReference>>() {
                 /** {@inheritDoc} */
                 @Override
-                public void onSuccess(Array<String> result) {
+                public void onSuccess(Array<ItemReference> result) {
                     final List<SuggestOracle.Suggestion> suggestions = new ArrayList<>(result.size());
-                    for (final String item : result.asIterable()) {
+                    for (final ItemReference item : result.asIterable()) {
                         suggestions.add(new SuggestOracle.Suggestion() {
                             @Override
                             public String getDisplayString() {
@@ -143,7 +145,7 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
 
                             @Override
                             public String getReplacementString() {
-                                return item;
+                                return item.getPath();
                             }
                         });
                     }
@@ -160,7 +162,8 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
         }
 
         /** Returns the formed display name of the specified path. */
-        private String getDisplayName(String path) {
+        private String getDisplayName(ItemReference item) {
+            final String path = item.getPath();
             final String itemName = path.substring(path.lastIndexOf('/') + 1);
             final String itemPath = path.replaceFirst("/", "");
             String displayString = itemName + "   (" + itemPath.substring(0, itemPath.length() - itemName.length() - 1) + ")";

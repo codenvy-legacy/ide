@@ -19,10 +19,6 @@
             margin: 6px;
         }
 
-        .space {
-            margin-right: 5px;
-        }
-
         .spacing {
             margin-bottom: 10px;
         }

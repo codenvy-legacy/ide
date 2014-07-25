@@ -102,8 +102,8 @@ public class DefaultNewResourceAction extends Action {
                         .createFile(getParentPath(), name, getDefaultContent(), getMimeType(), new AsyncRequestCallback<Void>() {
                             @Override
                             protected void onSuccess(Void result) {
-                                eventBus.fireEvent(new RefreshProjectTreeEvent());
                                 openFileInEditor(getParentPath(), name);
+                                eventBus.fireEvent(new RefreshProjectTreeEvent());
                             }
 
                             @Override
