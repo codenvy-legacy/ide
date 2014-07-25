@@ -17,6 +17,7 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new Groovy file.
@@ -33,7 +34,8 @@ public class NewGroovyFileAction extends DefaultNewResourceAction {
                                EditorTutorialResource resource,
                                SelectionAgent selectionAgent,
                                EditorAgent editorAgent,
-                               ProjectServiceClient projectServiceClient) {
+                               ProjectServiceClient projectServiceClient,
+                               EventBus eventBus) {
         super("Groovy file",
               "Creates new Groovy file",
               resource.groovyFile(),
@@ -41,7 +43,8 @@ public class NewGroovyFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
         this.resource = resource;
     }
 

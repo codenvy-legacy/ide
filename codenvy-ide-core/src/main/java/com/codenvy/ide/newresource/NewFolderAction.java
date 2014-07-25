@@ -34,7 +34,6 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class NewFolderAction extends DefaultNewResourceAction {
     private CoreLocalizationConstant localizationConstant;
-    private EventBus eventBus;
 
     @Inject
     public NewFolderAction(AppContext appContext,
@@ -50,9 +49,9 @@ public class NewFolderAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               null,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
         this.localizationConstant = localizationConstant;
-        this.eventBus = eventBus;
     }
 
     @Override

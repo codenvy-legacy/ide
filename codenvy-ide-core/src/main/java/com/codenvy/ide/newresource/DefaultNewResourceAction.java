@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
@@ -24,6 +25,7 @@ import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -43,6 +45,7 @@ public class DefaultNewResourceAction extends Action {
     protected SelectionAgent       selectionAgent;
     protected EditorAgent          editorAgent;
     protected ProjectServiceClient projectServiceClient;
+    protected EventBus             eventBus;
 
     /**
      * Creates new action.
@@ -71,13 +74,15 @@ public class DefaultNewResourceAction extends Action {
                                     AppContext appContext,
                                     SelectionAgent selectionAgent,
                                     @Nullable EditorAgent editorAgent,
-                                    ProjectServiceClient projectServiceClient) {
+                                    ProjectServiceClient projectServiceClient,
+                                    EventBus eventBus) {
         super(title, description, icon, svgIcon);
         this.title = title;
         this.appContext = appContext;
         this.selectionAgent = selectionAgent;
         this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -90,7 +95,8 @@ public class DefaultNewResourceAction extends Action {
                         .createFile(getParentPath(), name, getDefaultContent(), getMimeType(), new AsyncRequestCallback<Void>() {
                             @Override
                             protected void onSuccess(Void result) {
-//                                editorAgent.openEditor(itemReference);
+                                eventBus.fireEvent(new RefreshProjectTreeEvent());
+//                                openFileInEditor();
                             }
 
                             @Override
@@ -127,15 +133,19 @@ public class DefaultNewResourceAction extends Action {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selection.getFirstElement() instanceof ItemReference) {
-                ItemReference node = (ItemReference)selection.getFirstElement();
-                final String path = node.getPath();
-                if ("file".equals(node.getType())) {
-                    return path.substring(0, path.length() - node.getName().length());
-                } else if ("folder".equals(node.getType())) {
-                    return node.getPath();
+                ItemReference item = (ItemReference)selection.getFirstElement();
+                final String path = item.getPath();
+                if ("file".equals(item.getType())) {
+                    return path.substring(0, path.length() - item.getName().length());
+                } else if ("folder".equals(item.getType())) {
+                    return item.getPath();
                 }
             }
         }
         return appContext.getCurrentProject().getProjectDescription().getPath();
+    }
+
+    private void openFileInEditor(ItemReference itemReference) {
+        editorAgent.openEditor(itemReference);
     }
 }

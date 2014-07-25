@@ -20,6 +20,7 @@ import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new HTML file.
@@ -44,7 +45,8 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
                              WebLocalizationConstant localizationConstant,
                              SelectionAgent selectionAgent,
                              EditorAgent editorAgent,
-                             ProjectServiceClient projectServiceClient) {
+                             ProjectServiceClient projectServiceClient,
+                             EventBus eventBus) {
         super(localizationConstant.newHtmlFileActionTitle(),
               localizationConstant.newHtmlFileActionDescription(),
               webExtensionResource.html(),
@@ -52,7 +54,8 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override

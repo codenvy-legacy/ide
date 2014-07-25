@@ -20,6 +20,7 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new XML file.
@@ -37,7 +38,8 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
                             SelectionAgent selectionAgent,
                             EditorAgent editorAgent,
                             Resources resources,
-                            ProjectServiceClient projectServiceClient) {
+                            ProjectServiceClient projectServiceClient,
+                            EventBus eventBus) {
         super(localizationConstant.actionNewXmlFileTitle(),
               localizationConstant.actionNewXmlFileDescription(),
               null,
@@ -45,7 +47,8 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new folder.
@@ -33,7 +34,8 @@ public class NewFileAction extends DefaultNewResourceAction {
                          SelectionAgent selectionAgent,
                          EditorAgent editorAgent,
                          Resources resources,
-                         ProjectServiceClient projectServiceClient) {
+                         ProjectServiceClient projectServiceClient,
+                         EventBus eventBus) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
               null,
@@ -41,7 +43,8 @@ public class NewFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override

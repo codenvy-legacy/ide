@@ -23,6 +23,7 @@ import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new Java package.
@@ -37,7 +38,8 @@ public class NewPackageAction extends DefaultNewResourceAction {
                             AppContext appContext,
                             SelectionAgent selectionAgent,
                             EditorAgent editorAgent,
-                            ProjectServiceClient projectServiceClient) {
+                            ProjectServiceClient projectServiceClient,
+                            EventBus eventBus) {
         super(localizationConstant.actionNewPackageTitle(),
               localizationConstant.actionNewPackageDescription(),
               null,
@@ -45,7 +47,8 @@ public class NewPackageAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override

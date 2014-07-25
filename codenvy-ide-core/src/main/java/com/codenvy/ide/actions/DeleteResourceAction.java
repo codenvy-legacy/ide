@@ -104,18 +104,18 @@ public class DeleteResourceAction extends Action {
     }
 
     /**
-     * Delete item.
+     * Delete item by the specified path.
      *
-     * @param resourceName
+     * @param itemName
      *         name of the item to delete
-     * @param resourcePath
+     * @param itemPath
      *         path of the item to delete
      */
-    private void delete(@NotNull final String resourceName, final String resourcePath) {
-        Ask ask = new Ask(localization.delete(), localization.deleteResourceQuestion(resourceName), new AskHandler() {
+    private void delete(@NotNull final String itemName, final String itemPath) {
+        Ask ask = new Ask(localization.delete(), localization.deleteResourceQuestion(itemName), new AskHandler() {
             @Override
             public void onOk() {
-                projectServiceClient.delete(resourcePath, new AsyncRequestCallback<Void>() {
+                projectServiceClient.delete(itemPath, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());

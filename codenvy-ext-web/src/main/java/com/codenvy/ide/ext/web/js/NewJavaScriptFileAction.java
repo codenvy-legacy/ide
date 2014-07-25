@@ -20,6 +20,7 @@ import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new JavaScript file.
@@ -35,7 +36,8 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
                                    WebLocalizationConstant localizationConstant,
                                    SelectionAgent selectionAgent,
                                    EditorAgent editorAgent,
-                                   ProjectServiceClient projectServiceClient) {
+                                   ProjectServiceClient projectServiceClient,
+                                   EventBus eventBus) {
         super(localizationConstant.newJavaScriptFileActionTitle(),
               localizationConstant.newJavaScriptFileActionDescription(),
               webExtensionResource.js(),
@@ -43,7 +45,8 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override

@@ -132,8 +132,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                TreeStructure treeStructure =
-                        treeStructureProviderRegistry.getTreeStructureProvider(event.getProject().getProjectTypeId()).getTreeStructure();
+                final String projectTypeId = event.getProject().getProjectTypeId();
+                TreeStructure treeStructure = treeStructureProviderRegistry.getTreeStructureProvider(projectTypeId).getTreeStructure();
                 setContent(treeStructure);
                 view.setProjectHeader(event.getProject());
             }

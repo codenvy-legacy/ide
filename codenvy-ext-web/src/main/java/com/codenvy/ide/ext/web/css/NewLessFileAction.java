@@ -20,6 +20,7 @@ import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new Less file.
@@ -36,7 +37,8 @@ public class NewLessFileAction extends DefaultNewResourceAction {
                              WebLocalizationConstant localizationConstant,
                              SelectionAgent selectionAgent,
                              EditorAgent editorAgent,
-                             ProjectServiceClient projectServiceClient) {
+                             ProjectServiceClient projectServiceClient,
+                             EventBus eventBus) {
         super(localizationConstant.newLessFileActionTitle(),
               localizationConstant.newLessFileActionDescription(),
               webExtensionResource.css(),
@@ -44,7 +46,8 @@ public class NewLessFileAction extends DefaultNewResourceAction {
               appContext,
               selectionAgent,
               editorAgent,
-              projectServiceClient);
+              projectServiceClient,
+              eventBus);
     }
 
     @Override
