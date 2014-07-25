@@ -10,20 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.upload;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.resources.model.Folder;
-import com.codenvy.ide.api.resources.model.Project;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.web.bindery.event.shared.EventBus;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -43,7 +45,10 @@ public class UploadFilePresenterTest {
     private UploadFileView view;
 
     @Mock
-    private ResourceProvider resourceProvider;
+    private AppContext appContext;
+
+    @Mock
+    private EventBus eventBus;
 
     @Mock
     private SelectionAgent selectionAgent;
@@ -51,9 +56,15 @@ public class UploadFilePresenterTest {
     @InjectMocks
     private UploadFilePresenter presenter;
 
+    @Before
+    public void setUp() {
+        CurrentProject project = mock(CurrentProject.class);
+        when(project.getProjectDescription()).thenReturn(mock(ProjectDescriptor.class));
+        when(appContext.getCurrentProject()).thenReturn(project);
+    }
+
     @Test
     public void showDialogShouldBeExecuted() {
-
         presenter.showDialog();
 
         verify(view).showDialog();
@@ -61,7 +72,6 @@ public class UploadFilePresenterTest {
 
     @Test
     public void onCancelClickedShouldBeExecuted() {
-
         presenter.onCancelClicked();
 
         verify(view).close();
@@ -70,9 +80,9 @@ public class UploadFilePresenterTest {
     @Test
     public void onUploadClickedShouldBeExecuted() {
         Selection select = mock(Selection.class);
-        Folder folder = mock(Folder.class);
+        ItemReference item = mock(ItemReference.class);
         when(selectionAgent.getSelection()).thenReturn(select);
-        when(select.getFirstElement()).thenReturn(folder);
+        when(select.getFirstElement()).thenReturn(item);
 
         presenter.onUploadClicked();
 
@@ -93,13 +103,9 @@ public class UploadFilePresenterTest {
 
     @Test
     public void onSubmitCompleteShouldBeExecuted() {
-        Project project = mock(Project.class);
-        when(resourceProvider.getActiveProject()).thenReturn(project);
-
         presenter.onSubmitComplete("Result");
 
         verify(view).close();
-        verify(resourceProvider).getActiveProject();
-        verify(project).refreshChildren((Folder)anyObject(), (AsyncCallback<Folder>)anyObject());
+        verify(eventBus).fireEvent((RefreshProjectTreeEvent)anyObject());
     }
 }

@@ -11,11 +11,8 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -47,33 +44,24 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
     private final MessageBus               wsMessageBus;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private final NotificationManager      notificationManager;
     private final String                   SEARCH_URL;
     private       NavigateToFileView       view;
-    private       ResourceProvider         resourceProvider;
     private       AppContext               appContext;
     private       EventBus                 eventBus;
-    private       CoreLocalizationConstant localizationConstant;
     private       StringMap<ItemReference> resultMap;
 
     @Inject
     public NavigateToFilePresenter(NavigateToFileView view,
-                                   ResourceProvider resourceProvider,
                                    AppContext appContext,
                                    EventBus eventBus,
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
-                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                   NotificationManager notificationManager,
-                                   CoreLocalizationConstant localizationConstant) {
-        this.resourceProvider = resourceProvider;
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
         this.appContext = appContext;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.notificationManager = notificationManager;
-        this.localizationConstant = localizationConstant;
 
         resultMap = Collections.createStringMap();
 

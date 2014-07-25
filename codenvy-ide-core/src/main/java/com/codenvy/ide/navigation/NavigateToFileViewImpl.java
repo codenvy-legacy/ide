@@ -42,11 +42,6 @@ import java.util.List;
 @Singleton
 public class NavigateToFileViewImpl extends Window implements NavigateToFileView {
 
-    @Override
-    protected void onClose() {
-        //Do nothing
-    }
-
     interface NavigateToFileViewImplUiBinder extends UiBinder<Widget, NavigateToFileViewImpl> {
     }
 
@@ -108,6 +103,11 @@ public class NavigateToFileViewImpl extends Window implements NavigateToFileView
             }
         }.schedule(300);
         super.show();
+    }
+
+    @Override
+    protected void onClose() {
+        //Do nothing
     }
 
     /** {@inheritDoc} */
