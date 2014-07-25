@@ -28,7 +28,6 @@ import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UploadFileAction;
-import com.codenvy.ide.api.ProjectStateHandler;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;

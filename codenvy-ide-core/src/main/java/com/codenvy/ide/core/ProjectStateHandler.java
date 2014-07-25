@@ -8,12 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api;
+package com.codenvy.ide.core;
 
 import elemental.client.Browser;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.event.ProjectActionHandler_2;
@@ -22,6 +25,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,9 +39,9 @@ import javax.annotation.Nullable;
  * E.g.:
  * <ul>
  * <li>closing already opened project before opening another one;</li>
- * <li>setting Browser's title;</li>
+ * <li>setting Browser tab's title;</li>
  * <li>rewriting URL in Browser's address bar;</li>
- * <li>setting current project to {@link AppContext};</li>
+ * <li>setting current project to {@link com.codenvy.ide.api.AppContext};</li>
  * <li>etc.</li>
  * </ul>
  *
@@ -45,17 +49,19 @@ import javax.annotation.Nullable;
  */
 @Singleton
 public class ProjectStateHandler implements ProjectActionHandler_2 {
-    private AppContext             appContext;
-    private EventBus               eventBus;
-    private ProjectServiceClient   projectServiceClient;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private AppContext               appContext;
+    private EventBus                 eventBus;
+    private ProjectServiceClient     projectServiceClient;
+    private CoreLocalizationConstant coreLocalizationConstant;
+    private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public ProjectStateHandler(AppContext appContext, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                               CoreLocalizationConstant coreLocalizationConstant, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.appContext = appContext;
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
+        this.coreLocalizationConstant = coreLocalizationConstant;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         eventBus.addHandler(ProjectActionEvent_2.TYPE, this);
@@ -74,7 +80,10 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
                 appContext.setCurrentProject(new CurrentProject(projectDescriptor));
+
+                Document.get().setTitle(coreLocalizationConstant.projectOpenedTitle(projectDescriptor.getName()));
                 rewriteBrowserHistory(event.getProject().getName());
+
                 eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(projectDescriptor));
             }
 
@@ -91,9 +100,12 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             ProjectDescriptor closedProject = currentProject.getProjectDescription();
-            // Important: currentProject must be null BEFORE firing ProjectClosedEvent
+            // Note: currentProject must be null BEFORE firing ProjectClosedEvent
             appContext.setCurrentProject(null);
+
+            Document.get().setTitle(coreLocalizationConstant.projectClosedTitle());
             rewriteBrowserHistory(null);
+
             eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject));
         }
     }

@@ -45,7 +45,8 @@ public class AppContext {
         return currentProject;
     }
 
-    void setCurrentProject(CurrentProject currentProject) {
+    /** Not intended to be used by clients. */
+    public void setCurrentProject(CurrentProject currentProject) {
         this.currentProject = currentProject;
     }
 }
