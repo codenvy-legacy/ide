@@ -161,6 +161,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
 
+    @Key("importProject.warningTitle")
+    String importProjectWarningTitle();
+
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();
@@ -196,6 +199,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("messages.someFilesCanNotBeSaved")
     String someFilesCanNotBeSaved();
+
+    @Key("messages.importProject.enteredWrongUri")
+    String importProjectEnteredWrongUri();
 
     /* Buttons */
     @Key("ok")

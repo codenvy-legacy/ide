@@ -12,7 +12,6 @@ package com.codenvy.ide.ext.java.client;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -21,12 +20,12 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
-import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.Icon;
@@ -74,7 +73,6 @@ public class JavaExtension {
     private JavaLocalizationConstant localizationConstant;
     private JavaParserWorker         parserWorker;
     private BuildContext             buildContext;
-    private AppContext appContext;
 
     @Inject
     public JavaExtension(ResourceProvider resourceProvider,
@@ -101,8 +99,7 @@ public class JavaExtension {
                          /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
                           * delete!. */
                          FormatController formatController,
-                         BuildContext buildContext,
-                         AppContext appContext) {
+                         BuildContext buildContext) {
         this.notificationManager = notificationManager;
         this.restContext = restContext;
         this.workspaceId = workspaceId;
@@ -111,7 +108,6 @@ public class JavaExtension {
         this.localizationConstant = localizationConstant;
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
-        this.appContext = appContext;
 
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
@@ -209,7 +205,6 @@ public class JavaExtension {
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         updating = true;
-        appContext.setState("isRunEnabled", false);
         asyncRequestFactory.createGetRequest(url, true).send(new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
@@ -217,7 +212,6 @@ public class JavaExtension {
                 notification.setMessage(localizationConstant.dependenciesSuccessfullyUpdated());
                 notification.setStatus(FINISHED);
                 buildContext.setBuilding(false);
-                appContext.setState("isRunEnabled", true);
                 parserWorker.dependenciesUpdated();
                 editorAgent.getOpenedEditors().iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
                     @Override

@@ -47,5 +47,6 @@ public class StyleInjector {
         resources.dataGridStyle().ensureInjected();
         resources.cellTableStyle().ensureInjected();
         resources.infoPanelCss().ensureInjected();
+        resources.defaultCategoriesListCss().ensureInjected();
     }
 }

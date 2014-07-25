@@ -159,7 +159,7 @@ public class RestNameEnvironment {
             if (LOG.isDebugEnabled()) {
                 LOG.error("Can't parse class: ", e);
             }
-            throw new WebApplicationException();
+            throw new WebApplicationException(e);
         }
     }
 

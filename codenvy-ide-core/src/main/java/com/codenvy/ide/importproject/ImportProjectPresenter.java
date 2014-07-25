@@ -31,6 +31,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
@@ -49,6 +50,9 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
+    private static final RegExp HTTPS_URL_Pattern = RegExp.compile("(https://)((([^\\\\\\\\@:;, (//)])+/){2,})[^\\\\\\\\@:; ,]+");
+    private static final RegExp SSH_URL_Pattern   = RegExp.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)[^\\\\/@:]+)(:|/)|" +
+                                                                   "([^\\\\/@:]+@[^\\\\/@:]+):)[^\\\\@:]+");
     private final ProjectServiceClient                   projectServiceClient;
     private       ResourceProvider                       resourceProvider;
     private       NotificationManager                    notificationManager;
@@ -125,6 +129,12 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     @Override
     public void onImportClicked() {
         String url = view.getUri();
+
+        if (!(SSH_URL_Pattern.test(url) || HTTPS_URL_Pattern.test(url))) {
+            view.showWarning();
+            return;
+        }
+
         String importer = view.getImporter();
         final String projectName = view.getProjectName();
         view.close();

@@ -129,7 +129,8 @@ textarea {
 }
 
 .gwt-Button[disabled]:hover, button[disabled]:hover {
-	color: #888888 !important;
+	color: #888888;
+	background: linear-gradient(to bottom, buttonTopColor 0%, buttonTopColor 3%,buttonColor 4%, buttonColor 100%);
 }
 
 .gwt-Button:active, button:active{

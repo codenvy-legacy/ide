@@ -130,11 +130,11 @@
             transform: rotate(180deg);
             -webkit-transform: rotate(180deg);
         }
-        .blueButton{
+        .blueButton, .blueButton[disabled]:hover{
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
             border-radius: 2px;
         }
-		.blueButton:hover{
+		.blueButton:hover {
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3263A2 1px, #3263A2 100%);
         }
         .disabled{
