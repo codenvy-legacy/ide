@@ -21,6 +21,7 @@ import com.codenvy.ide.ext.java.client.JavaLocalizationConstant;
 import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -39,6 +40,7 @@ public class NewPackageAction extends DefaultNewResourceAction {
                             SelectionAgent selectionAgent,
                             EditorAgent editorAgent,
                             ProjectServiceClient projectServiceClient,
+                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             EventBus eventBus) {
         super(localizationConstant.actionNewPackageTitle(),
               localizationConstant.actionNewPackageDescription(),
@@ -48,6 +50,7 @@ public class NewPackageAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
+              dtoUnmarshallerFactory,
               eventBus);
     }
 

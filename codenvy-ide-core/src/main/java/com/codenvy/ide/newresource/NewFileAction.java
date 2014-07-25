@@ -17,6 +17,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,6 +36,7 @@ public class NewFileAction extends DefaultNewResourceAction {
                          EditorAgent editorAgent,
                          Resources resources,
                          ProjectServiceClient projectServiceClient,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          EventBus eventBus) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
@@ -44,6 +46,7 @@ public class NewFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
+              dtoUnmarshallerFactory,
               eventBus);
     }
 

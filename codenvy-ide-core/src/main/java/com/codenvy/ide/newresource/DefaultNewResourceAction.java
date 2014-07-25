@@ -11,6 +11,7 @@
 package com.codenvy.ide.newresource;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.gwt.client.QueryExpression;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.AppContext;
@@ -20,7 +21,10 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -40,12 +44,13 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class DefaultNewResourceAction extends Action {
-    protected String               title;
-    protected AppContext           appContext;
-    protected SelectionAgent       selectionAgent;
-    protected EditorAgent          editorAgent;
-    protected ProjectServiceClient projectServiceClient;
-    protected EventBus             eventBus;
+    protected String                 title;
+    protected AppContext             appContext;
+    protected SelectionAgent         selectionAgent;
+    protected EditorAgent            editorAgent;
+    protected ProjectServiceClient   projectServiceClient;
+    protected EventBus               eventBus;
+    private   DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     /**
      * Creates new action.
@@ -75,6 +80,7 @@ public class DefaultNewResourceAction extends Action {
                                     SelectionAgent selectionAgent,
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient,
+                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                     EventBus eventBus) {
         super(title, description, icon, svgIcon);
         this.title = title;
@@ -82,6 +88,7 @@ public class DefaultNewResourceAction extends Action {
         this.selectionAgent = selectionAgent;
         this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.eventBus = eventBus;
     }
 
@@ -96,7 +103,7 @@ public class DefaultNewResourceAction extends Action {
                             @Override
                             protected void onSuccess(Void result) {
                                 eventBus.fireEvent(new RefreshProjectTreeEvent());
-//                                openFileInEditor();
+                                openFileInEditor(getParentPath(), name);
                             }
 
                             @Override
@@ -145,7 +152,21 @@ public class DefaultNewResourceAction extends Action {
         return appContext.getCurrentProject().getProjectDescription().getPath();
     }
 
-    private void openFileInEditor(ItemReference itemReference) {
-        editorAgent.openEditor(itemReference);
+    private void openFileInEditor(String itemParentPath, String itemName) {
+        Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        projectServiceClient.search(new QueryExpression().setPath(itemParentPath).setName(itemName),
+                                    new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+                                        @Override
+                                        protected void onSuccess(Array<ItemReference> itemReferenceArray) {
+                                            if (!itemReferenceArray.isEmpty()) {
+                                                editorAgent.openEditor(itemReferenceArray.get(0));
+                                            }
+                                        }
+
+                                        @Override
+                                        protected void onFailure(Throwable throwable) {
+
+                                        }
+                                    });
     }
 }
