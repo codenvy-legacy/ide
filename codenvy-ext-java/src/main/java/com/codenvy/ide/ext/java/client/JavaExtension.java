@@ -152,10 +152,6 @@ public class JavaExtension {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-            }
         });
 
         eventBus.addHandler(FileEvent.TYPE, new FileEventHandler() {

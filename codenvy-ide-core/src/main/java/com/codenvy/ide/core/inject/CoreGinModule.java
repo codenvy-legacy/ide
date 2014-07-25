@@ -302,8 +302,8 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
-
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
+
         bind(AppContext.class).in(Singleton.class);
     }
 

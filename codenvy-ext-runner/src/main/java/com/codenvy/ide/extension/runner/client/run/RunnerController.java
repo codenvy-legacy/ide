@@ -188,10 +188,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
                 console.clear();
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-            }
         });
 
         eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {

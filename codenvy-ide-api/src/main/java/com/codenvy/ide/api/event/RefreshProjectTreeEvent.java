@@ -10,19 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * A handler for handling {@link OpenProjectEvent}.
- *
  * @author Artem Zatsarynnyy
  */
-public interface OpenProjectHandler extends EventHandler {
-    /**
-     * Called when {@link OpenProjectEvent} is fired.
-     *
-     * @param event
-     *         the {@link OpenProjectEvent} that contains project to open
-     */
-    void onOpenProject(OpenProjectEvent event);
+public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler> {
+
+    public static Type<RefreshProjectTreeHandler> TYPE = new Type<>();
+
+    @Override
+    public Type<RefreshProjectTreeHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(RefreshProjectTreeHandler handler) {
+        handler.onRefresh(this);
+    }
 }

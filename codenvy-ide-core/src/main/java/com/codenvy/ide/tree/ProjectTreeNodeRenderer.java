@@ -124,26 +124,25 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 
     @Override
     public void updateNodeContents(TreeNodeElement<AbstractTreeNode<?>> treeNode) {
-//        if (treeNode.getData() instanceof Project) {
-//            // Update folder icon based on icon state.
-//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//        if (treeNode.getData() instanceof ProjectRootTreeNode) {
+//            // Update project icon based on it's state.
+//            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());
 //            if (treeNode.isOpen()) {
-//                icon.addClassName(css.projectOpen());
+//                icon.setClassName(css.projectOpen());
 //            } else {
-//                icon.addClassName(css.project());
+//                icon.setClassName(css.project());
 //            }
-//        } else if (treeNode.getData() instanceof Folder) {
-//            // Update folder icon based on icon state.
-//            Element icon = treeNode.getNodeLabel().getFirstChildElement();
+//        } else if (treeNode.getData() instanceof ItemTreeNode) {
+//            // Update folder icon based on it's state.
+//            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());
-//              if (treeNode.getData().isLoading()) {
-//                icon.addClassName(css.folderLoading());
-//              } else
-//            if (treeNode.isOpen()) {
-//                icon.addClassName(css.folderOpen());
+//            if (treeNode.getData().isLoading()) {
+//                icon.setClassName(css.folderLoading());
+//            } else if (treeNode.isOpen()) {
+//                icon.setClassName(css.folderOpen());
 //            } else {
-//                icon.addClassName(css.folder());
+//                icon.setClassName(css.folder());
 //            }
 //        }
     }

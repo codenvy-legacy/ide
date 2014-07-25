@@ -42,11 +42,6 @@ public class FormatController {
             public void onProjectClosed(ProjectActionEvent event) {
 
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-
-            }
         });
     }
 

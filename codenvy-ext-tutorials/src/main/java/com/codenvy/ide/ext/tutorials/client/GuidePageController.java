@@ -49,11 +49,6 @@ public class GuidePageController {
                     closeTutorialGuide();
                 }
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                // do nothing
-            }
         });
     }
 

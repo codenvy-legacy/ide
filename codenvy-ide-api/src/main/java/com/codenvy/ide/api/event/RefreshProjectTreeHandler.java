@@ -10,24 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * An event that should be fired in order to close currently opened project.
- *
  * @author Artem Zatsarynnyy
  */
-public class CloseCurrentProjectEvent extends GwtEvent<CloseCurrentProjectHandler> {
-
-    public static Type<CloseCurrentProjectHandler> TYPE = new Type<>();
-
-    @Override
-    public Type<CloseCurrentProjectHandler> getAssociatedType() {
-        return TYPE;
-    }
-
-    @Override
-    protected void dispatch(CloseCurrentProjectHandler handler) {
-        handler.onClose(this);
-    }
+public interface RefreshProjectTreeHandler extends EventHandler {
+    void onRefresh(RefreshProjectTreeEvent event);
 }

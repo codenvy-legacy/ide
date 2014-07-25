@@ -72,11 +72,6 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     }
                 }
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                //do nothing
-            }
         });
     }
 

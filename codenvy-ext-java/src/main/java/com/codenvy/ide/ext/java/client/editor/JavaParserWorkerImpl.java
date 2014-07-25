@@ -58,8 +58,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The type Java parser worker impl.
- * @author  <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id :
+ *
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  */
 public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHandler, MessageFilter.MessageRecipient<ProblemsMessage> {
 
@@ -372,10 +372,6 @@ public class JavaParserWorkerImpl implements JavaParserWorker, ProjectActionHand
             worker.terminate();
             worker = null;
         }
-    }
-
-    @Override
-    public void onProjectDescriptionChanged(ProjectActionEvent event) {
     }
 
     @Override

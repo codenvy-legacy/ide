@@ -53,11 +53,6 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
             public void onProjectClosed(ProjectActionEvent event) {
                 view.clear();
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-
-            }
         });
     }
 

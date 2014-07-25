@@ -11,10 +11,8 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.event.OpenProjectEvent;
-import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
 import com.codenvy.ide.api.ui.tree.TreeStructure;
 import com.codenvy.ide.collections.Array;
@@ -22,7 +20,6 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -84,7 +81,7 @@ public class ProjectsListStructure implements TreeStructure {
     public void processNodeAction(AbstractTreeNode<?> node) {
         // open project
         if (node instanceof ProjectNode) {
-            eventBus.fireEvent(new OpenProjectEvent(((ProjectNode)node).getData()));
+            eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(((ProjectNode)node).getData()));
         }
     }
 }

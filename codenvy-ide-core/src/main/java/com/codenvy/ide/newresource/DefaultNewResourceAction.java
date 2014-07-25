@@ -20,9 +20,6 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.tree.generic.ItemTreeNode;
-import com.codenvy.ide.api.ui.tree.generic.ProjectRootTreeNode;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -129,20 +126,13 @@ public class DefaultNewResourceAction extends Action {
     protected String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
-            if (selection.getFirstElement() instanceof AbstractTreeNode) {
-                AbstractTreeNode node = (AbstractTreeNode)selection.getFirstElement();
-                if (node instanceof ItemTreeNode) {
-                    ItemReference data = ((ItemTreeNode)node).getData();
-                    switch (data.getType()) {
-                        case "folder":
-                            return data.getPath();
-                        case "file":
-                            if (node.getParent() instanceof ItemTreeNode) {
-                                return ((ItemTreeNode)node.getParent()).getData().getPath();
-                            } else if (node.getParent() instanceof ProjectRootTreeNode) {
-                                return ((ProjectRootTreeNode)node.getParent()).getData().getPath();
-                            }
-                    }
+            if (selection.getFirstElement() instanceof ItemReference) {
+                ItemReference node = (ItemReference)selection.getFirstElement();
+                final String path = node.getPath();
+                if ("file".equals(node.getType())) {
+                    return path.substring(0, path.length() - node.getName().length());
+                } else if ("folder".equals(node.getType())) {
+                    return node.getPath();
                 }
             }
         }

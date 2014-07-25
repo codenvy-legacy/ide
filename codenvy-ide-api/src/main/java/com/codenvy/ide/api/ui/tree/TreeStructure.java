@@ -33,7 +33,7 @@ public interface TreeStructure {
     void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback);
 
     /**
-     * Refreshes children for the specified node.
+     * Populate the specified node by children.
      *
      * @param node
      *         tree node for which refreshing children is requested

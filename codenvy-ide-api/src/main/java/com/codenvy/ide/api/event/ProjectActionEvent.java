@@ -14,7 +14,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event that describes the fact that Project Action has be performed.
+ * Event that describes the fact that Project Action (opened/closed) has been performed.
  *
  * @author Nikolay Zamosenchuk
  */
@@ -25,8 +25,12 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
     private final ProjectAction     projectAction;
 
     /**
+     * Create new {@link ProjectActionEvent}.
+     *
      * @param project
+     *         an instance of affected project
      * @param projectAction
+     *         the type of action
      */
     protected ProjectActionEvent(ProjectDescriptor project, ProjectAction projectAction) {
         this.project = project;
@@ -34,36 +38,23 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
     }
 
     /**
-     * Creates a Project Opened Event
+     * Creates a Project Opened Event.
      *
      * @param project
-     *         - an instance of affected project
-     * @return
+     *         an instance of affected project
      */
     public static ProjectActionEvent createProjectOpenedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.OPENED);
     }
 
     /**
-     * Creates a Project Closed Event
+     * Creates a Project Closed Event.
      *
      * @param project
-     *         - an instance of affected project
-     * @return
+     *         an instance of affected project
      */
     public static ProjectActionEvent createProjectClosedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.CLOSED);
-    }
-
-    /**
-     * Creates a Project's Description Changed Event
-     *
-     * @param project
-     *         - an instance of affected project
-     * @return
-     */
-    public static ProjectActionEvent createProjectDescriptionChangedEvent(ProjectDescriptor project) {
-        return new ProjectActionEvent(project, ProjectAction.DESCRIPTION_CHANGED);
     }
 
     @Override
@@ -90,9 +81,6 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
             case CLOSED:
                 handler.onProjectClosed(this);
                 break;
-            case DESCRIPTION_CHANGED:
-                handler.onProjectDescriptionChanged(this);
-                break;
             default:
                 break;
         }
@@ -100,6 +88,6 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
 
     /** Set of possible Project Actions */
     public static enum ProjectAction {
-        OPENED, CLOSED, DESCRIPTION_CHANGED
+        OPENED, CLOSED
     }
 }

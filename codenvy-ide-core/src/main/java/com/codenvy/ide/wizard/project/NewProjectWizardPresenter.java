@@ -16,8 +16,7 @@ import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.event.OpenProjectEvent;
-import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.wizard.Wizard;
@@ -147,7 +146,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
                 callback.onSuccess();
             }
 
@@ -170,7 +169,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
                 callback.onSuccess();
             }
 
@@ -190,7 +189,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
                                              ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                                             eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                                             eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
                                              callback.onSuccess();
                                          }
 

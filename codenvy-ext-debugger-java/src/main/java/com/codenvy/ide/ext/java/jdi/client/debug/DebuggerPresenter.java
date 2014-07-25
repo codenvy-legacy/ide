@@ -220,11 +220,6 @@ public class DebuggerPresenter extends BasePresenter implements DebuggerView.Act
                     closeView();
                 }
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-                // do nothing
-            }
         });
     }
 

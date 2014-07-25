@@ -17,7 +17,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.event.ResourceChangedEvent;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.selection.Selection;
@@ -43,7 +43,7 @@ public class DeleteResourceAction extends Action {
     private final CoreLocalizationConstant localization;
     private final AnalyticsEventLogger     eventLogger;
     private final ProjectServiceClient     projectServiceClient;
-    private final EventBus eventBus;
+    private final EventBus                 eventBus;
 
     @Inject
     public DeleteResourceAction(SelectionAgent selectionAgent,
@@ -118,8 +118,7 @@ public class DeleteResourceAction extends Action {
                 projectServiceClient.delete(resourcePath, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
-                        // TODO: update project's tree in project explorer
-//                        eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(resource));
+                        eventBus.fireEvent(new RefreshProjectTreeEvent());
                     }
 
                     @Override

@@ -24,7 +24,7 @@ import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.ui.Icon;
@@ -72,22 +72,22 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt analyticsEventLoggerExt;
-    private final DtoFactory              dtoFactory;
+    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt             analyticsEventLoggerExt;
+    private final DtoFactory                          dtoFactory;
     private final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
-    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
-    private final IconRegistry                  iconRegistry;
-    private final ThemeAgent                    themeAgent;
-    private final Provider<ComponentRegistry>   componentRegistry;
-    private final Provider<WorkspacePresenter>  workspaceProvider;
-    private final ExtensionInitializer          extensionInitializer;
-    private final UserProfileServiceClient      userProfileService;
-    private final WorkspaceServiceClient        workspaceServiceClient;
-    private final PreferencesManagerImpl        preferencesManager;
-    private final StyleInjector                 styleInjector;
-    private final EventBus                      eventBus;
-    private final ActionManager                 actionManager;
+    private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
+    private final IconRegistry                        iconRegistry;
+    private final ThemeAgent                          themeAgent;
+    private final Provider<ComponentRegistry>         componentRegistry;
+    private final Provider<WorkspacePresenter>        workspaceProvider;
+    private final ExtensionInitializer                extensionInitializer;
+    private final UserProfileServiceClient            userProfileService;
+    private final WorkspaceServiceClient              workspaceServiceClient;
+    private final PreferencesManagerImpl              preferencesManager;
+    private final StyleInjector                       styleInjector;
+    private final EventBus                            eventBus;
+    private final ActionManager                       actionManager;
 
     /** Create controller. */
     @Inject
@@ -342,7 +342,7 @@ public class BootstrapController {
         final String projectNameToOpen = Config.getProjectName();
         if (projectNameToOpen != null) {
             ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(projectNameToOpen);
-            eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+            eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
             processStartupAction();
         } else {
             processStartupAction();

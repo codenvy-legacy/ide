@@ -14,6 +14,7 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.ActionEvent;
@@ -23,6 +24,7 @@ import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new folder.
@@ -32,13 +34,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewFolderAction extends DefaultNewResourceAction {
     private CoreLocalizationConstant localizationConstant;
+    private EventBus eventBus;
 
     @Inject
     public NewFolderAction(AppContext appContext,
                            CoreLocalizationConstant localizationConstant,
                            SelectionAgent selectionAgent,
                            Resources resources,
-                           ProjectServiceClient projectServiceClient) {
+                           ProjectServiceClient projectServiceClient,
+                           EventBus eventBus) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
@@ -48,6 +52,7 @@ public class NewFolderAction extends DefaultNewResourceAction {
               null,
               projectServiceClient);
         this.localizationConstant = localizationConstant;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -59,6 +64,7 @@ public class NewFolderAction extends DefaultNewResourceAction {
                 projectServiceClient.createFolder(getParentPath() + '/' + value, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
+                        eventBus.fireEvent(new RefreshProjectTreeEvent());
                     }
 
                     @Override

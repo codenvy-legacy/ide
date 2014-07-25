@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Describe current state of project
+ * Describe current state of project.
  *
  * @author Vitaly Parfonov
  */

@@ -62,7 +62,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
-        rootNode = new AbstractTreeNode(null, null) {
+        rootNode = new AbstractTreeNode<Void>(null, null) {
             @Override
             public String getName() {
                 return "root";
@@ -141,14 +141,8 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     /** {@inheritDoc} */
     @Override
     public void updateItem(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
-        Array<Array<String>> paths = tree.replaceSubtree(oldResource, newResource, true);
-
-        TreeNodeElement<AbstractTreeNode<?>> nodeElement = tree.getNode(newResource);
-        if (nodeElement != null) {
-            tree.closeNode(nodeElement);
-            tree.expandNode(nodeElement);
-        }
-        tree.expandPaths(paths, false);
+        Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, true);
+        tree.expandPaths(pathsToExpand, false);
     }
 
     /** {@inheritDoc} */

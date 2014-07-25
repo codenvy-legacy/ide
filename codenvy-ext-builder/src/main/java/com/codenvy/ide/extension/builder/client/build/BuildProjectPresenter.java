@@ -120,10 +120,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 activeProject = null;
                 lastBuildTaskDescriptor = null;
             }
-
-            @Override
-            public void onProjectDescriptionChanged(ProjectActionEvent event) {
-            }
         });
     }
 
