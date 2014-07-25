@@ -12,6 +12,7 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
@@ -21,7 +22,6 @@ import org.everrest.test.mock.MockHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +43,12 @@ public class UploadFileTest extends LocalFileSystemTest {
         folderPath = createDirectory(testRootPath, "UploadTest");
         protectedFolderPath = createDirectory(testRootPath, "UploadTest_Protected");
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
 
-        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.READ.value(), BasicPermissions.WRITE.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -77,7 +77,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileMediaType = "text/plain;charset=utf8";
         ContainerResponse response = doUploadFile(protectedFolderId, fileName, fileMediaType, fileContent, "", "", false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors
-        assertTrue(((String)response.getEntity()).startsWith("<pre>Code: 106"));
+        assertTrue(((String)response.getEntity()).startsWith("<pre>message: "));
         String expectedPath = protectedFolderPath + '/' + fileName;
         assertFalse("File must not be created. ", exists(expectedPath));
     }
@@ -141,7 +141,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         createFile(folderPath, fileName, fileContent.getBytes());
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors
-        assertTrue(((String)response.getEntity()).startsWith("<pre>Code: 102"));
+        assertTrue(((String)response.getEntity()).startsWith("<pre>message: "));
         assertEquals(fileContent, new String(readFile(folderPath + '/' + fileName)));
     }
 
@@ -150,16 +150,16 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileMediaType = "application/octet-stream";
         final String fileContent = "existed protected file";
         String path = createFile(folderPath, fileName, fileContent.getBytes());
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
-        permissions.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.READ.value(), BasicPermissions.WRITE.value()));
         writePermissions(path, permissions);
         // File is protected by ACL and may not be overwritten even if 'overwrite' parameter is 'true'
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", true);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors
-        assertTrue(((String)response.getEntity()).startsWith("<pre>Code: 106"));
+        assertTrue(((String)response.getEntity()).startsWith("<pre>message: "));
         assertEquals(fileContent, new String(readFile(folderPath + '/' + fileName)));
     }
 
@@ -172,7 +172,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         // File is locked and may not be overwritten even if 'overwrite' parameter is 'true'
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", true);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors
-        assertTrue(((String)response.getEntity()).startsWith("<pre>Code: 104"));
+        assertTrue(((String)response.getEntity()).startsWith("<pre>message: "));
         assertEquals(fileContent, new String(readFile(folderPath + '/' + fileName)));
     }
 

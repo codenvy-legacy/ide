@@ -15,12 +15,13 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,11 @@ public class CreateTest extends LocalFileSystemTest {
         protectedFolderPath = createDirectory(testRootPath, "CreateTest_ProtectedFolder");
         String filePath = createFile(testRootPath, "CreateTest_File", DEFAULT_CONTENT_BYTES);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedFolderPath, permissions);
 
         folderId = pathToId(folderPath);
@@ -83,7 +84,7 @@ public class CreateTest extends LocalFileSystemTest {
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(409, response.getStatus());
     }
 
     public void testCreateFileInRoot() throws Exception {
@@ -143,7 +144,7 @@ public class CreateTest extends LocalFileSystemTest {
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(500, response.getStatus());
     }
 
     public void testCreateFileHavePermissions() throws Exception {
@@ -152,7 +153,7 @@ public class CreateTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
         // Replace default principal by principal who has write permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         // --
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, content.getBytes(), writer, null);
@@ -181,7 +182,7 @@ public class CreateTest extends LocalFileSystemTest {
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
     }
 
     public void testCreateFileWrongParentId() throws Exception {
@@ -221,7 +222,7 @@ public class CreateTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "folder/" + folderId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(500, response.getStatus());
     }
 
     public void testCreateFolderNoPermissions() throws Exception {
@@ -262,7 +263,7 @@ public class CreateTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(409, response.getStatus());
     }
 
     public void testCreateFolderHierarchy2() throws Exception {

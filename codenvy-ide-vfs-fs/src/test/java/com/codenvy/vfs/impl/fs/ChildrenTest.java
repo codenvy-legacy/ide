@@ -17,12 +17,13 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -67,9 +68,9 @@ public class ChildrenTest extends LocalFileSystemTest {
         String filePath = createFile(testRootPath, "ChildrenTest_File", DEFAULT_CONTENT_BYTES);
 
         String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         writePermissions(protectedFolderPath, permissions);
 
         fileId = pathToId(filePath);
@@ -102,7 +103,7 @@ public class ChildrenTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "children/" + fileId;
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
     }
 
@@ -110,7 +111,7 @@ public class ChildrenTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "children/" + protectedFolderId;
         // Replace default principal by principal who has read permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         // ---
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -133,9 +134,9 @@ public class ChildrenTest extends LocalFileSystemTest {
         // Have permission for read folder but have not permission to read one of its child.
         String protectedItemName = childrenNames.iterator().next();
         String protectedItemPath = folderPath + '/' + protectedItemName;
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         writePermissions(protectedItemPath, permissions);
         childrenNames.remove(protectedItemName); // this should not appears in result
 

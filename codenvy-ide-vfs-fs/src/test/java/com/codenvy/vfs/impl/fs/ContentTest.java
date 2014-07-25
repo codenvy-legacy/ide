@@ -12,13 +12,13 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +53,9 @@ public class ContentTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);
@@ -91,7 +91,7 @@ public class ContentTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "content/" + folderId;
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
     }
 
     public void testGetContentNoPermissions() throws Exception {
@@ -137,16 +137,16 @@ public class ContentTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "content/" + folderId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, updateContent, writer, null);
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
     }
 
     public void testUpdateContentNoPermissions() throws Exception {
         // Restore 'read' permission for 'admin'.
         // All requests in test use this principal by default.
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.READ));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedFilePath, permissions);
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "content/" + protectedFileId;
@@ -181,7 +181,7 @@ public class ContentTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, writer, null);
         // File is locked.
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
         assertTrue("Content must not be updated", Arrays.equals(content, readFile(lockedFilePath)));
         assertNull("Properties must not be updated", readProperties(lockedFilePath));

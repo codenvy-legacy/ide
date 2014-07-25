@@ -10,7 +10,12 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ConflictException;
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
+import com.codenvy.api.core.util.ValueHolder;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
 import com.codenvy.api.vfs.server.MountPoint;
@@ -21,14 +26,6 @@ import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.VirtualFileSystemUser;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
 import com.codenvy.api.vfs.server.VirtualFileVisitor;
-import com.codenvy.api.vfs.server.exceptions.InvalidArgumentException;
-import com.codenvy.api.vfs.server.exceptions.ItemAlreadyExistException;
-import com.codenvy.api.vfs.server.exceptions.ItemNotFoundException;
-import com.codenvy.api.vfs.server.exceptions.LockException;
-import com.codenvy.api.vfs.server.exceptions.NotSupportedException;
-import com.codenvy.api.vfs.server.exceptions.PermissionDeniedException;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import com.codenvy.api.vfs.server.observation.CreateEvent;
 import com.codenvy.api.vfs.server.observation.DeleteEvent;
 import com.codenvy.api.vfs.server.observation.MoveEvent;
@@ -52,6 +49,7 @@ import com.codenvy.commons.lang.cache.Cache;
 import com.codenvy.commons.lang.cache.LoadingValueSLRUCache;
 import com.codenvy.commons.lang.cache.SynchronizedCache;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
@@ -76,7 +74,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -183,7 +180,7 @@ public class FSMountPoint implements MountPoint {
             } catch (IOException e) {
                 String msg = String.format("Unable read lock for '%s'. ", key);
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemRuntimeException(msg);
+                throw new RuntimeException(msg);
             } finally {
                 closeQuietly(dis);
             }
@@ -209,7 +206,7 @@ public class FSMountPoint implements MountPoint {
             } catch (IOException e) {
                 String msg = String.format("Unable read properties for '%s'. ", key);
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemRuntimeException(msg);
+                throw new RuntimeException(msg);
             } finally {
                 closeQuietly(dis);
             }
@@ -234,20 +231,20 @@ public class FSMountPoint implements MountPoint {
 
                 // TODO : REMOVE!!! Temporary default ACL until will have client side for real manage
                 if (key.isRoot()) {
-                    final Map<Principal, Set<BasicPermissions>> dummy = new HashMap<>(2);
+                    final Map<Principal, Set<String>> dummy = new HashMap<>(2);
                     final Principal developer = DtoFactory.getInstance().createDto(Principal.class)
                                                           .withName("workspace/developer").withType(Principal.Type.GROUP);
                     final Principal other = DtoFactory.getInstance().createDto(Principal.class)
                                                       .withName(VirtualFileSystemInfo.ANY_PRINCIPAL).withType(Principal.Type.USER);
-                    dummy.put(developer, EnumSet.of(BasicPermissions.ALL));
-                    dummy.put(other, EnumSet.of(BasicPermissions.READ));
+                    dummy.put(developer, Sets.newHashSet(BasicPermissions.ALL.value()));
+                    dummy.put(other, Sets.newHashSet(BasicPermissions.READ.value()));
                     return new AccessControlList(dummy);
                 }
                 return new AccessControlList();
             } catch (IOException e) {
                 String msg = String.format("Unable read ACL for '%s'. ", key);
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemRuntimeException(msg);
+                throw new RuntimeException(msg);
             } finally {
                 closeQuietly(dis);
             }
@@ -323,7 +320,7 @@ public class FSMountPoint implements MountPoint {
     }
 
     @Override
-    public VirtualFileImpl getVirtualFileById(String id) throws VirtualFileSystemException {
+    public VirtualFileImpl getVirtualFileById(String id) throws NotFoundException, ForbiddenException, ServerException {
         if (root.getId().equals(id)) {
             return root;
         }
@@ -341,24 +338,23 @@ public class FSMountPoint implements MountPoint {
     }
 
     @Override
-    public VirtualFileImpl getVirtualFile(String path) throws VirtualFileSystemException {
+    public VirtualFileImpl getVirtualFile(String path) throws NotFoundException, ForbiddenException, ServerException {
         if (path == null || path.isEmpty() || "/".equals(path)) {
             return getRoot();
         }
         return doGetVirtualFile(Path.fromString(path));
     }
 
-    private VirtualFileImpl doGetVirtualFile(Path vfsPath) throws VirtualFileSystemException {
+    private VirtualFileImpl doGetVirtualFile(Path vfsPath) throws NotFoundException, ForbiddenException, ServerException {
         final VirtualFileImpl virtualFile =
                 new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(vfsPath)), vfsPath, pathToId(vfsPath), this);
         if (!virtualFile.exists()) {
-            throw new ItemNotFoundException(String.format("Object '%s' does not exists. ", vfsPath));
+            throw new NotFoundException(String.format("Object '%s' does not exists. ", vfsPath));
         }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.READ, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable get item '%s'. Operation not permitted. ", virtualFile.getPath()));
+            if (!hasPermission(virtualFile, BasicPermissions.READ.value(), true)) {
+                throw new ForbiddenException(String.format("Unable get item '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
         } finally {
             lock.release();
@@ -383,7 +379,7 @@ public class FSMountPoint implements MountPoint {
 
     // All methods below designed to be used from VirtualFileImpl ONLY.
 
-    Path idToPath(String id) throws VirtualFileSystemException {
+    Path idToPath(String id) throws NotFoundException {
         if (id.equals(root.getId())) {
             return Path.ROOT;
         }
@@ -399,7 +395,7 @@ public class FSMountPoint implements MountPoint {
             return Path.fromString(raw.substring(split));
         }
         // Invalid format of ID
-        throw new ItemNotFoundException(String.format("Object '%s' does not exists. ", id));
+        throw new NotFoundException(String.format("Object '%s' does not exists. ", id));
     }
 
 
@@ -413,7 +409,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    VirtualFileImpl getParent(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    VirtualFileImpl getParent(VirtualFileImpl virtualFile) {
         if (virtualFile.isRoot()) {
             return null;
         }
@@ -422,7 +418,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    VirtualFileImpl getChild(VirtualFileImpl parent, String name) throws VirtualFileSystemException {
+    VirtualFileImpl getChild(VirtualFileImpl parent, String name) throws ForbiddenException {
         if (parent.isFile()) {
             return null;
         }
@@ -432,10 +428,10 @@ public class FSMountPoint implements MountPoint {
             final VirtualFileImpl child =
                     new VirtualFileImpl(new java.io.File(parent.getIoFile(), name), childPath, pathToId(childPath), this);
             if (child.exists()) {
-                if (hasPermission(child, BasicPermissions.READ, true)) {
+                if (hasPermission(child, BasicPermissions.READ.value(), true)) {
                     return child;
                 }
-                throw new PermissionDeniedException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));
+                throw new ForbiddenException(String.format("Unable get item '%s'. Operation not permitted. ", child.getPath()));
             }
         } finally {
             lock.release();
@@ -444,7 +440,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    LazyIterator<VirtualFile> getChildren(VirtualFileImpl parent, VirtualFileFilter filter) throws VirtualFileSystemException {
+    LazyIterator<VirtualFile> getChildren(VirtualFileImpl parent, VirtualFileFilter filter) throws ServerException {
         if (!parent.isFolder()) {
             //throw new InvalidArgumentException(String.format("Unable get children. Item '%s' is not a folder. ", parent.getPath()));
             return LazyIterator.emptyIterator();
@@ -455,7 +451,7 @@ public class FSMountPoint implements MountPoint {
         try {
             if (parent.isRoot()) {
                 // NOTE: We do not check read permissions when access to ROOT folder.
-                if (!hasPermission(parent, BasicPermissions.READ, false)) {
+                if (!hasPermission(parent, BasicPermissions.READ.value(), false)) {
                     // User has not access to ROOT folder.
                     return LazyIterator.emptyIterator();
                 }
@@ -465,7 +461,7 @@ public class FSMountPoint implements MountPoint {
                 VirtualFile child = iterator.next();
                 // Check permission directly for current file only.
                 // We know the parent is accessible for current user otherwise we should not be here.
-                if (!hasPermission((VirtualFileImpl)child, BasicPermissions.READ, false) || !filter.accept(child)) {
+                if (!hasPermission((VirtualFileImpl)child, BasicPermissions.READ.value(), false) || !filter.accept(child)) {
                     iterator.remove(); // Do not show item in list if current user has not permission to see it
                 }
             }
@@ -479,11 +475,11 @@ public class FSMountPoint implements MountPoint {
 
 
     // UNDER LOCK
-    private List<VirtualFile> doGetChildren(VirtualFileImpl virtualFile, java.io.FilenameFilter filter) throws VirtualFileSystemException {
+    private List<VirtualFile> doGetChildren(VirtualFileImpl virtualFile, java.io.FilenameFilter filter) throws ServerException {
         final String[] names = virtualFile.getIoFile().list(filter);
         if (names == null) {
             // Something wrong. According to java docs may be null only if i/o error occurs.
-            throw new VirtualFileSystemException(String.format("Unable get children '%s'. ", virtualFile.getPath()));
+            throw new ServerException(String.format("Unable get children '%s'. ", virtualFile.getPath()));
         }
         final List<VirtualFile> children = new ArrayList<>(names.length);
         for (String name : names) {
@@ -495,30 +491,29 @@ public class FSMountPoint implements MountPoint {
 
 
     VirtualFileImpl createFile(VirtualFileImpl parent, String name, String mediaType, InputStream content)
-            throws VirtualFileSystemException {
+            throws ForbiddenException, ConflictException, ServerException {
         checkName(name);
 
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException("Unable create new file. Item specified as parent is not a folder. ");
+            throw new ForbiddenException("Unable create new file. Item specified as parent is not a folder. ");
         }
 
         final PathLockFactory.PathLock parentLock = pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable create new file in '%s'. Operation not permitted. ", parent.getPath()));
+            if (!hasPermission(parent, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable create new file in '%s'. Operation not permitted. ", parent.getPath()));
             }
             final Path newPath = parent.getInternalPath().newPath(name);
             final java.io.File newIoFile = new java.io.File(ioRoot, toIoPath(newPath));
             try {
                 if (!newIoFile.createNewFile()) // atomic
                 {
-                    throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
+                    throw new ConflictException(String.format("Item '%s' already exists. ", newPath));
                 }
             } catch (IOException e) {
                 String msg = String.format("Unable create new file '%s'. ", newPath);
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemException(msg);
+                throw new ServerException(msg);
             }
 
             final VirtualFileImpl newVirtualFile = new VirtualFileImpl(newIoFile, newPath, pathToId(newPath), this);
@@ -530,7 +525,7 @@ public class FSMountPoint implements MountPoint {
             if (searcherProvider != null) {
                 try {
                     searcherProvider.getSearcher(this, true).add(newVirtualFile);
-                } catch (VirtualFileSystemException e) {
+                } catch (ServerException e) {
                     LOG.error(e.getMessage(), e);
                 }
             }
@@ -542,17 +537,17 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    VirtualFileImpl createFolder(VirtualFileImpl parent, String name) throws VirtualFileSystemException {
+    VirtualFileImpl createFolder(VirtualFileImpl parent, String name) throws ForbiddenException, ConflictException, ServerException {
         checkName(name);
 
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
+            throw new ForbiddenException("Unable create folder. Item specified as parent is not a folder. ");
         }
 
         final PathLockFactory.PathLock parentLock = pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
+            if (!hasPermission(parent, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(
                         String.format("Unable create new folder in '%s'. Operation not permitted. ", parent.getPath()));
             }
             // Name may be hierarchical, e.g. folder1/folder2/folder3.
@@ -572,7 +567,7 @@ public class FSMountPoint implements MountPoint {
 
             if (newPath == null) {
                 // Folder or folder hierarchy already exists.
-                throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", parent.getInternalPath().newPath(name)));
+                throw new ConflictException(String.format("Item '%s' already exists. ", parent.getInternalPath().newPath(name)));
             }
 
             // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
@@ -586,27 +581,27 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    VirtualFileImpl copy(VirtualFileImpl source, VirtualFileImpl parent) throws VirtualFileSystemException {
+    VirtualFileImpl copy(VirtualFileImpl source, VirtualFileImpl parent) throws ForbiddenException, ConflictException, ServerException {
         if (source.getInternalPath().equals(parent.getInternalPath())) {
-            throw new InvalidArgumentException("Item cannot be copied to itself. ");
+            throw new ForbiddenException("Item cannot be copied to itself. ");
         }
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException("Unable copy item. Item specified as parent is not a folder. ");
+            throw new ForbiddenException("Unable copy item. Item specified as parent is not a folder. ");
         }
         PathLockFactory.PathLock sourceLock = null;
         PathLockFactory.PathLock parentLock = null;
         try {
             sourceLock = pathLockFactory.getLock(source.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
             parentLock = pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
-            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(String.format("Unable copy item '%s' to %s. Operation not permitted. ",
-                                                                  source.getPath(), parent.getPath()));
+            if (!hasPermission(parent, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable copy item '%s' to %s. Operation not permitted. ",
+                                                           source.getPath(), parent.getPath()));
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             final VirtualFileImpl destination =
                     new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
             if (destination.exists()) {
-                throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
+                throw new ConflictException(String.format("Item '%s' already exists. ", newPath));
             }
             doCopy(source, destination);
             eventService.publish(new CreateEvent(workspaceId, destination.getPath(), source.isFolder()));
@@ -623,7 +618,7 @@ public class FSMountPoint implements MountPoint {
 
 
     // UNDER LOCK
-    private void doCopy(VirtualFileImpl source, VirtualFileImpl destination) throws VirtualFileSystemException {
+    private void doCopy(VirtualFileImpl source, VirtualFileImpl destination) throws ServerException {
         // Source is locked, but destination is not.
         // It looks like not necessary to lock destination path since it does not exists yet.
         final java.io.File sourceMetadataFile = getMetadataFile(source.getInternalPath());
@@ -650,7 +645,7 @@ public class FSMountPoint implements MountPoint {
                         // Check permission directly for current file only.
                         // We already know parent accessible for current user otherwise we should not be here.
                         // Ignore item if don't have permission to read it.
-                        if (!hasPermission((VirtualFileImpl)current, BasicPermissions.READ, false)) {
+                        if (!hasPermission((VirtualFileImpl)current, BasicPermissions.READ.value(), false)) {
                             skipList.add((VirtualFileImpl)current);
                         } else {
                             if (current.isFolder()) {
@@ -686,7 +681,7 @@ public class FSMountPoint implements MountPoint {
             if (searcherProvider != null) {
                 try {
                     searcherProvider.getSearcher(this, true).add(destination);
-                } catch (VirtualFileSystemException e) {
+                } catch (ServerException e) {
                     LOG.error(e.getMessage(), e); // just log about i/o error in index
                 }
             }
@@ -695,27 +690,26 @@ public class FSMountPoint implements MountPoint {
             // User may delete copied files (if any) and try copy again.
             String msg = String.format("Unable copy '%s' to '%s'. ", source, destination);
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new ServerException(msg);
         }
     }
 
 
     VirtualFileImpl rename(VirtualFileImpl virtualFile, String newName, String newMediaType, String lockToken)
-            throws VirtualFileSystemException {
+            throws ForbiddenException, ConflictException, ServerException {
         if (virtualFile.isRoot()) {
-            throw new InvalidArgumentException("Unable rename root folder. ");
+            throw new ForbiddenException("Unable rename root folder. ");
         }
         final String sourcePath = virtualFile.getPath();
         final VirtualFileImpl parent = getParent(virtualFile);
         final PathLockFactory.PathLock parentLock =
                 pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable rename item '%s'. Operation not permitted. ", sourcePath));
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable rename item '%s'. Operation not permitted. ", sourcePath));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable rename file '%s'. File is locked. ", sourcePath));
+                throw new ForbiddenException(String.format("Unable rename file '%s'. File is locked. ", sourcePath));
             }
             final String name = virtualFile.getName();
             final VirtualFileImpl renamed;
@@ -723,7 +717,7 @@ public class FSMountPoint implements MountPoint {
                 final Path newPath = virtualFile.getInternalPath().getParent().newPath(newName);
                 renamed = new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
                 if (renamed.exists()) {
-                    throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", renamed.getName()));
+                    throw new ConflictException(String.format("Item '%s' already exists. ", renamed.getName()));
                 }
                 // use copy and delete
                 doCopy(virtualFile, renamed);
@@ -746,21 +740,22 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    VirtualFileImpl move(VirtualFileImpl source, VirtualFileImpl parent, String lockToken) throws VirtualFileSystemException {
+    VirtualFileImpl move(VirtualFileImpl source, VirtualFileImpl parent, String lockToken)
+            throws ForbiddenException, ConflictException, ServerException {
         final String sourcePath = source.getPath();
         final String parentPath = parent.getPath();
         if (source.isRoot()) {
-            throw new InvalidArgumentException("Unable move root folder. ");
+            throw new ForbiddenException("Unable move root folder. ");
         }
         if (source.getInternalPath().equals(parent.getInternalPath())) {
-            throw new InvalidArgumentException("Item cannot be moved to itself. ");
+            throw new ForbiddenException("Item cannot be moved to itself. ");
         }
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder. ");
+            throw new ForbiddenException("Unable move. Item specified as parent is not a folder. ");
         }
         if (source.isFolder() && parent.getInternalPath().isChild(source.getInternalPath())) {
-            throw new InvalidArgumentException(String.format("Unable move item '%s' to '%s'. Item may not have itself as parent. ",
-                                                             sourcePath, parentPath));
+            throw new ForbiddenException(String.format("Unable move item '%s' to '%s'. Item may not have itself as parent. ",
+                                                       sourcePath, parentPath));
         }
 
         PathLockFactory.PathLock sourceLock = null;
@@ -769,20 +764,21 @@ public class FSMountPoint implements MountPoint {
             sourceLock = pathLockFactory.getLock(source.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
             parentLock = pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
 
-            if (!(hasPermission(source, BasicPermissions.WRITE, true) && hasPermission(parent, BasicPermissions.WRITE, true))) {
-                throw new PermissionDeniedException(
+            if (!(hasPermission(source, BasicPermissions.WRITE.value(), true)
+                  && hasPermission(parent, BasicPermissions.WRITE.value(), true))) {
+                throw new ForbiddenException(
                         String.format("Unable move item '%s' to %s. Operation not permitted. ", sourcePath, parentPath));
             }
             // Even we check lock before delete original file check it here also to have better behaviour.
             // Prevent even copy original file if we already know it is locked.
             if (source.isFile() && !validateLockTokenIfLocked(source, lockToken)) {
-                throw new LockException(String.format("Unable move file '%s'. File is locked. ", sourcePath));
+                throw new ForbiddenException(String.format("Unable move file '%s'. File is locked. ", sourcePath));
             }
             final Path newPath = parent.getInternalPath().newPath(source.getName());
             VirtualFileImpl destination =
                     new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(newPath)), newPath, pathToId(newPath), this);
             if (destination.exists()) {
-                throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
+                throw new ConflictException(String.format("Item '%s' already exists. ", newPath));
             }
             // use copy and delete
             doCopy(source, destination);
@@ -800,9 +796,9 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    ContentStream getContent(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    ContentStream getContent(VirtualFileImpl virtualFile) throws ForbiddenException, ServerException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(String.format("Unable get content. Item '%s' is not a file. ", virtualFile.getPath()));
+            throw new ForbiddenException(String.format("Unable get content. Item '%s' is not a file. ", virtualFile.getPath()));
         }
 
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
@@ -834,7 +830,7 @@ public class FSMountPoint implements MountPoint {
             } catch (IOException e) {
                 String msg = String.format("Unable get content of '%s'. ", virtualFile.getPath());
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemException(msg);
+                throw new ServerException(msg);
             } finally {
                 closeQuietly(fIn);
             }
@@ -845,19 +841,19 @@ public class FSMountPoint implements MountPoint {
 
 
     void updateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content, String lockToken)
-            throws VirtualFileSystemException {
+            throws ForbiddenException, ServerException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(String.format("Unable update content. Item '%s' is not file. ", virtualFile.getPath()));
+            throw new ForbiddenException(String.format("Unable update content. Item '%s' is not file. ", virtualFile.getPath()));
         }
 
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(
                         String.format("Unable update content of file '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
             if (!validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable update content of file '%s'. File is locked. ", virtualFile.getPath()));
+                throw new ForbiddenException(String.format("Unable update content of file '%s'. File is locked. ", virtualFile.getPath()));
             }
 
             doUpdateContent(virtualFile, mediaType, content);
@@ -865,7 +861,7 @@ public class FSMountPoint implements MountPoint {
             if (searcherProvider != null) {
                 try {
                     searcherProvider.getSearcher(this, true).update(virtualFile);
-                } catch (VirtualFileSystemException e) {
+                } catch (ServerException e) {
                     LOG.error(e.getMessage(), e);
                 }
             }
@@ -877,7 +873,7 @@ public class FSMountPoint implements MountPoint {
 
 
     // UNDER LOCK
-    private void doUpdateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content) throws VirtualFileSystemException {
+    private void doUpdateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content) throws ServerException {
         FileOutputStream fOut = null;
         try {
             fOut = new FileOutputStream(virtualFile.getIoFile());
@@ -889,7 +885,7 @@ public class FSMountPoint implements MountPoint {
         } catch (IOException e) {
             String msg = String.format("Unable set content of '%s'. ", virtualFile.getPath());
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new ServerException(msg);
         } finally {
             closeQuietly(fOut);
         }
@@ -897,19 +893,19 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    void delete(VirtualFileImpl virtualFile, String lockToken) throws VirtualFileSystemException {
+    void delete(VirtualFileImpl virtualFile, String lockToken) throws ForbiddenException, ServerException {
         if (virtualFile.isRoot()) {
-            throw new InvalidArgumentException("Unable delete root folder. ");
+            throw new ForbiddenException("Unable delete root folder. ");
         }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         final String myPath = virtualFile.getPath();
         final boolean folder = virtualFile.isFolder();
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(String.format("Unable delete item '%s'. Operation not permitted. ", myPath));
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable delete item '%s'. Operation not permitted. ", myPath));
             }
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable delete item '%s'. Item is locked. ", myPath));
+                throw new ForbiddenException(String.format("Unable delete item '%s'. Item is locked. ", myPath));
             }
 
             doDelete(virtualFile, lockToken);
@@ -920,7 +916,7 @@ public class FSMountPoint implements MountPoint {
     }
 
     // UNDER LOCK
-    private void doDelete(VirtualFileImpl virtualFile, String lockToken) throws VirtualFileSystemException {
+    private void doDelete(VirtualFileImpl virtualFile, String lockToken) throws ForbiddenException, ServerException {
         if (virtualFile.isFolder()) {
             final LinkedList<VirtualFile> q = new LinkedList<>();
             q.add(virtualFile);
@@ -928,25 +924,27 @@ public class FSMountPoint implements MountPoint {
                 for (VirtualFile child : doGetChildren((VirtualFileImpl)q.pop(), SERVICE_GIT_DIR_FILTER)) {
                     // Check permission directly for current file only.
                     // We already know parent may be deleted by current user otherwise we should not be here.
-                    if (!hasPermission((VirtualFileImpl)child, BasicPermissions.WRITE, false)) {
-                        throw new PermissionDeniedException(
-                                String.format("Unable delete item '%s'. Operation not permitted. ", child.getPath()));
+                    if (!hasPermission((VirtualFileImpl)child, BasicPermissions.WRITE.value(), false)) {
+                        throw new ForbiddenException(String.format("Unable delete item '%s'. Operation not permitted. ", child.getPath()));
                     }
                     if (child.isFolder()) {
                         q.push(child);
                     } else if (isLocked((VirtualFileImpl)child)) {
                         // Do not check lock token here. It checked only when remove file directly.
                         // If folder contains locked children it may not be deleted.
-                        throw new LockException(String.format("Unable delete item '%s'. Child item '%s' is locked. ",
-                                                              virtualFile.getPath(), child.getPath()));
+                        throw new ForbiddenException(String.format("Unable delete item '%s'. Child item '%s' is locked. ",
+                                                                   virtualFile.getPath(), child.getPath()));
                     }
                 }
             }
         }
 
         // unlock file
-        if (virtualFile.isFile() && virtualFile.isLocked()) {
-            doUnlock(virtualFile, lockToken);
+        if (virtualFile.isFile()) {
+            final FileLock fileLock = checkIsLockValidAndGet(virtualFile);
+            if (NO_LOCK != fileLock) {
+                doUnlock(virtualFile, fileLock, lockToken);
+            }
         }
 
         // clear caches
@@ -957,7 +955,7 @@ public class FSMountPoint implements MountPoint {
         final String path = virtualFile.getPath();
         if (!deleteRecursive(virtualFile.getIoFile())) {
             LOG.error("Unable delete file {}", virtualFile.getIoFile());
-            throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
+            throw new ServerException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
         }
 
         // delete ACL file
@@ -965,7 +963,7 @@ public class FSMountPoint implements MountPoint {
         if (aclFile.delete()) {
             if (aclFile.exists()) {
                 LOG.error("Unable delete ACL file {}", aclFile);
-                throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
+                throw new ServerException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
             }
         }
 
@@ -974,14 +972,14 @@ public class FSMountPoint implements MountPoint {
         if (metadataFile.delete()) {
             if (metadataFile.exists()) {
                 LOG.error("Unable delete file metadata {}", metadataFile);
-                throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
+                throw new ServerException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
             }
         }
 
         if (searcherProvider != null) {
             try {
                 searcherProvider.getSearcher(this, true).delete(path);
-            } catch (VirtualFileSystemException e) {
+            } catch (ServerException e) {
                 LOG.error(e.getMessage(), e);
             }
         }
@@ -1009,15 +1007,17 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    ContentStream zip(VirtualFileImpl virtualFile, VirtualFileFilter filter) throws IOException, VirtualFileSystemException {
+    ContentStream zip(VirtualFileImpl virtualFile, VirtualFileFilter filter) throws ForbiddenException, ServerException {
         if (!virtualFile.isFolder()) {
-            throw new InvalidArgumentException(String.format("Unable export to zip. Item '%s' is not a folder. ", virtualFile.getPath()));
+            throw new ForbiddenException(String.format("Unable export to zip. Item '%s' is not a folder. ", virtualFile.getPath()));
         }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            final java.io.File zipFile = java.io.File.createTempFile("export", ".zip");
-            final FileOutputStream out = new FileOutputStream(zipFile);
+            java.io.File zipFile = null;
+            FileOutputStream out = null;
             try {
+                zipFile = java.io.File.createTempFile("export", ".zip");
+                out = new FileOutputStream(zipFile);
                 final ZipOutputStream zipOut = new ZipOutputStream(out);
                 final LinkedList<VirtualFile> q = new LinkedList<>();
                 q.add(virtualFile);
@@ -1029,7 +1029,7 @@ public class FSMountPoint implements MountPoint {
                         // (2) Check permission directly for current file only.
                         // We already know parent accessible for current user otherwise we should not be here.
                         // Ignore item if don't have permission to read it.
-                        if (filter.accept(current) && hasPermission((VirtualFileImpl)current, BasicPermissions.READ, false)) {
+                        if (filter.accept(current) && hasPermission((VirtualFileImpl)current, BasicPermissions.READ.value(), false)) {
                             final String zipEntryName =
                                     ((VirtualFileImpl)current).getInternalPath().subPath(zipEntryNameTrim).toString().substring(1);
                             if (current.isFile()) {
@@ -1058,34 +1058,37 @@ public class FSMountPoint implements MountPoint {
                     }
                 }
                 closeQuietly(zipOut);
-            } catch (IOException ioe) {
-                zipFile.delete();
-                throw ioe;
-            } catch (RuntimeException e) {
-                zipFile.delete();
-                throw new VirtualFileSystemException(e.getMessage(), e);
+                final String name = virtualFile.getName() + ".zip";
+                return new ContentStream(name, new DeleteOnCloseFileInputStream(zipFile), "application/zip", zipFile.length(), new Date());
+            } catch (IOException | RuntimeException ioe) {
+                if (zipFile != null) {
+                    zipFile.delete();
+                }
+                throw new ServerException(ioe.getMessage(), ioe);
             } finally {
                 closeQuietly(out);
             }
-
-            final String name = virtualFile.getName() + ".zip";
-            return new ContentStream(name, new DeleteOnCloseFileInputStream(zipFile), "application/zip", zipFile.length(), new Date());
         } finally {
             lock.release();
         }
     }
 
 
-    void unzip(VirtualFileImpl parent, InputStream zipped, boolean overwrite) throws IOException, VirtualFileSystemException {
+    void unzip(VirtualFileImpl parent, InputStream zipped, boolean overwrite)
+            throws ForbiddenException, ConflictException, ServerException {
         if (!parent.isFolder()) {
-            throw new InvalidArgumentException(String.format("Unable import zip content. Item '%s' is not a folder. ", parent.getPath()));
+            throw new ForbiddenException(String.format("Unable import zip content. Item '%s' is not a folder. ", parent.getPath()));
         }
-        final ZipContent zipContent = ZipContent.newInstance(zipped);
+        final ZipContent zipContent;
+        try {
+            zipContent = ZipContent.newInstance(zipped);
+        } catch (IOException e) {
+            throw new ServerException(e.getMessage(), e);
+        }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(parent, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable import from zip to '%s'. Operation not permitted. ", parent.getPath()));
+            if (!hasPermission(parent, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable import from zip to '%s'. Operation not permitted. ", parent.getPath()));
             }
 
             ZipInputStream zip = null;
@@ -1105,14 +1108,14 @@ public class FSMountPoint implements MountPoint {
                         current = new VirtualFileImpl(new java.io.File(ioRoot, toIoPath(parentPath)), parentPath, pathToId(parentPath),
                                                       this);
                         if (!(current.exists() || current.getIoFile().mkdirs())) {
-                            throw new VirtualFileSystemException(String.format("Unable create directory '%s' ", parentPath));
+                            throw new ServerException(String.format("Unable create directory '%s' ", parentPath));
                         }
                     }
                     final Path newPath = current.getInternalPath().newPath(name);
                     if (zipEntry.isDirectory()) {
                         final java.io.File dir = new java.io.File(current.getIoFile(), name);
                         if (!(dir.exists() || dir.mkdir())) {
-                            throw new VirtualFileSystemException(String.format("Unable create directory '%s' ", newPath));
+                            throw new ServerException(String.format("Unable create directory '%s' ", newPath));
                         }
                     } else {
                         final VirtualFileImpl file =
@@ -1120,10 +1123,10 @@ public class FSMountPoint implements MountPoint {
                         String mediaType = null;
                         if (file.exists()) {
                             if (isLocked(file)) {
-                                throw new LockException(String.format("File '%s' already exists and locked. ", file.getPath()));
+                                throw new ForbiddenException(String.format("File '%s' already exists and locked. ", file.getPath()));
                             }
-                            if (!hasPermission(file, BasicPermissions.WRITE, true)) {
-                                throw new PermissionDeniedException(
+                            if (!hasPermission(file, BasicPermissions.WRITE.value(), true)) {
+                                throw new ForbiddenException(
                                         String.format("Unable update file '%s'. Operation not permitted. ", file.getPath()));
                             }
                             mediaType = getPropertyValue(file, "vfs:mimeType");
@@ -1132,13 +1135,13 @@ public class FSMountPoint implements MountPoint {
                         try {
                             if (!file.getIoFile().createNewFile()) { // atomic
                                 if (!overwrite) {
-                                    throw new ItemAlreadyExistException(String.format("File '%s' already exists. ", file.getPath()));
+                                    throw new ConflictException(String.format("File '%s' already exists. ", file.getPath()));
                                 }
                             }
                         } catch (IOException e) {
                             String msg = String.format("Unable create new file '%s'. ", newPath);
                             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                            throw new VirtualFileSystemException(msg);
+                            throw new ServerException(msg);
                         }
 
                         doUpdateContent(file, mediaType, noCloseZip);
@@ -1148,12 +1151,12 @@ public class FSMountPoint implements MountPoint {
                 if (searcherProvider != null) {
                     try {
                         searcherProvider.getSearcher(this, true).add(parent);
-                    } catch (VirtualFileSystemException e) {
+                    } catch (ServerException e) {
                         LOG.error(e.getMessage(), e);
                     }
                 }
-            } catch (RuntimeException e) {
-                throw new VirtualFileSystemException(e.getMessage(), e);
+            } catch (IOException e) {
+                throw new ServerException(e.getMessage(), e);
             } finally {
                 closeQuietly(zip);
             }
@@ -1164,17 +1167,16 @@ public class FSMountPoint implements MountPoint {
 
    /* ============ LOCKING ============ */
 
-    String lock(VirtualFileImpl virtualFile, long timeout) throws VirtualFileSystemException {
+    String lock(VirtualFileImpl virtualFile, long timeout) throws ForbiddenException, ConflictException, ServerException {
         if (!virtualFile.isFile()) {
-            throw new InvalidArgumentException(String.format("Unable lock '%s'. Locking allowed for files only. ", virtualFile.getPath()));
+            throw new ForbiddenException(String.format("Unable lock '%s'. Locking allowed for files only. ", virtualFile.getPath()));
         }
 
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(String.format("Unable lock '%s'. Operation not permitted. ", virtualFile.getPath()));
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(String.format("Unable lock '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
-
             return doLock(virtualFile, timeout);
         } finally {
             lock.release();
@@ -1183,7 +1185,7 @@ public class FSMountPoint implements MountPoint {
 
 
     // UNDER LOCK
-    private String doLock(VirtualFileImpl virtualFile, long timeout) throws VirtualFileSystemException {
+    private String doLock(VirtualFileImpl virtualFile, long timeout) throws ConflictException, ServerException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         if (NO_LOCK == lockTokensCache[index].get(virtualFile.getInternalPath())) // causes read from file if need.
         {
@@ -1200,7 +1202,7 @@ public class FSMountPoint implements MountPoint {
             } catch (IOException e) {
                 String msg = String.format("Unable lock file '%s'. ", virtualFile.getPath());
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemException(msg);
+                throw new ServerException(msg);
             } finally {
                 closeQuietly(dos);
             }
@@ -1210,36 +1212,36 @@ public class FSMountPoint implements MountPoint {
             return lockToken;
         }
 
-        throw new LockException(String.format("Unable lock file '%s'. File already locked. ", virtualFile.getPath()));
+        throw new ConflictException(String.format("Unable lock file '%s'. File already locked. ", virtualFile.getPath()));
     }
 
 
-    void unlock(VirtualFileImpl virtualFile, String lockToken) throws VirtualFileSystemException {
+    void unlock(VirtualFileImpl virtualFile, String lockToken) throws ForbiddenException, ConflictException, ServerException {
         if (lockToken == null) {
-            throw new LockException("Null lock token. ");
+            throw new ForbiddenException("Null lock token. ");
         }
         if (!virtualFile.isFile()) {
             // Locks available for files only.
-            throw new LockException(String.format("Item '%s' is not locked. ", virtualFile.getPath()));
+            throw new ConflictException(String.format("Item '%s' is not locked. ", virtualFile.getPath()));
         }
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            doUnlock(virtualFile, lockToken);
+            final FileLock fileLock = checkIsLockValidAndGet(virtualFile);
+            if (NO_LOCK == fileLock) {
+                throw new ConflictException(String.format("File '%s' is not locked. ", virtualFile.getPath()));
+            }
+            doUnlock(virtualFile, fileLock, lockToken);
         } finally {
             lock.release();
         }
     }
 
     // UNDER LOCK
-    private void doUnlock(VirtualFileImpl virtualFile, String lockToken) throws VirtualFileSystemException {
+    private void doUnlock(VirtualFileImpl virtualFile, FileLock lock, String lockToken) throws ForbiddenException, ServerException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         try {
-            final FileLock lock = checkIsValidAndGet(virtualFile);
-            if (NO_LOCK == lock) {
-                throw new LockException(String.format("File '%s' is not locked. ", virtualFile.getPath()));
-            }
             if (!lock.getLockToken().equals(lockToken)) {
-                throw new LockException(String.format("Unable unlock file '%s'. Lock token does not match. ", virtualFile.getPath()));
+                throw new ForbiddenException(String.format("Unable unlock file '%s'. Lock token does not match. ", virtualFile.getPath()));
             }
             final java.io.File lockIoFile = getLockFile(virtualFile.getInternalPath());
             if (!lockIoFile.delete()) {
@@ -1250,25 +1252,25 @@ public class FSMountPoint implements MountPoint {
         } catch (IOException e) {
             String msg = String.format("Unable unlock file '%s'. ", virtualFile.getPath());
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new ServerException(msg);
         }
     }
 
 
-    boolean isLocked(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    boolean isLocked(VirtualFileImpl virtualFile) {
         if (!virtualFile.isFile()) {
             return false;
         }
         final PathLockFactory.PathLock pathLock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
-            return NO_LOCK != checkIsValidAndGet(virtualFile);
+            return NO_LOCK != checkIsLockValidAndGet(virtualFile);
         } finally {
             pathLock.release();
         }
     }
 
     // UNDER LOCK
-    private FileLock checkIsValidAndGet(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    private FileLock checkIsLockValidAndGet(VirtualFileImpl virtualFile) {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         // causes read from file if need
         final FileLock lock = lockTokensCache[index].get(virtualFile.getInternalPath());
@@ -1291,8 +1293,8 @@ public class FSMountPoint implements MountPoint {
 
 
     // UNDER LOCK
-    private boolean validateLockTokenIfLocked(VirtualFileImpl virtualFile, String checkLockToken) throws VirtualFileSystemException {
-        final FileLock lock = checkIsValidAndGet(virtualFile);
+    private boolean validateLockTokenIfLocked(VirtualFileImpl virtualFile, String checkLockToken) {
+        final FileLock lock = checkIsLockValidAndGet(virtualFile);
         return NO_LOCK == lock || lock.getLockToken().equals(checkLockToken);
     }
 
@@ -1308,7 +1310,7 @@ public class FSMountPoint implements MountPoint {
 
    /* ============ ACCESS CONTROL  ============ */
 
-    AccessControlList getACL(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    AccessControlList getACL(VirtualFileImpl virtualFile) {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
@@ -1320,19 +1322,18 @@ public class FSMountPoint implements MountPoint {
 
 
     void updateACL(VirtualFileImpl virtualFile, List<AccessControlEntry> acl, boolean override, String lockToken)
-            throws VirtualFileSystemException {
+            throws ForbiddenException, ServerException {
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
             final int index = virtualFile.getInternalPath().hashCode() & MASK;
             final AccessControlList actualACL = aclCache[index].get(virtualFile.getInternalPath());
 
-            if (!hasPermission(virtualFile, BasicPermissions.UPDATE_ACL, true)) {
-                throw new PermissionDeniedException(
-                        String.format("Unable update ACL for '%s'. Operation not permitted. ", virtualFile.getPath()));
+            if (!hasPermission(virtualFile, BasicPermissions.UPDATE_ACL.value(), true)) {
+                throw new ForbiddenException(String.format("Unable update ACL for '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
 
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new ForbiddenException(String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
             }
 
             // 1. make copy of ACL
@@ -1358,7 +1359,7 @@ public class FSMountPoint implements MountPoint {
             } catch (IOException e) {
                 String msg = String.format("Unable save ACL for '%s'. ", virtualFile.getPath());
                 LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-                throw new VirtualFileSystemException(msg);
+                throw new ServerException(msg);
             } finally {
                 closeQuietly(dos);
             }
@@ -1378,7 +1379,7 @@ public class FSMountPoint implements MountPoint {
 
 
     // under lock
-    private boolean hasPermission(VirtualFileImpl virtualFile, BasicPermissions p, boolean checkParent) throws VirtualFileSystemException {
+    private boolean hasPermission(VirtualFileImpl virtualFile, String p, boolean checkParent) {
         final VirtualFileSystemUser user = userContext.getVirtualFileSystemUser();
         Path path = virtualFile.getInternalPath();
         while (path != null) {
@@ -1386,9 +1387,9 @@ public class FSMountPoint implements MountPoint {
             if (!accessControlList.isEmpty()) {
                 final Principal userPrincipal = DtoFactory.getInstance().createDto(Principal.class)
                                                           .withName(user.getUserId()).withType(Principal.Type.USER);
-                Set<BasicPermissions> userPermissions = accessControlList.getPermissions(userPrincipal);
+                Set<String> userPermissions = accessControlList.getPermissions(userPrincipal);
                 if (userPermissions != null) {
-                    return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
+                    return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL.value());
                 }
                 Collection<String> groups = user.getGroups();
                 if (!groups.isEmpty()) {
@@ -1398,7 +1399,7 @@ public class FSMountPoint implements MountPoint {
                                                                    .withType(Principal.Type.GROUP);
                         userPermissions = accessControlList.getPermissions(groupPrincipal);
                         if (userPermissions != null) {
-                            return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL);
+                            return userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL.value());
                         }
                     }
                 }
@@ -1406,7 +1407,7 @@ public class FSMountPoint implements MountPoint {
                                                          .withName(VirtualFileSystemInfo.ANY_PRINCIPAL)
                                                          .withType(Principal.Type.USER);
                 userPermissions = accessControlList.getPermissions(anyPrincipal);
-                return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL));
+                return userPermissions != null && (userPermissions.contains(p) || userPermissions.contains(BasicPermissions.ALL.value()));
             }
             if (checkParent) {
                 path = path.getParent();
@@ -1429,7 +1430,7 @@ public class FSMountPoint implements MountPoint {
 
    /* ============ METADATA  ============ */
 
-    List<Property> getProperties(VirtualFileImpl virtualFile, PropertyFilter filter) throws VirtualFileSystemException {
+    List<Property> getProperties(VirtualFileImpl virtualFile, PropertyFilter filter) {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final Map<String, String[]> metadata = getFileMetadata(virtualFile);
         final List<Property> result = new ArrayList<>(metadata.size());
@@ -1449,17 +1450,19 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    void updateProperties(VirtualFileImpl virtualFile, List<Property> properties, String lockToken) throws VirtualFileSystemException {
+    void updateProperties(VirtualFileImpl virtualFile, List<Property> properties, String lockToken)
+            throws ForbiddenException, ServerException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
-            if (!hasPermission(virtualFile, BasicPermissions.WRITE, true)) {
-                throw new PermissionDeniedException(
+            if (!hasPermission(virtualFile, BasicPermissions.WRITE.value(), true)) {
+                throw new ForbiddenException(
                         String.format("Unable update properties for '%s'. Operation not permitted. ", virtualFile.getPath()));
             }
 
             if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken)) {
-                throw new LockException(String.format("Unable update properties of item '%s'. Item is locked. ", virtualFile.getPath()));
+                throw new ForbiddenException(
+                        String.format("Unable update properties of item '%s'. Item is locked. ", virtualFile.getPath()));
             }
 
             // 1. make copy of properties
@@ -1490,7 +1493,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private Map<String, String[]> getFileMetadata(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    private Map<String, String[]> getFileMetadata(VirtualFileImpl virtualFile) {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
         try {
@@ -1501,7 +1504,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    String getPropertyValue(VirtualFileImpl virtualFile, String name) throws VirtualFileSystemException {
+    String getPropertyValue(VirtualFileImpl virtualFile, String name) {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
@@ -1514,7 +1517,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    String[] getPropertyValues(VirtualFileImpl virtualFile, String name) throws VirtualFileSystemException {
+    String[] getPropertyValues(VirtualFileImpl virtualFile, String name) {
         // Do not check permission here. We already check 'read' permission when get VirtualFile.
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
@@ -1529,12 +1532,12 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    void setProperty(VirtualFileImpl virtualFile, String name, String value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String value) throws ServerException {
         setProperty(virtualFile, name, value == null ? null : new String[]{value});
     }
 
 
-    void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws VirtualFileSystemException {
+    void setProperty(VirtualFileImpl virtualFile, String name, String... value) throws ServerException {
         final int index = virtualFile.getInternalPath().hashCode() & MASK;
         final PathLockFactory.PathLock lock = pathLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
         try {
@@ -1558,7 +1561,7 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private void saveFileMetadata(VirtualFileImpl virtualFile, Map<String, String[]> properties) throws VirtualFileSystemException {
+    private void saveFileMetadata(VirtualFileImpl virtualFile, Map<String, String[]> properties) throws ServerException {
         DataOutputStream dos = null;
 
         try {
@@ -1578,7 +1581,7 @@ public class FSMountPoint implements MountPoint {
         } catch (IOException e) {
             String msg = String.format("Unable save properties for '%s'. ", virtualFile.getPath());
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new ServerException(msg);
         } finally {
             closeQuietly(dos);
         }
@@ -1597,13 +1600,13 @@ public class FSMountPoint implements MountPoint {
    /* ============ VERSIONING ============ */
    /* versions is not supported in fact. Here implements simple contract for single version. */
 
-    String getVersionId(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    String getVersionId(VirtualFileImpl virtualFile) {
         return virtualFile.isFile() ? "0" : null;
     }
 
-    LazyIterator<VirtualFile> getVersions(VirtualFileImpl virtualFile, VirtualFileFilter filter) throws VirtualFileSystemException {
+    LazyIterator<VirtualFile> getVersions(VirtualFileImpl virtualFile, VirtualFileFilter filter) throws ForbiddenException {
         if (!virtualFile.isFile()) {
-            throw new VirtualFileSystemException("Versioning allowed for files only. ");
+            throw new ForbiddenException("Versioning allowed for files only. ");
         }
         if (filter.accept(virtualFile)) {
             return LazyIterator.<VirtualFile>singletonIterator(virtualFile);
@@ -1611,17 +1614,17 @@ public class FSMountPoint implements MountPoint {
         return LazyIterator.emptyIterator();
     }
 
-    VirtualFileImpl getVersion(VirtualFileImpl virtualFile, String versionId) throws VirtualFileSystemException {
+    VirtualFileImpl getVersion(VirtualFileImpl virtualFile, String versionId) throws ForbiddenException, NotFoundException {
         if (!virtualFile.isFile()) {
-            throw new VirtualFileSystemException("Versioning allowed for files only. ");
+            throw new ForbiddenException("Versioning allowed for files only. ");
         }
         if ("0".equals(versionId)) {
             return virtualFile;
         }
-        throw new NotSupportedException("Versioning is not supported. ");
+        throw new NotFoundException("Version " + versionId + " for file " + virtualFile.getPath() + " doesn't exist. ");
     }
 
-    LazyIterator<Pair<String, String>> countMd5Sums(VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    LazyIterator<Pair<String, String>> countMd5Sums(VirtualFileImpl virtualFile) throws ServerException {
         if (!virtualFile.isFolder()) {
             return LazyIterator.emptyIterator();
         }
@@ -1630,34 +1633,44 @@ public class FSMountPoint implements MountPoint {
             final List<Pair<String, String>> hashes = new ArrayList<>();
             final int trimPathLength = virtualFile.getPath().length() + 1;
             final HashFunction hashFunction = Hashing.md5();
+            final ValueHolder<ServerException> errorHolder = new ValueHolder<>();
             virtualFile.accept(new VirtualFileVisitor() {
                 @Override
-                public void visit(final VirtualFile virtualFile) throws VirtualFileSystemException {
-                    if (virtualFile.isFile()) {
-                        final InputStream stream = virtualFile.getContent().getStream();
-                        try {
-                            final String hexHash = ByteStreams.hash(new InputSupplier<InputStream>() {
-                                @Override
-                                public InputStream getInput() throws IOException {
-                                    return stream;
-                                }
-                            }, hashFunction).toString();
-
-                            hashes.add(Pair.of(hexHash, virtualFile.getPath().substring(trimPathLength)));
-                        } catch (IOException e) {
-                            throw new VirtualFileSystemException(e);
+                public void visit(final VirtualFile virtualFile) {
+                    try {
+                        if (virtualFile.isFile()) {
+                            hashes.add(Pair.of(countHashSum(virtualFile, hashFunction), virtualFile.getPath().substring(trimPathLength)));
+                        } else {
+                            final LazyIterator<VirtualFile> children = virtualFile.getChildren(VirtualFileFilter.ALL);
+                            while (children.hasNext()) {
+                                children.next().accept(this);
+                            }
                         }
-                    } else {
-                        final LazyIterator<VirtualFile> children = virtualFile.getChildren(VirtualFileFilter.ALL);
-                        while (children.hasNext()) {
-                            children.next().accept(this);
-                        }
+                    } catch (ServerException e) {
+                        errorHolder.set(e);
                     }
                 }
             });
             return LazyIterator.fromList(hashes);
         } finally {
             lock.release();
+        }
+    }
+
+
+    private String countHashSum(VirtualFile virtualFile, HashFunction hashFunction) throws ServerException {
+        try {
+            final InputStream stream = virtualFile.getContent().getStream();
+            return ByteStreams.hash(new InputSupplier<InputStream>() {
+                @Override
+                public InputStream getInput() throws IOException {
+                    return stream;
+                }
+            }, hashFunction).toString();
+        } catch (ForbiddenException e) {
+            throw new ServerException(e.getServiceError());
+        } catch (IOException e) {
+            throw new ServerException(e);
         }
     }
 
@@ -1697,9 +1710,9 @@ public class FSMountPoint implements MountPoint {
     }
 
 
-    private void checkName(String name) throws InvalidArgumentException {
+    private void checkName(String name) throws ServerException {
         if (name == null || name.trim().isEmpty()) {
-            throw new InvalidArgumentException("Item's name is not set. ");
+            throw new ServerException("Item's name is not set. ");
         }
     }
 }

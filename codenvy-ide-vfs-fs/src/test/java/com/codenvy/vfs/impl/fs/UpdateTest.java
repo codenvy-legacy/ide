@@ -15,12 +15,12 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +52,11 @@ public class UpdateTest extends LocalFileSystemTest {
         lockedFilePath = createFile(testRootPath, "UpdateTest_LockedFile", DEFAULT_CONTENT_BYTES);
         protectedFilePath = createFile(testRootPath, "UpdateTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
 
         writePermissions(protectedFilePath, permissions);
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
@@ -140,7 +140,7 @@ public class UpdateTest extends LocalFileSystemTest {
         h.put("Content-Type", Arrays.asList("application/json"));
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
 
         assertNull("Properties must not be updated. ", readProperties(lockedFilePath));
@@ -158,7 +158,7 @@ public class UpdateTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         // File is protected and default principal 'andrew' has not write permission.
         // Replace default principal by principal who has write permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, properties.getBytes(), writer, null);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
 

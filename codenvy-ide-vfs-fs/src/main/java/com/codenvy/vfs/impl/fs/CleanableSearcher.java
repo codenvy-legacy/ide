@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.search.QueryExpression;
 
 import org.apache.lucene.index.Term;
 import org.slf4j.Logger;
@@ -41,8 +40,7 @@ public class CleanableSearcher extends FSIndexSearcher {
     private volatile boolean                   initDone;
     private volatile Throwable                 initError;
 
-    CleanableSearcher(CleanableSearcherProvider searcherService, java.io.File indexDir, VirtualFileFilter filter)
-            throws IOException, VirtualFileSystemException {
+    CleanableSearcher(CleanableSearcherProvider searcherService, java.io.File indexDir, VirtualFileFilter filter) throws IOException {
         super(indexDir, filter);
         this.searcherService = searcherService;
         postponeUpdates = new ConcurrentLinkedQueue<>();
@@ -72,7 +70,7 @@ public class CleanableSearcher extends FSIndexSearcher {
     }
 
     @Override
-    protected void doAdd(VirtualFile virtualFile) throws VirtualFileSystemException {
+    protected void doAdd(VirtualFile virtualFile) throws ServerException {
         if (initDone) {
             try {
                 postponeUpdateLatch.await();
@@ -85,7 +83,7 @@ public class CleanableSearcher extends FSIndexSearcher {
     }
 
     @Override
-    protected void doDelete(Term deleteTerm) throws VirtualFileSystemException {
+    protected void doDelete(Term deleteTerm) throws ServerException {
         if (initDone) {
             try {
                 postponeUpdateLatch.await();
@@ -98,7 +96,7 @@ public class CleanableSearcher extends FSIndexSearcher {
     }
 
     @Override
-    protected void doUpdate(Term deleteTerm, VirtualFile virtualFile) throws VirtualFileSystemException {
+    protected void doUpdate(Term deleteTerm, VirtualFile virtualFile) throws ServerException {
         if (initDone) {
             try {
                 postponeUpdateLatch.await();
@@ -133,7 +131,7 @@ public class CleanableSearcher extends FSIndexSearcher {
                     update.run();
                 }
                 postponeUpdates.clear();
-            } catch (VirtualFileSystemException e) {
+            } catch (ServerException e) {
                 LOG.error(e.getMessage(), e);
                 initError = e;
                 close();
@@ -169,7 +167,7 @@ public class CleanableSearcher extends FSIndexSearcher {
                 } else {
                     CleanableSearcher.super.doAdd(virtualFile);
                 }
-            } catch (VirtualFileSystemException e) {
+            } catch (ServerException e) {
                 LOG.error(e.getMessage(), e);
             }
         }

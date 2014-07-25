@@ -10,15 +10,13 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs.exceptions;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-
 /**
  * This exception occurs in case LocalPathResolver in some reason can't resolve the path.
  *
  * @author Vitaly Parfonov
  */
 @SuppressWarnings("serial")
-public class LocalPathResolveException extends VirtualFileSystemException {
+public class LocalPathResolveException extends RuntimeException {
 
     public LocalPathResolveException(String message, Throwable cause) {
         super(message, cause);

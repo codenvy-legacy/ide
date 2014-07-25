@@ -36,10 +36,10 @@ public class GitUrlResolver {
         this.pathResolver = pathResolver;
     }
 
-    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String path) throws VirtualFileSystemException {
+    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String path) {
         try {
             return resolve(uriInfo.getBaseUri(), ((FSMountPoint)vfs.getMountPoint()).getVirtualFile(path));
-        } catch (VirtualFileSystemException e) {
+        } catch (Exception e) {
             throw new GitUrlResolveException("Can't resolve Git URL", e);
         }
     }

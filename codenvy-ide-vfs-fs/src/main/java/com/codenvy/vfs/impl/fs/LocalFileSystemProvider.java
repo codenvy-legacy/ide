@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import com.codenvy.api.vfs.server.search.Searcher;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 
@@ -87,7 +86,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
 
     /** Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used first time. */
     @Override
-    public VirtualFileSystem newInstance(URI baseUri) throws VirtualFileSystemException {
+    public VirtualFileSystem newInstance(URI baseUri) throws ServerException {
         return new LocalFileSystem(workspaceId,
                                    baseUri == null ? URI.create("") : baseUri,
                                    userContext,
@@ -106,7 +105,7 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
                     if (searcher != null) {
                         searcher.close();
                     }
-                } catch (VirtualFileSystemException e) {
+                } catch (ServerException e) {
                     LOG.error(e.getMessage(), e);
                 }
             }
@@ -119,38 +118,31 @@ public class LocalFileSystemProvider extends VirtualFileSystemProvider {
      *
      * @param ioFile
      *         root point on the backing local filesystem
-     * @throws VirtualFileSystemException
+     * @throws ServerException
      *         if mount is failed, e.g. if specified <code>ioFile</code> already mounted
      * @see VirtualFileSystem
      */
-    public void mount(java.io.File ioFile) throws VirtualFileSystemException {
+    public void mount(java.io.File ioFile) throws ServerException {
         if (!mountRef.maybeSet(new FSMountPoint(getWorkspaceId(), ioFile, eventService, searcherProvider))) {
-            throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
+            throw new ServerException(String.format("Local filesystem '%s' already mounted. ", ioFile));
         }
     }
 
-    public boolean isMounted() throws VirtualFileSystemException {
+    public boolean isMounted() {
         return mountRef.get() != null;
     }
 
     @Override
-    public FSMountPoint getMountPoint(boolean create) {
+    public FSMountPoint getMountPoint(boolean create) throws ServerException {
         FSMountPoint mount = mountRef.get();
         if (mount == null && create) {
-            final java.io.File workspaceMountPoint;
-            try {
-                workspaceMountPoint = mountStrategy.getMountPath(workspaceId);
-            } catch (VirtualFileSystemException e) {
-                LOG.error(e.getMessage(), e);
-                // critical error cannot continue
-                throw new VirtualFileSystemRuntimeException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
-            }
+            final java.io.File workspaceMountPoint = mountStrategy.getMountPath(workspaceId);
             FSMountPoint newMount = new FSMountPoint(workspaceId, workspaceMountPoint, eventService, searcherProvider);
             if (mountRef.maybeSet(newMount)) {
                 if (!(workspaceMountPoint.exists() || workspaceMountPoint.mkdirs())) {
                     LOG.error("Unable create directory {}", workspaceMountPoint);
                     // critical error cannot continue
-                    throw new VirtualFileSystemRuntimeException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
+                    throw new ServerException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
                 }
                 mount = newMount;
             }

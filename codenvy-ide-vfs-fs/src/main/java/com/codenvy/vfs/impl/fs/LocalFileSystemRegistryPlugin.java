@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class LocalFileSystemRegistryPlugin {
                                          LocalFSMountStrategy mountStrategy,
                                          VirtualFileSystemRegistry registry,
                                          EventService eventService,
-                                         @Nullable SearcherProvider searcherProvider) throws VirtualFileSystemException {
+                                         @Nullable SearcherProvider searcherProvider) throws ServerException {
         for (String id : ids) {
             registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, eventService, searcherProvider, registry));
         }

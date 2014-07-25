@@ -15,11 +15,11 @@ import com.codenvy.api.vfs.shared.dto.File;
 import com.codenvy.api.vfs.shared.dto.Lock;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -52,11 +52,11 @@ public class LockTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedFilePath, permissions);
 
         fileId = pathToId(filePath);
@@ -81,7 +81,7 @@ public class LockTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "lock/" + lockedFileId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(423, response.getStatus());
+        assertEquals(409, response.getStatus());
         // lock file must not be updated.
         assertEquals("Lock file not found or lock token invalid. ", lockToken, readLock(lockedFilePath).getLockToken());
     }
@@ -101,7 +101,7 @@ public class LockTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "lock/" + folderId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
         // Lock file must not be created
         assertNull(readLock(folderPath));
     }
@@ -119,7 +119,7 @@ public class LockTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "unlock/" + lockedFileId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         assertEquals("Lock must be kept. ", lockToken, readLock(lockedFilePath).getLockToken());
         assertTrue("Lock must be kept.  ", ((File)getItem(lockedFileId)).isLocked());
     }
@@ -129,7 +129,7 @@ public class LockTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "unlock/" + lockedFileId + '?' + "lockToken=" + lockToken + "_WRONG";
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         assertEquals("Lock must be kept. ", lockToken, readLock(lockedFilePath).getLockToken());
         assertTrue("Lock must be kept.  ", ((File)getItem(lockedFileId)).isLocked());
     }
@@ -139,7 +139,7 @@ public class LockTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "unlock/" + fileId + '?' + "lockToken=some_token";
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(423, response.getStatus());
+        assertEquals(409, response.getStatus());
         assertFalse(((File)getItem(fileId)).isLocked());
     }
 

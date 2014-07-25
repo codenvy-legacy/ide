@@ -12,7 +12,6 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Principal;
-import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.dto.server.DtoFactory;
 
 import java.io.DataInput;
@@ -20,8 +19,8 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,10 +30,10 @@ import java.util.Set;
  * <p/>
  * NOTE: Implementation is not thread-safe and required external synchronization.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class AccessControlList {
-    private final Map<Principal, Set<BasicPermissions>> permissionMap;
+    private final Map<Principal, Set<String>> permissionMap;
 
     public AccessControlList() {
         permissionMap = new HashMap<>(4);
@@ -44,15 +43,15 @@ public class AccessControlList {
         this(accessControlList.permissionMap);
     }
 
-    public AccessControlList(Map<Principal, Set<BasicPermissions>> permissions) {
+    public AccessControlList(Map<Principal, Set<String>> permissions) {
         this.permissionMap = copy(permissions);
     }
 
-    private static Map<Principal, Set<BasicPermissions>> copy(Map<Principal, Set<BasicPermissions>> source) {
-        Map<Principal, Set<BasicPermissions>> copy = new HashMap<>(source.size());
-        for (Map.Entry<Principal, Set<BasicPermissions>> e : source.entrySet()) {
+    private static Map<Principal, Set<String>> copy(Map<Principal, Set<String>> source) {
+        Map<Principal, Set<String>> copy = new HashMap<>(source.size());
+        for (Map.Entry<Principal, Set<String>> e : source.entrySet()) {
             if (!(e.getValue() == null || e.getValue().isEmpty())) {
-                copy.put(DtoFactory.getInstance().clone(e.getKey()), EnumSet.copyOf(e.getValue()));
+                copy.put(DtoFactory.getInstance().clone(e.getKey()), new HashSet<>(e.getValue()));
             }
         }
         return copy;
@@ -67,11 +66,11 @@ public class AccessControlList {
             return Collections.emptyList();
         }
         List<AccessControlEntry> acl = new ArrayList<>(permissionMap.size());
-        for (Map.Entry<Principal, Set<BasicPermissions>> e : permissionMap.entrySet()) {
-            Set<BasicPermissions> basicPermissions = e.getValue();
+        for (Map.Entry<Principal, Set<String>> e : permissionMap.entrySet()) {
+            Set<String> basicPermissions = e.getValue();
             List<String> plainPermissions = new ArrayList<>(basicPermissions.size());
-            for (BasicPermissions permission : e.getValue()) {
-                plainPermissions.add(permission.value());
+            for (String permission : e.getValue()) {
+                plainPermissions.add(permission);
             }
             acl.add(DtoFactory.getInstance().createDto(AccessControlEntry.class)
                               .withPrincipal(DtoFactory.getInstance().clone(e.getKey()))
@@ -81,19 +80,19 @@ public class AccessControlList {
         return acl;
     }
 
-    Map<Principal, Set<BasicPermissions>> getPermissionMap() {
+    Map<Principal, Set<String>> getPermissionMap() {
         return copy(permissionMap);
     }
 
-    public Set<BasicPermissions> getPermissions(Principal principal) {
+    public Set<String> getPermissions(Principal principal) {
         if (permissionMap.isEmpty()) {
             return null;
         }
-        Set<BasicPermissions> userPermissions = permissionMap.get(principal);
+        Set<String> userPermissions = permissionMap.get(principal);
         if (userPermissions == null) {
             return null;
         }
-        return EnumSet.copyOf(userPermissions);
+        return new HashSet<>(userPermissions);
     }
 
     public void update(List<AccessControlEntry> acl, boolean override) {
@@ -109,49 +108,46 @@ public class AccessControlList {
 
         for (AccessControlEntry ace : acl) {
             final Principal principal = DtoFactory.getInstance().clone(ace.getPrincipal());
-            List<String> plainPermissions = ace.getPermissions();
-            if (plainPermissions == null || plainPermissions.isEmpty()) {
+            List<String> acePermissions = ace.getPermissions();
+            if (acePermissions == null || acePermissions.isEmpty()) {
                 permissionMap.remove(principal);
             } else {
-                Set<BasicPermissions> basicPermissions = permissionMap.get(principal);
-                if (basicPermissions == null) {
-                    basicPermissions = EnumSet.noneOf(BasicPermissions.class);
-                    permissionMap.put(principal, basicPermissions);
+                Set<String> permissions = permissionMap.get(principal);
+                if (permissions == null) {
+                    permissionMap.put(principal, permissions = new HashSet<>(4));
                 }
-                for (String strPermission : plainPermissions) {
-                    basicPermissions.add(BasicPermissions.fromValue(strPermission));
-                }
+                permissions.addAll(acePermissions);
             }
         }
     }
 
     void write(DataOutput output) throws IOException {
         output.writeInt(permissionMap.size());
-        for (Map.Entry<Principal, Set<BasicPermissions>> entry : permissionMap.entrySet()) {
+        for (Map.Entry<Principal, Set<String>> entry : permissionMap.entrySet()) {
             Principal principal = entry.getKey();
-            Set<BasicPermissions> permissions = entry.getValue();
+            Set<String> permissions = entry.getValue();
             output.writeUTF(principal.getName());
             output.writeUTF(principal.getType().toString());
             output.writeInt(permissions.size());
-            for (BasicPermissions permission : permissions) {
-                output.writeUTF(permission.value());
+            for (String permission : permissions) {
+                output.writeUTF(permission);
             }
         }
     }
 
     static AccessControlList read(DataInput input) throws IOException {
         int recordsNum = input.readInt();
-        HashMap<Principal, Set<BasicPermissions>> permissionsMap = new HashMap<>(recordsNum);
+        HashMap<Principal, Set<String>> permissionsMap = new HashMap<>(recordsNum);
         int readRecords = 0;
         while (readRecords < recordsNum) {
             String principalName = input.readUTF();
             String principalType = input.readUTF();
             int permissionsNum = input.readInt();
             if (permissionsNum > 0) {
-                Set<BasicPermissions> permissions = EnumSet.noneOf(BasicPermissions.class);
+                Set<String> permissions = new HashSet<>(4);
                 int readPermissions = 0;
                 while (readPermissions < permissionsNum) {
-                    permissions.add(BasicPermissions.fromValue(input.readUTF()));
+                    permissions.add(input.readUTF());
                     ++readPermissions;
                 }
                 final Principal principal = DtoFactory.getInstance().createDto(Principal.class)
