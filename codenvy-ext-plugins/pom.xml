@@ -18,9 +18,9 @@
         <groupId>com.codenvy.ide</groupId>
         <version>3.0.0-M20-SNAPSHOT</version>
     </parent>
-    <artifactId>codenvy-ext-tutorials</artifactId>
+    <artifactId>codenvy-ext-plugins</artifactId>
     <packaging>jar</packaging>
-    <name>Codenvy Extension :: Tutorials</name>
+    <name>Codenvy Extension :: Plugins</name>
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
