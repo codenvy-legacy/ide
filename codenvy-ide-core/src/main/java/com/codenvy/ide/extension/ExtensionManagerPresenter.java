@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension;
 
-import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -61,14 +61,14 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
             jso.addField(ed.getId(), ed.isEnabled());
         }
         preferencesManager.setPreference("ExtensionsPreferences", jso.serialize());
-        preferencesManager.flushPreferences(new AsyncCallback<Profile>() {
+        preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(ExtensionManagerPresenter.class, caught);
             }
 
             @Override
-            public void onSuccess(Profile result) {
+            public void onSuccess(ProfileDescriptor result) {
                 Ask ask = new Ask("Restart", "Restart Codenvy to activate changes in Extensions?", new AskHandler() {
                     @Override
                     public void onOk() {
