@@ -261,11 +261,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             //leave the default
             view.setRunerEnvirConfig(null);
             view.setBuilderEnvirConfig(null);
-            view.setMinRAMRequired(null);
-            view.setVendorRecommendedRAM(null);
+            view.setRAMRequired(null);
             // TODO: need workspace information
             //leave the default
-            view.setWorkspaceRAMAllocated(null);
+            view.setRAMAvailable(null);
             //set info visibled
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
@@ -273,11 +272,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setRunerEnvirConfig(new String[]{"JDK 7.0"});
             //leave the default
             view.setBuilderEnvirConfig(null);
-            view.setMinRAMRequired(null);
-            view.setVendorRecommendedRAM("6GB");
+            view.setRAMRequired(null);
             // TODO: need workspace information
             //leave the default
-            view.setWorkspaceRAMAllocated(null);
+            view.setRAMAvailable(null);
             //set info visibled
             view.setInfoVisibled(true);
         } else {

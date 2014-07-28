@@ -35,33 +35,30 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static ProjectWizardViewImplUiBinder ourUiBinder                  = GWT.create(ProjectWizardViewImplUiBinder.class);
-    private final  String                        defaultminRAMRequired        = "2GB";
-    private final  String                        defaultworkspaceRAMAllocated = "2GB";
-    private final  String                        defaultVendorRecommendedRAM  = "4GB";
-    private final  String                        defaultBuilderEnvirConfig[]  = new String[]{"Maven 3.1.1", "JDK 7.0"};
-    private final  String                        defaultRunerEnvirConfig[]    = new String[]{"JDK 7.0", "Tomcat 7.0"};
+    private static ProjectWizardViewImplUiBinder ourUiBinder                 = GWT.create(ProjectWizardViewImplUiBinder.class);
+    private final  String                        defaultRAMRequired          = "2GB";
+    private final  String                        defaultRAMAvailable         = "2GB";
+    private final  String                        defaultBuilderEnvirConfig[] = new String[]{"Maven 3.1.1", "JDK 7.0"};
+    private final  String                        defaultRunerEnvirConfig[]   = new String[]{"JDK 7.0", "Tomcat 7.0"};
 
     @UiField
     Style       style;
     @UiField
     SimplePanel wizardPanel;
     @UiField
-    FlowPanel environmentConfigurationPanel;
+    FlowPanel   environmentConfigurationPanel;
     @UiField
     Label       builderEnvironmentConfiguration;
     @UiField
     Label       runerEnvironmentConfiguration;
     @UiField
-    FlowPanel infoRAMPanel;
-    @UiField
-    Label       vendorRecommendedRAM;
+    FlowPanel   infoRAMPanel;
     @UiField
     HTMLPanel   linkGetMoreRAM;
     @UiField
-    Label       minRAMRequired;
+    Label       RAMRequired;
     @UiField
-    Label       workspaceRAMAllocated;
+    Label       RAMAvailable;
     @UiField
     Button      nextStepButton;
     @UiField
@@ -101,26 +98,20 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setMinRAMRequired(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultminRAMRequired;
-        minRAMRequired.setText(amountOfRAM);
+    public void setRAMRequired(String amountOfRAM) {
+        if (amountOfRAM == null) amountOfRAM = defaultRAMRequired;
+        RAMRequired.setText(amountOfRAM);
     }
 
     @Override
-    public void setWorkspaceRAMAllocated(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultworkspaceRAMAllocated;
-        workspaceRAMAllocated.setText(amountOfRAM);
+    public void setRAMAvailable(String amountOfRAM) {
+        if (amountOfRAM == null) amountOfRAM = defaultRAMAvailable;
+        RAMAvailable.setText(amountOfRAM);
     }
 
     @Override
-    public void setVendorRecommendedRAM(String amountOfRAM){
-        if(amountOfRAM == null) amountOfRAM = defaultVendorRecommendedRAM;
-        vendorRecommendedRAM.setText(amountOfRAM);
-    }
-
-    @Override
-    public void setBuilderEnvirConfig(String configs[]){
-        if(configs == null) configs = defaultBuilderEnvirConfig;
+    public void setBuilderEnvirConfig(String configs[]) {
+        if (configs == null) configs = defaultBuilderEnvirConfig;
         StringBuilder configsBuilder = new StringBuilder();
         for (String config : configs) {
             if (config.length() > 0) {
@@ -131,8 +122,8 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setRunerEnvirConfig(String configs[]){
-        if(configs == null) configs = defaultRunerEnvirConfig;
+    public void setRunerEnvirConfig(String configs[]) {
+        if (configs == null) configs = defaultRunerEnvirConfig;
         StringBuilder configsBuilder = new StringBuilder();
         for (String config : configs) {
             if (config.length() > 0) {
@@ -249,6 +240,8 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
         String infoText();
 
+        String infoValue();
+
         String labelPanel();
 
         String visible();
@@ -256,8 +249,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         String hidden();
 
         String grayColor();
-
-        String alignCenter();
     }
 
     interface ProjectWizardViewImplUiBinder
