@@ -13,12 +13,9 @@ package com.codenvy.ide.resources;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
-import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
@@ -108,7 +105,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 // do post actions
                 Folder rootFolder = getRoot();
                 CurrentProject currentProject = new CurrentProject(result);
-                currentProject.setProcessDescriptor(dtoFactory.createDto(ApplicationProcessDescriptor.class));
+//                currentProject.setProcessDescriptor(dtoFactory.createDto(ApplicationProcessDescriptor.class));
 //                appContext.setCurrentProject(currentProject);
 
                 List<String> attr = result.getAttributes().get(LANGUAGE_ATTRIBUTE);

@@ -131,10 +131,11 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         view.close();
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
-        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
                 projectServiceClient.getProject(result.getPath(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                     @Override
                     protected void onSuccess(ProjectDescriptor result) {

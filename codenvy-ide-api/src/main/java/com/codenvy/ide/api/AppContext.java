@@ -45,7 +45,12 @@ public class AppContext {
         return currentProject;
     }
 
-    /** Not intended to be used by clients. */
+    /**
+     * Set the current project instance.
+     * <p/>
+     * Should not be called directly as the current
+     * project is managed by the core.
+     */
     public void setCurrentProject(CurrentProject currentProject) {
         this.currentProject = currentProject;
     }
