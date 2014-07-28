@@ -126,9 +126,9 @@ public class MainPageViewImpl implements MainPageView {
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
         projectName.getElement().setAttribute("title", "Define the name of your project...");
-        projectName.getElement().setAttribute("maxlength", "35");
+        projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("title", "Add a description to your project...");
-        projectDescription.getElement().setAttribute("maxlength", "140");
+        projectDescription.getElement().setAttribute("maxlength", "256");
     }
 
     @UiHandler("projectName")
