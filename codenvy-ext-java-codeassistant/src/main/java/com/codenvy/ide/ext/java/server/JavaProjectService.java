@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.server;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
@@ -44,11 +43,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Singleton
 public class JavaProjectService {
     /** Logger. */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JavaProjectService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaProjectService.class);
 
-    private ConcurrentHashMap<String, JavaProject>                 cache       =
-            new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, JavaProject>                 cache       = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, CopyOnWriteArraySet<String>> projectInWs = new ConcurrentHashMap<>();
     private WorkspaceHashLocalFSMountStrategy fsMountStrategy;
     private ProjectApiRestClient              apiRestClient;

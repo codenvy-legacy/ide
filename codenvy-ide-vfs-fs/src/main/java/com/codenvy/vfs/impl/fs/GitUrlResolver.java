@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.VirtualFileSystem;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.vfs.impl.fs.exceptions.GitUrlResolveException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,15 +37,17 @@ public class GitUrlResolver {
         this.pathResolver = pathResolver;
     }
 
-    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String path) {
-        try {
-            return resolve(uriInfo.getBaseUri(), ((FSMountPoint)vfs.getMountPoint()).getVirtualFile(path));
-        } catch (Exception e) {
-            throw new GitUrlResolveException("Can't resolve Git URL", e);
-        }
+    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String path)
+            throws ServerException, NotFoundException, ForbiddenException {
+
+        return resolve(uriInfo.getBaseUri(), ((FSMountPoint)vfs.getMountPoint()).getVirtualFile(path));
     }
 
-    public String resolve(URI baseUri, VirtualFileImpl virtualFile) throws VirtualFileSystemException {
+    public String resolve(UriInfo uriInfo, VirtualFileImpl virtualFile) {
+        return resolve(uriInfo.getBaseUri(), virtualFile);
+    }
+
+    public String resolve(URI baseUri, VirtualFileImpl virtualFile) {
         final String localPath = pathResolver.resolve(virtualFile);
         StringBuilder result = new StringBuilder();
         result.append("http");

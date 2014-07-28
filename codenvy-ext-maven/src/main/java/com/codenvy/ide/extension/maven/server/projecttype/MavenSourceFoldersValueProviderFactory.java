@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.maven.server.projecttype;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
@@ -20,7 +22,7 @@ import org.apache.maven.model.Model;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,14 +43,13 @@ public class MavenSourceFoldersValueProviderFactory implements ValueProviderFact
         return new ValueProvider() {
             @Override
             public List<String> getValues() {
-                final List<String> list = new ArrayList<>();
-                FileEntry buildDescriptor = (FileEntry)project.getBaseFolder().getChild("pom.xml");
+                final List<String> list = new LinkedList<>();
                 try {
-                    if (buildDescriptor != null) {
-                        list.addAll(getSourceFolders(buildDescriptor));
+                    final FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
+                    if (pomFile != null) {
+                        list.addAll(getSourceFolders(pomFile));
                     }
-                } catch (IOException e) {
-//                    throw new IllegalStateException(e);
+                } catch (ForbiddenException | ServerException | IOException ignored) {
                 }
                 return list;
             }
@@ -60,17 +61,16 @@ public class MavenSourceFoldersValueProviderFactory implements ValueProviderFact
         };
     }
 
-    private List<String> getSourceFolders(FileEntry pomXml) throws IOException {
+    private List<String> getSourceFolders(FileEntry pomXml) throws IOException, ServerException {
         final String defaultSourceDirectoryPath = "src/main/java";
         final String defaultTestSourceDirectoryPath = "src/test/java";
 
-        Model model = MavenUtils.readModel(pomXml.getInputStream());
-        List<String> list = MavenUtils.getSourceDirectories(model);
+        final Model model = MavenUtils.readModel(pomXml.getInputStream());
+        final List<String> list = MavenUtils.getSourceDirectories(model);
         if (list.isEmpty()) {
             list.add(defaultSourceDirectoryPath);
             list.add(defaultTestSourceDirectoryPath);
         }
         return list;
     }
-
 }

@@ -35,8 +35,7 @@ import java.util.List;
 @Singleton
 public class ProjectApiRestClient {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ProjectApiRestClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProjectApiRestClient.class);
 
     private String projectApiUrl;
 

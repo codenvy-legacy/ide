@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.maven.tools;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
@@ -120,10 +121,12 @@ public class MavenUtils {
      * @return description of maven project
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static Model readModel(VirtualFile pom) throws IOException, VirtualFileSystemException {
+    public static Model readModel(VirtualFile pom) throws IOException, ForbiddenException, ServerException {
         try (InputStream stream = pom.getContent().getStream()) {
             return pomReader.read(stream, true);
         } catch (XmlPullParserException e) {
@@ -202,10 +205,12 @@ public class MavenUtils {
      *         {@link VirtualFile} to write a model
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void writeModel(Model model, VirtualFile output) throws IOException, VirtualFileSystemException {
+    public static void writeModel(Model model, VirtualFile output) throws IOException, ForbiddenException, ServerException {
         final ByteArrayOutputStream bout = new ByteArrayOutputStream();
         pomWriter.write(bout, model);
         output.updateContent(output.getMediaType(), new ByteArrayInputStream(bout.toByteArray()), null);
@@ -252,10 +257,12 @@ public class MavenUtils {
      *         POM of artifact to add as dependency
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void addDependency(VirtualFile pom, Dependency dependency) throws IOException, VirtualFileSystemException {
+    public static void addDependency(VirtualFile pom, Dependency dependency) throws IOException, ForbiddenException, ServerException {
         final Model model = readModel(pom);
         model.getDependencies().add(dependency);
         writeModel(model, pom);
@@ -288,10 +295,13 @@ public class MavenUtils {
      *         POM of artifact to add as dependency
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void addDependencies(VirtualFile pom, Dependency... dependencies) throws IOException, VirtualFileSystemException {
+    public static void addDependencies(VirtualFile pom, Dependency... dependencies)
+            throws IOException, ForbiddenException, ServerException {
         final Model model = readModel(pom);
         model.getDependencies().addAll(Arrays.asList(dependencies));
         writeModel(model, pom);
@@ -328,11 +338,13 @@ public class MavenUtils {
      *         artifact version
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
     public static void addDependency(VirtualFile pom, String groupId, String artifactId, String version, String scope)
-            throws IOException, VirtualFileSystemException {
+            throws IOException, ForbiddenException, ServerException {
         addDependency(pom, newDependency(groupId, artifactId, version, scope));
     }
 
@@ -413,7 +425,7 @@ public class MavenUtils {
         if (build != null) {
             if (build.getResources() != null && !build.getResources().isEmpty()) {
                 for (Resource resource : build.getResources())
-                   list.add(resource.getDirectory());
+                    list.add(resource.getDirectory());
             }
         }
         return list;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.commons.env.EnvironmentContext;
 
 import javax.inject.Inject;
@@ -22,6 +22,7 @@ import javax.inject.Singleton;
  *
  * @author andrew00x
  */
+// COPY OF com.codenvy.vfs.impl.fs.WorkspaceHashLocalFSMountStrategy
 @Singleton
 public class WorkspaceHashLocalFSMountStrategy {
     private static final String[] segments = new String[]
@@ -54,9 +55,9 @@ public class WorkspaceHashLocalFSMountStrategy {
         this.mountTempRoot = mountTempRoot;
     }
 
-    public java.io.File getMountPath(String workspaceId) throws VirtualFileSystemException {
+    public java.io.File getMountPath(String workspaceId) throws ServerException {
         if (workspaceId == null || workspaceId.isEmpty()) {
-            throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");
+            throw new ServerException("Unable get mount path for virtual file system. Workspace id is not set.");
         }
         final boolean isTmpWs = EnvironmentContext.getCurrent().isWorkspaceTemporary();
         // We can have a lot of workspace and create root folder for all of them at the same level of filesystem
@@ -73,7 +74,7 @@ public class WorkspaceHashLocalFSMountStrategy {
         return new java.io.File(parent, relPath);
     }
 
-    public java.io.File getMountPath() throws VirtualFileSystemException {
+    public java.io.File getMountPath() throws ServerException {
         return getMountPath(EnvironmentContext.getCurrent().getWorkspaceId());
     }
 }
