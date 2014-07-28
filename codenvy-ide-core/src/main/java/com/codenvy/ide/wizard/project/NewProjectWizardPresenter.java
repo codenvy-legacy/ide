@@ -77,9 +77,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         currentPage.storeOptions();
         final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex + 1);
-        if (wizardPage != mainPage) {
-            view.disableInput();
-        }
         setPage(wizardPage);
         currentPage.focusComponent();
     }
@@ -91,9 +88,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final int previousStepPageIndex = stepsPages.indexOf(currentPage);
         if (previousStepPageIndex == 0) return;
         WizardPage wizardPage = stepsPages.get(previousStepPageIndex - 1);
-        if (wizardPage == mainPage) {
-            view.enableInput();
-        }
         setPage(wizardPage);
     }
 
@@ -231,29 +225,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.close();
     }
 
-    @Override
-    public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]*$");
-        if (regExp.test(name)) {
-            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
-            view.removeNameError();
-        } else {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-            view.showNameError();
-        }
-        updateControls();
-    }
-
-    @Override
-    public void projectVisibilityChanged(Boolean aPublic) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
-    }
-
-    @Override
-    public void projectDescriptionChanged(String projectDescriptionValue) {
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
-    }
-
     /** {@inheritDoc} */
     @Override
     public void updateControls() {
@@ -283,11 +254,34 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                     (templateDescriptor == null && currentPage != mainPage && currentPage.isCompleted()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
                                             Constants.BLANK_ID) && currentPage.isCompleted()));
+
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-            view.disableAllExceptName();
+            // TODO: add configuration to ProjectTemplateDescriptor
+            //leave the default
+            view.setRunerEnvirConfig(null);
+            view.setBuilderEnvirConfig(null);
+            view.setMinRAMRequired(null);
+            view.setVendorRecommendedRAM(null);
+            // TODO: need workspace information
+            //leave the default
+            view.setWorkspaceRAMAllocated(null);
+            //set info visibled
+            view.setInfoVisibled(true);
+        } else if (descriptor != null) {
+            // TODO: add configuration to ProjectTypeDescriptor
+            view.setRunerEnvirConfig(new String[]{"JDK 7.0"});
+            //leave the default
+            view.setBuilderEnvirConfig(null);
+            view.setMinRAMRequired(null);
+            view.setVendorRecommendedRAM("6GB");
+            // TODO: need workspace information
+            //leave the default
+            view.setWorkspaceRAMAllocated(null);
+            //set info visibled
+            view.setInfoVisibled(true);
         } else {
-            view.enableInput();
+            view.setInfoVisibled(false);
         }
     }
 
@@ -302,19 +296,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void showFirstPage() {
         stepsPages.clear();
         stepsPages.add(mainPage);
-        view.reset();
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
-            view.setName(project.getName());
             boolean aPublic = project.getVisibility().equals("public") ? true : false;
-            view.setVisibility(aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
         }
         setPage(mainPage);
         view.showDialog();
         view.setEnabledAnimation(true);
-        view.focusOnName();
     }
 
     public void show(WizardContext context) {

@@ -12,17 +12,31 @@ package com.codenvy.ide.wizard.project;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.mvp.View;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.inject.ImplementedBy;
 
 /**
  * @author Evgen Vidolob
  */
 @ImplementedBy(ProjectWizardViewImpl.class)
-public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate>{
+public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate> {
 
     void showPage(Presenter presenter);
 
     void showDialog();
+
+    void setMinRAMRequired(String amountOfRAM);
+
+    void setWorkspaceRAMAllocated(String amountOfRAM);
+
+    void setVendorRecommendedRAM(String amountOfRAM);
+
+    void setBuilderEnvirConfig(String configs[]);
+
+    void setRunerEnvirConfig(String configs[]);
+
+    void setInfoVisibled(boolean enabled);
 
     void setEnabledAnimation(boolean enabled);
 
@@ -34,25 +48,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setBackButtonEnabled(boolean enabled);
 
-    void reset();
-
-    void enableInput();
-
-    void disableInput();
-
-    void setName(String name);
-
-    void setVisibility(boolean visible);
-
-    void removeNameError();
-
-    void showNameError();
-
-    void focusOnName();
-
-    void disableAllExceptName();
-
-    public interface ActionDelegate{
+    public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Next button */
         void onNextClicked();
 
@@ -64,11 +60,5 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button */
         void onCancelClicked();
-
-        void projectNameChanged(String name);
-
-        void projectVisibilityChanged(Boolean publ);
-
-        void projectDescriptionChanged(String projectDescriptionValue);
     }
 }
