@@ -15,6 +15,7 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.ProjectWizardViewImpl.Style">
+        @eval bgTopPanel com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
         .project {
             /*margin-right: 8px;*/
             margin-top: 4px;
@@ -31,24 +32,20 @@
         }
 
         .topPanel {
-            /*background-color: dialogContentBackground ;*/
-            /*box-shadow: 0 -1px 0px 0px tabBorderShadow;*/
-            /*border-top:  1px solid tabBorderShadow;*/
-            margin-top: -1px;
-            border-top: 1px solid rgba(188, 195, 199, 0.5);
-            box-shadow: 0 -1px 0 0 #232323;
+            height: 38px;
+            border-top: 1px solid #232323;
+            border-bottom: 1px solid #232323;
             z-index: 4;
-            background-color: dialogContentBackground;
+            background-color: bgTopPanel;
+            font-size: 12px;
         }
 
         .bottomPanel {
-            position: absolute;
-            bottom: 0;
+            height: 39px;
             border-top: 1px solid rgba(188, 195, 199, 0.5);
-            box-shadow: 0 -1px 0 0 #232323;
             z-index: 4;
             background-color: dialogContentBackground;
-            margin-bottom: -2px;
+            font-size: 12px;
         }
 
         .namePanel, .namePanelRight {
@@ -69,7 +66,7 @@
 
         .rootPanel {
             position: relative;
-            top: -2px;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
         }
 
         .privacy {
@@ -83,9 +80,9 @@
         }
 
         .tab {
-            left: 26px;
+            left: 0px;
             top: 0px;
-            right: 26px;
+            right: 0px;
             bottom: 0px;
             position: absolute !important;
         }
@@ -95,20 +92,6 @@
             background-color: toolbarBackgroundColor;
             width: 26px;
             position: absolute;
-        }
-
-        .buttonLikePanelLeft {
-            box-shadow: 1px 0px 0 0 #505050;
-            top: 0;
-            left: 0;
-            bottom: 0;
-        }
-
-        .buttonLikePanelRight {
-            box-shadow: -1px 0px 0 0 #505050;
-            top: 0;
-            right: 0;
-            bottom: 0;
         }
 
         .centerPanel {
@@ -122,63 +105,109 @@
             position: relative;
             top: 200px;
         }
-        svg.svgStyle, svg.svgRotated{
-            fill: tabFontColor;
+
+        .button, .blueButton {
+            float: right;
+            border-radius: 1px;
+            height: 28px;
+            min-width: 65px;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
         }
 
-        .svgRotated{
-            transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
+        .button {
+            margin: 5px;
         }
-        .blueButton{
+
+        .blueButton {
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
-            border-radius: 2px;
+            margin: 5px 25px 0px 8px;
         }
-        .disabled{
+
+        .disabled {
             opacity: 0.4;
         }
-        .inputError{
-            border-color: red;
-            box-shadow: 0 0 5px red;
+
+        .labelPanel {
+            float: left;
+            display: block;
+           font-size:11px;
         }
 
+        .labelPanel > div {
+            margin-top: 4px;
+        }
+
+        .infoText {
+            margin-left: 10px;
+        }
+
+        .infoText a {
+            color: #66CD00;
+        }
+
+        .infoText a:hover {
+            color: #7FFF00;
+        }
+
+        .visible {
+            visibility: visible;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        .alignCenter {
+            text-align: center;
+        }
+
+        .grayColor {
+            color: #818181;
+        }
     </ui:style>
-    <g:FlowPanel width="774px" height="530px" addStyleNames="{style.rootPanel}">
-        <g:FlowPanel width="774px" addStyleNames="{style.topPanel}" height="29px">
-            <g:FlowPanel width="198px" height="29px" addStyleNames="{style.namePanel}">
-                <g:Label text="{locale.createProjectFromTemplateName}"
-                         addStyleNames="{style.projectNamePosition}"/>
-                <g:TextBox width="128px" height="14px" ui:field="projectName" addStyleNames="{style.project}"
-                           debugId="file-newProject-projectName"/>
-            </g:FlowPanel>
-            <g:FlowPanel width="302px" height="29px" addStyleNames="{style.namePanel}">
-                <g:Label text="{locale.createProjectFromTemplateDescription}"
-                         addStyleNames="{style.projectNamePosition}"/>
-                <g:TextBox width="198px" height="14px" ui:field="projectDescription" addStyleNames="{style.project}"
-                           debugId="file-newProject-projectDescription"/>
-            </g:FlowPanel>
-            <g:FlowPanel width="270px" height="29px" addStyleNames="{style.namePanelRight}">
-                <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}"
-                         addStyleNames="{style.projectNamePosition}"/>
-                <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}" addStyleNames="{style.privacy}" height="13px"
-                               checked="true"
-                               ui:field="projectPublic" debugId="file-newProject-public"/>
-                <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}" addStyleNames="{style.privacy}" height="13px"
-                               debugId="file-newProject-private" ui:field="projectPrivate"/>
-                <g:Button ui:field="saveButton" text="Save" addStyleNames="{style.blueButton}"/>
+    <g:FlowPanel width="774px" height="550px" addStyleNames="{style.rootPanel}">
+        <g:FlowPanel width="774px" height="470px" addStyleNames="{style.centerPanel}">
+            <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
+        </g:FlowPanel>
+        <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}">
+            <g:FlowPanel ui:field="environmentConfigurationPanel" addStyleNames="{style.hidden}">
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
+                    <g:Label text="Runer Environment Configuration" addStyleNames="{style.infoText}"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label ui:field="builderEnvironmentConfiguration"/>
+                    <g:Label ui:field="runerEnvironmentConfiguration"/>
+                </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>
-        <g:FlowPanel width="774px" height="441px" addStyleNames="{style.centerPanel}">
-            <g:FlowPanel addStyleNames="{style.buttonLikePanelRight}" ui:field="nextStep">
-
+        <g:FlowPanel addStyleNames="{style.bottomPanel}">
+            <g:Button ui:field="saveButton" text="CREATE" addStyleNames="{style.blueButton}"/>
+            <g:Button ui:field="nextStepButton" text="Next" addStyleNames="{style.button}"/>
+            <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{style.button}"/>
+            <g:FlowPanel ui:field="infoRAMPanel" addStyleNames="{style.hidden}">
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label text="Min RAM Required:" addStyleNames="{style.infoText}"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label ui:field="minRAMRequired"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label text="Vendor Recommended RAM:" addStyleNames="{style.infoText}"/>
+                    <g:HTMLPanel ui:field="linkGetMoreRAM" addStyleNames="{style.infoText} {style.alignCenter}">
+                        <a href="{locale.createProjectFromTemplatelinkGetMoreRAM}">Get More RAM</a>
+                    </g:HTMLPanel>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label ui:field="vendorRecommendedRAM"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label text="Workspace RAM Allocated:" addStyleNames="{style.infoText}"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label ui:field="workspaceRAMAllocated"/>
+                </g:FlowPanel>
             </g:FlowPanel>
-            <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}" />
-            <g:FlowPanel addStyleNames="{style.buttonLikePanelLeft}" ui:field="previousStep">
-
-            </g:FlowPanel>
-        </g:FlowPanel>
-        <g:FlowPanel width="774px" height="60px" addStyleNames="{style.bottomPanel}">
-
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

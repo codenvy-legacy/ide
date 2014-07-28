@@ -107,6 +107,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
 
+    @Key("createProjectFromTemplate.linkGetMoreRAM")
+    String createProjectFromTemplatelinkGetMoreRAM();
+
     @Key("format.name")
     String formatName();
 
@@ -161,6 +164,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
 
+    @Key("importProject.warningTitle")
+    String importProjectWarningTitle();
+
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();
@@ -197,6 +203,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.someFilesCanNotBeSaved")
     String someFilesCanNotBeSaved();
 
+    @Key("messages.importProject.enteredWrongUri")
+    String importProjectEnteredWrongUri();
+
     /* Buttons */
     @Key("ok")
     String ok();
@@ -225,11 +234,11 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("delete")
     @DefaultMessage("Delete")
     String delete();
-    
+
     @Key("project.closed.title")
     @DefaultMessage("Codenvy Developer Environment")
     String projectClosedTitle();
-    
+
     @Key("project.opened.title")
     String projectOpenedTitle(String name);
 

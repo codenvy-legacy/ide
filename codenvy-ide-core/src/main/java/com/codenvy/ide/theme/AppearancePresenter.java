@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.theme;
 
-import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
@@ -51,14 +51,14 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
     public void doApply() {
         if (isDirty()) {
             preferencesManager.setPreference("Theme", themeId);
-            preferencesManager.flushPreferences(new AsyncCallback<Profile>() {
+            preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     // ignore
                 }
 
                 @Override
-                public void onSuccess(Profile result) {
+                public void onSuccess(ProfileDescriptor result) {
                     Ask ask = new Ask("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?", new AskHandler() {
                         @Override
                         public void onOk() {
