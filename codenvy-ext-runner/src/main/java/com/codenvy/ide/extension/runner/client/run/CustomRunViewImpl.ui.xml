@@ -24,6 +24,10 @@
             margin-bottom: 5px;
         }
 
+        .labelSpacingTop {
+            margin-top: 10px;
+        }
+
         .emptyBorder {
             margin: 6px;
         }
@@ -36,13 +40,17 @@
             float: left;
         }
 
+        .alignRight {
+            float: right;
+        }
+
         .gwt-SuggestBox {
             background-color: #4b4a4a;
             border: 1px solid #000000;
             color: #ffffff;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="240px" addStyleNames="{style.emptyBorder}" debugId="customRun-panel">
+    <g:DockLayoutPanel unit="PX" width="350px" height="270px" addStyleNames="{style.emptyBorder}" debugId="customRun-panel">
         <g:north size="60.0">
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" height="20px" width="100%"
@@ -50,11 +58,13 @@
                 <g:ListBox ui:field="environmentField" height="20px" width="100%" debugId="project-customRun-environment"/>
             </g:FlowPanel>
         </g:north>
-        <g:north size="35.0">
+        <g:north size="65.0">
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
                 <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="290px" addStyleNames="{style.alignLeft}"/>
                 <g:SuggestBox ui:field="memoryField" width="40px" height="15px" addStyleNames="{style.alignLeft} {style.gwt-SuggestBox}"
                               debugId="project-customRun-memory"/>
+                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" addStyleNames="{style.alignLeft} {style.labelSpacingTop}"/>
+                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" addStyleNames="{style.alignRight} {style.labelSpacingTop}"/>
             </g:FlowPanel>
         </g:north>
         <g:center>
