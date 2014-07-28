@@ -45,14 +45,15 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class MainPageViewImpl implements MainPageView {
-    private static final String DESCRIPTOR       = "Descriptors";
-    private static final String TEMPLATE         = "Temp";
-    private static final String CATEGORIES       = "Categories";
-    private static final String SAMPLES          = "Samples";
+    private static final String DESCRIPTOR = "Descriptors";
+    private static final String TEMPLATE   = "Temp";
+    private static final String CATEGORIES = "Categories";
+    private static final String SAMPLES    = "Samples";
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    private final String defaultOptions[] = new String[]{"JDK", "Application Server"};
+    private final String                                                    defaultOptions[]        =
+            new String[]{"JDK", "Application Server"};
     private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> projectTemplateDelegate =
             new Category.CategoryEventDelegate<ProjectTemplateDescriptor>() {
                 @Override
@@ -124,7 +125,9 @@ public class MainPageViewImpl implements MainPageView {
         this.resources = resources;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
+        projectName.getElement().setAttribute("title", "Define the name of your project...");
         projectName.getElement().setAttribute("maxlength", "35");
+        projectDescription.getElement().setAttribute("title", "Add a description to your project...");
         projectDescription.getElement().setAttribute("maxlength", "140");
     }
 
