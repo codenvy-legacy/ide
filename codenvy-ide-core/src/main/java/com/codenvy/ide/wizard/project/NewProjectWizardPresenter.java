@@ -259,7 +259,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setNextButtonEnabled(false);
             // TODO: add configuration to ProjectTemplateDescriptor
             //leave the default
-            view.setRunerEnvirConfig(null);
+            view.setRunnerEnvirConfig(null);
             view.setBuilderEnvirConfig(null);
             view.setRAMRequired(null);
             // TODO: need workspace information
@@ -269,7 +269,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
             // TODO: add configuration to ProjectTypeDescriptor
-            view.setRunerEnvirConfig(new String[]{"JDK 7.0"});
+            view.setRunnerEnvirConfig(new String[]{"JDK 7.0"});
             //leave the default
             view.setBuilderEnvirConfig(null);
             view.setRAMRequired(null);

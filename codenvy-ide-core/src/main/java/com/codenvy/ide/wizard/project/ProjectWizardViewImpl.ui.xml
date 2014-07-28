@@ -178,11 +178,11 @@
             <g:FlowPanel ui:field="environmentConfigurationPanel" addStyleNames="{style.hidden}">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
-                    <g:Label text="Runer Environment Configuration" addStyleNames="{style.infoText}"/>
+                    <g:Label text="Runner Environment Configuration" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label ui:field="builderEnvironmentConfiguration"/>
-                    <g:Label ui:field="runerEnvironmentConfiguration"/>
+                    <g:Label ui:field="runnerEnvironmentConfiguration"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>

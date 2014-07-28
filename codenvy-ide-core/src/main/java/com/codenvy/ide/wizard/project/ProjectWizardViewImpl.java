@@ -39,7 +39,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private final  String                        defaultRAMRequired          = "2GB";
     private final  String                        defaultRAMAvailable         = "2GB";
     private final  String                        defaultBuilderEnvirConfig[] = new String[]{"Maven 3.1.1", "JDK 7.0"};
-    private final  String                        defaultRunerEnvirConfig[]   = new String[]{"JDK 7.0", "Tomcat 7.0"};
+    private final  String                        defaultRunnerEnvirConfig[]   = new String[]{"JDK 7.0", "Tomcat 7.0"};
 
     @UiField
     Style       style;
@@ -50,7 +50,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     Label       builderEnvironmentConfiguration;
     @UiField
-    Label       runerEnvironmentConfiguration;
+    Label       runnerEnvironmentConfiguration;
     @UiField
     FlowPanel   infoRAMPanel;
     @UiField
@@ -122,15 +122,15 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setRunerEnvirConfig(String configs[]) {
-        if (configs == null) configs = defaultRunerEnvirConfig;
+    public void setRunnerEnvirConfig(String configs[]) {
+        if (configs == null) configs = defaultRunnerEnvirConfig;
         StringBuilder configsBuilder = new StringBuilder();
         for (String config : configs) {
             if (config.length() > 0) {
                 configsBuilder.append(": " + config);
             }
         }
-        runerEnvironmentConfiguration.setText(configsBuilder.toString());
+        runnerEnvironmentConfiguration.setText(configsBuilder.toString());
     }
 
     @Override

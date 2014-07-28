@@ -32,7 +32,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setBuilderEnvirConfig(String configs[]);
 
-    void setRunerEnvirConfig(String configs[]);
+    void setRunnerEnvirConfig(String configs[]);
 
     void setInfoVisibled(boolean enabled);
 
