@@ -117,8 +117,6 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
-import com.codenvy.ide.projecttype.SelectProjectTypeView;
-import com.codenvy.ide.projecttype.SelectProjectTypeViewImpl;
 import com.codenvy.ide.rename.RenameResourceView;
 import com.codenvy.ide.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
@@ -294,7 +292,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UploadFileView.class).to(UploadFileViewImpl.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
-        bind(SelectProjectTypeView.class).to(SelectProjectTypeViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
         bind(AboutView.class).to(AboutViewImpl.class);

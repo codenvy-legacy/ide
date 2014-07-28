@@ -15,11 +15,12 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * TODO: rename event
- * An event that should be fired in order to open a some project or close the current project.
+ * An event that should be fired in order to open some project or close the current project.
  *
  * @author Artem Zatsarynnyy
  */
 public class ProjectActionEvent_2 extends GwtEvent<ProjectActionHandler_2> {
+
     public static Type<ProjectActionHandler_2> TYPE = new Type<>();
     private final ProjectReference project;
     private final ProjectAction    projectAction;
