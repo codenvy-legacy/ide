@@ -47,6 +47,7 @@ public class CategoryNodeElement extends FlowPanel {
     private final AnimationController      animator;
     private       CategoriesList.Resources resources;
     private       boolean                  expanded;
+    private FlowPanel header;
     private final DivElement               expandControl;
     @SuppressWarnings("unchecked")
     CategoryNodeElement(Category category,
@@ -56,7 +57,7 @@ public class CategoryNodeElement extends FlowPanel {
         CategoryRenderer renderer = category.getRenderer();
         this.resources = resources;
         setStyleName(resources.defaultCategoriesListCss().category());
-        FlowPanel header = new FlowPanel();
+        header = new FlowPanel();
         header.sinkEvents(Event.ONCLICK);
         header.addDomHandler(new ClickHandler() {
             @Override
@@ -67,11 +68,15 @@ public class CategoryNodeElement extends FlowPanel {
         header.setStyleName(resources.defaultCategoriesListCss().categoryHeader());
         SpanElement label = Document.get().createSpanElement();
         label.setClassName(resources.defaultCategoriesListCss().categoryLabel());
-
+        
         label.appendChild(renderer.renderCategory(category));
 
-        header.getElement().appendChild(label);
 
+ //       header.getElement().appendChild(label);
+
+
+        header.getElement().appendChild(label);
+        
         expandControl = Document.get().createDivElement();
         expandControl.appendChild(resources.expansionImage().getSvg().getElement());
         expandControl.setClassName(resources.defaultCategoriesListCss().expandControl());
