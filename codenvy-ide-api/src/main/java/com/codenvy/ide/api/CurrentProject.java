@@ -26,9 +26,7 @@ public class CurrentProject {
 
     private ProjectDescriptor projectDescription;
 
-    private boolean isProjectRunning;
-
-    private boolean isRunningEnabled;
+    private boolean isRunningEnabled = true;
 
     private ApplicationProcessDescriptor processDescriptor;
 
@@ -68,12 +66,7 @@ public class CurrentProject {
         this.projectDescription = projectDescription;
     }
 
-    /**
-     * @return true if current project already running otherwise false
-     */
-    public boolean getIsProjectRunning() {
-        return isProjectRunning;
-    }
+
 
     /**
      * @return true if current project available to run otherwise false

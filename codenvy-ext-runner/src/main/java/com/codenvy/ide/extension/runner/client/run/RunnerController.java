@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
+import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.RunOptions;
@@ -352,7 +353,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
-        if (currentProject.getIsProjectRunning()) {
+        if (currentProject.getProcessDescriptor() != null && (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
+                || currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.RUNNING))) {
             Notification notification = new Notification(constant.projectRunningNow(
                     currentProject.getProjectDescription().getName()), ERROR);
             notificationManager.showNotification(notification);

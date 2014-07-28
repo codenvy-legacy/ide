@@ -17,13 +17,14 @@ import javax.inject.Singleton;
 
 /**
  * Describe current state of application.
- * E.g. current project, current process.
+ * E.g. current project, current workspace and etc.
  *
  * @author Vitaly Parfonov
  */
 @Singleton
 public class AppContext {
     private WorkspaceDescriptor workspace;
+
     private CurrentProject      currentProject;
 
     public WorkspaceDescriptor getWorkspace() {

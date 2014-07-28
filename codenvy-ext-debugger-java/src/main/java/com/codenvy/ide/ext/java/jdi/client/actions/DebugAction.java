@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.java.jdi.client.JavaRuntimeResources;
 import com.codenvy.ide.ext.java.jdi.client.debug.DebuggerPresenter;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -75,7 +76,7 @@ public class DebugAction extends Action {
             String packaging = currentProject.getAttributeValue(MavenAttributes.MAVEN_PACKAGING);
             e.getPresentation().setVisible("war".equals(packaging)||
                                            projectTypeId.equals(com.codenvy.ide.Constants.CODENVY_PLUGIN_ID));
-            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning() && currentProject.getIsRunningEnabled());
+            e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !RunnerUtils.isAppLaunched(currentProject));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

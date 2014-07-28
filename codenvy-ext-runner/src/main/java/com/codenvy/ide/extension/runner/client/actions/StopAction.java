@@ -18,6 +18,7 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -63,8 +64,7 @@ public class StopAction extends Action {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
                                            || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(currentProject.getProcessDescriptor()!= null && currentProject.getProcessDescriptor().getStatus().equals(
-                    ApplicationStatus.RUNNING));
+            e.getPresentation().setEnabled(RunnerUtils.isAppLaunched(currentProject));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

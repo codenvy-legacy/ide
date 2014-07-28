@@ -13,10 +13,9 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -68,7 +67,7 @@ public class CustomRunAction extends Action {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
                                            || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
-            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning() && currentProject.getIsRunningEnabled());
+            e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !RunnerUtils.isAppLaunched(currentProject));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }

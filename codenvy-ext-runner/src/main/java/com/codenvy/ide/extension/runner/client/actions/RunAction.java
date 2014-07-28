@@ -11,15 +11,17 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.runner.ApplicationStatus;
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,7 +36,7 @@ public class RunAction extends Action {
 
     private final RunnerController     runnerController;
     private final AnalyticsEventLogger eventLogger;
-    private AppContext appContext;
+    private       AppContext           appContext;
 
     @Inject
     public RunAction(RunnerController runnerController,
@@ -66,10 +68,10 @@ public class RunAction extends Action {
             // If project has defined a runner, let see the action
             e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
                                            || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
-//            e.getPresentation().setEnabled(!runnerController.isAnyAppRunning() && currentProject.getIsRunningEnabled());
-            e.getPresentation().setEnabled(true);
+            e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !RunnerUtils.isAppLaunched(currentProject));
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }
     }
+
 }

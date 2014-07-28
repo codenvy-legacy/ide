@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.RunnerMetric;
+import com.codenvy.ide.api.CurrentProject;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -32,4 +34,20 @@ public class RunnerUtils {
         }
         return null;
     }
+
+
+    /** Checking current project launched or not.
+     * Return true if status @code ApplicationStatus.NEW or ApplicationStatus.RUNNING
+     * otherwise false
+     */
+    public static boolean isAppLaunched(@NotNull CurrentProject currentProject) {
+        ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
+        if (processDescriptor == null)
+            return false;
+        if (processDescriptor.getStatus().equals(ApplicationStatus.NEW) ||
+            processDescriptor.getStatus().equals(ApplicationStatus.RUNNING))
+            return true;
+        return false;
+    }
+
 }
