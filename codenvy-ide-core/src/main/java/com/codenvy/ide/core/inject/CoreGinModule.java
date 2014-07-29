@@ -73,6 +73,7 @@ import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.IconRegistryImpl;
+import com.codenvy.ide.core.ProjectStateHandler;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
@@ -306,6 +307,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
 
         bind(AppContext.class).in(Singleton.class);
+        bind(ProjectStateHandler.class).asEagerSingleton();
 
         GinMultibinder<DeleteProvider> multiBinderDeleteProviders = GinMultibinder.newSetBinder(binder(), DeleteProvider.class);
         multiBinderDeleteProviders.addBinding().to(ItemReferenceDeleteProvider.class);

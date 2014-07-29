@@ -18,6 +18,7 @@ import com.codenvy.ide.ext.java.client.JavaResources;
 import com.codenvy.ide.ext.java.client.editor.JavaFormatter;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorkerImpl;
+import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.client.newresource.NewJavaResourceView;
 import com.codenvy.ide.ext.java.client.newresource.NewJavaResourceViewImpl;
 import com.codenvy.ide.texteditor.api.ContentFormatter;
@@ -35,6 +36,7 @@ public class JavaGinModule extends AbstractGinModule {
     protected void configure() {
         bind(JavaParserWorker.class).to(JavaParserWorkerImpl.class).in(Singleton.class);
         bind(ContentFormatter.class).to(JavaFormatter.class);
+        bind(FormatController.class).asEagerSingleton();
         bind(NewJavaResourceView.class).to(NewJavaResourceViewImpl.class).in(Singleton.class);
     }
 

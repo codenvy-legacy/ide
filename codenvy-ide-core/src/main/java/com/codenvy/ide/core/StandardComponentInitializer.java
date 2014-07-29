@@ -14,20 +14,20 @@ import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
-import com.codenvy.ide.actions.delete.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
-import com.codenvy.ide.actions.find.FindActionAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.rename.RenameItemAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UploadFileAction;
+import com.codenvy.ide.actions.delete.DeleteItemAction;
+import com.codenvy.ide.actions.find.FindActionAction;
+import com.codenvy.ide.actions.rename.RenameItemAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
@@ -147,10 +147,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private ExpandEditorAction expandEditorAction;
-
-    // instantiate ProjectStateHandler
-    @Inject
-    private ProjectStateHandler projectStateHandler;
 
     @Inject
     @Named("XMLFileType")

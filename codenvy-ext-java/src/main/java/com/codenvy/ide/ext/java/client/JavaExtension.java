@@ -38,7 +38,6 @@ import com.codenvy.ide.ext.java.client.action.UpdateDependencyAction;
 import com.codenvy.ide.ext.java.client.editor.JavaEditorProvider;
 import com.codenvy.ide.ext.java.client.editor.JavaParserWorker;
 import com.codenvy.ide.ext.java.client.editor.JavaReconcilerStrategy;
-import com.codenvy.ide.ext.java.client.format.FormatController;
 import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestFactory;
@@ -88,9 +87,6 @@ public class JavaExtension {
                          NewJavaClassAction newJavaClassAction,
                          JavaParserWorker parserWorker,
                          @Named("JavaFileType") FileType javaFile,
-                         /** Create an instance of the FormatController is used for the correct operation of the formatter. Do not
-                          * delete!. */
-                         FormatController formatController,
                          BuildContext buildContext,
                          AppContext appContext) {
         this.notificationManager = notificationManager;
