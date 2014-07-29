@@ -15,11 +15,10 @@ import com.google.inject.AbstractModule;
 
 /** @author Artem Zatsarynnyy */
 @DynaModule
-public class CodenvyTutorialModule extends AbstractModule {
+public class CodenvyPluginsModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ProjectTypeDescriptionsExtension.class);
-        bind(CodenvyTutorialProjectTypeExtension.class);
         bind(CodenvyPluginProjectTypeDescriptionExtension.class);
         bind(CodenvyPluginProjectTypeExtension.class);
     }

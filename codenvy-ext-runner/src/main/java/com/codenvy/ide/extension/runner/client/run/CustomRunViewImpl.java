@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
@@ -48,6 +49,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     ListBox    environmentField;
     @UiField
     SuggestBox memoryField;
+    @UiField
+    CheckBox   skipBuild;
     @UiField
     TextArea   descriptionField;
     Button runButton;
@@ -138,6 +141,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
+    public boolean isSkipBuildSelected() {
+        return skipBuild.getValue();
+    }
+
+    @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
@@ -150,5 +158,6 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     private void clear() {
         memoryField.setValue("");
         descriptionField.setText("");
+        skipBuild.setValue(false);
     }
 }
