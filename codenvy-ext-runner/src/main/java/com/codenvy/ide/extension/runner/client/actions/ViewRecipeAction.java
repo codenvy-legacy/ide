@@ -11,7 +11,6 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;

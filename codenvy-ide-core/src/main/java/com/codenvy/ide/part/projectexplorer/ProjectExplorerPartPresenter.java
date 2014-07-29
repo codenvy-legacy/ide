@@ -213,16 +213,20 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void updateTree() {
         final AbstractTreeNode parent = selectedTreeNode.getParent();
-        currentTreeStructure.refreshChildren(parent, new AsyncCallback<AbstractTreeNode<?>>() {
-            @Override
-            public void onSuccess(AbstractTreeNode<?> result) {
-                view.updateItem(parent, result);
-            }
+        if (parent.getParent() == null) {
+            setContent(currentTreeStructure);
+        } else {
+            currentTreeStructure.refreshChildren(parent, new AsyncCallback<AbstractTreeNode<?>>() {
+                @Override
+                public void onSuccess(AbstractTreeNode<?> result) {
+                    view.updateItem(parent, result);
+                }
 
-            @Override
-            public void onFailure(Throwable caught) {
-                Log.error(ProjectExplorerPartPresenter.class, caught);
-            }
-        });
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, caught);
+                }
+            });
+        }
     }
 }

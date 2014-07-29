@@ -15,7 +15,6 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
-import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -77,17 +76,5 @@ public class NewFolderAction extends DefaultNewResourceAction {
             }
         }
         ).show();
-    }
-
-    @Override
-    public void update(ActionEvent e) {
-        boolean enabled = false;
-        if (appContext.getCurrentProject() != null) {
-            Selection<?> selection = selectionAgent.getSelection();
-            if (selection != null) {
-                enabled = selection.getFirstElement() != null;
-            }
-        }
-        e.getPresentation().setEnabled(enabled);
     }
 }

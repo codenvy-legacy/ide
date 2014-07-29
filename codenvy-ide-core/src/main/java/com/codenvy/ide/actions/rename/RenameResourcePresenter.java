@@ -8,20 +8,25 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.rename;
+package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.gwt.client.QueryExpression;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.AppContext;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.api.resources.model.Resource;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
 
@@ -40,60 +45,131 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     private EditorAgent          editorAgent;
     private Resource             resource;
     private NotificationManager  notificationManager;
-    private AppContext           appContext;
+    private EventBus eventBus;
+    private ItemReference itemToRename;
+    private String itemPath;
 
     @Inject
     public RenameResourcePresenter(RenameResourceView view,
                                    EditorAgent editorAgent,
                                    NotificationManager notificationManager,
                                    ProjectServiceClient projectServiceClient,
-                                   AppContext appContext) {
+                                   EventBus eventBus) {
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.editorAgent = editorAgent;
         this.notificationManager = notificationManager;
-        this.appContext = appContext;
+        this.eventBus = eventBus;
 
         view.setDelegate(this);
     }
 
     /**
-     * Perform the resource renaming.
+     * Perform the item renaming.
      *
-     * @param resource
-     *         resource to rename
+     * @param item
+     *         item to rename
      */
-    public void renameResource(@NotNull Resource resource) {
-        this.resource = resource;
-        view.setName(resource.getName());
+    public void renameItem(@NotNull ItemReference item) {
+        itemToRename = item;
+        itemPath = item.getPath();
+        final String itemName = item.getName();
+        if ("file".equals(item.getType())) {
+            openDialog(itemName, itemName.substring(0, itemName.lastIndexOf(".")));
+        } else {
+            openDialog(itemName, itemName);
+        }
+    }
+
+    /**
+     * Perform the project renaming.
+     *
+     * @param project
+     *         project to rename
+     */
+    public void renameProject(@NotNull ProjectReference project) {
+        itemPath = project.getName();
+        final String itemName = project.getName();
+        openDialog(itemName, itemName);
+    }
+
+    /**
+     * Perform the project renaming.
+     *
+     * @param project
+     *         project to rename
+     */
+    public void renameProject(@NotNull ProjectDescriptor project) {
+        itemPath = project.getPath();
+        final String itemName = project.getName();
+        openDialog(itemName, itemName);
+    }
+
+    private void openDialog(String itemName, String namePartToSelect) {
+        view.setName(itemName);
         view.setEnableRenameButton(false);
         view.showDialog();
-        String namePart = (resource instanceof File) ? resource.getName().substring(0, resource.getName().lastIndexOf("."))
-                                                     : resource.getName();
-        view.selectText(namePart);
+        view.selectText(namePartToSelect);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRenameClicked() {
         final String newName = view.getName();
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
+        projectServiceClient.rename(itemPath, newName, null, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                eventBus.fireEvent(new RefreshProjectTreeEvent());
 
-        // rename project in project list (when no active project)
-        if (activeProject == null) {
-            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
-                @Override
-                protected void onSuccess(Void result) {
+                if (itemToRename != null) {
+                    String parentPath = itemPath.substring(0, itemPath.length() - itemToRename.getName().length());
+
+                    projectServiceClient.search(new QueryExpression().setPath(parentPath).setName(newName), new AsyncRequestCallback<Array<ItemReference>>() {
+                        @Override
+                        protected void onSuccess(Array<ItemReference> result) {
+                            ItemReference renamedItem = result.get(0);
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                        }
+                    });
+                }
+
+                if (itemToRename != null && "file".equals(itemToRename.getType())) {
+                    for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                        if (itemPath.equals(editor.getEditorInput().getFile().getPath())) {
+//                            editor.getEditorInput().setFile(itemToRename);
+                            editor.onFileChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
+            }
+        });
+
+//        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
+//
+//        // rename project in project list (when no active project)
+//        if (activeProject == null) {
+//            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
+//                @Override
+//                protected void onSuccess(Void result) {
 //                    resourceProvider.refreshRoot();
-                }
-
-                @Override
-                protected void onFailure(Throwable throwable) {
-                    notificationManager.showNotification(new Notification(throwable.getMessage(), ERROR));
-                }
-            });
-        } else {
-            // rename opened project or its child resource
+//                }
+//
+//                @Override
+//                protected void onFailure(Throwable throwable) {
+//                    notificationManager.showNotification(new Notification(throwable.getMessage(), ERROR));
+//                }
+//            });
+//        } else {
+//            // rename opened project or its child resource
 //            activeProject.rename(resource, newName, new AsyncCallback<Resource>() {
 //                @Override
 //                public void onSuccess(Resource result) {
@@ -129,7 +205,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
 //                    notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
 //                }
 //            });
-        }
+//        }
 
         view.close();
     }

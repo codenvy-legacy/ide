@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.rename;
+package com.codenvy.ide.actions.rename;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.ui.window.Window;

@@ -117,8 +117,12 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
-import com.codenvy.ide.rename.RenameResourceView;
-import com.codenvy.ide.rename.RenameResourceViewImpl;
+import com.codenvy.ide.actions.delete.DeleteProvider;
+import com.codenvy.ide.actions.delete.ItemReferenceDeleteProvider;
+import com.codenvy.ide.actions.delete.ProjectDescriptorDeleteProvider;
+import com.codenvy.ide.actions.delete.ProjectReferenceDeleteProvider;
+import com.codenvy.ide.actions.rename.RenameResourceView;
+import com.codenvy.ide.actions.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -302,6 +306,11 @@ public class CoreGinModule extends AbstractGinModule {
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
 
         bind(AppContext.class).in(Singleton.class);
+
+        GinMultibinder<DeleteProvider> multiBinderDeleteProviders = GinMultibinder.newSetBinder(binder(), DeleteProvider.class);
+        multiBinderDeleteProviders.addBinding().to(ItemReferenceDeleteProvider.class);
+        multiBinderDeleteProviders.addBinding().to(ProjectReferenceDeleteProvider.class);
+        multiBinderDeleteProviders.addBinding().to(ProjectDescriptorDeleteProvider.class);
     }
 
     @Provides

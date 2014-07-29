@@ -11,34 +11,24 @@
 package com.codenvy.ide.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.actions.rename.RenameResourcePresenter;
+import com.codenvy.ide.actions.rename.RenameResourceView;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
- * Test for {@link RenameResourcePresenter}.
+ * Test for {@link com.codenvy.ide.actions.rename.RenameResourcePresenter}.
  *
  * @author Ann Shumilova
  */

@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
@@ -31,7 +32,6 @@ import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
@@ -55,10 +55,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
@@ -68,6 +64,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
@@ -92,7 +89,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    protected final ResourceProvider           resourceProvider;
     private final   DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private final   DtoFactory                 dtoFactory;
     private         EditorAgent                editorAgent;
@@ -122,7 +118,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Inject
     public RunnerController(EventBus eventBus,
                             final WorkspaceAgent workspaceAgent,
-                            final ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
                             final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
@@ -135,7 +130,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             ThemeAgent themeAgent,
                             final AppContext appContext) {
         this.workspaceAgent = workspaceAgent;
-        this.resourceProvider = resourceProvider;
         this.console = console;
         this.shellConsole = shellConsole;
         this.service = service;
@@ -195,7 +189,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
                 if (isAnyAppRunning()) {
-                    event.setMessage(constant.appWillBeStopped(resourceProvider.getActiveProject().getName()));
+                    event.setMessage(constant.appWillBeStopped(appContext.getCurrentProject().getProjectDescription().getName()));
                 }
             }
 
@@ -658,26 +652,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
             final Link recipeLink = getLink(appContext.getCurrentProject().getProcessDescriptor(), "runner recipe");
             if (recipeLink != null) {
-                RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, recipeLink.getHref());
-                try {
-                    builder.sendRequest("", new com.google.gwt.http.client.RequestCallback() {
-                        public void onResponseReceived(Request request, Response response) {
-                            File recipeFile = new RecipeFile(response.getText());
-//                            editorAgent.openEditor(recipeFile);
-                            EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
-                            if (editor instanceof CodenvyTextEditor) {
-                                ((CodenvyTextEditor)editor).getView().setReadOnly(true);
-                            }
-                        }
-
-                        public void onError(Request request, Throwable exception) {
-                            notificationManager.showNotification(new Notification(constant.getRecipeFailed(), ERROR));
-                            Log.error(RunnerController.class, exception);
-                        }
-                    });
-                } catch (RequestException e) {
-                    notificationManager.showNotification(new Notification(constant.getRecipeFailed(), ERROR));
-                    Log.error(RunnerController.class, e);
+                List<Link> links = new ArrayList<>(1);
+                links.add(dtoFactory.createDto(Link.class).withHref(recipeLink.getHref()).withRel("get content"));
+                ItemReference recipeFile = dtoFactory.createDto(ItemReference.class)
+                                                     .withName("Runner Recipe")
+                                                     .withPath("runner_recipe")
+                                                     .withMediaType("text/plain")
+                                                     .withLinks(links);
+                editorAgent.openEditor(recipeFile);
+                EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
+                if (editor instanceof CodenvyTextEditor) {
+                    ((CodenvyTextEditor)editor).getView().setReadOnly(true);
                 }
             }
         }

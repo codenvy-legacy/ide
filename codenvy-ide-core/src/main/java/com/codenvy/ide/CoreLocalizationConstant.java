@@ -12,7 +12,7 @@ package com.codenvy.ide;
 
 import com.google.gwt.i18n.client.Messages;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/** @author Andrey Plotnikov */
 public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.nameField")
     String createProjectFromTemplateName();
@@ -77,8 +77,37 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("appearance.title")
     String appearanceTitle();
 
-    @Key("deleteResourceQuestion")
-    String deleteResourceQuestion(String resource);
+    /* DeleteItem */
+    @Key("action.delete.text")
+    String deleteItemActionText();
+
+    @Key("action.delete.description")
+    String deleteItemActionDescription();
+
+    @Key("deleteFileTitle")
+    String deleteFileTitle();
+
+    @Key("deleteFolderTitle")
+    String deleteFolderTitle();
+
+    @Key("deleteProjectTitle")
+    String deleteProjectTitle();
+
+    @Key("deleteFileQuestion")
+    String deleteFileQuestion(String name);
+
+    @Key("deleteFolderQuestion")
+    String deleteFolderQuestion(String name);
+
+    @Key("deleteProjectQuestion")
+    String deleteProjectQuestion(String name);
+
+    /* RenameItem */
+    @Key("action.rename.text")
+    String renameItemActionText();
+
+    @Key("action.rename.description")
+    String renameItemActionDescription();
 
     @Key("renameButton")
     String renameButton();

@@ -10,17 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -60,18 +65,26 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void getDocument(@NotNull EditorInput input, @NotNull final DocumentCallback callback) {
-        final ItemReference file = input.getFile();
-        projectServiceClient.getFileContent(file.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                contentReceived(result, callback);
-            }
+        for (Link link : input.getFile().getLinks()) {
+            if ("get content".equals(link.getRel())) {
+                RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, link.getHref());
+                try {
+                    requestBuilder.sendRequest("", new RequestCallback() {
+                        @Override
+                        public void onResponseReceived(Request request, Response response) {
+                            contentReceived(response.getText(), callback);
+                        }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(ResourceDocumentProvider.class, exception);
+                        @Override
+                        public void onError(Request request, Throwable exception) {
+                            Log.error(ResourceDocumentProvider.class, exception);
+                        }
+                    });
+                } catch (RequestException e) {
+                    Log.error(ResourceDocumentProvider.class, e);
+                }
             }
-        });
+        }
     }
 
     /**

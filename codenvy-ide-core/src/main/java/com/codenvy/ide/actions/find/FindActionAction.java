@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.actions;
+package com.codenvy.ide.actions.find;
 
 import com.codenvy.ide.actions.find.FindActionPresenter;
 import com.codenvy.ide.api.ui.action.Action;
