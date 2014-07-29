@@ -22,7 +22,7 @@ public interface Constants {
     final String NAMELESS_NAME                = "nameless";
     final String BLANK_PROJECT_TYPE           = "Blank Type";
     final String CODENVY_PLUGIN_NAME          = "Codenvy Extension";
-    final String CODENVY_CATEGORY             = "Codenvy Extension";
+    final String CODENVY_CATEGORY = "Codenvy";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";
