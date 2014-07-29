@@ -301,12 +301,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        runCallback = callback;
         lastApplicationDescriptor = null;
         activeProject = resourceProvider.getActiveProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
-        runCallback = callback;
+        console.print("[INFO] " + notification.getMessage());
 
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
         if (debug) {
@@ -353,13 +354,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        runCallback = callback;
         lastApplicationDescriptor = null;
         activeProject = resourceProvider.getActiveProject();
 
         notification = new Notification(constant.applicationStarting(activeProject.getName()), PROGRESS, RunnerController.this);
         notificationManager.showNotification(notification);
-        runCallback = callback;
-        
+        console.print("[INFO] " + notification.getMessage());
+
         if (isUserAction){
             console.setActive();
         }
