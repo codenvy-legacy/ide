@@ -54,10 +54,10 @@ public class ItemReferenceDeleteProvider implements DeleteProvider<ItemReference
     /** {@inheritDoc} */
     @Override
     public void deleteItem(final ItemReference item) {
-        final String dialogTitle = "file".equals(item.getType()) ? localizationConstant.deleteFileTitle()
-                                                                 : localizationConstant.deleteFolderTitle();
-        final String dialogQuestion = "file".equals(item.getType()) ? localizationConstant.deleteFileQuestion(item.getName())
-                                                                    : localizationConstant.deleteFolderQuestion(item.getName());
+        final String dialogTitle = "file".equals(item.getType()) ? localizationConstant.deleteFileDialogTitle()
+                                                                 : localizationConstant.deleteFolderDialogTitle();
+        final String dialogQuestion = "file".equals(item.getType()) ? localizationConstant.deleteFileDialogQuestion(item.getName())
+                                                                    : localizationConstant.deleteFolderDialogQuestion(item.getName());
 
         new Ask(dialogTitle, dialogQuestion, new AskHandler() {
             @Override

@@ -12,6 +12,7 @@ package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -28,38 +29,42 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 public class ProjectReferenceRenameProvider implements RenameProvider<ProjectReference> {
-    private ProjectServiceClient projectServiceClient;
-    private NotificationManager  notificationManager;
-    private EventBus             eventBus;
+    private ProjectServiceClient     projectServiceClient;
+    private NotificationManager      notificationManager;
+    private EventBus                 eventBus;
+    private CoreLocalizationConstant localizationConstant;
 
     @Inject
     public ProjectReferenceRenameProvider(ProjectServiceClient projectServiceClient, NotificationManager notificationManager,
-                                          EventBus eventBus) {
+                                          EventBus eventBus, CoreLocalizationConstant localizationConstant) {
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.eventBus = eventBus;
+        this.localizationConstant = localizationConstant;
     }
 
     /** {@inheritDoc} */
     @Override
     public void renameItem(final ProjectReference item) {
-        new AskValueDialog("Rename project", "New name:", new AskValueCallback() {
-            @Override
-            public void onOk(String value) {
-                projectServiceClient.rename(item.getName(), value, null, new AsyncRequestCallback<Void>() {
-                    @Override
-                    protected void onSuccess(Void result) {
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
-                    }
+        new AskValueDialog(localizationConstant.renameProjectDialogTitle(), localizationConstant.renameDialogNewNameLabel(),
+                           new AskValueCallback() {
+                               @Override
+                               public void onOk(String value) {
+                                   projectServiceClient.rename(item.getName(), value, null, new AsyncRequestCallback<Void>() {
+                                       @Override
+                                       protected void onSuccess(Void result) {
+                                           eventBus.fireEvent(new RefreshProjectTreeEvent());
+                                       }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        notificationManager.showNotification(new Notification(exception.getMessage(), Notification.Type.ERROR));
-                        Log.error(ProjectReferenceRenameProvider.class, exception);
-                    }
-                });
-            }
-        }).show();
+                                       @Override
+                                       protected void onFailure(Throwable exception) {
+                                           Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                                           notificationManager.showNotification(notification);
+                                           Log.error(ProjectReferenceRenameProvider.class, exception);
+                                       }
+                                   });
+                               }
+                           }).show();
     }
 
     /** {@inheritDoc} */

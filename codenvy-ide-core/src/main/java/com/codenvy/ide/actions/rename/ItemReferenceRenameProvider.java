@@ -12,6 +12,7 @@ package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
@@ -34,27 +35,45 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
     private NotificationManager  notificationManager;
     private EventBus             eventBus;
     private EditorAgent          editorAgent;
+    private CoreLocalizationConstant localizationConstant;
 
     @Inject
     public ItemReferenceRenameProvider(ProjectServiceClient projectServiceClient, NotificationManager notificationManager,
-                                       EventBus eventBus, EditorAgent editorAgent) {
+                                       EventBus eventBus, EditorAgent editorAgent, CoreLocalizationConstant localizationConstant) {
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.eventBus = eventBus;
         this.editorAgent = editorAgent;
+        this.localizationConstant = localizationConstant;
     }
 
     /** {@inheritDoc} */
     @Override
     public void renameItem(final ItemReference item) {
-        new AskValueDialog("Rename file/folder", "New name:", new AskValueCallback() {
+        final String dialogTitle = "file".equals(item.getType()) ? localizationConstant.renameFileDialogTitle()
+                                                                 : localizationConstant.renameFolderDialogTitle();
+        new AskValueDialog(dialogTitle, localizationConstant.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
-            public void onOk(String value) {
+            public void onOk(final String value) {
                 final String prevItemPath = item.getPath();
                 projectServiceClient.rename(item.getPath(), value, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
+
+//                        final String parentPath = item.getPath().substring(0, item.getPath().length() - item.getName().length());
+//                        QueryExpression query = new QueryExpression().setPath(parentPath).setName(value);
+//                        projectServiceClient.search(query, new AsyncRequestCallback<Array<ItemReference>>() {
+//                            @Override
+//                            protected void onSuccess(Array<ItemReference> result) {
+//
+//                            }
+
+//                            @Override
+//                            protected void onFailure(Throwable exception) {
+//
+//                            }
+//                        });
 
                         if ("file".equals(item.getType())) {
                             for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
@@ -72,7 +91,8 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        notificationManager.showNotification(new Notification(exception.getMessage(), Notification.Type.ERROR));
+                        Notification notification = new Notification(exception.getMessage(), Notification.Type.ERROR);
+                        notificationManager.showNotification(notification);
                         Log.error(ItemReferenceRenameProvider.class, exception);
                     }
                 });

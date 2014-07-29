@@ -62,12 +62,6 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("chooseResourceType")
     String chooseResourceType();
 
-    @Key("selectProjectType")
-    String selectProjectType(String project);
-
-    @Key("setProjectTypeTitle")
-    String setProjectTypeTitle();
-
     @Key("navigateToFile.view.title")
     String navigateToFileViewTitle();
 
@@ -84,23 +78,23 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.delete.description")
     String deleteItemActionDescription();
 
-    @Key("deleteFileTitle")
-    String deleteFileTitle();
+    @Key("deleteFileDialogTitle")
+    String deleteFileDialogTitle();
 
-    @Key("deleteFolderTitle")
-    String deleteFolderTitle();
+    @Key("deleteFolderDialogTitle")
+    String deleteFolderDialogTitle();
 
-    @Key("deleteProjectTitle")
-    String deleteProjectTitle();
+    @Key("deleteProjectDialogTitle")
+    String deleteProjectDialogTitle();
 
-    @Key("deleteFileQuestion")
-    String deleteFileQuestion(String name);
+    @Key("deleteFileDialogQuestion")
+    String deleteFileDialogQuestion(String name);
 
-    @Key("deleteFolderQuestion")
-    String deleteFolderQuestion(String name);
+    @Key("deleteFolderDialogQuestion")
+    String deleteFolderDialogQuestion(String name);
 
-    @Key("deleteProjectQuestion")
-    String deleteProjectQuestion(String name);
+    @Key("deleteProjectDialogQuestion")
+    String deleteProjectDialogQuestion(String name);
 
     /* RenameItem */
     @Key("action.rename.text")
@@ -108,6 +102,18 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("action.rename.description")
     String renameItemActionDescription();
+
+    @Key("renameFileDialogTitle")
+    String renameFileDialogTitle();
+
+    @Key("renameFolderDialogTitle")
+    String renameFolderDialogTitle();
+
+    @Key("renameProjectDialogTitle")
+    String renameProjectDialogTitle();
+
+    @Key("renameDialogNewNameLabel")
+    String renameDialogNewNameLabel();
 
     @Key("renameButton")
     String renameButton();
@@ -260,11 +266,11 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("delete")
     @DefaultMessage("Delete")
     String delete();
-    
+
     @Key("project.closed.title")
     @DefaultMessage("Codenvy Developer Environment")
     String projectClosedTitle();
-    
+
     @Key("project.opened.title")
     String projectOpenedTitle(String name);
 

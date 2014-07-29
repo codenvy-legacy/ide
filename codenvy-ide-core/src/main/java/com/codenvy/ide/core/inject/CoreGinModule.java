@@ -34,11 +34,8 @@ import com.codenvy.ide.actions.delete.ProjectReferenceDeleteProvider;
 import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.actions.rename.ItemReferenceRenameProvider;
-import com.codenvy.ide.actions.rename.ProjectDescriptorRenameProvider;
 import com.codenvy.ide.actions.rename.ProjectReferenceRenameProvider;
 import com.codenvy.ide.actions.rename.RenameProvider;
-import com.codenvy.ide.actions.rename.RenameResourceView;
-import com.codenvy.ide.actions.rename.RenameResourceViewImpl;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
@@ -295,7 +292,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(WelcomePartView.class).to(WelcomePartViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
-        bind(RenameResourceView.class).to(RenameResourceViewImpl.class).in(Singleton.class);
         bind(AboutView.class).to(AboutViewImpl.class);
         bind(ListOpenedFilesView.class).to(ListOpenedFilesViewImpl.class);
 
@@ -330,7 +326,6 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<RenameProvider> multiBinderRenameProviders = GinMultibinder.newSetBinder(binder(), RenameProvider.class);
         multiBinderRenameProviders.addBinding().to(ItemReferenceRenameProvider.class);
         multiBinderRenameProviders.addBinding().to(ProjectReferenceRenameProvider.class);
-        multiBinderRenameProviders.addBinding().to(ProjectDescriptorRenameProvider.class);
     }
 
     @Provides

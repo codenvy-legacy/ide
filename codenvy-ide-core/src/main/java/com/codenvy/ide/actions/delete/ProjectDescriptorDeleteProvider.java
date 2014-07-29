@@ -50,7 +50,7 @@ public class ProjectDescriptorDeleteProvider implements DeleteProvider<ProjectDe
     /** {@inheritDoc} */
     @Override
     public void deleteItem(final ProjectDescriptor item) {
-        new Ask(localizationConstant.deleteProjectTitle(), localizationConstant.deleteProjectQuestion(item.getName()), new AskHandler() {
+        new Ask(localizationConstant.deleteProjectDialogTitle(), localizationConstant.deleteProjectDialogQuestion(item.getName()), new AskHandler() {
             @Override
             public void onOk() {
                 projectServiceClient.delete(item.getName(), new AsyncRequestCallback<Void>() {
