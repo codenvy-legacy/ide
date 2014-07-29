@@ -157,9 +157,6 @@
                 </g:east>
                 <g:west size="47">
                     <g:DockLayoutPanel unit="PX" addStyleNames="{style.leftPart}">
-                        <g:north size="20">
-                            <g:Label text="Categories" height="20px" addStyleNames="{style.label}"/>
-                        </g:north>
                         <g:center>
                             <g:SimplePanel ui:field="categoriesPanel" addStyleNames="{style.categories}"
                                            debugId="newProject-categoriesPanel"/>
