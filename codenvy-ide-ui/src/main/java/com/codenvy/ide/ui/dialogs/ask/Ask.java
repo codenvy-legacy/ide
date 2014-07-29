@@ -18,7 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class Ask extends Window {
 
     @UiField
-    TextArea message;
+    SimplePanel message;
 
     interface AskUiBinder extends UiBinder<Widget, Ask> {
     }
@@ -48,7 +48,7 @@ public class Ask extends Window {
     public Ask(String title, String question, final AskHandler handler) {
         Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
-        this.message.setText(question);
+        this.message.getElement().setInnerHTML(question);
         setWidget(widget);
         Button ok = createButton(locale.ok(), "ask-dialog-ok", new ClickHandler() {
 

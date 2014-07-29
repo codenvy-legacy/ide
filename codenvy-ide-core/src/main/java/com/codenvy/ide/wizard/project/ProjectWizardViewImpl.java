@@ -13,25 +13,20 @@ package com.codenvy.ide.wizard.project;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,76 +35,113 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
-    @UiField
-    TextBox     projectName;
-    @UiField
-    SimplePanel wizardPanel;
-    @UiField
-    FlowPanel   nextStep;
-    @UiField
-    FlowPanel   previousStep;
+    private static ProjectWizardViewImplUiBinder ourUiBinder                 = GWT.create(ProjectWizardViewImplUiBinder.class);
+    private final  String                        defaultRAMRequired          = "2GB";
+    private final  String                        defaultRAMAvailable         = "2GB";
+    private final  String                        defaultBuilderEnvirConfig[] = new String[]{"Maven 3.1.1", "JDK 7.0"};
+    private final  String                        defaultRunnerEnvirConfig[]   = new String[]{"JDK 7.0", "Tomcat 7.0"};
+
     @UiField
     Style       style;
     @UiField
-    TextBox     projectDescription;
+    SimplePanel wizardPanel;
     @UiField
-    RadioButton projectPrivate;
+    FlowPanel   environmentConfigurationPanel;
     @UiField
-    RadioButton projectPublic;
+    Label       builderEnvironmentConfiguration;
+    @UiField
+    Label       runnerEnvironmentConfiguration;
+    @UiField
+    FlowPanel   infoRAMPanel;
+    @UiField
+    HTMLPanel   linkGetMoreRAM;
+    @UiField
+    Label       RAMRequired;
+    @UiField
+    Label       RAMAvailable;
+    @UiField
+    Button      nextStepButton;
+    @UiField
+    Button      previousStepButton;
     @UiField
     Button      saveButton;
     private ActionDelegate delegate;
     private Map<Presenter, Widget> pageCache = new HashMap<>();
+
 
     @Inject
     public ProjectWizardViewImpl(com.codenvy.ide.Resources resources) {
         super(false);
         setTitle("Project Configuration");
         setWidget(ourUiBinder.createAndBindUi(this));
-        SVGImage svgImage = new SVGImage(resources.wizardArrow());
-        svgImage.setClassNameBaseVal(style.svgStyle());
-        nextStep.add(svgImage);
-
-        SVGImage svgImageLeft = new SVGImage(resources.wizardArrow());
-        svgImageLeft.setClassNameBaseVal(style.svgRotated());
-        previousStep.add(svgImageLeft);
-        nextStep.sinkEvents(Event.ONCLICK);
-        previousStep.sinkEvents(Event.ONCLICK);
-        nextStep.addHandler(new ClickHandler() {
+        nextStepButton.sinkEvents(Event.ONCLICK);
+        previousStepButton.sinkEvents(Event.ONCLICK);
+        nextStepButton.addHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!nextStep.getStyleName().contains(style.disabled()))
+                if (!nextStepButton.getStyleName().contains(style.disabled()))
                     delegate.onNextClicked();
             }
         }, ClickEvent.getType());
-        previousStep.addHandler(new ClickHandler() {
+        previousStepButton.addHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!previousStep.getStyleName().contains(style.disabled()))
+                if (!previousStepButton.getStyleName().contains(style.disabled()))
                     delegate.onBackClicked();
             }
         }, ClickEvent.getType());
     }
 
-    @UiHandler("projectName")
-    void onProjectNameChanged(KeyUpEvent event) {
-        delegate.projectNameChanged(projectName.getText());
-    }
-
-    @UiHandler("projectDescription")
-    void onProjectDescriptionChanged(KeyUpEvent event) {
-        delegate.projectDescriptionChanged(projectDescription.getValue());
-    }
-
-    @UiHandler({"projectPublic", "projectPrivate"})
-    void visibilityHandler(ValueChangeEvent<Boolean> event) {
-        delegate.projectVisibilityChanged(projectPublic.getValue());
-    }
-
     @UiHandler("saveButton")
     void saveClick(ClickEvent event) {
         delegate.onSaveClicked();
+    }
+
+    @Override
+    public void setRAMRequired(String amountOfRAM) {
+        if (amountOfRAM == null) amountOfRAM = defaultRAMRequired;
+        RAMRequired.setText(amountOfRAM);
+    }
+
+    @Override
+    public void setRAMAvailable(String amountOfRAM) {
+        if (amountOfRAM == null) amountOfRAM = defaultRAMAvailable;
+        RAMAvailable.setText(amountOfRAM);
+    }
+
+    @Override
+    public void setBuilderEnvirConfig(String configs[]) {
+        if (configs == null) configs = defaultBuilderEnvirConfig;
+        StringBuilder configsBuilder = new StringBuilder();
+        for (String config : configs) {
+            if (config.length() > 0) {
+                configsBuilder.append(": " + config);
+            }
+        }
+        builderEnvironmentConfiguration.setText(configsBuilder.toString());
+    }
+
+    @Override
+    public void setRunnerEnvirConfig(String configs[]) {
+        if (configs == null) configs = defaultRunnerEnvirConfig;
+        StringBuilder configsBuilder = new StringBuilder();
+        for (String config : configs) {
+            if (config.length() > 0) {
+                configsBuilder.append(": " + config);
+            }
+        }
+        runnerEnvironmentConfiguration.setText(configsBuilder.toString());
+    }
+
+    @Override
+    public void setInfoVisibled(boolean enabled) {
+        if (enabled) {
+            environmentConfigurationPanel.getElement().replaceClassName(style.hidden(), style.visible());
+            infoRAMPanel.getElement().replaceClassName(style.hidden(), style.visible());
+        } else {
+            environmentConfigurationPanel.getElement().replaceClassName(style.visible(), style.hidden());
+            infoRAMPanel.getElement().replaceClassName(style.visible(), style.hidden());
+        }
     }
 
     @Override
@@ -142,9 +174,9 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @Override
     public void setNextButtonEnabled(boolean enabled) {
         if (enabled) {
-            nextStep.removeStyleName(style.disabled());
+            nextStepButton.removeStyleName(style.disabled());
         } else {
-            nextStep.addStyleName(style.disabled());
+            nextStepButton.addStyleName(style.disabled());
         }
     }
 
@@ -156,75 +188,10 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @Override
     public void setBackButtonEnabled(boolean enabled) {
         if (enabled) {
-            previousStep.removeStyleName(style.disabled());
+            previousStepButton.removeStyleName(style.disabled());
         } else {
-            previousStep.addStyleName(style.disabled());
+            previousStepButton.addStyleName(style.disabled());
         }
-    }
-
-    @Override
-    public void reset() {
-        projectName.setText("");
-        projectDescription.setText("");
-        projectPublic.setValue(true);
-        projectPrivate.setValue(false);
-        changeEnabledState(true);
-    }
-
-    @Override
-    public void enableInput() {
-        changeEnabledState(true);
-    }
-
-    @Override
-    public void disableInput() {
-        changeEnabledState(false);
-    }
-
-    @Override
-    public void setName(String name) {
-        projectName.setValue(name, true);
-    }
-
-    @Override
-    public void setVisibility(boolean visible) {
-        projectPublic.setValue(visible, false);
-    }
-
-    @Override
-    public void removeNameError() {
-        projectName.removeStyleName(style.inputError());
-    }
-
-    @Override
-    public void showNameError() {
-        projectName.addStyleName(style.inputError());
-    }
-
-    @Override
-    public void focusOnName() {
-        new Timer() {
-            @Override
-            public void run() {
-                projectName.setFocus(true);
-            }
-        }.schedule(300);
-    }
-
-    @Override
-    public void disableAllExceptName() {
-        changeEnabledStateAll(false);
-    }
-
-    void changeEnabledState(boolean enabled) {
-        projectName.setEnabled(enabled);
-        changeEnabledStateAll(enabled);
-    }
-
-    private void changeEnabledStateAll(boolean enabled) {
-        projectDescription.setEnabled(enabled);
-        projectPublic.setEnabled(enabled);
-        projectPrivate.setEnabled(enabled);
     }
 
     @Override
@@ -244,19 +211,12 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     interface Style extends CssResource {
-        String svgStyle();
 
         String namePanel();
 
         String projectNamePosition();
 
         String project();
-
-        String svgRotated();
-
-        String buttonLikePanelRight();
-
-        String buttonLikePanelLeft();
 
         String bottomPanel();
 
@@ -274,9 +234,21 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
         String blueButton();
 
+        String button();
+
         String disabled();
 
-        String inputError();
+        String infoText();
+
+        String infoValue();
+
+        String labelPanel();
+
+        String visible();
+
+        String hidden();
+
+        String grayColor();
     }
 
     interface ProjectWizardViewImplUiBinder

@@ -13,6 +13,7 @@ package com.codenvy.ide.wizard.project.main;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.inject.ImplementedBy;
 
 import java.util.Map;
@@ -30,7 +31,33 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     void reset();
 
+    void resetName();
+
+    void enableInput();
+
+    void disableInput();
+
+    void setName(String name);
+
+    void setVisibility(boolean visible);
+
+    void removeNameError();
+
+    void showNameError();
+
+    void focusOnName();
+
+    void disableAllExceptName();
+
     public interface ActionDelegate {
+
+        void projectNameChanged(String name);
+
+        void projectDescriptionChanged(String projectDescriptionValue);
+
+        void projectVisibilityChanged(Boolean aPublic);
+
+        ProjectWizardView.ActionDelegate getProjectWizardDelegate();
 
         void projectTemplateSelected(ProjectTemplateDescriptor template);
 

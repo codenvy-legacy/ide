@@ -19,13 +19,13 @@
             margin-top: 20px;
         }
 
-       .emptyBorder {
+        .emptyBorder {
             margin: 6px;
         }
 
-       .noborder {
-           border: 0;
-       }
+        .noborder {
+            border: 0;
+        }
 
         .noResize {
             resize: none;
@@ -34,12 +34,18 @@
         .ovwer {
             float: left;
         }
+
+        .textArea {
+            float: right;
+            background-color: #1F1F1F;
+            border: medium ridge #6f7277;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="350px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:FlowPanel>
                 <g:Image resource="{resources.ask64}" addStyleNames="{style.ovwer} {style.spacingTop}"/>
-                <g:TextArea ui:field="message" readOnly="true" width="280px" height="100%" addStyleNames="{style.noResize} {style.noborder}"/>
+                <g:SimplePanel ui:field="message" width="280px" height="100%" addStyleNames="{style.noResize} {style.noborder} {style.textArea}"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>

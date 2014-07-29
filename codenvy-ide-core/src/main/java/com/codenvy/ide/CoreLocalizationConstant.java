@@ -107,6 +107,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
 
+    @Key("createProjectFromTemplate.linkGetMoreRAM")
+    String createProjectFromTemplatelinkGetMoreRAM();
+
     @Key("format.name")
     String formatName();
 
@@ -231,11 +234,11 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("delete")
     @DefaultMessage("Delete")
     String delete();
-    
+
     @Key("project.closed.title")
     @DefaultMessage("Codenvy Developer Environment")
     String projectClosedTitle();
-    
+
     @Key("project.opened.title")
     String projectOpenedTitle(String name);
 
