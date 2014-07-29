@@ -8,51 +8,45 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.actions.delete;
+package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
+import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
 /**
- * Delete provider for deleting {@link ProjectReference} objects.
+ * Rename provider for renaming {@link ProjectReference} objects.
  *
  * @author Artem Zatsarynnyy
  */
-@Singleton
-public class ProjectReferenceDeleteProvider implements DeleteProvider<ProjectReference> {
-    private CoreLocalizationConstant localizationConstant;
-    private ProjectServiceClient     projectServiceClient;
-    private EventBus                 eventBus;
-    private NotificationManager      notificationManager;
+public class ProjectReferenceRenameProvider implements RenameProvider<ProjectReference> {
+    private ProjectServiceClient projectServiceClient;
+    private NotificationManager  notificationManager;
+    private EventBus             eventBus;
 
     @Inject
-    public ProjectReferenceDeleteProvider(CoreLocalizationConstant localizationConstant, ProjectServiceClient projectServiceClient,
-                                          EventBus eventBus, NotificationManager notificationManager) {
-        this.localizationConstant = localizationConstant;
+    public ProjectReferenceRenameProvider(ProjectServiceClient projectServiceClient, NotificationManager notificationManager,
+                                          EventBus eventBus) {
         this.projectServiceClient = projectServiceClient;
-        this.eventBus = eventBus;
         this.notificationManager = notificationManager;
+        this.eventBus = eventBus;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteItem(final ProjectReference item) {
-        new Ask(localizationConstant.deleteProjectTitle(), localizationConstant.deleteProjectQuestion(item.getName()), new AskHandler() {
+    public void renameItem(final ProjectReference item) {
+        new AskValueDialog("Rename project", "New name:", new AskValueCallback() {
             @Override
-            public void onOk() {
-                projectServiceClient.delete(item.getName(), new AsyncRequestCallback<Void>() {
+            public void onOk(String value) {
+                projectServiceClient.rename(item.getName(), value, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
@@ -60,7 +54,8 @@ public class ProjectReferenceDeleteProvider implements DeleteProvider<ProjectRef
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
+                        notificationManager.showNotification(new Notification(exception.getMessage(), Notification.Type.ERROR));
+                        Log.error(ProjectReferenceRenameProvider.class, exception);
                     }
                 });
             }
@@ -69,8 +64,7 @@ public class ProjectReferenceDeleteProvider implements DeleteProvider<ProjectRef
 
     /** {@inheritDoc} */
     @Override
-    public boolean canDelete(Object item) {
+    public boolean canRename(Object item) {
         return item instanceof ProjectReference;
     }
-
 }

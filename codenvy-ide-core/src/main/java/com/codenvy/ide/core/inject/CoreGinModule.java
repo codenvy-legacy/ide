@@ -27,8 +27,18 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutView;
 import com.codenvy.ide.about.AboutViewImpl;
 import com.codenvy.ide.actions.ActionManagerImpl;
+import com.codenvy.ide.actions.delete.DeleteProvider;
+import com.codenvy.ide.actions.delete.ItemReferenceDeleteProvider;
+import com.codenvy.ide.actions.delete.ProjectDescriptorDeleteProvider;
+import com.codenvy.ide.actions.delete.ProjectReferenceDeleteProvider;
 import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
+import com.codenvy.ide.actions.rename.ItemReferenceRenameProvider;
+import com.codenvy.ide.actions.rename.ProjectDescriptorRenameProvider;
+import com.codenvy.ide.actions.rename.ProjectReferenceRenameProvider;
+import com.codenvy.ide.actions.rename.RenameProvider;
+import com.codenvy.ide.actions.rename.RenameResourceView;
+import com.codenvy.ide.actions.rename.RenameResourceViewImpl;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
@@ -118,12 +128,6 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
-import com.codenvy.ide.actions.delete.DeleteProvider;
-import com.codenvy.ide.actions.delete.ItemReferenceDeleteProvider;
-import com.codenvy.ide.actions.delete.ProjectDescriptorDeleteProvider;
-import com.codenvy.ide.actions.delete.ProjectReferenceDeleteProvider;
-import com.codenvy.ide.actions.rename.RenameResourceView;
-import com.codenvy.ide.actions.rename.RenameResourceViewImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -190,9 +194,13 @@ public class CoreGinModule extends AbstractGinModule {
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
+        bind(AppContext.class).in(Singleton.class);
+        bind(ProjectStateHandler.class).asEagerSingleton();
         bind(BuildContext.class).to(BuildContextImpl.class).in(Singleton.class);
+
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));
+
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
         bind(ThemeAgent.class).to(ThemeAgentImpl.class).in(Singleton.class);
@@ -222,6 +230,8 @@ public class CoreGinModule extends AbstractGinModule {
         resourcesAPIconfigure();
         coreUiConfigure();
         editorAPIconfigure();
+        configureDeleteProviders();
+        configureRenameProviders();
     }
 
     /** API Bindings, binds API interfaces to the implementations */
@@ -244,19 +254,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
-    }
-
-    /** Configures binding for Editor API */
-    protected void editorAPIconfigure() {
-        bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
-        bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
-
-        bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
-        bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
-        bind(UserActivityManager.class).in(Singleton.class);
-        bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }
 
     /** Configures binding for Resource API (Resource Manager) */
@@ -305,14 +302,35 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
+    }
 
-        bind(AppContext.class).in(Singleton.class);
-        bind(ProjectStateHandler.class).asEagerSingleton();
+    /** Configures binding for Editor API */
+    protected void editorAPIconfigure() {
+        bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
+        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
+        bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
+        bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
+        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
+        bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
+        bind(UserActivityManager.class).in(Singleton.class);
+        bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+    }
+
+    /** Configure Delete Providers. */
+    private void configureDeleteProviders() {
         GinMultibinder<DeleteProvider> multiBinderDeleteProviders = GinMultibinder.newSetBinder(binder(), DeleteProvider.class);
         multiBinderDeleteProviders.addBinding().to(ItemReferenceDeleteProvider.class);
         multiBinderDeleteProviders.addBinding().to(ProjectReferenceDeleteProvider.class);
         multiBinderDeleteProviders.addBinding().to(ProjectDescriptorDeleteProvider.class);
+    }
+
+    /** Configure Rename Providers. */
+    private void configureRenameProviders() {
+        GinMultibinder<RenameProvider> multiBinderRenameProviders = GinMultibinder.newSetBinder(binder(), RenameProvider.class);
+        multiBinderRenameProviders.addBinding().to(ItemReferenceRenameProvider.class);
+        multiBinderRenameProviders.addBinding().to(ProjectReferenceRenameProvider.class);
+        multiBinderRenameProviders.addBinding().to(ProjectDescriptorRenameProvider.class);
     }
 
     @Provides

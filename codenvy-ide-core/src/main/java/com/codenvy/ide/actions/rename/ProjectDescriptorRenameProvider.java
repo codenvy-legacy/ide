@@ -8,61 +8,55 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.actions.delete;
+package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
+import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
 /**
- * Delete provider for deleting {@link ProjectDescriptor} objects.
+ * Rename provider for renaming {@link ProjectDescriptor} objects.
  *
  * @author Artem Zatsarynnyy
  */
-@Singleton
-public class ProjectDescriptorDeleteProvider implements DeleteProvider<ProjectDescriptor> {
-    private CoreLocalizationConstant localizationConstant;
-    private ProjectServiceClient     projectServiceClient;
-    private EventBus                 eventBus;
-    private NotificationManager      notificationManager;
+public class ProjectDescriptorRenameProvider implements RenameProvider<ProjectDescriptor> {
+    private ProjectServiceClient projectServiceClient;
+    private NotificationManager  notificationManager;
+    private EventBus             eventBus;
 
     @Inject
-    public ProjectDescriptorDeleteProvider(CoreLocalizationConstant localizationConstant, ProjectServiceClient projectServiceClient,
-                                           EventBus eventBus, NotificationManager notificationManager) {
-        this.localizationConstant = localizationConstant;
+    public ProjectDescriptorRenameProvider(ProjectServiceClient projectServiceClient, NotificationManager notificationManager,
+                                           EventBus eventBus) {
         this.projectServiceClient = projectServiceClient;
-        this.eventBus = eventBus;
         this.notificationManager = notificationManager;
+        this.eventBus = eventBus;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void deleteItem(final ProjectDescriptor item) {
-        new Ask(localizationConstant.deleteProjectTitle(), localizationConstant.deleteProjectQuestion(item.getName()), new AskHandler() {
+    public void renameItem(final ProjectDescriptor item) {
+        new AskValueDialog("Rename project", "New name:", new AskValueCallback() {
             @Override
-            public void onOk() {
-                projectServiceClient.delete(item.getName(), new AsyncRequestCallback<Void>() {
+            public void onOk(String value) {
+                projectServiceClient.rename(item.getPath(), value, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
-                        eventBus.fireEvent(ProjectActionEvent_2.createCloseCurrentProjectEvent());
+                        // TODO: check opened files
                     }
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
+                        notificationManager.showNotification(new Notification(exception.getMessage(), Notification.Type.ERROR));
+                        Log.error(ProjectDescriptorRenameProvider.class, exception);
                     }
                 });
             }
@@ -71,8 +65,8 @@ public class ProjectDescriptorDeleteProvider implements DeleteProvider<ProjectDe
 
     /** {@inheritDoc} */
     @Override
-    public boolean canDelete(Object item) {
+    public boolean canRename(Object item) {
         return item instanceof ProjectDescriptor;
+        // TODO: check that item isn't a module
     }
-
 }

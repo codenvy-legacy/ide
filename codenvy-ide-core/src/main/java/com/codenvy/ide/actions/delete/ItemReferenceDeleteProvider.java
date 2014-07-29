@@ -51,6 +51,7 @@ public class ItemReferenceDeleteProvider implements DeleteProvider<ItemReference
         this.editorAgent = editorAgent;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteItem(final ItemReference item) {
         final String dialogTitle = "file".equals(item.getType()) ? localizationConstant.deleteFileTitle()
@@ -86,6 +87,7 @@ public class ItemReferenceDeleteProvider implements DeleteProvider<ItemReference
         }).show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean canDelete(Object item) {
         return item instanceof ItemReference;

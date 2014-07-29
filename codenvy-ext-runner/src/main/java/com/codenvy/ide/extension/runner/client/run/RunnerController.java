@@ -32,7 +32,6 @@ import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
@@ -731,10 +730,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-
-
-
-
     @Nullable
     private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
         List<Link> links = appDescriptor.getLinks();
@@ -783,20 +778,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 doubleDigitI = Integer.toString(i);
         }
         return doubleDigitI;
-    }
-
-    private class RecipeFile extends File {
-        public RecipeFile(String content) {
-            super();
-            name = "Runner Recipe";
-            mimeType = "text/plain";
-            setContent(content);
-        }
-
-        @Override
-        public String getPath() {
-            return "runner_recipe";
-        }
     }
 
 }

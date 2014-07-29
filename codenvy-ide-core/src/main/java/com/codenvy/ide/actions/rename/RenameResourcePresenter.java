@@ -45,9 +45,9 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
     private EditorAgent          editorAgent;
     private Resource             resource;
     private NotificationManager  notificationManager;
-    private EventBus eventBus;
+    private EventBus             eventBus;
     private ItemReference itemToRename;
-    private String itemPath;
+    private String        itemPath;
 
     @Inject
     public RenameResourcePresenter(RenameResourceView view,

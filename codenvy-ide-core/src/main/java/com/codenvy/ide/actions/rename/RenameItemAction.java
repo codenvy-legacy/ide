@@ -11,9 +11,6 @@
 package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.selection.Selection;
@@ -22,25 +19,29 @@ import com.codenvy.ide.api.ui.action.Action;
 import com.codenvy.ide.api.ui.action.ActionEvent;
 import com.google.inject.Inject;
 
+import java.util.Set;
+
 /**
- * Action for renaming item that is selected in Project Explorer.
+ * Action for renaming item.
  *
  * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
 public class RenameItemAction extends Action {
-
-    private final SelectionAgent          selectionAgent;
-    private final RenameResourcePresenter presenter;
-    private final AnalyticsEventLogger    eventLogger;
+    private final SelectionAgent       selectionAgent;
+    private final AnalyticsEventLogger eventLogger;
+    private final Set<RenameProvider>  renameProviders;
 
     @Inject
-    public RenameItemAction(RenameResourcePresenter presenter, SelectionAgent selectionAgent,
-                            CoreLocalizationConstant localization, AnalyticsEventLogger eventLogger, Resources resources) {
+    public RenameItemAction(SelectionAgent selectionAgent,
+                            CoreLocalizationConstant localization,
+                            AnalyticsEventLogger eventLogger,
+                            Resources resources,
+                            Set<RenameProvider> renameProviders) {
         super(localization.renameItemActionText(), localization.renameItemActionDescription(), null, resources.rename());
-
         this.selectionAgent = selectionAgent;
-        this.presenter = presenter;
         this.eventLogger = eventLogger;
+        this.renameProviders = renameProviders;
     }
 
     /** {@inheritDoc} */
@@ -49,14 +50,9 @@ public class RenameItemAction extends Action {
         eventLogger.log("IDE: File rename");
 
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null) {
-            Object firstElement = selection.getFirstElement();
-            if (firstElement instanceof ItemReference) {
-                presenter.renameItem(((Selection<ItemReference>)selection).getFirstElement());
-            } else if (firstElement instanceof ProjectReference) {
-                presenter.renameProject(((Selection<ProjectReference>)selection).getFirstElement());
-            } else if (firstElement instanceof ProjectDescriptor) {
-                presenter.renameProject(((Selection<ProjectDescriptor>)selection).getFirstElement());
+        for (RenameProvider renameProvider : renameProviders) {
+            if (renameProvider.canRename(selection.getFirstElement())) {
+                renameProvider.renameItem(selection.getFirstElement());
             }
         }
     }
@@ -64,12 +60,17 @@ public class RenameItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        boolean isEnabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             Object firstElement = selection.getFirstElement();
-            e.getPresentation().setEnabled(firstElement instanceof ItemReference ||
-                                           firstElement instanceof ProjectReference ||
-                                           firstElement instanceof ProjectDescriptor);
+            for (RenameProvider<?> renameProvider : renameProviders) {
+                if (renameProvider.canRename(firstElement)) {
+                    isEnabled = true;
+                    break;
+                }
+            }
         }
+        e.getPresentation().setEnabled(isEnabled);
     }
 }

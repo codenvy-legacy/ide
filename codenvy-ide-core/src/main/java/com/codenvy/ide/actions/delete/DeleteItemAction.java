@@ -23,9 +23,10 @@ import com.google.inject.Singleton;
 import java.util.Set;
 
 /**
- * Action for deleting an item.
+ * Action for deleting item.
  *
  * @author Andrey Plotnikov
+ * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DeleteItemAction extends Action {
