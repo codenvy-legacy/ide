@@ -52,6 +52,7 @@
             background-color: #4b4a4a;
             border: 1px solid #000000;
             color: #ffffff;
+            position: relative;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="350px" height="220px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}" debugId="customRun-panel">
