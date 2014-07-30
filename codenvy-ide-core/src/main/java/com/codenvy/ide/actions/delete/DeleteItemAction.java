@@ -60,7 +60,7 @@ public class DeleteItemAction extends Action {
                 }
             }
         }
-        e.getPresentation().setEnabled(isEnabled);
+        e.getPresentation().setEnabledAndVisible(isEnabled);
     }
 
     /** {@inheritDoc} */

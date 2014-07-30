@@ -23,7 +23,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -67,7 +66,7 @@ public class CustomRunTest extends BaseTest {
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
         runnerDescriptors.add(runnerDescriptor);
 
-//        when(activeProject.getAttributeValue(anyString())).thenReturn(RUNNER_NAME);
+        when(activeProject.getAttributeValue(anyString())).thenReturn(RUNNER_NAME);
     }
 
     @Test
@@ -90,7 +89,6 @@ public class CustomRunTest extends BaseTest {
         verify(view, times(1)).showDialog();
     }
 
-    @Ignore
     @Test
     public void shouldNotShowDialog() throws Exception {
         doAnswer(new Answer() {

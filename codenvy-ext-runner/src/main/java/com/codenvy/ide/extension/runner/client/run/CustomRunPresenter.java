@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Array;
@@ -26,7 +26,6 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -75,7 +74,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
                     @Override
                     protected void onSuccess(Array<RunnerDescriptor> result) {
-                        ProjectDescriptor activeProject = appContext.getCurrentProject().getProjectDescription();
+                        CurrentProject activeProject = appContext.getCurrentProject();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         view.showDialog();
                     }
@@ -83,15 +82,14 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                     @Override
                     protected void onFailure(Throwable exception) {
                         notificationManager.showNotification(new Notification(constant.gettingEnvironmentsFailed(), ERROR));
-                        Log.error(CustomRunPresenter.class, exception);
                     }
                 }
                                       );
     }
 
-    private Array<RunnerEnvironment> getEnvironmentsForProject(ProjectDescriptor project, Array<RunnerDescriptor> runners) {
+    private Array<RunnerEnvironment> getEnvironmentsForProject(CurrentProject project, Array<RunnerDescriptor> runners) {
         Array<RunnerEnvironment> environments = Collections.createArray();
-        final String runnerName = project.getAttributes().get(Constants.RUNNER_NAME).get(0);
+        final String runnerName = project.getAttributeValue(Constants.RUNNER_NAME);
         for (RunnerDescriptor runnerDescriptor : runners.asIterable()) {
             if (runnerName.equals(runnerDescriptor.getName())) {
                 for (RunnerEnvironment environment : runnerDescriptor.getEnvironments().values()) {

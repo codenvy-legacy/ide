@@ -14,18 +14,15 @@ import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.Constants;
+import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.model.Project;
-import com.codenvy.ide.api.resources.model.ProjectDescription;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -60,27 +57,25 @@ public class ImportProjectPresenterTest {
     public static final String IMPORTER     = "git";
     public static final String URI          = "https://github.com/codenvy/hello.git";
     @Mock
-    protected Project                   project;
+    private ImportProjectView         view;
     @Mock
-    private   ImportProjectView         view;
+    private CoreLocalizationConstant  locale;
     @Mock
-    private   CoreLocalizationConstant  locale;
+    private DtoFactory                dtoFactory;
     @Mock
-    private   DtoFactory                dtoFactory;
+    private EventBus                  eventBus;
     @Mock
-    private   EventBus                  eventBus;
+    private ProjectDescriptor         projectDescriptor;
     @Mock
-    private   ProjectDescriptor         projectDescriptor;
+    private AppContext                appContext;
     @Mock
-    private   AppContext                appContext;
+    private NotificationManager       notificationManager;
     @Mock
-    private   NotificationManager       notificationManager;
+    private ProjectServiceClient      projectServiceClient;
     @Mock
-    private   ProjectServiceClient      projectServiceClient;
+    private NewProjectWizardPresenter projectWizardPresenter;
     @Mock
-    private   NewProjectWizardPresenter projectWizardPresenter;
-    @Mock
-    private   ImportSourceDescriptor    importSourceDescriptor;
+    private ImportSourceDescriptor    importSourceDescriptor;
 
     @Mock
     private ProjectImportersServiceClient projectImportersServiceClient;
@@ -102,7 +97,7 @@ public class ImportProjectPresenterTest {
 
     @Test
     public void onImportClickedWhenImportProjectIsSuccessfulShouldBeExecuted() {
-        ProjectDescription projectDescription = mock(ProjectDescription.class);
+        when(dtoFactory.createDto(ProjectReference.class)).thenReturn(mock(ProjectReference.class));
 
         doAnswer(new Answer() {
             @Override
@@ -119,7 +114,7 @@ public class ImportProjectPresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, projectDescriptor);
                 return callback;
@@ -134,8 +129,6 @@ public class ImportProjectPresenterTest {
         when(importSourceDescriptor.withType(IMPORTER)).thenReturn(importSourceDescriptor);
         when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
         when(locale.importProjectMessageSuccess()).thenReturn("Success!");
-        when(project.getDescription()).thenReturn(projectDescription);
-        when(projectDescription.getProjectTypeId()).thenReturn(Constants.NAMELESS_ID);
 
         presenter.onImportClicked();
 
@@ -208,8 +201,9 @@ public class ImportProjectPresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<ProjectDescriptor> callback = (AsyncCallback<ProjectDescriptor>)arguments[1];
-                callback.onFailure(mock(Throwable.class));
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());

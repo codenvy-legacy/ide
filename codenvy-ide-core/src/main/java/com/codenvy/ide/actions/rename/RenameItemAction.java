@@ -71,6 +71,6 @@ public class RenameItemAction extends Action {
                 }
             }
         }
-        e.getPresentation().setEnabled(isEnabled);
+        e.getPresentation().setEnabledAndVisible(isEnabled);
     }
 }

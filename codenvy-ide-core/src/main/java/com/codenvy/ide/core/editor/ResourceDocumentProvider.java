@@ -44,9 +44,7 @@ public class ResourceDocumentProvider implements DocumentProvider {
     private ProjectServiceClient projectServiceClient;
 
     @Inject
-    public ResourceDocumentProvider(DocumentFactory documentFactory,
-                                    EventBus eventBus,
-                                    ProjectServiceClient projectServiceClient) {
+    public ResourceDocumentProvider(DocumentFactory documentFactory, EventBus eventBus, ProjectServiceClient projectServiceClient) {
         this.documentFactory = documentFactory;
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
@@ -67,9 +65,8 @@ public class ResourceDocumentProvider implements DocumentProvider {
     public void getDocument(@NotNull EditorInput input, @NotNull final DocumentCallback callback) {
         for (Link link : input.getFile().getLinks()) {
             if ("get content".equals(link.getRel())) {
-                RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, link.getHref());
                 try {
-                    requestBuilder.sendRequest("", new RequestCallback() {
+                    new RequestBuilder(RequestBuilder.GET, link.getHref()).sendRequest("", new RequestCallback() {
                         @Override
                         public void onResponseReceived(Request request, Response response) {
                             contentReceived(response.getText(), callback);
@@ -83,14 +80,11 @@ public class ResourceDocumentProvider implements DocumentProvider {
                 } catch (RequestException e) {
                     Log.error(ResourceDocumentProvider.class, e);
                 }
+                break;
             }
         }
     }
 
-    /**
-     * @param content
-     * @param callback
-     */
     private void contentReceived(@NotNull String content, @NotNull DocumentCallback callback) {
         Document document = documentFactory.get(content);
         callback.onDocument(document);
