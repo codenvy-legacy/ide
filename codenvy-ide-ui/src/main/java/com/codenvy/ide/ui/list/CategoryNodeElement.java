@@ -41,14 +41,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * @author Evgen Vidolob
  */
 public class CategoryNodeElement extends FlowPanel {
-    private final Category category;
-    private CategoriesList.SelectionManager selectionManager;
-    private final FlowPanel                container;
-    private final AnimationController      animator;
-    private       CategoriesList.Resources resources;
-    private       boolean                  expanded;
-    private FlowPanel header;
-    private final DivElement               expandControl;
+    private final Category                        category;
+    private       CategoriesList.SelectionManager selectionManager;
+    private final FlowPanel                       container;
+    private final AnimationController             animator;
+    private       CategoriesList.Resources        resources;
+    private       boolean                         expanded;
+    private final DivElement                      expandControl;
+
     @SuppressWarnings("unchecked")
     CategoryNodeElement(Category category,
                         CategoriesList.SelectionManager selectionManager, CategoriesList.Resources resources) {
@@ -57,7 +57,7 @@ public class CategoryNodeElement extends FlowPanel {
         CategoryRenderer renderer = category.getRenderer();
         this.resources = resources;
         setStyleName(resources.defaultCategoriesListCss().category());
-        header = new FlowPanel();
+        FlowPanel header = new FlowPanel();
         header.sinkEvents(Event.ONCLICK);
         header.addDomHandler(new ClickHandler() {
             @Override
@@ -68,15 +68,11 @@ public class CategoryNodeElement extends FlowPanel {
         header.setStyleName(resources.defaultCategoriesListCss().categoryHeader());
         SpanElement label = Document.get().createSpanElement();
         label.setClassName(resources.defaultCategoriesListCss().categoryLabel());
-        
+
         label.appendChild(renderer.renderCategory(category));
 
-
- //       header.getElement().appendChild(label);
-
-
         header.getElement().appendChild(label);
-        
+
         expandControl = Document.get().createDivElement();
         expandControl.appendChild(resources.expansionImage().getSvg().getElement());
         expandControl.setClassName(resources.defaultCategoriesListCss().expandControl());
@@ -99,19 +95,19 @@ public class CategoryNodeElement extends FlowPanel {
 
     @SuppressWarnings("unchecked")
     private void selectItem(Element eventTarget) {
-       selectionManager.selectItem(eventTarget);
-       category.getEventDelegate().onListItemClicked(eventTarget, ListItem.cast(eventTarget).getData());
+        selectionManager.selectItem(eventTarget);
+        category.getEventDelegate().onListItemClicked(eventTarget, ListItem.cast(eventTarget).getData());
     }
 
     private void expandOrCollapse() {
         if (!expanded) {
             expanded = true;
-            if(container.getElement().getChildCount() == 0) {
+            if (container.getElement().getChildCount() == 0) {
                 renderChildren();
             }
             animator.show((elemental.dom.Element)container.getElement());
             expandControl.addClassName(resources.defaultCategoriesListCss().expandedImage());
-        } else{
+        } else {
             animator.hide((elemental.dom.Element)container.getElement());
             expandControl.removeClassName(resources.defaultCategoriesListCss().expandedImage());
             expanded = false;
