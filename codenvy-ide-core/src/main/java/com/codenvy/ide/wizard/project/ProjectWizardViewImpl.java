@@ -35,11 +35,12 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static ProjectWizardViewImplUiBinder ourUiBinder                 = GWT.create(ProjectWizardViewImplUiBinder.class);
-    private final  String                        defaultRAMRequired          = "2GB";
-    private final  String                        defaultRAMAvailable         = "2GB";
-    private final  String                        defaultBuilderEnvirConfig[] = new String[]{"Maven 3.1.1", "JDK 7.0"};
-    private final  String                        defaultRunnerEnvirConfig[]   = new String[]{"JDK 7.0", "Tomcat 7.0"};
+    private static final String                        defaultRAMRequired        = "2GB";
+    private static final String                        defaultRAMAvailable       = "2GB";
+    private static final String[]                      defaultBuilderEnvirConfig = new String[]{"Maven 3.1.1", "JDK 7.0"};
+    private static final String[]                      defaultRunnerEnvirConfig  = new String[]{"JDK 7.0", "Tomcat 7.0"};
+    private static       ProjectWizardViewImplUiBinder ourUiBinder               = GWT.create(ProjectWizardViewImplUiBinder.class);
+
 
     @UiField
     Style       style;

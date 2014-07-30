@@ -8,23 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-.info-panel {
-    display: inline;
-    font-size: 11px;
-    padding-top: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    overflow: hidden;
-    white-space: nowrap;
-    /*border-right: 1px solid #232323;*/
-}
+package com.codenvy.ide.ext.tutorials.server;
 
-.data-label {
-    padding-left: 5px;
-}
+import com.codenvy.inject.DynaModule;
+import com.google.inject.AbstractModule;
 
-.main-style {
-	font-size: fontSize;
-	font-family: mainFontFamily;
-	color: mainFontColor;
+/** @author Artem Zatsarynnyy */
+@DynaModule
+public class CodenvyPluginsModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(ProjectTypeDescriptionsExtension.class);
+        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
+        bind(CodenvyPluginProjectTypeExtension.class);
+    }
 }

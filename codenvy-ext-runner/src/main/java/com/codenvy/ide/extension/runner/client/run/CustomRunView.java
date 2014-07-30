@@ -54,4 +54,8 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
     /** Get memory size from memory field. */
     String getMemorySize();
+
+    /** Performs when user select skip build. */
+    boolean isSkipBuildSelected();
+
 }

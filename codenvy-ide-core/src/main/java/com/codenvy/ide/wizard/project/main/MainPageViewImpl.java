@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,15 +46,10 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class MainPageViewImpl implements MainPageView {
-    private static final String DESCRIPTOR = "Descriptors";
-    private static final String TEMPLATE   = "Temp";
-    private static final String CATEGORIES = "Categories";
-    private static final String SAMPLES    = "Samples";
+    private static final String[] defaultOptions = new String[]{"JDK", "Application Server"};
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    private final String                                                    defaultOptions[]        =
-            new String[]{"JDK", "Application Server"};
     private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> projectTemplateDelegate =
             new Category.CategoryEventDelegate<ProjectTemplateDescriptor>() {
                 @Override
@@ -112,7 +108,7 @@ public class MainPageViewImpl implements MainPageView {
     RadioButton projectPrivate;
     @UiField
     RadioButton projectPublic;
-    //    private Tree<String>                                categoriesTree;
+
     private ActionDelegate                              delegate;
     private Map<String, Set<ProjectTypeDescriptor>>     categories;
     private Map<String, Set<ProjectTemplateDescriptor>> samples;
@@ -126,9 +122,9 @@ public class MainPageViewImpl implements MainPageView {
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
         projectName.getElement().setAttribute("title", "Define the name of your project...");
-        projectName.getElement().setAttribute("maxlength", "35");
+        projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("title", "Add a description to your project...");
-        projectDescription.getElement().setAttribute("maxlength", "140");
+        projectDescription.getElement().setAttribute("maxlength", "256");
     }
 
     @UiHandler("projectName")
@@ -293,7 +289,10 @@ public class MainPageViewImpl implements MainPageView {
         }
 
         for (String s : samples.keySet()) {
-            Category<ProjectTemplateDescriptor> category = new Category<>(s, projectTemplateRenderer, samples.get(s),
+            List<ProjectTemplateDescriptor> projectTemplateDescriptors = new ArrayList<>();
+            projectTemplateDescriptors.addAll(samples.get(s));
+            Collections.sort(projectTemplateDescriptors, new ProjectTemplaDescriptorComparator());
+            Category<ProjectTemplateDescriptor> category = new Category<>(s, projectTemplateRenderer, projectTemplateDescriptors,
                                                                           projectTemplateDelegate);
             categoriesList.add(category);
         }

@@ -516,6 +516,11 @@ public interface Theme {
      * @return the color of button text if hover
      */
     String getButtonHoverTextColor();
+    
+    /**
+     * @return the color of button if hover
+     */
+    String getButtonHoverColor();
 
     /* Boxes (listbox, textbox) properties */
 

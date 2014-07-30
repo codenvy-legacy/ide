@@ -8,19 +8,20 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.tutorials.server;
+package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.inject.DynaModule;
-import com.google.inject.AbstractModule;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 
-/** @author Artem Zatsarynnyy */
-@DynaModule
-public class CodenvyTutorialModule extends AbstractModule {
+import java.util.Comparator;
+
+/**
+ * Helps to sort the template descriptors by display name.
+ *
+ * @author Oleksii Orel
+ */
+final class ProjectTemplaDescriptorComparator implements Comparator<ProjectTemplateDescriptor> {
     @Override
-    protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(CodenvyTutorialProjectTypeExtension.class);
-        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
-        bind(CodenvyPluginProjectTypeExtension.class);
+    public int compare(ProjectTemplateDescriptor o1, ProjectTemplateDescriptor o2) {
+        return o1.getDisplayName().compareTo(o2.getDisplayName());
     }
 }

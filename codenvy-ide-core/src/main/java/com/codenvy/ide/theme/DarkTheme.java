@@ -426,6 +426,11 @@ public class DarkTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#ffffff";
     }
+    
+    @Override
+    public String getButtonHoverColor() {
+        return "#484848";
+    }
 
     @Override
     public String getSocialButtonColor() {
