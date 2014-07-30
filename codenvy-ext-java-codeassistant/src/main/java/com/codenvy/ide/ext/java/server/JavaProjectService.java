@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
@@ -28,12 +28,13 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+//import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 
 /**
  * Maintenance and create JavaProjects
@@ -76,6 +77,7 @@ public class JavaProjectService {
         options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
     }
 
+/*
     public JavaProject getOrCreateJavaProject(String wsId, String projectPath) {
         String key = wsId + projectPath;
         if (cache.containsKey(key)) {
@@ -85,7 +87,7 @@ public class JavaProjectService {
         try {
             File mountPath = fsMountStrategy.getMountPath(wsId);
             JavaProject javaProject =
-                    new JavaProject(project, new File(mountPath, projectPath), tempDir, apiRestClient, wsId, new HashMap<>(options));
+                    new JavaProject(mountPath, project, tempDir, apiRestClient, wsId, new HashMap<>(options));
             cache.put(key, javaProject);
             if (!projectInWs.containsKey(wsId)) {
                 projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
@@ -96,7 +98,27 @@ public class JavaProjectService {
             throw new WebApplicationException(e);
         }
     }
+*/
 
+    public JavaProject getOrCreateJavaProject(String wsId, String projectPath) {
+        String key = wsId + projectPath;
+        if (cache.containsKey(key)) {
+            return cache.get(key);
+        }
+        File mountPath;
+        try {
+            mountPath = fsMountStrategy.getMountPath(wsId);
+        } catch (ServerException e) {
+            throw new RuntimeException(e);
+        }
+        JavaProject javaProject = new JavaProject(mountPath, projectPath, tempDir, wsId, new HashMap<>(options));
+        cache.put(key, javaProject);
+        if (!projectInWs.containsKey(wsId)) {
+            projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
+        }
+        projectInWs.get(wsId).add(projectPath);
+        return javaProject;
+    }
 
     public void removeProject(String wsId, String projectPath) {
         JavaProject javaProject = cache.remove(wsId + projectPath);

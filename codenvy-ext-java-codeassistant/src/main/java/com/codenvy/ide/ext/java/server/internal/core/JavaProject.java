@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
@@ -52,10 +51,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,13 +65,17 @@ public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
     private JavaSearchNameEnvironment nameEnvironment;
-    private ProjectDescriptor         project;
-    private File                      projectFile;
+    /*    private ProjectDescriptor         project;*/
+    private String                    projectPath;
+    private String                    wsId;
+    private String                    projectName;
+    private File                      projectDir;
     private Map<String, String>       options;
     private IClasspathEntry[]         rawClassPath;
     private ResolvedClasspath         resolvedClasspath;
     private IndexManager              indexManager;
 
+/*
     public JavaProject(ProjectDescriptor project, File projectFile, String tempDir, ProjectApiRestClient projectManager, String ws,
                        Map<String, String> options) {
         super(null);
@@ -127,11 +130,79 @@ public class JavaProject extends Openable implements IJavaProject {
         indexManager.saveIndexes();
         nameEnvironment = new JavaSearchNameEnvironment(this, null);
     }
+*/
+
+    public JavaProject(File root, String projectPath, String tempDir, String ws, Map<String, String> options) {
+        super(null);
+        this.projectPath = projectPath;
+        wsId = ws;
+        int index = projectPath.lastIndexOf('/');
+        projectName = index < 0 ? projectPath : projectPath.substring(index + 1);
+        this.projectDir = new File(root, projectPath);
+        this.options = options;
+        List<IClasspathEntry> paths = new LinkedList<>();
+        try {
+            if (index == 0) {
+                // project in root folder
+                addSources(projectDir, paths);
+            } else {
+                // module of project - add this module and all modules in parent projects
+                index = projectPath.indexOf(1, '/');
+                File parent = new File(root, projectPath.substring(1, index));
+                LinkedList<File> q = new LinkedList<>();
+                q.add(parent);
+                while (!q.isEmpty()) {
+                    File f = q.poll();
+                    addSources(f, paths);
+                    File[] l = f.listFiles();
+                    for (File c : l) {
+                        if (c.isDirectory()
+                            && new File(c, com.codenvy.api.project.server.Constants.CODENVY_PROJECT_FILE_RELATIVE_PATH).exists()) {
+
+                            q.add(c);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Can't find sources folder attribute");
+        }
+
+        paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
+        try {
+            File depDir = new File(tempDir, projectPath);
+            if (depDir.exists()) {
+                DirectoryStream<java.nio.file.Path> deps =
+                        Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
+                            @Override
+                            public boolean accept(java.nio.file.Path entry) throws IOException {
+                                return entry.getFileName().toString().endsWith("jar");
+                            }
+                        });
+
+                for (java.nio.file.Path dep : deps) {
+                    paths.add(JavaCore.newLibraryEntry(new Path(dep.toAbsolutePath().toString()), null, null));
+                }
+            }
+            rawClassPath = paths.toArray(new IClasspathEntry[paths.size()]);
+        } catch (IOException e) {
+            LOG.error("Can't find jar dependency's: ", e);
+        }
+
+        indexManager = new IndexManager(tempDir + "/" + ws + projectPath + "/");
+//        Thread thread = new Thread(indexManager, "index thread");
+        indexManager.reset();
+//        thread.start();
+        indexManager.indexAll(this);
+        indexManager.saveIndexes();
+        nameEnvironment = new JavaSearchNameEnvironment(this, null);
+    }
 
     public JavaSearchNameEnvironment getNameEnvironment() {
         return nameEnvironment;
     }
 
+/*
     private void addSources(ProjectDescriptor project, List<IClasspathEntry> paths) throws IOException {
         List<String> strings = project.getAttributes().get("builder.name");
 
@@ -150,6 +221,14 @@ public class JavaProject extends Openable implements IJavaProject {
             if (new File(s).exists()) {
                 paths.add(JavaCore.newSourceEntry(new Path(s)));
             }
+        }
+    }
+*/
+
+    private void addSources(File projectDir, List<IClasspathEntry> paths) throws IOException {
+        File src = new File(projectDir, "/src/main/java");
+        if (src.exists()) {
+            paths.add(JavaCore.newSourceEntry(new Path(src.getAbsolutePath())));
         }
     }
 
@@ -377,11 +456,11 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getName() {
-        return project.getName();
+        return projectName;
     }
 
     public IPath getFullPath() {
-        return new Path(projectFile.getPath());
+        return new Path(projectDir.getPath());
     }
 
     @Override
@@ -802,7 +881,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public IPath getPath() {
-        return new Path(project.getPath());
+        return new Path(projectPath);
     }
 
     @Override
@@ -931,7 +1010,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getVfsId() {
-        return project.getPath();
+        return wsId;
     }
 
     public static class ResolvedClasspath {
