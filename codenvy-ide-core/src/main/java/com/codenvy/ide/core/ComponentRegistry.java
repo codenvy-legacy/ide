@@ -12,7 +12,6 @@ package com.codenvy.ide.core;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
@@ -25,10 +24,9 @@ public class ComponentRegistry {
 
     /** Instantiates Component Registry. All components should be listed in this constructor. */
     @Inject
-    public ComponentRegistry(ResourceProviderComponent resourceManager, StandardComponentInitializer componentInitializer) {
+    public ComponentRegistry(StandardComponentInitializer componentInitializer) {
         this.componentInitializer = componentInitializer;
         pendingComponents = Collections.createArray();
-        pendingComponents.add(resourceManager);
     }
 
     /**
@@ -44,22 +42,7 @@ public class ComponentRegistry {
 
                 // all components started
                 if (pendingComponents.size() == 0) {
-                    Log.info(ComponentRegistry.class, "All services have been successfully initialized.");
-
-                    //initialize standard components
-                    try {
-                        componentInitializer.initialize();
-                    } catch (Throwable e) {
-                        Log.error(ComponentRegistry.class, e);
-                    }
-
-                    // Finalization of starting components
-                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            callback.onSuccess(null);
-                        }
-                    });
+                    initializeStandardComponents(callback);
                 }
             }
 
@@ -70,9 +53,31 @@ public class ComponentRegistry {
             }
         };
 
-        for (Component component : pendingComponents.asIterable()) {
-            component.start(internalCallback);
+        if (!pendingComponents.isEmpty()) {
+            for (Component component : pendingComponents.asIterable()) {
+                component.start(internalCallback);
+            }
+        } else {
+            initializeStandardComponents(callback);
         }
     }
 
+    private void initializeStandardComponents(final Callback<Void, ComponentException> callback) {
+        Log.info(ComponentRegistry.class, "All services have been successfully initialized.");
+
+        // initialize standard components
+        try {
+            componentInitializer.initialize();
+        } catch (Throwable e) {
+            Log.error(ComponentRegistry.class, e);
+        }
+
+        // Finalization of starting components
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                callback.onSuccess(null);
+            }
+        });
+    }
 }

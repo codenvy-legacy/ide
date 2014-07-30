@@ -53,10 +53,7 @@ import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.resources.model.GenericModelProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
@@ -125,7 +122,6 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
-import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.selection.SelectionAgentImpl;
@@ -224,7 +220,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
-        resourcesAPIconfigure();
         coreUiConfigure();
         editorAPIconfigure();
         configureDeleteProviders();
@@ -251,13 +246,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
-    }
-
-    /** Configures binding for Resource API (Resource Manager) */
-    protected void resourcesAPIconfigure() {
-        bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
-        // Generic Model Provider
-        bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
     }
 
     /** Configure Core UI components, resources and views */

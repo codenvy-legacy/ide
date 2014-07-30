@@ -48,12 +48,10 @@ public class NewJavaResourcePresenter implements NewJavaResourceView.ActionDeleg
     @Inject
     public NewJavaResourcePresenter(NewJavaResourceView view,
                                     EditorAgent editorAgent,
-                                    SelectionAgent selectionAgent,
-                                    ResourceProvider resourceProvider) {
+                                    SelectionAgent selectionAgent) {
         this.view = view;
         this.editorAgent = editorAgent;
         this.selectionAgent = selectionAgent;
-        this.resourceProvider = resourceProvider;
         this.view.setDelegate(this);
         types.add(ResourceTypes.CLASS);
         types.add(ResourceTypes.INTERFACE);
