@@ -273,7 +273,7 @@ public class RestNameEnvironment {
             http.setRequestMethod("GET");
             int responseCode = http.getResponseCode();
             if (responseCode != 200) {
-                throw new IOException("Can't download zipped dependencies");
+                throw new IOException("Your project referenced a zipped dependency that cannot be downloaded.");
             }
             // Connection closed automatically when input stream closed.
             // If IOException or BuilderException occurs then connection closed immediately.
@@ -308,7 +308,7 @@ public class RestNameEnvironment {
             LOG.error("Build failed see more detail here: " + logLink.getHref());
             throw new BuilderException(
                     "Build failed see more detail here: <a href=\"" + logLink.getHref() + "\" target=\"_blank\">" + logLink.getHref() +
-                    "</a>"
+                    "</a>."
             );
         }
         throw new BuilderException("Build failed");

@@ -178,8 +178,10 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                                    } else {
                                                        notificationManager
                                                                .showNotification(
-                                                                       new Notification("Unable to open " + path + ". It's not a file.",
-                                                                                        Notification.Type.WARNING)
+                                                                       new Notification(
+                                                                               "Unable to navigate to the file.  We were unable to open " +
+                                                                               path + ".",
+                                                                               Notification.Type.WARNING)
                                                                                 );
                                                    }
                                                }
@@ -187,7 +189,9 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                                @Override
                                                public void onFailure(Throwable caught) {
                                                    notificationManager.showNotification(
-                                                           new Notification("Unable to open " + path, Notification.Type.WARNING));
+                                                           new Notification(
+                                                                   "Unable to navigate to the file.  We were unable to open " + path + ".",
+                                                                   Notification.Type.WARNING));
                                                }
                                            }
                                           );

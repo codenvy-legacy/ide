@@ -684,12 +684,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
 
                         public void onError(Request request, Throwable exception) {
-                            notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                            notificationManager.showNotification(new Notification(
+                                    "Attempted to retrive runner recipe, and an error occured.  If this issue continues, please contact support.",
+                                    ERROR));
                             Log.error(RunnerController.class, exception);
                         }
                     });
                 } catch (RequestException e) {
-                    notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                    notificationManager.showNotification(new Notification(
+                            "Attempted to retrive runner recipe, and an error occured.  If this issue continues, please contact support.",
+                            ERROR));
                     Log.error(RunnerController.class, e);
                 }
             }

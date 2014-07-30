@@ -428,7 +428,7 @@ public class JavaProject extends Project {
                     return parent;
                 }
             }
-            throw new JavaModelException("CompilationUnit or Package must be child of 'Package' or 'SourceFolder'");
+            throw new JavaModelException("CompilationUnit or Package must be child of 'Package' or 'SourceFolder'.");
         }
         return parent;
     }

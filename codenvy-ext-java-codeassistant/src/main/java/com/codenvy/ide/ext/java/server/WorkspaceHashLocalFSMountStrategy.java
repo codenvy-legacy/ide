@@ -57,7 +57,8 @@ public class WorkspaceHashLocalFSMountStrategy {
 
     public java.io.File getMountPath(String workspaceId) throws ServerException {
         if (workspaceId == null || workspaceId.isEmpty()) {
-            throw new ServerException("Unable get mount path for virtual file system. Workspace id is not set.");
+            throw new ServerException("We were unable to get a mount path from the virtual file system." +
+                                      " The workspace ID is not set.  Contact support if this error appears.");
         }
         final boolean isTmpWs = EnvironmentContext.getCurrent().isWorkspaceTemporary();
         // We can have a lot of workspace and create root folder for all of them at the same level of filesystem
