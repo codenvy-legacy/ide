@@ -33,8 +33,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -405,7 +405,7 @@ public class MavenUtils {
 
     /** Get source directories. */
     public static List<String> getSourceDirectories(Model model) {
-        List<String> list = new ArrayList<>();
+        List<String> list = new LinkedList<>();
         Build build = model.getBuild();
         if (build != null) {
             if (build.getSourceDirectory() != null) {
@@ -414,12 +414,26 @@ public class MavenUtils {
                 list.add(build.getTestSourceDirectory());
             }
         }
+        if (list.isEmpty()) {
+            list.add("src/main/java");
+            list.add("src/test/java");
+        }
         return list;
     }
 
     /** Get source directories. */
+    public static List<String> getSourceDirectories(VirtualFile pom) throws ServerException, IOException, ForbiddenException {
+        return getSourceDirectories(readModel(pom));
+    }
+
+    /** Get source directories. */
+    public static List<String> getSourceDirectories(java.io.File pom) throws IOException {
+        return getSourceDirectories(readModel(pom));
+    }
+
+    /** Get resource directories. */
     public static List<String> getResourceDirectories(Model model) {
-        List<String> list = new ArrayList<>();
+        List<String> list = new LinkedList<>();
         Build build = model.getBuild();
 
         if (build != null) {
@@ -428,7 +442,21 @@ public class MavenUtils {
                     list.add(resource.getDirectory());
             }
         }
+        if (list.isEmpty()) {
+            list.add("src/main/resources");
+            list.add("src/test/resources");
+        }
         return list;
+    }
+
+    /** Get resource directories. */
+    public static List<String> getResourceDirectories(VirtualFile pom) throws ServerException, IOException, ForbiddenException {
+        return getResourceDirectories(readModel(pom));
+    }
+
+    /** Get resource directories. */
+    public static List<String> getResourceDirectories(java.io.File pom) throws IOException {
+        return getResourceDirectories(readModel(pom));
     }
 
     /** Creates new {@link Dependency} instance. */

@@ -10,9 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core;
 
+import com.codenvy.api.project.server.ProjectProperties;
+import com.codenvy.api.project.server.ProjectProperty;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -48,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -226,9 +230,28 @@ public class JavaProject extends Openable implements IJavaProject {
 */
 
     private void addSources(File projectDir, List<IClasspathEntry> paths) throws IOException {
-        File src = new File(projectDir, "/src/main/java");
-        if (src.exists()) {
-            paths.add(JavaCore.newSourceEntry(new Path(src.getAbsolutePath())));
+        File codenvy = new File(projectDir, com.codenvy.api.project.server.Constants.CODENVY_PROJECT_FILE_RELATIVE_PATH);
+        final ProjectProperties properties;
+        try (FileInputStream in = new FileInputStream(codenvy)) {
+            properties = ProjectProperties.load(in);
+        }
+        final String builderName = properties.getPropertyValue("builder.name");
+        List<File> sources = new LinkedList<>();
+        if ("maven".equals(builderName)) {
+            File pom = new File(projectDir, "pom.xml");
+            if (pom.exists()) {
+                for (String src : MavenUtils.getSourceDirectories(pom)) {
+                    sources.add(new File(projectDir, src));
+                }
+            }
+        } else {
+            sources.add(new File(projectDir, "/src/main/java"));
+            sources.add(new File(projectDir, "/src/test/java"));
+        }
+        for (File source : sources) {
+            if (source.exists()) {
+                paths.add(JavaCore.newSourceEntry(new Path(source.getAbsolutePath())));
+            }
         }
     }
 

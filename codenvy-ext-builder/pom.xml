@@ -39,12 +39,12 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
-            <artifactId>codenvy-gwt-client-commons</artifactId>
+            <artifactId>codenvy-api-builder-gwt-client</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
-            <artifactId>codenvy-api-builder-gwt-client</artifactId>
+            <artifactId>codenvy-gwt-client-commons</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
