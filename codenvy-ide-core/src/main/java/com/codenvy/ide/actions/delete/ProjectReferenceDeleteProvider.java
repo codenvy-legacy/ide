@@ -26,7 +26,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * Delete provider for deleting {@link ProjectReference} objects.
+ * Delete provider for deleting {@link ProjectReference}.
  *
  * @author Artem Zatsarynnyy
  */

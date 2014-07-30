@@ -11,6 +11,7 @@
 package com.codenvy.ide.actions.rename;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.gwt.client.QueryExpression;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -18,7 +19,12 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -26,25 +32,28 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Rename provider for renaming {@link ItemReference} objects.
+ * Rename provider for renaming {@link ItemReference}.
  *
  * @author Artem Zatsarynnyy
  */
 public class ItemReferenceRenameProvider implements RenameProvider<ItemReference> {
-    private ProjectServiceClient projectServiceClient;
-    private NotificationManager  notificationManager;
-    private EventBus             eventBus;
-    private EditorAgent          editorAgent;
+    private ProjectServiceClient     projectServiceClient;
+    private NotificationManager      notificationManager;
+    private EventBus                 eventBus;
+    private EditorAgent              editorAgent;
     private CoreLocalizationConstant localizationConstant;
+    private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public ItemReferenceRenameProvider(ProjectServiceClient projectServiceClient, NotificationManager notificationManager,
-                                       EventBus eventBus, EditorAgent editorAgent, CoreLocalizationConstant localizationConstant) {
+                                       EventBus eventBus, EditorAgent editorAgent, CoreLocalizationConstant localizationConstant,
+                                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.eventBus = eventBus;
         this.editorAgent = editorAgent;
         this.localizationConstant = localizationConstant;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** {@inheritDoc} */
@@ -55,38 +64,11 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
         new AskValueDialog(dialogTitle, localizationConstant.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
             public void onOk(final String value) {
-                final String prevItemPath = item.getPath();
                 projectServiceClient.rename(item.getPath(), value, null, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
-
-//                        final String parentPath = item.getPath().substring(0, item.getPath().length() - item.getName().length());
-//                        QueryExpression query = new QueryExpression().setPath(parentPath).setName(value);
-//                        projectServiceClient.search(query, new AsyncRequestCallback<Array<ItemReference>>() {
-//                            @Override
-//                            protected void onSuccess(Array<ItemReference> result) {
-//
-//                            }
-
-//                            @Override
-//                            protected void onFailure(Throwable exception) {
-//
-//                            }
-//                        });
-
-                        if ("file".equals(item.getType())) {
-                            for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                                // TODO: replace key (path) in editorAgent.getOpenedEditors()
-                                if (prevItemPath.equals(editor.getEditorInput().getFile().getPath())) {
-                                    // TODO: editor.getEditorInput().setFile(renamedItem);
-                                    editor.onFileChanged();
-                                    break;
-                                }
-                            }
-                        } else if ("folder".equals(item.getType())) {
-                            // TODO
-                        }
+                        checkOpenedFiles(item, value);
                     }
 
                     @Override
@@ -98,6 +80,67 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
                 });
             }
         }).show();
+    }
+
+    private void checkOpenedFiles(final ItemReference itemBeforeRenaming, String newName) {
+        final String itemPathBeforeRenaming = itemBeforeRenaming.getPath();
+        final String parentPathBeforeRenaming =
+                itemPathBeforeRenaming.substring(0, itemPathBeforeRenaming.length() - itemBeforeRenaming.getName().length());
+        final String itemPathAfterRenaming = parentPathBeforeRenaming + newName;
+
+        QueryExpression query = null;
+        if ("file".equals(itemBeforeRenaming.getType())) {
+            query = new QueryExpression().setPath(parentPathBeforeRenaming).setName(newName);
+        } else if ("folder".equals(itemBeforeRenaming.getType())) {
+            query = new QueryExpression().setPath(itemPathAfterRenaming);
+        }
+
+        if (query != null) {
+            Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+            projectServiceClient.search(query, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+                @Override
+                protected void onSuccess(Array<ItemReference> result) {
+                    if ("file".equals(itemBeforeRenaming.getType())) {
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            if (itemPathBeforeRenaming.equals(editor.getEditorInput().getFile().getPath())) {
+                                // result array should contain one item only
+                                ItemReference renamedItem = result.get(0);
+                                replaceFileInEditor(editor, renamedItem);
+                                break;
+                            }
+                        }
+                    } else if ("folder".equals(itemBeforeRenaming.getType())) {
+                        StringMap<ItemReference> children = Collections.createStringMap();
+                        for (ItemReference itemReference : result.asIterable()) {
+                            children.put(itemReference.getPath(), itemReference);
+                        }
+
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            ItemReference openedFile = editor.getEditorInput().getFile();
+                            if (openedFile.getPath().startsWith(itemPathBeforeRenaming)) {
+                                String childFileNewPath = openedFile.getPath().replaceFirst(itemPathBeforeRenaming, itemPathAfterRenaming);
+                                ItemReference renamedItem = children.get(childFileNewPath);
+                                if (renamedItem != null) {
+                                    replaceFileInEditor(editor, renamedItem);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(ItemReferenceRenameProvider.class, exception);
+                }
+            });
+        }
+    }
+
+    private void replaceFileInEditor(EditorPartPresenter editor, ItemReference renamedItem) {
+        editorAgent.getOpenedEditors().remove(editor.getEditorInput().getFile().getPath());
+        editorAgent.getOpenedEditors().put(renamedItem.getPath(), editor);
+        editor.getEditorInput().setFile(renamedItem);
+        editor.onFileChanged();
     }
 
     /** {@inheritDoc} */

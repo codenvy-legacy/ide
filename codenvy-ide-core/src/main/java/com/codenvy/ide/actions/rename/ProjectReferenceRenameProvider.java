@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Rename provider for renaming {@link ProjectReference} objects.
+ * Rename provider for renaming {@link ProjectReference}.
  *
  * @author Artem Zatsarynnyy
  */
