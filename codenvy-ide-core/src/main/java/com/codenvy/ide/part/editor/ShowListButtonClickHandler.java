@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.part;
+package com.codenvy.ide.part.editor;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.part.projectexplorer;
+package com.codenvy.ide.part.editor;
 
 import com.codenvy.ide.api.ui.workspace.PartStackView;
 

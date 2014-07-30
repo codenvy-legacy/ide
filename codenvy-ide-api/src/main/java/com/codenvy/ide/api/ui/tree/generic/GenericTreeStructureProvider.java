@@ -19,8 +19,6 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * //
- *
  * @author Artem Zatsarynnyy
  */
 public class GenericTreeStructureProvider implements TreeStructureProvider {

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.core.projecttree;
 
 import com.codenvy.ide.api.ui.tree.TreeStructureProvider;
 import com.codenvy.ide.api.ui.tree.TreeStructureProviderRegistry;

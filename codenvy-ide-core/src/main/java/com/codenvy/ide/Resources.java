@@ -21,7 +21,7 @@ import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.infopanel.InfoPanel;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
-import com.codenvy.ide.tree.ProjectTreeNodeRenderer;
+import com.codenvy.ide.part.projectexplorer.ProjectTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.cellview.CellTableResources;
 import com.codenvy.ide.ui.cellview.DataGridResources;

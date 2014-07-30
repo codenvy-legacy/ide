@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.tree;
+package com.codenvy.ide.part.projectexplorer;
 
 import elemental.dom.Element;
 import elemental.html.SpanElement;

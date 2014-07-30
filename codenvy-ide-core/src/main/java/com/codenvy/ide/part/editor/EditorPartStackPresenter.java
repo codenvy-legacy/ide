@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.part;
+package com.codenvy.ide.part.editor;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -21,7 +21,7 @@ import com.codenvy.ide.api.ui.workspace.PartStackView;
 import com.codenvy.ide.api.ui.workspace.PropertyListener;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.part.projectexplorer.TabItemWithMarks;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;

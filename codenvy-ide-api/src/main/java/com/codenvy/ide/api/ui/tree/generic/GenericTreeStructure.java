@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Simple structure for the hierarchical tree.
+ * {@link TreeStructure} for the hierarchical tree.
  *
  * @author Artem Zatsarynnyy
  */
@@ -48,34 +48,12 @@ public class GenericTreeStructure implements TreeStructure {
         roots = Collections.createArray();
     }
 
-    // TODO: find node by absolute path
-    AbstractTreeNode<?> getNodeByPath(String path) {
-        String[] splittedPath = path.split("/");
-        for (AbstractTreeNode<?> rootNode : roots.asIterable()) {
-            if (rootNode.getName().equals("???")) {
-                // get children recursively
-                // find node
-            }
-        }
-        return null;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
         if (roots.isEmpty()) {
-            AbstractTreeNode<?> extLibrariesNode = new AbstractTreeNode<String>(null, null) {
-                @Override
-                public String getName() {
-                    return "External Libraries";
-                }
-
-                @Override
-                public boolean isAlwaysLeaf() {
-                    return false;
-                }
-            };
-            roots = Collections.createArray(new ProjectRootTreeNode(null, appContext.getCurrentProject().getProjectDescription()), extLibrariesNode);
+            roots = Collections.<AbstractTreeNode<?>>createArray(
+                    new ProjectRootTreeNode(null, appContext.getCurrentProject().getProjectDescription()));
         }
         callback.onSuccess(roots);
     }
