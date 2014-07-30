@@ -28,8 +28,12 @@
             margin-top: 10px;
         }
 
+		.labelSpacingLeft {
+            margin-left: 5px;
+        }
+
         .emptyBorder {
-            margin: 6px;
+            margin: 10px;
         }
 
         .noResize {
@@ -50,23 +54,28 @@
             color: #ffffff;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="270px" addStyleNames="{style.emptyBorder}" debugId="customRun-panel">
-        <g:north size="60.0">
-            <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
+    <g:DockLayoutPanel unit="PX" width="350px" height="220px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}" debugId="customRun-panel">
+        <g:north size="80.0">
+            <g:FlowPanel addStyleNames="{style.spacingTop}">
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" height="20px" width="100%"
-                         addStyleNames="{style.labelMargin}"/>
+                         addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
                 <g:ListBox ui:field="environmentField" height="20px" width="100%" debugId="project-customRun-environment"/>
             </g:FlowPanel>
         </g:north>
-        <g:north size="65.0">
-            <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="290px" addStyleNames="{style.alignLeft}"/>
-                <g:SuggestBox ui:field="memoryField" width="40px" height="15px" addStyleNames="{style.alignLeft} {style.gwt-SuggestBox}"
+        <g:north size="30">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
+                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" addStyleNames="{resources.runner.mainStyle}" width="90px"/>
+                <g:SuggestBox ui:field="memoryField" height="15px" width="40px" addStyleNames="{style.gwt-SuggestBox}"
                               debugId="project-customRun-memory"/>
-                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" addStyleNames="{style.alignLeft} {style.labelSpacingTop}"/>
-                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" addStyleNames="{style.alignRight} {style.labelSpacingTop}"/>
-            </g:FlowPanel>
-        </g:north>
+                <g:Label text="{locale.runConfigurationViewMBLabel}" addStyleNames="{style.labelSpacingLeft} {resources.runner.mainStyle}"/>
+            </g:HorizontalPanel>
+        </g:north>    
+        <g:north size="30">     
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">    
+                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" addStyleNames="{resources.runner.mainStyle}"/>
+                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" />
+        	</g:HorizontalPanel>
+        </g:north>	
         <g:center>
             <g:TextArea ui:field="descriptionField" readOnly="true" width="100%" addStyleNames="{style.noResize}}"/>
         </g:center>

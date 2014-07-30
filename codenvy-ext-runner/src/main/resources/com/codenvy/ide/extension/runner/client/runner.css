@@ -22,3 +22,9 @@
 .data-label {
     padding-left: 5px;
 }
+
+.main-style {
+	font-size: fontSize;
+	font-family: mainFontFamily;
+	color: mainFontColor;
+}
