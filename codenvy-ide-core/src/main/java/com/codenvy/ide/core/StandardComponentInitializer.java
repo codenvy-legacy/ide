@@ -22,11 +22,13 @@ import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RedoAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UndoAction;
 import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.filetypes.FileType;
@@ -110,10 +112,16 @@ public class StandardComponentInitializer {
     private CloseProjectAction closeProjectAction;
 
     @Inject
-    private OpenProjectAction  openProjectAction;
+    private OpenProjectAction openProjectAction;
 
     @Inject
     private FormatterAction formatterAction;
+
+    @Inject
+    private UndoAction undoAction;
+
+    @Inject
+    private RedoAction redoAction;
 
     @Inject
     private UploadFileAction uploadFileAction;
@@ -268,7 +276,11 @@ public class StandardComponentInitializer {
         // Compose Code menu
         DefaultActionGroup codeGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_CODE);
         actionManager.registerAction("format", formatterAction);
+        actionManager.registerAction("undo", undoAction);
+        actionManager.registerAction("redo", redoAction);
         codeGroup.add(formatterAction);
+        codeGroup.add(undoAction);
+        codeGroup.add(redoAction);
 
         // Compose Window menu
         DefaultActionGroup windowGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_WINDOW);
@@ -328,6 +340,8 @@ public class StandardComponentInitializer {
 
         // Define hot-keys
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('F').build(), "format");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('z').build(), "undo");
+        keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('Z').build(), "redo");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().alt().charCode('n').build(), "navigateToFile");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
