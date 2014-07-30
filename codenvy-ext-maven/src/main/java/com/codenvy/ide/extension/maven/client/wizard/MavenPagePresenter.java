@@ -16,9 +16,9 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -82,6 +82,11 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     }
 
     @Override
+    public void setUpdateDelegate(@NotNull Wizard.UpdateDelegate delegate) {
+        super.setUpdateDelegate(delegate);
+    }
+
+    @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
         view.reset();
@@ -130,12 +135,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
         options.put(MavenAttributes.MAVEN_GROUP_ID, Arrays.asList(view.getGroupId()));
         options.put(MavenAttributes.MAVEN_VERSION, Arrays.asList(view.getVersion()));
         options.put(MavenAttributes.MAVEN_PACKAGING, Arrays.asList(view.getPackaging()));
-        if ("war".equals(view.getPackaging())) {
-            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaWeb"));
-        }
-        if ("jar".equals(view.getPackaging())) {
-            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaStandalone"));
-        }
+
         final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         projectDescriptor.setAttributes(options);
@@ -180,6 +180,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
 
                     @Override
                     public void onSuccess(Project result) {
+                        wizardContext.putData(ProjectWizard.PROJECT, result);
                         callback.onSuccess();
                     }
                 });
@@ -203,6 +204,7 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
                                        resourceProvider.getProject(name, new AsyncCallback<Project>() {
                                            @Override
                                            public void onSuccess(Project project) {
+                                               wizardContext.putData(ProjectWizard.PROJECT, project);
                                                callback.onSuccess();
                                            }
 
@@ -224,5 +226,17 @@ public class MavenPagePresenter extends AbstractWizardPage implements MavenPageV
     @Override
     public void onTextsChange() {
         delegate.updateControls();
+    }
+
+    @Override
+    public void setPackaging(String packaging) {
+        if ("war".equals(packaging)) {
+//            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaWeb"));
+            wizardContext.putData(ProjectWizard.RUNNER_NAME, "JavaWeb");
+        }
+        if ("jar".equals(packaging)) {
+//            options.put(Constants.RUNNER_NAME, Arrays.asList("JavaStandalone"));
+            wizardContext.putData(ProjectWizard.RUNNER_NAME, "JavaStandalone");
+        }
     }
 }

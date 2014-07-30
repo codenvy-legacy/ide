@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.maven.client.wizard;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -88,6 +89,7 @@ public class MavenPageViewImpl implements MavenPageView {
         groupId.setText("");
         versionField.setText("1.0-SNAPSHOT");
         packagingField.setSelectedIndex(0);
+
     }
 
     @Override
@@ -108,6 +110,11 @@ public class MavenPageViewImpl implements MavenPageView {
     @UiHandler({"versionField", "groupId", "artifactId"})
     void onKeyUp(KeyUpEvent event) {
         delegate.onTextsChange();
+    }
+
+    @UiHandler("packagingField")
+    void onPackagingChanged(ChangeEvent event) {
+        delegate.setPackaging(getPackaging());
     }
 
     interface MavenPageViewImplUiBinder

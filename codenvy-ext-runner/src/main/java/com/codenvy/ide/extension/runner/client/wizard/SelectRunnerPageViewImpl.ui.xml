@@ -1,0 +1,66 @@
+<!--
+  Copyright (c) 2012-2014 Codenvy, S.A.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+    Codenvy, S.A. - initial API and implementation
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .spaceRight {
+            margin-right: 8px;
+            margin-top: 1px;
+        }
+
+        .mainDoc {
+            margin: 15px;
+        }
+
+        .labelPosition {
+            position: relative;
+            line-height: 29px;
+            margin-left: 20px;
+
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" debugId="mavenPageView-mainPanel" addStyleNames="{style.mainDoc}">
+        <g:north size="50">
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="Select runner:"
+                                 addStyleNames="{style.labelPosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:SimplePanel addStyleNames="{style.spaceRight}">
+                        <g:SimplePanel>
+                            <g:ListBox ui:field="runnerBox" width="396px" height="29px"/>
+                        </g:SimplePanel>
+                    </g:SimplePanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north><g:north size="50">
+            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+                <g:west size="138">
+                    <g:FlowPanel>
+                        <g:Label text="Select Environment:"
+                                 addStyleNames="{style.labelPosition}"/>
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:SimplePanel addStyleNames="{style.spaceRight}">
+                        <g:SimplePanel>
+                            <g:ListBox ui:field="environmentBox" width="396px" height="29px"/>
+                        </g:SimplePanel>
+                    </g:SimplePanel>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:north>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

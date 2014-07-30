@@ -23,14 +23,11 @@ import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -50,10 +47,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       WizardPage                currentPage;
     private       ProjectWizardView         view;
     private       MainPagePresenter         mainPage;
-    /** Pages for which 'step tabs' will be showed. */
-    private Array<WizardPage> stepsPages = Collections.createArray();
-    private WizardContext wizardContext;
-    private ProjectWizard wizard;
+    private       WizardContext             wizardContext;
+    private       ProjectWizard             wizard;
 
     @Inject
     public NewProjectWizardPresenter(ProjectWizardView view, MainPagePresenter mainPage, ProjectServiceClient projectService,
@@ -75,20 +70,30 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void onNextClicked() {
         currentPage.storeOptions();
-        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
-        WizardPage wizardPage = stepsPages.get(previousStepPageIndex + 1);
-        setPage(wizardPage);
-        currentPage.focusComponent();
+        if (wizard != null) {
+            WizardPage wizardPage;
+            if(currentPage == mainPage){
+                wizardPage = wizard.flipToFirst();
+            } else{
+                wizardPage = wizard.flipToNext();
+            }
+            setPage(wizardPage);
+            currentPage.focusComponent();
+
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBackClicked() {
         currentPage.removeOptions();
-        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
-        if (previousStepPageIndex == 0) return;
-        WizardPage wizardPage = stepsPages.get(previousStepPageIndex - 1);
-        setPage(wizardPage);
+        if (wizard != null) {
+            WizardPage wizardPage = wizard.flipToPrevious();
+            if (wizardPage == null) {
+                wizardPage = mainPage;
+            }
+            setPage(wizardPage);
+        }
     }
 
     /** {@inheritDoc} */
@@ -234,24 +239,18 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
                 if (wizard != null) {
                     wizard.flipToFirst();
-                    stepsPages.clear();
-                    stepsPages.add(mainPage);
-                    stepsPages.addAll(wizard.getPages());
                 }
 
-            } else {
-                stepsPages.clear();
-                stepsPages.add(mainPage);
             }
 
         }
         ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         // change state of buttons
-        view.setBackButtonEnabled(stepsPages.indexOf(currentPage) != 0);
-        view.setNextButtonEnabled(stepsPages.indexOf(currentPage) != stepsPages.size() - 1 && currentPage.isCompleted());
+        view.setBackButtonEnabled(currentPage != mainPage);
+        view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
-                                    (templateDescriptor == null && currentPage != mainPage && currentPage.isCompleted()) ||
+                                    (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
                                             Constants.BLANK_ID) && currentPage.isCompleted()));
 
@@ -294,8 +293,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void showFirstPage() {
-        stepsPages.clear();
-        stepsPages.add(mainPage);
+        if (wizard != null) {
+            wizard.flipToFirst();
+        }
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             boolean aPublic = project.getVisibility().equals("public") ? true : false;

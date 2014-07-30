@@ -8,38 +8,27 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.maven.client.wizard;
 
+package com.codenvy.ide.extension.runner.client.wizard;
+
+import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
+
+import java.util.Collection;
 
 /**
  * @author Evgen Vidolob
  */
-@ImplementedBy(MavenPageViewImpl.class)
-public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
-    void setArtifactId(String artifact);
+@ImplementedBy(SelectRunnerPageViewImpl.class)
+public interface SelectRunnerPageView extends View<SelectRunnerPageView.ActionDelegate> {
+    void showRunners(Collection<RunnerDescriptor> runnerDescriptors);
 
-    void setGroupId(String group);
-
-    void setVersion(String value);
-
-    String getPackaging();
-
-    void reset();
-
-    void setPackaging(String packaging);
+    void selectRunner(String runnerName);
 
     public interface ActionDelegate{
+        void runnerSelected(RunnerDescriptor runner);
 
-        void onTextsChange();
-
-        void setPackaging(String packaging);
+        void runnerEnvironmentSelected(String environmentId);
     }
-
-    String getGroupId();
-
-    String getArtifactId();
-
-    String getVersion();
 }

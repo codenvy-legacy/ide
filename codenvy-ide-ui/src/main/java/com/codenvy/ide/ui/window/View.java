@@ -142,8 +142,16 @@ public class View extends Composite {
                 if (delegate != null) {
                     delegate.onClose();
                 }
+                event.stopPropagation();
             }
         }, ClickEvent.getType());
+        crossButton.addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }, MouseDownEvent.getType());
         MouseHandler mouseHandler = new MouseHandler();
         header.addDomHandler(mouseHandler, MouseDownEvent.getType());
         header.addDomHandler(mouseHandler, MouseUpEvent.getType());
