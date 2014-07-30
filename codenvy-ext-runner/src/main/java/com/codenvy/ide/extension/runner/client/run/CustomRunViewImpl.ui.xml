@@ -65,18 +65,17 @@
         </g:north>
         <g:north size="30">
             <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
-                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" addStyleNames="{resources.runner.mainStyle}" width="90px"/>
+                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="304px" addStyleNames="{resources.runner.mainStyle}"/>
                 <g:SuggestBox ui:field="memoryField" height="15px" width="40px" addStyleNames="{style.gwt-SuggestBox}"
                               debugId="project-customRun-memory"/>
-                <g:Label text="{locale.runConfigurationViewMBLabel}" addStyleNames="{style.labelSpacingLeft} {resources.runner.mainStyle}"/>
             </g:HorizontalPanel>
-        </g:north>    
-        <g:north size="30">     
-            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">    
-                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" addStyleNames="{resources.runner.mainStyle}"/>
-                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" />
+        </g:north>
+        <g:north size="30">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
+                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" width="330px" addStyleNames="{resources.runner.mainStyle}"/>
+                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild"/>
         	</g:HorizontalPanel>
-        </g:north>	
+        </g:north>
         <g:center>
             <g:TextArea ui:field="descriptionField" readOnly="true" width="100%" addStyleNames="{style.noResize}}"/>
         </g:center>

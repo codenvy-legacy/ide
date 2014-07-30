@@ -174,11 +174,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void setNextButtonEnabled(boolean enabled) {
-        if (enabled) {
-            nextStepButton.removeStyleName(style.disabled());
-        } else {
-            nextStepButton.addStyleName(style.disabled());
-        }
+        nextStepButton.setEnabled(enabled);
     }
 
     @Override
@@ -188,11 +184,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void setBackButtonEnabled(boolean enabled) {
-        if (enabled) {
-            previousStepButton.removeStyleName(style.disabled());
-        } else {
-            previousStepButton.addStyleName(style.disabled());
-        }
+        previousStepButton.setEnabled(enabled);
     }
 
     @Override
