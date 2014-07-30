@@ -61,4 +61,8 @@ public interface BuilderLocalizationConstant extends Messages {
 
     @Key("build.finished")
     String buildFinished(String project);
+
+    @Key("build.artifact.not-ready")
+    String atifactNotReady();
+
 }
