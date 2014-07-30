@@ -48,6 +48,7 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
@@ -58,6 +59,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
@@ -109,7 +111,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     protected Project                                           activeProject;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
-    private   RunnerMetric                                      lastAppWaitingTimeLimit;
     private   ProjectRunCallback                                runCallback;
     protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
@@ -202,13 +203,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
-                if (isAnyAppRunning()) {
+                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     event.setMessage(constant.appWillBeStopped(resourceProvider.getActiveProject().getName()));
                 }
             }
 
             @Override
             public void onWindowClosed(WindowActionEvent event) {
+                if (!getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
+                    stopActiveProject(false);
+                }
             }
         });
     }
@@ -260,24 +264,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Run active project, specifying environment.
-     *
-     * @param environment
-     *         environment which will be used to run project
-     * @param isUserAction points whether the build is started directly by user interaction       
-     */
-    public void runActiveProject(RunnerEnvironment environment, boolean isUserAction) {
-        runActiveProject(environment, false, null, isUserAction);
-    }
-
-    /**
      * Run active project.
      *
      * @param debug
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
-     * @param isUserAction points whether the build is started directly by user interaction        
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
      */
     public void runActiveProject(boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         runActiveProject(null, debug, callback, isUserAction);
@@ -292,7 +286,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *         if <code>true</code> - run in debug mode
      * @param callback
      *         callback that will be notified when project will be run
-     * @param isUserAction points whether the build is started directly by user interaction        
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
      */
     public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         if (isAnyAppRunning) {
@@ -319,10 +314,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
 
-        if (isUserAction){
+        if (isUserAction) {
             console.setActive();
         }
-        
+
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -714,58 +709,52 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns startTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStartTime() {
-        return getRunnerMetric("startTime");
+        return getRunnerMetric(RunnerMetric.START_TIME);
     }
 
     /** Returns waitingTimeLimit {@link RunnerMetric}. */
     @Nullable
-    public RunnerMetric getCurrentAppTimeoutThreshold() {
+    public RunnerMetric getCurrentAppTerminationTime() {
         if (lastApplicationDescriptor == null) {
             return null;
         }
-        RunnerMetric waitingTime = getRunnerMetric("waitingTime");
-        if (waitingTime != null) {
-            lastAppWaitingTimeLimit = waitingTime;
+        RunnerMetric terminationMetric = getRunnerMetric(RunnerMetric.TERMINATION_TIME);
+        if (terminationMetric != null) {
+            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue()))
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
+                                 .withValue(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue());
+            // if app is running now, count uptime on the client-side
+            if (terminationMetric.getValue() != null) {
+                double terminationTime = NumberFormat.getDecimalFormat().parse(terminationMetric.getValue());
+                final double terminationTimeout = terminationTime - System.currentTimeMillis();
+                final String value = StringUtils.timeMlsToHumanReadable(terminationTimeout);
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription()).withValue(value);
+            }
         }
-        return lastAppWaitingTimeLimit;
+        return null;
     }
+
 
     /** Returns stopTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
-        return getRunnerMetric("stopTime");
+        return getRunnerMetric(RunnerMetric.STOP_TIME);
     }
 
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
         // if app already stopped, get uptime from server
+        RunnerMetric uptimeMetric = getRunnerMetric(RunnerMetric.UP_TIME);
         if (getCurrentAppStopTime() != null) {
-            return getRunnerMetric("uptime");
+            return uptimeMetric;
         }
 
         // if app is running now, count uptime on the client-side
         if (getCurrentAppStartTime() != null) {
             final long totalTimeMillis = System.currentTimeMillis() - lastApplicationDescriptor.getStartTime();
-            int ss = (int)(totalTimeMillis / 1000);
-            int mm = 0;
-            if (ss >= 60) {
-                mm = ss / 60;
-                ss = ss % 60;
-            }
-            int hh = 0;
-            if (mm >= 60) {
-                hh = mm / 60;
-                mm = mm % 60;
-            }
-            int d = 0;
-            if (hh >= 24) {
-                d = hh / 24;
-                hh = hh % 24;
-            }
-            final String value =
-                    String.valueOf("" + d + "d:" + getDoubleDigit(hh) + "h:" + getDoubleDigit(mm) + "m:" + getDoubleDigit(ss) + "s");
-            return dtoFactory.createDto(RunnerMetric.class).withDescription("Application's uptime").withValue(value);
+            final String value = StringUtils.timeMlsToHumanReadable(totalTimeMillis);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
         }
 
         return null;
@@ -820,45 +809,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
-    private static String getDoubleDigit(int i) {
-        final String doubleDigitI;
-        switch (i) {
-            case 0:
-                doubleDigitI = "00";
-                break;
-            case 1:
-                doubleDigitI = "01";
-                break;
-            case 2:
-                doubleDigitI = "02";
-                break;
-            case 3:
-                doubleDigitI = "03";
-                break;
-            case 4:
-                doubleDigitI = "04";
-                break;
-            case 5:
-                doubleDigitI = "05";
-                break;
-            case 6:
-                doubleDigitI = "06";
-                break;
-            case 7:
-                doubleDigitI = "07";
-                break;
-            case 8:
-                doubleDigitI = "08";
-                break;
-            case 9:
-                doubleDigitI = "09";
-                break;
-            default:
-                doubleDigitI = Integer.toString(i);
-        }
-        return doubleDigitI;
-    }
 
     private class RecipeFile extends File {
         public RecipeFile(String content) {
