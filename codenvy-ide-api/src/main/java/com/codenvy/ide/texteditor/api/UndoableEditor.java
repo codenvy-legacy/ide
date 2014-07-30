@@ -8,19 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.tutorials.server;
+package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.inject.DynaModule;
-import com.google.inject.AbstractModule;
+/**
+ * @author Roman Nikitenko
+ */
+public interface UndoableEditor {
 
-/** @author Artem Zatsarynnyy */
-@DynaModule
-public class CodenvyTutorialModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(CodenvyTutorialProjectTypeExtension.class);
-        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
-        bind(CodenvyPluginProjectTypeExtension.class);
-    }
+    /** Returns the undo manager. */
+    UndoManager getUndoManager();
+
 }

@@ -116,6 +116,18 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("format.description")
     String formatDescription();
 
+    @Key("undo.name")
+    String undoName();
+
+    @Key("undo.description")
+    String undoDescription();
+
+    @Key("redo.name")
+    String redoName();
+
+    @Key("redo.description")
+    String redoDescription();
+
     @Key("uploadFile.name")
     String uploadFileName();
 

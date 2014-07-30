@@ -14,7 +14,6 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -87,5 +86,11 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
     @Override
     public void setDelegate(NotificationItem.ActionDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public void clear() {
+        notificationWidget.clear();
+        panel.clear();
     }
 }

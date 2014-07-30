@@ -117,10 +117,13 @@
         .button {
             margin: 5px;
         }
-
-        .blueButton {
+        .blueButton, .blueButton[disabled]:hover{
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
             margin: 5px 25px 0px 8px;
+        }
+
+		.blueButton:hover {
+            background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3263A2 1px, #3263A2 100%);
         }
 
         .disabled {
@@ -130,11 +133,15 @@
         .labelPanel {
             float: left;
             display: block;
-           font-size:11px;
+            font-size: 11px;
         }
 
         .labelPanel > div {
             margin-top: 4px;
+        }
+
+        .bottomPanel > div {
+            margin-top: 9px;
         }
 
         .infoText {
@@ -149,16 +156,17 @@
             color: #7FFF00;
         }
 
+        .infoValue {
+            margin-left: 2px;
+            margin-right: 20px;
+        }
+
         .visible {
             visibility: visible;
         }
 
         .hidden {
             visibility: hidden;
-        }
-
-        .alignCenter {
-            text-align: center;
         }
 
         .grayColor {
@@ -173,11 +181,11 @@
             <g:FlowPanel ui:field="environmentConfigurationPanel" addStyleNames="{style.hidden}">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
-                    <g:Label text="Runer Environment Configuration" addStyleNames="{style.infoText}"/>
+                    <g:Label text="Runner Environment Configuration" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label ui:field="builderEnvironmentConfiguration"/>
-                    <g:Label ui:field="runerEnvironmentConfiguration"/>
+                    <g:Label ui:field="runnerEnvironmentConfiguration"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>
@@ -187,25 +195,21 @@
             <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{style.button}"/>
             <g:FlowPanel ui:field="infoRAMPanel" addStyleNames="{style.hidden}">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="Min RAM Required:" addStyleNames="{style.infoText}"/>
+                    <g:Label text="RAM Required:" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="minRAMRequired"/>
+                    <g:Label ui:field="RAMRequired" addStyleNames="{style.infoValue}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="Vendor Recommended RAM:" addStyleNames="{style.infoText}"/>
-                    <g:HTMLPanel ui:field="linkGetMoreRAM" addStyleNames="{style.infoText} {style.alignCenter}">
+                    <g:Label text="RAM Available:" addStyleNames="{style.infoText}"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:Label ui:field="RAMAvailable" addStyleNames="{style.infoValue}"/>
+                </g:FlowPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel}">
+                    <g:HTMLPanel ui:field="linkGetMoreRAM" addStyleNames="{style.infoText}">
                         <a href="{locale.createProjectFromTemplatelinkGetMoreRAM}">Get More RAM</a>
                     </g:HTMLPanel>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="vendorRecommendedRAM"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="Workspace RAM Allocated:" addStyleNames="{style.infoText}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="workspaceRAMAllocated"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>

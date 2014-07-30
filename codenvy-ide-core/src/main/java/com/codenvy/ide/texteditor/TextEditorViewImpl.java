@@ -124,7 +124,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     };
     private final Array<Gutter>                     gutters                       = Collections.createArray();
     private final InputController   input;
-    private InfoPanel     info;
+    private       InfoPanel         info;
     private final LeftGutterManager leftGutterManager;
     private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
@@ -135,7 +135,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     private final UserActivityManager                userActivityManager;
     private final OverviewRuler                      overviewRuller;
     private       DocumentModel                      textStore;
-    private       UndoManager                        editorUndoManager;
+    private       UndoManager                        undoManager;
     private       LocalCursorController              localCursorController;
     private       Renderer                           renderer;
     private       DebugLineRenderer                  debugLineRenderer;
@@ -195,9 +195,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         editorFontDimensionsCalculator.addCallback(fontDimensionsChangedCallback);
     }
 
-         public InfoPanel getInfoPanel(){
-             return info;
-         }
+    public InfoPanel getInfoPanel() {
+        return info;
+    }
 
     /**
      * Hook called on receipt of a <code>EditorDocumentMutator</code>. The event has
@@ -423,8 +423,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         input.handleDocumentChanged(textStore, selection, viewport);
         renderer = Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
                                    renderTimeExecutor, breakpointGutterManager);
-        if (editorUndoManager != null) {
-            editorUndoManager.connect(this);
+        if (undoManager != null) {
+            undoManager.connect(this);
         }
 
         // Delayed core editor component initialization
@@ -459,11 +459,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     }
 
     public void undo() {
-        editorUndoManager.undo();
+        undoManager.undo();
     }
 
     public void redo() {
-        editorUndoManager.redo();
+        undoManager.redo();
     }
 
     public void scrollTo(int lineNumber, int column) {
@@ -527,15 +527,16 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         }
     }
 
-    /** @return the editorUndoManager */
+    /** @return the undoManager */
+    @Override
     public UndoManager getUndoManager() {
-        return editorUndoManager;
+        return undoManager;
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#setUndoManager(com.codenvy.ide.texteditor.api.UndoManager) */
     @Override
     public void setUndoManager(UndoManager undoManager) {
-        this.editorUndoManager = undoManager;
+        this.undoManager = undoManager;
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#configure(com.codenvy.ide.texteditor.api.TextEditorConfiguration) */
@@ -748,7 +749,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     }
 
     public void resetHistory() {
-        editorUndoManager.reset();
+        undoManager.reset();
     }
 
     /** Animation CSS. */

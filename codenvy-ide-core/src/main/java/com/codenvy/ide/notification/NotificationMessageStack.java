@@ -128,4 +128,12 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
         messages.remove(message);
         showMessage();
     }
+
+    public void clear() {
+        for(NotificationMessage notification : notificationMessage.values()) {
+            notification.hide();
+        }
+        notificationMessage.clear();
+        messages.clear();
+    }
 }

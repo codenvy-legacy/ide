@@ -424,6 +424,11 @@ public class LightTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#000000";
     }
+    
+    @Override
+    public String getButtonHoverColor() {
+        return "#ffffff";
+    }
 
     @Override
     public String getToolbarBackgroundColor() {

@@ -27,7 +27,7 @@
         <g:east size="16">
             <g:FlowPanel ui:field="rightPanel" addStyleNames="{res.workBenchCss.ideWorkBenchToolPanelRight}"/>
         </g:east>
-        <g:west size="16">
+        <g:west size="18">
             <g:FlowPanel ui:field="leftPanel" addStyleNames="{res.workBenchCss.ideWorkBenchToolPanelLeft}"/>
         </g:west>
         <g:south size="16">

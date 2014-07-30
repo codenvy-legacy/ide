@@ -258,25 +258,23 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setNextButtonEnabled(false);
             // TODO: add configuration to ProjectTemplateDescriptor
             //leave the default
-            view.setRunerEnvirConfig(null);
+            view.setRunnerEnvirConfig(null);
             view.setBuilderEnvirConfig(null);
-            view.setMinRAMRequired(null);
-            view.setVendorRecommendedRAM(null);
+            view.setRAMRequired(null);
             // TODO: need workspace information
             //leave the default
-            view.setWorkspaceRAMAllocated(null);
+            view.setRAMAvailable(null);
             //set info visibled
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
             // TODO: add configuration to ProjectTypeDescriptor
-            view.setRunerEnvirConfig(new String[]{"JDK 7.0"});
+            view.setRunnerEnvirConfig(new String[]{"JDK 7.0"});
             //leave the default
             view.setBuilderEnvirConfig(null);
-            view.setMinRAMRequired(null);
-            view.setVendorRecommendedRAM("6GB");
+            view.setRAMRequired(null);
             // TODO: need workspace information
             //leave the default
-            view.setWorkspaceRAMAllocated(null);
+            view.setRAMAvailable(null);
             //set info visibled
             view.setInfoVisibled(true);
         } else {

@@ -26,15 +26,13 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void showDialog();
 
-    void setMinRAMRequired(String amountOfRAM);
+    void setRAMRequired(String amountOfRAM);
 
-    void setWorkspaceRAMAllocated(String amountOfRAM);
-
-    void setVendorRecommendedRAM(String amountOfRAM);
+    void setRAMAvailable(String amountOfRAM);
 
     void setBuilderEnvirConfig(String configs[]);
 
-    void setRunerEnvirConfig(String configs[]);
+    void setRunnerEnvirConfig(String configs[]);
 
     void setInfoVisibled(boolean enabled);
 
