@@ -48,6 +48,9 @@
             background-color: #4b4a4a;
             border: 1px solid #000000;
             color: #ffffff;
+            margin-right: 2px;
+            position: relative;
+            bottom: 3px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="350px" height="270px" addStyleNames="{style.emptyBorder}" debugId="customRun-panel">
@@ -60,11 +63,12 @@
         </g:north>
         <g:north size="65.0">
             <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="290px" addStyleNames="{style.alignLeft}"/>
+                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="270px" addStyleNames="{style.alignLeft}"/>
                 <g:SuggestBox ui:field="memoryField" width="40px" height="15px" addStyleNames="{style.alignLeft} {style.gwt-SuggestBox}"
                               debugId="project-customRun-memory"/>
-                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" addStyleNames="{style.alignLeft} {style.labelSpacingTop}"/>
-                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" addStyleNames="{style.alignRight} {style.labelSpacingTop}"/>
+                <g:Label text="Mb" addStyleNames="{style.alignLeft}"/>
+                <g:Label text="{locale.runConfigurationViewSkipBuildLabel}" width="285px" addStyleNames="{style.alignLeft} {style.labelSpacingTop}"/>
+                <g:CheckBox ui:field="skipBuild" debugId="project-customRun-skipBuild" addStyleNames="{style.alignLeft} {style.labelSpacingTop}"/>
             </g:FlowPanel>
         </g:north>
         <g:center>
