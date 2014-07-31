@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,6 +40,8 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     FlowPanel mainPanel;
     //    @UiField
     Label     count       = new Label();
+    @UiField
+    ScrollPanel scrollPanel;
 
     @UiField(provided = true)
     final Resources res;
@@ -80,5 +83,9 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         return count;
     }
 
-
+    /** {@inheritDoc} */
+    @Override
+    public void scrollBottom() {
+        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+    }
 }
