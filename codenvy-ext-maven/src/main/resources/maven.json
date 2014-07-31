@@ -261,9 +261,9 @@
         }
     },
     {
-        "displayName": "Desktop PostrgeSQL",
+        "displayName": "Desktop PostgreSQL",
         "category": "Samples - Hello World",
-        "description": "A simple desktop application that creates a PostrgeSQL DB and updates it in the runtime",
+        "description": "A simple desktop application that creates a PostgreSQL DB and updates it in the runtime",
         "source": {
             "type": "git-less",
             "location": "https://github.com/codenvy-templates/desktop-postgresql-java-simple.git"
