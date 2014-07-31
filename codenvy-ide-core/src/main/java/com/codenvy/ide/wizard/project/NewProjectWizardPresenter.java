@@ -30,6 +30,7 @@ import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
@@ -47,8 +48,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       WizardPage                currentPage;
     private       ProjectWizardView         view;
     private       MainPagePresenter         mainPage;
-    private       WizardContext             wizardContext;
-    private       ProjectWizard             wizard;
+    private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
+        @Override
+        public WizardPage get() {
+            return mainPage;
+        }
+    };
+    private WizardContext wizardContext;
+    private ProjectWizard wizard;
 
     @Inject
     public NewProjectWizardPresenter(ProjectWizardView view, MainPagePresenter mainPage, ProjectServiceClient projectService,
@@ -72,11 +79,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         currentPage.storeOptions();
         if (wizard != null) {
             WizardPage wizardPage;
-            if(currentPage == mainPage){
-                wizardPage = wizard.flipToFirst();
-            } else{
-                wizardPage = wizard.flipToNext();
-            }
+            wizardPage = wizard.flipToNext();
             setPage(wizardPage);
             currentPage.focusComponent();
 
@@ -238,7 +241,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             if (descriptor != null) {
                 wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
                 if (wizard != null) {
+                    wizard.setUpdateDelegate(this);
+                    if (!wizard.containsPage(mainPageProvider)) {
+                        wizard.addPage(mainPageProvider, 0, false);
+                    }
                     wizard.flipToFirst();
+                    mainPage.setContext(wizardContext);
                 }
 
             }
@@ -319,7 +327,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void setPage(@NotNull WizardPage wizardPage) {
         currentPage = wizardPage;
         currentPage.setContext(wizardContext);
-        currentPage.setUpdateDelegate(this);
         updateControls();
         view.showPage(currentPage);
     }

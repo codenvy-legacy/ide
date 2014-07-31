@@ -18,7 +18,6 @@ import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.ui.wizard.DefaultWizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.codenvy.ide.api.ui.wizard.paas.AbstractPaasPage;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -55,46 +54,6 @@ public class NewProjectWizard extends DefaultWizard {
         super(notificationManager, "New project");
         chooseTemplate = 1;
         lastTemplatePage = 2;
-    }
-
-    /**
-     * Add a page after the first page in the wizard, namely between the start page and template choosing page.
-     *
-     * @param wizardPage
-     *         page that needs to be added
-     */
-    public void addPageAfterFirst(@NotNull Provider<? extends WizardPage> wizardPage) {
-        addPage(wizardPage, 1, false);
-    }
-
-    /**
-     * Add a page after 'choose template' page.
-     *
-     * @param wizardPage
-     *         page that needs to be added
-     */
-    public void addPageAfterChooseTemplate(@NotNull Provider<? extends WizardPage> wizardPage) {
-        addPage(wizardPage, chooseTemplate + 1, false);
-    }
-
-    /**
-     * Add a page before paas pages.
-     *
-     * @param wizardPage
-     *         page that needs to be added
-     */
-    public void addPageBeforePaas(@NotNull Provider<? extends WizardPage> wizardPage) {
-        addPage(wizardPage, lastTemplatePage, false);
-    }
-
-    /**
-     * Add a PaaS page.
-     *
-     * @param paasPage
-     *         page that needs to be added
-     */
-    public void addPaaSPage(@NotNull Provider<? extends AbstractPaasPage> paasPage) {
-        addPage(paasPage, lastTemplatePage + 1, false);
     }
 
     /** {@inheritDoc} */

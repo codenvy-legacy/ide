@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -92,11 +91,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void focusComponent() {
-
-    }
-
-    @Override
-    public void commit(@NotNull final CommitCallback callback) {
 
     }
 
