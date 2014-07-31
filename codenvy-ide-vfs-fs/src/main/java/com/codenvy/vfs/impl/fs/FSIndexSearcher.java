@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import com.codenvy.api.vfs.server.search.LuceneSearcher;
 
 import org.apache.lucene.store.Directory;
@@ -34,11 +34,11 @@ public class FSIndexSearcher extends LuceneSearcher {
     }
 
     @Override
-    protected Directory makeDirectory() {
+    protected Directory makeDirectory() throws ServerException {
         try {
             return FSDirectory.open(indexDir, new SingleInstanceLockFactory());
         } catch (IOException e) {
-            throw new VirtualFileSystemRuntimeException(e);
+            throw new ServerException(e);
         }
     }
 

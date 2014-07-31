@@ -85,6 +85,9 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
  * @author Artem Zatsarynnyy
  */
 @Singleton
+
+//TODO rre-rework this class
+// try remove fields like lastApplicationDescriptor;
 public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** WebSocket channel to get application's status. */
@@ -165,7 +168,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
                                                             // open WebShell console
-                                                            Link shellLink = getLink(lastApplicationDescriptor, "shell url");
+                                                            Link shellLink = getLink("shell url");
                                                             if (shellLink != null) {
                                                                 workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
                                                                 shellConsole.setUrl(shellLink.getHref());
@@ -313,6 +316,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
+        runOptions.setSkipBuild(Boolean.parseBoolean(activeProject.getAttributeValue("runner:skipBuild")));
+
 
         if (isUserAction) {
             console.setActive();
@@ -362,6 +367,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
+        runOptions.setSkipBuild(Boolean.parseBoolean(activeProject.getAttributeValue("runner:skipBuild")));
 
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
@@ -491,7 +497,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        this.lastApplicationDescriptor = applicationProcessDescriptor;
+        lastApplicationDescriptor = applicationProcessDescriptor;
         isAnyAppRunning = true;
         startCheckingAppStatus(lastApplicationDescriptor);
         startCheckingAppOutput(lastApplicationDescriptor);
@@ -499,15 +505,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
+
         switch (descriptor.getStatus()) {
             case RUNNING:
                 startCheckingAppHealth(descriptor);
-
+                notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
-                notification.setType(INFO);
-                notification.setMessage(constant.applicationStarted(activeProject.getName()));
+//                notification.setType();
+//                notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
-                Link shellLink = getLink(lastApplicationDescriptor, "shell url");
+                Link shellLink = getLink("shell url");
                 if (shellLink != null) {
                     workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
                     shellConsole.setUrl(shellLink.getHref());
@@ -521,17 +528,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-
+                notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
                     notification.setType(ERROR);
                     getLogs(false);
-                } else {
-                    notification.setType(INFO);
                 }
-
                 notification.setStatus(FINISHED);
-                notification.setMessage(constant.applicationStopped(activeProject.getName()));
+                console.print("[INFO] " + notification.getMessage());
 
                 workspaceAgent.removePart(shellConsole);
                 break;
@@ -541,9 +545,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppOutput(descriptor);
                 getLogs(false);
 
+                notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
                 notification.setStatus(FINISHED);
-                notification.setType(ERROR);
-                notification.setMessage(constant.applicationFailed(activeProject.getName()));
+                console.print("[INFO] " + notification.getMessage());
 
                 workspaceAgent.removePart(shellConsole);
                 break;
@@ -552,9 +556,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
+                notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
                 notification.setStatus(FINISHED);
-                notification.setType(WARNING);
-                notification.setMessage(constant.applicationCanceled(activeProject.getName()));
+                console.print("[INFO] " + notification.getMessage());
 
                 workspaceAgent.removePart(shellConsole);
                 break;
@@ -563,7 +567,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Get logs of the currently launched application. */
     public void getLogs(boolean isUserAction) {
-        final Link viewLogsLink = getLink(lastApplicationDescriptor, Constants.LINK_REL_VIEW_LOG);
+        final Link viewLogsLink = getLink(Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -600,7 +604,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Stop the currently running application. */
     public void stopActiveProject(boolean isUserAction) {
-        final Link stopLink = getLink(lastApplicationDescriptor, Constants.LINK_REL_STOP);
+        final Link stopLink = getLink(Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(activeProject.getName()), null);
             return;
@@ -660,7 +664,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
         if (isAnyAppRunning() && lastApplicationDescriptor != null) {
-            Link recipeLink = getLink(lastApplicationDescriptor, "runner recipe");
+            Link recipeLink = getLink("runner recipe");
             return recipeLink != null;
         }
         return false;
@@ -669,7 +673,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Opens runner recipe file in editor. */
     public void showRecipe() {
         if (lastApplicationDescriptor != null) {
-            final Link recipeLink = getLink(lastApplicationDescriptor, "runner recipe");
+            final Link recipeLink = getLink("runner recipe");
             if (recipeLink != null) {
                 RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, recipeLink.getHref());
                 try {
@@ -684,12 +688,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
 
                         public void onError(Request request, Throwable exception) {
-                            notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                            notificationManager.showNotification(new Notification(
+                                    "Attempted to retrive runner recipe, and an error occured.  If this issue continues, please contact support.",
+                                    ERROR));
                             Log.error(RunnerController.class, exception);
                         }
                     });
                 } catch (RequestException e) {
-                    notificationManager.showNotification(new Notification("Failed to get run recipe", ERROR));
+                    notificationManager.showNotification(new Notification(
+                            "Attempted to retrive runner recipe, and an error occured.  If this issue continues, please contact support.",
+                            ERROR));
                     Log.error(RunnerController.class, e);
                 }
             }
@@ -700,8 +708,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public String getCurrentAppURL() {
         // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null && getCurrentAppStopTime() == null && isLastAppHealthOk) {
-            return getAppLink(lastApplicationDescriptor);
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING)) {
+            return getAppLink();
         }
         return null;
     }
@@ -772,13 +780,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
+    private  String getAppLink() {
         String url = null;
-        final Link appLink = getLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = getLink(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
-            final Link codeServerLink = getLink(appDescriptor, "code server");
+            final Link codeServerLink = getLink("code server");
             if (codeServerLink != null) {
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(appLink.getHref());
@@ -800,8 +808,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     @Nullable
-    private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
-        List<Link> links = appDescriptor.getLinks();
+    private Link getLink(String rel) {
+        if (lastApplicationDescriptor == null)
+            return null;
+        List<Link> links = lastApplicationDescriptor.getLinks();
         for (Link link : links) {
             if (link.getRel().equalsIgnoreCase(rel))
                 return link;

@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.vfs.impl.fs.exceptions.LocalPathResolveException;
-
 import javax.inject.Singleton;
 
 /**
@@ -23,10 +19,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class LocalPathResolver {
-    public String resolve(VirtualFile virtualFile) throws VirtualFileSystemException {
-        if (!(virtualFile instanceof VirtualFileImpl)) {
-            throw new LocalPathResolveException(String.format("Cannot resolve path on the local filesystem for %s", virtualFile));
-        }
-        return ((VirtualFileImpl)virtualFile).getIoFile().getAbsolutePath();
+    public String resolve(VirtualFileImpl virtualFile) {
+        return virtualFile.getIoFile().getAbsolutePath();
     }
 }

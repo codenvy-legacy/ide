@@ -310,9 +310,10 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     public String getLastBuildResultURL() {
         if (lastBuildTaskDescriptor != null) {
             Link downloadResultLink = getLink(lastBuildTaskDescriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
-            if (downloadResultLink != null) {
+            if (downloadResultLink != null)
                 return downloadResultLink.getHref();
-            }
+            if (lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS) || lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE))
+                return constant.atifactNotReady();
         }
         return null;
     }
@@ -335,10 +336,10 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             double terminationTime = NumberFormat.getDecimalFormat().parse(waitingTimeLimit.getValue());
             final double terminationTimeout = terminationTime - System.currentTimeMillis();
             final String value = StringUtils.timeMlsToHumanReadable(terminationTimeout);
-            dtoFactory.createDto(BuilderMetric.class).withDescription(waitingTimeLimit.getDescription())
+            return dtoFactory.createDto(BuilderMetric.class).withDescription(waitingTimeLimit.getDescription())
                       .withValue(waitingTimeLimit.getName()).withValue(value);
         }
-        return lastWaitingTimeLimit;
+        return null;
     }
 
     /** Returns endTime {@link BuilderMetric}. */

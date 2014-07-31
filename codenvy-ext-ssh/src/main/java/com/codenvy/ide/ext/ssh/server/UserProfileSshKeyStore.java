@@ -64,9 +64,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
             }
             profile.getPreferences().put(sshKeyAttributeName, new String(key));
             profileDao.update(profile);
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException(String.format("Failed to add private key for host '%s'.", host));
-        } catch (ServerException e) {
+        } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to add private key for host '%s'.", host));
         }
     }
@@ -86,9 +84,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         Profile profile;
         try {
             profile = profileDao.getById(user.getId());
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException(String.format("Failed to get key for host '%s'.", host));
-        } catch (ServerException e) {
+        } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to get key for host '%s'.", host));
         }
 
@@ -116,12 +112,12 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     }
 
     @Override
-    public void genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException {
-        genKeyPair(host, comment, passPhrase, null);
+    public SshKeyPair genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException {
+        return genKeyPair(host, comment, passPhrase, null);
     }
 
     @Override
-    public void genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException {
+    public SshKeyPair genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException {
         User user = getUser(EnvironmentContext.getCurrent().getUser().getName());
         Profile profile;
         try {
@@ -148,18 +144,25 @@ public class UserProfileSshKeyStore implements SshKeyStore {
             }
             keyPair.setPassphrase(passPhrase);
 
+            SshKey privateKey;
+            SshKey publicKey;
             ByteArrayOutputStream buff = new ByteArrayOutputStream();
+
             keyPair.writePrivateKey(buff);
+            privateKey = new SshKey(sshPrivateKeyAttributeName, buff.toByteArray());
             profile.getPreferences().put(sshPrivateKeyAttributeName, new String(buff.toByteArray()));
+
             buff.reset();
+
             keyPair.writePublicKey(buff,
                                    comment != null ? comment : (keyMail.indexOf('@') > 0 ? keyMail : (keyMail + "@ide.codenvy.local")));
-            // Save keys in user attributes
+            publicKey = new SshKey(sshPublicKeyAttributeName, buff.toByteArray());
             profile.getPreferences().put(sshPublicKeyAttributeName, new String(buff.toByteArray()));
+
             profileDao.update(profile);
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException(String.format("Failed to generate keys for host '%s'.", host));
-        } catch (ServerException e) {
+
+            return new SshKeyPair(publicKey, privateKey);
+        } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to generate keys for host '%s'.", host));
         }
     }
@@ -173,9 +176,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
             profile.getPreferences().remove(sshKeyAttributeName(host, PRIVATE));
             profile.getPreferences().remove(sshKeyAttributeName(host, PUBLIC));
             profileDao.update(profile);
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
-        } catch (ServerException e) {
+        } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         }
     }
@@ -186,9 +187,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         Profile profile;
         try {
             profile = profileDao.getById(user.getId());
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException("Failed to get all keys.");
-        } catch (ServerException e) {
+        } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException("Failed to get all keys.");
         }
 
@@ -221,10 +220,8 @@ public class UserProfileSshKeyStore implements SshKeyStore {
         User user;
         try {
             user = userDao.getByAlias(userId);
-        } catch (NotFoundException e) {
-            throw new SshKeyStoreException(String.format("Failed to get user. ", e.getMessage()));
-        } catch (ServerException e) {
-            throw new SshKeyStoreException(String.format("Failed to get user. ", e.getMessage()));
+        } catch (NotFoundException | ServerException e) {
+            throw new SshKeyStoreException(String.format("Failed to get user. %s", e.getMessage()));
         }
         if (user == null) {
             throw new SshKeyStoreException("User not found.");

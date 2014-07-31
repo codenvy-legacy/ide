@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ConflictException;
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.NotFoundException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.util.ContentTypeGuesser;
 import com.codenvy.api.vfs.server.ContentStream;
 import com.codenvy.api.vfs.server.LazyIterator;
@@ -17,17 +21,13 @@ import com.codenvy.api.vfs.server.Path;
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
 import com.codenvy.api.vfs.server.VirtualFileVisitor;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import com.codenvy.api.vfs.shared.PropertyFilter;
 import com.codenvy.api.vfs.shared.dto.AccessControlEntry;
 import com.codenvy.api.vfs.shared.dto.Folder;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.Property;
-import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo;
 import com.codenvy.commons.lang.Pair;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * Implementation of VirtualFile which uses java.io.File.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class VirtualFileImpl implements VirtualFile {
     private final java.io.File ioFile;
@@ -53,73 +53,73 @@ public class VirtualFileImpl implements VirtualFile {
     }
 
     @Override
-    public String getId() throws VirtualFileSystemException {
+    public String getId() {
         return id;
     }
 
     @Override
-    public String getName() throws VirtualFileSystemException {
+    public String getName() {
         return path.getName();
     }
 
     @Override
-    public String getPath() throws VirtualFileSystemException {
+    public String getPath() {
         return path.toString();
     }
 
     @Override
-    public Path getVirtualFilePath() throws VirtualFileSystemException {
+    public Path getVirtualFilePath() {
         return path;
     }
 
     @Override
-    public boolean exists() throws VirtualFileSystemException {
+    public boolean exists() {
         return getIoFile().exists();
     }
 
     @Override
-    public boolean isRoot() throws VirtualFileSystemException {
+    public boolean isRoot() {
         return path.isRoot();
     }
 
     @Override
-    public boolean isFile() throws VirtualFileSystemException {
+    public boolean isFile() {
         return getIoFile().isFile();
     }
 
     @Override
-    public boolean isFolder() throws VirtualFileSystemException {
+    public boolean isFolder() {
         return getIoFile().isDirectory();
     }
 
     @Override
-    public VirtualFile getParent() throws VirtualFileSystemException {
+    public VirtualFile getParent() {
         return mountPoint.getParent(this);
     }
 
     @Override
-    public LazyIterator<VirtualFile> getChildren(VirtualFileFilter filter) throws VirtualFileSystemException {
+    public LazyIterator<VirtualFile> getChildren(VirtualFileFilter filter) throws ServerException {
         return mountPoint.getChildren(this, filter);
     }
 
     @Override
-    public VirtualFile getChild(String name) throws VirtualFileSystemException {
+    public VirtualFile getChild(String name) throws ForbiddenException, ServerException {
         return mountPoint.getChild(this, name);
     }
 
     @Override
-    public ContentStream getContent() throws VirtualFileSystemException {
+    public ContentStream getContent() throws ForbiddenException, ServerException {
         return mountPoint.getContent(this);
     }
 
     @Override
-    public VirtualFile updateContent(String mediaType, InputStream content, String lockToken) throws VirtualFileSystemException {
+    public VirtualFile updateContent(String mediaType, InputStream content, String lockToken) throws ForbiddenException, ServerException {
         mountPoint.updateContent(this, mediaType, content, lockToken);
         return this;
     }
 
     @Override
-    public String getMediaType() throws VirtualFileSystemException {
+    public String getMediaType() throws ServerException {
         String mediaType = mountPoint.getPropertyValue(this, "vfs:mimeType");
         if (mediaType == null) {
             // If media type is not set then item may be file or regular folder and cannot be a project.
@@ -128,33 +128,32 @@ public class VirtualFileImpl implements VirtualFile {
         return mediaType;
     }
 
-//    @Override
-    public VirtualFile setMediaType(String mediaType) throws VirtualFileSystemException {
+    //    @Override
+    public VirtualFile setMediaType(String mediaType) throws ServerException {
         mountPoint.setProperty(this, "vfs:mimeType", mediaType);
         return this;
     }
 
     @Override
-    public long getCreationDate() throws VirtualFileSystemException {
-        // Creation date is not accessible over JDK API. May be done when switch to JDK7.
-        // But even after switch to JDK7 creation date may not be available from underlying file system.
+    public long getCreationDate() {
+        // Creation date may not be available from underlying file system.
         return -1;
     }
 
     @Override
-    public long getLastModificationDate() throws VirtualFileSystemException {
+    public long getLastModificationDate() {
         return getIoFile().lastModified();
     }
 
     @Override
-    public long getLength() throws VirtualFileSystemException {
+    public long getLength() throws ServerException {
         return getIoFile().length();
     }
 
     //
 
     @Override
-    public List<Property> getProperties(PropertyFilter filter) throws VirtualFileSystemException {
+    public List<Property> getProperties(PropertyFilter filter) throws ServerException {
         if (PropertyFilter.NONE_FILTER == filter) {
             // Do not 'disturb' backend if we already know result is always empty.
             return Collections.emptyList();
@@ -163,104 +162,106 @@ public class VirtualFileImpl implements VirtualFile {
     }
 
     @Override
-    public VirtualFile updateProperties(List<Property> properties, String lockToken) throws VirtualFileSystemException {
+    public VirtualFile updateProperties(List<Property> properties, String lockToken) throws ForbiddenException, ServerException {
         mountPoint.updateProperties(this, properties, lockToken);
         return this;
     }
 
     @Override
-    public String getPropertyValue(String name) throws VirtualFileSystemException {
+    public String getPropertyValue(String name) throws ServerException {
         return mountPoint.getPropertyValue(this, name);
     }
 
     @Override
-    public String[] getPropertyValues(String name) throws VirtualFileSystemException {
+    public String[] getPropertyValues(String name) throws ServerException {
         return mountPoint.getPropertyValues(this, name);
     }
 
     //
 
     @Override
-    public String getVersionId() throws VirtualFileSystemException {
+    public String getVersionId() {
         return mountPoint.getVersionId(this);
     }
 
     @Override
-    public LazyIterator<VirtualFile> getVersions(VirtualFileFilter filter) throws VirtualFileSystemException {
+    public LazyIterator<VirtualFile> getVersions(VirtualFileFilter filter) throws ForbiddenException, ServerException {
         return mountPoint.getVersions(this, filter);
     }
 
     @Override
-    public VirtualFile getVersion(String versionId) throws VirtualFileSystemException {
+    public VirtualFile getVersion(String versionId) throws NotFoundException, ForbiddenException, ServerException {
         return mountPoint.getVersion(this, versionId);
     }
 
     //
 
     @Override
-    public VirtualFile copyTo(VirtualFile parent) throws VirtualFileSystemException {
+    public VirtualFile copyTo(VirtualFile parent) throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.copy(this, (VirtualFileImpl)parent);
     }
 
     @Override
-    public VirtualFile moveTo(VirtualFile parent, String lockToken) throws VirtualFileSystemException {
+    public VirtualFile moveTo(VirtualFile parent, String lockToken) throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.move(this, (VirtualFileImpl)parent, lockToken);
     }
 
     @Override
-    public VirtualFile rename(String newName, String newMediaType, String lockToken) throws VirtualFileSystemException {
+    public VirtualFile rename(String newName, String newMediaType, String lockToken)
+            throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.rename(this, newName, newMediaType, lockToken);
     }
 
     @Override
-    public void delete(String lockToken) throws VirtualFileSystemException {
+    public void delete(String lockToken) throws ForbiddenException, ServerException {
         mountPoint.delete(this, lockToken);
     }
 
     //
 
     @Override
-    public ContentStream zip(VirtualFileFilter filter) throws IOException, VirtualFileSystemException {
+    public ContentStream zip(VirtualFileFilter filter) throws ForbiddenException, ServerException {
         return mountPoint.zip(this, filter);
     }
 
     @Override
-    public void unzip(InputStream zipped, boolean overwrite) throws IOException, VirtualFileSystemException {
+    public void unzip(InputStream zipped, boolean overwrite) throws ForbiddenException, ConflictException, ServerException {
         mountPoint.unzip(this, zipped, overwrite);
     }
 
     //
 
     @Override
-    public String lock(long timeout) throws VirtualFileSystemException {
+    public String lock(long timeout) throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.lock(this, timeout);
     }
 
     @Override
-    public VirtualFile unlock(String lockToken) throws VirtualFileSystemException {
+    public VirtualFile unlock(String lockToken) throws ForbiddenException, ConflictException, ServerException {
         mountPoint.unlock(this, lockToken);
         return this;
     }
 
     @Override
-    public boolean isLocked() throws VirtualFileSystemException {
+    public boolean isLocked() throws ServerException {
         return mountPoint.isLocked(this);
     }
 
     //
 
     @Override
-    public Map<Principal, Set<VirtualFileSystemInfo.BasicPermissions>> getPermissions() throws VirtualFileSystemException {
+    public Map<Principal, Set<String>> getPermissions() throws ServerException {
         return mountPoint.getACL(this).getPermissionMap();
     }
 
     @Override
-    public List<AccessControlEntry> getACL() throws VirtualFileSystemException {
+    public List<AccessControlEntry> getACL() throws ServerException {
         return mountPoint.getACL(this).getEntries();
     }
 
     @Override
-    public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken) throws VirtualFileSystemException {
+    public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken)
+            throws ForbiddenException, ServerException {
         mountPoint.updateACL(this, acl, override, lockToken);
         return this;
     }
@@ -268,12 +269,13 @@ public class VirtualFileImpl implements VirtualFile {
     //
 
     @Override
-    public VirtualFile createFile(String name, String mediaType, InputStream content) throws VirtualFileSystemException {
+    public VirtualFile createFile(String name, String mediaType, InputStream content)
+            throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.createFile(this, name, mediaType, content);
     }
 
     @Override
-    public VirtualFile createFolder(String name) throws VirtualFileSystemException {
+    public VirtualFile createFolder(String name) throws ForbiddenException, ConflictException, ServerException {
         return mountPoint.createFolder(this, name);
     }
 
@@ -285,12 +287,12 @@ public class VirtualFileImpl implements VirtualFile {
     }
 
     @Override
-    public void accept(VirtualFileVisitor visitor) throws VirtualFileSystemException {
+    public void accept(VirtualFileVisitor visitor) throws ServerException {
         visitor.visit(this);
     }
 
     @Override
-    public LazyIterator<Pair<String, String>> countMd5Sums() throws VirtualFileSystemException {
+    public LazyIterator<Pair<String, String>> countMd5Sums() throws ServerException {
         return mountPoint.countMd5Sums(this);
     }
 
@@ -302,17 +304,12 @@ public class VirtualFileImpl implements VirtualFile {
         if (other == null) {
             throw new NullPointerException();
         }
-        try {
-            if (isFolder()) {
-                return other.isFolder() ? getName().compareTo(other.getName()) : -1;
-            } else if (other.isFolder()) {
-                return 1;
-            }
-            return getName().compareTo(other.getName());
-        } catch (VirtualFileSystemException e) {
-            // cannot continue if failed to determine item type.
-            throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+        if (isFolder()) {
+            return other.isFolder() ? getName().compareTo(other.getName()) : -1;
+        } else if (other.isFolder()) {
+            return 1;
         }
+        return getName().compareTo(other.getName());
     }
 
    /* =================== */

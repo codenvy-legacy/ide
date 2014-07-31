@@ -50,7 +50,7 @@ public class Project extends Folder {
     private         String                    projectTypeId;
     private         String                    visibility;
 
-    private         List<String>              currentUserPermissions;
+    private List<String> currentUserPermissions;
 
     /**
      * Constructor for empty project. Used for serialization only.
@@ -552,11 +552,11 @@ public class Project extends Folder {
      */
     protected void checkItemValid(final Resource resource) throws Exception {
         if (resource == null) {
-            throw new Exception("Resource is null.");
+            throw new Exception("A Java Resource object is null.  This is a Codenvy error.  Please contact support.");
         }
         if (resource.getProject() != this) {
-            throw new Exception("Resource is out of the project's scope. Project : " + getName() + ", resource path is : "
-                                + resource.getPath());
+            throw new Exception("Resource is out of the project's scope. Project : " +
+                                getName() + ", resource path is : " + resource.getPath() + ".");
         }
     }
 

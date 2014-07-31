@@ -301,6 +301,7 @@ public class MainPageViewImpl implements MainPageView {
 
     @Override
     public void reset() {
+        resetName();
         categoriesPanel.clear();
         list = new CategoriesList(resources);
         categoriesPanel.add(list);

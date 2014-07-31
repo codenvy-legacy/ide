@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.projecttypes;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
@@ -17,6 +19,7 @@ import com.codenvy.api.project.shared.ValueProvider;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,8 +40,12 @@ public class AntSourceFoldersValueProviderFactory implements ValueProviderFactor
         return new ValueProvider() {
             @Override
             public List<String> getValues() {
-                final List<String> list = new ArrayList<>();
-                FileEntry buildDescriptor = (FileEntry)project.getBaseFolder().getChild("build.xml");
+                final List<String> list = new LinkedList<>();
+                FileEntry buildDescriptor = null;
+                try {
+                    buildDescriptor = (FileEntry)project.getBaseFolder().getChild("build.xml");
+                } catch (ForbiddenException | ServerException ignored) {
+                }
                 if (buildDescriptor != null) {
                     list.addAll(getAntSourceFolders(buildDescriptor));
                 }

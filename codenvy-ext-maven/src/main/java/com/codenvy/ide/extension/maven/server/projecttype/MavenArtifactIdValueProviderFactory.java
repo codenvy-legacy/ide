@@ -10,17 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.maven.server.projecttype;
 
+import com.codenvy.api.core.ConflictException;
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ValueProvider;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,7 +32,7 @@ import java.util.List;
 public class MavenArtifactIdValueProviderFactory implements ValueProviderFactory {
     @Override
     public String getName() {
-        return "maven.artifactId";
+        return MavenAttributes.MAVEN_ARTIFACT_ID;
     }
 
     @Override
@@ -37,29 +40,26 @@ public class MavenArtifactIdValueProviderFactory implements ValueProviderFactory
         return new ValueProvider() {
             @Override
             public List<String> getValues() {
-                List<String> list = new ArrayList<>();
-                FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
-                if (pomFile != null) {
-                    try {
-                        Model model = MavenUtils.readModel(pomFile.getInputStream());
-                        list.add(model.getArtifactId());
-                    } catch (IOException e) {
-//                        throw new IllegalStateException(e);
-                    }
+                final List<String> list = new LinkedList<>();
+                try {
+                    final FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
+                    final Model model = MavenUtils.readModel(pomFile.getInputStream());
+                    list.add(model.getArtifactId());
+                } catch (ForbiddenException | ServerException | IOException ignored) {
                 }
                 return list;
             }
 
             @Override
             public void setValues(List<String> value) {
-                if(value.isEmpty()){
+                if (value.isEmpty()) {
                     throw new IllegalStateException("Maven ArtifactId can't be empty.");
                 }
-                if(value.size() > 1){
+                if (value.size() > 1) {
                     throw new IllegalStateException("Maven ArtifactId must be only one value.");
                 }
-                FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
                 try {
+                    FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
                     Model model;
                     if (pomFile != null) {
                         model = MavenUtils.readModel(pomFile.getInputStream());
@@ -71,7 +71,7 @@ public class MavenArtifactIdValueProviderFactory implements ValueProviderFactory
                     }
                     model.setArtifactId(value.get(0));
                     MavenUtils.writeModel(model, pomFile.getVirtualFile());
-                } catch (IOException | VirtualFileSystemException e) {
+                } catch (ForbiddenException | ServerException | ConflictException | IOException e) {
                     throw new IllegalStateException(e);
                 }
             }

@@ -70,7 +70,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import static com.codenvy.commons.lang.IoUtil.deleteRecursive;
 import static com.codenvy.commons.lang.NameGenerator.generate;
 
@@ -128,7 +127,8 @@ public abstract class LocalFileSystemTest extends TestCase {
         testFsIoRoot = WorkspaceHashLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
         assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(), null, virtualFileSystemRegistry);
+        provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new WorkspaceHashLocalFSMountStrategy(root, root), new EventService(), null,
+                                               virtualFileSystemRegistry);
         provider.mount(testFsIoRoot);
         mountPoint = provider.getMountPoint(true);
         ROOT_ID = mountPoint.getRoot().getId();
@@ -148,7 +148,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         deployer.publish(new VirtualFileSystemApplication());
 
         // RUNTIME VARIABLES
-        EnvironmentContext.getCurrent().setUser(new UserImpl("admin", null, Arrays.asList("workspace/admin", "workspace/developer")));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("admin", "admin", null, Arrays.asList("workspace/admin", "workspace/developer")));
     }
 
     // Directory "fs-root" in "target" folder of builder project.
@@ -399,7 +399,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         validateProperties(vfsPath, expectedProperties, false);
     }
 
-    protected java.io.File writePermissions(String vfsPath, Map<Principal, Set<BasicPermissions>> permissions) throws IOException {
+    protected java.io.File writePermissions(String vfsPath, Map<Principal, Set<String>> permissions) throws IOException {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), FSMountPoint.ACL_DIR);
         if (!(aclDir.exists() || aclDir.mkdirs())) {
@@ -422,7 +422,7 @@ public abstract class LocalFileSystemTest extends TestCase {
         return aclFile;
     }
 
-    protected Map<Principal, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception {
+    protected Map<Principal, Set<String>> readPermissions(String vfsPath) throws Exception {
         java.io.File file = getIoFile(vfsPath);
         java.io.File aclDir = new java.io.File(file.getParentFile(), FSMountPoint.ACL_DIR);
         java.io.File aclFile = new java.io.File(aclDir, file.getName() + FSMountPoint.ACL_FILE_SUFFIX);
