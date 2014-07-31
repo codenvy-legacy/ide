@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.MountPoint;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.LuceneSearcherProvider;
 import com.codenvy.api.vfs.server.search.Searcher;
 import com.codenvy.api.vfs.server.util.MediaTypeFilter;
@@ -58,7 +58,7 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
     }
 
     @Override
-    public Searcher getSearcher(MountPoint mountPoint, boolean create) throws VirtualFileSystemException {
+    public Searcher getSearcher(MountPoint mountPoint, boolean create) throws ServerException {
         final java.io.File vfsIoRoot = ((VirtualFileImpl)mountPoint.getRoot()).getIoFile();
         CleanableSearcher searcher = instances.get(vfsIoRoot);
         if (searcher == null && create) {
@@ -81,7 +81,7 @@ public class CleanableSearcherProvider extends LuceneSearcherProvider {
                 }
                 newSearcher = new CleanableSearcher(this, myIndexDir, filter);
             } catch (IOException e) {
-                throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
+                throw new ServerException("Unable create searcher. " + e.getMessage(), e);
             }
             searcher = instances.putIfAbsent(vfsIoRoot, newSearcher);
             if (searcher == null) {

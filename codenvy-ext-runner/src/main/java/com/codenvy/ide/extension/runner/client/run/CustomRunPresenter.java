@@ -121,6 +121,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         if (view.getSelectedEnvironment() != null) {
             runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
         }
+        runOptions.setSkipBuild(view.isSkipBuildSelected());
+
         view.close();
         runnerController.runActiveProject(runOptions, null, true);
     }

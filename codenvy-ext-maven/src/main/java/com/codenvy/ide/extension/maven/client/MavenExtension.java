@@ -22,6 +22,7 @@ import com.codenvy.ide.ext.java.shared.Constants;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.maven.client.actions.CustomBuildAction;
 import com.codenvy.ide.extension.maven.client.wizard.MavenPagePresenter;
+import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -41,8 +42,11 @@ public class MavenExtension {
     public MavenExtension(MavenLocalizationConstant localizationConstants,
                           BuilderLocalizationConstant builderLocalizationConstant,
                           ActionManager actionManager,
-                          CustomBuildAction customBuildAction, Provider<MavenPagePresenter> mavenPagePresenter,
-                          ProjectTypeWizardRegistry wizardRegistry, NotificationManager notificationManager) {
+                          CustomBuildAction customBuildAction,
+                          Provider<MavenPagePresenter> mavenPagePresenter,
+                          Provider<SelectRunnerPagePresenter> runnerPagePresenter,
+                          ProjectTypeWizardRegistry wizardRegistry,
+                          NotificationManager notificationManager) {
         actionManager.registerAction(localizationConstants.buildProjectControlId(), customBuildAction);
 
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
@@ -50,6 +54,7 @@ public class MavenExtension {
 
         ProjectWizard wizard = new ProjectWizard(notificationManager);
         wizard.addPage(mavenPagePresenter);
+        wizard.addPage(runnerPagePresenter);
         wizardRegistry.addWizard(Constants.MAVEN_ID, wizard);
     }
 }

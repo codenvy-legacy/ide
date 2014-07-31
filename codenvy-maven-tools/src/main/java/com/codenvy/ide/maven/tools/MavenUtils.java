@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.maven.tools;
 
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.VirtualFile;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
@@ -32,8 +33,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -120,10 +121,12 @@ public class MavenUtils {
      * @return description of maven project
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static Model readModel(VirtualFile pom) throws IOException, VirtualFileSystemException {
+    public static Model readModel(VirtualFile pom) throws IOException, ForbiddenException, ServerException {
         try (InputStream stream = pom.getContent().getStream()) {
             return pomReader.read(stream, true);
         } catch (XmlPullParserException e) {
@@ -202,10 +205,12 @@ public class MavenUtils {
      *         {@link VirtualFile} to write a model
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void writeModel(Model model, VirtualFile output) throws IOException, VirtualFileSystemException {
+    public static void writeModel(Model model, VirtualFile output) throws IOException, ForbiddenException, ServerException {
         final ByteArrayOutputStream bout = new ByteArrayOutputStream();
         pomWriter.write(bout, model);
         output.updateContent(output.getMediaType(), new ByteArrayInputStream(bout.toByteArray()), null);
@@ -252,10 +257,12 @@ public class MavenUtils {
      *         POM of artifact to add as dependency
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void addDependency(VirtualFile pom, Dependency dependency) throws IOException, VirtualFileSystemException {
+    public static void addDependency(VirtualFile pom, Dependency dependency) throws IOException, ForbiddenException, ServerException {
         final Model model = readModel(pom);
         model.getDependencies().add(dependency);
         writeModel(model, pom);
@@ -288,10 +295,13 @@ public class MavenUtils {
      *         POM of artifact to add as dependency
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
-    public static void addDependencies(VirtualFile pom, Dependency... dependencies) throws IOException, VirtualFileSystemException {
+    public static void addDependencies(VirtualFile pom, Dependency... dependencies)
+            throws IOException, ForbiddenException, ServerException {
         final Model model = readModel(pom);
         model.getDependencies().addAll(Arrays.asList(dependencies));
         writeModel(model, pom);
@@ -328,11 +338,13 @@ public class MavenUtils {
      *         artifact version
      * @throws IOException
      *         if an i/o error occurs
-     * @throws VirtualFileSystemException
-     *         if virtual file system exception occurs
+     * @throws ForbiddenException
+     *         if {@code pom} isn't a file
+     * @throws ServerException
+     *         if other error occurs
      */
     public static void addDependency(VirtualFile pom, String groupId, String artifactId, String version, String scope)
-            throws IOException, VirtualFileSystemException {
+            throws IOException, ForbiddenException, ServerException {
         addDependency(pom, newDependency(groupId, artifactId, version, scope));
     }
 
@@ -393,7 +405,7 @@ public class MavenUtils {
 
     /** Get source directories. */
     public static List<String> getSourceDirectories(Model model) {
-        List<String> list = new ArrayList<>();
+        List<String> list = new LinkedList<>();
         Build build = model.getBuild();
         if (build != null) {
             if (build.getSourceDirectory() != null) {
@@ -402,21 +414,49 @@ public class MavenUtils {
                 list.add(build.getTestSourceDirectory());
             }
         }
+        if (list.isEmpty()) {
+            list.add("src/main/java");
+            list.add("src/test/java");
+        }
         return list;
     }
 
     /** Get source directories. */
+    public static List<String> getSourceDirectories(VirtualFile pom) throws ServerException, IOException, ForbiddenException {
+        return getSourceDirectories(readModel(pom));
+    }
+
+    /** Get source directories. */
+    public static List<String> getSourceDirectories(java.io.File pom) throws IOException {
+        return getSourceDirectories(readModel(pom));
+    }
+
+    /** Get resource directories. */
     public static List<String> getResourceDirectories(Model model) {
-        List<String> list = new ArrayList<>();
+        List<String> list = new LinkedList<>();
         Build build = model.getBuild();
 
         if (build != null) {
             if (build.getResources() != null && !build.getResources().isEmpty()) {
                 for (Resource resource : build.getResources())
-                   list.add(resource.getDirectory());
+                    list.add(resource.getDirectory());
             }
         }
+        if (list.isEmpty()) {
+            list.add("src/main/resources");
+            list.add("src/test/resources");
+        }
         return list;
+    }
+
+    /** Get resource directories. */
+    public static List<String> getResourceDirectories(VirtualFile pom) throws ServerException, IOException, ForbiddenException {
+        return getResourceDirectories(readModel(pom));
+    }
+
+    /** Get resource directories. */
+    public static List<String> getResourceDirectories(java.io.File pom) throws IOException {
+        return getResourceDirectories(readModel(pom));
     }
 
     /** Creates new {@link Dependency} instance. */

@@ -11,6 +11,7 @@
 package com.codenvy.ide.importproject;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -59,10 +60,12 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     ListBox importersList;
 
     ImportProjectView.ActionDelegate delegate;
+    CoreLocalizationConstant         locale;
 
     /** Create view. */
     @Inject
     public ImportProjectViewImpl(ImportProjectViewBinder importProjectViewBinder, CoreLocalizationConstant locale) {
+        this.locale = locale;
         this.setTitle(locale.importProjectViewTitle());
         setWidget(importProjectViewBinder.createAndBindUi(this));
 
@@ -87,7 +90,7 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
         importersList.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-               delegate.onImporterSelected();
+                delegate.onImporterSelected();
             }
         });
     }
@@ -96,6 +99,12 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     @Override
     public void showDialog() {
         this.show();
+    }
+
+    @Override
+    public void showWarning() {
+        Info infoWindow = new Info(locale.importProjectWarningTitle(), locale.importProjectEnteredWrongUri());
+        infoWindow.show();
     }
 
     /** {@inheritDoc} */

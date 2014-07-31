@@ -10,33 +10,35 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
-import elemental.dom.Element;
-import elemental.events.MouseEvent;
-import elemental.html.SpanElement;
-
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.ui.tree.NodeDataAdapter;
-import com.codenvy.ide.ui.tree.NodeRenderer;
-import com.codenvy.ide.ui.tree.Tree;
-import com.codenvy.ide.ui.tree.TreeNodeElement;
-import com.codenvy.ide.util.dom.Elements;
-import com.codenvy.ide.util.input.SignalEvent;
+import com.codenvy.ide.ui.list.CategoriesList;
+import com.codenvy.ide.ui.list.Category;
+import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,90 +46,199 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class MainPageViewImpl implements MainPageView {
-    private static final String DESCRIPTOR = "Descriptors";
-    private static final String TEMPLATE   = "Temp";
-    private static final String CATEGORIES = "Categories";
-    private static final String SAMPLES    = "Samples";
+    private static final String[] defaultOptions = new String[]{"JDK", "Application Server"};
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    private final Tree.Listener<String> treeEventHandler = new Tree.Listener<String>() {
-        @Override
-        public void onNodeAction(TreeNodeElement<String> node) {
+    private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> projectTemplateDelegate =
+            new Category.CategoryEventDelegate<ProjectTemplateDescriptor>() {
+                @Override
+                public void onListItemClicked(Element listItemBase, ProjectTemplateDescriptor itemData) {
+                    selectNextWizardType(itemData);
+                }
+            };
+    private final Category.CategoryEventDelegate<ProjectTypeDescriptor>     projectTypeDelegate     =
+            new Category.CategoryEventDelegate<ProjectTypeDescriptor>() {
+                @Override
+                public void onListItemClicked(Element listItemBase, ProjectTypeDescriptor itemData) {
+                    selectNextWizardType(itemData);
+                }
+            };
+    private final CategoryRenderer<ProjectTypeDescriptor>                   projectTypeRenderer     =
+            new CategoryRenderer<ProjectTypeDescriptor>() {
+                @Override
+                public void renderElement(com.google.gwt.dom.client.Element element, ProjectTypeDescriptor data) {
+                    element.setInnerText(data.getProjectTypeName());
+                }
 
-        }
+                @Override
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectTypeDescriptor> category) {
+                    com.google.gwt.dom.client.SpanElement spanElement = Document.get().createSpanElement();
+                    spanElement.setInnerText(category.getTitle().toUpperCase());
+                    return spanElement;
+                }
+            };
+    private final CategoryRenderer<ProjectTemplateDescriptor>               projectTemplateRenderer =
+            new CategoryRenderer<ProjectTemplateDescriptor>() {
+                @Override
+                public void renderElement(com.google.gwt.dom.client.Element element, ProjectTemplateDescriptor data) {
+                    element.setInnerText(data.getDisplayName());
+                }
 
-        @Override
-        public void onNodeClosed(TreeNodeElement<String> node) {
-
-        }
-
-        @Override
-        public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<String> node) {
-
-        }
-
-        @Override
-        public void onNodeDragStart(TreeNodeElement<String> node, MouseEvent event) {
-
-        }
-
-        @Override
-        public void onNodeDragDrop(TreeNodeElement<String> node, MouseEvent event) {
-
-        }
-
-        @Override
-        public void onNodeExpanded(TreeNodeElement<String> node) {
-
-        }
-
-        @Override
-        public void onNodeSelected(TreeNodeElement<String> node, SignalEvent event) {
-            String key = node.getData();
-            if (templateOrType.containsKey(key)) {
-                selectNextWizardType(templateOrType.get(key));
-            }
-        }
-
-        @Override
-        public void onRootContextMenu(int mouseX, int mouseY) {
-
-        }
-
-        @Override
-        public void onRootDragDrop(MouseEvent event) {
-
-        }
-    };
+                @Override
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectTemplateDescriptor> category) {
+                    com.google.gwt.dom.client.SpanElement spanElement = Document.get().createSpanElement();
+                    spanElement.setInnerText(category.getTitle().toUpperCase());
+                    return spanElement;
+                }
+            };
+    @UiField
+    Style       style;
     @UiField
     SimplePanel categoriesPanel;
     @UiField
     HTMLPanel   descriptionArea;
-    private Tree<String>                                categoriesTree;
+    @UiField
+    HTMLPanel   configurationArea;
+    @UiField
+    TextBox     projectName;
+    @UiField
+    TextArea    projectDescription;
+    @UiField
+    RadioButton projectPrivate;
+    @UiField
+    RadioButton projectPublic;
+
     private ActionDelegate                              delegate;
     private Map<String, Set<ProjectTypeDescriptor>>     categories;
     private Map<String, Set<ProjectTemplateDescriptor>> samples;
     private Map<String, Object>                         templateOrType;
     private Resources                                   resources;
+    private CategoriesList                              list;
 
     @Inject
     public MainPageViewImpl(Resources resources) {
         this.resources = resources;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
+        projectName.getElement().setAttribute("title", "Define the name of your project...");
+        projectName.getElement().setAttribute("maxlength", "32");
+        projectDescription.getElement().setAttribute("title", "Add a description to your project...");
+        projectDescription.getElement().setAttribute("maxlength", "256");
+    }
+
+    @UiHandler("projectName")
+    void onProjectNameChanged(KeyUpEvent event) {
+        delegate.projectNameChanged(projectName.getText());
+    }
+
+    @UiHandler("projectDescription")
+    void onProjectDescriptionChanged(KeyUpEvent event) {
+        delegate.projectDescriptionChanged(projectDescription.getValue());
+    }
+
+    @UiHandler({"projectPublic", "projectPrivate"})
+    void visibilityHandler(ValueChangeEvent<Boolean> event) {
+        delegate.projectVisibilityChanged(projectPublic.getValue());
     }
 
     private void selectNextWizardType(Object itemData) {
         if (itemData instanceof ProjectTemplateDescriptor) {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
+            setConfigOptions(null);
+            // TODO: add 'Environment Configuration Options' to ProjectTemplateDescriptor
         } else if (itemData instanceof ProjectTypeDescriptor) {
             delegate.projectTypeSelected((ProjectTypeDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
+            setConfigOptions(new String[]{"JDK"});
+            // TODO: add 'Environment Configuration Options' to ProjectTypeDescriptor
         } else {
             descriptionArea.getElement().setInnerText("");
+            resetConfigOptions();
         }
+    }
+
+    private void setConfigOptions(String options[]) {
+        if (options == null) options = defaultOptions;
+        StringBuilder optionsHTMLBuilder = new StringBuilder();
+        for (String option : options) {
+            if (option.length() > 0) {
+                optionsHTMLBuilder.append("<p>");
+                optionsHTMLBuilder.append("- " + option);
+                optionsHTMLBuilder.append("</p>\n");
+            }
+        }
+        configurationArea.getElement().setInnerHTML(optionsHTMLBuilder.toString());
+    }
+
+    private void resetConfigOptions() {
+        configurationArea.getElement().setInnerText("");
+    }
+
+    private void changeEnabledState(boolean enabled) {
+        projectName.setEnabled(enabled);
+        changeEnabledStateAll(enabled);
+    }
+
+    private void changeEnabledStateAll(boolean enabled) {
+        projectDescription.setEnabled(enabled);
+        projectPublic.setEnabled(enabled);
+        projectPrivate.setEnabled(enabled);
+    }
+
+    @Override
+    public void resetName() {
+        projectName.setText("");
+        projectDescription.setText("");
+        projectPublic.setValue(true);
+        projectPrivate.setValue(false);
+        changeEnabledState(true);
+    }
+
+    @Override
+    public void enableInput() {
+        changeEnabledState(true);
+    }
+
+    @Override
+    public void disableInput() {
+        changeEnabledState(false);
+    }
+
+    @Override
+    public void setName(String name) {
+        projectName.setValue(name, true);
+    }
+
+    @Override
+    public void setVisibility(boolean visible) {
+        projectPublic.setValue(visible, false);
+    }
+
+    @Override
+    public void removeNameError() {
+        projectName.removeStyleName(style.inputError());
+    }
+
+    @Override
+    public void showNameError() {
+        projectName.addStyleName(style.inputError());
+    }
+
+    @Override
+    public void focusOnName() {
+        new Timer() {
+            @Override
+            public void run() {
+                projectName.setFocus(true);
+            }
+        }.schedule(300);
+    }
+
+    @Override
+    public void disableAllExceptName() {
+        changeEnabledStateAll(false);
     }
 
     @Override
@@ -156,7 +267,7 @@ public class MainPageViewImpl implements MainPageView {
         if (typeDescriptor != null) {
             for (String key : templateOrType.keySet()) {
                 if (templateOrType.get(key) == typeDescriptor) {
-                    categoriesTree.getSelectionModel().selectSingleNode(key);
+//                    categoriesTree.getSelectionModel().selectSingleNode(key);
                     selectNextWizardType(typeDescriptor);
 
                 }
@@ -170,23 +281,34 @@ public class MainPageViewImpl implements MainPageView {
         this.categories = categories;
         this.samples = samples;
         templateOrType = new HashMap<>();
-        categoriesTree.getModel().setRoot("");
-        if (samples.isEmpty()) {
-            categoriesTree.renderTree(1);
-        } else
-            categoriesTree.renderTree(0);
+
+        List<Category<?>> categoriesList = new ArrayList<>();
+        for (String s : categories.keySet()) {
+            Category<ProjectTypeDescriptor> category = new Category<>(s, projectTypeRenderer, categories.get(s), projectTypeDelegate);
+            categoriesList.add(category);
+        }
+
+        for (String s : samples.keySet()) {
+            List<ProjectTemplateDescriptor> projectTemplateDescriptors = new ArrayList<>();
+            projectTemplateDescriptors.addAll(samples.get(s));
+            Collections.sort(projectTemplateDescriptors, new ProjectTemplaDescriptorComparator());
+            Category<ProjectTemplateDescriptor> category = new Category<>(s, projectTemplateRenderer, projectTemplateDescriptors,
+                                                                          projectTemplateDelegate);
+            categoriesList.add(category);
+        }
+        list.render(categoriesList);
     }
 
     @Override
     public void reset() {
+        resetName();
         categoriesPanel.clear();
-        categoriesTree = Tree.create(resources, new CategoriesDataAdapter(), new CategoriesNodeRenderer());
-        categoriesPanel.add(categoriesTree);
-        Style style = categoriesTree.asWidget().getElement().getStyle();
-        style.setWidth(100, Style.Unit.PCT);
-        style.setHeight(100, Style.Unit.PCT);
-        style.setPosition(Style.Position.RELATIVE);
-        categoriesTree.setTreeEventHandler(treeEventHandler);
+        list = new CategoriesList(resources);
+        categoriesPanel.add(list);
+        com.google.gwt.dom.client.Style style = list.getElement().getStyle();
+        style.setWidth(100, com.google.gwt.dom.client.Style.Unit.PCT);
+        style.setHeight(100, com.google.gwt.dom.client.Style.Unit.PCT);
+        style.setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
         descriptionArea.clear();
     }
 
@@ -194,162 +316,33 @@ public class MainPageViewImpl implements MainPageView {
             extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
     }
 
-    private class CategoriesDataAdapter implements NodeDataAdapter<String> , Comparator<String>{
+    interface Style extends CssResource {
+        String mainPanel();
 
-        private Map<String, TreeNodeElement<String>> elements = new HashMap<>();
+        String leftPart();
 
-        @Override
-        public int compare(String a, String b) {
-            if (a.startsWith(SAMPLES) && !b.startsWith(SAMPLES)) {
-                return -1;
-            }
-            return a.compareTo(b);
+        String rightPart();
 
-        }
+        String namePanel();
 
-        @Override
-        public boolean hasChildren(String data) {
-            return data.startsWith(SAMPLES) || data.startsWith(CATEGORIES);
-        }
+        String projectName();
 
-        @Override
-        public Array<String> getChildren(String data) {
-            if (categories != null) {
-                if ("".equals(data)) {
-                    Array<String> array = Collections.createArray();
-                    for (String s : categories.keySet()) {
-                        array.add(CATEGORIES + s);
-                    }
-                    if (!samples.isEmpty()) {
-                        for (String s : samples.keySet()) {
-                            array.add(SAMPLES + s);
-                        }
-                    }
-                    array.sort(this);
-                    return array;
+        String projectDescription();
 
-                }
+        String labelPosition();
 
-                if (data.startsWith(CATEGORIES)) {
-                    String key = data.substring(CATEGORIES.length());
-                    Array<String> array = Collections.createArray();
-                    Set<ProjectTypeDescriptor> typeDescriptors = categories.get(key);
-                    if (typeDescriptors != null) {
-                        for (ProjectTypeDescriptor typeDescriptor : typeDescriptors) {
-                            String itemKey = DESCRIPTOR + key + '!' + typeDescriptor.getProjectTypeId();
-                            array.add(itemKey);
-                            templateOrType.put(itemKey, typeDescriptor);
-                        }
-                    }
-                    array.sort(this);
-                    return array;
-                }
-            }
-            if (data.startsWith(SAMPLES)) {
-                String key = data.substring(SAMPLES.length());
-                if (samples.containsKey(key)) {
-                    Set<ProjectTemplateDescriptor> descriptors = samples.get(key);
-                    Array<String> array = Collections.createArray();
-                    for (ProjectTemplateDescriptor descriptor : descriptors) {
-                        String itemKey = TEMPLATE + descriptor.getDisplayName();
-                        templateOrType.put(itemKey, descriptor);
-                        array.add(itemKey);
+        String radioButtonPosition();
 
-                    }
-                    array.sort(this);
-                    return array;
-                }
-            }
+        String categories();
 
+        String description();
 
-            return null;
-        }
+        String configuration();
 
-        @Override
-        public String getNodeId(String data) {
-            return data;
-        }
+        String label();
 
-        @Override
-        public String getNodeName(String data) {
-            return data;
-        }
+        String inputError();
 
-        @Override
-        public String getParent(String data) {
-            return "";
-        }
-
-        @Override
-        public TreeNodeElement<String> getRenderedTreeNode(String data) {
-            return elements.get(data);
-        }
-
-        @Override
-        public void setNodeName(String data, String name) {
-
-        }
-
-        @Override
-        public void setRenderedTreeNode(String data, TreeNodeElement<String> renderedNode) {
-            elements.put(data, renderedNode);
-        }
-
-        @Override
-        public String getDragDropTarget(String data) {
-            return null;
-        }
-
-        @Override
-        public Array<String> getNodePath(String data) {
-            return PathUtils.getNodePath(this, data);
-        }
-
-        @Override
-        public String getNodeByPath(String root, Array<String> relativeNodePath) {
-            return null;
-        }
-    }
-
-    private class CategoriesNodeRenderer implements NodeRenderer<String> {
-
-        @Override
-        public Element getNodeKeyTextContainer(SpanElement treeNodeLabel) {
-            return null;
-        }
-
-        @Override
-        public SpanElement renderNodeContents(String data) {
-            SpanElement spanElement = Elements.createSpanElement();
-            if (data.startsWith(SAMPLES)) {
-                data = data.substring(SAMPLES.length());
-                spanElement.getStyle().setFontWeight("bold");
-            }
-            if (data.startsWith(CATEGORIES)) {
-                data = data.substring(CATEGORIES.length());
-                spanElement.getStyle().setFontWeight("bold");
-            }
-            if (samples.containsKey(data)) {
-                spanElement.getStyle().setFontWeight("bold");
-            }
-            if (templateOrType.containsKey(data)) {
-                Object temOrType = templateOrType.get(data);
-                if (temOrType instanceof ProjectTemplateDescriptor) {
-                    ProjectTemplateDescriptor template = ((ProjectTemplateDescriptor)temOrType);
-                    data = template.getDisplayName();
-                } else if (temOrType instanceof ProjectTypeDescriptor) {
-                    ProjectTypeDescriptor descriptor = ((ProjectTypeDescriptor)temOrType);
-                    data = descriptor.getProjectTypeName();
-                }
-                spanElement.getStyle().setFontSize("11px");
-            }
-            spanElement.setInnerHTML(data);
-            return spanElement;
-        }
-
-        @Override
-        public void updateNodeContents(TreeNodeElement<String> treeNode) {
-
-        }
+        String horizontalLine();
     }
 }

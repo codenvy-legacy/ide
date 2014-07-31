@@ -8,24 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.vfs.impl.fs.exceptions;
-
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+package com.codenvy.ide.texteditor.api;
 
 /**
- * This exception occurs in case LocalPathResolver in some reason can't resolve the path.
- *
- * @author Vitaly Parfonov
+ * @author Roman Nikitenko
  */
-@SuppressWarnings("serial")
-public class GitUrlResolveException extends VirtualFileSystemException {
+public interface UndoableEditor {
 
-    public GitUrlResolveException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public GitUrlResolveException(String message) {
-        super(message);
-    }
+    /** Returns the undo manager. */
+    UndoManager getUndoManager();
 
 }

@@ -19,7 +19,7 @@ import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
-import com.codenvy.api.user.shared.dto.Profile;
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Constants;
@@ -187,9 +187,9 @@ public class BootstrapController {
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
-                 new AsyncRequestCallback<Profile>(dtoUnmarshallerFactory.newUnmarshaller(Profile.class)) {
+                 new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                      @Override
-                     protected void onSuccess(final Profile profile) {
+                     protected void onSuccess(final ProfileDescriptor profile) {
                          Config.setCurrentProfile(profile);
 
                          /**

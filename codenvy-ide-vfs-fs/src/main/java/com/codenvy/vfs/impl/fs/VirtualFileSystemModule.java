@@ -12,7 +12,6 @@ package com.codenvy.vfs.impl.fs;
 
 import com.codenvy.api.vfs.server.VirtualFile;
 import com.codenvy.api.vfs.server.VirtualFileFilter;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -27,7 +26,7 @@ public class VirtualFileSystemModule extends AbstractModule {
                 Multibinder.newSetBinder(binder(), VirtualFileFilter.class, Names.named("vfs.index_filter"));
         multibinder.addBinding().toInstance(new VirtualFileFilter() {
             @Override
-            public boolean accept(VirtualFile virtualFile) throws VirtualFileSystemException {
+            public boolean accept(VirtualFile virtualFile) {
                 return !virtualFile.getPath().endsWith("/.codenvy/misc.xml");
             }
         });

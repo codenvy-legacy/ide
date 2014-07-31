@@ -142,11 +142,26 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
 
+    @Key("createProjectFromTemplate.linkGetMoreRAM")
+    String createProjectFromTemplatelinkGetMoreRAM();
+
     @Key("format.name")
     String formatName();
 
     @Key("format.description")
     String formatDescription();
+
+    @Key("undo.name")
+    String undoName();
+
+    @Key("undo.description")
+    String undoDescription();
+
+    @Key("redo.name")
+    String redoName();
+
+    @Key("redo.description")
+    String redoDescription();
 
     @Key("uploadFile.name")
     String uploadFileName();
@@ -196,6 +211,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
 
+    @Key("importProject.warningTitle")
+    String importProjectWarningTitle();
+
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();
@@ -231,6 +249,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("messages.someFilesCanNotBeSaved")
     String someFilesCanNotBeSaved();
+
+    @Key("messages.importProject.enteredWrongUri")
+    String importProjectEnteredWrongUri();
 
     @Key("messages.unable-open-not-file")
     String unableOpenNotFile(String path);

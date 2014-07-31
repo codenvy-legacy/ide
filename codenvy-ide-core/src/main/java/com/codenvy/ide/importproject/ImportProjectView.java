@@ -39,6 +39,9 @@ public interface ImportProjectView extends IsWidget {
     /** Show dialog. */
     void showDialog();
 
+    /** Show warning. */
+    void showWarning();
+
     /** Close dialog */
     void close();
 

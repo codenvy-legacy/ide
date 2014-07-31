@@ -105,6 +105,16 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
         }
     }
 
+    /**
+     * Check if this wizard contains page.
+     *
+     * @param page the page
+     * @return the boolean
+     */
+    public boolean containsPage(@NotNull Provider<? extends WizardPage> page) {
+        return wizardPageProviders.contains(page);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void setUpdateDelegate(@NotNull UpdateDelegate delegate) {

@@ -124,9 +124,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("enteredValueNotCorrect")
     String enteredValueNotCorrect();
 
-    @Key("get-recipe.failed")
-    String getRecipeFailed();
-
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
@@ -143,4 +140,7 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.runConfiguration.memorySizeLabel")
     String runConfigurationViewMemorySizeLabel();
+    
+    @Key("view.runConfiguration.skipBuildLabel")
+    String runConfigurationViewSkipBuildLabel();
 }

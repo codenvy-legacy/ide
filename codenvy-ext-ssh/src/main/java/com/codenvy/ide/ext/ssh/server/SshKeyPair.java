@@ -8,19 +8,25 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ext.tutorials.server;
+package com.codenvy.ide.ext.ssh.server;
 
-import com.codenvy.inject.DynaModule;
-import com.google.inject.AbstractModule;
+/**
+ * @author andrew00x
+ */
+public class SshKeyPair {
+    private final SshKey pub;
+    private final SshKey prv;
 
-/** @author Artem Zatsarynnyy */
-@DynaModule
-public class CodenvyTutorialModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        bind(ProjectTypeDescriptionsExtension.class);
-        bind(CodenvyTutorialProjectTypeExtension.class);
-        bind(CodenvyPluginProjectTypeDescriptionExtension.class);
-        bind(CodenvyPluginProjectTypeExtension.class);
+    public SshKeyPair(SshKey pub, SshKey prv) {
+        this.pub = pub;
+        this.prv = prv;
+    }
+
+    public SshKey getPublicKey() {
+        return pub;
+    }
+
+    public SshKey getPrivateKey() {
+        return prv;
     }
 }

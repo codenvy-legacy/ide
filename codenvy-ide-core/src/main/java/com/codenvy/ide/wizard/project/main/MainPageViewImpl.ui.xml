@@ -12,50 +12,158 @@
 -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style>
-        .mainPanel{
-            margin: 14px;
-            border: none !important;
-            height: 412px;
-        }
+    <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
+    <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.main.MainPageViewImpl.Style">
+        @eval InputBackgroundColor com.codenvy.ide.api.ui.theme.Style.getInputBackground();
         @eval bgColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-        .categories{
+
+        .mainPanel {
+            margin: 0px;
+            border: none !important;
+            height: 100%;
+        }
+
+        .leftPart {
+            margin-left: 12px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .rightPart {
+            border-left: 1px solid #505050;
+            margin-left: 1px;
+        }
+
+        .rightPart > div {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+
+        .namePanel {
+            margin-top: 5px;
+            overflow: hidden;
+            display: block;
+        }
+
+        .projectName, .projectDescription {
+            margin-top: 4px;
+            float: right;
+            background-color: InputBackgroundColor;
+            color: #dbdbdb;
+            border: 1px solid #191c1e;
+            border-radius: 1px;
+            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
+            font-size: 12px;
+            padding-left: 8px;
+        }
+
+        .labelPosition {
+            position: relative;
+            line-height: 29px;
+            margin-right: 9px;
+            font-weight: bold;
+            float: left;
+            font-size: 12px;
+        }
+
+        .radioButtonPosition {
+            position: relative;
+            float: right;
+            padding-left: 5px;
+            top: 8px;
+            right: 65px;
+        }
+
+        .categories {
             border: 1px solid bgColor;
             margin-right: 25px;
             background-color: #313131;
         }
-        .description{
-            font-size: 12px;
+
+        .description {
+            font-size: 11px;
         }
-        .label{
+
+        .configuration {
+            margin-right: 10px;
+            font-size: 11px;
+        }
+
+        .configuration > p {
+            margin: 0px 0px 2px 10px;
+        }
+
+        .label {
             font-weight: bold;
             font-size: 12px;
         }
+
+        .inputError {
+            border-color: red;
+            box-shadow: 0 0 5px red;
+        }
+
+        .horizontalLine {
+            width: 255px;
+            margin-top: 7px;
+            float: right;
+            border-bottom: 1px solid #505050;
+        }
+
     </ui:style>
-<g:DockLayoutPanel unit="PX" addStyleNames="{style.mainPanel}">
-     <g:center>
-      <g:DockLayoutPanel unit="PCT">
-          <g:east size="50">
-              <g:DockLayoutPanel unit="PX">
-                  <g:north size="20">
-                      <g:Label text="Description:" addStyleNames="{style.label}"/>
-                  </g:north>
-                  <g:north size="70">
-                      <g:HTMLPanel debugId="newProject-descriptionArea" ui:field="descriptionArea" addStyleNames="{style.description}"/>
-                  </g:north>
-              </g:DockLayoutPanel>
-          </g:east>
-          <g:west size="50">
-              <g:DockLayoutPanel unit="PX" >
-                  <g:north size="20">
-                      <g:Label text="Categories" height="20px" addStyleNames="{style.label}"/>
-                  </g:north>
-                  <g:center>
-                      <g:SimplePanel ui:field="categoriesPanel" addStyleNames="{style.categories}" debugId="newProject-categoriesPanel"/>
-                  </g:center>
-              </g:DockLayoutPanel>
-          </g:west>
-      </g:DockLayoutPanel>
-  </g:center>
-</g:DockLayoutPanel>
+    <g:DockLayoutPanel unit="PX" addStyleNames="{style.mainPanel}">
+        <g:center>
+            <g:DockLayoutPanel unit="PCT">
+                <g:east size="53">
+                    <g:FlowPanel addStyleNames="{style.rightPart}">
+                        <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
+                            <g:Label text="{locale.createProjectFromTemplateName}"
+                                     addStyleNames="{style.labelPosition}"/>
+                            <g:TextBox width="290px" height="14px" ui:field="projectName" addStyleNames="{style.projectName}"
+                                       debugId="file-newProject-projectName"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="60px" addStyleNames="{style.namePanel}">
+                            <g:Label text="{locale.createProjectFromTemplateDescription}"
+                                     addStyleNames="{style.labelPosition}"/>
+                            <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.projectDescription}"
+                                        debugId="file-newProject-projectDescription"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="80px" addStyleNames="{style.namePanel}">
+                            <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}" addStyleNames="{style.labelPosition}"/>
+                            <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}"
+                                           addStyleNames="{style.radioButtonPosition}" checked="true"
+                                           ui:field="projectPublic" debugId="file-newProject-public"/>
+                            <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}"
+                                           addStyleNames="{style.radioButtonPosition}"
+                                           ui:field="projectPrivate" debugId="file-newProject-private"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="20px" addStyleNames="{style.namePanel}">
+                            <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>
+                            <g:Label text="Template Information" addStyleNames="{style.label}"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="50px" addStyleNames="{style.namePanel}">
+                            <g:HTMLPanel debugId="newProject-descriptionArea" ui:field="descriptionArea"
+                                         addStyleNames="{style.description}"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="20px" addStyleNames="{style.namePanel}">
+                            <g:Label text="Environment Configuration Options:" addStyleNames="{style.label}"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="70px">
+                            <g:HTMLPanel debugId="newProject-configurationArea" ui:field="configurationArea"
+                                         addStyleNames="{style.configuration}"/>
+                        </g:FlowPanel>
+                    </g:FlowPanel>
+                </g:east>
+                <g:west size="47">
+                    <g:DockLayoutPanel unit="PX" addStyleNames="{style.leftPart}">
+                        <g:center>
+                            <g:SimplePanel ui:field="categoriesPanel" addStyleNames="{style.categories}"
+                                           debugId="newProject-categoriesPanel"/>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </g:west>
+            </g:DockLayoutPanel>
+        </g:center>
+    </g:DockLayoutPanel>
 </ui:UiBinder>

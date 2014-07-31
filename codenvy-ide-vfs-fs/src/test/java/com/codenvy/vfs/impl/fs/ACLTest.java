@@ -15,6 +15,7 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
@@ -24,8 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class ACLTest extends LocalFileSystemTest {
     private String lockedFilePath;
     private String lockedFileId;
 
-    private Map<Principal, Set<BasicPermissions>> permissions;
+    private Map<Principal, Set<String>> permissions;
 
     @Override
     protected void setUp() throws Exception {
@@ -55,9 +56,10 @@ public class ACLTest extends LocalFileSystemTest {
         Principal user1 = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal user2 = DtoFactory.getInstance().createDto(Principal.class).withName("john").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(admin, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(user1, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE, BasicPermissions.UPDATE_ACL));
-        permissions.put(user2, EnumSet.of(BasicPermissions.READ));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(user1, Sets.newHashSet(BasicPermissions.READ.value(), BasicPermissions.WRITE.value(),
+                                               BasicPermissions.UPDATE_ACL.value()));
+        permissions.put(user2, Sets.newHashSet(BasicPermissions.READ.value()));
 
         writePermissions(filePath, permissions);
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
@@ -102,9 +104,9 @@ public class ACLTest extends LocalFileSystemTest {
         assertEquals(204, response.getStatus());
 
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("john").withType(Principal.Type.USER);
-        permissions.get(principal).add(BasicPermissions.WRITE);
+        permissions.get(principal).add(BasicPermissions.WRITE.value());
         // check backend
-        Map<? extends Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<? extends Principal, Set<String>> updatedAccessList = readPermissions(filePath);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -128,7 +130,7 @@ public class ACLTest extends LocalFileSystemTest {
         permissions.remove(user2);
 
         // check backend
-        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<String>> updatedAccessList = readPermissions(filePath);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -161,7 +163,7 @@ public class ACLTest extends LocalFileSystemTest {
     public void testUpdateACLHavePermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.READ));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(filePath, permissions);
 
         String requestPath = SERVICE_URI + "acl/" + fileId;
@@ -171,14 +173,14 @@ public class ACLTest extends LocalFileSystemTest {
         h.put("Content-Type", Arrays.asList("application/json"));
         // File is protected and default principal 'andrew' has not update_acl permission.
         // Replace default principal by principal who has write permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
         assertEquals(204, response.getStatus());
 
         principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.get(principal).add(BasicPermissions.WRITE);
+        permissions.get(principal).add(BasicPermissions.WRITE.value());
         // check backend
-        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<String>> updatedAccessList = readPermissions(filePath);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -190,7 +192,7 @@ public class ACLTest extends LocalFileSystemTest {
     public void testUpdateACLNoPermissions() throws Exception {
         // Remove permissions for current user, see LocalFileSystemTest.setUp()
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.READ));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(filePath, permissions);
 
         String acl = "[{\"principal\":{\"name\":\"admin\",\"type\":\"USER\"},\"permissions\":[\"all\"]}]";
@@ -206,7 +208,7 @@ public class ACLTest extends LocalFileSystemTest {
 
         // ACL must not be changed.
         // check backend
-        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(filePath);
+        Map<Principal, Set<String>> updatedAccessList = readPermissions(filePath);
         assertEquals(permissions, updatedAccessList);
 
         // check API
@@ -227,14 +229,14 @@ public class ACLTest extends LocalFileSystemTest {
 
         assertEquals(204, response.getStatus());
 
-        Map<Principal, Set<BasicPermissions>> thisTestAccessList = new HashMap<>(2);
+        Map<Principal, Set<String>> thisTestAccessList = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("john").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        thisTestAccessList.put(user, EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-        thisTestAccessList.put(admin, EnumSet.of(BasicPermissions.READ));
+        thisTestAccessList.put(user, Sets.newHashSet(BasicPermissions.READ.value(), BasicPermissions.WRITE.value()));
+        thisTestAccessList.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
 
         // check backend
-        Map<Principal, Set<BasicPermissions>> updatedAccessList = readPermissions(lockedFilePath);
+        Map<Principal, Set<String>> updatedAccessList = readPermissions(lockedFilePath);
         assertEquals(thisTestAccessList, updatedAccessList);
 
         // check API
@@ -253,7 +255,7 @@ public class ACLTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "acl/" + lockedFileId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
 
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
 
         // ACL must not be updated.
         List<AccessControlEntry> updatedAcl =
@@ -261,20 +263,17 @@ public class ACLTest extends LocalFileSystemTest {
         assertTrue(updatedAcl.isEmpty()); // TODO
     }
 
-    private Map<Principal, Set<BasicPermissions>> toMap(List<AccessControlEntry> acl) {
-        Map<Principal, Set<BasicPermissions>> map = new HashMap<>(acl.size());
+    private Map<Principal, Set<String>> toMap(List<AccessControlEntry> acl) {
+        Map<Principal, Set<String>> map = new HashMap<>(acl.size());
         for (AccessControlEntry ace : acl) {
             Principal principal = DtoFactory.getInstance().clone(ace.getPrincipal());
-            Set<BasicPermissions> permissions = map.get(principal);
+            Set<String> permissions = map.get(principal);
             if (permissions == null) {
-                permissions = EnumSet.noneOf(BasicPermissions.class);
-                map.put(principal, permissions);
+                map.put(principal, permissions = new HashSet<>(4));
             }
-            List<String> strPermissions = ace.getPermissions();
-            if (!(strPermissions == null || strPermissions.isEmpty())) {
-                for (String strPermission : strPermissions) {
-                    permissions.add(BasicPermissions.fromValue(strPermission));
-                }
+            List<String> acePermissions = ace.getPermissions();
+            if (!(acePermissions == null || acePermissions.isEmpty())) {
+                permissions.addAll(acePermissions);
             }
         }
         return map;

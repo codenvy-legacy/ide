@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.maven.server.projecttype;
 
+import com.codenvy.api.core.ConflictException;
+import com.codenvy.api.core.ForbiddenException;
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.project.server.FolderEntry;
 
 import java.io.IOException;
@@ -19,9 +22,7 @@ import java.io.IOException;
  */
 public class MavenProjectGenerator {
 
-
-
-    public static void generateProjectStructure(FolderEntry baseFolder) throws IOException {
+    public static void generateProjectStructure(FolderEntry baseFolder) throws ConflictException, ForbiddenException, ServerException {
         FolderEntry src = baseFolder.createFolder("src");
         FolderEntry main = src.createFolder("main");
         FolderEntry mainJava = main.createFolder("java");

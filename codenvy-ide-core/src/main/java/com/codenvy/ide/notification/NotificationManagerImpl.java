@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.notification;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
@@ -22,6 +24,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -54,9 +57,10 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
      * @param notificationMessageStack
      */
     @Inject
-    public NotificationManagerImpl(NotificationManagerView view,
-                                   NotificationContainer notificationContainer,
-                                   NotificationMessageStack notificationMessageStack) {
+    public NotificationManagerImpl(EventBus eventBus,
+                                   NotificationManagerView view,
+                                   final NotificationContainer notificationContainer,
+                                   final NotificationMessageStack notificationMessageStack) {
         this.view = view;
         this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);
@@ -67,6 +71,19 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         this.notificationMessageStack.setDelegate(this);
         this.notifications = Collections.createArray();
 
+        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                notifications.clear();
+                notificationMessageStack.clear();
+                notificationContainer.clear();
+                onValueChanged();
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -101,7 +118,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         notificationMessageStack.addNotification(notification);
         notificationContainer.addNotification(notification);
         onValueChanged();
-
+        view.scrollBottom();
     }
 
 

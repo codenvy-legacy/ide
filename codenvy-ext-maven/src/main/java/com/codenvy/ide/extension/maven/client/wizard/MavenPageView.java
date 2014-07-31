@@ -33,6 +33,8 @@ public interface MavenPageView extends View<MavenPageView.ActionDelegate> {
     public interface ActionDelegate{
 
         void onTextsChange();
+
+        void setPackaging(String packaging);
     }
 
     String getGroupId();

@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.VirtualFileEvent;
 import com.codenvy.commons.lang.IoUtil;
 import com.codenvy.ide.ext.java.server.internal.core.JavaProject;
@@ -29,7 +28,6 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,11 +42,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Singleton
 public class JavaProjectService {
     /** Logger. */
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JavaProjectService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaProjectService.class);
 
-    private ConcurrentHashMap<String, JavaProject>                 cache       =
-            new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, JavaProject>                 cache       = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, CopyOnWriteArraySet<String>> projectInWs = new ConcurrentHashMap<>();
     private WorkspaceHashLocalFSMountStrategy fsMountStrategy;
     private ProjectApiRestClient              apiRestClient;
@@ -84,22 +80,20 @@ public class JavaProjectService {
         if (cache.containsKey(key)) {
             return cache.get(key);
         }
-        ProjectDescriptor project = apiRestClient.getProject(wsId, projectPath);
+        File mountPath;
         try {
-            File mountPath = fsMountStrategy.getMountPath(wsId);
-            JavaProject javaProject =
-                    new JavaProject(project, new File(mountPath, projectPath), tempDir, apiRestClient, wsId, new HashMap<>(options));
-            cache.put(key, javaProject);
-            if (!projectInWs.containsKey(wsId)) {
-                projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
-            }
-            projectInWs.get(wsId).add(projectPath);
-            return javaProject;
-        } catch (VirtualFileSystemException e) {
-            throw new WebApplicationException(e);
+            mountPath = fsMountStrategy.getMountPath(wsId);
+        } catch (ServerException e) {
+            throw new RuntimeException(e);
         }
+        JavaProject javaProject = new JavaProject(mountPath, projectPath, tempDir, wsId, new HashMap<>(options));
+        cache.put(key, javaProject);
+        if (!projectInWs.containsKey(wsId)) {
+            projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
+        }
+        projectInWs.get(wsId).add(projectPath);
+        return javaProject;
     }
-
 
     public void removeProject(String wsId, String projectPath) {
         JavaProject javaProject = cache.remove(wsId + projectPath);

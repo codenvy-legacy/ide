@@ -35,7 +35,7 @@
     margin-top: 3px;
     background: inactiveTabBackground;
     border: 1px solid inactiveTabBorderColor;
-    padding: 3px 16px;
+    padding: 3px 0px 3px 10px;
     cursor: pointer;
     cursor: hand;
     position: relative;
@@ -50,7 +50,6 @@
 
 .ide-PartStack .ide-PartStack-Tab span {
     /* margin between text and image */
-    margin-right: 6px;
     padding-bottom: 2px;
     white-space: nowrap;
     font-size: 11px;
@@ -113,6 +112,7 @@
     cursor: default;
     opacity: 0.5;
     vertical-align: middle;
+    padding: 5px 10px;
 }
 
 .ide-PartStack .ide-PartStack-Tab .CloseButton:hover {

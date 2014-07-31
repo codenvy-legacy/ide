@@ -19,11 +19,12 @@ import com.codenvy.ide.api.ui.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.wizard.project.ProjectWizardView;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,6 +50,34 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         view.setDelegate(this);
     }
 
+    @Override
+    public void projectNameChanged(String name) {
+        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]*$");
+        if (regExp.test(name)) {
+            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+            view.removeNameError();
+        } else {
+            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+            view.showNameError();
+        }
+        delegate.updateControls();
+    }
+
+    @Override
+    public void projectDescriptionChanged(String projectDescriptionValue) {
+        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
+    }
+
+    @Override
+    public void projectVisibilityChanged(Boolean aPublic) {
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
+    }
+
+    @Override
+    public ProjectWizardView.ActionDelegate getProjectWizardDelegate() {
+        return (ProjectWizardView.ActionDelegate)delegate;
+    }
+
     @Nullable
     @Override
     public String getNotice() {
@@ -62,11 +91,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void focusComponent() {
-
-    }
-
-    @Override
-    public void commit(@NotNull final CommitCallback callback) {
 
     }
 
@@ -117,6 +141,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
+        view.enableInput();
     }
 
     @Override
@@ -126,5 +151,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         typeDescriptor = null;
         delegate.updateControls();
+        view.disableAllExceptName();
     }
 }

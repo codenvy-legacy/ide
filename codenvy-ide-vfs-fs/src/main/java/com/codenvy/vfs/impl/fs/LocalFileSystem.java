@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.vfs.server.VirtualFileSystemImpl;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
 import com.codenvy.api.vfs.server.VirtualFileSystemUserContext;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 import com.codenvy.api.vfs.server.util.LinksHelper;
 import com.codenvy.api.vfs.shared.PropertyFilter;
@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Implementation of VirtualFileSystem for local filesystem.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public class LocalFileSystem extends VirtualFileSystemImpl {
     final String vfsId;
@@ -49,7 +49,7 @@ public class LocalFileSystem extends VirtualFileSystemImpl {
     }
 
     @Override
-    public VirtualFileSystemInfo getInfo() throws VirtualFileSystemException {
+    public VirtualFileSystemInfo getInfo() throws ServerException {
         final BasicPermissions[] basicPermissions = BasicPermissions.values();
         final List<String> permissions = new ArrayList<>(basicPermissions.length);
         for (BasicPermissions bp : basicPermissions) {

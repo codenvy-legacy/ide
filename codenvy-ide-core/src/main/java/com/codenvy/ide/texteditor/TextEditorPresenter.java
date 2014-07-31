@@ -30,6 +30,7 @@ import com.codenvy.ide.text.DocumentListener;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.api.outline.OutlineModel;
 import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
 import com.codenvy.ide.util.executor.UserActivityManager;
@@ -233,5 +234,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     public void setErrorState(EditorState errorState) {
         this.errorState = errorState;
         firePropertyChange(ERROR_STATE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public UndoManager getUndoManager() {
+        return this.getView().getUndoManager();
     }
 }

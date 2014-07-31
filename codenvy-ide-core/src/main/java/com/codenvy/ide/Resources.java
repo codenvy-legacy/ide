@@ -25,6 +25,7 @@ import com.codenvy.ide.part.projectexplorer.ProjectTreeNodeRenderer;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.cellview.CellTableResources;
 import com.codenvy.ide.ui.cellview.DataGridResources;
+import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.welcome.WelcomePageResources;
@@ -47,7 +48,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, InfoPanel.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
                                    MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources, DataGridResources,
-                                   CellTableResources {
+                                   CellTableResources, CategoriesList.Resources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {
@@ -81,10 +82,10 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @NotStrict
     CoreCss coreCss();
 
-    @Source("tree/project_explorer.png")
+    @Source("part/projectexplorer/project_explorer.png")
     ImageResource projectExplorer();
 
-    @Source("tree/project-closed.png")
+    @Source("part/projectexplorer/project-closed.png")
     ImageResource projectClosed();
 
     @Source("wizard/new_project_icon.png")

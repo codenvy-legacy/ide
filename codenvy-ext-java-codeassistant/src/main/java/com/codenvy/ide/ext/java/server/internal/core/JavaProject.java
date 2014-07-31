@@ -10,10 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.java.server.internal.core;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.server.ProjectProperties;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
+import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -49,13 +50,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,30 +68,45 @@ public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
     private JavaSearchNameEnvironment nameEnvironment;
-    private ProjectDescriptor         project;
-    private File                      projectFile;
+    private String                    projectPath;
+    private String                    wsId;
+    private String                    projectName;
+    private File                      projectDir;
     private Map<String, String>       options;
     private IClasspathEntry[]         rawClassPath;
     private ResolvedClasspath         resolvedClasspath;
     private IndexManager              indexManager;
 
-    public JavaProject(ProjectDescriptor project, File projectFile, String tempDir, ProjectApiRestClient projectManager, String ws,
-                       Map<String, String> options) {
+    public JavaProject(File root, String projectPath, String tempDir, String ws, Map<String, String> options) {
         super(null);
-        this.project = project;
-        this.projectFile = projectFile;
+        this.projectPath = projectPath;
+        wsId = ws;
+        int index = projectPath.lastIndexOf('/');
+        projectName = index < 0 ? projectPath : projectPath.substring(index + 1);
+        this.projectDir = new File(root, projectPath);
         this.options = options;
-
-        List<IClasspathEntry> paths = new ArrayList<>();
+        List<IClasspathEntry> paths = new LinkedList<>();
         try {
-            String path = project.getPath();
-            if (path.equals("/" + project.getName())) {
-                addSources(project, paths);
+            if (index == 0) {
+                // project in root folder
+                addSources(projectDir, paths);
             } else {
-                ProjectDescriptor parentProject = projectManager.getProject(ws, path.substring(0, path.indexOf(project.getName())));
-                List<ProjectDescriptor> modules = projectManager.getModules(ws, parentProject.getPath());
-                for (ProjectDescriptor module : modules) {
-                    addSources(module, paths);
+                // module of project - add this module and all modules in parent projects
+                index = projectPath.indexOf(1, '/');
+                File parent = new File(root, projectPath.substring(1, index));
+                LinkedList<File> q = new LinkedList<>();
+                q.add(parent);
+                while (!q.isEmpty()) {
+                    File f = q.poll();
+                    addSources(f, paths);
+                    File[] l = f.listFiles();
+                    for (File c : l) {
+                        if (c.isDirectory()
+                            && new File(c, com.codenvy.api.project.server.Constants.CODENVY_PROJECT_FILE_RELATIVE_PATH).exists()) {
+
+                            q.add(c);
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -97,10 +114,8 @@ public class JavaProject extends Openable implements IJavaProject {
         }
 
         paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
-        String path = "";
         try {
-            path = project.getPath();
-            File depDir = new File(tempDir, path);
+            File depDir = new File(tempDir, projectPath);
             if (depDir.exists()) {
                 DirectoryStream<java.nio.file.Path> deps =
                         Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
@@ -119,10 +134,8 @@ public class JavaProject extends Openable implements IJavaProject {
             LOG.error("Can't find jar dependency's: ", e);
         }
 
-        indexManager = new IndexManager(tempDir + "/" + ws + path + "/");
-//        Thread thread = new Thread(indexManager, "index thread");
+        indexManager = new IndexManager(tempDir + "/" + ws + projectPath + "/");
         indexManager.reset();
-//        thread.start();
         indexManager.indexAll(this);
         indexManager.saveIndexes();
         nameEnvironment = new JavaSearchNameEnvironment(this, null);
@@ -132,23 +145,28 @@ public class JavaProject extends Openable implements IJavaProject {
         return nameEnvironment;
     }
 
-    private void addSources(ProjectDescriptor project, List<IClasspathEntry> paths) throws IOException {
-        List<String> strings = project.getAttributes().get("builder.name");
-
-        final String builderName;
-        if (strings != null && (builderName = strings.get(0)) != null) {
-            final String sourceFolders = "builder.${builder}.source_folders".replace("${builder}", builderName);
-            List<String> attribute = project.getAttributes().get(sourceFolders);
-            if (attribute != null) {
-                for (String path : attribute) {
-                    paths.add(JavaCore.newSourceEntry(
-                            new Path(projectFile.getPath() + "/" + path)));
+    private void addSources(File projectDir, List<IClasspathEntry> paths) throws IOException {
+        File codenvy = new File(projectDir, com.codenvy.api.project.server.Constants.CODENVY_PROJECT_FILE_RELATIVE_PATH);
+        final ProjectProperties properties;
+        try (FileInputStream in = new FileInputStream(codenvy)) {
+            properties = ProjectProperties.load(in);
+        }
+        final String builderName = properties.getPropertyValue("builder.name");
+        List<File> sources = new LinkedList<>();
+        if ("maven".equals(builderName)) {
+            File pom = new File(projectDir, "pom.xml");
+            if (pom.exists()) {
+                for (String src : MavenUtils.getSourceDirectories(pom)) {
+                    sources.add(new File(projectDir, src));
                 }
             }
         } else {
-            String s = projectFile.getPath() + "/src/main/java";
-            if (new File(s).exists()) {
-                paths.add(JavaCore.newSourceEntry(new Path(s)));
+            sources.add(new File(projectDir, "/src/main/java"));
+            sources.add(new File(projectDir, "/src/test/java"));
+        }
+        for (File source : sources) {
+            if (source.exists()) {
+                paths.add(JavaCore.newSourceEntry(new Path(source.getAbsolutePath())));
             }
         }
     }
@@ -377,11 +395,11 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getName() {
-        return project.getName();
+        return projectName;
     }
 
     public IPath getFullPath() {
-        return new Path(projectFile.getPath());
+        return new Path(projectDir.getPath());
     }
 
     @Override
@@ -802,7 +820,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public IPath getPath() {
-        return new Path(project.getPath());
+        return new Path(projectPath);
     }
 
     @Override
@@ -931,7 +949,7 @@ public class JavaProject extends Openable implements IJavaProject {
     }
 
     public String getVfsId() {
-        return project.getPath();
+        return wsId;
     }
 
     public static class ResolvedClasspath {

@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.client.action;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.build.BuildContext;
@@ -42,7 +41,7 @@ public class UpdateDependencyAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Update project dependencies");
-        javaExtension.updateDependencies(appContext.getCurrentProject().getProjectDescription().getName());
+        javaExtension.updateDependencies(appContext.getCurrentProject().getProjectDescription().getPath());
     }
 
     /** {@inheritDoc} */

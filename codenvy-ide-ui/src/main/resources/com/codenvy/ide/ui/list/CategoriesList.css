@@ -1,0 +1,108 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+@def menuListBorderPx 1px;
+@def listItemTopPadding 2px;
+@def listItemBottomPadding 2px;
+@def listItemLeftPadding 16px;
+@def listItemRightPadding 44px;
+
+.listBase {
+    background: dialogContentBackground;
+    outline: none;
+    white-space: nowrap;
+}
+
+.listContainer {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: consolePanelColor;
+}
+
+.categoryItem {
+    padding: listItemTopPadding listItemRightPadding listItemBottomPadding listItemLeftPadding;
+    color: mainMenuFontColor;
+    font-size: 11px;
+    cursor: default;
+    margin: 0;
+
+    -moz-transition: background 0.130s;
+    -webkit-transition: background 0.130s;
+    transition: background 0.130s;
+}
+
+    /* For tables, the <tr> (which would be the listItem) cannot have padding */
+.categoryItem >td {
+    padding-top: listItemTopPadding;
+    padding-bottom: listItemBottomPadding;
+}
+
+.categoryItem >td:first-child {
+    padding-left: 0px;
+}
+
+.categoryItem >td:last-child {
+    padding-right: listItemLeftPadding;
+}
+
+.categoryItem[selected], .categoryItem:hover {
+    color: mainMenuFontColor;
+
+    -moz-transition: background 0s;
+    -webkit-transition: background 0s;
+    transition: background 0s;
+}
+
+.categoryItem[selected] {
+
+    background-color: selectionBackground;
+}
+
+.categoryItem:hover {
+    /*background-color: hoverBackgroundColor;*/
+}
+
+.category {
+   line-height: 16px;
+}
+
+.categoryLabel{
+    float: left;
+    font-weight: bold;
+    margin-left: 6px;
+    margin-top: 2px;
+}
+.itemContainer, .expandControl{
+}
+.expandControl{
+    float: right;
+    /*margin-right: 9px;*/
+    transition: all 300ms;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    margin-top: 3px;
+    margin-right: 1px;
+}
+.expandControl svg{
+    margin: auto;
+}
+.categoryHeader{
+    height: 18px;
+    background-color: partBackground;
+    border-bottom: 1px solid #2b2b2b;
+}
+
+.expandedImage{
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    margin-top: 1px;
+    margin-right: 3px
+}

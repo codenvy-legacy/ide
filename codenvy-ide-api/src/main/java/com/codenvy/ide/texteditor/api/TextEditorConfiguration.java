@@ -65,7 +65,7 @@ public class TextEditorConfiguration {
      */
     @Nullable
     public UndoManager getUndoManager(@NotNull TextEditorPartView view) {
-        return new UndoManager(25);
+        return new UndoManagerImpl(25);
     }
 
     /**

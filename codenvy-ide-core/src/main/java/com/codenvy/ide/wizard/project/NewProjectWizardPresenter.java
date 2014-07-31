@@ -23,16 +23,14 @@ import com.codenvy.ide.api.ui.wizard.Wizard;
 import com.codenvy.ide.api.ui.wizard.WizardContext;
 import com.codenvy.ide.api.ui.wizard.WizardDialog;
 import com.codenvy.ide.api.ui.wizard.WizardPage;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -43,16 +41,20 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    private ProjectServiceClient      projectService;
-    private DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    private ProjectTypeWizardRegistry wizardRegistry;
-    private DtoFactory                dtoFactory;
-    private EventBus                  eventBus;
-    private WizardPage                currentPage;
-    private ProjectWizardView         view;
-    private MainPagePresenter         mainPage;
-    /** Pages for which 'step tabs' will be showed. */
-    private Array<WizardPage> stepsPages = Collections.createArray();
+    private final ProjectServiceClient      projectService;
+    private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private       ProjectTypeWizardRegistry wizardRegistry;
+    private       DtoFactory                dtoFactory;
+    private       EventBus                  eventBus;
+    private       WizardPage                currentPage;
+    private       ProjectWizardView         view;
+    private       MainPagePresenter         mainPage;
+    private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
+        @Override
+        public WizardPage get() {
+            return mainPage;
+        }
+    };
     private WizardContext wizardContext;
     private ProjectWizard wizard;
 
@@ -76,26 +78,26 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void onNextClicked() {
         currentPage.storeOptions();
-        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
-        WizardPage wizardPage = stepsPages.get(previousStepPageIndex + 1);
-        if (wizardPage != mainPage) {
-            view.disableInput();
+        if (wizard != null) {
+            WizardPage wizardPage;
+            wizardPage = wizard.flipToNext();
+            setPage(wizardPage);
+            currentPage.focusComponent();
+
         }
-        setPage(wizardPage);
-        currentPage.focusComponent();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onBackClicked() {
         currentPage.removeOptions();
-        final int previousStepPageIndex = stepsPages.indexOf(currentPage);
-        if (previousStepPageIndex == 0) return;
-        WizardPage wizardPage = stepsPages.get(previousStepPageIndex - 1);
-        if (wizardPage == mainPage) {
-            view.enableInput();
+        if (wizard != null) {
+            WizardPage wizardPage = wizard.flipToPrevious();
+            if (wizardPage == null) {
+                wizardPage = mainPage;
+            }
+            setPage(wizardPage);
         }
-        setPage(wizardPage);
     }
 
     /** {@inheritDoc} */
@@ -142,19 +144,21 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectDescriptorToUpdate.setVisibility(visibility ? "public" : "private");
         projectDescriptorToUpdate.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectService.updateProject(project.getPath(), projectDescriptorToUpdate, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
-                callback.onSuccess();
-            }
+        projectService.updateProject(project.getPath(), projectDescriptorToUpdate,
+                                     new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                                         @Override
+                                         protected void onSuccess(ProjectDescriptor result) {
+                                             ProjectReference projectToOpen =
+                                                     dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                                             eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+                                             callback.onSuccess();
+                                         }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             callback.onFailure(exception);
+                                         }
+                                     });
     }
 
     private void createBlankProject(final WizardPage.CommitCallback callback) {
@@ -188,7 +192,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
-                                             ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                                             ProjectReference projectToOpen =
+                                                     dtoFactory.createDto(ProjectReference.class).withName(result.getName());
                                              eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
                                              callback.onSuccess();
                                          }
@@ -207,29 +212,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.close();
     }
 
-    @Override
-    public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]*$");
-        if (regExp.test(name)) {
-            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
-            view.removeNameError();
-        } else {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-            view.showNameError();
-        }
-        updateControls();
-    }
-
-    @Override
-    public void projectVisibilityChanged(Boolean aPublic) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
-    }
-
-    @Override
-    public void projectDescriptionChanged(String projectDescriptionValue) {
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
-    }
-
     /** {@inheritDoc} */
     @Override
     public void updateControls() {
@@ -238,31 +220,52 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             if (descriptor != null) {
                 wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
                 if (wizard != null) {
+                    wizard.setUpdateDelegate(this);
+                    if (!wizard.containsPage(mainPageProvider)) {
+                        wizard.addPage(mainPageProvider, 0, false);
+                    }
                     wizard.flipToFirst();
-                    stepsPages.clear();
-                    stepsPages.add(mainPage);
-                    stepsPages.addAll(wizard.getPages());
+                    mainPage.setContext(wizardContext);
                 }
-            } else {
-                stepsPages.clear();
-                stepsPages.add(mainPage);
+
             }
         }
 
         ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         // change state of buttons
-        view.setBackButtonEnabled(stepsPages.indexOf(currentPage) != 0);
-        view.setNextButtonEnabled(stepsPages.indexOf(currentPage) != stepsPages.size() - 1 && currentPage.isCompleted());
+        view.setBackButtonEnabled(currentPage != mainPage);
+        view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
-                                    (templateDescriptor == null && currentPage != mainPage && currentPage.isCompleted()) ||
+                                    (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
                                             Constants.BLANK_ID) && currentPage.isCompleted()));
+
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-            view.disableAllExceptName();
+            // TODO: add configuration to ProjectTemplateDescriptor
+            //leave the default
+            view.setRunnerEnvirConfig(null);
+            view.setBuilderEnvirConfig(null);
+            view.setRAMRequired(null);
+            // TODO: need workspace information
+            //leave the default
+            view.setRAMAvailable(null);
+            //set info visibled
+            view.setInfoVisibled(true);
+        } else if (descriptor != null) {
+            // TODO: add configuration to ProjectTypeDescriptor
+            view.setRunnerEnvirConfig(new String[]{"JDK 7.0"});
+            //leave the default
+            view.setBuilderEnvirConfig(null);
+            view.setRAMRequired(null);
+            // TODO: need workspace information
+            //leave the default
+            view.setRAMAvailable(null);
+            //set info visibled
+            view.setInfoVisibled(true);
         } else {
-            view.enableInput();
+            view.setInfoVisibled(false);
         }
     }
 
@@ -275,21 +278,18 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void showFirstPage() {
-        stepsPages.clear();
-        stepsPages.add(mainPage);
-        view.reset();
+        if (wizard != null) {
+            wizard.flipToFirst();
+        }
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
-            view.setName(project.getName());
             boolean aPublic = project.getVisibility().equals("public") ? true : false;
-            view.setVisibility(aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
         }
         setPage(mainPage);
         view.showDialog();
         view.setEnabledAnimation(true);
-        view.focusOnName();
     }
 
     public void show(WizardContext context) {
@@ -306,7 +306,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void setPage(@NotNull WizardPage wizardPage) {
         currentPage = wizardPage;
         currentPage.setContext(wizardContext);
-        currentPage.setUpdateDelegate(this);
         updateControls();
         view.showPage(currentPage);
     }

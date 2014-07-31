@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.core.ServerException;
 
 /**
  * Get location of local file system for 'mount' virtual filesystem.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author andrew00x
  */
 public interface LocalFSMountStrategy {
     /**
@@ -27,10 +27,10 @@ public interface LocalFSMountStrategy {
      * @param workspace
      *         name of workspace or <code>null</code>
      * @return location on local file system where virtual filesystem should be mounter
-     * @throws VirtualFileSystemException
+     * @throws ServerException
      */
-    java.io.File getMountPath(String workspace) throws VirtualFileSystemException;
+    java.io.File getMountPath(String workspace) throws ServerException;
 
     /** This is shortcut for <code>getMountPath(null)</code> */
-    java.io.File getMountPath() throws VirtualFileSystemException;
+    java.io.File getMountPath() throws ServerException;
 }

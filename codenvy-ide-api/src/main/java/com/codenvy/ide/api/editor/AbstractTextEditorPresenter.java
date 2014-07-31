@@ -14,6 +14,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.UndoableEditor;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -28,7 +29,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor {
+public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor, UndoableEditor {
     protected TextEditorConfiguration configuration;
     protected DocumentProvider        documentProvider;
     protected Document                document;

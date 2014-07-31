@@ -20,9 +20,9 @@ public interface Constants {
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
     final String NAMELESS_NAME                = "nameless";
-    final String BLANK_PROJECT_TYPE           = "Blank Project Type";
+    final String BLANK_PROJECT_TYPE           = "Blank Type";
     final String CODENVY_PLUGIN_NAME          = "Codenvy Extension";
-    final String CODENVY_CATEGORY             = "Codenvy Extension";
+    final String CODENVY_CATEGORY = "Codenvy";
     // project attribute names
     final String LANGUAGE                     = "language";
     final String LANGUAGE_VERSION             = "language.version";
@@ -30,4 +30,5 @@ public interface Constants {
     final String BUILDER_NAME                 = "builder.name";
     final String BUILDER_MAVEN_SOURCE_FOLDERS = "builder.maven.source_folders";
     final String RUNNER_NAME                  = "runner.name";
+    final String RUNNER_ENV_ID                = "runner.env_id";
 }

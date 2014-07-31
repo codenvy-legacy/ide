@@ -16,11 +16,11 @@
     <parent>
         <artifactId>maven-depmgt-pom</artifactId>
         <groupId>com.codenvy</groupId>
-        <version>1.8.3-SNAPSHOT</version>
+        <version>1.8.8-SNAPSHOT</version>
     </parent>
     <groupId>com.codenvy.ide</groupId>
     <artifactId>codenvy-ide-parent</artifactId>
-    <version>3.0.0-M19-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
@@ -43,10 +43,10 @@
         <module>codenvy-ext-java</module>
         <module>codenvy-ext-java-codeassistant</module>
         <module>codenvy-ext-debugger-java</module>
+        <module>codenvy-ext-plugins</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-ext-tutorials</module>
         <module>codenvy-sdk-tutorials/action-api</module>
         <module>codenvy-sdk-tutorials/analytics-event-logger-ext</module>
         <module>codenvy-sdk-tutorials/wizard-api</module>

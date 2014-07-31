@@ -16,8 +16,7 @@ import com.google.gwt.i18n.client.Messages;
  * Localization constants. Interface represents the constants contained in resource bundle:
  * 'TutorialsLocalizationConstant.properties'.
  *
- * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: TutorialsLocalizationConstant.java Sep 16, 2013 12:40:17 PM azatsarynnyy $
+ * @author Artem Zatsarynnyy
  */
 public interface TutorialsLocalizationConstant extends Messages {
     /* Actions */
@@ -29,7 +28,6 @@ public interface TutorialsLocalizationConstant extends Messages {
 
     @Key("control.showTutorialGuide.description")
     String showTutorialGuideActionDescription();
-
 
     @Key("control.updateExtension.id")
     String updateExtensionActionId();

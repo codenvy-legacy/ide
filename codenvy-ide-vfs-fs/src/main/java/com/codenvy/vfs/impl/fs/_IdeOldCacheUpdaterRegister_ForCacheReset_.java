@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.core.notification.EventSubscriber;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.observation.UpdateACLEvent;
 import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
@@ -87,7 +87,7 @@ public class _IdeOldCacheUpdaterRegister_ForCacheReset_ extends AbstractModule {
             String pathToVFSRoot;
             try {
                 pathToVFSRoot = localFSMountStrategy.getMountPath(event.getWorkspaceId()) + event.getPath();
-            } catch (VirtualFileSystemException e) {
+            } catch (ServerException e) {
                 LOG.warn("Can not get path to workspace {} for cache update in ide2", event.getWorkspaceId());
                 return;
             }

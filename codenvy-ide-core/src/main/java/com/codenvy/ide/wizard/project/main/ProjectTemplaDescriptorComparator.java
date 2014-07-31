@@ -8,24 +8,20 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.vfs.impl.fs.exceptions;
+package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+
+import java.util.Comparator;
 
 /**
- * This exception occurs in case LocalPathResolver in some reason can't resolve the path.
+ * Helps to sort the template descriptors by display name.
  *
- * @author Vitaly Parfonov
+ * @author Oleksii Orel
  */
-@SuppressWarnings("serial")
-public class LocalPathResolveException extends VirtualFileSystemException {
-
-    public LocalPathResolveException(String message, Throwable cause) {
-        super(message, cause);
+final class ProjectTemplaDescriptorComparator implements Comparator<ProjectTemplateDescriptor> {
+    @Override
+    public int compare(ProjectTemplateDescriptor o1, ProjectTemplateDescriptor o2) {
+        return o1.getDisplayName().compareTo(o2.getDisplayName());
     }
-
-    public LocalPathResolveException(String message) {
-        super(message);
-    }
-
 }

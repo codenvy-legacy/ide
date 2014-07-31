@@ -141,7 +141,7 @@ public class JavaExtension {
             public void onProjectOpened(ProjectActionEvent event) {
                 ProjectDescriptor project = event.getProject();
                 if ("java".equals(project.getAttributes().get(Constants.LANGUAGE).get(0))) {
-                    updateDependencies(project.getName());
+                    updateDependencies(project.getPath());
                 }
             }
 
@@ -156,8 +156,8 @@ public class JavaExtension {
                 String name = event.getFile().getName();
                 if (event.getOperationType() == FileEvent.FileOperation.SAVE && "pom.xml".equals(name)) {
                     final String filePath = event.getFile().getPath();
-                    final String projectName = filePath.substring(0, filePath.indexOf('/', 1));
-                    updateDependencies(projectName);
+                    final String projectPath = filePath.substring(0, filePath.indexOf('/', 1));
+                    updateDependencies(projectPath);
                 }
             }
         });
@@ -176,12 +176,12 @@ public class JavaExtension {
 
     }-*/;
 
-    public void updateDependencies(final String projectName) {
+    public void updateDependencies(final String projectPath) {
         if (updating) {
             needForUpdate = true;
             return;
         }
-        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectName;
+        String url = getJavaCAPath() + "/java-name-environment/" + workspaceId + "/update-dependencies?projectpath=" + projectPath;
 
         final Notification notification = new Notification(localizationConstant.updatingDependencies(), PROGRESS);
         notificationManager.showNotification(notification);
@@ -210,7 +210,7 @@ public class JavaExtension {
                         }
                         if (needForUpdate) {
                             needForUpdate = false;
-                            updateDependencies(projectName);
+                            updateDependencies(projectPath);
                         }
                     }
                 });
