@@ -252,6 +252,33 @@
         }
     },
     {
+        "displayName": "Desktop MySQL",
+        "category": "Samples - Hello World",
+        "description": "A simple desktop application that creates a MySQL DB and updates it in the runtime",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-mysql-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Desktop PostrgeSQL",
+        "category": "Samples - Hello World",
+        "description": "A simple desktop application that creates a PostrgeSQL DB and updates it in the runtime",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-postgresql-java-simple.git"
+        }
+    },
+    {
+        "displayName": "Desktop Cassandra",
+        "category": "Samples - Hello World",
+        "description": "A simple desktop application that creates a Cassandra DB and updates it in the runtime",
+        "source": {
+            "type": "git-less",
+            "location": "https://github.com/codenvy-templates/desktop-cassandra-java-simple.git"
+        }
+    },
+    {
         "displayName": "Scala",
         "category": "Samples - Hello World",
         "description": "A simple Scala example.",
