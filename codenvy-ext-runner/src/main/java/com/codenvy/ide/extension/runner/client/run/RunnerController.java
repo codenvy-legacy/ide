@@ -316,6 +316,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
+        runOptions.setSkipBuild(Boolean.parseBoolean(activeProject.getAttributeValue("runner:skipBuild")));
+
 
         if (isUserAction) {
             console.setActive();
@@ -365,6 +367,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
+        runOptions.setSkipBuild(Boolean.parseBoolean(activeProject.getAttributeValue("runner:skipBuild")));
 
         service.run(activeProject.getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
