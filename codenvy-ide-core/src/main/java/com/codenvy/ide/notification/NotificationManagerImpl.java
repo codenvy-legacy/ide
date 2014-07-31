@@ -123,7 +123,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         notificationMessageStack.addNotification(notification);
         notificationContainer.addNotification(notification);
         onValueChanged();
-
+        view.scrollBottom();
     }
 
 
