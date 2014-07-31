@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.java.server.internal.core;
 
 import com.codenvy.api.project.server.ProjectProperties;
-import com.codenvy.api.project.server.ProjectProperty;
 import com.codenvy.ide.ext.java.server.core.JavaCore;
 import com.codenvy.ide.ext.java.server.internal.core.search.indexing.IndexManager;
 import com.codenvy.ide.ext.java.server.internal.core.search.matching.JavaSearchNameEnvironment;
@@ -69,7 +68,6 @@ public class JavaProject extends Openable implements IJavaProject {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaProject.class);
     private JavaSearchNameEnvironment nameEnvironment;
-    /*    private ProjectDescriptor         project;*/
     private String                    projectPath;
     private String                    wsId;
     private String                    projectName;
@@ -78,63 +76,6 @@ public class JavaProject extends Openable implements IJavaProject {
     private IClasspathEntry[]         rawClassPath;
     private ResolvedClasspath         resolvedClasspath;
     private IndexManager              indexManager;
-
-/*
-    public JavaProject(ProjectDescriptor project, File projectFile, String tempDir, ProjectApiRestClient projectManager, String ws,
-                       Map<String, String> options) {
-        super(null);
-        this.project = project;
-        this.projectFile = projectFile;
-        this.options = options;
-
-        List<IClasspathEntry> paths = new ArrayList<>();
-        try {
-            String path = project.getPath();
-            if (path.equals("/" + project.getName())) {
-                addSources(project, paths);
-            } else {
-                ProjectDescriptor parentProject = projectManager.getProject(ws, path.substring(0, path.indexOf(project.getName())));
-                List<ProjectDescriptor> modules = projectManager.getModules(ws, parentProject.getPath());
-                for (ProjectDescriptor module : modules) {
-                    addSources(module, paths);
-                }
-            }
-        } catch (IOException e) {
-            LOG.error("Can't find sources folder attribute");
-        }
-
-        paths.add(JavaCore.newContainerEntry(new Path("codenvy:Jre")));
-        String path = "";
-        try {
-            path = project.getPath();
-            File depDir = new File(tempDir, path);
-            if (depDir.exists()) {
-                DirectoryStream<java.nio.file.Path> deps =
-                        Files.newDirectoryStream(depDir.toPath(), new DirectoryStream.Filter<java.nio.file.Path>() {
-                            @Override
-                            public boolean accept(java.nio.file.Path entry) throws IOException {
-                                return entry.getFileName().toString().endsWith("jar");
-                            }
-                        });
-
-                for (java.nio.file.Path dep : deps) {
-                    paths.add(JavaCore.newLibraryEntry(new Path(dep.toAbsolutePath().toString()), null, null));
-                }
-            }
-            rawClassPath = paths.toArray(new IClasspathEntry[paths.size()]);
-        } catch (IOException e) {
-            LOG.error("Can't find jar dependency's: ", e);
-        }
-
-        indexManager = new IndexManager(tempDir + "/" + ws + path + "/");
-//        Thread thread = new Thread(indexManager, "index thread");
-        indexManager.reset();
-//        thread.start();
-        indexManager.indexAll(this);
-        indexManager.saveIndexes();
-        nameEnvironment = new JavaSearchNameEnvironment(this, null);
-    }
-*/
 
     public JavaProject(File root, String projectPath, String tempDir, String ws, Map<String, String> options) {
         super(null);
@@ -194,9 +135,7 @@ public class JavaProject extends Openable implements IJavaProject {
         }
 
         indexManager = new IndexManager(tempDir + "/" + ws + projectPath + "/");
-//        Thread thread = new Thread(indexManager, "index thread");
         indexManager.reset();
-//        thread.start();
         indexManager.indexAll(this);
         indexManager.saveIndexes();
         nameEnvironment = new JavaSearchNameEnvironment(this, null);
@@ -205,29 +144,6 @@ public class JavaProject extends Openable implements IJavaProject {
     public JavaSearchNameEnvironment getNameEnvironment() {
         return nameEnvironment;
     }
-
-/*
-    private void addSources(ProjectDescriptor project, List<IClasspathEntry> paths) throws IOException {
-        List<String> strings = project.getAttributes().get("builder.name");
-
-        final String builderName;
-        if (strings != null && (builderName = strings.get(0)) != null) {
-            final String sourceFolders = "builder.${builder}.source_folders".replace("${builder}", builderName);
-            List<String> attribute = project.getAttributes().get(sourceFolders);
-            if (attribute != null) {
-                for (String path : attribute) {
-                    paths.add(JavaCore.newSourceEntry(
-                            new Path(projectFile.getPath() + "/" + path)));
-                }
-            }
-        } else {
-            String s = projectFile.getPath() + "/src/main/java";
-            if (new File(s).exists()) {
-                paths.add(JavaCore.newSourceEntry(new Path(s)));
-            }
-        }
-    }
-*/
 
     private void addSources(File projectDir, List<IClasspathEntry> paths) throws IOException {
         File codenvy = new File(projectDir, com.codenvy.api.project.server.Constants.CODENVY_PROJECT_FILE_RELATIVE_PATH);

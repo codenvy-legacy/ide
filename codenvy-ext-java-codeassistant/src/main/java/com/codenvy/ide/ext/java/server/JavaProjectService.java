@@ -34,8 +34,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-//import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-
 /**
  * Maintenance and create JavaProjects
  *
@@ -76,29 +74,6 @@ public class JavaProjectService {
         options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
         options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
     }
-
-/*
-    public JavaProject getOrCreateJavaProject(String wsId, String projectPath) {
-        String key = wsId + projectPath;
-        if (cache.containsKey(key)) {
-            return cache.get(key);
-        }
-        ProjectDescriptor project = apiRestClient.getProject(wsId, projectPath);
-        try {
-            File mountPath = fsMountStrategy.getMountPath(wsId);
-            JavaProject javaProject =
-                    new JavaProject(mountPath, project, tempDir, apiRestClient, wsId, new HashMap<>(options));
-            cache.put(key, javaProject);
-            if (!projectInWs.containsKey(wsId)) {
-                projectInWs.put(wsId, new CopyOnWriteArraySet<String>());
-            }
-            projectInWs.get(wsId).add(projectPath);
-            return javaProject;
-        } catch (VirtualFileSystemException e) {
-            throw new WebApplicationException(e);
-        }
-    }
-*/
 
     public JavaProject getOrCreateJavaProject(String wsId, String projectPath) {
         String key = wsId + projectPath;
