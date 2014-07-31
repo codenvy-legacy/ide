@@ -12,6 +12,9 @@ package com.codenvy.ide.maven.tools;
 
 import com.codenvy.api.core.ForbiddenException;
 import com.codenvy.api.core.ServerException;
+import com.codenvy.api.core.util.CommandLine;
+import com.codenvy.api.core.util.LineConsumer;
+import com.codenvy.api.core.util.ProcessUtil;
 import com.codenvy.api.vfs.server.VirtualFile;
 
 import org.apache.maven.model.Build;
@@ -34,8 +37,10 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A smattering of useful methods to work with the Maven POM.
@@ -498,5 +503,62 @@ public class MavenUtils {
         }
         model.setPomFile(pom);
         return model;
+    }
+
+    public static Map<String, String> getMavenVersionInformation() throws IOException {
+        final Map<String, String> versionInfo = new HashMap<>();
+        final LineConsumer cmdOutput = new LineConsumer() {
+            @Override
+            public void writeLine(String line) throws IOException {
+                String key = null;
+                int keyEnd = 0;
+                int valueStart = 0;
+                final int l = line.length();
+                if (line.startsWith("Apache Maven")) {
+                    key = "Maven version";
+                } else {
+                    while (keyEnd < l) {
+                        if (line.charAt(keyEnd) == ':') {
+                            valueStart = keyEnd + 1;
+                            break;
+                        }
+                        keyEnd++;
+                    }
+                    if (keyEnd > 0) {
+                        key = line.substring(0, keyEnd);
+                    }
+                }
+                if (key != null) {
+                    while (valueStart < l && Character.isWhitespace(line.charAt(valueStart))) {
+                        valueStart++;
+                    }
+                    if ("Maven version".equals(key)) {
+                        int valueEnd = valueStart;
+                        // Don't show version details, e.g. (0728685237757ffbf44136acec0402957f723d9a; 2013-09-17 18:22:22+0300)
+                        while (valueEnd < l && '(' != line.charAt(valueEnd)) {
+                            valueEnd++;
+                        }
+                        final String value = line.substring(valueStart, valueEnd).trim();
+                        versionInfo.put(key, value);
+                    } else {
+                        final String value = line.substring(valueStart);
+                        versionInfo.put(key, value);
+                    }
+                }
+            }
+
+            @Override
+            public void close() throws IOException {
+            }
+        };
+        readMavenVersionInformation(cmdOutput);
+        return versionInfo;
+    }
+
+    private static void readMavenVersionInformation(LineConsumer cmdOutput) throws IOException {
+        final CommandLine commandLine = new CommandLine(getMavenExecCommand()).add("-version");
+        final ProcessBuilder processBuilder = new ProcessBuilder().command(commandLine.toShellCommand()).redirectErrorStream(true);
+        final Process process = processBuilder.start();
+        ProcessUtil.process(process, cmdOutput, LineConsumer.DEV_NULL);
     }
 }

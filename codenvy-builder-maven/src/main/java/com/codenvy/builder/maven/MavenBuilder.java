@@ -12,6 +12,7 @@ package com.codenvy.builder.maven;
 
 import com.codenvy.api.builder.BuilderException;
 import com.codenvy.api.builder.dto.BuildRequest;
+import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildLogger;
 import com.codenvy.api.builder.internal.BuildResult;
@@ -41,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +103,8 @@ public class MavenBuilder extends Builder {
 
     private final Map<String, String> pluginPackaging;
 
+    private final Map<String, String> mavenProperties;
+
     @Inject
     public MavenBuilder(@Named(Constants.BASE_DIRECTORY) java.io.File rootDirectory,
                         @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
@@ -110,6 +114,18 @@ public class MavenBuilder extends Builder {
                         EventService eventService) {
         super(rootDirectory, numberOfWorkers, queueSize, cleanupTime, eventService);
         this.pluginPackaging = pluginPackaging;
+
+        Map<String, String> myMavenProperties = null;
+        try {
+            myMavenProperties = MavenUtils.getMavenVersionInformation();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        if (myMavenProperties == null) {
+            mavenProperties = Collections.emptyMap();
+        } else {
+            mavenProperties = Collections.unmodifiableMap(myMavenProperties);
+        }
     }
 
     @Override
@@ -120,6 +136,18 @@ public class MavenBuilder extends Builder {
     @Override
     public String getDescription() {
         return "Apache Maven based builder implementation";
+    }
+
+    @Override
+    public Map<String, BuilderEnvironment> getEnvironments() {
+        final Map<String, BuilderEnvironment> envs = new HashMap<>(4);
+        final Map<String, String> properties = new HashMap<>(mavenProperties);
+        properties.remove("Maven home");
+        properties.remove("Java home");
+        final BuilderEnvironment def = DtoFactory.getInstance().createDto(BuilderEnvironment.class)
+                                                 .withId("default").withIsDefault(true).withProperties(properties);
+        envs.put(def.getId(), def);
+        return envs;
     }
 
     @Override
@@ -245,7 +273,8 @@ public class MavenBuilder extends Builder {
                 if (pluginPackaging.containsKey(packaging)) {
                     fileExt = '.' + pluginPackaging.get(packaging);
                 } else {
-                    fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies() && !isCodenvyExtensionProject(workDir)
+                    fileExt = (packaging == null || packaging.equals("jar")) && config.getRequest().isIncludeDependencies() &&
+                              !isCodenvyExtensionProject(workDir)
                               ? ".zip"
                               : packaging != null
                                 ? '.' + packaging
