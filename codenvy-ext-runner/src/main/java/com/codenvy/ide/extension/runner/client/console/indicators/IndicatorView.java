@@ -32,19 +32,19 @@ public class IndicatorView extends Composite {
     private       Anchor           dataAnchor;
     private       InlineLabel      dataLabel;
     private       PropertyListener propertyListener;
+    private       FlowPanel        panel;
 
     public IndicatorView(String caption, boolean isURL, int width, Presentation presentation, RunnerResources resources) {
         this.isURL = isURL;
         this.presentation = presentation;
+        panel = new FlowPanel();
 
-        FlowPanel panel = new FlowPanel();
         InlineLabel captionLabel = new InlineLabel(caption + ':');
         panel.add(captionLabel);
 
         if (isURL) {
             dataAnchor = new Anchor();
             dataAnchor.setStyleName(resources.runner().dataLabel());
-            panel.add(dataAnchor);
         } else {
             dataLabel = new InlineLabel();
             dataLabel.setStyleName(resources.runner().dataLabel());
@@ -75,20 +75,24 @@ public class IndicatorView extends Composite {
     }
 
     private void setData(String value) {
-        if (value == null) {
-            value = "";
-        }
-
         if (isURL) {
-            if (value.length() > 20) {
-                dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length() - 10));
+            if (value != null) {
+                if (value.length() > 20) {
+                    dataAnchor.setText(value.substring(0, 10) + "..." + value.substring(value.length() - 10));
+                } else {
+                    dataAnchor.setText(value);
+                }
+                dataAnchor.setHref(value);
+                dataAnchor.setTarget("_blank");
+                if (!dataAnchor.isAttached())
+                    panel.add(dataAnchor);
             } else {
-                dataAnchor.setText(value);
+                if (dataAnchor.isAttached())
+                    dataAnchor.removeFromParent();
             }
-            dataAnchor.setHref(value);
-            dataAnchor.setTarget("_blank");
+
         } else {
-            dataLabel.setText(value);
+            dataLabel.setText(value == null ? "" : value);
         }
     }
 
