@@ -15,12 +15,12 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,12 +56,12 @@ public class CopyTest extends LocalFileSystemTest {
         destinationPath = createDirectory(testRootPath, "CopyTest_DestinationFolder");
         protectedDestinationPath = createDirectory(testRootPath, "CopyTest_ProtectedDestinationFolder");
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
 
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedDestinationPath, permissions);
 
         fileId = pathToId(filePath);
@@ -87,8 +87,7 @@ public class CopyTest extends LocalFileSystemTest {
         String existedFile = createFile(destinationPath, fileName, existedFileContent);
         String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals(400, response.getStatus());
-        assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
+        assertEquals(409, response.getStatus());
         // untouched ??
         assertTrue(exists(existedFile));
         assertTrue(Arrays.equals(existedFileContent, readFile(existedFile)));
@@ -98,7 +97,7 @@ public class CopyTest extends LocalFileSystemTest {
         // Destination resource is protected but set user who has permits as current.
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + protectedDestinationId;
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -136,9 +135,9 @@ public class CopyTest extends LocalFileSystemTest {
 
     public void testCopyFolderContainsFileNoReadPermission() throws Exception {
         List<String> l = flattenDirectory(folderPath);
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         Random r = new Random();
         // Find one file randomly and apply permissions to it.
         String protectedFilePath = folderPath + '/' + l.get(r.nextInt(l.size()));
@@ -177,9 +176,9 @@ public class CopyTest extends LocalFileSystemTest {
 
     public void testCopyFolderContainsFolderNoReadPermission() throws Exception {
         List<String> l = flattenDirectory(folderPath);
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         Random r = new Random();
         // Find one file randomly and apply permissions to it.
         String protectedFolderPath = folderPath + '/' + l.get(r.nextInt(l.size()));
@@ -224,8 +223,7 @@ public class CopyTest extends LocalFileSystemTest {
         createDirectory(destinationPath, folderName);
         String requestPath = SERVICE_URI + "copy/" + folderId + '?' + "parentId=" + destinationId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals(400, response.getStatus());
-        assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
+        assertEquals(409, response.getStatus());
         assertTrue("Source folder not found. ", exists(folderPath));
     }
 }

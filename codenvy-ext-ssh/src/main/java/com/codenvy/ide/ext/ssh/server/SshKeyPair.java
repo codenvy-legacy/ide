@@ -8,24 +8,25 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.vfs.impl.fs.exceptions;
-
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
+package com.codenvy.ide.ext.ssh.server;
 
 /**
- * This exception occurs in case LocalPathResolver in some reason can't resolve the path.
- *
- * @author Vitaly Parfonov
+ * @author andrew00x
  */
-@SuppressWarnings("serial")
-public class LocalPathResolveException extends VirtualFileSystemException {
+public class SshKeyPair {
+    private final SshKey pub;
+    private final SshKey prv;
 
-    public LocalPathResolveException(String message, Throwable cause) {
-        super(message, cause);
+    public SshKeyPair(SshKey pub, SshKey prv) {
+        this.pub = pub;
+        this.prv = prv;
     }
 
-    public LocalPathResolveException(String message) {
-        super(message);
+    public SshKey getPublicKey() {
+        return pub;
     }
 
+    public SshKey getPrivateKey() {
+        return prv;
+    }
 }

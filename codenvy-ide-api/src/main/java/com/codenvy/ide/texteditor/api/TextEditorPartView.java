@@ -49,6 +49,8 @@ public interface TextEditorPartView {
      */
     void setUndoManager(UndoManager undoManager);
 
+    /** @return the undoManager */
+    UndoManager getUndoManager();
 
     /**
      * Configures the source viewer using the given configuration. Prior to 3.0 this

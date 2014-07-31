@@ -153,9 +153,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.runConfiguration.memorySizeLabel")
     String runConfigurationViewMemorySizeLabel();
     
-    @Key("view.runConfiguration.memoryMBLabel")
-    String runConfigurationViewMBLabel();
-    
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();
 }

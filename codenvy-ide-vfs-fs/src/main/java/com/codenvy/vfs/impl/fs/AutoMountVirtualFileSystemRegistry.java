@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.vfs.impl.fs;
 
+import com.codenvy.api.core.ServerException;
 import com.codenvy.api.core.notification.EventService;
 import com.codenvy.api.vfs.server.VirtualFileSystemProvider;
 import com.codenvy.api.vfs.server.VirtualFileSystemRegistry;
-import com.codenvy.api.vfs.server.exceptions.VirtualFileSystemException;
 import com.codenvy.api.vfs.server.search.SearcherProvider;
 
 import javax.annotation.Nullable;
@@ -43,7 +43,7 @@ public class AutoMountVirtualFileSystemRegistry extends VirtualFileSystemRegistr
     }
 
     @Override
-    protected VirtualFileSystemProvider loadProvider(String vfsId) throws VirtualFileSystemException {
+    protected VirtualFileSystemProvider loadProvider(String vfsId) throws ServerException {
         File wsPath = mountStrategy.getMountPath(vfsId);
         if (!wsPath.exists()) {
             return null;

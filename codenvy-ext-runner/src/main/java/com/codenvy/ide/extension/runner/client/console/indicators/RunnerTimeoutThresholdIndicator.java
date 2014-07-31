@@ -36,7 +36,7 @@ public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
+        final RunnerMetric metric = runnerController.getCurrentAppTerminationTime();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

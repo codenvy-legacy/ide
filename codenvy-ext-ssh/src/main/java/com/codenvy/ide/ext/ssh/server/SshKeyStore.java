@@ -61,7 +61,7 @@ public interface SshKeyStore {
      * @throws SshKeyStoreException
      *         if any error occurs in key store
      */
-    void genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException;
+    SshKeyPair genKeyPair(String host, String comment, String passPhrase) throws SshKeyStoreException;
 
     /**
      * Generate SSH key files.
@@ -77,7 +77,7 @@ public interface SshKeyStore {
      * @throws SshKeyStoreException
      *         if any error occurs in key store
      */
-    void genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException;
+    SshKeyPair genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException;
 
     /**
      * Remove both private and public (if any) keys.

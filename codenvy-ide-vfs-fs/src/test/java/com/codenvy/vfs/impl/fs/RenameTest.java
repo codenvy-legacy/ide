@@ -14,12 +14,12 @@ import com.codenvy.api.vfs.shared.ExitCodes;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +72,11 @@ public class RenameTest extends LocalFileSystemTest {
 
         createLock(lockedFilePath, lockToken, Long.MAX_VALUE);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedFolderPath, permissions);
 
@@ -110,8 +110,7 @@ public class RenameTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "rename/" + fileId + '?' + "newname=" + newName + '&' + "mediaType=" +
                              "text/*;charset=ISO-8859-1";
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals(400, response.getStatus());
-        assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
+        assertEquals(409, response.getStatus());
         // Be sure file exists.
         assertTrue(exists(existedFile));
         // Check content.
@@ -141,7 +140,7 @@ public class RenameTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "rename/" + lockedFileId +
                              '?' + "newname=" + newName + '&' + "mediaType=" + "text/*;charset=ISO-8859-1";
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
         assertTrue("File must not be removed. ", exists(lockedFilePath));
         String expectedPath = testRootPath + '/' + newName;

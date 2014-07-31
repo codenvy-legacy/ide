@@ -14,11 +14,12 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,11 +59,11 @@ public class DeleteTest extends LocalFileSystemTest {
     protected void setUp() throws Exception {
         super.setUp();
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(2);
+        Map<Principal, Set<String>> permissions = new HashMap<>(2);
         Principal user = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
         Principal admin = DtoFactory.getInstance().createDto(Principal.class).withName("admin").withType(Principal.Type.USER);
-        permissions.put(user, EnumSet.of(BasicPermissions.ALL));
-        permissions.put(admin, EnumSet.of(BasicPermissions.READ));
+        permissions.put(user, Sets.newHashSet(BasicPermissions.ALL.value()));
+        permissions.put(admin, Sets.newHashSet(BasicPermissions.READ.value()));
 
         filePath = createFile(testRootPath, "DeleteTest_File", DEFAULT_CONTENT_BYTES);
         lockedFilePath = createFile(testRootPath, "DeleteTest_LockedFile", DEFAULT_CONTENT_BYTES);
@@ -130,7 +131,7 @@ public class DeleteTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "delete/" + lockedFileId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
         assertTrue("File must not be removed. ", exists(lockedFilePath));
         assertEquals(lockToken, readLock(lockedFilePath).getLockToken()); // lock file must not be removed
@@ -141,7 +142,7 @@ public class DeleteTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "delete/" + protectedFileId;
         // File is protected and default principal 'andrew' has not write permission.
         // Replace default principal by principal who has write permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
         assertEquals(204, response.getStatus());
         assertFalse("File must not be removed. ", exists(protectedFilePath));
@@ -176,7 +177,7 @@ public class DeleteTest extends LocalFileSystemTest {
     public void testDeleteRootFolder() throws Exception {
         String requestPath = SERVICE_URI + "delete/" + ROOT_ID;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
-        assertEquals(400, response.getStatus()); // must not be able delete root folder
+        assertEquals(403, response.getStatus()); // must not be able delete root folder
         assertTrue("Folder must not be removed. ", exists("/"));
     }
 
@@ -211,7 +212,7 @@ public class DeleteTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "delete/" + lockedChildFolderId;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
-        assertEquals(423, response.getStatus());
+        assertEquals(403, response.getStatus());
         log.info(new String(writer.getBody()));
         assertTrue("Folder must not be removed. ", exists(lockedChildFolderPath));
         List<String> after = flattenDirectory(lockedChildFolderPath);

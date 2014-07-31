@@ -13,6 +13,7 @@ package com.codenvy.vfs.impl.fs;
 import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.api.vfs.shared.dto.VirtualFileSystemInfo.BasicPermissions;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -20,7 +21,6 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.nio.file.Files;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -79,11 +79,11 @@ public class AclUpdaterMain {
     }
 
     private AccessControlList getACL() {
-        Map<Principal, Set<BasicPermissions>> acl = new HashMap<>();
+        Map<Principal, Set<String>> acl = new HashMap<>();
         Principal principal = DtoFactory.getInstance().createDto(Principal.class);
         principal.setName("workspace/developer");
         principal.setType(Principal.Type.GROUP);
-        acl.put(principal, EnumSet.of(BasicPermissions.ALL));
+        acl.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         return new AccessControlList(acl);
     }
 

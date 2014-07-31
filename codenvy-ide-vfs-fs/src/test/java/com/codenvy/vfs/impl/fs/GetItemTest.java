@@ -16,11 +16,12 @@ import com.codenvy.api.vfs.shared.dto.Principal;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.commons.user.UserImpl;
 import com.codenvy.dto.server.DtoFactory;
+import com.google.common.collect.Sets;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,10 +59,10 @@ public class GetItemTest extends LocalFileSystemTest {
         properties.put("MyProperty02", new String[]{"to be or not to be"});
         writeProperties(filePath, properties);
 
-        Map<Principal, Set<BasicPermissions>> permissions = new HashMap<>(1);
+        Map<Principal, Set<String>> permissions = new HashMap<>(1);
         Principal principal = DtoFactory.getInstance().createDto(Principal.class).withName("andrew").withType(Principal.Type.USER);
 
-        permissions.put(principal, EnumSet.of(BasicPermissions.ALL));
+        permissions.put(principal, Sets.newHashSet(BasicPermissions.ALL.value()));
         writePermissions(protectedFilePath, permissions);
         writePermissions(protectedParent, permissions);
 
@@ -119,7 +120,7 @@ public class GetItemTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "itembypath" + filePath + '?' + "versionId=" + 1; // must fail
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(405, response.getStatus());
+        assertEquals(404, response.getStatus());
     }
 
    /*
@@ -165,7 +166,7 @@ public class GetItemTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "item/" + protectedFileId;
         // Replace default principal by principal who has read permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew"));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
         // ---
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
@@ -233,6 +234,6 @@ public class GetItemTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "itembypath" + folderPath + '?' + "versionId=" + 1;
         ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
         log.info(new String(writer.getBody()));
-        assertEquals(400, response.getStatus());
+        assertEquals(403, response.getStatus());
     }
 }
