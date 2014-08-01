@@ -16,13 +16,17 @@ import com.codenvy.api.core.ServerException;
 import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.api.project.server.VirtualFileEntry;
 import com.codenvy.api.project.shared.ValueProvider;
 import com.codenvy.ide.extension.maven.shared.MavenAttributes;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
 import org.apache.maven.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +34,8 @@ import java.util.List;
  * @author Evgen Vidolob
  */
 public class MavenPackagingValueProviderFactory implements ValueProviderFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(MavenPackagingValueProviderFactory.class);
+
     @Override
     public String getName() {
         return MavenAttributes.MAVEN_PACKAGING;
@@ -42,10 +48,14 @@ public class MavenPackagingValueProviderFactory implements ValueProviderFactory 
             public List<String> getValues() {
                 final List<String> list = new LinkedList<>();
                 try {
-                    final FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
-                    final Model model = MavenUtils.readModel(pomFile.getInputStream());
-                    list.add(model.getPackaging());
-                } catch (ForbiddenException | ServerException | IOException ignored) {
+                    final VirtualFileEntry pomFile = project.getBaseFolder().getChild("pom.xml");
+                    if (pomFile != null && pomFile.isFile()) {
+                        try (InputStream input = ((FileEntry)pomFile).getInputStream()) {
+                            list.add(MavenUtils.readModel(input).getPackaging());
+                        }
+                    }
+                } catch (ForbiddenException | ServerException | IOException e) {
+                    LOG.error(e.getMessage(), e);
                 }
                 return list;
             }
@@ -59,10 +69,16 @@ public class MavenPackagingValueProviderFactory implements ValueProviderFactory 
                     throw new IllegalStateException("Maven Packaging must be only one value.");
                 }
                 try {
-                    FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
+                    VirtualFileEntry pomFile = project.getBaseFolder().getChild("pom.xml");
                     Model model;
                     if (pomFile != null) {
-                        model = MavenUtils.readModel(pomFile.getInputStream());
+                        if (!pomFile.isFile()) {
+                            throw new IllegalStateException(
+                                    String.format("Unable to set Packaging. Path %s exists but is not a file.", pomFile.getPath()));
+                        }
+                        try (InputStream input = ((FileEntry)pomFile).getInputStream()) {
+                            model = MavenUtils.readModel(input);
+                        }
                     } else {
                         model = new Model();
                         model.setModelVersion("4.0.0");

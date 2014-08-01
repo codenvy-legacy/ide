@@ -100,7 +100,7 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
         environmentBox.addItem("---", (String)null);
         for (RunnerDescriptor runnerDescriptor : runnerDescriptors) {
             runnerDescriptorMap.put(runnerDescriptor.getName(), runnerDescriptor);
-            runnerBox.addItem(runnerDescriptor.getDescription(), runnerDescriptor.getName());
+            runnerBox.addItem(runnerDescriptor.getName(), runnerDescriptor.getName());
             runnerNames.add(runnerDescriptor.getName());
         }
 
