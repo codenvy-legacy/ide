@@ -113,7 +113,7 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
     private void rewriteBrowserHistory(@Nullable String projectName) {
         String url = Config.getContext() + "/" + Config.getWorkspaceName();
         if (projectName != null) {
-            url += projectName;
+            url += "/" + projectName;
         }
         Browser.getWindow().getHistory().replaceState(null, Window.getTitle(), url);
     }
