@@ -148,7 +148,10 @@ public class AntBuilder extends Builder {
         properties.remove("Ant home");
         properties.remove("Java home");
         final BuilderEnvironment def = DtoFactory.getInstance().createDto(BuilderEnvironment.class)
-                                                 .withId("default").withIsDefault(true).withProperties(properties);
+                                                 .withId("default")
+                                                 .withIsDefault(true)
+                                                 .withDisplayName(properties.get("Ant version"))
+                                                 .withProperties(properties);
         envs.put(def.getId(), def);
         return envs;
     }

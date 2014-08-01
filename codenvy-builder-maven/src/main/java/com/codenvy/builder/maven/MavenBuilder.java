@@ -145,7 +145,10 @@ public class MavenBuilder extends Builder {
         properties.remove("Maven home");
         properties.remove("Java home");
         final BuilderEnvironment def = DtoFactory.getInstance().createDto(BuilderEnvironment.class)
-                                                 .withId("default").withIsDefault(true).withProperties(properties);
+                                                 .withId("default")
+                                                 .withIsDefault(true)
+                                                 .withDisplayName(properties.get("Maven version"))
+                                                 .withProperties(properties);
         envs.put(def.getId(), def);
         return envs;
     }
