@@ -11,6 +11,7 @@
 package com.codenvy.builder.ant;
 
 import com.codenvy.api.builder.BuilderException;
+import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.dto.Dependency;
 import com.codenvy.api.builder.internal.BuildListener;
 import com.codenvy.api.builder.internal.BuildResult;
@@ -46,6 +47,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -103,6 +105,8 @@ public class AntBuilder extends Builder {
     private final Map<Long, AntMessageServer> antMessageServers;
     private final CustomPortService           portService;
 
+    private final Map<String, String> antProperties;
+
     @Inject
     public AntBuilder(@Named(Constants.BASE_DIRECTORY) java.io.File rootDirectory,
                       @Named(Constants.NUMBER_OF_WORKERS) int numberOfWorkers,
@@ -113,6 +117,18 @@ public class AntBuilder extends Builder {
         super(rootDirectory, numberOfWorkers, queueSize, cleanupTime, eventService);
         this.portService = portService;
         antMessageServers = new ConcurrentHashMap<>();
+
+        Map<String, String> myAntProperties = null;
+        try {
+            myAntProperties = AntUtils.getAntEnvironmentInformation();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        if (myAntProperties == null) {
+            antProperties = Collections.emptyMap();
+        } else {
+            antProperties = Collections.unmodifiableMap(myAntProperties);
+        }
     }
 
     @Override
@@ -123,6 +139,18 @@ public class AntBuilder extends Builder {
     @Override
     public String getDescription() {
         return "Apache Ant based builder implementation";
+    }
+
+    @Override
+    public Map<String, BuilderEnvironment> getEnvironments() {
+        final Map<String, BuilderEnvironment> envs = new HashMap<>(4);
+        final Map<String, String> properties = new HashMap<>(antProperties);
+        properties.remove("Ant home");
+        properties.remove("Java home");
+        final BuilderEnvironment def = DtoFactory.getInstance().createDto(BuilderEnvironment.class)
+                                                 .withId("default").withIsDefault(true).withProperties(properties);
+        envs.put(def.getId(), def);
+        return envs;
     }
 
     @Override
