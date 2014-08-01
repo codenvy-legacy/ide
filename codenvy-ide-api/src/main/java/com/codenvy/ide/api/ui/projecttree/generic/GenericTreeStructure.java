@@ -8,14 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.ui.tree.generic;
+package com.codenvy.ide.api.ui.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.tree.TreeStructure;
+import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.projecttree.TreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;

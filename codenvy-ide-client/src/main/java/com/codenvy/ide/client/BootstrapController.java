@@ -26,7 +26,7 @@ import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.event.WindowActionEvent;
-import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.Action;

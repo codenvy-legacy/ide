@@ -13,6 +13,10 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event for refreshing project tree.
+ * <p/>
+ * Note that refresh will be performed for the selected node's parent node.
+ *
  * @author Artem Zatsarynnyy
  */
 public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler> {

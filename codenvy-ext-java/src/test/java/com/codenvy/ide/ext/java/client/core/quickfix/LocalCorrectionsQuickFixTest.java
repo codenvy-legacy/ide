@@ -24,8 +24,6 @@ import com.codenvy.ide.ext.java.jdt.internal.text.correction.AssistContext;
 import com.codenvy.ide.ext.java.jdt.internal.text.correction.proposals.CUCorrectionProposal;
 import com.codenvy.ide.ext.java.jdt.templates.CodeTemplateContextType;
 import com.codenvy.ide.ext.java.worker.WorkerMessageHandler;
-import com.codenvy.ide.api.resources.model.File;
-import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -43,12 +41,6 @@ import static org.mockito.Mockito.when;
 
 public class LocalCorrectionsQuickFixTest extends QuickFixTest {
     @Mock
-    private Project project;
-
-    @Mock
-    private File activeFle;
-
-    @Mock
     private CUVariables cuVariables;
 
     @Before
@@ -65,10 +57,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest {
         new WorkerMessageHandler(null);
         GwtReflectionUtils.setPrivateFieldValue(WorkerMessageHandler.get(), "nameEnvironment", new FileSystem(
                 new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
-        when(activeFle.getProject()).thenReturn(project);
-        when(activeFle.getName()).thenReturn("TestClass.java");
-        when(activeFle.getPath()).thenReturn("/MyProject/src/main/java/my/test/TestClass.java");
-        when(project.getPath()).thenReturn("/MyProject/src/main/java/my/test");
 
         when(cuVariables.getFileName()).thenReturn("TestClass.java");
         when(cuVariables.getPackageName()).thenReturn("my.test");

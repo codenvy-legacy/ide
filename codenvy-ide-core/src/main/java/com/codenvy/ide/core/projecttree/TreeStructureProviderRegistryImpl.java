@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.core.projecttree;
 
-import com.codenvy.ide.api.ui.tree.TreeStructureProvider;
-import com.codenvy.ide.api.ui.tree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.ui.projecttree.TreeStructureProvider;
+import com.codenvy.ide.api.ui.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;

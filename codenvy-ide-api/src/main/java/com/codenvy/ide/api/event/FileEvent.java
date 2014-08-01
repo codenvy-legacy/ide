@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.resources;
+package com.codenvy.ide.api.event;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.google.gwt.event.shared.GwtEvent;

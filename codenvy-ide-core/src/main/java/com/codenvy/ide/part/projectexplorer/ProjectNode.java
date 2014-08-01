@@ -11,7 +11,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
 
 /**
  * Tree node to for {@link ProjectReference}.

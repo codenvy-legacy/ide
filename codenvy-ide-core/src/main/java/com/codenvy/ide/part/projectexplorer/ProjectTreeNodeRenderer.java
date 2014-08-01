@@ -20,7 +20,7 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.ui.Icon;
 import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;

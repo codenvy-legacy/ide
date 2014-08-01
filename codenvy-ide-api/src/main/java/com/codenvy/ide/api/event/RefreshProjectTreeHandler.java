@@ -13,8 +13,18 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link RefreshProjectTreeEvent}.
+ *
  * @author Artem Zatsarynnyy
  */
 public interface RefreshProjectTreeHandler extends EventHandler {
+    /**
+     * Called when project tree should be refreshed.
+     * <p/>
+     * Note that refresh will be performed for the selected node's parent node.
+     *
+     * @param event
+     *         the fired {@link RefreshProjectTreeEvent}
+     */
     void onRefresh(RefreshProjectTreeEvent event);
 }

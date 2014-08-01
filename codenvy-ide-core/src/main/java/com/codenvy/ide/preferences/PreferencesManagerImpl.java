@@ -36,12 +36,12 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /**
      * Create preferences.
      *
-     * @param userService
+     * @param userProfileService
      */
     @Inject
     protected PreferencesManagerImpl(UserProfileServiceClient userProfileService) {
-        this.persistedPreferences = new HashMap<String, String>();
-        this.changedPreferences = new HashMap<String, String>();
+        this.persistedPreferences = new HashMap<>();
+        this.changedPreferences = new HashMap<>();
         this.userProfileService = userProfileService;
     }
 

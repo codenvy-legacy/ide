@@ -15,7 +15,7 @@ import elemental.events.MouseEvent;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -135,7 +135,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     /** {@inheritDoc} */
     @Override
     public void updateItem(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
-        Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, true);
+        Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, false);
         tree.expandPaths(pathsToExpand, false);
     }
 

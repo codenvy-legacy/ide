@@ -22,13 +22,13 @@ import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 
-/** @author Vitalii Parfonov */
-
 /**
  * Add this project type for replace UnknownProjectType by user decision
  * (e.g after cloning project) for avoid cyclic asking if keep
  * only UnknownProjectType.
  * This is temporary solution maybe removed in future.
+ *
+ * @author Vitalii Parfonov
  */
 @Singleton
 public class BaseProjectTypeExtension implements ProjectTypeExtension {

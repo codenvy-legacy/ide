@@ -15,7 +15,7 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.api.resources.FileEvent;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;

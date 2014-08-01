@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.resources.model;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.ResourceChangedEvent;

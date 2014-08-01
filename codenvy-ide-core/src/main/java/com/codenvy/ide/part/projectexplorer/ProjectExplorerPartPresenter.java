@@ -20,9 +20,9 @@ import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.api.ui.tree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.tree.TreeStructure;
-import com.codenvy.ide.api.ui.tree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.ui.projecttree.TreeStructure;
+import com.codenvy.ide.api.ui.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -54,20 +54,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private   ProjectServiceClient          projectServiceClient;
     private   DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private   CoreLocalizationConstant      coreLocalizationConstant;
-    /** Tree that is currently showing. */
     private   TreeStructure                 currentTreeStructure;
     private   AbstractTreeNode<?>           selectedTreeNode;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
-    public ProjectExplorerPartPresenter(ProjectExplorerView view,
-                                        EventBus eventBus,
-                                        ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                        ContextMenuPresenter contextMenuPresenter,
-                                        CoreLocalizationConstant coreLocalizationConstant,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry,
-                                        AppContext appContext) {
+    public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
+                                        CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry) {
         this.view = view;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -122,13 +117,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     protected void bind() {
         view.setDelegate(this);
 
-        eventBus.addHandler(RefreshProjectTreeEvent.TYPE, new RefreshProjectTreeHandler() {
-            @Override
-            public void onRefresh(RefreshProjectTreeEvent event) {
-                updateTree();
-            }
-        });
-
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
@@ -145,6 +133,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     setContent(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
                     view.hideProjectHeader();
                 }
+            }
+        });
+
+        eventBus.addHandler(RefreshProjectTreeEvent.TYPE, new RefreshProjectTreeHandler() {
+            @Override
+            public void onRefresh(RefreshProjectTreeEvent event) {
+                updateTree();
             }
         });
     }
@@ -214,7 +209,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private void updateTree() {
         final AbstractTreeNode parent = selectedTreeNode.getParent();
         if (parent.getParent() == null) {
-            setContent(currentTreeStructure);
+            setContent(currentTreeStructure); // refresh entire tree
         } else {
             currentTreeStructure.refreshChildren(parent, new AsyncCallback<AbstractTreeNode<?>>() {
                 @Override

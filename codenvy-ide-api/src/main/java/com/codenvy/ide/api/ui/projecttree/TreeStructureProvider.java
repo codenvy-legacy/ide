@@ -8,13 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.ui.tree;
+package com.codenvy.ide.api.ui.projecttree;
 
 /**
- * //
+ * Tree structure provider responsible for creating {@link TreeStructure} instances of desired type.
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProvider {
+    /**
+     * Creates an empty {@link TreeStructure} instance of the corresponding class.
+     *
+     * @return {@link TreeStructure} instance
+     */
     TreeStructure getTreeStructure();
 }

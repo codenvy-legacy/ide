@@ -11,8 +11,8 @@
 package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.api.resources.FileEvent;
-import com.codenvy.ide.api.resources.FileEvent.FileOperation;
+import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.event.FileEvent.FileOperation;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;

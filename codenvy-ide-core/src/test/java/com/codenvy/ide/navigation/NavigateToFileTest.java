@@ -15,7 +15,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileEvent;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.resources.model.Folder;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;

@@ -18,7 +18,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.resources.FileEvent;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
