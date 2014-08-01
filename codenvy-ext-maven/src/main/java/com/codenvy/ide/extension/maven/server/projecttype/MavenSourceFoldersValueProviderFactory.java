@@ -12,13 +12,14 @@ package com.codenvy.ide.extension.maven.server.projecttype;
 
 import com.codenvy.api.core.ForbiddenException;
 import com.codenvy.api.core.ServerException;
-import com.codenvy.api.project.server.FileEntry;
 import com.codenvy.api.project.server.Project;
 import com.codenvy.api.project.server.ValueProviderFactory;
+import com.codenvy.api.project.server.VirtualFileEntry;
 import com.codenvy.api.project.shared.ValueProvider;
 import com.codenvy.ide.maven.tools.MavenUtils;
 
-import org.apache.maven.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 @Singleton
 public class MavenSourceFoldersValueProviderFactory implements ValueProviderFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(MavenSourceFoldersValueProviderFactory.class);
 
     @Override
     public String getName() {
@@ -45,11 +47,12 @@ public class MavenSourceFoldersValueProviderFactory implements ValueProviderFact
             public List<String> getValues() {
                 final List<String> list = new LinkedList<>();
                 try {
-                    final FileEntry pomFile = (FileEntry)project.getBaseFolder().getChild("pom.xml");
-                    if (pomFile != null) {
-                        list.addAll(getSourceFolders(pomFile));
+                    final VirtualFileEntry pomFile = project.getBaseFolder().getChild("pom.xml");
+                    if (pomFile != null && pomFile.isFile()) {
+                        list.addAll(MavenUtils.getSourceDirectories(pomFile.getVirtualFile()));
                     }
-                } catch (ForbiddenException | ServerException | IOException ignored) {
+                } catch (ForbiddenException | ServerException | IOException e) {
+                    LOG.error(e.getMessage(), e);
                 }
                 return list;
             }
@@ -59,18 +62,5 @@ public class MavenSourceFoldersValueProviderFactory implements ValueProviderFact
                 // nothing to do
             }
         };
-    }
-
-    private List<String> getSourceFolders(FileEntry pomXml) throws IOException, ServerException {
-        final String defaultSourceDirectoryPath = "src/main/java";
-        final String defaultTestSourceDirectoryPath = "src/test/java";
-
-        final Model model = MavenUtils.readModel(pomXml.getInputStream());
-        final List<String> list = MavenUtils.getSourceDirectories(model);
-        if (list.isEmpty()) {
-            list.add(defaultSourceDirectoryPath);
-            list.add(defaultTestSourceDirectoryPath);
-        }
-        return list;
     }
 }
