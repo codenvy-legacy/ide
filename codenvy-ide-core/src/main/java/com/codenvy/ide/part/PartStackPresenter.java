@@ -66,12 +66,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
     };
     /** current active part */
-    protected PartPresenter           activePart;
-    protected PartStackEventHandler   partStackHandler;
-    private   WorkBenchPartController workBenchPartController;
+    protected PartPresenter              activePart;
+    protected PartStackEventHandler      partStackHandler;
+    private WorkBenchPartController      workBenchPartController;
     /** Container for every new PartPresenter which will be added to this PartStack. */
-    protected AcceptsOneWidget        partViewContainer;
-    private Array<Double> partsSize = Collections.createArray();
+    protected AcceptsOneWidget           partViewContainer;
+    private Double                       partsSize        = (double)DEFAULT_SIZE;
 
     @Inject
     public PartStackPresenter(EventBus eventBus,
@@ -133,10 +133,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         if (part instanceof BasePresenter) {
             ((BasePresenter)part).setPartStack(this);
         }
+        
+        partsSize = (part.getSize() > partsSize) ? part.getSize() : partsSize;
         parts.add(part);
-
-        final double partSize = part.getSize() <= 0 ? DEFAULT_SIZE : part.getSize();
-        partsSize.add(partSize);
 
         part.addPropertyListener(propertyListener);
         // include close button
@@ -182,7 +181,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         // remember size of the previous active part
         if (activePart != null && workBenchPartController != null) {
-            partsSize.set(parts.indexOf(activePart), workBenchPartController.getSize());
+            partsSize = workBenchPartController.getSize();
         }
 
         activePart = part;
@@ -197,10 +196,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         onRequestFocus();
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
-
+        
         if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
-            workBenchPartController.setSize(partsSize.get(parts.indexOf(activePart)));
+            workBenchPartController.setSize(partsSize);
         }
     }
 
@@ -238,7 +237,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
             view.removeTab(partIndex);
             parts.remove(part);
-            partsSize.remove(partIndex);
             part.removePropertyListener(propertyListener);
         }
     }
@@ -254,7 +252,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             @Override
             public void onClick(ClickEvent event) {
                 if (activePart == part) {
-                    partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
+                    partsSize = workBenchPartController.getSize();
                     workBenchPartController.setHidden(true);
                     activePart = null;
                     view.setActiveTab(-1);
