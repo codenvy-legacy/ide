@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="745px" height="824px" viewBox="0 0 745 824" version="1.1" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0 (7574) - http://www.bohemiancoding.com/sketch -->
+    <title>angular-icon</title>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill-rule="evenodd" >
+        <path d="M58.6835937,649.835938 L-0.1796875,164 L371.6875,32.3046875 L745.023438,161 L687.457031,646.820312 L363.34375,823.574219 L58.6835937,649.835938 Z"></path>
+        <path d="M90.8440285,626.105991 L38,190.16918 L371.840721,72 L707,187.477304 L655.32023,623.400094 L364.350188,782 L90.8440285,626.105991 Z"></path>
+        <text font-family="Arial" font-size="688" font-weight="bold" fill="#474747">
+            <tspan x="126" y="623">A</tspan>
+        </text>
+    </g>
+</svg>

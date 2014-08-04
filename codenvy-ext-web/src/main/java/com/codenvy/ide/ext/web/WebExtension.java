@@ -14,6 +14,8 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
+import com.codenvy.ide.api.ui.Icon;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
@@ -59,6 +61,9 @@ public class WebExtension {
 
         @Source("com/codenvy/ide/ext/web/js.svg")
         SVGResource jsFile();
+
+        @Source("com/codenvy/ide/ext/web/java.svg")
+        SVGResource projecttypeJava();
     }
 
     /**
@@ -77,11 +82,15 @@ public class WebExtension {
                         NewCssFileAction newCssFileAction,
                         NewLessFileAction newLessFileAction,
                         NewHtmlFileAction newHtmlFileAction,
+                        WebExtension.ParserResource resources,
+                        IconRegistry iconRegistry,
                         NewJavaScriptFileAction newJavaScriptFileAction,
                         @Named("CSSFileType") FileType cssFile,
                         @Named("LESSFileType") FileType lessFile,
                         @Named("JSFileType") FileType jsFile,
                         @Named("HTMLFileType") FileType htmlFile) {
+        // register new Icon for javascript projecttype
+        iconRegistry.registerIcon(new Icon("javascript.projecttype.icon",  resources.projecttypeJava()));
         // Register and add actions
         actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);
         actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
