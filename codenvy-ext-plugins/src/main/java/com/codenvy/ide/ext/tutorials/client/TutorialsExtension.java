@@ -12,6 +12,8 @@ package com.codenvy.ide.ext.tutorials.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.ui.Icon;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
@@ -46,9 +48,13 @@ public class TutorialsExtension {
                               ShowTutorialGuideAction showAction,
                               ProjectTypeWizardRegistry wizardRegistry,
                               NotificationManager notificationManager,
+                              IconRegistry iconRegistry,
                               Provider<ExtensionPagePresenter> extensionPagePresenter) {
         resources.tutorialsCss().ensureInjected();
-
+        // register new Icons for samples and codenvy projecttypes
+        iconRegistry.registerIcon(new Icon("samples.samples.category.icon", resources.samplesCategorySamples()));
+        iconRegistry.registerIcon(new Icon("samples-helloworld.samples.category.icon", resources.samplesCategorySamples()));
+        iconRegistry.registerIcon(new Icon("codenvy.samples.category.icon", resources.samplesCategoryCodenvy()));
         Map<String, String> icons = new HashMap<>(1);
         icons.put("codenvy_tutorial.projecttype.big.icon", "codenvy-tutorial/codenvy.jpg");
 
