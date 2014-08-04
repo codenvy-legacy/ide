@@ -18,7 +18,6 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.projectexplorer.TabItemWithMarks;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,7 +26,6 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,7 +33,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -61,6 +58,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     private final PartStackUIResources partStackUIResources;
 
     private TabButton activeTab;
+
+    private int oldIndex;
 
     private boolean focused;
 
@@ -178,6 +177,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         if (activeTab != null) {
             activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
             activeTab.ensureDebugId("tabButton-" + activeTab.tabItemTittle.getText());
+            contentPanel.getWidget(oldIndex).ensureDebugId("editorPartStack-oldContent");
         }
 
         if (index >= 0 && index < tabs.size()) {
@@ -185,6 +185,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             activeTab.addStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
             contentPanel.showWidget(index);
             activeTab.ensureDebugId("activeTabButton-" + activeTab.tabItemTittle.getText());
+            contentPanel.getWidget(index).ensureDebugId("editorPartStack-newContent");
+            oldIndex = index;
         }
         processPanelSize();
     }
