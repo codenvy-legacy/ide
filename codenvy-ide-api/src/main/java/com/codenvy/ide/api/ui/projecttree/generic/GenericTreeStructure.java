@@ -15,7 +15,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.projecttree.TreeStructure;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -26,35 +26,32 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * {@link TreeStructure} for the hierarchical tree.
+ * {@link com.codenvy.ide.api.ui.projecttree.AbstractTreeStructure} for the hierarchical tree.
  *
  * @author Artem Zatsarynnyy
  */
-public class GenericTreeStructure implements TreeStructure {
-    private Array<AbstractTreeNode<?>> roots;
-    private EventBus                   eventBus;
-    private ProjectServiceClient       projectServiceClient;
-    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private AppContext                 appContext;
+public class GenericTreeStructure extends AbstractTreeStructure {
+    private EventBus               eventBus;
+    private ProjectServiceClient   projectServiceClient;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private AppContext             appContext;
 
     public GenericTreeStructure(EventBus eventBus,
                                 ProjectServiceClient projectServiceClient,
                                 DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                 AppContext appContext) {
+        super();
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.appContext = appContext;
-        roots = Collections.createArray();
     }
 
     /** {@inheritDoc} */
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
-        if (roots.isEmpty()) {
-            roots = Collections.<AbstractTreeNode<?>>createArray(
-                    new ProjectRootTreeNode(null, appContext.getCurrentProject().getProjectDescription()));
-        }
+        Array<AbstractTreeNode<?>> roots = Collections.<AbstractTreeNode<?>>createArray(
+                new ProjectRootTreeNode(null, appContext.getCurrentProject().getProjectDescription()));
         callback.onSuccess(roots);
     }
 
@@ -74,6 +71,7 @@ public class GenericTreeStructure implements TreeStructure {
     }
 
     private void refresh(final AbstractTreeNode<?> parentNode, String path, final AsyncCallback<AbstractTreeNode<?>> callback) {
+        final boolean isShowHiddenItems = getSettings().isShowHiddenItems();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
@@ -81,7 +79,9 @@ public class GenericTreeStructure implements TreeStructure {
                 Array<AbstractTreeNode<?>> array = Collections.createArray();
                 parentNode.setChildren(array);
                 for (ItemReference itemReference : result.asIterable()) {
-                    array.add(new ItemTreeNode(parentNode, itemReference));
+                    if (isShowHiddenItems || !itemReference.getName().startsWith(".")) {
+                        array.add(new ItemTreeNode(parentNode, itemReference));
+                    }
                 }
                 callback.onSuccess(parentNode);
             }

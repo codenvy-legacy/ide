@@ -10,13 +10,31 @@
  *******************************************************************************/
 package com.codenvy.ide.api.ui.projecttree;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.ui.projecttree.generic.GenericTreeStructureProvider;
+
 /**
- * //
+ * Registry of all registered {@link TreeStructureProvider}s
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProviderRegistry {
+    /**
+     * Registers {@link TreeStructureProvider} instance for the given project.
+     *
+     * @param id
+     *         ID
+     * @param treeStructureProvider
+     *         {@link TreeStructureProvider} to register
+     */
     void registerTreeStructureProvider(String id, TreeStructureProvider treeStructureProvider);
 
-    TreeStructureProvider getTreeStructureProvider(String id);
+    /**
+     * Returns {@link TreeStructureProvider} instance for the given project or {@link GenericTreeStructureProvider} if none was found.
+     *
+     * @param project
+     *         project for which {@link TreeStructureProvider} need to find
+     * @return
+     */
+    TreeStructureProvider getTreeStructureProvider(ProjectDescriptor project);
 }

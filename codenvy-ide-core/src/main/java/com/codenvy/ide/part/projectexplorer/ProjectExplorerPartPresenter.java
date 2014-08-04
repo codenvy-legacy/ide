@@ -11,6 +11,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -21,7 +22,7 @@ import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.projecttree.TreeStructure;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.ui.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
@@ -54,7 +55,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private   ProjectServiceClient          projectServiceClient;
     private   DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private   CoreLocalizationConstant      coreLocalizationConstant;
-    private   TreeStructure                 currentTreeStructure;
+    private   AbstractTreeStructure         currentTreeStructure;
     private   AbstractTreeNode<?>           selectedTreeNode;
 
     /** Instantiates the Project Explorer presenter. */
@@ -120,9 +121,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                final String projectTypeId = event.getProject().getProjectTypeId();
-                TreeStructure treeStructure = treeStructureProviderRegistry.getTreeStructureProvider(projectTypeId).getTreeStructure();
-                setContent(treeStructure);
+                final ProjectDescriptor project = event.getProject();
+                AbstractTreeStructure tree = treeStructureProviderRegistry.getTreeStructureProvider(project).getTreeStructure();
+                setContent(tree);
                 view.setProjectHeader(event.getProject());
             }
 
@@ -189,7 +190,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         contextMenuPresenter.show(mouseX, mouseY);
     }
 
-    private void setContent(@NotNull final TreeStructure treeStructure) {
+    private void setContent(@NotNull final AbstractTreeStructure treeStructure) {
         treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
             @Override
             public void onSuccess(Array<AbstractTreeNode<?>> result) {

@@ -11,15 +11,15 @@
 package com.codenvy.ide.api.ui.projecttree;
 
 /**
- * Tree structure provider responsible for creating {@link TreeStructure} instances of desired type.
+ * Tree structure provider responsible for creating {@link AbstractTreeStructure} instances of desired type.
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProvider {
     /**
-     * Creates an empty {@link TreeStructure} instance of the corresponding class.
+     * Creates an empty {@link AbstractTreeStructure} instance of the corresponding class.
      *
-     * @return {@link TreeStructure} instance
+     * @return {@link AbstractTreeStructure} instance
      */
-    TreeStructure getTreeStructure();
+    AbstractTreeStructure getTreeStructure();
 }

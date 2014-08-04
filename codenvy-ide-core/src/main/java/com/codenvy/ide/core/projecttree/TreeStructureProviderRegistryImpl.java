@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.core.projecttree;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.ui.projecttree.TreeStructureProvider;
 import com.codenvy.ide.api.ui.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Collections;
@@ -17,7 +18,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;
 
 /**
- * //
+ * Implementation of {@link TreeStructureProviderRegistry}.
  *
  * @author Artem Zatsarynnyy
  */
@@ -37,12 +38,10 @@ public class TreeStructureProviderRegistryImpl implements TreeStructureProviderR
     }
 
     @Override
-    public TreeStructureProvider getTreeStructureProvider(String id) {
-        if (id != null) {
-            TreeStructureProvider treeStructure = providers.get(id);
-            if (treeStructure != null) {
-                return treeStructure;
-            }
+    public TreeStructureProvider getTreeStructureProvider(ProjectDescriptor project) {
+        TreeStructureProvider treeStructure = providers.get(project.getProjectTypeId());
+        if (treeStructure != null) {
+            return treeStructure;
         }
         // return generic tree structure
         return genericTreeStructureProvider;

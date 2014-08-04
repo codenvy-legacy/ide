@@ -12,15 +12,13 @@ package com.codenvy.ide.api.ui.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.ui.projecttree.TreeStructure;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.ui.projecttree.TreeStructureProvider;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-/**
- * @author Artem Zatsarynnyy
- */
+/** @author Artem Zatsarynnyy */
 public class GenericTreeStructureProvider implements TreeStructureProvider {
     private EventBus               eventBus;
     private ProjectServiceClient   projectServiceClient;
@@ -39,7 +37,7 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
     }
 
     @Override
-    public TreeStructure getTreeStructure() {
+    public AbstractTreeStructure getTreeStructure() {
         return new GenericTreeStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory, appContext);
     }
 }

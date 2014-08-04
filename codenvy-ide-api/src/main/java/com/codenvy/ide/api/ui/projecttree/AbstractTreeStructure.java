@@ -22,7 +22,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author Artem Zatsarynnyy
  */
-public interface TreeStructure {
+public abstract class AbstractTreeStructure {
+    private final Settings DEFAULT_SETTINGS = new Settings();
 
     /**
      * Returns root nodes for the tree.
@@ -30,7 +31,7 @@ public interface TreeStructure {
      * @param callback
      *         callback to return root nodes
      */
-    void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback);
+    public abstract void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback);
 
     /**
      * Populate the specified node by children.
@@ -40,7 +41,7 @@ public interface TreeStructure {
      * @param callback
      *         callback to return node with refreshed children
      */
-    void refreshChildren(AbstractTreeNode<?> node, AsyncCallback<AbstractTreeNode<?>> callback);
+    public abstract void refreshChildren(AbstractTreeNode<?> node, AsyncCallback<AbstractTreeNode<?>> callback);
 
     /**
      * Process an action on node in the view
@@ -49,5 +50,21 @@ public interface TreeStructure {
      * @param node
      *         tree node to process an action on it
      */
-    void processNodeAction(AbstractTreeNode<?> node);
+    public abstract void processNodeAction(AbstractTreeNode<?> node);
+
+    public Settings getSettings() {
+        return DEFAULT_SETTINGS;
+    }
+
+    /** Settings for {@link AbstractTreeStructure}. */
+    public class Settings {
+        /**
+         * Should hidden items be shown?
+         *
+         * @return <code>true</code> - if hidden items should be shown, <code>false</code> - otherwise
+         */
+        public boolean isShowHiddenItems() {
+            return false;
+        }
+    }
 }

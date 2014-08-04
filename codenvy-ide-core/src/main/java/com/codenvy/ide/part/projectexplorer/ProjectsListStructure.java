@@ -14,7 +14,7 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.ui.projecttree.TreeStructure;
+import com.codenvy.ide.api.ui.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -28,11 +28,10 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectsListStructure implements TreeStructure {
-    private Array<AbstractTreeNode<?>> roots;
-    private ProjectServiceClient       projectServiceClient;
-    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private EventBus                   eventBus;
+public class ProjectsListStructure extends AbstractTreeStructure {
+    private ProjectServiceClient   projectServiceClient;
+    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private EventBus               eventBus;
 
     public ProjectsListStructure(ProjectServiceClient projectServiceClient,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -40,34 +39,27 @@ public class ProjectsListStructure implements TreeStructure {
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.eventBus = eventBus;
-
-        roots = Collections.createArray();
     }
 
     /** {@inheritDoc} */
     @Override
     public void getRoots(final AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
-        if (!roots.isEmpty()) {
-            callback.onSuccess(roots);
-        } else {
-            Unmarshallable<Array<ProjectReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class);
-
-            projectServiceClient.getProjects(new AsyncRequestCallback<Array<ProjectReference>>(unmarshaller) {
-                @Override
-                protected void onSuccess(Array<ProjectReference> result) {
-                    Array<AbstractTreeNode<?>> array = Collections.createArray();
-                    for (ProjectReference projectReference : result.asIterable()) {
-                        array.add(new ProjectNode(null, projectReference));
-                    }
-                    callback.onSuccess(array);
+        Unmarshallable<Array<ProjectReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class);
+        projectServiceClient.getProjects(new AsyncRequestCallback<Array<ProjectReference>>(unmarshaller) {
+            @Override
+            protected void onSuccess(Array<ProjectReference> result) {
+                Array<AbstractTreeNode<?>> array = Collections.createArray();
+                for (ProjectReference projectReference : result.asIterable()) {
+                    array.add(new ProjectNode(null, projectReference));
                 }
+                callback.onSuccess(array);
+            }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    callback.onFailure(exception);
-                }
-            });
-        }
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */
