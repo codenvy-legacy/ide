@@ -14,6 +14,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Client resources.
  *
@@ -36,4 +38,10 @@ public interface TutorialsResources extends ClientBundle {
 
     @Source("guide.png")
     ImageResource guide();
+
+    @Source("codenvy-svg.svg")
+    SVGResource samplesCategoryCodenvy();
+
+    @Source("samples.svg")
+    SVGResource samplesCategorySamples();
 }

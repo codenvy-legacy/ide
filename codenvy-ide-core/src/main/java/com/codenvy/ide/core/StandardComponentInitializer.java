@@ -34,6 +34,8 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.ui.Icon;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
 import com.codenvy.ide.api.ui.action.IdeActions;
@@ -48,9 +50,13 @@ import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 
@@ -61,6 +67,10 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
  */
 @Singleton
 public class StandardComponentInitializer {
+    public interface ParserResource extends ClientBundle {
+        @Source("blank.svg")
+        SVGResource  samplesCategoryBlank();
+    }
 
     @Inject
     private EditorRegistry editorRegistry;
@@ -194,7 +204,8 @@ public class StandardComponentInitializer {
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
-    public StandardComponentInitializer() {
+    public StandardComponentInitializer(IconRegistry iconRegistry, StandardComponentInitializer.ParserResource parserResource) {
+        iconRegistry.registerIcon(new Icon("blank.samples.category.icon", parserResource.samplesCategoryBlank()));
     }
 
     public void initialize() {
