@@ -1,6 +1,6 @@
 [
     {
-        "displayName": "JSP Simple Form",
+        "displayName": "JSP",
         "category": "Samples - Hello World",
         "description": "A simple JSP application that returns user's input.",
         "source": {
@@ -9,7 +9,7 @@
         }
     },
     {
-        "displayName": "Spring Simple Form",
+        "displayName": "Spring",
         "category": "Samples - Hello World",
         "description": "A basic example using Spring servlets. The app returns values entered into a submit form.",
         "source": {
@@ -18,7 +18,7 @@
         }
     },
     {
-        "displayName": "Maven JAR Basic",
+        "displayName": "Maven JAR",
         "category": "Samples - Hello World",
         "description": "A basic JAR project built with Maven.",
         "source": {
@@ -36,7 +36,7 @@
         }
     },
     {
-        "displayName": "Swing Basic GUI Components",
+        "displayName": "Swing",
         "category": "Samples - Hello World",
         "description": "A simple Java Swing application.",
         "source": {
@@ -45,7 +45,7 @@
         }
     },
     {
-        "displayName": "GWT User Info",
+        "displayName": "GWT",
         "category": "Samples - Hello World",
         "description": "A GWT 2.6.1 application that returns user's input and information on application server and user agent.",
         "source": {
@@ -54,7 +54,7 @@
         }
     },
     {
-        "displayName": "Play v1 Default",
+        "displayName": "Play v1",
         "category": "Samples - Hello World",
         "description": "Play 1.2.7 start-up application which is a part of the Play distribution.",
         "source": {
@@ -63,7 +63,7 @@
         }
     },
     {
-        "displayName": "Play v2 Say Hello",
+        "displayName": "Play v2",
         "category": "Samples - Hello World",
         "description": "Play 2.10 application with basic functionality. Returns user's input with simple preferences.",
         "source": {
@@ -72,7 +72,7 @@
         }
     },
     {
-        "displayName": "Grails User Info",
+        "displayName": "Grails",
         "category": "Samples - Hello World",
         "description": "Default Grails application welcoming a user and providing information on application status and installed plug-ins.",
         "source": {
@@ -81,7 +81,7 @@
         }
     },
     {
-        "displayName": "JSF Simple Form",
+        "displayName": "JSF",
         "category": "Samples - Hello World",
         "description": "A basic 'What's Your Name' application that returns user's input.",
         "source": {
@@ -90,7 +90,7 @@
         }
     },
     {
-        "displayName": "Lift Web Account",
+        "displayName": "Lift",
         "category": "Samples - Hello World",
         "description": "Application demonstrating a simple user account, login, edit account, password recovery and logout procedures.",
         "source": {
@@ -99,7 +99,7 @@
         }
     },
     {
-        "displayName": "Struts Simple Form",
+        "displayName": "Struts",
         "category": "Samples - Hello World",
         "description": "A simple Struts app with a simple 'What's Your Name?' box that returns user's input.",
         "source": {
@@ -108,7 +108,7 @@
         }
     },
     {
-        "displayName": "Vaadin Online Address Book",
+        "displayName": "Vaadin",
         "category": "Samples - Hello World",
         "description": "An online address book built with Vaadin.",
         "source": {
@@ -135,7 +135,7 @@
         }
     },
     {
-        "displayName": "Wicket Default",
+        "displayName": "Wicket",
         "category": "Samples - Hello World",
         "description": "Quick Start Wicket web application which is a part of the Wicket bundle.",
         "source": {
@@ -144,7 +144,7 @@
         }
     },
     {
-        "displayName": "Groovy Scripting Console",
+        "displayName": "Groovy",
         "category": "Samples - Hello World",
         "description": "A basic scripting console to run JavaScript",
         "source": {
@@ -162,7 +162,7 @@
         }
     },
     {
-        "displayName": "JRuby Hello World",
+        "displayName": "JRuby",
         "category": "Samples - Hello World",
         "description": "A basic JRuby application compiled into JAR with JRuby Maven plugin. Outputs a simple message into a console",
         "source": {
@@ -171,7 +171,7 @@
         }
     },
     {
-        "displayName": "JRuby Spring Hello World",
+        "displayName": "JRuby Spring",
         "category": "Samples - Hello World",
         "description": "A basic JRuby application compiled into WAR with JRuby Maven plugin and run in an application server",
         "source": {
@@ -180,7 +180,7 @@
         }
     },
     {
-        "displayName": "Jython HttpServlet",
+        "displayName": "Jython Web",
         "category": "Samples - Hello World",
         "description": "A simple Jython web application packaged with Maven",
         "source": {
@@ -198,7 +198,7 @@
         }
     },
     {
-        "displayName": "Shale Simple Form",
+        "displayName": "Shale",
         "category": "Samples - Hello World",
         "description": "An application using Shale web framework. Returns user's input",
         "source": {
@@ -207,7 +207,7 @@
         }
     },
     {
-        "displayName": "Rhino Arithmetic Function",
+        "displayName": "Rhino",
         "category": "Samples - Hello World",
         "description": "A basic Rhino application that does arithmetic calculations",
         "source": {
@@ -216,7 +216,7 @@
         }
     },
     {
-        "displayName": "Kotlin Hello World",
+        "displayName": "Kotlin",
         "category": "Samples - Hello World",
         "description": "A console Kotlin app that outputs Hello World to a console",
         "source": {
@@ -225,7 +225,7 @@
         }
     },
     {
-        "displayName": "Velocity Spring MVC",
+        "displayName": "Velocity",
         "category": "Samples - Hello World",
         "description": "A simple web application using Velocity Framework",
         "source": {
@@ -234,7 +234,7 @@
         }
     },
     {
-        "displayName": "Thymeleaf Online Address Book",
+        "displayName": "Thymeleaf",
         "category": "Samples - Hello World",
         "description": "A basic web application that uses Thymeleaf engine",
         "source": {
@@ -243,7 +243,7 @@
         }
     },
     {
-        "displayName": "Desktop MongoDB",
+        "displayName": "MongoDB",
         "category": "Samples - Hello World",
         "description": "A simple desktop application that creates a DB and updates it in the runtime",
         "source": {
@@ -252,7 +252,7 @@
         }
     },
     {
-        "displayName": "Desktop MySQL",
+        "displayName": "MySQL",
         "category": "Samples - Hello World",
         "description": "A simple desktop application that creates a MySQL DB and updates it in the runtime",
         "source": {
@@ -261,7 +261,7 @@
         }
     },
     {
-        "displayName": "Desktop PostgreSQL",
+        "displayName": "PostgreSQL",
         "category": "Samples - Hello World",
         "description": "A simple desktop application that creates a PostgreSQL DB and updates it in the runtime",
         "source": {
@@ -270,7 +270,7 @@
         }
     },
     {
-        "displayName": "Desktop Cassandra",
+        "displayName": "Cassandra",
         "category": "Samples - Hello World",
         "description": "A simple desktop application that creates a Cassandra DB and updates it in the runtime",
         "source": {
