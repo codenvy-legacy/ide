@@ -21,7 +21,7 @@ import com.codenvy.ide.text.Position;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface SelectionModel {
+public interface SelectionModel extends CursorModel {
     /** Clear selection */
     void deselect();
 
@@ -39,14 +39,6 @@ public interface SelectionModel {
     Position getSelectedRange();
 
     /**
-     * Move cursor to offset.
-     *
-     * @param offset
-     *         the offset
-     */
-    void setCursorPosition(int offset);
-
-    /**
      * Select and reveal text in editor
      *
      * @param offset
@@ -56,10 +48,4 @@ public interface SelectionModel {
      */
     void selectAndReveal(int offset, int length);
 
-    /**
-     * Get cursor position
-     *
-     * @return the position of cursor.
-     */
-    Position getCursorPosition();
 }
