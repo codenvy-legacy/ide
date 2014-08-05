@@ -174,15 +174,6 @@ public interface JavaResources extends ClientBundle {
     @Source("svg/close-folder.svg")
     SVGResource closeFolder();
 
-    @Source("svg/css.svg")
-    SVGResource cssFile();
-
-    @Source("svg/html.svg")
-    SVGResource htmlFile();
-
-    @Source("svg/image-icon.svg")
-    SVGResource imageIcon();
-
     @Source("svg/java.svg")
     SVGResource javaFile();
 

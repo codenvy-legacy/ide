@@ -68,7 +68,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 @Singleton
 public class StandardComponentInitializer {
     public interface ParserResource extends ClientBundle {
-        @Source("blank.svg")
+        @Source("com/codenvy/ide/blank.svg")
         SVGResource  samplesCategoryBlank();
     }
 
