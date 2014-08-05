@@ -96,6 +96,9 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
+        if (event.getActivePart() == null) {
+            view.showNoOutline();
+        }
         if (event.getActivePart() instanceof TextEditorPartPresenter) {
             if (activePart != event.getActivePart()) {
                 activePart = (TextEditorPartPresenter)event.getActivePart();

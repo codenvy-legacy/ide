@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor;
 
+import javax.validation.constraints.NotNull;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -21,6 +23,7 @@ import com.codenvy.ide.api.resources.FileEvent;
 import com.codenvy.ide.api.resources.FileEventHandler;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.texteditor.api.HasHandlesOperationsView;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
@@ -40,11 +43,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
-
 
 /** @author Evgen Vidolob */
-public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors {
+public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
 
     //    private final TextListener textListener = new TextListener() {
 //
