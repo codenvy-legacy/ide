@@ -19,6 +19,7 @@ import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
+import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 
@@ -33,7 +34,7 @@ public class DefaultEditorProvider implements EditorProvider {
     @Inject
     public DefaultEditorProvider(final EditorTypeMapping editorTypeMapping,
                                  final EditorTypeRegistry editorTypeRegistry,
-                                 final @Named(JsEditorExtension.PLAIN_TEXT_FILETYPE_INJECT_NAME) FileType plainTextFileType,
+                                 final @PlainTextFileType FileType plainTextFileType,
                                  final @Named(JsEditorExtension.DEFAULT_EDITOR_TYPE_INSTANCE) EditorType defaultEditorType) {
         this.editorTypeMapping = editorTypeMapping;
         this.plainTextFileType = plainTextFileType;

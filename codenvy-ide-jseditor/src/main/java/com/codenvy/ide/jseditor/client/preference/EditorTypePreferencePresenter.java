@@ -13,8 +13,6 @@ package com.codenvy.ide.jseditor.client.preference;
 import java.util.Collections;
 import java.util.Map.Entry;
 
-import javax.inject.Named;
-
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
@@ -23,9 +21,9 @@ import com.codenvy.ide.api.notification.Notification.Type;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
-import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
+import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
 import com.codenvy.ide.jseditor.client.keymap.KeymapPrefReader;
@@ -78,7 +76,7 @@ public class EditorTypePreferencePresenter extends AbstractPreferencesPagePresen
                                          final NotificationManager notificationManager,
                                          final EventBus eventBus,
                                          final EditorPreferenceResource resource,
-                                         final @Named(JsEditorExtension.PLAIN_TEXT_FILETYPE_INJECT_NAME) FileType plainTextFileType) {
+                                         final @PlainTextFileType FileType plainTextFileType) {
         super(constant.editorTypeTitle(), resource.editorPrefIconTemporary());// TODO use svg icon when the PreferencesPagePresenter allow
                                                                               // it
         this.view = view;

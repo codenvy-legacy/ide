@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client;
 
-import javax.inject.Named;
-
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -22,6 +20,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
+import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -39,10 +38,8 @@ public class JsEditorExtension {
     public static final String DEFAULT_EDITOR_TYPE_INJECT_NAME = "DefaultEditorType";
 
     /** The default editor injection name. */
-    public static final String DEFAULT_EDITOR_TYPE_INSTANCE             = "DefaultEditorType";
+    public static final String DEFAULT_EDITOR_TYPE_INSTANCE    = "DefaultEditorType";
 
-    /** The plain/tect filetype injection name. */
-    public static final String PLAIN_TEXT_FILETYPE_INJECT_NAME = "plainTextFileType";
 
     @Inject
     public JsEditorExtension(final EditorTypeRegistry editorTypeRegistry,
@@ -50,7 +47,7 @@ public class JsEditorExtension {
                              final DocumentProvider documentProvider,
                              final NotificationManager notificationManager,
                              final FileTypeRegistry fileTypeRegistry,
-                             final @Named(PLAIN_TEXT_FILETYPE_INJECT_NAME) FileType plainText,
+                             final @PlainTextFileType FileType plainText,
                              final JsEditorConstants constants) {
 
         // Register classic editor

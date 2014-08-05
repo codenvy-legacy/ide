@@ -85,7 +85,7 @@ public class JsEditorGinModule extends AbstractGinModule {
 
     @Provides
     @Singleton
-    @Named(JsEditorExtension.PLAIN_TEXT_FILETYPE_INJECT_NAME)
+    @PlainTextFileType
     protected FileType textPlainFileType(final JsEditorConstants constants) {
         return new FileType(constants.defaultEditorDescription(),
                             (SVGResource)null,

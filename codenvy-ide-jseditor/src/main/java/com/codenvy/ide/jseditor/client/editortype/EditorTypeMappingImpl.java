@@ -22,7 +22,7 @@ import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.jseditor.client.JsEditorExtension;
+import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.jseditor.client.util.PrintMap;
 import com.codenvy.ide.jseditor.client.util.PrintMap.Converter;
 import com.codenvy.ide.util.loging.Log;
@@ -56,7 +56,7 @@ public class EditorTypeMappingImpl implements EditorTypeMapping {
     @Inject
     public EditorTypeMappingImpl(final FileTypeRegistry fileTypeRegistry,
                                  final @Named("defaultFileType") FileType unknownFileType,
-                                 final @Named(JsEditorExtension.PLAIN_TEXT_FILETYPE_INJECT_NAME) FileType plainTextFileType,
+                                 final @PlainTextFileType FileType plainTextFileType,
                                  final PreferencesManager preferencesManager) {
         this.fileTypeRegistry = fileTypeRegistry;
         this.unknownFileType = unknownFileType;
