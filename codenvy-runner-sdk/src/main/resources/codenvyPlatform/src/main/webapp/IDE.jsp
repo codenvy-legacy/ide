@@ -17,7 +17,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Codenvy Developer Environment</title>
-    <link rel="shortcut icon" href="/ide/_app/favicon.ico"/>
+    <link rel="shortcut icon" href="/ws/_app/favicon.ico"/>
 
     <script type="text/javascript" language="javascript">
 
@@ -43,9 +43,9 @@
 
             "hiddenFiles": ".*",
 
-            "facebookLikeURL": "/ide/_app/facebook-like.html",
+            "facebookLikeURL": "/ws/_app/facebook-like.html",
 
-            "googleLikeURL": "/ide/_app/google-like.html"
+            "googleLikeURL": "/ws/_app/google-like.html"
 
         };
 
@@ -73,8 +73,8 @@
 
     </script>
 
-    <script type="text/javascript" src="/ide/_app/greetings/greetings.js"></script>
-    <script type="text/javascript" language="javascript" src="/ide/_app/browserNotSupported.js"></script>
-    <script type="text/javascript" language="javascript" src="/ide/_app/_app.nocache.js"></script>
+    <script type="text/javascript" src="/ws/_app/greetings/greetings.js"></script>
+    <script type="text/javascript" language="javascript" src="/ws/_app/browserNotSupported.js"></script>
+    <script type="text/javascript" language="javascript" src="/ws/_app/_app.nocache.js"></script>
 </head>
 </html>
