@@ -59,8 +59,6 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     private TabButton activeTab;
 
-    private int oldIndex;
-
     private boolean focused;
 
     // DOM Handler
@@ -177,7 +175,6 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         if (activeTab != null) {
             activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
             activeTab.ensureDebugId("tabButton-" + activeTab.tabItemTittle.getText());
-            contentPanel.getWidget(oldIndex).ensureDebugId("editorPartStack-oldContent");
         }
 
         if (index >= 0 && index < tabs.size()) {
@@ -185,8 +182,6 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             activeTab.addStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
             contentPanel.showWidget(index);
             activeTab.ensureDebugId("activeTabButton-" + activeTab.tabItemTittle.getText());
-            contentPanel.getWidget(index).ensureDebugId("editorPartStack-newContent");
-            oldIndex = index;
         }
         processPanelSize();
     }
