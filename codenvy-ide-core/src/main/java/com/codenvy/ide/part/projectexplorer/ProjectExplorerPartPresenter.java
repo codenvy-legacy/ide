@@ -198,7 +198,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
      */
     private void updateItem(@NotNull final Resource resource) {
         Project project = resource.getProject();
-        if (resource.isFolder() && ((Folder)resource).getName().equals("")) {
+        if (resource.isFolder() && resource.getPath().equals(project.getPath())) {
             view.updateItem(project, resource);
         } else {
             project.findResourceByPath(resource.getPath(), new AsyncCallback<Resource>() {

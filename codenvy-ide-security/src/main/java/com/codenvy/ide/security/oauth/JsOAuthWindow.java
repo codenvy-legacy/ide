@@ -13,8 +13,8 @@ package com.codenvy.ide.security.oauth;
 import com.google.gwt.user.client.Window;
 
 /**
-* @author Vladislav Zhukovskii
-*/
+ * @author Vladislav Zhukovskii
+ */
 public class JsOAuthWindow {
     private String        authUrl;
     private String        errUrl;
@@ -78,8 +78,8 @@ public class JsOAuthWindow {
                     if (href) {
                         console.log(href);
                         var path = popupWindow.location.pathname;
-                        console.log("path" + path + " :: " + "/ide/" + $wnd.wsName);
-                        if (path == ("/ide/" + $wnd.IDE.config.workspaceName) || path == "/dashboard/") {
+                        console.log("path" + path + " :: " + "/ws/" + $wnd.wsName);
+                        if (path == ("/ws/" + $wnd.IDE.config.workspaceName) || path == "/dashboard/") {
                             instance.@com.codenvy.ide.security.oauth.JsOAuthWindow::setAuthenticationStatus(I)(3);
                             popupWindow.close();
                             popupWindow = null;

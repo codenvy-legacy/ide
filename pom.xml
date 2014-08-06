@@ -62,6 +62,7 @@
         <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
         <module>codenvy-sdk-tutorials/server-side</module>
         <module>codenvy-sdk-tools</module>
+        <module>codenvy-ide-jseditor</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
@@ -79,6 +80,13 @@
             <url>https://maven.codenvycorp.com/content/groups/public/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>codenvy-public-repo</id>
+            <name>codenvy public</name>
+            <url>https://maven.codenvycorp.com/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <pluginManagement>
             <plugins>

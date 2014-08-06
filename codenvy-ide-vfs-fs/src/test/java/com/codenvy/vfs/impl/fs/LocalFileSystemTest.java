@@ -36,6 +36,7 @@ import org.everrest.core.impl.ApplicationProviderBinder;
 import org.everrest.core.impl.ApplicationPublisher;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.EverrestProcessor;
 import org.everrest.core.impl.ProviderBinder;
 import org.everrest.core.impl.RequestDispatcher;
 import org.everrest.core.impl.RequestHandlerImpl;
@@ -139,10 +140,9 @@ public abstract class LocalFileSystemTest extends TestCase {
         dependencies.addComponent(EventListenerList.class, mountPoint.getEventService());
         ResourceBinder resources = new ResourceBinderImpl();
         ProviderBinder providers = new ApplicationProviderBinder();
-        RequestHandler requestHandler =
-                new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies, new EverrestConfiguration());
+        EverrestProcessor processor = new EverrestProcessor(resources, providers, dependencies, new EverrestConfiguration(), null);
+        launcher = new ResourceLauncher(processor);
         ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
-        launcher = new ResourceLauncher(requestHandler);
 
         ApplicationPublisher deployer = new ApplicationPublisher(resources, providers);
         deployer.publish(new VirtualFileSystemApplication());

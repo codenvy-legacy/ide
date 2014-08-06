@@ -32,13 +32,13 @@
             margin-right: 5px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="440px" height="200px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="440px" height="200px" addStyleNames="{style.emptyBorder}" debugId="changeValue-mainPanel">
         <g:south size="26">
             <g:FlowPanel>
                 <g:Button addStyleNames="{style.alignBtn}" width="60px" ui:field="btnCancel"
-                          text="{locale.changeValueViewCancelButtonTitle}"/>
+                          text="{locale.changeValueViewCancelButtonTitle}" debugId="changeValue-cancelButton"/>
                 <g:Button addStyleNames="{style.alignBtn} {style.space}" width="60px" ui:field="btnChange"
-                          text="{locale.changeValueViewChangeButtonTitle}"/>
+                          text="{locale.changeValueViewChangeButtonTitle}" debugId="changeValue-changeButton"/>
             </g:FlowPanel>
         </g:south>
         <g:center>
@@ -48,7 +48,7 @@
                         <g:Label ui:field="changeValueLabel" addStyleNames="{style.alignLeft}"/>
                     </g:north>
                     <g:center>
-                        <g:TextArea ui:field="value" width="415px" height="125px"/>
+                        <g:TextArea ui:field="value" width="415px" height="125px" debugId="changeValue-value"/>
                     </g:center>
                 </g:DockLayoutPanel>
             </g:FlowPanel>
