@@ -21,10 +21,47 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  */
 public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate> {
     public interface ActionDelegate extends BaseActionDelegate {
+        /** Called when Terminal tab opened. */
+        void onTerminalTabOpened();
+
+        /** Called when Terminal loaded into frame. */
+        void onTerminalLoaded();
+
+        /** Called when tab for app preview is opened. */
+        void onAppTabOpened();
+
+        /** Called when app preview loaded into frame. */
+        void onAppPreviewLoaded();
     }
 
     /** @return toolbar panel */
     AcceptsOneWidget getToolbarPanel();
+
+    /**
+     * Set title of console part.
+     *
+     * @param title
+     *         title to set
+     */
+    void setTitle(String title);
+
+    /** (Re)load Terminal frame. */
+    void reloadTerminalFrame(String url);
+
+    /** (Re)load frame for previewing an app. */
+    void reloadAppPreviewFrame(String url);
+
+    /** Hide Terminal panel and show special empty panel instead. */
+    void hideTerminal();
+
+    /** Hide panel for previewing an app and show special empty panel instead. */
+    void hideAppPreview();
+
+    /** Clear console. Remove all messages. */
+    void clearConsole();
+
+    /** Scroll to bottom of the view. */
+    void scrollBottom();
 
     /**
      * Print text in console area.
@@ -33,18 +70,4 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
      *         text that need to be shown
      */
     void print(String text);
-
-    /**
-     * Set title of console part.
-     *
-     * @param title
-     *         title that need to be set
-     */
-    void setTitle(String title);
-
-    /** Clear console. Remove all messages. */
-    void clear();
-
-    /** Scroll to bottom of the view. */
-    void scrollBottom();
 }

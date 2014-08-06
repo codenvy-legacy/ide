@@ -32,7 +32,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -40,7 +39,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
-import com.codenvy.ide.extension.runner.client.shell.ShellConsolePresenter;
 import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -103,7 +101,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private         MessageBus                 messageBus;
     private         WorkspaceAgent             workspaceAgent;
     private         RunnerConsolePresenter     console;
-    private         ShellConsolePresenter      shellConsole;
     private         RunnerServiceClient        service;
     private         UpdateServiceClient        updateService;
     private         RunnerLocalizationConstant constant;
@@ -129,7 +126,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             final WorkspaceAgent workspaceAgent,
                             final ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
-                            final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
                             UpdateServiceClient updateService,
                             final RunnerLocalizationConstant constant,
@@ -142,7 +138,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
-        this.shellConsole = shellConsole;
         this.service = service;
         this.updateService = updateService;
         this.constant = constant;
@@ -167,12 +162,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
-                                                            // open WebShell console
+
+                                                            final String appLink = getAppLink();
+                                                            if (appLink != null) {
+                                                                console.setAppURL(appLink);
+                                                            }
                                                             Link shellLink = getLink("shell url");
                                                             if (shellLink != null) {
-                                                                workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                                                                shellConsole.setUrl(shellLink.getHref());
+                                                                console.setShellURL(shellLink.getHref());
                                                             }
+
                                                             notificationManager.showNotification(new Notification(
                                                                     "Application " + event.getProject().getName() + " is running now.",
                                                                     INFO));
@@ -514,10 +513,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 //                notification.setType();
 //                notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
+                final String appLink = getAppLink();
+                if (appLink != null) {
+                    console.setAppURL(appLink);
+                }
                 Link shellLink = getLink("shell url");
                 if (shellLink != null) {
-                    workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                    shellConsole.setUrl(shellLink.getHref());
+                    console.setShellURL(shellLink.getHref());
                 }
 
                 if (runCallback != null) {
@@ -537,7 +539,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case FAILED:
                 isAnyAppRunning = false;
@@ -549,7 +551,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case CANCELLED:
                 isAnyAppRunning = false;
@@ -560,7 +562,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
         }
     }
