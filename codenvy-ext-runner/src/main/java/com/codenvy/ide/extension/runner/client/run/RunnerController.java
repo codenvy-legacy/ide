@@ -508,10 +508,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         switch (descriptor.getStatus()) {
             case RUNNING:
                 startCheckingAppHealth(descriptor);
-                notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
+                if (notification == null)
+                   notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
-//                notification.setType();
-//                notification.setMessage(constant.applicationStarted(activeProject.getName()));
+                notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
                 final String appLink = getAppLink();
                 if (appLink != null) {
@@ -530,7 +530,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
+                if (notification == null)
+                    notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
                     notification.setType(ERROR);
@@ -547,7 +548,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppOutput(descriptor);
                 getLogs(false);
 
-                notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
+                if (notification == null)
+                    notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
@@ -558,7 +560,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
-                notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
+                if (notification == null)
+                    notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
@@ -710,7 +713,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public String getCurrentAppURL() {
         // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING)) {
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING) && isLastAppHealthOk) {
             return getAppLink();
         }
         return null;
