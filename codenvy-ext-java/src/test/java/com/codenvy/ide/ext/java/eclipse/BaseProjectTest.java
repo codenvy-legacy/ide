@@ -13,7 +13,6 @@ package com.codenvy.ide.ext.java.eclipse;
 import com.codenvy.api.project.server.DefaultProjectManager;
 import com.codenvy.api.project.server.ProjectManager;
 import com.codenvy.api.project.server.ProjectTypeDescriptionRegistry;
-import com.codenvy.api.project.server.ProjectTypeRegistry;
 import com.codenvy.api.project.server.ValueProviderFactory;
 import com.codenvy.api.project.shared.ProjectType;
 import com.codenvy.vfs.impl.fs.LocalFileSystemTest;
@@ -47,11 +46,10 @@ public class BaseProjectTest extends LocalFileSystemTest {
 
     @BeforeClass
     public static void init() throws Exception {
-        ProjectTypeRegistry typeRegistry = new ProjectTypeRegistry();
-        typeRegistry.registerProjectType(new ProjectType("test_type", "test type", "test category"));
-        ProjectTypeDescriptionRegistry ptdr = new ProjectTypeDescriptionRegistry(typeRegistry);
+        ProjectTypeDescriptionRegistry ptdr = new ProjectTypeDescriptionRegistry();
+        ptdr.registerProjectType(new ProjectType("test_type", "test type", "test category"));
         Set<ValueProviderFactory> vpf = Collections.EMPTY_SET;
-        pm = new DefaultProjectManager(typeRegistry, ptdr, vpf, virtualFileSystemRegistry, mountPoint.getEventService());
+        pm = new DefaultProjectManager(ptdr, vpf, virtualFileSystemRegistry, mountPoint.getEventService());
         folderPath = createDirectory("/", "project");
         URL testproject = Thread.currentThread().getContextClassLoader().getResource("projects/testproject");
         zipProject = zipFolder(testproject.getFile());
