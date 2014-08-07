@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.console;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,7 +25,6 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,9 +46,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private static final String INFO_COLOR         = "lightgreen'";
     private static final String DOCKER_COLOR       = "#00B7EC'";
     private static final String DOCKER_ERROR_COLOR = "#F62217'";
-
-    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
-    }
+    private RunnerResources runnerResources;
 
     @UiField
     FlowPanel   topPanel;
@@ -58,11 +56,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     SimplePanel toolbarPanel;
 
     @UiField
-    Label consoleButton;
+    SimplePanel consoleButton;
     @UiField
-    Label terminalButton;
+    SimplePanel terminalButton;
     @UiField
-    Label appPreviewButton;
+    SimplePanel appPreviewButton;
 
     @UiField
     ScrollPanel scrollPanel;
@@ -79,11 +77,15 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     Frame     appPreviewFrame;
 
-    private Label activeTabButton;
+    private SimplePanel activeTabButton;
+
+    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
+    }
 
     @Inject
-    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerConsoleViewImplUiBinder uiBinder) {
+    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources, RunnerConsoleViewImplUiBinder uiBinder) {
         super(resources);
+        this.runnerResources = runnerResources;
         container.add(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
@@ -110,26 +112,26 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             }
         });
 
-        consoleButton.addClickHandler(new ClickHandler() {
+        consoleButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 setActiveTab(0);
             }
-        });
-        terminalButton.addClickHandler(new ClickHandler() {
+        }, ClickEvent.getType());
+        terminalButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 setActiveTab(1);
                 delegate.onTerminalTabOpened();
             }
-        });
-        appPreviewButton.addClickHandler(new ClickHandler() {
+        }, ClickEvent.getType());
+        appPreviewButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 setActiveTab(2);
                 delegate.onAppTabOpened();
             }
-        });
+        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */
@@ -146,8 +148,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     private void setActiveTab(int index) {
         if (activeTabButton != null) {
-            activeTabButton.getElement().getStyle().clearBackgroundColor();
-            activeTabButton.getElement().getStyle().clearColor();
+            activeTabButton.removeStyleName(runnerResources.runner().tabSelected());
         }
         if (index == 0) {
             activeTabButton = consoleButton;
@@ -156,8 +157,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         } else if (index == 2) {
             activeTabButton = appPreviewButton;
         }
-        activeTabButton.getElement().getStyle().setBackgroundColor("#343434");
-        activeTabButton.getElement().getStyle().setColor("#00B7EC");
+        activeTabButton.addStyleName(runnerResources.runner().tabSelected());
 
         tabPanel.showWidget(index);
     }
