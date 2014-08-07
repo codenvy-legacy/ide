@@ -66,7 +66,6 @@ public class JavaExtension {
     boolean updating      = false;
     boolean needForUpdate = false;
     private NotificationManager      notificationManager;
-    private String                   restContext;
     private String                   workspaceId;
     private AsyncRequestFactory      asyncRequestFactory;
     private EditorAgent              editorAgent;
@@ -81,7 +80,6 @@ public class JavaExtension {
                          EditorRegistry editorRegistry,
                          JavaEditorProvider javaEditorProvider,
                          EventBus eventBus,
-                         @Named("restContext") String restContext,
                          @Named("workspaceId") String workspaceId,
                          ActionManager actionManager,
                          AsyncRequestFactory asyncRequestFactory,
@@ -101,7 +99,6 @@ public class JavaExtension {
                          FormatController formatController,
                          BuildContext buildContext) {
         this.notificationManager = notificationManager;
-        this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.asyncRequestFactory = asyncRequestFactory;
         this.editorAgent = editorAgent;
@@ -109,21 +106,10 @@ public class JavaExtension {
         this.parserWorker = parserWorker;
         this.buildContext = buildContext;
 
+        // register new Icons for java projecttype
+        iconRegistry.registerIcon(new Icon("java.samples.category.icon", resources.samplesCategoryJava()));
         iconRegistry.registerIcon(new Icon("java.class", "java-extension/java-icon.png"));
         iconRegistry.registerIcon(new Icon("java.package", "java-extension/package-icon.png"));
-        iconRegistry.registerIcon(new Icon("maven.projecttype.big.icon", "java-extension/jar_64.png"));
-        iconRegistry.registerIcon(new Icon("maven.folder.small.icon", resources.packageIcon()));
-        iconRegistry.registerIcon(new Icon("maven/java.file.small.icon", resources.javaFile()));
-        iconRegistry.registerIcon(new Icon("maven/xml.file.small.icon", resources.xmlFile()));
-        iconRegistry.registerIcon(new Icon("maven/css.file.small.icon", resources.cssFile()));
-        iconRegistry.registerIcon(new Icon("maven/js.file.small.icon", resources.jsFile()));
-        iconRegistry.registerIcon(new Icon("maven/json.file.small.icon", resources.jsonFile()));
-        iconRegistry.registerIcon(new Icon("maven/html.file.small.icon", resources.htmlFile()));
-        iconRegistry.registerIcon(new Icon("maven/jsp.file.small.icon", resources.jspFile()));
-        iconRegistry.registerIcon(new Icon("maven/gif.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("maven/jpg.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("maven/png.file.small.icon", resources.imageIcon()));
-        iconRegistry.registerIcon(new Icon("maven/pom.xml.file.small.icon", resources.maven()));
 
         editorRegistry.registerDefaultEditor(javaFile, javaEditorProvider);
         fileTypeRegistry.registerFileType(javaFile);

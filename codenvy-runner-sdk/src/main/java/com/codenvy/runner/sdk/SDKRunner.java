@@ -141,7 +141,7 @@ public class SDKRunner extends Runner {
                         new SDKRunnerConfiguration(server, request.getMemorySize(), httpPort, codeServerAddress, codeServerPort, request);
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL)
-                                                       .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ide/default")));
+                                                       .withHref(String.format("http://%s:%d/%s", hostName, httpPort, "ws/default")));
                 configuration.getLinks().add(DtoFactory.getInstance().createDto(Link.class)
                                                        .withRel(LINK_REL_CODE_SERVER)
                                                        .withHref(String.format("%s:%d", codeServerAddress, codeServerPort)));

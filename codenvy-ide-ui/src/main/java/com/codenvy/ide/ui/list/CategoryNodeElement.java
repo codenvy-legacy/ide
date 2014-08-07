@@ -91,6 +91,10 @@ public class CategoryNodeElement extends FlowPanel {
         add(container);
         animator = new AnimationController.Builder().setCollapse(true).setFade(true).build();
         animator.hideWithoutAnimating((elemental.dom.Element)container.getElement());
+        expanded = true;
+        renderChildren();
+        animator.show((elemental.dom.Element)container.getElement());
+        expandControl.addClassName(resources.defaultCategoriesListCss().expandedImage());
     }
 
     @SuppressWarnings("unchecked")

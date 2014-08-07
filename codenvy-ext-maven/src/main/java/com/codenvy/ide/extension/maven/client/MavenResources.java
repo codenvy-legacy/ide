@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -22,4 +23,37 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface MavenResources extends ClientBundle {
     @Source("build.svg")
     SVGResource build();
+
+    @Source("xml.svg")
+    SVGResource xmlFile();
+
+    @Source("js.svg")
+    SVGResource jsFile();
+
+    @Source("json.svg")
+    SVGResource jsonFile();
+
+    @Source("jsp.svg")
+    SVGResource jspFile();
+
+    @Source("css.svg")
+    SVGResource cssFile();
+
+    @Source("html.svg")
+    SVGResource htmlFile();
+
+    @Source("image-icon.svg")
+    SVGResource imageIcon();
+
+    @Source("maven.svg")
+    SVGResource maven();
+
+    @Source("package.svg")
+    SVGResource packageIcon();
+
+    @Source("java.svg")
+    SVGResource javaFile();
+
+    @Source("jar_64.png")
+    ImageResource mavenJarBigIcon();
 }

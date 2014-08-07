@@ -13,12 +13,15 @@ package com.codenvy.ide.wizard.project.main;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.ui.Icon;
+import com.codenvy.ide.api.ui.IconRegistry;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -73,9 +76,7 @@ public class MainPageViewImpl implements MainPageView {
 
                 @Override
                 public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectTypeDescriptor> category) {
-                    com.google.gwt.dom.client.SpanElement spanElement = Document.get().createSpanElement();
-                    spanElement.setInnerText(category.getTitle().toUpperCase());
-                    return spanElement;
+                    return renderCategoryWithIcon(category.getTitle());
                 }
             };
     private final CategoryRenderer<ProjectTemplateDescriptor>               projectTemplateRenderer =
@@ -87,11 +88,11 @@ public class MainPageViewImpl implements MainPageView {
 
                 @Override
                 public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectTemplateDescriptor> category) {
-                    com.google.gwt.dom.client.SpanElement spanElement = Document.get().createSpanElement();
-                    spanElement.setInnerText(category.getTitle().toUpperCase());
-                    return spanElement;
+                    return renderCategoryWithIcon(category.getTitle());
                 }
             };
+    private final IconRegistry iconRegistry;
+
     @UiField
     Style       style;
     @UiField
@@ -117,8 +118,9 @@ public class MainPageViewImpl implements MainPageView {
     private CategoriesList                              list;
 
     @Inject
-    public MainPageViewImpl(Resources resources) {
+    public MainPageViewImpl(Resources resources, IconRegistry iconRegistry) {
         this.resources = resources;
+        this.iconRegistry = iconRegistry;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
         projectName.getElement().setAttribute("title", "Define the name of your project...");
@@ -185,6 +187,25 @@ public class MainPageViewImpl implements MainPageView {
         projectDescription.setEnabled(enabled);
         projectPublic.setEnabled(enabled);
         projectPrivate.setEnabled(enabled);
+    }
+
+    private SpanElement renderCategoryWithIcon(String title) {
+        SpanElement spanElement = Document.get().createSpanElement();
+        spanElement.setInnerText(title.toUpperCase());
+        Icon icon = iconRegistry.getIconIfExist(title.toLowerCase().replaceAll(" ", "") + ".samples.category.icon");
+        if (icon == null) return spanElement;
+        Element iconElement = null;
+        if (icon.getSVGImage() != null) {
+            iconElement = icon.getSVGImage().getElement();
+            iconElement.setAttribute("class", resources.defaultCategoriesListCss().headerIcon());
+        } else if (icon.getImage() != null) {
+            iconElement = icon.getImage().getElement();
+            iconElement.setClassName(resources.defaultCategoriesListCss().headerIcon());
+        }
+        if (iconElement != null) {
+            spanElement.appendChild(iconElement);
+        }
+        return spanElement;
     }
 
     @Override

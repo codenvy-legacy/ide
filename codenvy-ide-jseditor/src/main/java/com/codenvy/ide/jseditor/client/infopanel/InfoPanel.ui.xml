@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012-2014 Codenvy, S.A.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+      Codenvy, S.A. - initial API and implementation
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent"><!-- required for html entities -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with type="com.codenvy.ide.jseditor.client.JsEditorConstants" field="constants" />
+    <ui:style src="com/codenvy/ide/api/ui/style.css">
+        /* layout styles */
+        .infoPanel-layout {
+            display: flex;
+            display: -webkit-flex;
+
+            flex-flow: column;
+            -webkit-flex-flow: column;
+
+            justify-content: flex-start;
+            -webkit-justify-content: flex-start;
+
+            align-items: stretch;
+            -webkit-align-items: stretch;
+        }
+        .infoPanel-horizlayout {
+            display: flex;
+            display: -webkit-flex;
+
+            flex-flow: row;
+            -webkit-flex-flow: row;
+
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+
+            align-items: stretch;
+            -webkit-align-items: stretch;
+        }
+        .infoPanel-item {
+            flex-grow: 0; /* don't allow growth if there is space available */
+            -webkit-flex-grow: 0;
+            flex-shrink: 0; /* don't allow to shrink if there is not enough space */
+            -webkit-flex-shrink: 0;
+        }
+
+        /* specific styles */
+        .editorInfo {
+            height: 16px;
+            margin-bottom: 0;
+        }
+        .topBorder {
+            border-top: 1px solid editorInfoBorderColor;
+            border-bottom: 1px solid editorInfoBorderShadowColor;
+        }
+        .panelInfo {
+            font-family: Helvetica Neue, Light;
+            font-size: 11px;
+            color: #5c5c5c;
+            background-color: editorInfoBackgroundColor;
+        }
+
+        .leftPart {
+            margin-left: 5px;
+            min-width: 15em; /* to prevent position changes for the center element when line ou char gains one character */
+        }
+        .centrePart {
+        }
+        .rightPart {
+            margin-right: 10px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.editorInfo} {style.infoPanel-layout} {style.panelInfo}">
+        <!-- Border -->
+        <div class="{style.topBorder}" />
+        <!-- Actual content -->
+        <div class="{style.infoPanel-horizlayout}">
+            <div class="{style.leftPart}">
+                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneLineLabel}" /></span>
+                <g:InlineLabel ui:field="lineNumber" addStyleNames="{style.infoPanel-item}" />
+                <span ui:field="charPosLabel" class="{style.infoPanel-item}"><ui:text from="{constants.infoPanelCharacterLabel}" /></span>
+                <g:InlineLabel ui:field="charPosition" addStyleNames="{style.infoPanel-item}"/>
+            </div>
+            <div class="{style.centrePart}">
+                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneTabSizeLabel}" /></span>
+                <g:InlineLabel ui:field="tabSize" addStyleNames="{style.infoPanel-item}" />
+            </div>
+            <div class="{style.rightPart}">
+                <g:InlineLabel ui:field="fileType" addStyleNames="{style.infoPanel-item}" />
+            </div>
+        </div>
+    </g:HTMLPanel>
+
+</ui:UiBinder>

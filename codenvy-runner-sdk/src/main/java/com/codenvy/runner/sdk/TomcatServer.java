@@ -104,7 +104,7 @@ public class TomcatServer implements ApplicationServer {
             tomcatPath = Files.createDirectory(workDir.toPath().resolve("tomcat"));
             ZipUtils.unzip(Utils.getTomcatBinaryDistribution().openStream(), tomcatPath.toFile());
             webappsPath = tomcatPath.resolve("webapps");
-            ZipUtils.unzip(new java.io.File(warToDeploy.getName()), webappsPath.resolve("ide").toFile());
+            ZipUtils.unzip(new java.io.File(warToDeploy.getName()), webappsPath.resolve("ws").toFile());
             generateServerXml(tomcatPath.toFile(), runnerConfiguration);
 
             // add JAR with extension to 'api' application's 'lib' directory

@@ -33,7 +33,6 @@ import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
@@ -71,7 +70,6 @@ import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
-import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
@@ -241,7 +239,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
@@ -262,7 +259,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
         themeBinder.addBinding().to(DarkTheme.class);
-//        themeBinder.addBinding().to(LightTheme.class);
+        // themeBinder.addBinding().to(LightTheme.class);
 
         // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
@@ -275,7 +272,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
-//        bind(PartStackView.class).to(PartStackViewImpl.class);
+        // bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
@@ -301,7 +298,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("defaultFileType")
     @Singleton
     protected FileType provideDefaultFileType() {
-        //TODO add icon for unknown file
+        // TODO add icon for unknown file
         Resources res = GWT.create(Resources.class);
         return new FileType(res.defaultFile(), null);
     }
