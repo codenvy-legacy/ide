@@ -24,12 +24,12 @@
     <dependencies>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
+            <artifactId>codenvy-ide-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ide-api</artifactId>
+            <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
