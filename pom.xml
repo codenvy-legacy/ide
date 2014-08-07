@@ -24,44 +24,16 @@
     <packaging>pom</packaging>
     <name>Codenvy :: Parent</name>
     <modules>
-        <module>codenvy-ide-env-dummy</module>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-ui</module>
         <module>codenvy-ide-vfs-fs</module>
         <module>codenvy-ide-core</module>
-        <module>codenvy-maven-tools</module>
-        <module>codenvy-ant-tools</module>
-        <module>codenvy-builder-maven</module>
-        <module>codenvy-builder-ant</module>
-        <module>codenvy-sdk-api-war</module>
-        <module>codenvy-runner-sdk</module>
-        <module>codenvy-runner-webapps</module>
         <module>codenvy-ext-builder</module>
-        <module>codenvy-ext-maven</module>
         <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
-        <module>codenvy-ext-java</module>
-        <module>codenvy-ext-java-codeassistant</module>
-        <module>codenvy-ext-debugger-java</module>
-        <module>codenvy-ext-plugins</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-security</module>
         <module>codenvy-ide-client</module>
-        <module>codenvy-sdk-tutorials/action-api</module>
-        <module>codenvy-sdk-tutorials/analytics-event-logger-ext</module>
-        <module>codenvy-sdk-tutorials/wizard-api</module>
-        <module>codenvy-sdk-tutorials/theme-api</module>
-        <module>codenvy-sdk-tutorials/parts-api</module>
-        <module>codenvy-sdk-tutorials/notification-api</module>
-        <module>codenvy-sdk-tutorials/editor-api</module>
-        <module>codenvy-sdk-tutorials/empty-ext</module>
-        <module>codenvy-sdk-tutorials/gin</module>
-        <module>codenvy-sdk-tutorials/gist-ext</module>
-        <module>codenvy-sdk-tutorials/helloworld-ext</module>
-        <module>codenvy-sdk-tutorials/icons-regitry-api</module>
-        <module>codenvy-sdk-tutorials/wysiwyg-editor</module>
-        <module>codenvy-sdk-tutorials/server-side</module>
-        <module>codenvy-sdk-tools</module>
         <module>codenvy-ide-jseditor</module>
     </modules>
     <scm>
