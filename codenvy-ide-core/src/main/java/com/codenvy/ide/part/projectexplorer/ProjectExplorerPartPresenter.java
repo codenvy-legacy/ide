@@ -142,6 +142,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onResourceRenamed(ResourceChangedEvent event) {
                 if (event.getResource() instanceof Project &&
                     event.getResource().getParent().isFolder() && event.getResource().getParent().getName().equals("")) {
+                    view.setProjectHeader(event.getResource().getProject());
                     setContent(event.getResource().getParent());
                 } else {
                     updateItem(event.getResource().getParent());

@@ -136,6 +136,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("enteredValueNotCorrect")
     String enteredValueNotCorrect();
 
+    @Key("runnerNotReady")
+    String runnerNotReady();
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();

@@ -32,7 +32,6 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -40,7 +39,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
-import com.codenvy.ide.extension.runner.client.shell.ShellConsolePresenter;
 import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -103,7 +101,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private         MessageBus                 messageBus;
     private         WorkspaceAgent             workspaceAgent;
     private         RunnerConsolePresenter     console;
-    private         ShellConsolePresenter      shellConsole;
     private         RunnerServiceClient        service;
     private         UpdateServiceClient        updateService;
     private         RunnerLocalizationConstant constant;
@@ -129,7 +126,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             final WorkspaceAgent workspaceAgent,
                             final ResourceProvider resourceProvider,
                             final RunnerConsolePresenter console,
-                            final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
                             UpdateServiceClient updateService,
                             final RunnerLocalizationConstant constant,
@@ -142,7 +138,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.workspaceAgent = workspaceAgent;
         this.resourceProvider = resourceProvider;
         this.console = console;
-        this.shellConsole = shellConsole;
         this.service = service;
         this.updateService = updateService;
         this.constant = constant;
@@ -167,12 +162,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
-                                                            // open WebShell console
+
+                                                            final String appLink = getAppLink();
+                                                            if (appLink != null) {
+                                                                console.setAppURL(appLink);
+                                                            }
                                                             Link shellLink = getLink("shell url");
                                                             if (shellLink != null) {
-                                                                workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                                                                shellConsole.setUrl(shellLink.getHref());
+                                                                console.setShellURL(shellLink.getHref());
                                                             }
+
                                                             notificationManager.showNotification(new Notification(
                                                                     "Application " + event.getProject().getName() + " is running now.",
                                                                     INFO));
@@ -190,7 +189,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (isAnyAppRunning()) {
+                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     stopActiveProject(false);
                 }
                 console.clear();
@@ -509,15 +508,18 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         switch (descriptor.getStatus()) {
             case RUNNING:
                 startCheckingAppHealth(descriptor);
-                notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
+                if (notification == null)
+                   notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
-//                notification.setType();
-//                notification.setMessage(constant.applicationStarted(activeProject.getName()));
+                notification.setMessage(constant.applicationStarted(activeProject.getName()));
 
+                final String appLink = getAppLink();
+                if (appLink != null) {
+                    console.setAppURL(appLink);
+                }
                 Link shellLink = getLink("shell url");
                 if (shellLink != null) {
-                    workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                    shellConsole.setUrl(shellLink.getHref());
+                    console.setShellURL(shellLink.getHref());
                 }
 
                 if (runCallback != null) {
@@ -528,7 +530,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
-                notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
+                if (notification == null)
+                    notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
                     notification.setType(ERROR);
@@ -537,7 +540,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case FAILED:
                 isAnyAppRunning = false;
@@ -545,22 +548,24 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppOutput(descriptor);
                 getLogs(false);
 
-                notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
+                if (notification == null)
+                    notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case CANCELLED:
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
-                notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
+                if (notification == null)
+                    notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
         }
     }
@@ -708,7 +713,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public String getCurrentAppURL() {
         // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING)) {
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING) && isLastAppHealthOk) {
             return getAppLink();
         }
         return null;

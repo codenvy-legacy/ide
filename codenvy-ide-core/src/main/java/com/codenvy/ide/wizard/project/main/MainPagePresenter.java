@@ -131,6 +131,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         view.setProjectTypeCategories(descriptorsByCategory, samples);
         if (project != null) {
             view.selectProjectType(project.getDescription().getProjectTypeId());
+            view.setVisibility(project.getVisibility().equals("public"));
+            view.setName(project.getName());
         }
     }
 
@@ -151,6 +153,5 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         typeDescriptor = null;
         delegate.updateControls();
-        view.disableAllExceptName();
     }
 }
