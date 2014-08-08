@@ -30,10 +30,14 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
-    private static final String    TITLE    = "Runner";
-    private RunnerConsoleView      view;
-    private final ToolbarPresenter consoleToolbar;
-    private boolean                isUnread = false;
+    private static final String TITLE = "Runner";
+    private       RunnerConsoleView view;
+    private final ToolbarPresenter  consoleToolbar;
+    private       String            appURL;
+    private       String            shellURL;
+    private boolean isUnread = false;
+    private boolean isTerminalFrameAlreadyLoaded;
+    private boolean isAppPreviewFrameAlreadyLoaded;
 
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
@@ -41,18 +45,17 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
-        
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
 
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
             @Override
             public void onActivePartChanged(ActivePartChangedEvent event) {
                 onPartActivated(event.getActivePart());
             }
         });
     }
-    
-    private void onPartActivated(PartPresenter part){
-        if (part != null && part.equals(this) && isUnread){
+
+    private void onPartActivated(PartPresenter part) {
+        if (part != null && part.equals(this) && isUnread) {
             isUnread = false;
             firePropertyChange(TITLE_PROPERTY);
         }
@@ -104,11 +107,9 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         view.print(message);
         view.scrollBottom();
     }
-    
-    /**
-     * Sets the console active (selected) in the parts stack.
-     */
-    public void setActive(){
+
+    /** Sets the console active (selected) in the parts stack. */
+    public void setActive() {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
@@ -117,6 +118,58 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     /** Clear console. Remove all messages. */
     public void clear() {
-        view.clear();
+        view.clearConsole();
+    }
+
+    /** Set shell URL. */
+    public void setShellURL(String url) {
+        this.shellURL = url;
+    }
+
+    /** Should be called when current app is stopped. */
+    public void onAppStopped() {
+        shellURL = null;
+        appURL = null;
+        isTerminalFrameAlreadyLoaded = false;
+        isAppPreviewFrameAlreadyLoaded = false;
+        view.hideTerminal();
+        view.hideAppPreview();
+    }
+
+    /** Set URL to preview an app. */
+    public void setAppURL(String url) {
+        this.appURL = url;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTerminalTabOpened() {
+        // Note: in order to avoid some troubles of loading shell page into IFrame,
+        // page should be loaded into view when tab becomes visible.
+        if (shellURL != null && !isTerminalFrameAlreadyLoaded) {
+            view.reloadTerminalFrame(shellURL);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onTerminalLoaded() {
+        isTerminalFrameAlreadyLoaded = true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAppTabOpened() {
+        // Note: in order to avoid some troubles of loading app page into IFrame,
+        // page should be loaded into view when tab becomes visible.
+        if (appURL != null && !isAppPreviewFrameAlreadyLoaded) {
+            view.reloadAppPreviewFrame(appURL);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onAppPreviewLoaded() {
+        isAppPreviewFrameAlreadyLoaded = true;
     }
 }

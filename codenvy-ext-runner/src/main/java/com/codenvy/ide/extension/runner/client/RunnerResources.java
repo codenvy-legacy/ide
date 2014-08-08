@@ -50,6 +50,9 @@ public interface RunnerResources extends ClientBundle {
         
         @ClassName("main-style")
         String mainStyle();
+
+        @ClassName("tab-selected")
+        String tabSelected();
     }
 
     @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})

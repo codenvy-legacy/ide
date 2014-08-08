@@ -28,3 +28,8 @@
 	font-family: mainFontFamily;
 	color: mainFontColor;
 }
+
+.tab-selected {
+    background-color: #343434;
+    color: #00B7EC;
+}

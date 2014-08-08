@@ -189,10 +189,11 @@ public class MainPageViewImpl implements MainPageView {
         projectPrivate.setEnabled(enabled);
     }
 
-    private SpanElement renderCategoryWithIcon(String title){
+    private SpanElement renderCategoryWithIcon(String title) {
         SpanElement spanElement = Document.get().createSpanElement();
         spanElement.setInnerText(title.toUpperCase());
         Icon icon = iconRegistry.getIconIfExist(title.toLowerCase().replaceAll(" ", "") + ".samples.category.icon");
+        if (icon == null) return spanElement;
         Element iconElement = null;
         if (icon.getSVGImage() != null) {
             iconElement = icon.getSVGImage().getElement();

@@ -23,7 +23,7 @@
             user-select: text;
 			color: outputFontColor;
 			padding-left: 7px;
-			padding-bottom: 5px;				
+			padding-bottom: 5px;
 			margin-top: 4px;
         }
 		
