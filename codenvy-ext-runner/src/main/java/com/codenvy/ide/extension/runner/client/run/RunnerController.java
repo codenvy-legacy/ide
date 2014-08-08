@@ -181,7 +181,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (isAnyAppRunning()) {
+                if (isAnyAppRunning() && !RunnerUtils.getRunnerMetric(appContext.getCurrentProject().getProcessDescriptor(), RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     stopActiveProject(false);
                 }
                 console.clear();
@@ -516,8 +516,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             case RUNNING:
                 startCheckingAppHealth(descriptor.getProcessId());
 
+                if (notification == null)
+                    notification = new Notification(constant.applicationStarted(projectName), INFO);
                 notification.setStatus(FINISHED);
-                notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(projectName));
 
                 final String appLink = getAppLink(appContext.getCurrentProject().getProcessDescriptor());
@@ -538,7 +539,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor.getProcessId());
                 stopCheckingAppOutput(descriptor.getProcessId());
-                notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
+
+                if (notification == null)
+                    notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
 
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
@@ -558,10 +561,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppOutput(descriptor.getProcessId());
                 getLogs(false);
 
-                notification = new Notification(constant.applicationFailed(projectName), ERROR);
+                if (notification == null)
+                    notification = new Notification(constant.applicationFailed(projectName), ERROR);
                 notification.setStatus(FINISHED);
-                notification.setType(ERROR);
-                notification.setMessage(constant.applicationFailed(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -572,9 +574,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppStatus(descriptor.getProcessId());
                 stopCheckingAppOutput(descriptor.getProcessId());
 
+                if (notification == null)
+                    notification = new Notification(constant.applicationCanceled(projectName),WARNING);
                 notification.setStatus(FINISHED);
-                notification.setType(WARNING);
-                notification.setMessage(constant.applicationCanceled(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();

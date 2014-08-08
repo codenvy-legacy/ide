@@ -119,7 +119,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        if (project != null && projectName.equals(project.getName()) && wizard == null) {
+        if (project != null && projectName.equals(project.getName())) {
             updateProject(project, callback);
             return;
         }
@@ -138,27 +138,23 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-        final ProjectDescriptor projectDescriptorToUpdate = dtoFactory.createDto(ProjectDescriptor.class);
-        projectDescriptorToUpdate.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
+        final ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
+        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptorToUpdate.setVisibility(visibility ? "public" : "private");
-        projectDescriptorToUpdate.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
-        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectService.updateProject(project.getPath(), projectDescriptorToUpdate,
-                                     new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
-                                         @Override
-                                         protected void onSuccess(ProjectDescriptor result) {
-                                             ProjectReference projectToOpen =
-                                                     dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                                             eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
-                                             callback.onSuccess();
-                                         }
+        projectDescriptor.setVisibility(visibility ? "public" : "private");
+        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
+                eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+            }
 
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             callback.onFailure(exception);
-                                         }
-                                     });
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     private void createBlankProject(final WizardPage.CommitCallback callback) {
@@ -187,15 +183,18 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void importProject(final WizardPage.CommitCallback callback,
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
-        projectService.importProject(projectName, templateDescriptor.getSource(),
+        projectService.importProject(projectName,
+                                     templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
-                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                                                                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
-                                             ProjectReference projectToOpen =
-                                                     dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                                             eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
-                                             callback.onSuccess();
+                                             if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)){
+                                                 getProject(projectName, callback);
+                                             } else {
+                                                 switchVisibility(callback, result);
+                                             }
+                                             
                                          }
 
                                          @Override
@@ -203,7 +202,28 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                              callback.onFailure(exception);
                                          }
                                      }
-                                    );
+                      );
+    }
+    
+    private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
+        String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
+        projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                getProject(project.getName(), callback);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+    
+    private void getProject(String name, final WizardPage.CommitCallback callback) {
+        ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(name);
+        eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+        callback.onSuccess();
     }
 
     /** {@inheritDoc} */

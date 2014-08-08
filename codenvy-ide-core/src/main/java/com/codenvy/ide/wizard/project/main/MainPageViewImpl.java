@@ -235,6 +235,7 @@ public class MainPageViewImpl implements MainPageView {
     @Override
     public void setVisibility(boolean visible) {
         projectPublic.setValue(visible, false);
+        projectPrivate.setValue(!visible, false);
     }
 
     @Override
