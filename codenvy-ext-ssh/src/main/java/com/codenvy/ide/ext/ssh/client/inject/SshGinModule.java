@@ -11,7 +11,7 @@
 package com.codenvy.ide.ext.ssh.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshKeyServiceImpl;
 import com.codenvy.ide.ext.ssh.client.key.SshKeyView;

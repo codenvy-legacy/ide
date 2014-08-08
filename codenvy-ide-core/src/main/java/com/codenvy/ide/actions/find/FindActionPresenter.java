@@ -12,12 +12,12 @@ package com.codenvy.ide.actions.find;
 
 import com.codenvy.ide.actions.ActionManagerImpl;
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.IdeActions;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.UnicodeUtils;

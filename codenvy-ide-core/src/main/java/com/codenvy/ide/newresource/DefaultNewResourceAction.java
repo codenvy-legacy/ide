@@ -14,13 +14,13 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.QueryExpression;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
-import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -64,7 +64,7 @@ public class DefaultNewResourceAction extends Action {
      * @param svgIcon
      *         action's SVG icon
      * @param appContext
-     *         {@link com.codenvy.ide.api.AppContext} instance
+     *         {@link com.codenvy.ide.api.app.AppContext} instance
      * @param selectionAgent
      *         {@link com.codenvy.ide.api.selection.SelectionAgent} instance
      * @param editorAgent

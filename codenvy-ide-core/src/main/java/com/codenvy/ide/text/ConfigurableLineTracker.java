@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.TextUtilities;
 import com.codenvy.ide.runtime.Assert;
 
 /**

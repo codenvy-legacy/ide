@@ -15,6 +15,7 @@
 package com.codenvy.ide.texteditor.renderer;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
@@ -38,7 +39,7 @@ import java.util.EnumSet;
 public class Renderer {
 
     public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-                                  SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager,
+                                  SelectionModel selection, FocusManager focusManager,
                                   TextEditorViewImpl editor, Resources res, RenderTimeExecutor renderTimeExecutor,
                                   BreakpointGutterManager breakpointGutterManager) {
         return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
@@ -85,7 +86,7 @@ public class Renderer {
     private final RenderTimeExecutor renderTimeExecutor;
 
     private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-                     SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor,
+                     SelectionModel selection, FocusManager focusManager, TextEditorViewImpl editor,
                      Resources res, RenderTimeExecutor renderTimeExecutor, BreakpointGutterManager breakpointGutterManager) {
         this.viewport = viewport;
         this.renderTimeExecutor = renderTimeExecutor;

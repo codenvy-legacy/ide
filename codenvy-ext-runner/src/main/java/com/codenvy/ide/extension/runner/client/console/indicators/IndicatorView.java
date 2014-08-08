@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
-import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.api.ui.action.PropertyChangeEvent;
-import com.codenvy.ide.api.ui.action.PropertyChangeListener;
+import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.action.PropertyChangeEvent;
+import com.codenvy.ide.api.action.PropertyChangeListener;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;

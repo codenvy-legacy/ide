@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.LineTracker;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.RegionImpl;
 import com.codenvy.ide.text.AbstractLineTracker.DelimiterInfo;
 
 import java.util.ArrayList;

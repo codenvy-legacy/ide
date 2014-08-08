@@ -11,7 +11,7 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.ui.theme.Theme;
+import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.collections.Array;
 
 /**

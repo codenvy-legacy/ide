@@ -11,7 +11,6 @@
 package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.extension.SDK;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
 
 import javax.validation.constraints.NotNull;
 

@@ -34,16 +34,16 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.ui.Icon;
-import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectWizard;
-import com.codenvy.ide.image.viewer.ImageViewerProvider;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.action.IdeActions;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.keybinding.KeyBuilder;
+import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.imageviewer.ImageViewerProvider;
 import com.codenvy.ide.newresource.NewFileAction;
 import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.toolbar.MainToolbar;
@@ -51,14 +51,13 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
+import static com.codenvy.ide.api.action.IdeActions.GROUP_FILE_NEW;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)

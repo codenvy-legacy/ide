@@ -10,6 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.BadPartitioningException;
+import com.codenvy.ide.api.text.BadPositionCategoryException;
+import com.codenvy.ide.api.text.DefaultPositionUpdater;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentEvent;
+import com.codenvy.ide.api.text.DocumentListener;
+import com.codenvy.ide.api.text.DocumentPartitioner;
+import com.codenvy.ide.api.text.DocumentPartitioningChangedEvent;
+import com.codenvy.ide.api.text.DocumentPartitioningListener;
+import com.codenvy.ide.api.text.LineTracker;
+import com.codenvy.ide.api.text.ListenerList;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.PositionUpdater;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.TypedRegion;
+import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.runtime.Assert;
 
 import java.util.ArrayList;

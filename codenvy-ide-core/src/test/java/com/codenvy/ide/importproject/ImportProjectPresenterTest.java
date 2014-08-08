@@ -16,7 +16,7 @@ import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
@@ -144,7 +144,7 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
-        verify(projectWizardPresenter).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
+        verify(projectWizardPresenter).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
     }
 
     @Test
@@ -246,7 +246,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
+        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
     }
@@ -294,7 +294,7 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
+        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
     }
 
@@ -375,7 +375,7 @@ public class ImportProjectPresenterTest {
         verify(projectServiceClient).getProject(eq(PROJECT_PATH), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
-        verify(projectWizardPresenter).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
+        verify(projectWizardPresenter).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
     }
 
 }

@@ -11,8 +11,8 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.ui.wizard.Wizard;
-import com.codenvy.ide.api.ui.wizard.WizardPage;
+import com.codenvy.ide.api.wizard.Wizard;
+import com.codenvy.ide.api.wizard.WizardPage;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

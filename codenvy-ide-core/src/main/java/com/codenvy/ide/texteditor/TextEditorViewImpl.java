@@ -16,6 +16,7 @@ package com.codenvy.ide.texteditor;
 
 import elemental.dom.Element;
 
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -24,34 +25,34 @@ import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
 import com.codenvy.ide.text.DocumentImpl;
-import com.codenvy.ide.text.Position;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.text.RegionImpl;
-import com.codenvy.ide.text.TextUtilities;
-import com.codenvy.ide.text.annotation.AnnotationModel;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.RegionImpl;
+import com.codenvy.ide.api.text.TextUtilities;
+import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
-import com.codenvy.ide.texteditor.api.ContentFormatter;
-import com.codenvy.ide.texteditor.api.KeyListener;
-import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorOperations;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.TextInputListener;
+import com.codenvy.ide.api.texteditor.ContentFormatter;
+import com.codenvy.ide.api.texteditor.KeyListener;
+import com.codenvy.ide.api.texteditor.NativeKeyUpListener;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextInputListener;
 import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.texteditor.api.UndoManager;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.parser.Parser;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
-import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
+import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
+import com.codenvy.ide.api.texteditor.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
 import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
@@ -110,11 +111,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     public static final int ANIMATION_DURATION = 100;
     private static      int idCounter          = 0;
-    private final Buffer                                      buffer;
-    private final EditorTextStoreMutator                      editorDocumentMutator;
-    private final FontDimensionsCalculator                    editorFontDimensionsCalculator;
-    private final com.codenvy.ide.texteditor.api.FocusManager focusManager;
-    private final MouseHoverManager                           mouseHoverManager;
+    private final Buffer                   buffer;
+    private final EditorTextStoreMutator   editorDocumentMutator;
+    private final FontDimensionsCalculator editorFontDimensionsCalculator;
+    private final FocusManager             focusManager;
+    private final MouseHoverManager        mouseHoverManager;
     private final int                               id                            = idCounter++;
     private final FontDimensionsCalculator.Callback fontDimensionsChangedCallback = new FontDimensionsCalculator.Callback() {
         @Override
@@ -337,15 +338,15 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return editorDocumentMutator;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getElement() */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#getElement() */
     @Override
     public com.google.gwt.user.client.Element getElement() {
         return (com.google.gwt.user.client.Element)getView().getElement();
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getFocusManager() */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#getFocusManager() */
     @Override
-    public com.codenvy.ide.texteditor.api.FocusManager getFocusManager() {
+    public FocusManager getFocusManager() {
         return focusManager;
     }
 
@@ -353,7 +354,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return mouseHoverManager;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getKeyListenerRegistrar() */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#getKeyListenerRegistrar() */
     @Override
     public ListenerRegistrar<KeyListener> getKeyListenerRegistrar() {
         return input.getKeyListenerRegistrar();
@@ -371,7 +372,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return debugLineRenderer;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getSelection() */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#getSelection() */
     @Override
     public SelectionModel getSelection() {
         return selectionManager.getSelectionModel();
@@ -394,7 +395,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         renderer.removeLineRenderer(lineRenderer);
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getDocument() */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#getDocument() */
     @Override
     public Document getDocument() {
         return document;
@@ -533,13 +534,13 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return undoManager;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#setUndoManager(com.codenvy.ide.texteditor.api.UndoManager) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#setUndoManager(com.codenvy.ide.api.texteditor.UndoManager) */
     @Override
     public void setUndoManager(UndoManager undoManager) {
         this.undoManager = undoManager;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#configure(com.codenvy.ide.texteditor.api.TextEditorConfiguration) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#configure(com.codenvy.ide.api.texteditor.TextEditorConfiguration) */
     @Override
     public void configure(TextEditorConfiguration configuration) {
         setUndoManager(configuration.getUndoManager(this));
@@ -662,7 +663,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         //            Autoindenter.create(documentParser, this);
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#canDoOperation(int) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#canDoOperation(int) */
     @Override
     public boolean canDoOperation(int operation) {
         if (TextEditorOperations.CODEASSIST_PROPOSALS == operation && codeAssistant != null) {
@@ -680,7 +681,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         return false;
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#doOperation(int) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#doOperation(int) */
     @Override
     public void doOperation(int operation) {
         switch (operation) {
@@ -715,13 +716,13 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         // TODO implement all code in TextEditorOperations
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#addTextInputListener(com.codenvy.ide.texteditor.api.TextInputListener) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#addTextInputListener(com.codenvy.ide.api.texteditor.TextInputListener) */
     @Override
     public void addTextInputListener(TextInputListener listener) {
         textInputListenerManager.add(listener);
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#removeTextInputListener(com.codenvy.ide.texteditor.api.TextInputListener) */
+    /** @see com.codenvy.ide.api.texteditor.TextEditorPartView#removeTextInputListener(com.codenvy.ide.api.texteditor.TextInputListener) */
     @Override
     public void removeTextInputListener(TextInputListener listener) {
         textInputListenerManager.remove(listener);

@@ -11,8 +11,8 @@
 package com.codenvy.ide.core.projecttree;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.ui.projecttree.TreeStructureProvider;
-import com.codenvy.ide.api.ui.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.TreeStructureProvider;
+import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.google.inject.Inject;

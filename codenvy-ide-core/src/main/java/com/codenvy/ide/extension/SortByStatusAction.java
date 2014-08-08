@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.ToggleAction;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ToggleAction;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

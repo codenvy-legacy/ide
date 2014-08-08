@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.api.texteditor.UndoManager;
 
 /** An interface that allows mutation of a document. */
 public interface TextStoreMutator {

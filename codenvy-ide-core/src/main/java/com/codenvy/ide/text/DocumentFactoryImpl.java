@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentFactory;
+
 /**
  * Default implementation of the DocumentFactory.
  * Use {@link DocumentImpl} as implementation of Document interface

@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.theme;
 
-import com.codenvy.ide.api.ui.theme.Theme;
-import com.codenvy.ide.api.ui.theme.ThemeAgent;
+import com.codenvy.ide.api.theme.Theme;
+import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.user.client.Cookies;
 import com.google.inject.Inject;
 
 import javax.validation.constraints.NotNull;

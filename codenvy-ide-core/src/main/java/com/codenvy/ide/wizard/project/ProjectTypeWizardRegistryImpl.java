@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project;
 
-import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.ui.wizard.ProjectWizard;
+import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.RegionImpl;
 import com.codenvy.ide.runtime.Assert;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -121,7 +125,7 @@ public class FindReplaceDocumentAdapter implements CharSequence {
      * @param operationCode
      *         specifies what kind of operation is executed
      * @return the find or replace region or <code>null</code> if there was no match
-     * @throws BadLocationException
+     * @throws com.codenvy.ide.api.text.BadLocationException
      *         if startOffset is an invalid document offset
      * @throws IllegalStateException
      *         if a REPLACE or REPLACE_FIND operation is not preceded by a successful FIND operation
@@ -215,8 +219,8 @@ public class FindReplaceDocumentAdapter implements CharSequence {
      *         if a REPLACE or REPLACE_FIND operation is not preceded by a successful FIND operation
      * @throws PatternSyntaxException
      *         if a regular expression has invalid syntax
-     * @see DocumentEvent
-     * @see DocumentListener
+     * @see com.codenvy.ide.api.text.DocumentEvent
+     * @see com.codenvy.ide.api.text.DocumentListener
      */
     public Region replace(String text, boolean regExReplace) throws BadLocationException {
         // TODO

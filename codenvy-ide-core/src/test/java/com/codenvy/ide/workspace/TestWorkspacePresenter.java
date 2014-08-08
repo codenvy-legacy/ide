@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
+import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;

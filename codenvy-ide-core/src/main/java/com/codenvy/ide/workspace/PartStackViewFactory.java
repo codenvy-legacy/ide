@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.PartStackView;
 import com.google.gwt.user.client.ui.InsertPanel;
 
 /**

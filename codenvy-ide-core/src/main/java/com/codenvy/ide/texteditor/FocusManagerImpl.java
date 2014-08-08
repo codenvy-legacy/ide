@@ -18,7 +18,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.dom.Element;
 
-import com.codenvy.ide.texteditor.api.FocusManager;
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
@@ -28,7 +28,7 @@ import com.codenvy.ide.util.dom.Elements;
 /** Tracks the focus state of the editor. */
 public class FocusManagerImpl implements FocusManager {
 
-    private final ListenerManager<com.codenvy.ide.texteditor.api.FocusManager.FocusListener> focusListenerManager =
+    private final ListenerManager<FocusManager.FocusListener> focusListenerManager =
             ListenerManager.create();
 
     private boolean hasFocus;
@@ -44,8 +44,8 @@ public class FocusManagerImpl implements FocusManager {
 
     private void attachEventHandlers(Buffer buffer) {
         inputElement.addEventListener(Event.FOCUS, new EventListener() {
-            private final Dispatcher<com.codenvy.ide.texteditor.api.FocusManager.FocusListener> dispatcher =
-                    new Dispatcher<com.codenvy.ide.texteditor.api.FocusManager.FocusListener>() {
+            private final Dispatcher<FocusManager.FocusListener> dispatcher =
+                    new Dispatcher<FocusManager.FocusListener>() {
                         @Override
                         public void dispatch(FocusListener listener) {
                             listener.onFocusChange(true);
@@ -60,8 +60,8 @@ public class FocusManagerImpl implements FocusManager {
         }, false);
 
         inputElement.addEventListener(Event.BLUR, new EventListener() {
-            private final Dispatcher<com.codenvy.ide.texteditor.api.FocusManager.FocusListener> dispatcher =
-                    new Dispatcher<com.codenvy.ide.texteditor.api.FocusManager.FocusListener>() {
+            private final Dispatcher<FocusManager.FocusListener> dispatcher =
+                    new Dispatcher<FocusManager.FocusListener>() {
                         @Override
                         public void dispatch(FocusListener listener) {
                             listener.onFocusChange(false);
@@ -85,7 +85,7 @@ public class FocusManagerImpl implements FocusManager {
 
     /** {@inheritDoc} */
     @Override
-    public ListenerRegistrar<com.codenvy.ide.texteditor.api.FocusManager.FocusListener> getFocusListenerRegistrar() {
+    public ListenerRegistrar<FocusManager.FocusListener> getFocusListenerRegistrar() {
         return focusListenerManager;
     }
 

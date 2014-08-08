@@ -13,10 +13,10 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.CustomComponentAction;
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.CustomComponentAction;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.workspace.WorkBenchPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

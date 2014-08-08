@@ -14,11 +14,11 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.dom.Element;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.keybinding.Scheme;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.keybinding.Scheme;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.browser.UserAgent;

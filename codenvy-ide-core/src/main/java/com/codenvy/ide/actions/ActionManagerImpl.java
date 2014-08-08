@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.Anchor;
-import com.codenvy.ide.api.ui.action.Constraints;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.Anchor;
+import com.codenvy.ide.api.action.Constraints;
+import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.action.IdeActions;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 

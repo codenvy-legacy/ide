@@ -14,13 +14,14 @@
 
 package com.codenvy.ide.texteditor.syntaxhighlighter;
 
+import com.codenvy.ide.api.texteditor.SelectionModel;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
-import com.codenvy.ide.texteditor.api.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.renderer.LineRenderer;
 import com.codenvy.ide.texteditor.renderer.Renderer;
@@ -39,7 +40,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
     private static final String LINE_TAG_CACHED_TOKENS = "SyntaxHighlighter.cachedTokens";
 
     public static SyntaxHighlighter create(DocumentModel document, Renderer renderer, ViewportModel viewport,
-                                           com.codenvy.ide.texteditor.api.SelectionModel selection, DocumentParser documentParser,
+                                           SelectionModel selection, DocumentParser documentParser,
                                            TextEditorViewImpl.Css editorCss) {
         ListenerRegistrar.RemoverManager removerManager = new ListenerRegistrar.RemoverManager();
         SyntaxHighlighter syntaxHighlighter =
@@ -63,7 +64,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
     private final ListenerRegistrar.RemoverManager removerManager;
 
     private SyntaxHighlighter(DocumentModel document, Renderer editorRenderer, ViewportModel viewport,
-                              com.codenvy.ide.texteditor.api.SelectionModel selection, DocumentParser documentParser,
+                              SelectionModel selection, DocumentParser documentParser,
                               ListenerRegistrar.RemoverManager removerManager,
                               TextEditorViewImpl.Css editorCss) {
         this.editorRenderer = editorRenderer;

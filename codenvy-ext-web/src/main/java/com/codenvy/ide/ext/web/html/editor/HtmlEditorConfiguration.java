@@ -12,13 +12,13 @@ package com.codenvy.ide.ext.web.html.editor;
 
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.parser.CmParser;
-import com.codenvy.ide.texteditor.api.parser.Parser;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.parser.CmParser;
+import com.codenvy.ide.api.texteditor.parser.Parser;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;

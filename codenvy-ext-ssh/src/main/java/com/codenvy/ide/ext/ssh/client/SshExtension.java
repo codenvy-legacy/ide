@@ -11,7 +11,7 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
+import com.codenvy.ide.api.preferences.PreferencesAgent;
 import com.codenvy.ide.ext.ssh.client.manage.SshKeyManagerPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;

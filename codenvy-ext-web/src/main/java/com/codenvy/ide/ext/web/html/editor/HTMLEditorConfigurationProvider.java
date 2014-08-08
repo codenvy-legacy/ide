@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.google.inject.Inject;
 
 import javax.inject.Provider;

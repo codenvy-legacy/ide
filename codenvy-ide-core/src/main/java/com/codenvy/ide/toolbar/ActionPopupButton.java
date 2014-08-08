@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;

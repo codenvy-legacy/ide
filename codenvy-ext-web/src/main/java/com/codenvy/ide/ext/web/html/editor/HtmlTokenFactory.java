@@ -18,9 +18,9 @@ package com.codenvy.ide.ext.web.html.editor;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.web.css.editor.CssState;
 import com.codenvy.ide.ext.web.css.editor.CssTokenFactory;
-import com.codenvy.ide.texteditor.api.parser.Token;
-import com.codenvy.ide.texteditor.api.parser.TokenFactory;
-import com.codenvy.ide.texteditor.api.parser.TokenType;
+import com.codenvy.ide.api.texteditor.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.TokenFactory;
+import com.codenvy.ide.api.texteditor.parser.TokenType;
 
 /**
  * Token factory for HTML. Depending on the mode it creates either {@link Token}

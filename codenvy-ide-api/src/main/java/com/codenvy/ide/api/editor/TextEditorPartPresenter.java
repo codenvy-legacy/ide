@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 
 
 /**

@@ -21,7 +21,7 @@ import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

@@ -11,9 +11,9 @@
 package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PartStackType;
+import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;

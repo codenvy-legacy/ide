@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
+import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
 
 /**
  * Default implementation of {@link QuickAssistAssistant}

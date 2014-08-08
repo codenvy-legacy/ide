@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 /**
  * Invocation context for Css code assistant, it's hold prefix, offset and resources of currant code assistant session.

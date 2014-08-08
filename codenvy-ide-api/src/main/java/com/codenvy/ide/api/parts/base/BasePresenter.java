@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.parts.base;
 
-import com.codenvy.ide.api.ui.workspace.AbstractPartPresenter;
-import com.codenvy.ide.api.ui.workspace.PartStack;
+import com.codenvy.ide.api.parts.AbstractPartPresenter;
+import com.codenvy.ide.api.parts.PartStack;
 
 import javax.validation.constraints.NotNull;
 

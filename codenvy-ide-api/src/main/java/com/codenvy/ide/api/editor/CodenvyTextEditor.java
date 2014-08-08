@@ -11,8 +11,8 @@
 package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 import javax.validation.constraints.NotNull;
 

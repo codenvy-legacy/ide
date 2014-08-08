@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.console.indicators;
 
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
 import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
 import com.google.inject.Inject;

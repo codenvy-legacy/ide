@@ -13,10 +13,9 @@ package com.codenvy.ide.extension.builder.client.console;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.vectomatic.dom.svg.ui.SVGResource;

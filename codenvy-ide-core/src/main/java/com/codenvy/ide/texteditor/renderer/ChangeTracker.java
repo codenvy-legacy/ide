@@ -28,7 +28,7 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.Spacer;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.ViewportModel.Edge;
-import com.codenvy.ide.texteditor.api.FocusManager;
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.ScheduledCommandExecutor;
@@ -47,7 +47,7 @@ import java.util.EnumSet;
  * render pass.
  */
 class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listener, SelectionModel.SelectionListener,
-                               Buffer.SpacerListener, com.codenvy.ide.texteditor.api.FocusManager.FocusListener {
+                               Buffer.SpacerListener, FocusManager.FocusListener {
 
     enum ChangeType {
         /** The viewport's top or bottom are now pointing to different lines */
@@ -320,7 +320,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
     }
 
     private void attach(Buffer buffer, DocumentModel document, ViewportModel viewport, SelectionModel selection,
-                        com.codenvy.ide.texteditor.api.FocusManager focusManager) {
+                        FocusManager focusManager) {
         listenerRemovers.add(focusManager.getFocusListenerRegistrar().add(this));
         listenerRemovers.add(document.getTextListenerRegistrar().add(this));
         listenerRemovers.add(viewport.getListenerRegistrar().add(this));

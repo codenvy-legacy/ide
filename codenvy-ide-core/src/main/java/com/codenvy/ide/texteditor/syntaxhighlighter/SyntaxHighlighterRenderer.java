@@ -14,12 +14,13 @@
 
 package com.codenvy.ide.texteditor.syntaxhighlighter;
 
+import com.codenvy.ide.api.texteditor.SelectionModel;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
-import com.codenvy.ide.texteditor.api.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.texteditor.renderer.LineRenderer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
@@ -41,7 +42,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer {
         res.syntaxHighlighterRendererCss().ensureInjected();
     }
 
-    private final com.codenvy.ide.texteditor.api.SelectionModel selection;
+    private final SelectionModel selection;
 
     private final SyntaxHighlighter syntaxHighlighter;
 
@@ -51,7 +52,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer {
 
     private final Css editorCss;
 
-    SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, com.codenvy.ide.texteditor.api.SelectionModel selection,
+    SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, SelectionModel selection,
                               TextEditorViewImpl.Css editorCss) {
         this.syntaxHighlighter = syntaxHighlighter;
         this.selection = selection;

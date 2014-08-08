@@ -11,8 +11,8 @@
 package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

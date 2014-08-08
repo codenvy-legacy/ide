@@ -10,17 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.contexmenu;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.ActionPlaces;
-import com.codenvy.ide.api.ui.action.CustomComponentAction;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.api.ui.action.Separator;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.ActionPlaces;
+import com.codenvy.ide.api.action.CustomComponentAction;
+import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.action.IdeActions;
+import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.action.Separator;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.toolbar.ActionButton;

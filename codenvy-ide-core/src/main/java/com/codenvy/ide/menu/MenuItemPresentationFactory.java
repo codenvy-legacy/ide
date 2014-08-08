@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.menu;
 
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.toolbar.PresentationFactory;
 
 /**

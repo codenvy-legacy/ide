@@ -15,7 +15,8 @@
 package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.text.Document;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.renderer.Renderer;
@@ -29,7 +30,7 @@ import com.codenvy.ide.texteditor.renderer.Renderer;
 public class SelectionManager {
 
     public static SelectionManager create(Document doc, DocumentModel document, Buffer buffer,
-                                          com.codenvy.ide.texteditor.api.FocusManager focusManager,
+                                          FocusManager focusManager,
                                           Resources resources) {
         SelectionModel selectionModel = SelectionModel.create(doc, document, buffer);
         SelectionLineRenderer selectionLineRenderer = new SelectionLineRenderer(selectionModel, focusManager, resources);

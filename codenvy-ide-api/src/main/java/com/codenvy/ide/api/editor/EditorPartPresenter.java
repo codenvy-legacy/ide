@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.validation.constraints.NotNull;

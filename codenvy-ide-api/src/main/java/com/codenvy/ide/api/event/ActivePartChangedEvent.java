@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**

@@ -15,8 +15,8 @@ import elemental.client.Browser;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.CurrentProject;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.event.ProjectActionHandler_2;
@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
  * <li>closing already opened project before opening another one;</li>
  * <li>setting Browser tab's title;</li>
  * <li>rewriting URL in Browser's address bar;</li>
- * <li>setting current project to {@link com.codenvy.ide.api.AppContext};</li>
+ * <li>setting current project to {@link com.codenvy.ide.api.app.AppContext};</li>
  * <li>etc.</li>
  * </ul>
  *

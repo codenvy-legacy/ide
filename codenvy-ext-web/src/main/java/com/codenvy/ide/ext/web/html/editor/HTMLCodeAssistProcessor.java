@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 
 /**
  * Marker interface for HTML.

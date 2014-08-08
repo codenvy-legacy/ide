@@ -14,10 +14,10 @@ import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.ui.Icon;
-import com.codenvy.ide.api.ui.IconRegistry;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
 import com.codenvy.ide.ext.web.css.NewLessFileAction;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
@@ -34,7 +34,7 @@ import com.google.inject.name.Named;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
+import static com.codenvy.ide.api.action.IdeActions.GROUP_FILE_NEW;
 
 /**
  * Extension add editing JavaScript, HTML, CSS css type support to the IDE Application.

@@ -11,7 +11,7 @@
 package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.api.AppContext;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;

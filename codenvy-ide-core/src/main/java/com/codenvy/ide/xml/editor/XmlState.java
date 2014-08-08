@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.codenvy.ide.xml.editor;
 
-import com.codenvy.ide.texteditor.api.parser.CmState;
+import com.codenvy.ide.api.texteditor.parser.CmState;
 
 /**
  * Object that represents xml-parser state.

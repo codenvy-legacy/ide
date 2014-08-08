@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.api.quickassist;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
 
 /**
  * An <code>QuickAssistAssistant</code> provides support for quick fixes and quick
@@ -19,7 +20,7 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
  * purpose is to propose, display, and insert quick assists and quick fixes
  * available at the current source viewer's quick assist invocation context.
  * <p>
- * The quick assist assistant can be configured with a {@link QuickAssistProcessor}
+ * The quick assist assistant can be configured with a {@link com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor}
  * which provides the possible quick assist and quick fix completions.
  * </p>
  *

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.annotation.AnnotationModel;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.annotation.Nullable;

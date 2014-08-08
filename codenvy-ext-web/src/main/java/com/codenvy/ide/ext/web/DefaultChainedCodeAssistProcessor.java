@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web;
 
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

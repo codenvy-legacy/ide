@@ -12,11 +12,10 @@ package com.codenvy.ide.navigation;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.CurrentProject;
-import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.resources.model.Folder;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
@@ -25,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyObject;
@@ -70,9 +68,6 @@ public class NavigateToFileTest {
 
     @Before
     public void setUp() {
-        Folder folder = Mockito.mock(Folder.class);
-        Mockito.when(folder.getPath()).thenReturn(PROJECT_PATH + "/" + FOLDER_NAME);
-
         when(appContext.getCurrentProject()).thenReturn(project);
 
         presenter = new NavigateToFilePresenter(view, appContext, eventBus, messageBus, anyString(), dtoUnmarshallerFactory);

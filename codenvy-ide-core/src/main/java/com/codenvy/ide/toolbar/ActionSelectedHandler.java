@@ -11,7 +11,7 @@
 package com.codenvy.ide.toolbar;
 
 
-import com.codenvy.ide.api.ui.action.Action;
+import com.codenvy.ide.api.action.Action;
 
 /** @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a> */
 

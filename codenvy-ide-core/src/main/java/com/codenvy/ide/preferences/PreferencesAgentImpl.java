@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencesAgent;
+import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;

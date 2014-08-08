@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.notification;
 
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 
 import javax.validation.constraints.NotNull;
 

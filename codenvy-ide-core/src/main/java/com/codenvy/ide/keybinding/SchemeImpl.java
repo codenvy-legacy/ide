@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.keybinding;
 
-import com.codenvy.ide.api.ui.keybinding.Scheme;
+import com.codenvy.ide.api.keybinding.Scheme;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.IntegerMap;

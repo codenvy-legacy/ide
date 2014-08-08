@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.core;
 
-import com.codenvy.ide.api.ui.Icon;
-import com.codenvy.ide.api.ui.IconRegistry;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
 import com.google.inject.Singleton;
 
 import java.util.HashMap;

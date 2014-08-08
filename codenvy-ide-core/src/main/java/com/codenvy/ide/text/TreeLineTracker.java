@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.LineTracker;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.RegionImpl;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.AbstractLineTracker.DelimiterInfo;
 
@@ -1080,7 +1084,7 @@ abstract class TreeLineTracker implements LineTracker {
      *
      * @param offset
      *         the illegal character or line offset that caused the exception
-     * @throws BadLocationException
+     * @throws com.codenvy.ide.api.text.BadLocationException
      *         always
      */
     private void fail(int offset) throws BadLocationException {

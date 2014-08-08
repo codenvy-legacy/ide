@@ -13,15 +13,14 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.texteditor.api.HandlesTextOperations;
-import com.codenvy.ide.texteditor.api.HasHandlesOperationsView;
-import com.codenvy.ide.texteditor.api.TextEditorOperations;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.texteditor.HandlesTextOperations;
+import com.codenvy.ide.api.texteditor.HasHandlesOperationsView;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.google.inject.Inject;
 
 /**

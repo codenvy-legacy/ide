@@ -12,13 +12,13 @@ package com.codenvy.ide.ext.web.css.editor;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Position;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.util.AbstractTrie;
 import com.codenvy.ide.util.loging.Log;
 

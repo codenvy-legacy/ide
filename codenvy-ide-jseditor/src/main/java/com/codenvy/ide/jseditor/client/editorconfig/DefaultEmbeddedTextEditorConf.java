@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editorconfig;
 
-import com.codenvy.ide.texteditor.api.outline.OutlineModel;
+import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 
 public class DefaultEmbeddedTextEditorConf implements EmbeddedTextEditorConfiguration {
 

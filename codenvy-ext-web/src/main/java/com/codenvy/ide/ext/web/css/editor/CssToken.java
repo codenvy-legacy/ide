@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.texteditor.api.parser.Token;
-import com.codenvy.ide.texteditor.api.parser.TokenType;
+import com.codenvy.ide.api.texteditor.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.TokenType;
 
 /** Token that knows about CSS state stack. */
 public class CssToken extends Token {

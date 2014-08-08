@@ -15,9 +15,9 @@
 package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.TextUtilities;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.TextUtilities;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
@@ -33,7 +33,7 @@ import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.PositionUtils;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.ViewportModel;
-import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
@@ -60,7 +60,7 @@ import static com.codenvy.ide.text.store.util.LineUtils.rubberbandColumn;
  * document is replaced, a new instance of this class is created for the new
  * document.
  */
-public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide.texteditor.api.SelectionModel {
+public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide.api.texteditor.SelectionModel {
 
     /** Enumeration of movement actions. */
     public enum MoveAction {
@@ -801,9 +801,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
 
     /** {@inheritDoc} */
     @Override
-    public com.codenvy.ide.text.Position getCursorPosition() {
+    public com.codenvy.ide.api.text.Position getCursorPosition() {
         int offset = TextUtilities.getOffset(doc, cursorAnchor.getLineInfo().number(), getBaseColumn());
-        return new com.codenvy.ide.text.Position(offset);
+        return new com.codenvy.ide.api.text.Position(offset);
     }
 
     private void dispatchCursorChange(final boolean isExplicitChange) {
@@ -977,13 +977,13 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
 
     /** {@inheritDoc} */
     @Override
-    public com.codenvy.ide.text.Position getSelectedRange() {
+    public com.codenvy.ide.api.text.Position getSelectedRange() {
         int startOffset = TextUtilities.getOffset(doc, getBaseLineNumber(), getBaseColumn());
         int endOffset = TextUtilities.getOffset(doc, getCursorLineNumber(), getCursorColumn());
         if (startOffset > endOffset) {
-            return new com.codenvy.ide.text.Position(endOffset, startOffset - endOffset);
+            return new com.codenvy.ide.api.text.Position(endOffset, startOffset - endOffset);
         } else {
-            return new com.codenvy.ide.text.Position(startOffset, endOffset - startOffset);
+            return new com.codenvy.ide.api.text.Position(startOffset, endOffset - startOffset);
         }
     }
 

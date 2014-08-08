@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.text.store.DocumentTextStore;
 
 /**

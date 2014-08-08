@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.api.ui.action.Separator;
-import com.codenvy.ide.api.ui.action.ToggleAction;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.action.Separator;
+import com.codenvy.ide.api.action.ToggleAction;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.util.input.KeyMapUtil;

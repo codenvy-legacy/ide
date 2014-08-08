@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.api.codeassistant;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 
 /**
  * An <code>CodeAssistant</code> provides support on interactive content completion.
@@ -23,7 +24,7 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
  * document offset, a content assistant displays the possible contexts and requests
  * the user to choose the one whose information should be displayed.
  * <p>
- * A content assistant has a list of {@link CodeAssistProcessor}
+ * A content assistant has a list of {@link com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor}
  * objects each of which is registered for a  particular document content
  * type. The content assistant uses the processors to react on the request
  * of completing documents or presenting context information.

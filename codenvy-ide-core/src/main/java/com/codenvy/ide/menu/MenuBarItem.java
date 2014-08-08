@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.menu;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionGroup;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.Presentation;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
 import com.codenvy.ide.toolbar.PopupMenu;

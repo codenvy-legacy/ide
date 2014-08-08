@@ -12,7 +12,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
-import com.codenvy.ide.text.Region;
+import com.codenvy.ide.api.text.Region;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;

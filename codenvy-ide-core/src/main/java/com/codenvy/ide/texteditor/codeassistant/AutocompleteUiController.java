@@ -21,12 +21,13 @@ import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.ui.Popup;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
@@ -290,7 +291,7 @@ public class AutocompleteUiController implements AutocompleteBox {
             anchor = null;
         }
 
-        com.codenvy.ide.texteditor.api.FocusManager focusManager = editor.getFocusManager();
+        FocusManager focusManager = editor.getFocusManager();
         if (hadFocus && !focusManager.hasFocus()) {
             focusManager.focus();
         }

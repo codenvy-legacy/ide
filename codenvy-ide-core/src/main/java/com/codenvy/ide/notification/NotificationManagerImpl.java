@@ -15,7 +15,7 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;

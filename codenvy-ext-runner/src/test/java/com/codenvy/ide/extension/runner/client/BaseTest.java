@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.CurrentProject;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;

@@ -11,19 +11,9 @@
 package com.codenvy.ide.ext.web.js.editor;
 
 import com.codenvy.ide.ext.web.DefaultChainedCodeAssistProcessor;
-import com.codenvy.ide.ext.web.html.editor.HTMLCodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**

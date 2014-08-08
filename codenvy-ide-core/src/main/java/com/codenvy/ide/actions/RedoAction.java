@@ -13,10 +13,10 @@ package com.codenvy.ide.actions;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.texteditor.api.UndoManager;
-import com.codenvy.ide.texteditor.api.UndoableEditor;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.google.inject.Inject;
 
 /**

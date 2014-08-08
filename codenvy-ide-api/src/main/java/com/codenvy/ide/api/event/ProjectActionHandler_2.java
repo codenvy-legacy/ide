@@ -13,7 +13,7 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * TODO: rename handler
+ * TODO: rename class
  * A handler for handling {@link ProjectActionEvent_2}.
  *
  * @author Artem Zatsarynnyy

@@ -14,7 +14,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 
 import javax.validation.constraints.NotNull;
 

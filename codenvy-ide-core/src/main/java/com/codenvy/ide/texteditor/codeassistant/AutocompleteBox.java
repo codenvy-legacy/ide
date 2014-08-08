@@ -14,7 +14,7 @@
 
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 
 
 /** Interface used to isolate {@link CodeAssistantImpl} from UI implementation. */

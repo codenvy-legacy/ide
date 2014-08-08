@@ -12,7 +12,7 @@ package com.codenvy.ide.part.console;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.ui.workspace.PartPresenter;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.workspace.WorkBenchPartControllerImpl;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;

@@ -11,9 +11,9 @@
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.api.runner.dto.RunnerMetric;
-import com.codenvy.ide.api.AppContext;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;

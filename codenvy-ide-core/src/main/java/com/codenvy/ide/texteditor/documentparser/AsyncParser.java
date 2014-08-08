@@ -18,7 +18,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.texteditor.api.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.Token;
 
 
 /**

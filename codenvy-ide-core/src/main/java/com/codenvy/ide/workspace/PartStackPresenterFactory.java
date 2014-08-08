@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.ui.workspace.PartStack;
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.PartStack;
+import com.codenvy.ide.api.parts.PartStackView;
 
 /**
  * Gin factory for PartStack

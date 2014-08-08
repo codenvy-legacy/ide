@@ -11,7 +11,7 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.dom.client.Style;
@@ -35,9 +35,9 @@ import com.google.inject.assistedinject.Assisted;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.BELOW;
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.LEFT;
-import static com.codenvy.ide.api.ui.workspace.PartStackView.TabPosition.RIGHT;
+import static com.codenvy.ide.api.parts.PartStackView.TabPosition.BELOW;
+import static com.codenvy.ide.api.parts.PartStackView.TabPosition.LEFT;
+import static com.codenvy.ide.api.parts.PartStackView.TabPosition.RIGHT;
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 
 /**

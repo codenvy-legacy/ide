@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js.editor;
 
-import com.codenvy.ide.texteditor.api.AutoEditStrategy;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 /**
  * Allows to define a new AutoEditStrategy based on text editor and content type.

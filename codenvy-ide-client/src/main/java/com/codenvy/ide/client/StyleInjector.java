@@ -13,10 +13,7 @@ package com.codenvy.ide.client;
 import com.codenvy.ide.Resources;
 import com.google.inject.Inject;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 public class StyleInjector {
     private Resources resources;
 
@@ -42,7 +39,6 @@ public class StyleInjector {
         resources.partStackCss().ensureInjected();
         resources.parenMatchHighlighterCss().ensureInjected();
         resources.dialogBox().ensureInjected();
-        resources.welcomeCSS().ensureInjected();
         resources.notificationCss().ensureInjected();
         resources.dataGridStyle().ensureInjected();
         resources.cellTableStyle().ensureInjected();

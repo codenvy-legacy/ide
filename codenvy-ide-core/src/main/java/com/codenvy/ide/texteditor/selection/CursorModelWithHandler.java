@@ -11,7 +11,7 @@
 package com.codenvy.ide.texteditor.selection;
 
 
-import com.codenvy.ide.texteditor.api.CursorModel;
+import com.codenvy.ide.api.texteditor.CursorModel;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 /**

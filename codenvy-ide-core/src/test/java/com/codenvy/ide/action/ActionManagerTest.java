@@ -11,11 +11,11 @@
 package com.codenvy.ide.action;
 
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
-import com.codenvy.ide.api.ui.action.IdeActions;
-import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.action.IdeActions;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 
 import org.junit.Before;
 import org.junit.Test;

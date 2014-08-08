@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.part.editor;
 
-import com.codenvy.ide.api.ui.workspace.PartStackView;
+import com.codenvy.ide.api.parts.PartStackView;
 
 /**
  * Tab with error and warning marks

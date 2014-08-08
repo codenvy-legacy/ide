@@ -22,28 +22,26 @@ import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.texteditor.api.HasHandlesOperationsView;
+import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.texteditor.HasHandlesOperationsView;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentEvent;
-import com.codenvy.ide.text.DocumentListener;
-import com.codenvy.ide.text.annotation.AnnotationModel;
-import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.UndoManager;
-import com.codenvy.ide.texteditor.api.outline.OutlineModel;
-import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentEvent;
+import com.codenvy.ide.api.text.DocumentListener;
+import com.codenvy.ide.api.text.annotation.AnnotationModel;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.texteditor.outline.OutlineModel;
+import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-
-import javax.validation.constraints.NotNull;
 
 
 /** @author Evgen Vidolob */

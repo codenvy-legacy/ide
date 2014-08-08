@@ -20,7 +20,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.Notification.Type;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.ui.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;

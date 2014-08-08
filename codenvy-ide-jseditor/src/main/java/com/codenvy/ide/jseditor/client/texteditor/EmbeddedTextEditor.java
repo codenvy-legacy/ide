@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
+import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 
 public interface EmbeddedTextEditor extends EditorPartPresenter {
 

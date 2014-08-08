@@ -14,7 +14,7 @@
 package com.codenvy.ide.ext.web.html.editor;
 
 import com.codenvy.ide.ext.web.css.editor.CssState;
-import com.codenvy.ide.texteditor.api.parser.CmState;
+import com.codenvy.ide.api.texteditor.parser.CmState;
 import com.codenvy.ide.xml.editor.XmlState;
 
 /**

@@ -13,21 +13,21 @@ package com.codenvy.ide.texteditor.codeassistant;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.text.TextUtilities;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.TextUtilities;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.texteditor.api.CodeAssistCallback;
-import com.codenvy.ide.texteditor.api.KeyListener;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.UndoManager;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.CodeAssistCallback;
+import com.codenvy.ide.api.texteditor.KeyListener;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
-import com.codenvy.ide.texteditor.api.codeassistant.Completion;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.codenvy.ide.api.texteditor.codeassistant.Completion;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteBox.Events;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
@@ -167,7 +167,7 @@ public class CodeAssistantImpl implements CodeAssistant {
         return buf.toString();
     }
 
-    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant#install(com.codenvy.ide.texteditor.api.TextEditorPartView) */
+    /** @see com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant#install(com.codenvy.ide.api.texteditor.TextEditorPartView) */
     @Override
     public void install(TextEditorPartView view) {
         this.textEditor = (TextEditorViewImpl)view;

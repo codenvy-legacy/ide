@@ -11,19 +11,13 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.api.resources.model.File;
+import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
-import com.codenvy.ide.text.Region;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -33,6 +27,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.

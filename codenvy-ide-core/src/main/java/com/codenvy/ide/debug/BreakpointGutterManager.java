@@ -20,7 +20,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.texteditor.renderer.DebugLineRenderer;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;

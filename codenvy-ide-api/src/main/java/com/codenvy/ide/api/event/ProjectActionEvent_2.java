@@ -14,7 +14,7 @@ import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * TODO: rename event
+ * TODO: rename class
  * An event that should be fired in order to open some project or close the current project.
  *
  * @author Artem Zatsarynnyy

@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.edits.DeleteEdit;
-import com.codenvy.ide.text.edits.InsertEdit;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
+import com.codenvy.ide.api.text.edits.DeleteEdit;
+import com.codenvy.ide.api.text.edits.InsertEdit;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextChange;
@@ -22,7 +22,7 @@ import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
 import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;

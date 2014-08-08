@@ -10,9 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.actions.find;
 
-import com.codenvy.ide.actions.find.FindActionPresenter;
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

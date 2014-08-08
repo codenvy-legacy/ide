@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.quickassist.QuickAssistInvocationContext;
 
 /**
  * Text quick assist invocation context.

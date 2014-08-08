@@ -19,7 +19,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;

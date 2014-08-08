@@ -15,7 +15,7 @@ import elemental.events.MouseEvent;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.api.ui.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;

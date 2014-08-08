@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.text;
 
+import com.codenvy.ide.api.text.Region;
+
 /**
  * Describes a line as a particular number of characters beginning at a particular offset, consisting of a particular number of
  * characters, and being closed with a particular line delimiter.

@@ -13,7 +13,7 @@ package com.codenvy.ide.extension.runner.client;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.RunnerMetric;
-import com.codenvy.ide.api.CurrentProject;
+import com.codenvy.ide.api.app.CurrentProject;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

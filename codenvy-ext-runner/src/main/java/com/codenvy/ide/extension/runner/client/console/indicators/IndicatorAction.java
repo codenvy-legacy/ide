@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
-import com.codenvy.ide.api.ui.action.Action;
-import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.api.ui.action.CustomComponentAction;
-import com.codenvy.ide.api.ui.action.Presentation;
+import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.CustomComponentAction;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.user.client.ui.Widget;
 

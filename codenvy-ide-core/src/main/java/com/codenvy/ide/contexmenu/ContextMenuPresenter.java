@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.contexmenu;
 
-import com.codenvy.ide.api.ui.action.ActionPlaces;
+import com.codenvy.ide.api.action.ActionPlaces;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

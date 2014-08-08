@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.ui.action.ActionManager;
-import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.cell.client.Cell;

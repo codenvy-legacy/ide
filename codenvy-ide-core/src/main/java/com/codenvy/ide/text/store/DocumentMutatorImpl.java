@@ -21,7 +21,7 @@ import com.codenvy.ide.text.store.TextChange.Type;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.util.LineUtils;
-import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.util.StringUtils;
 
 

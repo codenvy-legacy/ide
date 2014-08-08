@@ -15,7 +15,8 @@
 package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.ui.theme.Style;
+import com.codenvy.ide.api.texteditor.FocusManager;
+import com.codenvy.ide.api.theme.Style;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.LineInfo;
@@ -32,10 +33,10 @@ import com.codenvy.ide.util.ListenerRegistrar;
 public class LocalCursorController
         implements
         SelectionModel.CursorListener,
-        com.codenvy.ide.texteditor.api.FocusManager.FocusListener,
+        FocusManager.FocusListener,
         ReadOnlyListener {
 
-    public static LocalCursorController create(Resources resources, com.codenvy.ide.texteditor.api.FocusManager focusManager,
+    public static LocalCursorController create(Resources resources, FocusManager focusManager,
                                                SelectionModel selectionModel, Buffer buffer, TextEditorViewImpl editor) {
 
         CursorView cursorView = CursorView.create(resources, true);
@@ -49,7 +50,7 @@ public class LocalCursorController
             Collections.createArray();
     private final SelectionModel selectionModel;
 
-    private LocalCursorController(com.codenvy.ide.texteditor.api.FocusManager focusManager, SelectionModel selectionModel,
+    private LocalCursorController(FocusManager focusManager, SelectionModel selectionModel,
                                   CursorView cursorView, Buffer buffer, TextEditorViewImpl editor) {
 
         this.selectionModel = selectionModel;

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.LineTracker;
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.LineTracker;
 import com.codenvy.ide.text.TextStore;
 
 /**
