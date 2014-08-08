@@ -189,7 +189,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (isAnyAppRunning()) {
+                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     stopActiveProject(false);
                 }
                 console.clear();
