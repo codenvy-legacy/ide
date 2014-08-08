@@ -57,6 +57,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -67,6 +68,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
@@ -722,7 +724,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns startTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStartTime() {
-        return getRunnerMetric(RunnerMetric.START_TIME);
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getCreationTime() >= 0) {
+            Date startDate = new Date(lastApplicationDescriptor.getCreationTime());
+            String startDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+        }
+        return null;
     }
 
     /** Returns waitingTimeLimit {@link RunnerMetric}. */
@@ -751,16 +758,28 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns stopTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
-        return getRunnerMetric(RunnerMetric.STOP_TIME);
+        RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
+        if (runnerMetric != null &&  runnerMetric.getValue() != null) {
+            double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
+            Date startDate = new Date((long)stopTimeMs);
+            String stopDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
+        }
+        return null;
     }
 
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
-        // if app already stopped, get uptime from server
         RunnerMetric uptimeMetric = getRunnerMetric(RunnerMetric.UP_TIME);
+        if (uptimeMetric == null)
+            return null;
+
+        // if app already stopped, get uptime from server
         if (getCurrentAppStopTime() != null) {
-            return uptimeMetric;
+            double uptimeMetricValue = NumberFormat.getDecimalFormat().parse(uptimeMetric.getValue());
+            final String value = StringUtils.timeMlsToHumanReadable(uptimeMetricValue);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
         }
 
         // if app is running now, count uptime on the client-side
@@ -769,7 +788,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             final String value = StringUtils.timeMlsToHumanReadable(totalTimeMillis);
             return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
         }
-
         return null;
     }
 
