@@ -1,0 +1,253 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+package com.codenvy.ide.jseditor.client.texteditor;
+
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.editor.AbstractEditorPresenter;
+import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.event.FileEventHandler;
+import com.codenvy.ide.api.notification.Notification;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.jseditor.client.document.DocumentStorage;
+import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.texteditor.api.outline.OutlineModel;
+import com.codenvy.ide.texteditor.api.outline.OutlinePresenter;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import javax.validation.constraints.NotNull;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
+/**
+ * Presenter part for the embedded variety of editor implementations.
+ * 
+ * @author "Mickaël Leduque"
+ */
+public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler {
+
+    private final Resources                     resources;
+    private final WorkspaceAgent                workspaceAgent;
+    private final EmbeddedTextEditorViewFactory textEditorViewFactory;
+
+    private final DocumentStorage               documentStorage;
+
+    private EmbeddedTextEditorConfiguration     configuration;
+    private NotificationManager                 notificationManager;
+    private EmbeddedTextEditorPartView          editor;
+    private OutlineImpl                         outline;
+
+    @AssistedInject
+    public EmbeddedTextEditorPresenter(final Resources resources,
+                                       final WorkspaceAgent workspaceAgent,
+                                       final EventBus eventBus,
+                                       final DocumentStorage documentStorage,
+                                       @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory) {
+        this.resources = resources;
+        this.workspaceAgent = workspaceAgent;
+        this.textEditorViewFactory = textEditorViewFactory;
+        this.documentStorage = documentStorage;
+
+        eventBus.addHandler(FileEvent.TYPE, this);
+    }
+
+    @Override
+    protected void initializeEditor() {
+        editor.configure(getConfiguration(), getEditorInput().getFile());
+
+        // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
+        // Otherwise, the editor may not be ready to render the document.
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                documentStorage.getDocument(input.getFile(), new EmbeddedDocumentCallback() {
+                    @Override
+                    public void onDocumentReceived(final String contents) {
+                        editor.setContents(contents);
+                        firePropertyChange(PROP_INPUT);
+                        editor.addChangeHandler(new ChangeHandler() {
+
+                            @Override
+                            public void onChange(ChangeEvent event) {
+                                handleDocumentChanged();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    private void handleDocumentChanged() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                updateDirtyState(editor.isDirty());
+            }
+        });
+    }
+
+    @Override
+    public void close(final boolean save) {
+        this.documentStorage.documentClosed(this.editor.getEmbeddedDocument());
+    }
+
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
+
+    @Override
+    public void doRevertToSaved() {
+        // do nothing
+    }
+
+
+    @Override
+    public OutlinePresenter getOutline() {
+        if (outline != null) {
+            return outline;
+        }
+        final OutlineModel outlineModel = getConfiguration().getOutline();
+        if (outlineModel != null) {
+            outline = new OutlineImpl(resources, outlineModel, editor, this);
+            return outline;
+        } else {
+            return null;
+        }
+    }
+
+    @NotNull
+    protected Widget getWidget() {
+        return editor.asWidget();
+    }
+
+    @Override
+    public void go(final AcceptsOneWidget container) {
+        container.setWidget(getWidget());
+    }
+
+    @Override
+    public String getTitleToolTip() {
+        return null;
+    }
+
+    @Override
+    public EmbeddedTextEditorPartView getView() {
+        return this.editor;
+    }
+
+    @Override
+    public void activate() {
+        // TODO
+    }
+
+    @Override
+    public void onFileOperation(final FileEvent event) {
+        if (event.getOperationType() != FileEvent.FileOperation.CLOSE) {
+            return;
+        }
+
+        ItemReference eventFile = event.getFile();
+        ItemReference file = input.getFile();
+        if (file.equals(eventFile)) {
+            workspaceAgent.removePart(this);
+        }
+    }
+
+
+    @Override
+    public void initialize(@NotNull EmbeddedTextEditorConfiguration configuration,
+                           @NotNull NotificationManager notificationManager) {
+        this.configuration = configuration;
+        this.notificationManager = notificationManager;
+        this.editor = this.textEditorViewFactory.createTextEditorPartView();
+    }
+
+    @Override
+    public EmbeddedTextEditorConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public ImageResource getTitleImage() {
+        return input.getImageResource();
+    }
+
+    @Override
+    public SVGResource getTitleSVGImage() {
+        return input.getSVGResource();
+    }
+
+    @Override
+    public String getTitle() {
+        if (isDirty()) {
+            return "*" + input.getName();
+        } else {
+            return input.getName();
+        }
+    }
+
+    @Override
+    public void doSave() {
+        doSave(null);
+    }
+
+    @Override
+    public void doSave(final AsyncCallback<EditorInput> callback) {
+        final EmbeddedDocument doc = editor.getEmbeddedDocument();
+
+        this.documentStorage.saveDocument(getEditorInput(), doc, false, new AsyncCallback<EditorInput>() {
+            @Override
+            public void onSuccess(EditorInput editorInput) {
+                updateDirtyState(false);
+                afterSave();
+                if (callback != null) {
+                    callback.onSuccess(editorInput);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                final Notification notification = new Notification(caught.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                if (callback != null) {
+                    callback.onFailure(caught);
+                }
+            }
+        });
+    }
+
+    /** Override this method for handling after save actions. */
+    protected void afterSave() {
+        this.editor.markClean();
+    }
+
+    @Override
+    public void doSaveAs() {
+        // TODO not implemented
+    }
+}

@@ -29,6 +29,7 @@ public class WorkBenchPartControllerImpl implements WorkBenchPartController {
         this.splitLayoutPanel = splitLayoutPanel;
         this.widget = widget;
         splitLayoutPanel.setWidgetHidden(widget, true);
+        splitLayoutPanel.forceLayout();
     }
 
     /** {@inheritDoc} */

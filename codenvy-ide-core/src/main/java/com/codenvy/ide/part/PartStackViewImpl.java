@@ -83,7 +83,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             dashboardTabButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    switchToDashboard();
+                    handleDashboardButton();
                 }
             });
             tabsPanel.add(dashboardTabButton);
@@ -97,9 +97,9 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     /**
      * Switch to Codenvy Dashboard.
      */
-    private native void switchToDashboard() /*-{
+    private native void handleDashboardButton() /*-{
         try {
-            $wnd.IDE.eventHandlers.switchToDashboard();
+            $wnd.IDE.eventHandlers.dashboardhandler();
         } catch (e) {
             console.log(e.message);
         }

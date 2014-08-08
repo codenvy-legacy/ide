@@ -180,6 +180,7 @@
 /*wizard*/
 @eval stepsPanelColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsColor();
 @eval stepsPanelBorerColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsBorderColor();
+@eval wizardIconColor com.codenvy.ide.api.ui.theme.Style.getToolbarIconColor();
 
 /*Cell widgets*/
 @eval cellOddRow com.codenvy.ide.api.ui.theme.Style.getCellOddRow();

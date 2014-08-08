@@ -295,7 +295,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);
-                notification.setMessage(constant.buildCanceled());
+                notification.setMessage(constant.buildCanceled(activeProject.getName()));
                 buildContext.setBuilding(false);
                 break;
         }

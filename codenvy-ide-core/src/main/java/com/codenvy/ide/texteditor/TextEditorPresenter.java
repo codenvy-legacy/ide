@@ -11,6 +11,8 @@
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import javax.validation.constraints.NotNull;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -21,6 +23,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.texteditor.api.HasHandlesOperationsView;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
@@ -44,7 +47,7 @@ import javax.validation.constraints.NotNull;
 
 
 /** @author Evgen Vidolob */
-public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors {
+public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
 
     //    private final TextListener textListener = new TextListener() {
 //

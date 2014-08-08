@@ -46,7 +46,7 @@ public interface BuilderLocalizationConstant extends Messages {
     String buildFailed();
 
     @Key("messages.buildCanceled")
-    String buildCanceled();
+    String buildCanceled(String project);
 
     @Key("messages.promptSaveFiles")
     String messagePromptSaveFiles();

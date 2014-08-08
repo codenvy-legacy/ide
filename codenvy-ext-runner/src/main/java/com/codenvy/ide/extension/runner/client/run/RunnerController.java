@@ -33,7 +33,6 @@ import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.ui.theme.ThemeAgent;
-import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -42,7 +41,6 @@ import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
-import com.codenvy.ide.extension.runner.client.shell.ShellConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -97,7 +95,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private final AppContext                 appContext;
     private       WorkspaceAgent             workspaceAgent;
     private       RunnerConsolePresenter     console;
-    private       ShellConsolePresenter      shellConsole;
     private       RunnerServiceClient        service;
     private       RunnerLocalizationConstant constant;
     private       NotificationManager        notificationManager;
@@ -121,7 +118,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public RunnerController(EventBus eventBus,
                             final WorkspaceAgent workspaceAgent,
                             final RunnerConsolePresenter console,
-                            final ShellConsolePresenter shellConsole,
                             final RunnerServiceClient service,
                             final RunnerLocalizationConstant constant,
                             final NotificationManager notificationManager,
@@ -133,7 +129,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             final AppContext appContext) {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
-        this.shellConsole = shellConsole;
         this.service = service;
         this.constant = constant;
         this.notificationManager = notificationManager;
@@ -158,13 +153,18 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
-                                                            // open WebShell console
+
                                                             Link shellLink = getLink(appContext.getCurrentProject().getProcessDescriptor(),
                                                                                      "shell url");
-                                                            if (shellLink != null) {
-                                                                workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                                                                shellConsole.setUrl(shellLink.getHref());
+
+                                                            final String appLink = getAppLink(appContext.getCurrentProject().getProcessDescriptor());
+                                                            if (appLink != null) {
+                                                                console.setAppURL(appLink);
                                                             }
+                                                            if (shellLink != null) {
+                                                                console.setShellURL(shellLink.getHref());
+                                                            }
+
                                                             notificationManager.showNotification(new Notification(
                                                                     constant.projectRunningNow(event.getProject().getName()), INFO));
 
@@ -520,10 +520,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setType(INFO);
                 notification.setMessage(constant.applicationStarted(projectName));
 
+                final String appLink = getAppLink(appContext.getCurrentProject().getProcessDescriptor());
+                if (appLink != null) {
+                    console.setAppURL(appLink);
+                }
                 Link shellLink = getLink(descriptor, "shell url");
                 if (shellLink != null) {
-                    workspaceAgent.openPart(shellConsole, PartStackType.INFORMATION);
-                    shellConsole.setUrl(shellLink.getHref());
+                    console.setShellURL(shellLink.getHref());
                 }
 
                 if (runCallback != null) {
@@ -546,7 +549,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationStopped(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case FAILED:
                 isAnyAppRunning = false;
@@ -561,7 +564,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationFailed(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
             case CANCELLED:
                 isAnyAppRunning = false;
@@ -574,7 +577,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setMessage(constant.applicationCanceled(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
-                workspaceAgent.removePart(shellConsole);
+                console.onAppStopped();
                 break;
         }
     }
@@ -673,6 +676,33 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
             }
         }
+    }
+
+    public String getAppLink(ApplicationProcessDescriptor appDescriptor) {
+        String url = null;
+        final Link appLink = getLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        if (appLink != null) {
+            url = appLink.getHref();
+
+            final Link codeServerLink = getLink(appDescriptor, "code server");
+            if (codeServerLink != null) {
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(appLink.getHref());
+                final String codeServerHref = codeServerLink.getHref();
+                final int colon = codeServerHref.lastIndexOf(':');
+                if (colon > 0) {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref.substring(0, colon));
+                    urlBuilder.append("&p=");
+                    urlBuilder.append(codeServerHref.substring(colon + 1));
+                } else {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref);
+                }
+                url = urlBuilder.toString();
+            }
+        }
+        return url;
     }
 
      /** Returns startTime {@link RunnerMetric}. */

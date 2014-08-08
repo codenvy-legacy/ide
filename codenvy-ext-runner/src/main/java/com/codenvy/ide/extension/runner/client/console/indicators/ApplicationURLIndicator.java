@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.AppContext;
 import com.codenvy.ide.api.CurrentProject;
@@ -21,9 +20,6 @@ import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
 /**
  * Action used to show application URL.
  *
@@ -31,12 +27,14 @@ import java.util.List;
  */
 @Singleton
 public class ApplicationURLIndicator extends IndicatorAction {
-    private AppContext appContext;
+    private AppContext       appContext;
+    private RunnerController runnerController;
 
     @Inject
-    public ApplicationURLIndicator(RunnerResources resources, AppContext appContext) {
+    public ApplicationURLIndicator(RunnerResources resources, AppContext appContext, RunnerController runnerController) {
         super("Application", true, 205, resources);
         this.appContext = appContext;
+        this.runnerController = runnerController;
     }
 
     @Override
@@ -45,44 +43,7 @@ public class ApplicationURLIndicator extends IndicatorAction {
         if (currentProject != null && currentProject.getProcessDescriptor() != null) {
             ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
             final Presentation presentation = e.getPresentation();
-            presentation.putClientProperty(Properties.DATA_PROPERTY, getAppLink(processDescriptor));
+            presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getAppLink(processDescriptor));
         }
-    }
-
-    private static String getAppLink(ApplicationProcessDescriptor appDescriptor) {
-        String url = null;
-        final Link appLink = getLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
-        if (appLink != null) {
-            url = appLink.getHref();
-
-            final Link codeServerLink = getLink(appDescriptor, "code server");
-            if (codeServerLink != null) {
-                StringBuilder urlBuilder = new StringBuilder();
-                urlBuilder.append(appLink.getHref());
-                final String codeServerHref = codeServerLink.getHref();
-                final int colon = codeServerHref.lastIndexOf(':');
-                if (colon > 0) {
-                    urlBuilder.append("?h=");
-                    urlBuilder.append(codeServerHref.substring(0, colon));
-                    urlBuilder.append("&p=");
-                    urlBuilder.append(codeServerHref.substring(colon + 1));
-                } else {
-                    urlBuilder.append("?h=");
-                    urlBuilder.append(codeServerHref);
-                }
-                url = urlBuilder.toString();
-            }
-        }
-        return url;
-    }
-
-    @Nullable
-    private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
-        List<Link> links = appDescriptor.getLinks();
-        for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
-                return link;
-        }
-        return null;
     }
 }

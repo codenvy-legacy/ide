@@ -27,9 +27,9 @@ import java.util.List;
 public class CategoriesList extends Composite {
     /** Defines the attribute used to indicate selection. */
     private static final String SELECTED_ATTRIBUTE = "SELECTED";
-    private final Resources resources;
+    private final Resources        resources;
     private final SelectionManager selectionManager;
-    private FlowPanel root;
+    private       FlowPanel        root;
 
     public CategoriesList(Resources resources) {
         this.resources = resources;
@@ -40,10 +40,12 @@ public class CategoriesList extends Composite {
     }
 
     /**
-     *  Refreshes list of items.
+     * Refreshes list of items.
      * <p/>
      * <p>This method tries to keep selection.
-     * @param categories the categories
+     *
+     * @param categories
+     *         the categories
      */
     public void render(List<Category<?>> categories) {
         for (Category category : categories) {
@@ -86,6 +88,8 @@ public class CategoriesList extends Composite {
         String expandedImage();
 
         String itemContainer();
+
+        String headerIcon();
     }
 
     public interface Resources extends ClientBundle {
