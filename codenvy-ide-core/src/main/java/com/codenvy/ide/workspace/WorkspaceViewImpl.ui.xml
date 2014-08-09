@@ -24,13 +24,6 @@
             margin-right: 20px;
         }
 
-        .bottomPanel {
-            border-right: 1px solid tabBorder;
-            border-left: 1px solid tabBorder;
-            background-color: conColor;
-            border-bottom: 1px solid tabBorder;
-        }
-
         .toolbarPanel {
             margin-top: 0;
             z-index: 6;
@@ -38,6 +31,23 @@
 
         .noToolbarPanel {
             background-color: tabBorder;
+        }
+
+        .actionsPanel {
+            box-sizing: border-box;
+            /*background-color: conColor;*/
+            background-color: #313131;
+            border-top: #2f2f2f 1px solid;
+            /*border-right: 1px solid tabBorder;*/
+            overflow: hidden;
+        }
+
+        .statusPanel {
+            box-sizing: border-box;
+            /*background-color: conColor;*/
+            background-color: #313131;
+            border-top: #232323 1px solid;
+            overflow: hidden;
         }
 
         .dockLayoutPanel > div {
@@ -68,9 +78,14 @@
             <g:SimplePanel width="100%" height="1" ui:field="noToolbarPanel" addStyleNames="{style.noToolbarPanel}"/>
         </g:north>
 
-        <g:south size="22">
-            <g:SimplePanel width="100%" ui:field="statusPanel" addStyleNames="{style.bottomPanel}"/>
+        <g:south size="18">
+            <g:SimplePanel width="100%" ui:field="statusPanel" addStyleNames="{style.statusPanel}"/>
         </g:south>
+
+        <g:south size="41"> <!-- the valid size is 41, was 22 -->
+            <g:SimplePanel width="100%" ui:field="actionsPanel" addStyleNames="{style.actionsPanel}"/>
+        </g:south>
+
         <g:center>
             <g:SimpleLayoutPanel ui:field="perspectivePanel" width="100%" height="100%"/>
         </g:center>
