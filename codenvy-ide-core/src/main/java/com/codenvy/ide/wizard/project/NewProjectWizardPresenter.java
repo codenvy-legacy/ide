@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.Constants;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
@@ -42,6 +43,7 @@ import javax.validation.constraints.NotNull;
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
     private final ProjectServiceClient      projectService;
     private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private final CoreLocalizationConstant  constant;
     private final ResourceProvider          resourceProvider;
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       DtoFactory                factory;
@@ -58,13 +60,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private ProjectWizard wizard;
 
     @Inject
-    public NewProjectWizardPresenter(ProjectWizardView view, MainPagePresenter mainPage, ProjectServiceClient projectService,
+    public NewProjectWizardPresenter(ProjectWizardView view,
+                                     MainPagePresenter mainPage,
+                                     ProjectServiceClient projectService,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                     ResourceProvider resourceProvider, ProjectTypeWizardRegistry wizardRegistry, DtoFactory factory) {
+                                     CoreLocalizationConstant constant,
+                                     ResourceProvider resourceProvider,
+                                     ProjectTypeWizardRegistry wizardRegistry,
+                                     DtoFactory factory) {
         this.view = view;
         this.mainPage = mainPage;
         this.projectService = projectService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.constant = constant;
         this.resourceProvider = resourceProvider;
         this.wizardRegistry = wizardRegistry;
         this.factory = factory;
@@ -102,6 +110,25 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onSaveClicked() {
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        //do check whether there is a project with the same name
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //Project with the same name already exists
+                Info info = new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
+                info.show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                //Project with the same name does not exist
+                createProject();
+            }
+        });
+    }
+
+    private void createProject() {
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
             @Override

@@ -20,6 +20,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.selectTemplate")
     String createProjectFromTemplateSelectTemplate();
 
+    @Key("createProject.warningTitle")
+    String createProjectWarningTitle();
+
     @Key("noIncorrectProjectNameMessage")
     String noIncorrectProjectNameMessage();
 

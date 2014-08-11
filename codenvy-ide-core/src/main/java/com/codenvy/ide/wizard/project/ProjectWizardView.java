@@ -53,7 +53,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
         /** Performs any actions appropriate in response to the user having pressed the Back button */
         void onBackClicked();
 
-        /** Performs any actions appropriate in response to the user having pressed the Finish button */
+        /** Performs any actions appropriate in response to the user having pressed the Create button */
         void onSaveClicked();
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button */
