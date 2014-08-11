@@ -133,7 +133,6 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("sh", makeList("text/x-sh"));// many are not suffixed at all !
 
         this.mappings.put("pas", makeList("text/x-pascal"));
-        this.mappings.put("pp", makeList("text/x-pascal"));
         this.mappings.put("p", makeList("text/x-pascal"));
         this.mappings.put("fpm", makeList("text/x-pascal"));// turbo pascal modules
         this.mappings.put("st", makeList("text/x-stsrc"));// smalltalk
@@ -148,6 +147,8 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("f03", makeList("text/x-fortran"));
         this.mappings.put("vb", makeList("text/x-vb"));
         this.mappings.put("vbs", makeList("text/vbscript"));
+
+        this.mappings.put("pp", makeList("text/x-puppet"));
     }
 
     /**
