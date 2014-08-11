@@ -169,7 +169,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
-        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 if (project.getVisibility().equals(visibility)) {
@@ -224,15 +225,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectService.importProject(projectName,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
-                                                                                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
-                                             if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)){
-                                                 getProject(projectName, callback);
-                                             } else {
-                                                 switchVisibility(callback, result);
-                                             }
-                                             
+                                             updateProject(result, callback);
                                          }
 
                                          @Override
@@ -240,9 +236,34 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                              callback.onFailure(exception);
                                          }
                                      }
-                      );
+                                    );
     }
-    
+
+    private void updateProject(final ProjectDescriptor result, final WizardPage.CommitCallback callback) {
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+
+        if (templateDescriptor != null && templateDescriptor.getDescription() != null) {
+            result.setDescription(templateDescriptor.getDescription());
+        }
+
+        projectService.updateProject(result.getPath(), result, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+            @Override
+            protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
+                    getProject(result.getName(), callback);
+                } else {
+                    switchVisibility(callback, result);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                callback.onFailure(throwable.getCause());
+            }
+        });
+    }
+
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
@@ -258,7 +279,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             }
         });
     }
-    
+
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         resourceProvider.getProject(name, new AsyncCallback<Project>() {
             @Override
