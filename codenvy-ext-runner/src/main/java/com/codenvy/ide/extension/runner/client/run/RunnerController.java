@@ -731,7 +731,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public RunnerMetric getCurrentAppStartTime() {
         if (lastApplicationDescriptor != null && lastApplicationDescriptor.getCreationTime() >= 0) {
             Date startDate = new Date(lastApplicationDescriptor.getCreationTime());
-            String startDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
             return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
         }
         return null;
@@ -767,7 +767,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (runnerMetric != null &&  runnerMetric.getValue() != null) {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
-            String stopDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
             return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
         }
         return null;

@@ -36,7 +36,7 @@ public class BuildStartedIndicator extends IndicatorAction {
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        final BuilderMetric metric = buildProjectPresenter.getLastBuildStartTime();
+        final BuilderMetric metric = buildProjectPresenter.getStartedTime();
         if (metric != null) {
             presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
             presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());
