@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /** @author Vitalii Parfonov */
 
@@ -51,5 +52,10 @@ public class BaseProjectTypeExtension implements ProjectTypeExtension {
     @Override
     public List<ProjectTemplateDescription> getTemplates() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public Map<String, String> getIconRegistry() {
+        return null;
     }
 }
