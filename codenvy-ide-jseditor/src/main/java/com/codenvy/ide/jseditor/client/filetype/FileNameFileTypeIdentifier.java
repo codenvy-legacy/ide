@@ -35,7 +35,7 @@ public class FileNameFileTypeIdentifier implements FileTypeIdentifier {
         if (contains(new String[]{"SConstruct", "Sconstruct", "sconstruct"}, filename)) {
             return Collections.singletonList("text/x-python");
         }
-        if (filename != null && "vagrantfile".equals(filename.toUpperCase())) {
+        if (filename != null && "VAGRANTFILE".equals(filename.toUpperCase())) {
             return Collections.singletonList("text/x-ruby");
         }
 
