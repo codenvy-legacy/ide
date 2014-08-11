@@ -17,12 +17,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Implements {@link WorkspaceView}
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
+@Singleton
 public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
     interface WorkspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl> {
     }
@@ -44,10 +46,13 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
 
     @UiField
     SimplePanel toolbarPanel, noToolbarPanel;
+
     @UiField
-    SimplePanel  statusPanel;
+    SimplePanel  actionsPanel, statusPanel;
+
     @UiField
     Button      btnUpdate;
+
     ActionDelegate delegate;
 
     /** Create view. */
@@ -57,6 +62,8 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
         getElement().setId("codenvyIdeWorkspaceViewImpl");
         topMenuLayoutPanel.setWidgetHidden(updateExtensionPanel, true);
         ideMainDockPanel.setWidgetHidden(noToolbarPanel, true);
+        ideMainDockPanel.setWidgetHidden(actionsPanel, true);
+        ideMainDockPanel.setWidgetHidden(statusPanel, true);
     }
     
     /** {@inheritDoc} */
@@ -91,8 +98,34 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
 
     /** {@inheritDoc} */
     @Override
+    public AcceptsOneWidget getActionsPanel() {
+        return actionsPanel;
+    }
+
+    /**
+     * Shows or hides actions panel.
+     *
+     * @param visible
+     */
+    @Override
+    public void setActionsPanelVisible(boolean visible) {
+        ideMainDockPanel.setWidgetHidden(actionsPanel, !visible);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public AcceptsOneWidget getStatusPanel() {
         return statusPanel;
+    }
+
+    /**
+     * Shows or hides status panel
+     *
+     * @param visible
+     */
+    @Override
+    public void setStatusPanelVisible(boolean visible) {
+        ideMainDockPanel.setWidgetHidden(statusPanel, !visible);
     }
 
     /** {@inheritDoc} */
