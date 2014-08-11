@@ -71,9 +71,14 @@
 @eval editorBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorBackgroundColor();
 @eval editorCurrentLineColor com.codenvy.ide.api.ui.theme.Style.getEditorCurrentLineColor();
 @eval editorDefaultFontColor com.codenvy.ide.api.ui.theme.Style.getEditorDefaultFontColor();
+@eval editorCursorColor com.codenvy.ide.api.ui.theme.Style.getEditorCursorColor();
 @eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
 @eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
+
 @eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
+@eval editorGutterLineNumberColor com.codenvy.ide.api.ui.theme.Style.getEditorLineNumberColor();
+@eval editorGutterSeparatorColor com.codenvy.ide.api.ui.theme.Style.getEditorSeparatorColor();
+
 @eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
 @eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
 @eval editorInfoBorderColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderColor();
