@@ -426,7 +426,7 @@ public class DarkTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#ffffff";
     }
-    
+
     @Override
     public String getButtonHoverColor() {
         return "#484848";
@@ -505,5 +505,15 @@ public class DarkTheme implements Theme {
     @Override
     public String getEditorInfoBorderShadowColor() {
         return "#424242";
+    }
+
+    @Override
+    public String getEditorLineNumberColor() {
+        return "#888888";
+    }
+
+    @Override
+    public String getEditorSeparatorColor() {
+        return "#888888";
     }
 }
