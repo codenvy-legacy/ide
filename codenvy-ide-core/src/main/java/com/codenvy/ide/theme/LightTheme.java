@@ -424,7 +424,7 @@ public class LightTheme implements Theme {
     public String getButtonHoverTextColor() {
         return "#000000";
     }
-    
+
     @Override
     public String getButtonHoverColor() {
         return "#ffffff";
@@ -504,5 +504,15 @@ public class LightTheme implements Theme {
     @Override
     public String getEditorInfoBorderShadowColor() {
         return "#f0f0f0";
+    }
+
+    @Override
+    public String getEditorLineNumberColor() {
+        return "#888888";
+    }
+
+    @Override
+    public String getEditorSeparatorColor() {
+        return "#888888";
     }
 }

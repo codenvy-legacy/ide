@@ -14,7 +14,7 @@
     font-size: 12px;
     right: 0px;
     position: absolute;
-    color: #888888;
+    color: editorGutterLineNumberColor;
 }
 
 .animationEnabled .lineNumber {

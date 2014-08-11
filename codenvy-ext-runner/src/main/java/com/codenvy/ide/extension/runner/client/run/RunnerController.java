@@ -32,8 +32,8 @@ import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
@@ -47,11 +47,14 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
@@ -62,6 +65,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
@@ -78,7 +82,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
  * @author Artem Zatsarynnyy
  * @author Vitaly Parfonov
  */
-
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
 
@@ -154,13 +157,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
 
-                                                            Link shellLink = getLink(appContext.getCurrentProject().getProcessDescriptor(),
-                                                                                     "shell url");
-
-                                                            final String appLink = getAppLink(appContext.getCurrentProject().getProcessDescriptor());
+                                                            final String appLink = getAppLink();
                                                             if (appLink != null) {
                                                                 console.setAppURL(appLink);
                                                             }
+                                                            Link shellLink = getLink("shell url");
                                                             if (shellLink != null) {
                                                                 console.setShellURL(shellLink.getHref());
                                                             }
@@ -191,21 +192,15 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
             @Override
             public void onWindowClosing(WindowActionEvent event) {
-                if (isAnyAppRunning()) {
+                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     event.setMessage(constant.appWillBeStopped(appContext.getCurrentProject().getProjectDescription().getName()));
                 }
             }
 
             @Override
             public void onWindowClosed(WindowActionEvent event) {
-                CurrentProject currentProject = appContext.getCurrentProject();
-                if (currentProject != null) {
-                    ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
-                    if (processDescriptor != null) {
-                        if (!RunnerUtils.getRunnerMetric(processDescriptor, RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                            stopActiveProject(false);
-                        }
-                    }
+                if (!getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
+                    stopActiveProject(false);
                 }
             }
         });
@@ -376,8 +371,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
                             isAnyAppRunning = true;
+                            if (notification == null)
+                                notification = new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()), INFO);
                             currentProject.setProcessDescriptor(result);
                             currentProject.setIsRunningEnabled(false);
+                            notification.setStatus(FINISHED);
+                            notification.setMessage(constant.applicationStarted(currentProject.getProjectDescription().getName()));
                             startCheckingAppStatus(result.getProcessId());
                             startCheckingAppOutput(result.getProcessId());
                         }
@@ -525,7 +524,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 if (appLink != null) {
                     console.setAppURL(appLink);
                 }
-                Link shellLink = getLink(descriptor, "shell url");
+                Link shellLink = getLink("shell url");
                 if (shellLink != null) {
                     console.setShellURL(shellLink.getHref());
                 }
@@ -586,7 +585,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Get logs of the currently launched application. */
     public void getLogs(boolean isUserAction) {
-        final Link viewLogsLink = getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_VIEW_LOG);
+        final Link viewLogsLink = getLink(Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -623,7 +622,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Stop the currently running application. */
     public void stopActiveProject(boolean isUserAction) {
-        final Link stopLink = getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_STOP);
+        final Link stopLink = getLink(Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()), null);
             return;
@@ -653,7 +652,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
         if (isAnyAppRunning() && appContext.getCurrentProject().getProcessDescriptor() != null) {
-            Link recipeLink = getLink(appContext.getCurrentProject().getProcessDescriptor(), "runner recipe");
+            Link recipeLink = getLink("runner recipe");
             return recipeLink != null;
         }
         return false;
@@ -662,7 +661,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Opens runner recipe file in editor. */
     public void showRecipe() {
         if (appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
-            final Link recipeLink = getLink(appContext.getCurrentProject().getProcessDescriptor(), "runner recipe");
+            final Link recipeLink = getLink("runner recipe");
             if (recipeLink != null) {
                 List<Link> links = new ArrayList<>(1);
                 links.add(dtoFactory.createDto(Link.class).withHref(recipeLink.getHref()).withRel("get content"));
@@ -682,11 +681,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     public String getAppLink(ApplicationProcessDescriptor appDescriptor) {
         String url = null;
-        final Link appLink = getLink(appDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = getLink(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
-            final Link codeServerLink = getLink(appDescriptor, "code server");
+            final Link codeServerLink = getLink("code server");
             if (codeServerLink != null) {
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(appLink.getHref());
@@ -710,114 +709,124 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      /** Returns startTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStartTime() {
-        ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
-        return RunnerUtils.getRunnerMetric(processDescriptor, "startTime");
+        if (lastApplicationDescriptor != null && lastApplicationDescriptor.getCreationTime() >= 0) {
+            Date startDate = new Date(lastApplicationDescriptor.getCreationTime());
+            String startDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+        }
+        return null;
     }
 
     /** Returns waitingTimeLimit {@link RunnerMetric}. */
     @Nullable
-    public RunnerMetric getCurrentAppTimeoutThreshold() {
-        if (appContext.getCurrentProject().getProcessDescriptor() == null) {
+    public RunnerMetric getCurrentAppTerminationTime() {
+        if (lastApplicationDescriptor == null) {
             return null;
         }
-        RunnerMetric waitingTime = RunnerUtils.getRunnerMetric(appContext.getCurrentProject().getProcessDescriptor(), "waitingTime");
-        if (waitingTime != null) {
-            lastAppWaitingTimeLimit = waitingTime;
+        RunnerMetric terminationMetric = getRunnerMetric(RunnerMetric.TERMINATION_TIME);
+        if (terminationMetric != null) {
+            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue()))
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
+                                 .withValue(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue());
+            // if app is running now, count uptime on the client-side
+            if (terminationMetric.getValue() != null) {
+                double terminationTime = NumberFormat.getDecimalFormat().parse(terminationMetric.getValue());
+                final double terminationTimeout = terminationTime - System.currentTimeMillis();
+                final String value = StringUtils.timeMlsToHumanReadable(terminationTimeout);
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription()).withValue(value);
+            }
         }
-        return lastAppWaitingTimeLimit;
+        return null;
     }
+
 
     /** Returns stopTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
-        ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
-        return RunnerUtils.getRunnerMetric(processDescriptor, RunnerMetric.STOP_TIME);
+        RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
+        if (runnerMetric != null &&  runnerMetric.getValue() != null) {
+            double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
+            Date startDate = new Date((long)stopTimeMs);
+            String stopDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
+        }
+        return null;
     }
 
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
+        RunnerMetric uptimeMetric = getRunnerMetric(RunnerMetric.UP_TIME);
+        if (uptimeMetric == null)
+            return null;
+
         // if app already stopped, get uptime from server
         if (getCurrentAppStopTime() != null) {
-            ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
-            return RunnerUtils.getRunnerMetric(processDescriptor, RunnerMetric.UP_TIME);
+            double uptimeMetricValue = NumberFormat.getDecimalFormat().parse(uptimeMetric.getValue());
+            final String value = StringUtils.timeMlsToHumanReadable(uptimeMetricValue);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
         }
 
         // if app is running now, count uptime on the client-side
         if (getCurrentAppStartTime() != null) {
-            final long totalTimeMillis = System.currentTimeMillis() - appContext.getCurrentProject().getProcessDescriptor().getStartTime();
-            int ss = (int)(totalTimeMillis / 1000);
-            int mm = 0;
-            if (ss >= 60) {
-                mm = ss / 60;
-                ss = ss % 60;
-            }
-            int hh = 0;
-            if (mm >= 60) {
-                hh = mm / 60;
-                mm = mm % 60;
-            }
-            int d = 0;
-            if (hh >= 24) {
-                d = hh / 24;
-                hh = hh % 24;
-            }
-            final String value =
-                    String.valueOf("" + d + "d:" + getDoubleDigit(hh) + "h:" + getDoubleDigit(mm) + "m:" + getDoubleDigit(ss) + "s");
-            return dtoFactory.createDto(RunnerMetric.class).withDescription("Application's uptime").withValue(value);
+            final long totalTimeMillis = System.currentTimeMillis() - lastApplicationDescriptor.getStartTime();
+            final String value = StringUtils.timeMlsToHumanReadable(totalTimeMillis);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
         }
 
         return null;
     }
 
     @Nullable
-    private static Link getLink(ApplicationProcessDescriptor appDescriptor, String rel) {
-        List<Link> links = appDescriptor.getLinks();
+    private RunnerMetric getRunnerMetric(String metricName) {
+        if (lastApplicationDescriptor != null) {
+            for (RunnerMetric runnerStat : lastApplicationDescriptor.getRunStats()) {
+                if (metricName.equals(runnerStat.getName())) {
+                    return runnerStat;
+                }
+            }
+        }
+        return null;
+    }
+
+    private  String getAppLink() {
+        String url = null;
+        final Link appLink = getLink(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        if (appLink != null) {
+            url = appLink.getHref();
+
+            final Link codeServerLink = getLink("code server");
+            if (codeServerLink != null) {
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(appLink.getHref());
+                final String codeServerHref = codeServerLink.getHref();
+                final int colon = codeServerHref.lastIndexOf(':');
+                if (colon > 0) {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref.substring(0, colon));
+                    urlBuilder.append("&p=");
+                    urlBuilder.append(codeServerHref.substring(colon + 1));
+                } else {
+                    urlBuilder.append("?h=");
+                    urlBuilder.append(codeServerHref);
+                }
+                url = urlBuilder.toString();
+            }
+        }
+        return url;
+    }
+
+    @Nullable
+    private Link getLink(String rel) {
+        ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
+        if (processDescriptor == null)
+            return null;
+        List<Link> links = processDescriptor.getLinks();
         for (Link link : links) {
             if (link.getRel().equalsIgnoreCase(rel))
                 return link;
         }
         return null;
-    }
-
-    /** Get a double digit int from a single, e.g. 1 = "01", 2 = "02". */
-    private static String getDoubleDigit(int i) {
-        final String doubleDigitI;
-        switch (i) {
-            case 0:
-                doubleDigitI = "00";
-                break;
-            case 1:
-                doubleDigitI = "01";
-                break;
-            case 2:
-                doubleDigitI = "02";
-                break;
-            case 3:
-                doubleDigitI = "03";
-                break;
-            case 4:
-                doubleDigitI = "04";
-                break;
-            case 5:
-                doubleDigitI = "05";
-                break;
-            case 6:
-                doubleDigitI = "06";
-                break;
-            case 7:
-                doubleDigitI = "07";
-                break;
-            case 8:
-                doubleDigitI = "08";
-                break;
-            case 9:
-                doubleDigitI = "09";
-                break;
-            default:
-                doubleDigitI = Integer.toString(i);
-        }
-        return doubleDigitI;
     }
 
 }

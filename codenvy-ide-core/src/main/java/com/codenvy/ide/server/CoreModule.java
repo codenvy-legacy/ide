@@ -10,11 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.server;
 
-import com.codenvy.inject.DynaModule;
 import com.google.inject.AbstractModule;
 
 /** @author Artem Zatsarynnyy */
-@DynaModule
 public class CoreModule extends AbstractModule {
     @Override
     protected void configure() {

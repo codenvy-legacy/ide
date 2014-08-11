@@ -18,17 +18,21 @@
             margin: 6px;
         }
 
-        .withoutPadding {
-            padding: 0;
+        .noResize {
+            resize: none;
+        }
+
+        .textArea {
+            margin:auto;
+            background-color: #1F1F1F;
+            border: medium ridge #6f7277;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="160px" addStyleNames="{style.emptyBorder}">
         <g:center>
-            <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                <g:SimplePanel width="100%" height="100%">
-                    <g:TextArea ui:field="message" width="100%" height="100%" readOnly="true" addStyleNames="{style.withoutPadding}"
-                                debugId="info-window-message"/>
-                </g:SimplePanel>
+            <g:FlowPanel>
+                <g:SimplePanel ui:field="message" width="98%" height="100%"
+                               addStyleNames="{style.noResize} {style.textArea}" debugId="info-window-message"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>

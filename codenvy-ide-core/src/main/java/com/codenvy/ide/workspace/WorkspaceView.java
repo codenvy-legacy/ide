@@ -43,8 +43,35 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
      */
     void setToolbarVisible(boolean visible);
 
-    /** @return status panel */
+    /** @return actions panel */
+
+    /**
+     * Returns actions panel ( panel like toolbar but located at the bottom )
+     *
+     * @return actions panel
+     */
+    AcceptsOneWidget getActionsPanel();
+
+    /**
+     * Shows or hides actions panel.
+     *
+     * @param visible
+     */
+    void setActionsPanelVisible(boolean visible);
+
+    /**
+     * Returns status panel ( an information panel located under actions panel )
+     *
+     * @return status panel
+     */
     AcceptsOneWidget getStatusPanel();
+
+    /**
+     * Shows or hides status panel
+     *
+     * @param visible
+     */
+    void setStatusPanelVisible(boolean visible);
 
     /**
      * Sets whether 'Update extension' button is visible.

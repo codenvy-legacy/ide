@@ -56,6 +56,7 @@ import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.WorkBenchView;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.preferences.PreferencesAgent;
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -153,6 +154,7 @@ import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
 import com.codenvy.ide.workspace.PartStackViewFactory;
+import com.codenvy.ide.workspace.WorkBenchViewImpl;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.codenvy.ide.workspace.WorkspaceView;
 import com.codenvy.ide.workspace.WorkspaceViewImpl;
@@ -255,6 +257,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
         // Views
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
+        bind(WorkBenchView.class).to(WorkBenchViewImpl.class).in(Singleton.class);
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
 
         bind(ToolbarView.class).to(ToolbarViewImpl.class);

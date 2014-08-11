@@ -34,28 +34,6 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-debugger-java</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>tools</artifactId>
-                    <groupId>sun.jdt</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- Extensions -->
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-java</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
-            <artifactId>codenvy-ext-maven</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ext-runner</artifactId>
             <version>${project.version}</version>
         </dependency>

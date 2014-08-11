@@ -516,7 +516,7 @@ public interface Theme {
      * @return the color of button text if hover
      */
     String getButtonHoverTextColor();
-    
+
     /**
      * @return the color of button if hover
      */
@@ -626,4 +626,14 @@ public interface Theme {
      * @return the color of border shadow for editor info panel.
      */
     String getEditorInfoBorderShadowColor();
+
+    /**
+     * @return the color of the line numbers in the editor gutter.
+     */
+    String getEditorLineNumberColor();
+
+    /**
+     * @return the color of the separator line between the gutter and the editor.
+     */
+    String getEditorSeparatorColor();
 }
