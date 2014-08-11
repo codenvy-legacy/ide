@@ -18,7 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -35,7 +35,7 @@ public class Info extends Window {
     private        Locale       locale      = GWT.create(Locale.class);
 
     @UiField
-    TextArea message;
+    SimplePanel message;
 
 
     /**
@@ -57,7 +57,7 @@ public class Info extends Window {
             }
         });
         getFooter().add(btnOk);
-        this.message.setText(message);
+        this.message.getElement().setInnerHTML(message);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Info extends Window {
     public Info(String title, String message, final InfoHandler handler) {
         this(handler);
         this.setTitle(title);
-        this.message.setText(message);
+        this.message.getElement().setInnerHTML(message);
     }
 
     /**
@@ -115,7 +115,7 @@ public class Info extends Window {
     }
 
     public void setMessage(String message) {
-        this.message.setText(message);
+        this.message.getElement().setInnerHTML(message);
     }
 
     @Override
