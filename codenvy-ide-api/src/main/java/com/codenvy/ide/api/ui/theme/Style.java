@@ -343,7 +343,7 @@ public class Style {
     public static String getButtonHoverTextColor() {
         return theme.getButtonHoverTextColor();
     }
-    
+
     public static String getButtonHoverColor() {
         return theme.getButtonHoverColor();
     }
@@ -402,5 +402,13 @@ public class Style {
 
     public static String getEditorInfoBorderShadowColor() {
         return theme.getEditorInfoBorderShadowColor();
+    }
+
+    public static String getEditorLineNumberColor() {
+        return theme.getEditorLineNumberColor();
+    }
+
+    public static String getEditorSeparatorColor() {
+        return theme.getEditorSeparatorColor();
     }
 }
