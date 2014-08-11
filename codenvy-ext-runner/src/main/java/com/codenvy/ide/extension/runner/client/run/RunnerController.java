@@ -377,6 +377,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         protected void onSuccess(ApplicationProcessDescriptor result) {
                             lastApplicationDescriptor = result;
                             isAnyAppRunning = true;
+                            if (notification == null)
+                                notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
+                            notification.setStatus(FINISHED);
+                            notification.setMessage(constant.applicationStarted(activeProject.getName()));
                             startCheckingAppStatus(lastApplicationDescriptor);
                             startCheckingAppOutput(lastApplicationDescriptor);
                         }
@@ -500,6 +504,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
         lastApplicationDescriptor = applicationProcessDescriptor;
         isAnyAppRunning = true;
+        
         startCheckingAppStatus(lastApplicationDescriptor);
         startCheckingAppOutput(lastApplicationDescriptor);
     }
