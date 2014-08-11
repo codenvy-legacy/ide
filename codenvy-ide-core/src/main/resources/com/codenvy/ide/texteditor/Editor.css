@@ -79,7 +79,7 @@
     min-width: 2em;
     padding-left: 5px;
     padding-right: 6px;
-    border-right: 1px dotted #888888;
+    border-right: 1px dotted editorGutterSeparatorColor;
     text-align: right;
 }
 
