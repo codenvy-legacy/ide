@@ -20,7 +20,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * In order to listen to dynamic Selection changes, please subscribe to {@link SelectionChangedEvent}
  * on {@link EventBus}.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @SDK(title = "ide.api.ui.selection")
 public interface SelectionAgent {
@@ -31,5 +31,7 @@ public interface SelectionAgent {
      * @return
      */
     public Selection<?> getSelection();
+
+    public <T> Selection<T> getSelection(SelectionKey<T> key);
 
 }

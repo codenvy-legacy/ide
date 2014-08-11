@@ -17,15 +17,19 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.selection.SelectionKey;
+import com.codenvy.ide.api.selection.SelectionProvider;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.Set;
 
 
 /**
  * Implements {@link SelectionAgent}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 @Singleton
 public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyListener, SelectionAgent {
@@ -33,10 +37,12 @@ public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyLis
     private PartPresenter activePart;
 
     private final EventBus eventBus;
+    private final Set<SelectionProvider> selectionProviders;
 
     @Inject
-    public SelectionAgentImpl(EventBus eventBus) {
+    public SelectionAgentImpl(EventBus eventBus, Set<SelectionProvider> selectionProviders) {
         this.eventBus = eventBus;
+        this.selectionProviders = selectionProviders;
         // bind event listener
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
     }
@@ -45,6 +51,20 @@ public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyLis
     @Override
     public Selection<?> getSelection() {
         return activePart != null ? activePart.getSelection() : null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <T> Selection<T> getSelection(SelectionKey<T> key) {
+        Selection<?> selection = activePart.getSelection();
+        Object firstElement = selection.getFirstElement();
+        for (SelectionProvider selectionProvider : selectionProviders) {
+            T o = selectionProvider.get(firstElement, key);
+            if (o != null) {
+                return new Selection<>(o);
+            }
+        }
+        return null;
     }
 
     protected void notifySelectionChanged() {

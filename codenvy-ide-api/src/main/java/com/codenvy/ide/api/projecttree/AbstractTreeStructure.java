@@ -14,7 +14,7 @@ import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * Defines the structure of the project's tree, displayed in the Project Explorer.
+ * Defines project's tree structure to display it in Project Explorer.
  * <p/>
  * Some of the methods gets nodes using
  * {@link com.google.gwt.user.client.rpc.AsyncCallback},
@@ -26,7 +26,7 @@ public abstract class AbstractTreeStructure {
     private final Settings DEFAULT_SETTINGS = new Settings();
 
     /**
-     * Returns root nodes for the tree.
+     * Returns nodes at the root of the tree.
      *
      * @param callback
      *         callback to return root nodes
