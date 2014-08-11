@@ -239,21 +239,21 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                     );
     }
 
-    private void updateProject(final ProjectDescriptor result, final WizardPage.CommitCallback callback) {
+    private void updateProject(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
 
         if (templateDescriptor != null && templateDescriptor.getDescription() != null) {
-            result.setDescription(templateDescriptor.getDescription());
+            projectDescriptor.setDescription(templateDescriptor.getDescription());
         }
 
-        projectService.updateProject(result.getPath(), result, new AsyncRequestCallback<ProjectDescriptor>(
+        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
                 if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
-                    getProject(result.getName(), callback);
+                    getProject(projectDescriptor.getName(), callback);
                 } else {
-                    switchVisibility(callback, result);
+                    switchVisibility(callback, projectDescriptor);
                 }
             }
 
