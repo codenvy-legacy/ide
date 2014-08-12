@@ -38,6 +38,7 @@ import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.update.UpdateServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -164,16 +165,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
-
-                                                            final String appLink = getAppLink();
-                                                            if (appLink != null) {
-                                                                console.setAppURL(appLink);
-                                                            }
-                                                            Link shellLink = getLink("shell url");
-                                                            if (shellLink != null) {
-                                                                console.setShellURL(shellLink.getHref());
-                                                            }
-
+                                                            console.onAppStarted(lastApplicationDescriptor);
                                                             notificationManager.showNotification(new Notification(
                                                                     "Application " + event.getProject().getName() + " is running now.",
                                                                     INFO));
@@ -474,6 +466,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     final String urlStatus = jsonObject.get("status").isString().stringValue();
                     if (urlStatus.equals("OK")) {
                         isLastAppHealthOk = true;
+                        console.onAppStarted(applicationProcessDescriptor);
                         stopCheckingAppHealth(applicationProcessDescriptor);
                     }
                 }
@@ -519,19 +512,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                    notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
-
-                final String appLink = getAppLink();
-                if (appLink != null) {
-                    console.setAppURL(appLink);
-                }
-                Link shellLink = getLink("shell url");
-                if (shellLink != null) {
-                    console.setShellURL(shellLink.getHref());
-                }
-
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, activeProject);
                 }
+
                 break;
             case STOPPED:
                 isAnyAppRunning = false;
@@ -579,7 +563,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Get logs of the currently launched application. */
     public void getLogs(boolean isUserAction) {
-        final Link viewLogsLink = getLink(Constants.LINK_REL_VIEW_LOG);
+        final Link viewLogsLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -616,7 +600,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Stop the currently running application. */
     public void stopActiveProject(boolean isUserAction) {
-        final Link stopLink = getLink(Constants.LINK_REL_STOP);
+        final Link stopLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(activeProject.getName()), null);
             return;
@@ -676,7 +660,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
         if (isAnyAppRunning() && lastApplicationDescriptor != null) {
-            Link recipeLink = getLink("runner recipe");
+            Link recipeLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_RUNNER_RECIPE);
             return recipeLink != null;
         }
         return false;
@@ -685,7 +669,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Opens runner recipe file in editor. */
     public void showRecipe() {
         if (lastApplicationDescriptor != null) {
-            final Link recipeLink = getLink("runner recipe");
+            final Link recipeLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_RUNNER_RECIPE);
             if (recipeLink != null) {
                 RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, recipeLink.getHref());
                 try {
@@ -810,11 +794,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private  String getAppLink() {
         String url = null;
-        final Link appLink = getLink(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils.getLink(lastApplicationDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
-            final Link codeServerLink = getLink("code server");
+            final Link codeServerLink = RunnerUtils.getLink(lastApplicationDescriptor, "code server");
             if (codeServerLink != null) {
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(appLink.getHref());
@@ -835,17 +819,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return url;
     }
 
-    @Nullable
-    private Link getLink(String rel) {
-        if (lastApplicationDescriptor == null)
-            return null;
-        List<Link> links = lastApplicationDescriptor.getLinks();
-        for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
-                return link;
-        }
-        return null;
-    }
+
 
 
     private class RecipeFile extends File {
