@@ -110,25 +110,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onSaveClicked() {
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        //do check whether there is a project with the same name
-        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                //Project with the same name already exists
-                Info info = new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
-                info.show();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                //Project with the same name does not exist
-                createProject();
-            }
-        });
-    }
-
-    private void createProject() {
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
             @Override
@@ -145,22 +126,38 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
+
         if (project != null && projectName.equals(project.getName())) {
             updateProject(project, callback);
             return;
         }
-        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-            Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
-            createBlankProject(callback);
-            return;
-        }
-        if (templateDescriptor == null && wizard != null) {
-            wizard.onFinish();
-            view.close();
-            return;
-        }
+        //do check whether there is a project with the same name
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //Project with the same name already exists
+                Info info =
+                        new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
+                info.show();
+            }
 
-        importProject(callback, templateDescriptor, projectName);
+            @Override
+            protected void onFailure(Throwable exception) {
+                //Project with the same name does not exist
+                if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
+                    Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+                    createBlankProject(callback);
+                    return;
+                }
+                if (templateDescriptor == null && wizard != null) {
+                    wizard.onFinish();
+                    view.close();
+                    return;
+                }
+                importProject(callback, templateDescriptor, projectName);
+            }
+        });
+
     }
 
     private void updateProject(final Project project, final WizardPage.CommitCallback callback) {
@@ -240,11 +237,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void updateProject(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
+        String description = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
 
-        if (templateDescriptor != null && templateDescriptor.getDescription() != null) {
+        if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
             projectDescriptor.setDescription(templateDescriptor.getDescription());
-        }
+        } else projectDescriptor.setDescription(description);
 
         projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
