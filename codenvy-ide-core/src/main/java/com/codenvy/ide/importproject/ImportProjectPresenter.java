@@ -28,7 +28,6 @@ import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.regexp.shared.RegExp;
@@ -132,7 +131,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         final String projectName = view.getProjectName();
 
         if (!(SSH_URL_Pattern.test(url) || HTTPS_URL_Pattern.test(url))) {
-            view.showWarning();
+            view.showWarning(locale.importProjectEnteredWrongUri());
             return;
         }
 
@@ -140,9 +139,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 //Project with the same name already exists
-                Info info =
-                        new Info(locale.importProjectWarningTitle(), locale.createProjectFromTemplateProjectExists(projectName));
-                info.show();
+                view.showWarning(locale.createProjectFromTemplateProjectExists(projectName));
             }
 
             @Override
@@ -189,17 +186,16 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
             @Override
             protected void onFailure(Throwable exception) {
+                String errorMessage;
                 if (exception instanceof UnauthorizedException) {
                     ServiceError serverError =
                             dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse().getText(), ServiceError.class);
-                    Notification notification = new Notification(serverError.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
+                    errorMessage = serverError.getMessage();
                 } else {
                     Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
-
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
-                    notificationManager.showNotification(notification);
+                    errorMessage = exception.getMessage();
                 }
+                view.showWarning(errorMessage);
                 deleteFolder(projectName);
             }
         });
@@ -228,13 +224,21 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
     /** {@inheritDoc} */
     @Override
-    public void onValueChanged() {
+    public void onUriChanged() {
         String projectName = view.getProjectName();
         String uri = view.getUri();
+
         if (projectName.isEmpty() && !uri.isEmpty()) {
             projectName = parseUri(uri);
             view.setProjectName(projectName);
         }
+        onProjectNameChanged();
+    }
+
+    @Override
+    public void onProjectNameChanged() {
+        String projectName = view.getProjectName();
+        String uri = view.getUri();
         boolean enable = !uri.isEmpty() && !projectName.isEmpty();
 
         view.setEnabledImportButton(enable);

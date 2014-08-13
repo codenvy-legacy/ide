@@ -38,12 +38,14 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -168,7 +170,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -179,7 +181,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -189,7 +191,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -282,9 +284,9 @@ public class ImportProjectPresenterTest {
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(resourceProvider).getProject(anyString(), (AsyncCallback<Project>)anyObject());
         verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.ui.wizard.WizardContext)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
         verify(resourceProvider).getProject(eq(PROJECT_Name), (AsyncCallback<Project>)anyObject());
         verify(resourceProvider).delete((Project)anyObject(), (AsyncCallback<String>)anyObject());
+        verify(view).showWarning(anyString());
     }
 
     @Test
@@ -345,27 +347,27 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsEmpty() {
+    public void onUriChangedWhenProjectNameIsEmpty() {
         when(view.getProjectName()).thenReturn("");
         when(view.getUri()).thenReturn(URI);
 
-        presenter.onValueChanged();
+        presenter.onUriChanged();
 
-        verify(view).getUri();
-        verify(view).getProjectName();
+        verify(view, times(2)).getUri();
+        verify(view, times(2)).getProjectName();
         verify(view).setProjectName(anyString());
-        verify(view).setEnabledImportButton(eq(true));
+        verify(view).setEnabledImportButton(anyBoolean());
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsNotEmpty() {
+    public void onUriChangedWhenProjectNameIsNotEmpty() {
         when(view.getProjectName()).thenReturn(PROJECT_Name);
         when(view.getUri()).thenReturn(URI);
 
-        presenter.onValueChanged();
+        presenter.onUriChanged();
 
-        verify(view).getUri();
-        verify(view).getProjectName();
+        verify(view, times(2)).getUri();
+        verify(view, times(2)).getProjectName();
         verify(view, never()).setProjectName(anyString());
         verify(view).setEnabledImportButton(eq(true));
     }

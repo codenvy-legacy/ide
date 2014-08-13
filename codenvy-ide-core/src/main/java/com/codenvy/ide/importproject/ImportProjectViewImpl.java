@@ -102,8 +102,8 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
     }
 
     @Override
-    public void showWarning() {
-        Info infoWindow = new Info(locale.importProjectWarningTitle(), locale.importProjectEnteredWrongUri());
+    public void showWarning(String message) {
+        Info infoWindow = new Info(locale.importProjectWarningTitle(), message);
         infoWindow.show();
     }
 
@@ -115,12 +115,12 @@ public class ImportProjectViewImpl extends Window implements ImportProjectView{
 
     @UiHandler("uri")
     public void onUriChanged(KeyUpEvent event) {
-        delegate.onValueChanged();
+        delegate.onUriChanged();
     }
 
     @UiHandler("projectName")
     public void onProjectNameChanged(KeyUpEvent event) {
-        delegate.onValueChanged();
+        delegate.onProjectNameChanged();
     }
 
     /** {@inheritDoc} */
