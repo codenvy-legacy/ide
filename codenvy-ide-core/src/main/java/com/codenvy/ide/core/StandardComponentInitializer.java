@@ -312,7 +312,6 @@ public class StandardComponentInitializer {
         DefaultActionGroup helpGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
         actionManager.registerAction("findActionAction", findActionAction);
         actionManager.registerAction("showAbout", showAboutAction);
-        actionManager.registerAction("showAbout", showAboutAction);
         actionManager.registerAction("redirectToHelp", redirectToHelpAction);
         actionManager.registerAction("redirectToForums", redirectToForumsAction);
         actionManager.registerAction("redirectToFeedback", redirectToFeedbackAction);

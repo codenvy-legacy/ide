@@ -62,8 +62,8 @@ public class WebExtension {
         @Source("js.svg")
         SVGResource jsFile();
 
-        @Source("java.svg")
-        SVGResource samplesCategoryJava();
+        @Source("category/js.svg")
+        SVGResource samplesCategoryJs();
     }
 
     /**
@@ -90,7 +90,7 @@ public class WebExtension {
                         @Named("JSFileType") FileType jsFile,
                         @Named("HTMLFileType") FileType htmlFile) {
         // register new Icon for javascript projecttype
-        iconRegistry.registerIcon(new Icon("javascript.samples.category.icon",  resources.samplesCategoryJava()));
+        iconRegistry.registerIcon(new Icon("javascript.samples.category.icon",  resources.samplesCategoryJs()));
         // Register and add actions
         actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);
         actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
