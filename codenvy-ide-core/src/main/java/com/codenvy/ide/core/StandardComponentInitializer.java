@@ -319,6 +319,7 @@ public class StandardComponentInitializer {
 
         helpGroup.add(findActionAction);
         helpGroup.add(showAboutAction);
+        helpGroup.addSeparator();
         helpGroup.add(redirectToHelpAction);
         helpGroup.addSeparator();
         helpGroup.add(redirectToForumsAction);
