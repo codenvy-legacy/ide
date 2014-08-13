@@ -122,6 +122,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
     private   Timer                                             setAppHealthOkTimer;
+    //show time in "Total Time" indicator start immediately  after launch running process
+    private   Timer                                             totalActiveTimeTimer;
+    private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
+
+
     private   String                                            theme;
 
     @Inject
@@ -386,6 +391,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+        totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time").withName("total_time");
+
+        totalActiveTimeTimer = new Timer() {
+            int timeSeconds = 0;
+            @Override
+            public void run() {
+                timeSeconds++;
+                String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
+                totalActiveTimeMetric.setValue(humanReadable);
+            }
+        };
+        totalActiveTimeTimer.scheduleRepeating(1000);
+
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
@@ -518,6 +536,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                 break;
             case STOPPED:
+                totalActiveTimeTimer.cancel();
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
@@ -534,6 +553,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case FAILED:
+                totalActiveTimeTimer.cancel();
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
@@ -547,6 +567,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case CANCELLED:
+                totalActiveTimeTimer.cancel();
                 isAnyAppRunning = false;
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
@@ -736,8 +757,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             if (terminationMetric.getValue() != null) {
                 double terminationTime = NumberFormat.getDecimalFormat().parse(terminationMetric.getValue());
                 final double terminationTimeout = terminationTime - System.currentTimeMillis();
-                final String value = StringUtils.timeMlsToHumanReadable(terminationTimeout);
+                final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription()).withValue(value);
+            }
+        }
+        RunnerMetric lifeTimeMetric = getRunnerMetric(RunnerMetric.LIFETIME);
+        if (lifeTimeMetric != null && lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(NEW)) {
+            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.LIFETIME).getValue()))
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription())
+                                 .withValue(getRunnerMetric(RunnerMetric.LIFETIME).getValue());
+            if (lifeTimeMetric.getValue() != null) {
+                double lifeTime = NumberFormat.getDecimalFormat().parse(lifeTimeMetric.getValue());
+                final String value = StringUtils.timeMlsToHumanReadable((long)lifeTime);
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription()).withValue(value + " " + constant.startsAfterLaunch());
             }
         }
         return null;
@@ -760,25 +792,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
-        RunnerMetric uptimeMetric = getRunnerMetric(RunnerMetric.UP_TIME);
-        if (uptimeMetric == null)
-            return null;
-
-        // if app already stopped, get uptime from server
-        if (getCurrentAppStopTime() != null) {
-            double uptimeMetricValue = NumberFormat.getDecimalFormat().parse(uptimeMetric.getValue());
-            final String value = StringUtils.timeMlsToHumanReadable(uptimeMetricValue);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
-        }
-
-        // if app is running now, count uptime on the client-side
-        if (getCurrentAppStartTime() != null) {
-            final long totalTimeMillis = System.currentTimeMillis() - lastApplicationDescriptor.getStartTime();
-            final String value = StringUtils.timeMlsToHumanReadable(totalTimeMillis);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(uptimeMetric.getDescription()).withValue(value);
+        if (totalActiveTimeMetric != null && totalActiveTimeMetric.getValue() != null) {
+            return totalActiveTimeMetric;
         }
         return null;
     }
+
+
 
     @Nullable
     private RunnerMetric getRunnerMetric(String metricName) {
@@ -792,7 +812,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return null;
     }
 
-    private  String getAppLink() {
+    private String getAppLink() {
         String url = null;
         final Link appLink = RunnerUtils.getLink(lastApplicationDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
@@ -818,8 +838,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         return url;
     }
-
-
 
 
     private class RecipeFile extends File {

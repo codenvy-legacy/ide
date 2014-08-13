@@ -146,6 +146,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("titles.warning")
     String titlesWarning();
 
+    @Key("runner.pannel.starts-after-launch")
+    String startsAfterLaunch();
+
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();

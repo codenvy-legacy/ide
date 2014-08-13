@@ -342,7 +342,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             lastWaitingTimeLimit = waitingTimeLimit;
             double terminationTime = NumberFormat.getDecimalFormat().parse(waitingTimeLimit.getValue());
             final double terminationTimeout = terminationTime - System.currentTimeMillis();
-            final String value = StringUtils.timeMlsToHumanReadable(terminationTimeout);
+            final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
             return dtoFactory.createDto(BuilderMetric.class).withDescription(waitingTimeLimit.getDescription())
                       .withValue(waitingTimeLimit.getName()).withValue(value);
         }
