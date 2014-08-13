@@ -14,7 +14,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.Project;
@@ -145,7 +144,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 //Project with the same name does not exist
                 if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-                    Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
                     createBlankProject(callback);
                     return;
                 }
@@ -326,7 +325,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
-                                            Constants.BLANK_ID) && currentPage.isCompleted()));
+                                            com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
@@ -365,9 +364,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void showFirstPage() {
-        if (wizard != null) {
-            wizard.flipToFirst();
-        }
+        wizard = null;
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             boolean aPublic = project.getVisibility().equals("public") ? true : false;

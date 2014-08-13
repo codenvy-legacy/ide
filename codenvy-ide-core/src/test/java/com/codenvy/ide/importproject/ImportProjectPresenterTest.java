@@ -142,7 +142,7 @@ public class ImportProjectPresenterTest {
         when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
         when(locale.importProjectMessageSuccess()).thenReturn("Success!");
         when(project.getDescription()).thenReturn(projectDescription);
-        when(projectDescription.getProjectTypeId()).thenReturn(Constants.NAMELESS_ID);
+        when(projectDescription.getProjectTypeId()).thenReturn(com.codenvy.api.project.shared.Constants.BLANK_ID);
 
         presenter.onImportClicked();
 
@@ -413,7 +413,7 @@ public class ImportProjectPresenterTest {
         when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
         when(locale.importProjectMessageSuccess()).thenReturn("Success!");
         when(project.getDescription()).thenReturn(projectDescription);
-        when(projectDescription.getProjectTypeId()).thenReturn(Constants.NAMELESS_ID);
+        when(projectDescription.getProjectTypeId()).thenReturn(com.codenvy.api.project.shared.Constants.BLANK_ID);
 
         presenter.onImportClicked();
 

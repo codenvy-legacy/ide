@@ -16,7 +16,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -169,7 +168,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                         notificationManager.showNotification(notification);
 
                         if (result.getDescription().getProjectTypeId() == null ||
-                            Constants.NAMELESS_ID.equals(result.getDescription().getProjectTypeId())) {
+                            com.codenvy.api.project.shared.Constants.BLANK_ID.equals(result.getDescription().getProjectTypeId())) {
 
                             WizardContext context = new WizardContext();
                             context.putData(ProjectWizard.PROJECT, result);

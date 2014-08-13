@@ -102,6 +102,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     @Override
     public void go(AcceptsOneWidget container) {
         view.reset();
+        typeDescriptor = null;
+        template = null;
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();

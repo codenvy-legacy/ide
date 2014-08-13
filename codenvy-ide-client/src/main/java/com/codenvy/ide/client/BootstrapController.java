@@ -21,7 +21,6 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.resources.ProjectTypeDescriptorRegistry;
@@ -246,9 +245,7 @@ public class BootstrapController {
             @Override
             protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
-                    if (!result.get(i).getProjectTypeId().equalsIgnoreCase(Constants.NAMELESS_ID)) {
                         projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
-                    }
                 }
 
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {

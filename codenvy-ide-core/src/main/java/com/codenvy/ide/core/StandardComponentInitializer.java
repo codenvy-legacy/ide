@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.core;
 
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
@@ -51,7 +50,6 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.xml.NewXmlFileAction;
 import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -358,6 +356,6 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
-        wizardRegistry.addWizard(Constants.BLANK_ID, new ProjectWizard(notificationManager));
+        wizardRegistry.addWizard(com.codenvy.api.project.shared.Constants.BLANK_ID, new ProjectWizard(notificationManager));
     }
 }

@@ -12,7 +12,6 @@ package com.codenvy.ide.part.projectexplorer;
 
 import elemental.client.Browser;
 
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -29,7 +28,6 @@ import com.codenvy.ide.api.resources.model.Project;
 import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
-import com.codenvy.ide.projecttype.SelectProjectTypePresenter;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -55,17 +53,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     protected EventBus                   eventBus;
     private   ResourceProvider           resourceProvider;
     private   ContextMenuPresenter       contextMenuPresenter;
-    private   SelectProjectTypePresenter selectProjectTypePresenter;
     private   CoreLocalizationConstant   coreLocalizationConstant;
 
     /**
      * Instantiates the ProjectExplorer Presenter.
-     *
-     * @param view
+     *  @param view
      * @param eventBus
      * @param resourceProvider
      * @param contextMenuPresenter
-     * @param selectProjectTypePresenter
      * @param coreLocalizationConstant
      */
     @Inject
@@ -73,14 +68,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                                         EventBus eventBus,
                                         ResourceProvider resourceProvider,
                                         ContextMenuPresenter contextMenuPresenter,
-                                        SelectProjectTypePresenter selectProjectTypePresenter,
                                         CoreLocalizationConstant coreLocalizationConstant) {
         this.view = view;
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.contextMenuPresenter = contextMenuPresenter;
-        this.selectProjectTypePresenter = selectProjectTypePresenter;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -285,39 +278,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onResourceOpened(final Resource resource) {
         if (resource instanceof Folder && (((Folder)resource).getChildren().isEmpty())) {
-            if (resource.getResourceType().equals(Project.TYPE)) {
-                checkProjectType((Project)resource, new AsyncCallback<Project>() {
-                    @Override
-                    public void onSuccess(Project result) {
-                        refreshChildren(result);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Log.error(ProjectExplorerPartPresenter.class, "Can not set project type.", caught);
-                    }
-                });
-            } else {
-                refreshChildren((Folder)resource);
-            }
+            refreshChildren((Folder)resource);
         }
     }
 
-    /**
-     * Check, whether project type is "unknown" and call {@link SelectProjectTypePresenter} to set it.
-     *
-     * @param project
-     *         project to check it's type
-     * @param callback
-     *         callback
-     */
-    private void checkProjectType(final Project project, final AsyncCallback<Project> callback) {
-        if (Constants.NAMELESS_ID.equals(project.getDescription().getProjectTypeId())) {
-            selectProjectTypePresenter.showDialog(project, callback);
-        } else {
-            callback.onSuccess(project);
-        }
-    }
 
     private void refreshChildren(Folder folder) {
         folder.getProject().refreshChildren(folder, new AsyncCallback<Folder>() {
