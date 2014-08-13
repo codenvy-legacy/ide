@@ -12,87 +12,87 @@
 
 /*Tabs*/
 
-@eval tabBorder com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval inactiveTabBackground com.codenvy.ide.api.ui.theme.Style.getInactiveTabBackground();
-@eval inactiveTabBorderColor com.codenvy.ide.api.ui.theme.Style.getInactiveTabBorderColor();
-@eval activeTabBackground com.codenvy.ide.api.ui.theme.Style.getActiveTabBackground();
-@eval activeTabBorderColor com.codenvy.ide.api.ui.theme.Style.getActiveTabBorderColor();
-@eval tabsPanelBackground com.codenvy.ide.api.ui.theme.Style.getTabsPanelBackground();
-@eval highlightFocus com.codenvy.ide.api.ui.theme.Style.getHighlightFocus();
+@eval tabBorder com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval inactiveTabBackground com.codenvy.ide.api.theme.Style.getInactiveTabBackground();
+@eval inactiveTabBorderColor com.codenvy.ide.api.theme.Style.getInactiveTabBorderColor();
+@eval activeTabBackground com.codenvy.ide.api.theme.Style.getActiveTabBackground();
+@eval activeTabBorderColor com.codenvy.ide.api.theme.Style.getActiveTabBorderColor();
+@eval tabsPanelBackground com.codenvy.ide.api.theme.Style.getTabsPanelBackground();
+@eval highlightFocus com.codenvy.ide.api.theme.Style.getHighlightFocus();
 
-@eval hoverBackgroundColor com.codenvy.ide.api.ui.theme.Style.getHoverBackgroundColor();
-@eval lightGreyBackground com.codenvy.ide.api.ui.theme.Style.getLightGreyBackground();
-@eval barBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBarBackgroundColor();
+@eval hoverBackgroundColor com.codenvy.ide.api.theme.Style.getHoverBackgroundColor();
+@eval lightGreyBackground com.codenvy.ide.api.theme.Style.getLightGreyBackground();
+@eval barBackgroundColor com.codenvy.ide.api.theme.Style.getBarBackgroundColor();
 
-@eval partBackground com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-@eval partToolbar com.codenvy.ide.api.ui.theme.Style.getPartToolbar();
-@eval partToolbarActive com.codenvy.ide.api.ui.theme.Style.getPartToolbarActive();
-@eval partToolbarShadow com.codenvy.ide.api.ui.theme.Style.getPartToolbarShadow();
-@eval partToolbarSeparatorTopColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorTopColor();
-@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.ui.theme.Style.getPartToolbarSeparatorBottomColor();
+@eval partBackground com.codenvy.ide.api.theme.Style.getPartBackground();
+@eval partToolbar com.codenvy.ide.api.theme.Style.getPartToolbar();
+@eval partToolbarActive com.codenvy.ide.api.theme.Style.getPartToolbarActive();
+@eval partToolbarShadow com.codenvy.ide.api.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor com.codenvy.ide.api.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor com.codenvy.ide.api.theme.Style.getPartToolbarSeparatorBottomColor();
 
-@eval consolePanelColor com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
+@eval consolePanelColor com.codenvy.ide.api.theme.Style.getConsolePanelColor();
 
-@eval tabBorderShadow com.codenvy.ide.api.ui.theme.Style.getTabBorderShadow();
-@eval buttonTextShadow com.codenvy.ide.api.ui.theme.Style.getButtonTextShadow();
-@eval minimizeIconColor com.codenvy.ide.api.ui.theme.Style.getMinimizeIconColor();
+@eval tabBorderShadow com.codenvy.ide.api.theme.Style.getTabBorderShadow();
+@eval buttonTextShadow com.codenvy.ide.api.theme.Style.getButtonTextShadow();
+@eval minimizeIconColor com.codenvy.ide.api.theme.Style.getMinimizeIconColor();
 
 /* Indicates a completed action. Preferred text color is lightTextColor. */
-@eval completedBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletedBackgroundColor();
-@eval progressColor com.codenvy.ide.api.ui.theme.Style.getProgressColor();
+@eval completedBackgroundColor com.codenvy.ide.api.theme.Style.getCompletedBackgroundColor();
+@eval progressColor com.codenvy.ide.api.theme.Style.getProgressColor();
 /* Background color for an item selected with the keyboard */
-@eval keyboardSelectionBackgroundColor com.codenvy.ide.api.ui.theme.Style.getKeyboardSelectionBackgroundColor();
-@eval anchorColor com.codenvy.ide.api.ui.theme.Style.getAnchorColor();
+@eval keyboardSelectionBackgroundColor com.codenvy.ide.api.theme.Style.getKeyboardSelectionBackgroundColor();
+@eval anchorColor com.codenvy.ide.api.theme.Style.getAnchorColor();
 
 /* Tree */
-@eval hoverBackground com.codenvy.ide.api.ui.theme.Style.getHoverBackground();
-@eval selectionBackground com.codenvy.ide.api.ui.theme.Style.getSelectionBackground();
-@eval treeTextFileColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFileColor();
-@eval treeTextFolderColor com.codenvy.ide.api.ui.theme.Style.getTreeTextFolderColor();
-@eval treeTextShadow com.codenvy.ide.api.ui.theme.Style.getTreeTextShadow();
-@eval treeIconFileColor com.codenvy.ide.api.ui.theme.Style.getTreeIconFileColor();
+@eval hoverBackground com.codenvy.ide.api.theme.Style.getHoverBackground();
+@eval selectionBackground com.codenvy.ide.api.theme.Style.getSelectionBackground();
+@eval treeTextFileColor com.codenvy.ide.api.theme.Style.getTreeTextFileColor();
+@eval treeTextFolderColor com.codenvy.ide.api.theme.Style.getTreeTextFolderColor();
+@eval treeTextShadow com.codenvy.ide.api.theme.Style.getTreeTextShadow();
+@eval treeIconFileColor com.codenvy.ide.api.theme.Style.getTreeIconFileColor();
 
 /* Button */
-@eval buttonTopColor com.codenvy.ide.api.ui.theme.Style.getButtonTopColor();
-@eval buttonColor com.codenvy.ide.api.ui.theme.Style.getButtonColor();
-@eval buttonHoverTextColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverTextColor();
-@eval buttonHoverColor com.codenvy.ide.api.ui.theme.Style.getButtonHoverColor();
-@eval svgUrlShadow com.codenvy.ide.api.ui.theme.Style.getSvgUrlShadow();
-@eval socialButtonColor com.codenvy.ide.api.ui.theme.Style.getSocialButtonColor();
+@eval buttonTopColor com.codenvy.ide.api.theme.Style.getButtonTopColor();
+@eval buttonColor com.codenvy.ide.api.theme.Style.getButtonColor();
+@eval buttonHoverTextColor com.codenvy.ide.api.theme.Style.getButtonHoverTextColor();
+@eval buttonHoverColor com.codenvy.ide.api.theme.Style.getButtonHoverColor();
+@eval svgUrlShadow com.codenvy.ide.api.theme.Style.getSvgUrlShadow();
+@eval socialButtonColor com.codenvy.ide.api.theme.Style.getSocialButtonColor();
 
 /* notable button */
-@eval notableButtonTopColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonTopColor();
-@eval notableButtonColor com.codenvy.ide.api.ui.theme.Style.getNotableButtonColor();
+@eval notableButtonTopColor com.codenvy.ide.api.theme.Style.getNotableButtonTopColor();
+@eval notableButtonColor com.codenvy.ide.api.theme.Style.getNotableButtonColor();
 
 /*input*/
-@eval inputBackground com.codenvy.ide.api.ui.theme.Style.getInputBackground();
+@eval inputBackground com.codenvy.ide.api.theme.Style.getInputBackground();
 
 /*Editor*/
-@eval editorBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorBackgroundColor();
-@eval editorCurrentLineColor com.codenvy.ide.api.ui.theme.Style.getEditorCurrentLineColor();
-@eval editorDefaultFontColor com.codenvy.ide.api.ui.theme.Style.getEditorDefaultFontColor();
-@eval editorCursorColor com.codenvy.ide.api.ui.theme.Style.getEditorCursorColor();
-@eval editorSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorSelectionColor();
-@eval editorInactiveSelectionColor com.codenvy.ide.api.ui.theme.Style.getEditorInactiveSelectionColor();
+@eval editorBackgroundColor com.codenvy.ide.api.theme.Style.getEditorBackgroundColor();
+@eval editorCurrentLineColor com.codenvy.ide.api.theme.Style.getEditorCurrentLineColor();
+@eval editorDefaultFontColor com.codenvy.ide.api.theme.Style.getEditorDefaultFontColor();
+@eval editorCursorColor com.codenvy.ide.api.theme.Style.getEditorCursorColor();
+@eval editorSelectionColor com.codenvy.ide.api.theme.Style.getEditorSelectionColor();
+@eval editorInactiveSelectionColor com.codenvy.ide.api.theme.Style.getEditorInactiveSelectionColor();
 
-@eval editoGutterColor com.codenvy.ide.api.ui.theme.Style.getEditorGutterColor();
-@eval editorGutterLineNumberColor com.codenvy.ide.api.ui.theme.Style.getEditorLineNumberColor();
-@eval editorGutterSeparatorColor com.codenvy.ide.api.ui.theme.Style.getEditorSeparatorColor();
+@eval editoGutterColor com.codenvy.ide.api.theme.Style.getEditorGutterColor();
+@eval editorGutterLineNumberColor com.codenvy.ide.api.theme.Style.getEditorLineNumberColor();
+@eval editorGutterSeparatorColor com.codenvy.ide.api.theme.Style.getEditorSeparatorColor();
 
-@eval completionPopupBorderColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBorderColor();
-@eval completionPopupBackgroundColor com.codenvy.ide.api.ui.theme.Style.getCompletionPopupBackgroundColor();
-@eval editorInfoBorderColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderColor();
-@eval editorInfoBorderShadowColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBorderShadowColor();
-@eval editorInfoBackgroundColor com.codenvy.ide.api.ui.theme.Style.getEditorInfoBackgroundColor();
+@eval completionPopupBorderColor com.codenvy.ide.api.theme.Style.getCompletionPopupBorderColor();
+@eval completionPopupBackgroundColor com.codenvy.ide.api.theme.Style.getCompletionPopupBackgroundColor();
+@eval editorInfoBorderColor com.codenvy.ide.api.theme.Style.getEditorInfoBorderColor();
+@eval editorInfoBorderShadowColor com.codenvy.ide.api.theme.Style.getEditorInfoBorderShadowColor();
+@eval editorInfoBackgroundColor com.codenvy.ide.api.theme.Style.getEditorInfoBackgroundColor();
 
 /* Listbox, TextBox... */
-@eval boxBorderColor com.codenvy.ide.api.ui.theme.Style.getBoxBorderColor();
-@eval boxBackgroundColor com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColor();
-@eval boxBackgroundColorDisabled com.codenvy.ide.api.ui.theme.Style.getBoxBackgroundColorDisabled();
-@eval boxTextColor com.codenvy.ide.api.ui.theme.Style.getBoxTextColor();
-@eval boxTextShadow com.codenvy.ide.api.ui.theme.Style.getBoxTextShadow();
-@eval boxInnerShadow com.codenvy.ide.api.ui.theme.Style.getBoxInnerShadow();
-@eval boxOuterShadow com.codenvy.ide.api.ui.theme.Style.getBoxOuterShadow();
+@eval boxBorderColor com.codenvy.ide.api.theme.Style.getBoxBorderColor();
+@eval boxBackgroundColor com.codenvy.ide.api.theme.Style.getBoxBackgroundColor();
+@eval boxBackgroundColorDisabled com.codenvy.ide.api.theme.Style.getBoxBackgroundColorDisabled();
+@eval boxTextColor com.codenvy.ide.api.theme.Style.getBoxTextColor();
+@eval boxTextShadow com.codenvy.ide.api.theme.Style.getBoxTextShadow();
+@eval boxInnerShadow com.codenvy.ide.api.theme.Style.getBoxInnerShadow();
+@eval boxOuterShadow com.codenvy.ide.api.theme.Style.getBoxOuterShadow();
 
 /* Sizes */
 @def dividerThickness 1px;
@@ -130,77 +130,77 @@
 @def outputFontFamily 'Droid Sans Mono', monospace;
 
 /*Main Menu*/
-@eval mainMenuBkgColor com.codenvy.ide.api.ui.theme.Style.getMainMenuBkgColor();
-@eval mainMenuFontColor com.codenvy.ide.api.ui.theme.Style.getMainMenuFontColor();
+@eval mainMenuBkgColor com.codenvy.ide.api.theme.Style.getMainMenuBkgColor();
+@eval mainMenuFontColor com.codenvy.ide.api.theme.Style.getMainMenuFontColor();
 @def fontMenuSize 12px;
 
-@eval mainFontColor com.codenvy.ide.api.ui.theme.Style.getMainFontColor();
-@eval tabFontColor com.codenvy.ide.api.ui.theme.Style.getTabFontColor();
-@eval welcomeFontColor com.codenvy.ide.api.ui.theme.Style.getWelcomeFontColor();
-@eval captionFontColor com.codenvy.ide.api.ui.theme.Style.getCaptionFontColor();
-@eval factoryLinkColor com.codenvy.ide.api.ui.theme.Style.getFactoryLinkColor();
-@eval lightTextColor com.codenvy.ide.api.ui.theme.Style.getLightTextColor();
-@eval lightestTextColor com.codenvy.ide.api.ui.theme.Style.getLightestTextColor();
-@eval radioButtonBackgroundColor com.codenvy.ide.api.ui.theme.Style.getRadioButtonBackgroundColor();
-@eval disabledMenuItemColor com.codenvy.ide.api.ui.theme.Style.getDeisabledMenuColor();
+@eval mainFontColor com.codenvy.ide.api.theme.Style.getMainFontColor();
+@eval tabFontColor com.codenvy.ide.api.theme.Style.getTabFontColor();
+@eval welcomeFontColor com.codenvy.ide.api.theme.Style.getWelcomeFontColor();
+@eval captionFontColor com.codenvy.ide.api.theme.Style.getCaptionFontColor();
+@eval factoryLinkColor com.codenvy.ide.api.theme.Style.getFactoryLinkColor();
+@eval lightTextColor com.codenvy.ide.api.theme.Style.getLightTextColor();
+@eval lightestTextColor com.codenvy.ide.api.theme.Style.getLightestTextColor();
+@eval radioButtonBackgroundColor com.codenvy.ide.api.theme.Style.getRadioButtonBackgroundColor();
+@eval disabledMenuItemColor com.codenvy.ide.api.theme.Style.getDeisabledMenuColor();
 
 /*Toolbar*/
-@eval toolbarBackgroundColor com.codenvy.ide.api.ui.theme.Style.getToolbarBackgroundColor();
-@eval toolbarIconColor com.codenvy.ide.api.ui.theme.Style.getToolbarIconColor();
+@eval toolbarBackgroundColor com.codenvy.ide.api.theme.Style.getToolbarBackgroundColor();
+@eval toolbarIconColor com.codenvy.ide.api.theme.Style.getToolbarIconColor();
 
 /* DialogBox*/
-@eval dialogTopLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogTopCenter com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogTopRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogMiddleLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogMiddleRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogBottomLeft com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogBottomCenter com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogBottomRight com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
-@eval dialogContentBackground com.codenvy.ide.api.ui.theme.Style.getDialogContentBackground();
+@eval dialogTopLeft com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogTopCenter com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogTopRight com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogMiddleLeft com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogMiddleRight com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomLeft com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomCenter com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomRight com.codenvy.ide.api.theme.Style.getTabBorderColor();
+@eval dialogContentBackground com.codenvy.ide.api.theme.Style.getDialogContentBackground();
 
 /*Window*/
-@eval windowContentBackground com.codenvy.ide.api.ui.theme.Style.getWindowContentBackground();
-@eval windowHeaderBackground com.codenvy.ide.api.ui.theme.Style.getWindowHeaderBackground();
-@eval windowSeparatorColor com.codenvy.ide.api.ui.theme.Style.getWindowSeparatorColor();
+@eval windowContentBackground com.codenvy.ide.api.theme.Style.getWindowContentBackground();
+@eval windowHeaderBackground com.codenvy.ide.api.theme.Style.getWindowHeaderBackground();
+@eval windowSeparatorColor com.codenvy.ide.api.theme.Style.getWindowSeparatorColor();
 
 /*syntax highlight*/
-@eval keyword com.codenvy.ide.api.ui.theme.Style.getEditorKeyWord();
-@eval atom com.codenvy.ide.api.ui.theme.Style.getEditorAtom();
-@eval number com.codenvy.ide.api.ui.theme.Style.getEditorNumber();
-@eval deff com.codenvy.ide.api.ui.theme.Style.getEditorDef();
-@eval variable com.codenvy.ide.api.ui.theme.Style.getEditorVariable();
-@eval variable2 com.codenvy.ide.api.ui.theme.Style.getEditorVariable2();
-@eval property com.codenvy.ide.api.ui.theme.Style.getEditorProperty();
-@eval operator com.codenvy.ide.api.ui.theme.Style.getEditorOperator();
-@eval comment com.codenvy.ide.api.ui.theme.Style.getEditorComment();
-@eval string com.codenvy.ide.api.ui.theme.Style.getEditorString();
-@eval string2 com.codenvy.ide.api.ui.theme.Style.getEditorString2();
-@eval smeta com.codenvy.ide.api.ui.theme.Style.getEditorMeta();
-@eval error com.codenvy.ide.api.ui.theme.Style.getEditorError();
-@eval builtin com.codenvy.ide.api.ui.theme.Style.getEditorBuiltin();
-@eval tag com.codenvy.ide.api.ui.theme.Style.getEditorTag();
-@eval attribute com.codenvy.ide.api.ui.theme.Style.getEditorAttribute();
+@eval keyword com.codenvy.ide.api.theme.Style.getEditorKeyWord();
+@eval atom com.codenvy.ide.api.theme.Style.getEditorAtom();
+@eval number com.codenvy.ide.api.theme.Style.getEditorNumber();
+@eval deff com.codenvy.ide.api.theme.Style.getEditorDef();
+@eval variable com.codenvy.ide.api.theme.Style.getEditorVariable();
+@eval variable2 com.codenvy.ide.api.theme.Style.getEditorVariable2();
+@eval property com.codenvy.ide.api.theme.Style.getEditorProperty();
+@eval operator com.codenvy.ide.api.theme.Style.getEditorOperator();
+@eval comment com.codenvy.ide.api.theme.Style.getEditorComment();
+@eval string com.codenvy.ide.api.theme.Style.getEditorString();
+@eval string2 com.codenvy.ide.api.theme.Style.getEditorString2();
+@eval smeta com.codenvy.ide.api.theme.Style.getEditorMeta();
+@eval error com.codenvy.ide.api.theme.Style.getEditorError();
+@eval builtin com.codenvy.ide.api.theme.Style.getEditorBuiltin();
+@eval tag com.codenvy.ide.api.theme.Style.getEditorTag();
+@eval attribute com.codenvy.ide.api.theme.Style.getEditorAttribute();
 
 /*wizard*/
-@eval stepsPanelColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsColor();
-@eval stepsPanelBorerColor com.codenvy.ide.api.ui.theme.Style.getWizardStepsBorderColor();
-@eval wizardIconColor com.codenvy.ide.api.ui.theme.Style.getToolbarIconColor();
+@eval stepsPanelColor com.codenvy.ide.api.theme.Style.getWizardStepsColor();
+@eval stepsPanelBorerColor com.codenvy.ide.api.theme.Style.getWizardStepsBorderColor();
+@eval wizardIconColor com.codenvy.ide.api.theme.Style.getToolbarIconColor();
 
 /*Cell widgets*/
-@eval cellOddRow com.codenvy.ide.api.ui.theme.Style.getCellOddRow();
-@eval cellEvenRow com.codenvy.ide.api.ui.theme.Style.getCellEvenRow();
-@eval cellKeyboardSelectedRow com.codenvy.ide.api.ui.theme.Style.getCellKeyboardSelectedRow();
-@eval cellHoveredRow com.codenvy.ide.api.ui.theme.Style.getCellHoveredRow();
+@eval cellOddRow com.codenvy.ide.api.theme.Style.getCellOddRow();
+@eval cellEvenRow com.codenvy.ide.api.theme.Style.getCellEvenRow();
+@eval cellKeyboardSelectedRow com.codenvy.ide.api.theme.Style.getCellKeyboardSelectedRow();
+@eval cellHoveredRow com.codenvy.ide.api.theme.Style.getCellHoveredRow();
 
 /*Events*/
-@eval successEventColor com.codenvy.ide.api.ui.theme.Style.getSuccessEventColor();
-@eval errorEventColor com.codenvy.ide.api.ui.theme.Style.getErrorEventColor();
-@eval linkColor com.codenvy.ide.api.ui.theme.Style.getLinkColor();
-@eval delimeterColor com.codenvy.ide.api.ui.theme.Style.getDelimeterColor();
+@eval successEventColor com.codenvy.ide.api.theme.Style.getSuccessEventColor();
+@eval errorEventColor com.codenvy.ide.api.theme.Style.getErrorEventColor();
+@eval linkColor com.codenvy.ide.api.theme.Style.getLinkColor();
+@eval delimeterColor com.codenvy.ide.api.theme.Style.getDelimeterColor();
 
 /*Events*/
-@eval outputFontColor com.codenvy.ide.api.ui.theme.Style.getOutputFontColor();
-@eval outputLinkColor com.codenvy.ide.api.ui.theme.Style.getOutputLinkColor();
+@eval outputFontColor com.codenvy.ide.api.theme.Style.getOutputFontColor();
+@eval outputLinkColor com.codenvy.ide.api.theme.Style.getOutputLinkColor();
 
 

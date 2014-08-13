@@ -15,7 +15,7 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.ProjectWizardViewImpl.Style">
-        @eval bgTopPanel com.codenvy.ide.api.ui.theme.Style.getConsolePanelColor();
+        @eval bgTopPanel com.codenvy.ide.api.theme.Style.getConsolePanelColor();
         .project {
             /*margin-right: 8px;*/
             margin-top: 4px;

@@ -15,7 +15,6 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -111,25 +110,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onSaveClicked() {
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        //do check whether there is a project with the same name
-        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                //Project with the same name already exists
-                Info info = new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
-                info.show();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                //Project with the same name does not exist
-                createProject();
-            }
-        });
-    }
-
-    private void createProject() {
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
             @Override
@@ -146,22 +126,38 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+
         if (project != null && projectName.equals(project.getName())) {
             updateProject(project, callback);
             return;
         }
-        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-            Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
-            createBlankProject(callback);
-            return;
-        }
-        if (templateDescriptor == null && wizard != null) {
-            wizard.onFinish();
-            view.close();
-            return;
-        }
+        //do check whether there is a project with the same name
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //Project with the same name already exists
+                Info info =
+                        new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
+                info.show();
+            }
 
-        importProject(callback, templateDescriptor, projectName);
+            @Override
+            protected void onFailure(Throwable exception) {
+                //Project with the same name does not exist
+                if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
+                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+                    createBlankProject(callback);
+                    return;
+                }
+                if (templateDescriptor == null && wizard != null) {
+                    wizard.onFinish();
+                    view.close();
+                    return;
+                }
+                importProject(callback, templateDescriptor, projectName);
+            }
+        });
+
     }
 
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
@@ -285,7 +281,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
-                                            Constants.BLANK_ID) && currentPage.isCompleted()));
+                                            com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
@@ -324,9 +320,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void showFirstPage() {
-        if (wizard != null) {
-            wizard.flipToFirst();
-        }
+        wizard = null;
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         if (project != null) {
             boolean aPublic = project.getVisibility().equals("public") ? true : false;

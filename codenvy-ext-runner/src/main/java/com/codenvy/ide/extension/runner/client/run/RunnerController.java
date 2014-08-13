@@ -80,7 +80,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
  * Controls launching application.
  *
  * @author Artem Zatsarynnyy
- * @author Vitaly Parfonov
  */
 @Singleton
 public class RunnerController implements Notification.OpenNotificationHandler {
@@ -156,16 +155,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
-
-                                                            final String appLink = getAppLink();
-                                                            if (appLink != null) {
-                                                                console.setAppURL(appLink);
-                                                            }
-                                                            Link shellLink = getLink("shell url");
-                                                            if (shellLink != null) {
-                                                                console.setShellURL(shellLink.getHref());
-                                                            }
-
+                                                            console.onAppStarted(lastApplicationDescriptor);
                                                             notificationManager.showNotification(new Notification(
                                                                     constant.projectRunningNow(event.getProject().getName()), INFO));
 
@@ -182,7 +172,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (isAnyAppRunning() && !RunnerUtils.getRunnerMetric(appContext.getCurrentProject().getProcessDescriptor(), RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
+                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
                     stopActiveProject(false);
                 }
                 console.clear();
@@ -472,6 +462,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     if (urlStatus.equals("OK")) {
                         isLastAppHealthOk = true;
                         stopCheckingAppHealth(processId);
+                        console.onAppStarted(appContext.getCurrentProject().getProcessDescriptor());
+                        stopCheckingAppHealth(processId);
                     }
                 }
             }
@@ -529,9 +521,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     console.setShellURL(shellLink.getHref());
                 }
 
+                notification.setMessage(constant.applicationStarted(appContext.getCurrentProject().getProjectDescription().getName()));
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
                 }
+
                 break;
             case STOPPED:
                 isAnyAppRunning = false;
@@ -585,7 +579,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Get logs of the currently launched application. */
     public void getLogs(boolean isUserAction) {
-        final Link viewLogsLink = getLink(Constants.LINK_REL_VIEW_LOG);
+        final Link viewLogsLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_VIEW_LOG);
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
@@ -622,7 +616,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Stop the currently running application. */
     public void stopActiveProject(boolean isUserAction) {
-        final Link stopLink = getLink(Constants.LINK_REL_STOP);
+        final Link stopLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_STOP);
         if (stopLink == null) {
             onFail(constant.stopApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()), null);
             return;
@@ -651,8 +645,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
-        if (isAnyAppRunning() && appContext.getCurrentProject().getProcessDescriptor() != null) {
-            Link recipeLink = getLink("runner recipe");
+        if (isAnyAppRunning() && lastApplicationDescriptor != null) {
+            Link recipeLink = RunnerUtils.getLink(lastApplicationDescriptor, Constants.LINK_REL_RUNNER_RECIPE);
             return recipeLink != null;
         }
         return false;
@@ -711,7 +705,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public RunnerMetric getCurrentAppStartTime() {
         if (lastApplicationDescriptor != null && lastApplicationDescriptor.getCreationTime() >= 0) {
             Date startDate = new Date(lastApplicationDescriptor.getCreationTime());
-            String startDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
             return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
         }
         return null;
@@ -747,7 +741,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (runnerMetric != null &&  runnerMetric.getValue() != null) {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
-            String stopDateFormatted = DateTimeFormat.getFormat("dd/mm/yyyy HH:mm:ss").format(startDate);
+            String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
             return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
         }
         return null;
@@ -791,11 +785,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private  String getAppLink() {
         String url = null;
-        final Link appLink = getLink(com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils.getLink(lastApplicationDescriptor, com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
-            final Link codeServerLink = getLink("code server");
+            final Link codeServerLink = RunnerUtils.getLink(lastApplicationDescriptor, "code server");
             if (codeServerLink != null) {
                 StringBuilder urlBuilder = new StringBuilder();
                 urlBuilder.append(appLink.getHref());

@@ -14,8 +14,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.main.MainPageViewImpl.Style">
-        @eval InputBackgroundColor com.codenvy.ide.api.ui.theme.Style.getInputBackground();
-        @eval borderColor com.codenvy.ide.api.ui.theme.Style.getTabBorderColor();
+        @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
+        @eval borderColor com.codenvy.ide.api.theme.Style.getTabBorderColor();
 
         .mainPanel {
             margin: 0px;

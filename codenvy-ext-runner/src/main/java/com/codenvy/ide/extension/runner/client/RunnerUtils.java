@@ -10,13 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
-import com.codenvy.api.runner.ApplicationStatus;
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.api.runner.dto.RunnerMetric;
-import com.codenvy.ide.api.app.CurrentProject;
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author Vitaly Parfonov
@@ -24,30 +22,14 @@ import javax.validation.constraints.NotNull;
 public class RunnerUtils {
 
     @Nullable
-    public static RunnerMetric getRunnerMetric(@NotNull ApplicationProcessDescriptor processDescriptor, String metricName) {
-        if (processDescriptor != null) {
-            for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
-                if (metricName.equals(runnerStat.getName())) {
-                    return runnerStat;
-                }
-            }
+    public static Link getLink(ApplicationProcessDescriptor processDescriptor, String rel) {
+        if (processDescriptor == null)
+            return null;
+        List<Link> links = processDescriptor.getLinks();
+        for (Link link : links) {
+            if (link.getRel().equalsIgnoreCase(rel))
+                return link;
         }
         return null;
     }
-
-
-    /** Checking current project launched or not.
-     * Return true if status @code ApplicationStatus.NEW or ApplicationStatus.RUNNING
-     * otherwise false
-     */
-    public static boolean isAppLaunched(@NotNull CurrentProject currentProject) {
-        ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
-        if (processDescriptor == null)
-            return false;
-        if (processDescriptor.getStatus().equals(ApplicationStatus.NEW) ||
-            processDescriptor.getStatus().equals(ApplicationStatus.RUNNING))
-            return true;
-        return false;
-    }
-
 }

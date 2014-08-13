@@ -138,7 +138,7 @@
     display: table-cell;
 }
 
-@if (com.codenvy.ide.api.ui.theme.Style.theme.getId().equals(com.codenvy.ide.theme.DarkTheme.DARK_THEME_ID)) {
+@if (com.codenvy.ide.api.theme.Style.theme.getId().equals(com.codenvy.ide.theme.DarkTheme.DARK_THEME_ID)) {
  @sprite .crossButton{
    gwt-image: "closeDark";
    position: absolute;

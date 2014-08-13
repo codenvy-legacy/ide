@@ -135,6 +135,15 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @Source("actions/about.svg")
     SVGResource about();
 
+    @Source("actions/help.svg")
+    SVGResource help();
+
+    @Source("actions/forums.svg")
+    SVGResource forums();
+
+    @Source("actions/feature-vote.svg")
+    SVGResource featureVote();
+
     @Source("actions/close-project.svg")
     SVGResource closeProject();
 

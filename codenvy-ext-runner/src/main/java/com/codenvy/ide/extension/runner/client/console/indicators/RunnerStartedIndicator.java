@@ -11,11 +11,11 @@
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
 import com.codenvy.api.runner.dto.RunnerMetric;
-import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.RunnerUtils;
+import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -27,18 +27,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunnerStartedIndicator extends IndicatorAction {
     private AppContext appContext;
+    private RunnerController runnerController;
 
     @Inject
-    public RunnerStartedIndicator(RunnerResources resources, AppContext appContext) {
+    public RunnerStartedIndicator(RunnerResources resources, AppContext appContext, RunnerController runnerController) {
         super("Started", false, 215, resources);
         this.appContext = appContext;
+        this.runnerController = runnerController;
     }
 
     @Override
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
             final Presentation presentation = e.getPresentation();
-            final RunnerMetric metric =RunnerUtils.getRunnerMetric(appContext.getCurrentProject().getProcessDescriptor(), "startTime");
+            final RunnerMetric metric = runnerController.getCurrentAppStartTime();
             if (metric != null) {
                 presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
                 presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

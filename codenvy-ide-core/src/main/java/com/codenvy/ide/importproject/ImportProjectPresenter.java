@@ -17,7 +17,6 @@ import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ProjectActionEvent_2;
 import com.codenvy.ide.api.notification.Notification;
@@ -30,6 +29,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.regexp.shared.RegExp;
@@ -129,16 +129,34 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
-        String url = view.getUri();
+        final String url = view.getUri();
+        final String projectName = view.getProjectName();
 
         if (!(SSH_URL_Pattern.test(url) || HTTPS_URL_Pattern.test(url))) {
             view.showWarning();
             return;
         }
 
+        projectServiceClient.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //Project with the same name already exists
+                Info info =
+                        new Info(locale.importProjectWarningTitle(), locale.createProjectFromTemplateProjectExists(projectName));
+                info.show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                //Project with the same name does not exist
+                view.close();
+                importProject(url, projectName);
+            }
+        });
+    }
+
+    private void importProject(String url, final String projectName) {
         String importer = view.getImporter();
-        final String projectName = view.getProjectName();
-        view.close();
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
@@ -154,7 +172,10 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
                         Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
                         notificationManager.showNotification(notification);
-                        if (result.getProjectTypeId() == null || Constants.NAMELESS_ID.equals(result.getProjectTypeId())) {
+
+                        if (result.getProjectTypeId() == null ||
+                            com.codenvy.api.project.shared.Constants.BLANK_ID.equals(result.getProjectTypeId())) {
+
                             WizardContext context = new WizardContext();
                             context.putData(ProjectWizard.PROJECT, result);
                             wizardPresenter.show(context);
@@ -181,6 +202,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                     notificationManager.showNotification(notification);
                 } else {
                     Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
+
                     Notification notification = new Notification(exception.getMessage(), ERROR);
                     notificationManager.showNotification(notification);
                 }

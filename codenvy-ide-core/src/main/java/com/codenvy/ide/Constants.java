@@ -12,15 +12,9 @@ package com.codenvy.ide;
 
 /** @author Artem Zatsarynnyy */
 public interface Constants {
-    // project type ids
-    final String NAMELESS_ID                  = "nameless";
-    final String NAMELESS_CATEGORY            = "nameless";
-    final String BLANK_CATEGORY               = "Blank";
-    final String BLANK_ID                     = "blank";
+
     final String CODENVY_PLUGIN_ID            = "codenvy_extension";
     // project type names
-    final String NAMELESS_NAME                = "nameless";
-    final String BLANK_PROJECT_TYPE           = "Blank Type";
     final String CODENVY_PLUGIN_NAME          = "Codenvy Extension";
     final String CODENVY_CATEGORY = "Codenvy";
     // project attribute names

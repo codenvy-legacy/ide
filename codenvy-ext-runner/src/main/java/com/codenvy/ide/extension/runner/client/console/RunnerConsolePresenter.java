@@ -10,10 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
-import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -134,6 +137,16 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         isAppPreviewFrameAlreadyLoaded = false;
         view.hideTerminal();
         view.hideAppPreview();
+    }
+
+    /** Should be called when current app is stopped. */
+    public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
+        shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL).getHref() : null;
+        appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL).getHref() : null;
+        if (shellURL != null)
+            view.reloadTerminalFrame(shellURL);
+        if (appURL != null)
+            view.reloadAppPreviewFrame(appURL);
     }
 
     /** Set URL to preview an app. */

@@ -14,8 +14,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-        @eval backgroundColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
-		@eval outputFontColor com.codenvy.ide.api.ui.theme.Style.getOutputFontColor();
+        @eval backgroundColor com.codenvy.ide.api.theme.Style.getPartBackground();
+		@eval outputFontColor com.codenvy.ide.api.theme.Style.getOutputFontColor();
         .console {
             background-color: backgroundColor;
             -moz-user-select: text;

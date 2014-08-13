@@ -236,6 +236,34 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.newXmlFile.description")
     String actionNewXmlFileDescription();
 
+    /* Redirect Actions */
+    @Key("action.redirectToHelp.title")
+    String actionRedirectToHelpTitle();
+
+    @Key("action.redirectToHelp.description")
+    String actionRedirectToHelpDescription();
+
+    @Key("action.redirectToHelp.url")
+    String actionRedirectToHelpUrl();
+
+    @Key("action.redirectToForums.title")
+    String actionRedirectToForumsTitle();
+
+    @Key("action.redirectToForums.description")
+    String actionRedirectToForumsDescription();
+
+    @Key("action.redirectToForums.url")
+    String actionRedirectToForumsUrl();
+
+    @Key("action.redirectToFeedback.title")
+    String actionRedirectToFeedbackTitle();
+
+    @Key("action.redirectToFeedback.description")
+    String actionRedirectToFeedbackDescription();
+
+    @Key("action.redirectToFeedback.url")
+    String actionRedirectToFeedbackUrl();
+
     /* NewResource */
     @Key("newResource.title")
     String newResourceTitle(String title);

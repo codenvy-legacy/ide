@@ -16,7 +16,7 @@
     
     <ui:image field="placeholder" src="codenvy-placeholder.png"/>
     <ui:style>
-		@eval bgColor com.codenvy.ide.api.ui.theme.Style.getPartBackground();
+		@eval bgColor com.codenvy.ide.api.theme.Style.getPartBackground();
 		@sprite .bg {
             gwt-image: "placeholder";
 			background-color: bgColor;

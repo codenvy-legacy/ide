@@ -19,6 +19,7 @@ import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -41,6 +42,7 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -48,6 +50,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
+import java.util.Date;
 import java.util.List;
 
 import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
@@ -194,7 +197,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               lastBuildTaskDescriptor = result;
-                              Log.info(this.getClass(), result.getStatus().toString());
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
                                   // if project wasn't changed from the last build,
                                   // we get result immediately without re-build
@@ -224,7 +226,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                     @Override
                     protected void onMessageReceived(BuildTaskDescriptor result) {
                         lastBuildTaskDescriptor = result;
-                        Log.info(this.getClass(), result.getStatus().toString());
                         onBuildStatusUpdated(result);
                     }
 
@@ -316,8 +317,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
 
     /** Returns startTime {@link BuilderMetric}. */
     @Nullable
-    public BuilderMetric getLastBuildStartTime() {
-        return getBuilderMetric(BuilderMetric.START_TIME);
+    public BuilderMetric getStartedTime() {
+        if (lastBuildTaskDescriptor != null)
+        if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getCreationTime() > 0) {
+            Date startDate = new Date(lastBuildTaskDescriptor.getCreationTime());
+            String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(BuilderMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+        }
+        return null;
     }
 
     /** Returns waitingTimeLimit {@link BuilderMetric}. */
@@ -341,7 +348,14 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Returns endTime {@link BuilderMetric}. */
     @Nullable
     public BuilderMetric getLastBuildEndTime() {
-        return getBuilderMetric(BuilderMetric.END_TIME);
+        BuilderMetric builderMetric = getBuilderMetric(BuilderMetric.END_TIME);
+        if (builderMetric != null &&  builderMetric.getValue() != null) {
+            double stopTimeMs = NumberFormat.getDecimalFormat().parse(builderMetric.getValue());
+            Date startDate = new Date((long)stopTimeMs);
+            String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
+            return dtoFactory.createDto(BuilderMetric.class).withDescription(builderMetric.getDescription()).withValue(stopDateFormatted);
+        }
+        return null;
     }
 
     /** Returns runningTime {@link BuilderMetric}. */
@@ -349,11 +363,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     public BuilderMetric getLastBuildRunningTime() {
         BuilderMetric builderMetric = getBuilderMetric(BuilderMetric.RUNNING_TIME);
         if (builderMetric != null && builderMetric.getValue() != null) {
-            //The value is the number of seconds (example: 4.000s):
-            int ss = (int)getNumber(builderMetric.getValue());
+            long mss = (long)NumberFormat.getDecimalFormat().parse(builderMetric.getValue());
+            long ss = mss / 1000; // The value is the number of seconds (example: 4.000s):
             int mm = 0;
             if (ss >= 60) {
-                mm = ss / 60;
+                mm = (int)(ss / 60);
                 ss = ss % 60;
             }
             int hh = 0;
@@ -371,19 +385,19 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         return builderMetric;
     }
     
-    /**
-     * Parses given string to find the decimal number.
-     * @param str input to parse 
-     * @return decimal number
-     */
-    private native float getNumber(String str) /*-{
-        var pattern = new RegExp("[0-9]+(\.[0-9]+)?");
-        var result = pattern.exec(str);
-        if (result != null && result.length > 0){
-            return parseFloat(result[0]);
-        }
-        return 0;
-    }-*/;
+//    /**
+//     * Parses given string to find the decimal number.
+//     * @param str input to parse
+//     * @return decimal number
+//     */
+//    private native float getNumber(String str) /*-{
+//        var pattern = new RegExp("[0-9]+(\.[0-9]+)?");
+//        var result = pattern.exec(str);
+//        if (result != null && result.length > 0){
+//            return parseFloat(result[0]);
+//        }
+//        return 0;
+//    }-*/;
 
     @Nullable
     private BuilderMetric getBuilderMetric(String metricName) {
