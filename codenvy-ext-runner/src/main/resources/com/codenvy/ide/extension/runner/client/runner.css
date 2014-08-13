@@ -32,4 +32,5 @@
 .tab-selected {
     background-color: #343434;
     color: #00B7EC;
+    border-right-color: #343434;
 }
