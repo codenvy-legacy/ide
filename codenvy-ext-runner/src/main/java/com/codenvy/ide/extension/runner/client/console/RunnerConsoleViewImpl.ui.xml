@@ -24,15 +24,18 @@
             float: left;
             cursor: pointer;
             width: 55px;
-            height: 17px;
+            height: 18px;
             font-size: 11px;
             text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
             text-align: center;
             background-color: tabsPanelBackground;
-            border-right: 1px solid #232323;
-            border-top: 1px solid tabBorderShadow;
+            /*border-right: 1px solid #232323;*/
+            /*border-top: 1px solid tabBorderShadow;*/
             border-bottom: 1px solid tabBorder;
             box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+            border-left: 1px solid tabBorder;
+            border-right: 1px solid tabBorderShadow;
+
         }
 
         .tabButtonLabel {

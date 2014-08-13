@@ -110,25 +110,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onSaveClicked() {
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        //do check whether there is a project with the same name
-        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                //Project with the same name already exists
-                Info info = new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
-                info.show();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                //Project with the same name does not exist
-                createProject();
-            }
-        });
-    }
-
-    private void createProject() {
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
             @Override
@@ -145,22 +126,38 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         Project project = wizardContext.getData(ProjectWizard.PROJECT);
+
         if (project != null && projectName.equals(project.getName())) {
             updateProject(project, callback);
             return;
         }
-        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-            Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
-            createBlankProject(callback);
-            return;
-        }
-        if (templateDescriptor == null && wizard != null) {
-            wizard.onFinish();
-            view.close();
-            return;
-        }
+        //do check whether there is a project with the same name
+        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //Project with the same name already exists
+                Info info =
+                        new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
+                info.show();
+            }
 
-        importProject(callback, templateDescriptor, projectName);
+            @Override
+            protected void onFailure(Throwable exception) {
+                //Project with the same name does not exist
+                if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
+                    Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+                    createBlankProject(callback);
+                    return;
+                }
+                if (templateDescriptor == null && wizard != null) {
+                    wizard.onFinish();
+                    view.close();
+                    return;
+                }
+                importProject(callback, templateDescriptor, projectName);
+            }
+        });
+
     }
 
     private void updateProject(final Project project, final WizardPage.CommitCallback callback) {
@@ -169,7 +166,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
-        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 if (project.getVisibility().equals(visibility)) {
@@ -224,15 +222,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectService.importProject(projectName,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
-                                                                                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
-                                             if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)){
-                                                 getProject(projectName, callback);
-                                             } else {
-                                                 switchVisibility(callback, result);
-                                             }
-                                             
+                                             updateProject(result, callback);
                                          }
 
                                          @Override
@@ -240,9 +233,35 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                              callback.onFailure(exception);
                                          }
                                      }
-                      );
+                                    );
     }
-    
+
+    private void updateProject(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
+        String description = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+
+        if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
+            projectDescriptor.setDescription(templateDescriptor.getDescription());
+        } else projectDescriptor.setDescription(description);
+
+        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+            @Override
+            protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
+                    getProject(projectDescriptor.getName(), callback);
+                } else {
+                    switchVisibility(callback, projectDescriptor);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                callback.onFailure(throwable.getCause());
+            }
+        });
+    }
+
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
@@ -258,7 +277,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             }
         });
     }
-    
+
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         resourceProvider.getProject(name, new AsyncCallback<Project>() {
             @Override
