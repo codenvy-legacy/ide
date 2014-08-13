@@ -40,7 +40,7 @@ public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() != null) {
             final Presentation presentation = e.getPresentation();
-            final RunnerMetric metric = runnerController.getCurrentAppTimeoutThreshold();
+            final RunnerMetric metric = runnerController.getCurrentAppStartTime();
             if (metric != null) {
                 presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
                 presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

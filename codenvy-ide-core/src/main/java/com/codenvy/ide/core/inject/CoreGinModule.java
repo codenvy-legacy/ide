@@ -66,7 +66,9 @@ import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
 import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.selection.ItemReferenceSelectionProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.selection.SelectionProvider;
 import com.codenvy.ide.api.text.DocumentFactory;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
@@ -220,6 +222,7 @@ public class CoreGinModule extends AbstractGinModule {
         editorAPIconfigure();
         configureDeleteProviders();
         configureRenameProviders();
+        configureSelectionProviders();
     }
 
     /** API Bindings, binds API interfaces to the implementations */
@@ -308,6 +311,11 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<RenameProvider> multiBinderRenameProviders = GinMultibinder.newSetBinder(binder(), RenameProvider.class);
         multiBinderRenameProviders.addBinding().to(ItemReferenceRenameProvider.class);
         multiBinderRenameProviders.addBinding().to(ProjectReferenceRenameProvider.class);
+    }
+
+    private void configureSelectionProviders() {
+        GinMultibinder<SelectionProvider> multiBinderSelectionProviders = GinMultibinder.newSetBinder(binder(), SelectionProvider.class);
+        multiBinderSelectionProviders.addBinding().to(ItemReferenceSelectionProvider.class);
     }
 
     @Provides

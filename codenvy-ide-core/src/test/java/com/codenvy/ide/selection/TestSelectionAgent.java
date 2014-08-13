@@ -47,7 +47,7 @@ public class TestSelectionAgent {
 
     private EventBus eventBus = new SimpleEventBus();
 
-    private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus);
+    private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus, null);
 
     @Mock
     private PartPresenter part;
