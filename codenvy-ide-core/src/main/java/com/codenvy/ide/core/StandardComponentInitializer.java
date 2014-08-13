@@ -21,6 +21,9 @@ import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RedirectToFeedbackAction;
+import com.codenvy.ide.actions.RedirectToForumsAction;
+import com.codenvy.ide.actions.RedirectToHelpAction;
 import com.codenvy.ide.actions.RedoAction;
 import com.codenvy.ide.actions.RenameResourceAction;
 import com.codenvy.ide.actions.SaveAction;
@@ -67,7 +70,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_FILE_NEW;
 public class StandardComponentInitializer {
     public interface ParserResource extends ClientBundle {
         @Source("com/codenvy/ide/blank.svg")
-        SVGResource  samplesCategoryBlank();
+        SVGResource samplesCategoryBlank();
     }
 
     @Inject
@@ -99,6 +102,15 @@ public class StandardComponentInitializer {
 
     @Inject
     private ShowAboutAction showAboutAction;
+
+    @Inject
+    private RedirectToHelpAction redirectToHelpAction;
+
+    @Inject
+    private RedirectToForumsAction redirectToForumsAction;
+
+    @Inject
+    private RedirectToFeedbackAction redirectToFeedbackAction;
 
     @Inject
     private FindActionAction findActionAction;
@@ -300,9 +312,17 @@ public class StandardComponentInitializer {
         DefaultActionGroup helpGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_HELP);
         actionManager.registerAction("findActionAction", findActionAction);
         actionManager.registerAction("showAbout", showAboutAction);
+        actionManager.registerAction("showAbout", showAboutAction);
+        actionManager.registerAction("redirectToHelp", redirectToHelpAction);
+        actionManager.registerAction("redirectToForums", redirectToForumsAction);
+        actionManager.registerAction("redirectToFeedback", redirectToFeedbackAction);
+
         helpGroup.add(findActionAction);
         helpGroup.add(showAboutAction);
-
+        helpGroup.add(redirectToHelpAction);
+        helpGroup.addSeparator();
+        helpGroup.add(redirectToForumsAction);
+        helpGroup.add(redirectToFeedbackAction);
 
         // Compose main context menu
         DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
