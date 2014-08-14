@@ -13,17 +13,16 @@ package com.codenvy.ide.part.projectexplorer;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -50,11 +49,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     protected ProjectExplorerView           view;
     protected EventBus                      eventBus;
     private   ContextMenuPresenter          contextMenuPresenter;
-    private   TreeStructureProviderRegistry treeStructureProviderRegistry;
-    private   AppContext                    appContext;
     private   ProjectServiceClient          projectServiceClient;
     private   DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private   CoreLocalizationConstant      coreLocalizationConstant;
+    private   TreeStructureProviderRegistry treeStructureProviderRegistry;
     private   AbstractTreeStructure         currentTreeStructure;
     private   AbstractTreeNode<?>           selectedTreeNode;
 
@@ -62,7 +60,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
-                                        CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
+                                        CoreLocalizationConstant coreLocalizationConstant,
                                         TreeStructureProviderRegistry treeStructureProviderRegistry) {
         this.view = view;
         this.projectServiceClient = projectServiceClient;
@@ -71,7 +69,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
-        this.appContext = appContext;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -87,7 +84,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onOpen() {
         // show list of all projects
-        setContent(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+        setTree(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
     }
 
     /** {@inheritDoc} */
@@ -123,17 +120,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectOpened(ProjectActionEvent event) {
                 final ProjectDescriptor project = event.getProject();
                 AbstractTreeStructure tree = treeStructureProviderRegistry.getTreeStructureProvider(project).getTreeStructure();
-                setContent(tree);
+                setTree(tree);
                 view.setProjectHeader(event.getProject());
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                // if no previously opened project
-                if (appContext.getCurrentProject() == null) {
-                    setContent(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
-                    view.hideProjectHeader();
-                }
+                setTree(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+                view.hideProjectHeader();
             }
         });
 
@@ -147,7 +141,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceSelected(@NotNull AbstractTreeNode<?> node) {
+    public void onNodeSelected(@NotNull AbstractTreeNode<?> node) {
         selectedTreeNode = node;
         if (node == null) {
             setSelection(null);
@@ -158,14 +152,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceOpened(final AbstractTreeNode<?> node) {
-        // if children is empty then may be it doesn't refreshed yet
+    public void onNodeExpanded(final AbstractTreeNode<?> node) {
         if (node.getChildren().isEmpty()) {
+            // If children is empty then may be it doesn't refreshed yet?
             currentTreeStructure.refreshChildren(node, new AsyncCallback<AbstractTreeNode<?>>() {
                 @Override
                 public void onSuccess(AbstractTreeNode<?> result) {
                     if (!result.getChildren().isEmpty()) {
-                        view.updateItem(node, result);
+                        view.updateNode(node, result);
                     }
                 }
 
@@ -179,7 +173,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onResourceAction(@NotNull AbstractTreeNode node) {
+    public void onNodeAction(@NotNull AbstractTreeNode node) {
         // delegate handling an action to current tree structure
         currentTreeStructure.processNodeAction(node);
     }
@@ -190,12 +184,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         contextMenuPresenter.show(mouseX, mouseY);
     }
 
-    private void setContent(@NotNull final AbstractTreeStructure treeStructure) {
+    private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
         treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
             @Override
             public void onSuccess(Array<AbstractTreeNode<?>> result) {
                 currentTreeStructure = treeStructure;
-                view.setItems(result);
+                view.setRootNodes(result);
             }
 
             @Override
@@ -204,18 +198,18 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             }
         });
 
-        onResourceSelected(null);
+        onNodeSelected(null);
     }
 
     private void updateTree() {
         final AbstractTreeNode parent = selectedTreeNode.getParent();
         if (parent.getParent() == null) {
-            setContent(currentTreeStructure); // refresh entire tree
+            setTree(currentTreeStructure); // refresh entire tree
         } else {
             currentTreeStructure.refreshChildren(parent, new AsyncCallback<AbstractTreeNode<?>>() {
                 @Override
                 public void onSuccess(AbstractTreeNode<?> result) {
-                    view.updateItem(parent, result);
+                    view.updateNode(parent, result);
                 }
 
                 @Override

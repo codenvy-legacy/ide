@@ -12,7 +12,7 @@ package com.codenvy.ide.openproject;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -58,7 +58,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
-        eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(selectedProject));
+        eventBus.fireEvent(new OpenProjectEvent(selectedProject));
         view.close();
     }
 

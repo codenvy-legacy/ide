@@ -13,7 +13,7 @@ package com.codenvy.ide.actions.delete;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
+import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -57,7 +57,7 @@ public class ProjectDescriptorDeleteProvider implements DeleteProvider<ProjectDe
                     @Override
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
-                        eventBus.fireEvent(ProjectActionEvent_2.createCloseCurrentProjectEvent());
+                        eventBus.fireEvent(new CloseCurrentProjectEvent());
                     }
 
                     @Override

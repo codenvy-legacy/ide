@@ -71,7 +71,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void setItems(final Array<AbstractTreeNode<?>> rootNodes) {
+    public void setRootNodes(final Array<AbstractTreeNode<?>> rootNodes) {
         rootNode.setChildren(rootNodes);
 
         for (AbstractTreeNode treeNode : rootNodes.asIterable()) {
@@ -89,17 +89,17 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.setTreeEventHandler(new Tree.Listener<AbstractTreeNode<?>>() {
             @Override
             public void onNodeAction(TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onResourceAction(node.getData());
+                delegate.onNodeAction(node.getData());
             }
 
             @Override
             public void onNodeClosed(TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onResourceSelected(node.getData());
+                delegate.onNodeSelected(node.getData());
             }
 
             @Override
             public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onResourceSelected(node.getData());
+                delegate.onNodeSelected(node.getData());
                 delegate.onContextMenu(mouseX, mouseY);
             }
 
@@ -113,12 +113,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeExpanded(TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onResourceOpened(node.getData());
+                delegate.onNodeExpanded(node.getData());
             }
 
             @Override
             public void onNodeSelected(TreeNodeElement<AbstractTreeNode<?>> node, SignalEvent event) {
-                delegate.onResourceSelected(node.getData());
+                delegate.onNodeSelected(node.getData());
             }
 
             @Override
@@ -134,7 +134,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void updateItem(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
+    public void updateNode(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
         Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, false);
         tree.expandPaths(pathsToExpand, false);
     }

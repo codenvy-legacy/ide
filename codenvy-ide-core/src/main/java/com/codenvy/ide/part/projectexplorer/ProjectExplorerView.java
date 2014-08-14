@@ -13,8 +13,8 @@ package com.codenvy.ide.part.projectexplorer;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.collections.Array;
 
 import javax.validation.constraints.NotNull;
 
@@ -26,19 +26,20 @@ import javax.validation.constraints.NotNull;
  */
 public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDelegate> {
     /**
-     * Sets items into tree.
+     * Sets root nodes into tree.
      *
      * @param rootNodes
-     *         The root resource item
+     *         root nodes to set
      */
-    void setItems(@NotNull Array<AbstractTreeNode<?>> rootNodes);
+    void setRootNodes(@NotNull Array<AbstractTreeNode<?>> rootNodes);
 
     /**
-     * Updates the pointed item.
+     * Updates the specified node.
      *
-     * @param resource
+     * @param oldResource
+     * @param newResource
      */
-    void updateItem(@NotNull AbstractTreeNode<?> oldResource, @NotNull AbstractTreeNode<?> newResource);
+    void updateNode(@NotNull AbstractTreeNode<?> oldResource, @NotNull AbstractTreeNode<?> newResource);
 
     /**
      * Sets title of part.
@@ -68,7 +69,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         selected node
          */
-        void onResourceSelected(@NotNull AbstractTreeNode<?> node);
+        void onNodeSelected(@NotNull AbstractTreeNode<?> node);
 
         /**
          * Performs any actions in response to node expanded (opened) action.
@@ -76,7 +77,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         expanded node
          */
-        void onResourceOpened(@NotNull AbstractTreeNode<?> node);
+        void onNodeExpanded(@NotNull AbstractTreeNode<?> node);
 
         /**
          * Performs any actions in response to some node action.
@@ -84,7 +85,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         node
          */
-        void onResourceAction(@NotNull AbstractTreeNode<?> node);
+        void onNodeAction(@NotNull AbstractTreeNode<?> node);
 
         /**
          * Performs any actions appropriate in response to the user having clicked right button on mouse.

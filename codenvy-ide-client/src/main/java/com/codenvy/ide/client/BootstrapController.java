@@ -23,14 +23,14 @@ import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
-import com.codenvy.ide.api.event.WindowActionEvent;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.icon.Icon;
-import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.theme.Style;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
@@ -339,7 +339,7 @@ public class BootstrapController {
         final String projectNameToOpen = Config.getProjectName();
         if (projectNameToOpen != null) {
             ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(projectNameToOpen);
-            eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(projectToOpen));
+            eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
             processStartupAction();
         } else {
             processStartupAction();

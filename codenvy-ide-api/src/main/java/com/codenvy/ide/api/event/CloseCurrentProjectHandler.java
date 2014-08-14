@@ -13,15 +13,16 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handles Changed Toggle Item State Event.
+ * A handler for handling {@link CloseCurrentProjectEvent}.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Artem Zatsarynnyy
  */
-public interface ChangeToggleItemStateHandler extends EventHandler {
+public interface CloseCurrentProjectHandler extends EventHandler {
     /**
-     * Toggle item state have changed.
+     * Called when someone is going to close the currently opened project.
      *
      * @param event
+     *         the fired {@link CloseCurrentProjectEvent}
      */
-    public void onStateChanged(ChangeToggleItemStateEvent event);
+    void onCloseCurrentProject(CloseCurrentProjectEvent event);
 }

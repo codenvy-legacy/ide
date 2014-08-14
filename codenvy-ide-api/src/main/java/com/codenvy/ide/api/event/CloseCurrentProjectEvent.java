@@ -10,19 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Handles the Selection Changed Event
+ * An event that should be fired in order to close the currently opened project.
  *
- * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
-public interface SelectionChangedHandler extends EventHandler {
-    /**
-     * Selection Changed
-     *
-     * @param event
-     */
-    void onSelectionChanged(SelectionChangedEvent event);
+public class CloseCurrentProjectEvent extends GwtEvent<CloseCurrentProjectHandler> {
 
+    public static Type<CloseCurrentProjectHandler> TYPE = new Type<>();
+
+    @Override
+    public Type<CloseCurrentProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(CloseCurrentProjectHandler handler) {
+        handler.onCloseCurrentProject(this);
+    }
 }

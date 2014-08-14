@@ -42,6 +42,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *
      * @param project
      *         an instance of affected project
+     * @see OpenProjectEvent
      */
     public static ProjectActionEvent createProjectOpenedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.OPENED);
@@ -52,6 +53,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *
      * @param project
      *         an instance of affected project
+     * @see com.codenvy.ide.api.event.CloseCurrentProjectEvent
      */
     public static ProjectActionEvent createProjectClosedEvent(ProjectDescriptor project) {
         return new ProjectActionEvent(project, ProjectAction.CLOSED);

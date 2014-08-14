@@ -13,25 +13,16 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * TODO: rename class
- * A handler for handling {@link ProjectActionEvent_2}.
+ * A handler for handling {@link OpenProjectEvent}.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectActionHandler_2 extends EventHandler {
+public interface OpenProjectHandler extends EventHandler {
     /**
      * Called when someone is going to open a project.
      *
      * @param event
-     *         the fired {@link ProjectActionEvent_2}
+     *         the fired {@link OpenProjectEvent}
      */
-    void onOpenProject(ProjectActionEvent_2 event);
-
-    /**
-     * Called when someone is going to close the currently opened project.
-     *
-     * @param event
-     *         the fired {@link ProjectActionEvent_2}
-     */
-    void onCloseProject(ProjectActionEvent_2 event);
+    void onOpenProject(OpenProjectEvent event);
 }

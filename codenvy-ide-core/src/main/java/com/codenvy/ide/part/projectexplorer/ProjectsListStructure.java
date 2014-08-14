@@ -12,7 +12,7 @@ package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.collections.Array;
@@ -73,7 +73,7 @@ public class ProjectsListStructure extends AbstractTreeStructure {
     public void processNodeAction(AbstractTreeNode<?> node) {
         // open project
         if (node instanceof ProjectNode) {
-            eventBus.fireEvent(ProjectActionEvent_2.createOpenProjectEvent(((ProjectNode)node).getData()));
+            eventBus.fireEvent(new OpenProjectEvent(((ProjectNode)node).getData()));
         }
     }
 }

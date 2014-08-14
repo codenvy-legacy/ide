@@ -17,9 +17,11 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
+import com.codenvy.ide.api.event.CloseCurrentProjectHandler;
+import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.OpenProjectHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionEvent_2;
-import com.codenvy.ide.api.event.ProjectActionHandler_2;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -41,35 +43,35 @@ import javax.annotation.Nullable;
  * <li>closing already opened project before opening another one;</li>
  * <li>setting Browser tab's title;</li>
  * <li>rewriting URL in Browser's address bar;</li>
- * <li>setting current project to {@link com.codenvy.ide.api.app.AppContext};</li>
+ * <li>setting {@link CurrentProject} to {@link AppContext};</li>
  * <li>etc.</li>
  * </ul>
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ProjectStateHandler implements ProjectActionHandler_2 {
-    private AppContext               appContext;
+public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProjectHandler {
     private EventBus                 eventBus;
+    private AppContext               appContext;
     private ProjectServiceClient     projectServiceClient;
-    private CoreLocalizationConstant coreLocalizationConstant;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private CoreLocalizationConstant coreLocalizationConstant;
 
     @Inject
     public ProjectStateHandler(AppContext appContext, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                CoreLocalizationConstant coreLocalizationConstant, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        this.appContext = appContext;
         this.eventBus = eventBus;
+        this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
-        this.coreLocalizationConstant = coreLocalizationConstant;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.coreLocalizationConstant = coreLocalizationConstant;
 
-        eventBus.addHandler(ProjectActionEvent_2.TYPE, this);
+        eventBus.addHandler(OpenProjectEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenProject(final ProjectActionEvent_2 event) {
+    public void onOpenProject(final OpenProjectEvent event) {
         // previously opened project should be correctly closed
         if (appContext.getCurrentProject() != null) {
             eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject().getProjectDescription()));
@@ -84,6 +86,7 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
                 Document.get().setTitle(coreLocalizationConstant.projectOpenedTitle(projectDescriptor.getName()));
                 rewriteBrowserHistory(event.getProject().getName());
 
+                // notify all listeners about opening project
                 eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(projectDescriptor));
             }
 
@@ -96,7 +99,7 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseProject(ProjectActionEvent_2 event) {
+    public void onCloseCurrentProject(CloseCurrentProjectEvent event) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             ProjectDescriptor closedProject = currentProject.getProjectDescription();
@@ -106,6 +109,7 @@ public class ProjectStateHandler implements ProjectActionHandler_2 {
             Document.get().setTitle(coreLocalizationConstant.projectClosedTitle());
             rewriteBrowserHistory(null);
 
+            // notify all listeners about closing project
             eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject));
         }
     }

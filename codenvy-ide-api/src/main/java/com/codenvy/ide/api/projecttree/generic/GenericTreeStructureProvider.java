@@ -21,19 +21,19 @@ import com.google.web.bindery.event.shared.EventBus;
 /** @author Artem Zatsarynnyy */
 public class GenericTreeStructureProvider implements TreeStructureProvider {
     private EventBus               eventBus;
+    private AppContext             appContext;
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private AppContext             appContext;
 
     @Inject
     public GenericTreeStructureProvider(EventBus eventBus,
+                                        AppContext appContext,
                                         ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                        AppContext appContext) {
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
+        this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.appContext = appContext;
     }
 
     @Override

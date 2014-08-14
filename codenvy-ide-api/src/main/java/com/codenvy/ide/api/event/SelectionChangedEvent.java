@@ -13,20 +13,19 @@ package com.codenvy.ide.api.event;
 import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.event.shared.GwtEvent;
 
-
 /**
- * Event that notifies of changed Core Expressions
+ * Event that notifies of changed Selection
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public class SelectionChangedEvent extends GwtEvent<SelectionChangedHandler> {
-    public static Type<SelectionChangedHandler> TYPE = new Type<SelectionChangedHandler>();
+    public static Type<SelectionChangedHandler> TYPE = new Type<>();
 
     private final Selection<?> selection;
 
     /**
-     * @param expressions
-     *         the map of ID's and current values
+     * @param selection
+     *         new selection
      */
     public SelectionChangedEvent(Selection<?> selection) {
         this.selection = selection;
