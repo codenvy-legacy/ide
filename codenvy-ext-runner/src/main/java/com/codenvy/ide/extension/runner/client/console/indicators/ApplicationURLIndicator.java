@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console.indicators;
 
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
 import com.google.inject.Inject;
@@ -41,9 +40,8 @@ public class ApplicationURLIndicator extends IndicatorAction {
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null && currentProject.getProcessDescriptor() != null) {
-            ApplicationProcessDescriptor processDescriptor = currentProject.getProcessDescriptor();
             final Presentation presentation = e.getPresentation();
-            presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getAppLink(processDescriptor));
+            presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppURL());
         }
     }
 }

@@ -30,8 +30,11 @@ public interface ImportProjectView extends IsWidget {
         /** Performs any actions appropriate in response to the user having pressed the Import button. */
         void onImportClicked();
 
-        /** Performs any actions appropriate in response to the user having changed something. */
-        void onValueChanged();
+        /** Performs any actions appropriate in response to the user having changed the URI field. */
+        void onUriChanged();
+
+        /** Performs any actions appropriate in response to the user having changed the Project Name field. */
+        void onProjectNameChanged();
 
         void onImporterSelected();
     }
@@ -39,8 +42,13 @@ public interface ImportProjectView extends IsWidget {
     /** Show dialog. */
     void showDialog();
 
-    /** Show warning. */
-    void showWarning();
+    /**
+     * Show warning.
+     *
+     * @param message
+     *         message what will be shown on popup
+     */
+    void showWarning(String message);
 
     /** Close dialog */
     void close();

@@ -22,6 +22,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
@@ -49,33 +50,35 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private RunnerResources runnerResources;
 
     @UiField
-    FlowPanel   topPanel;
+    DockLayoutPanel             topPanel;
     @UiField
-    DeckPanel   tabPanel;
+    DeckPanel                   tabPanel;
     @UiField
-    SimplePanel toolbarPanel;
+    FlowPanel                   tabsPanel;
+    @UiField
+    SimplePanel                 toolbarPanel;
 
     @UiField
-    SimplePanel consoleButton;
+    SimplePanel                 consoleButton;
     @UiField
-    SimplePanel terminalButton;
+    SimplePanel                 terminalButton;
     @UiField
-    SimplePanel appPreviewButton;
+    SimplePanel                 appPreviewButton;
 
     @UiField
-    ScrollPanel scrollPanel;
+    ScrollPanel                 scrollPanel;
     @UiField
-    FlowPanel   consoleArea;
+    FlowPanel                   consoleArea;
 
     @UiField
-    DeckPanel terminalPanel;
+    DeckPanel                   terminalPanel;
     @UiField
-    Frame     terminalFrame;
+    Frame                       terminalFrame;
 
     @UiField
-    DeckPanel appPreviewPanel;
+    DeckPanel                   appPreviewPanel;
     @UiField
-    Frame     appPreviewFrame;
+    Frame                       appPreviewFrame;
 
     private SimplePanel activeTabButton;
 
@@ -94,7 +97,9 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         // this hack used for adding box shadow effect to top panel (tabs+toolbar)
         topPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         topPanel.getElement().getParentElement().getStyle().setZIndex(1);
-
+        tabsPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
+        toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
+        
         setActiveTab(0); // show Console panel
         hideTerminal();
         hideAppPreview();

@@ -19,6 +19,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -26,6 +27,7 @@ import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,12 +38,14 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -165,7 +169,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -176,7 +180,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -186,7 +190,7 @@ public class ImportProjectPresenterTest {
 
         presenter.onImportClicked();
 
-        verify(view).showWarning();
+        verify(view).showWarning(anyString());
         verify(view, never()).getImporter();
     }
 
@@ -268,11 +272,12 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(projectWizardPresenter, never()).show((WizardContext)anyObject());
         verify(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
+        verify(view).showWarning(anyString());
     }
 
+    @Ignore
     @Test
     public void onImportClickedWhenImportProjectIsSuccessfulButGetProjectIsFailed() {
         doAnswer(new Answer() {
@@ -297,16 +302,6 @@ public class ImportProjectPresenterTest {
             }
         }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         view.showDialog();
         when(view.getUri()).thenReturn(URI);
         when(view.getImporter()).thenReturn(IMPORTER);
@@ -314,6 +309,9 @@ public class ImportProjectPresenterTest {
         when(dtoFactory.createDto(ImportSourceDescriptor.class)).thenReturn(importSourceDescriptor);
         when(importSourceDescriptor.withType(IMPORTER)).thenReturn(importSourceDescriptor);
         when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
+        ProjectReference projectReference = mock(ProjectReference.class);
+        when(dtoFactory.createDto(ProjectReference.class)).thenReturn(projectReference);
+        when(projectReference.withName(anyString())).thenReturn(projectReference);
 
         presenter.onImportClicked();
 
@@ -332,27 +330,27 @@ public class ImportProjectPresenterTest {
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsEmpty() {
+    public void onUriChangedWhenProjectNameIsEmpty() {
         when(view.getProjectName()).thenReturn("");
         when(view.getUri()).thenReturn(URI);
 
-        presenter.onValueChanged();
+        presenter.onUriChanged();
 
-        verify(view).getUri();
-        verify(view).getProjectName();
+        verify(view, times(2)).getUri();
+        verify(view, times(2)).getProjectName();
         verify(view).setProjectName(anyString());
-        verify(view).setEnabledImportButton(eq(true));
+        verify(view).setEnabledImportButton(anyBoolean());
     }
 
     @Test
-    public void onValueChangedWhenProjectNameIsNotEmpty() {
+    public void onUriChangedWhenProjectNameIsNotEmpty() {
         when(view.getProjectName()).thenReturn(PROJECT_NAME);
         when(view.getUri()).thenReturn(URI);
 
-        presenter.onValueChanged();
+        presenter.onUriChanged();
 
-        verify(view).getUri();
-        verify(view).getProjectName();
+        verify(view, times(2)).getUri();
+        verify(view, times(2)).getProjectName();
         verify(view, never()).setProjectName(anyString());
         verify(view).setEnabledImportButton(eq(true));
     }
@@ -386,16 +384,6 @@ public class ImportProjectPresenterTest {
             }
         }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, projectDescriptor);
-                return callback;
-            }
-        }).when(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         view.showDialog();
 
         when(view.getImporter()).thenReturn(IMPORTER);
