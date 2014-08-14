@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.part;
 
-import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
@@ -36,42 +33,45 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
  * <p/>
  * PartStack support "focus" (please don't mix with GWT Widget's Focus feature). Focused PartStack will highlight active Part, notifying
  * user what component is currently active.
- * 
+ *
  * @author Nikolay Zamosenchuk
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final int             DEFAULT_SIZE     = 200;
+    private static final int                  DEFAULT_SIZE = 200;
+    private              Double               partsSize    = (double)DEFAULT_SIZE;
     /** list of parts */
-    protected final Array<PartPresenter> parts            = Collections.createArray();
+    protected final      Array<PartPresenter> parts        = Collections.createArray();
     /** view implementation */
-    protected final PartStackView        view;
-    private final EventBus               eventBus;
-    protected boolean                    partsClosable    = false;
-    protected PropertyListener           propertyListener = new PropertyListener() {
+    protected final PartStackView view;
+    private final   EventBus      eventBus;
+    protected boolean          partsClosable    = false;
+    protected PropertyListener propertyListener = new PropertyListener() {
 
-                                                              @Override
-                                                              public void propertyChanged(PartPresenter source, int propId) {
-                                                                  if (PartPresenter.TITLE_PROPERTY == propId) {
-                                                                      updatePartTab(source);
-                                                                  } else if (EditorPartPresenter.PROP_DIRTY == propId) {
-                                                                      eventBus.fireEvent(new EditorDirtyStateChangedEvent(
-                                                                                                                          (EditorPartPresenter)source));
-                                                                  }
-                                                              }
-                                                          };
+        @Override
+        public void propertyChanged(PartPresenter source, int propId) {
+            if (PartPresenter.TITLE_PROPERTY == propId) {
+                updatePartTab(source);
+            } else if (EditorPartPresenter.PROP_DIRTY == propId) {
+                eventBus.fireEvent(new EditorDirtyStateChangedEvent(
+                        (EditorPartPresenter)source));
+            }
+        }
+    };
     /** current active part */
-    protected PartPresenter              activePart;
-    protected PartStackEventHandler      partStackHandler;
-    private WorkBenchPartController      workBenchPartController;
+    protected PartPresenter           activePart;
+    protected PartStackEventHandler   partStackHandler;
     /** Container for every new PartPresenter which will be added to this PartStack. */
-    protected AcceptsOneWidget           partViewContainer;
-    private Double                       partsSize        = (double)DEFAULT_SIZE;
+    protected AcceptsOneWidget        partViewContainer;
+    private   WorkBenchPartController workBenchPartController;
 
     @Inject
     public PartStackPresenter(EventBus eventBus,
@@ -93,7 +93,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /**
      * Update part tab, it's may be title, icon or tooltip
-     * 
+     *
      * @param part
      */
     private void updatePartTab(PartPresenter part) {
@@ -141,9 +141,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // include close button
         SVGResource titleSVGImage = part.getTitleSVGImage();
         TabItem tabItem =
-                          view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(),
-                                            part.getTitleToolTip(),
-                                            part.getTitleWidget(), partsClosable);
+                view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(),
+                                  part.getTitleToolTip(),
+                                  part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
         part.go(partViewContainer);
         part.onOpen();
@@ -208,7 +208,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     @Override
     public void hidePart(PartPresenter part) {
         if (activePart == part) {
-            setActivePart(null);
+            if (workBenchPartController != null) {
+                partsSize = workBenchPartController.getSize();
+                workBenchPartController.setHidden(true);
+            }
+            activePart = null;
+            view.setActiveTab(-1);
         }
     }
 
@@ -220,7 +225,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /**
      * Close Part
-     * 
+     *
      * @param part
      */
     protected void close(PartPresenter part) {
@@ -244,7 +249,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /**
      * Bind Activate and Close events to the Tab
-     * 
+     *
      * @param item
      * @param part
      */
@@ -278,7 +283,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /**
      * Returns the list of parts.
-     * 
+     *
      * @return {@link Array} array of parts
      */
     protected Array<PartPresenter> getParts() {
