@@ -24,21 +24,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Structure for displaying list of projects.
+ * Structure for displaying projects list.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectsListStructure extends AbstractTreeStructure {
+class ProjectsListStructure extends AbstractTreeStructure {
+    private EventBus               eventBus;
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private EventBus               eventBus;
 
-    public ProjectsListStructure(ProjectServiceClient projectServiceClient,
-                                 DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                 EventBus eventBus) {
+    ProjectsListStructure(EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.eventBus = eventBus;
     }
 
     /** {@inheritDoc} */
@@ -74,6 +72,25 @@ public class ProjectsListStructure extends AbstractTreeStructure {
         // open project
         if (node instanceof ProjectNode) {
             eventBus.fireEvent(new OpenProjectEvent(((ProjectNode)node).getData()));
+        }
+    }
+
+    /** Node that represents project item. */
+    private static class ProjectNode extends AbstractTreeNode<ProjectReference> {
+        ProjectNode(AbstractTreeNode parent, ProjectReference data) {
+            super(parent, data);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String getName() {
+            return data.getName();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean isLeaf() {
+            return true;
         }
     }
 }

@@ -38,6 +38,6 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
 
     @Override
     public AbstractTreeStructure getTreeStructure() {
-        return new GenericTreeStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory, appContext);
+        return new GenericTreeStructure(eventBus, appContext, projectServiceClient, dtoUnmarshallerFactory);
     }
 }

@@ -31,7 +31,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public boolean hasChildren(AbstractTreeNode<?> data) {
-        return !data.isAlwaysLeaf();
+        return !data.isLeaf();
     }
 
     /** {@inheritDoc} */

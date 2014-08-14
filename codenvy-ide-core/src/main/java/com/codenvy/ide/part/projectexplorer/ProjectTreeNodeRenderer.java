@@ -117,7 +117,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 
     @Override
     public void updateNodeContents(TreeNodeElement<AbstractTreeNode<?>> treeNode) {
-//        if (treeNode.getData() instanceof ProjectRootTreeNode) {
+//        if (treeNode.getData() instanceof ProjectRootNode) {
 //            // Update project icon based on it's state.
 //            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());
@@ -126,7 +126,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 //            } else {
 //                icon.setClassName(css.project());
 //            }
-//        } else if (treeNode.getData() instanceof ItemTreeNode) {
+//        } else if (treeNode.getData() instanceof ItemNode) {
 //            // Update folder icon based on it's state.
 //            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());

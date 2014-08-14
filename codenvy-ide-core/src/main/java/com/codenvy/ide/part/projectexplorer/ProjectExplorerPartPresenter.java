@@ -84,7 +84,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onOpen() {
         // show list of all projects
-        setTree(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+        setTree(new ProjectsListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
     }
 
     /** {@inheritDoc} */
@@ -126,7 +126,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                setTree(new ProjectsListStructure(projectServiceClient, dtoUnmarshallerFactory, eventBus));
+                setTree(new ProjectsListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
                 view.hideProjectHeader();
             }
         });

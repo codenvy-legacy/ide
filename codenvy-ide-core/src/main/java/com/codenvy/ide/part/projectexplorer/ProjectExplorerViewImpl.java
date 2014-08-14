@@ -63,7 +63,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public boolean isAlwaysLeaf() {
+            public boolean isLeaf() {
                 return false;
             }
         };
