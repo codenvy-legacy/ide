@@ -548,6 +548,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     getLogs(false);
                 }
                 notification.setStatus(FINISHED);
+                notification.setMessage(constant.applicationStopped(activeProject.getName()));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -562,6 +563,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 if (notification == null)
                     notification = new Notification(constant.applicationFailed(activeProject.getName()), ERROR);
                 notification.setStatus(FINISHED);
+                notification.setMessage(constant.applicationFailed(activeProject.getName()));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -575,6 +577,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 if (notification == null)
                     notification = new Notification(constant.applicationCanceled(activeProject.getName()), WARNING);
                 notification.setStatus(FINISHED);
+                notification.setMessage(constant.applicationCanceled(activeProject.getName()));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
