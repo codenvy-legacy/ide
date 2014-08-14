@@ -67,6 +67,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
         this.coreLocalizationConstant = coreLocalizationConstant;
 
         eventBus.addHandler(OpenProjectEvent.TYPE, this);
+        eventBus.addHandler(CloseCurrentProjectEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
