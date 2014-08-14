@@ -70,7 +70,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import java.util.Date;
-import java.util.List;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -127,7 +126,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
 
 
-    private   String                                            theme;
+    private String theme;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -360,7 +359,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notificationManager.showNotification(notification);
         console.print("[INFO] " + notification.getMessage());
 
-        if (isUserAction){
+        if (isUserAction) {
             console.setActive();
         }
 
@@ -393,15 +392,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
         totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time").withName("total_time");
 
-        totalActiveTimeTimer = new Timer() {
-            int timeSeconds = 0;
-            @Override
-            public void run() {
-                timeSeconds++;
-                String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
-                totalActiveTimeMetric.setValue(humanReadable);
-            }
-        };
+        //checking if it's ALWAYS ON app and we reopen running project
+        // in this case we initiate timer with UP_TIME metric
+        RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.UP_TIME);
+        long initTime = 0;
+        if (runnerMetric != null) {
+            String value = runnerMetric.getValue();
+            double v = NumberFormat.getDecimalFormat().parse(value);
+            initTime = (long)v/1000;
+        }
+        totalActiveTimeTimer = new TotalTimeTimer(initTime);
         totalActiveTimeTimer.scheduleRepeating(1000);
 
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
@@ -515,7 +515,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
         lastApplicationDescriptor = applicationProcessDescriptor;
         isAnyAppRunning = true;
-        
+
         startCheckingAppStatus(lastApplicationDescriptor);
         startCheckingAppOutput(lastApplicationDescriptor);
     }
@@ -527,7 +527,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             case RUNNING:
                 startCheckingAppHealth(descriptor);
                 if (notification == null)
-                   notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
+                    notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
                 if (runCallback != null) {
@@ -573,7 +573,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 stopCheckingAppOutput(descriptor);
 
                 if (notification == null)
-                    notification = new Notification(constant.applicationCanceled(activeProject.getName()),WARNING);
+                    notification = new Notification(constant.applicationCanceled(activeProject.getName()), WARNING);
                 notification.setStatus(FINISHED);
                 console.print("[INFO] " + notification.getMessage());
 
@@ -588,8 +588,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (viewLogsLink == null) {
             onFail(constant.getApplicationLogsFailed(), null);
         }
-        
-        if (isUserAction){
+
+        if (isUserAction) {
             console.setActive();
         }
 
@@ -626,11 +626,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             onFail(constant.stopApplicationFailed(activeProject.getName()), null);
             return;
         }
-        
-        if (isUserAction){
+
+        if (isUserAction) {
             console.setActive();
         }
-        
+
         service.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
             @Override
@@ -706,7 +706,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         public void onError(Request request, Throwable exception) {
                             notificationManager.showNotification(new Notification(
-                                    "Attempted to retrive runner recipe, and an error occured.  If this issue continues, please contact support.",
+                                    "Attempted to retrive runner recipe, and an error occured.  If this issue continues, " +
+                                    "please contact support.",
                                     ERROR));
                             Log.error(RunnerController.class, exception);
                         }
@@ -769,7 +770,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             if (lifeTimeMetric.getValue() != null) {
                 double lifeTime = NumberFormat.getDecimalFormat().parse(lifeTimeMetric.getValue());
                 final String value = StringUtils.timeMlsToHumanReadable((long)lifeTime);
-                return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription()).withValue(value + " " + constant.startsAfterLaunch());
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription())
+                                 .withValue(value + " " + constant.startsAfterLaunch());
             }
         }
         return null;
@@ -780,7 +782,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
         RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
-        if (runnerMetric != null &&  runnerMetric.getValue() != null) {
+        if (runnerMetric != null && runnerMetric.getValue() != null) {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
@@ -797,7 +799,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         return null;
     }
-
 
 
     @Nullable
@@ -851,6 +852,22 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         @Override
         public String getPath() {
             return "runner_recipe";
+        }
+    }
+
+
+    private class TotalTimeTimer extends Timer {
+        long timeSeconds;
+
+        private TotalTimeTimer(long initTime) {
+            timeSeconds = initTime;
+        }
+
+        @Override
+        public void run() {
+            timeSeconds++;
+            String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
+            totalActiveTimeMetric.setValue(humanReadable);
         }
     }
 
