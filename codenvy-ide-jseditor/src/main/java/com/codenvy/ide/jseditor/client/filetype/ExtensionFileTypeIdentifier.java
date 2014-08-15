@@ -48,8 +48,12 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
 
     /** Prepares the know extension registry. */
     public void init() {
-        this.mappings.put("c", makeList("text/x-csrc"));
+        this.mappings.put("c", makeList("text/x-c"));
+        this.mappings.put("C", makeList("text/x-c++src"));
+        this.mappings.put("cc", makeList("text/x-c++src"));
+        this.mappings.put("cpp", makeList("text/x-c++src"));
         this.mappings.put("h", makeList("text/x-chdr"));
+        this.mappings.put("hh", makeList("text/x-c++hdr"));
         this.mappings.put("c++", Collections.singletonList("text/x-c++src"));
         this.mappings.put("cs", Collections.singletonList("text/x-csharp"));
         this.mappings.put("m", Collections.singletonList("text/x-objective-c")); // conflict with octave/matlab
