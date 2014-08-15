@@ -114,7 +114,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
     private   ProjectRunCallback                                runCallback;
-    protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
+    protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
     protected SubscriptionHandler<String>                       runnerHealthHandler;
     private   boolean                                           isLastAppHealthOk;
@@ -458,6 +458,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void stopCheckingAppOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        runnerOutputHandler.stop();
         try {
             messageBus.unsubscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
         } catch (WebSocketException e) {
@@ -525,11 +526,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
         switch (descriptor.getStatus()) {
             case RUNNING:
-                startCheckingAppHealth(descriptor);
                 if (notification == null)
                     notification = new Notification(constant.applicationStarted(activeProject.getName()), INFO);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStarted(activeProject.getName()));
+                console.print("[INFO] " + notification.getMessage());
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, activeProject);
                 }
@@ -549,6 +550,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStopped(activeProject.getName()));
+
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
