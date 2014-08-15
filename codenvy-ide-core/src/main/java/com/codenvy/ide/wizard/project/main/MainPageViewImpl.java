@@ -191,7 +191,6 @@ public class MainPageViewImpl implements MainPageView {
 
     private SpanElement renderCategoryWithIcon(String title) {
         SpanElement spanElement = Document.get().createSpanElement();
-        spanElement.setInnerText(title.toUpperCase());
         Icon icon = iconRegistry.getIconIfExist(title.toLowerCase().replaceAll(" ", "") + ".samples.category.icon");
         if (icon == null) return spanElement;
         Element iconElement = null;
@@ -205,6 +204,10 @@ public class MainPageViewImpl implements MainPageView {
         if (iconElement != null) {
             spanElement.appendChild(iconElement);
         }
+        SpanElement textElement = Document.get().createSpanElement();
+        textElement.setClassName(resources.defaultCategoriesListCss().headerText());
+        textElement.setInnerText(title.toUpperCase());
+        spanElement.appendChild(textElement);
         return spanElement;
     }
 
