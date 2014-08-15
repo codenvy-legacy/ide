@@ -122,11 +122,10 @@ public class DefaultNewResourceAction extends Action {
 
     /**
      * Returns MIME-type for a new resource.
-     * By default, this method returns text/plain.
+     * By default, this method returns null.
      */
     protected String getMimeType() {
-        return "NULL"; //agreement with server side: send NULL means we not set mimetype on client side
-                       //in this case mimetype will be resolved on server side
+        return null;
     }
 
     /** Returns parent folder for creating new resource. */

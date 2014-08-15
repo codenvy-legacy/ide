@@ -78,6 +78,11 @@ public class NewFolderAction extends DefaultNewResourceAction {
     }
 
     @Override
+    protected String getMimeType() {
+        return "text/folder";
+    }
+
+    @Override
     public void update(ActionEvent e) {
         boolean enabled = false;
         Selection<?> selection = selectionAgent.getSelection();
