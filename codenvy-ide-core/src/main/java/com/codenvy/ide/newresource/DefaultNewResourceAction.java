@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.resources.model.File;
@@ -133,7 +132,7 @@ public class DefaultNewResourceAction extends Action {
         Project activeProject = resourceProvider.getActiveProject();
         Folder parent = null;
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null) {
+        if (selection != null && selection.getFirstElement() != null) {
             if (selection.getFirstElement() instanceof Resource) {
                 Resource resource = (Resource)selection.getFirstElement();
                 if (resource.isFile()) {
