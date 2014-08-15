@@ -82,7 +82,7 @@ public class RenameResourcePresenter implements RenameResourceView.ActionDelegat
 
         // rename project in project list (when no active project)
         if (activeProject == null) {
-            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
+            projectServiceClient.rename(resource.getPath(), newName, null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     resourceProvider.refreshRoot();

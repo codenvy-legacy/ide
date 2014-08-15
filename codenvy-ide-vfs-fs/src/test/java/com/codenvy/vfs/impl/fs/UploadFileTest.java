@@ -58,7 +58,7 @@ public class UploadFileTest extends LocalFileSystemTest {
     public void testUploadNewFile() throws Exception {
         final String fileName = "testUploadNewFile";
         final String fileContent = "test upload file";
-        final String fileMediaType = "text/plain;charset=utf8";
+        final String fileMediaType = "text/plain";
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, fileContent, "", "", false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertTrue(((String)response.getEntity()).isEmpty()); // empty if successful
@@ -74,7 +74,7 @@ public class UploadFileTest extends LocalFileSystemTest {
     public void testUploadNewFileNoPermissions() throws Exception {
         final String fileName = "testUploadNewFileNoPermissions";
         final String fileContent = "test upload file";
-        final String fileMediaType = "text/plain;charset=utf8";
+        final String fileMediaType = "text/plain";
         ContainerResponse response = doUploadFile(protectedFolderId, fileName, fileMediaType, fileContent, "", "", false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors
         assertTrue(((String)response.getEntity()).startsWith("<pre>message: "));
@@ -85,7 +85,7 @@ public class UploadFileTest extends LocalFileSystemTest {
     public void testUploadNewFileInRootFolder() throws Exception {
         final String fileName = "testUploadNewFile";
         final String fileContent = "test upload file";
-        final String fileMediaType = "text/plain;charset=utf8";
+        final String fileMediaType = "text/plain";
         folderId = ROOT_ID;
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, fileContent, "", "", false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -101,7 +101,7 @@ public class UploadFileTest extends LocalFileSystemTest {
     public void testUploadNewFileCustomizeName() throws Exception {
         final String fileName = "testUploadNewFileCustomizeName";
         final String fileContent = "test upload file with custom name";
-        final String fileMediaType = "text/plain;charset=utf8";
+        final String fileMediaType = "text/plain";
         // Name of file passed in HTML form. If present it should be used instead of original file name.
         final String formFileName = fileName + ".txt";
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, fileContent, "", formFileName, false);
@@ -120,7 +120,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileContent = "test upload file with custom media type";
         final String fileMediaType = "application/octet-stream";
         final String formFileName = fileName + ".txt";
-        final String formMediaType = "text/plain;charset=utf8"; // should be used instead of fileMediaType
+        final String formMediaType = "text/plain"; // should be used instead of fileMediaType
         ContainerResponse response =
                 doUploadFile(folderId, fileName, fileMediaType, fileContent, formMediaType, formFileName, false);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -181,7 +181,7 @@ public class UploadFileTest extends LocalFileSystemTest {
         final String fileContent = "existed file overwrite";
         createFile(folderPath, fileName, fileContent.getBytes());
         final String newFileContent = "test upload and overwrite existed file";
-        final String fileMediaType = "text/plain;charset=utf8";
+        final String fileMediaType = "text/plain";
         ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, newFileContent, "", "", true);
         assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
         assertTrue(((String)response.getEntity()).isEmpty()); // empty if successful

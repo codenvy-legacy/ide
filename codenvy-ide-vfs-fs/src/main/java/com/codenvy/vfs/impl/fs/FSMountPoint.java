@@ -842,6 +842,17 @@ public class FSMountPoint implements MountPoint {
 
     void updateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content, String lockToken)
             throws ForbiddenException, ServerException {
+        updateContent(virtualFile, mediaType, content, lockToken, true);
+    }
+
+
+    void updateContent(VirtualFileImpl virtualFile, InputStream content, String lockToken) throws ForbiddenException, ServerException {
+        updateContent(virtualFile, null, content, lockToken, false);
+    }
+
+
+    private void updateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content, String lockToken,
+                               boolean updateMediaType) throws ForbiddenException, ServerException {
         if (!virtualFile.isFile()) {
             throw new ForbiddenException(String.format("Unable update content. Item '%s' is not file. ", virtualFile.getPath()));
         }
@@ -856,7 +867,11 @@ public class FSMountPoint implements MountPoint {
                 throw new ForbiddenException(String.format("Unable update content of file '%s'. File is locked. ", virtualFile.getPath()));
             }
 
-            doUpdateContent(virtualFile, mediaType, content);
+            if (updateMediaType) {
+                doUpdateContent(virtualFile, mediaType, content);
+            } else {
+                doUpdateContent(virtualFile, content);
+            }
 
             if (searcherProvider != null) {
                 try {
@@ -874,6 +889,13 @@ public class FSMountPoint implements MountPoint {
 
     // UNDER LOCK
     private void doUpdateContent(VirtualFileImpl virtualFile, String mediaType, InputStream content) throws ServerException {
+        doUpdateContent(virtualFile, content);
+        setProperty(virtualFile, "vfs:mimeType", mediaType);
+    }
+
+
+    // UNDER LOCK
+    private void doUpdateContent(VirtualFileImpl virtualFile, InputStream content) throws ServerException {
         FileOutputStream fOut = null;
         try {
             fOut = new FileOutputStream(virtualFile.getIoFile());
@@ -889,7 +911,6 @@ public class FSMountPoint implements MountPoint {
         } finally {
             closeQuietly(fOut);
         }
-        setProperty(virtualFile, "vfs:mimeType", mediaType);
     }
 
 
@@ -1120,7 +1141,6 @@ public class FSMountPoint implements MountPoint {
                     } else {
                         final VirtualFileImpl file =
                                 new VirtualFileImpl(new java.io.File(current.getIoFile(), name), newPath, pathToId(newPath), this);
-                        String mediaType = null;
                         if (file.exists()) {
                             if (isLocked(file)) {
                                 throw new ForbiddenException(String.format("File '%s' already exists and locked. ", file.getPath()));
@@ -1129,7 +1149,6 @@ public class FSMountPoint implements MountPoint {
                                 throw new ForbiddenException(
                                         String.format("Unable update file '%s'. Operation not permitted. ", file.getPath()));
                             }
-                            mediaType = getPropertyValue(file, "vfs:mimeType");
                         }
 
                         try {
@@ -1144,7 +1163,7 @@ public class FSMountPoint implements MountPoint {
                             throw new ServerException(msg);
                         }
 
-                        doUpdateContent(file, mediaType, noCloseZip);
+                        doUpdateContent(file, noCloseZip);
                     }
                     zip.closeEntry();
                 }

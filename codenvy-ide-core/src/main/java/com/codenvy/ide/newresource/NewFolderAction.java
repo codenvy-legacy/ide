@@ -19,7 +19,6 @@ import com.codenvy.ide.api.resources.model.Resource;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.action.ActionEvent;
-import com.codenvy.ide.newresource.DefaultNewResourceAction;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -75,11 +74,6 @@ public class NewFolderAction extends DefaultNewResourceAction {
             }
         }
         ).show();
-    }
-
-    @Override
-    protected String getMimeType() {
-        return "text/folder";
     }
 
     @Override

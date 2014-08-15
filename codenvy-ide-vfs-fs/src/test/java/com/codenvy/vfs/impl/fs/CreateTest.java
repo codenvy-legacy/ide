@@ -63,7 +63,7 @@ public class CreateTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
         Map<String, List<String>> headers = new HashMap<>();
         List<String> contentType = new ArrayList<>();
-        contentType.add("text/plain;charset=utf8");
+        contentType.add("text/plain");
         headers.put("Content-Type", contentType);
 
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
@@ -72,7 +72,7 @@ public class CreateTest extends LocalFileSystemTest {
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(content, new String(readFile(expectedPath)));
         Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+        expectedProperties.put("vfs:mimeType", new String[]{"text/plain"});
         validateProperties(expectedPath, expectedProperties);
     }
 
@@ -93,7 +93,7 @@ public class CreateTest extends LocalFileSystemTest {
         String requestPath = SERVICE_URI + "file/" + ROOT_ID + '?' + "name=" + name;
         Map<String, List<String>> headers = new HashMap<>();
         List<String> contentType = new ArrayList<>();
-        contentType.add("text/plain;charset=utf8");
+        contentType.add("text/plain");
         headers.put("Content-Type", contentType);
 
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -105,7 +105,7 @@ public class CreateTest extends LocalFileSystemTest {
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(content, new String(readFile(expectedPath)));
         Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+        expectedProperties.put("vfs:mimeType", new String[]{"text/plain"});
         validateProperties(expectedPath, expectedProperties);
     }
 
@@ -117,9 +117,6 @@ public class CreateTest extends LocalFileSystemTest {
         String expectedPath = folderPath + '/' + name;
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertTrue(readFile(expectedPath).length == 0);
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"application/octet-stream"});
-        validateProperties(expectedPath, expectedProperties);
     }
 
     public void testCreateFileNoMediaType() throws Exception {
@@ -133,9 +130,6 @@ public class CreateTest extends LocalFileSystemTest {
         String expectedPath = folderPath + '/' + name;
         assertTrue("File was not created in expected location. ", exists(expectedPath));
         assertEquals(content, new String(readFile(expectedPath)));
-        Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"application/octet-stream"});
-        validateProperties(expectedPath, expectedProperties);
     }
 
     public void testCreateFileNoName() throws Exception {
@@ -153,7 +147,7 @@ public class CreateTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
         // Replace default principal by principal who has write permission.
-        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer")));
+        EnvironmentContext.getCurrent().setUser(new UserImpl("andrew", "andrew", null, Arrays.asList("workspace/developer"), false));
         // --
         ContainerResponse response =
                 launcher.service("POST", requestPath, BASE_URI, null, content.getBytes(), writer, null);

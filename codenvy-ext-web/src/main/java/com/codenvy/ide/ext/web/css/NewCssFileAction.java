@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -54,8 +53,8 @@ public class NewCssFileAction extends DefaultNewResourceAction {
         return DEFAULT_CONTENT;
     }
 
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_CSS;
-    }
+//    @Override
+//    protected String getMimeType() {
+//        return com.codenvy.ide.MimeType.TEXT_CSS;
+//    }
 }

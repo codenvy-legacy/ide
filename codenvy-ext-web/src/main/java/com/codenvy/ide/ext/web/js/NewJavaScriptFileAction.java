@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js;
 
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -48,8 +47,8 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
         return  "js";
     }
 
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_JAVASCRIPT;
-    }
+//    @Override
+//    protected String getMimeType() {
+//        return com.codenvy.ide.MimeType.TEXT_JAVASCRIPT;
+//    }
 }

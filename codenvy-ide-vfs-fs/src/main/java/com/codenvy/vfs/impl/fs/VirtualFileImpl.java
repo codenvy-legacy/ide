@@ -119,6 +119,12 @@ public class VirtualFileImpl implements VirtualFile {
     }
 
     @Override
+    public VirtualFile updateContent(InputStream content, String lockToken) throws ForbiddenException, ServerException {
+        mountPoint.updateContent(this, content, lockToken);
+        return this;
+    }
+
+    @Override
     public String getMediaType() throws ServerException {
         String mediaType = mountPoint.getPropertyValue(this, "vfs:mimeType");
         if (mediaType == null) {

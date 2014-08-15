@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.resources.model;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.ResourceChangedEvent;
@@ -441,7 +440,7 @@ public class Project extends Folder {
         try {
             checkItemValid(file);
 
-            projectServiceClient.updateFile(file.getPath(), file.getContent(), file.getMimeType(), new AsyncRequestCallback<Void>() {
+            projectServiceClient.updateFile(file.getPath(), file.getContent(), null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     callback.onSuccess(file);
@@ -501,7 +500,7 @@ public class Project extends Folder {
         try {
             checkItemValid(resource);
 
-            projectServiceClient.rename(resource.getPath(), newName, resource.getMimeType(), new AsyncRequestCallback<Void>() {
+            projectServiceClient.rename(resource.getPath(), newName, null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     final Folder folderToRefresh = (resource instanceof Project && resource.getParent().getName().equals(""))

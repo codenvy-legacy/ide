@@ -124,12 +124,12 @@ public class ContentTest extends LocalFileSystemTest {
     public void testUpdateContent() throws Exception {
         String requestPath = SERVICE_URI + "content/" + fileId;
         Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        headers.put("Content-Type", Arrays.asList("text/plain"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, null);
         assertEquals(204, response.getStatus());
         assertTrue(Arrays.equals(updateContent, readFile(filePath)));
         Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+        expectedProperties.put("vfs:mimeType", new String[]{"text/plain"});
         validateProperties(filePath, expectedProperties);
     }
 
@@ -151,7 +151,7 @@ public class ContentTest extends LocalFileSystemTest {
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         String requestPath = SERVICE_URI + "content/" + protectedFileId;
         Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        headers.put("Content-Type", Arrays.asList("text/plain"));
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, writer, null);
         // Request must fail since 'admin' has not 'write' permission (only 'read').
         assertEquals(403, response.getStatus());
@@ -162,7 +162,7 @@ public class ContentTest extends LocalFileSystemTest {
 
     public void testUpdateContentLocked() throws Exception {
         Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        headers.put("Content-Type", Arrays.asList("text/plain"));
         String requestPath = SERVICE_URI + "content/" + lockedFileId + '?' + "lockToken=" + lockToken;
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, null);
         // File is locked.
@@ -170,13 +170,13 @@ public class ContentTest extends LocalFileSystemTest {
         assertTrue(Arrays.equals(updateContent, readFile(lockedFilePath))); // content updated
         // media type is set
         Map<String, String[]> expectedProperties = new HashMap<>(1);
-        expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+        expectedProperties.put("vfs:mimeType", new String[]{"text/plain"});
         validateProperties(lockedFilePath, expectedProperties);
     }
 
     public void testUpdateContentLockedNoLockToken() throws Exception {
         Map<String, List<String>> headers = new HashMap<>(1);
-        headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+        headers.put("Content-Type", Arrays.asList("text/plain"));
         String requestPath = SERVICE_URI + "content/" + lockedFileId;
         ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
         ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, writer, null);

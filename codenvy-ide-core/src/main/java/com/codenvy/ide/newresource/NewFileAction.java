@@ -41,11 +41,4 @@ public class NewFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent);
     }
-
-    @Override
-    protected String getMimeType() {
-        //agreement with server side: send NULL means we not set mimetype on client side
-        //in this case mimetype will be resolved on server side
-        return "NULL";
-    }
 }
