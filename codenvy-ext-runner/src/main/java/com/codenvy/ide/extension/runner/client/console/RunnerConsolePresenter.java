@@ -44,6 +44,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private boolean isUnread = false;
     private boolean isTerminalFrameAlreadyLoaded;
     private boolean isAppPreviewFrameAlreadyLoaded;
+    private boolean appTabOpened;
 
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
@@ -148,7 +149,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL).getHref() : null;
         if (shellURL != null)
             view.reloadTerminalFrame(shellURL);
-        if (appURL != null)
+        if (appURL != null && appTabOpened)
             view.reloadAppPreviewFrame(appURL);
     }
 
@@ -162,6 +163,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     public void onTerminalTabOpened() {
         // Note: in order to avoid some troubles of loading shell page into IFrame,
         // page should be loaded into view when tab becomes visible.
+        appTabOpened = false;
         if (shellURL != null && !isTerminalFrameAlreadyLoaded) {
             view.reloadTerminalFrame(shellURL);
         }
@@ -178,6 +180,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     public void onAppTabOpened() {
         // Note: in order to avoid some troubles of loading app page into IFrame,
         // page should be loaded into view when tab becomes visible.
+        appTabOpened = true;
         if (appURL != null && !isAppPreviewFrameAlreadyLoaded) {
             view.reloadAppPreviewFrame(appURL);
         }
@@ -187,5 +190,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     @Override
     public void onAppPreviewLoaded() {
         isAppPreviewFrameAlreadyLoaded = true;
+    }
+
+
+    @Override
+    public void onConsoleTabOpened() {
+        appTabOpened = false;
     }
 }

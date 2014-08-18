@@ -556,6 +556,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor=null;
                 break;
             case FAILED:
                 totalActiveTimeTimer.cancel();
@@ -572,6 +573,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor=null;
                 break;
             case CANCELLED:
                 totalActiveTimeTimer.cancel();
@@ -587,6 +589,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor=null;
                 break;
         }
     }
@@ -735,8 +738,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     @Nullable
     public String getCurrentAppURL() {
         // Don't show app URL in console when app is stopped. After some time this URL may be used by other app.
-        Log.info(RunnerController.class, lastApplicationDescriptor);
-        Log.info(RunnerController.class, isLastAppHealthOk);
         if (lastApplicationDescriptor != null && lastApplicationDescriptor.getStatus().equals(RUNNING) && isLastAppHealthOk) {
             return getAppLink();
         }
