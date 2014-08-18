@@ -12,7 +12,6 @@ package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
@@ -31,14 +30,14 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author Artem Zatsarynnyy
  */
-class GenericTreeStructure extends AbstractTreeStructure {
-    private EventBus               eventBus;
-    private AppContext             appContext;
-    private ProjectServiceClient   projectServiceClient;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+public class GenericTreeStructure extends AbstractTreeStructure {
+    protected EventBus               eventBus;
+    protected AppContext             appContext;
+    protected ProjectServiceClient   projectServiceClient;
+    protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    GenericTreeStructure(EventBus eventBus, AppContext appContext, ProjectServiceClient projectServiceClient,
-                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public GenericTreeStructure(EventBus eventBus, AppContext appContext, ProjectServiceClient projectServiceClient,
+                                DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
@@ -59,8 +58,8 @@ class GenericTreeStructure extends AbstractTreeStructure {
         if (node instanceof ProjectRootNode) {
             final String path = ((ProjectRootNode)node).getData().getPath();
             refresh(node, path, callback);
-        } else if (isFolder(node)) {
-            final String path = ((ItemNode)node).getData().getPath();
+        } else if (node instanceof FolderNode) {
+            final String path = ((FolderNode)node).getData().getPath();
             refresh(node, path, callback);
         } else {
             Log.warn(GenericTreeStructure.class, "Unsupported node to refresh children.");
@@ -71,20 +70,12 @@ class GenericTreeStructure extends AbstractTreeStructure {
     /** {@inheritDoc} */
     @Override
     public void processNodeAction(AbstractTreeNode<?> node) {
-        if (isFile(node)) {
-            eventBus.fireEvent(new FileEvent(((ItemNode)node).getData(), FileEvent.FileOperation.OPEN));
+        if (node instanceof FileNode) {
+            eventBus.fireEvent(new FileEvent(((FileNode)node).getData(), FileEvent.FileOperation.OPEN));
         }
     }
 
-    private boolean isFile(AbstractTreeNode<?> node) {
-        return node instanceof ItemNode && "file".equals(((ItemNode)node).getData().getType());
-    }
-
-    private boolean isFolder(AbstractTreeNode<?> node) {
-        return node instanceof ItemNode && "folder".equals(((ItemNode)node).getData().getType());
-    }
-
-    private void refresh(final AbstractTreeNode<?> parentNode, String path, final AsyncCallback<AbstractTreeNode<?>> callback) {
+    protected void refresh(final AbstractTreeNode<?> parentNode, String path, final AsyncCallback<AbstractTreeNode<?>> callback) {
         final boolean isShowHiddenItems = getSettings().isShowHiddenItems();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
@@ -94,7 +85,11 @@ class GenericTreeStructure extends AbstractTreeStructure {
                 parentNode.setChildren(array);
                 for (ItemReference itemReference : result.asIterable()) {
                     if (isShowHiddenItems || !itemReference.getName().startsWith(".")) {
-                        array.add(new ItemNode(parentNode, itemReference));
+                        if ("file".equals(itemReference.getType())) {
+                            array.add(new FileNode(parentNode, itemReference));
+                        } else if ("folder".equals(itemReference.getType())) {
+                            array.add(new FolderNode(parentNode, itemReference));
+                        }
                     }
                 }
                 callback.onSuccess(parentNode);
@@ -105,43 +100,5 @@ class GenericTreeStructure extends AbstractTreeStructure {
                 callback.onFailure(exception);
             }
         });
-    }
-
-    /** Node that represents root item of opened project. */
-    private static class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> {
-        ProjectRootNode(AbstractTreeNode parent, ProjectDescriptor data) {
-            super(parent, data);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public String getName() {
-            return data.getName();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean isLeaf() {
-            return false;
-        }
-    }
-
-    /** Node that represents item (folder or file). */
-    private static class ItemNode extends AbstractTreeNode<ItemReference> {
-        ItemNode(AbstractTreeNode parent, ItemReference data) {
-            super(parent, data);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public String getName() {
-            return data.getName();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean isLeaf() {
-            return "file".equals(data.getType());
-        }
     }
 }

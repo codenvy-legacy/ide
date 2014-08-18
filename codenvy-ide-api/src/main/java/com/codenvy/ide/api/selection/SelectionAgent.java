@@ -31,7 +31,4 @@ public interface SelectionAgent {
      * @return
      */
     public Selection<?> getSelection();
-
-    public <T> Selection<T> getSelection(SelectionKey<T> key);
-
 }

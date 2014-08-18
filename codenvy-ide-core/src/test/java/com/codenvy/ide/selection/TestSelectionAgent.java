@@ -13,9 +13,9 @@ package com.codenvy.ide.selection;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedHandler;
-import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.parts.AbstractPartPresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -47,7 +47,7 @@ public class TestSelectionAgent {
 
     private EventBus eventBus = new SimpleEventBus();
 
-    private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus, null);
+    private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus);
 
     @Mock
     private PartPresenter part;

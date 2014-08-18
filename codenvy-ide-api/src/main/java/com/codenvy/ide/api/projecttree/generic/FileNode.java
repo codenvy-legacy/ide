@@ -8,23 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.selection;
+package com.codenvy.ide.api.projecttree.generic;
+
+import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 
 /**
- * Identifier for data items which can be returned from {@link SelectionAgent#getSelection(SelectionKey)}.
+ * Node that represents a file.
  *
- * @param <T>
- *         type of data item
  * @author Artem Zatsarynnyy
  */
-public class SelectionKey<T> {
-    private final String name;
-
-    public SelectionKey(String name) {
-        this.name = name;
+public class FileNode extends ItemNode {
+    public FileNode(AbstractTreeNode parent, ItemReference data) {
+        super(parent, data);
     }
 
-    public String getName() {
-        return name;
+    /** {@inheritDoc} */
+    @Override
+    public boolean isLeaf() {
+        return true;
     }
 }

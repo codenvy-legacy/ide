@@ -14,8 +14,14 @@ import elemental.dom.Element;
 import elemental.html.SpanElement;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.generic.FolderNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -26,6 +32,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+
 /**
  * {@link NodeRenderer} to renderer {@code AbstractTreeNode}.
  *
@@ -34,10 +42,12 @@ import com.google.inject.Inject;
 public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>> {
     private final Css          css;
     private       IconRegistry iconRegistry;
+    private AppContext appContext;
 
     @Inject
-    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry) {
+    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, AppContext appContext) {
         this.iconRegistry = iconRegistry;
+        this.appContext = appContext;
         this.css = resources.workspaceNavigationFileTreeNodeRendererCss();
     }
 
@@ -55,13 +65,13 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
     private SpanElement renderNodeContents(Css css, AbstractTreeNode item, boolean renderIcon) {
         SpanElement root = Elements.createSpanElement(css.root());
 
-//        if (renderIcon) {
-//            SVGImage icon = detectIcon(item);
-//            if (icon != null) {
-//                icon.getElement().setAttribute("class", css.icon());
-//                root.appendChild((Element)icon.getElement());
-//            }
-//        }
+        if (renderIcon) {
+            SVGImage icon = detectIcon(item);
+            if (icon != null) {
+                icon.getElement().setAttribute("class", css.icon());
+                root.appendChild((Element)icon.getElement());
+            }
+        }
 
         Elements.addClassName(css.label(), root);
 
@@ -83,37 +93,38 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
         return root;
     }
 
-//    private SVGImage detectIcon(Resource item) {
+    private SVGImage detectIcon(AbstractTreeNode item) {
 //        Project project = item.getProject();
-//        Icon icon = null;
-//
-//        if (project == null) {
-//            return null;
-//        }
-//
-//        final String projectTypeId = project.getDescription().getProjectTypeId();
-//        if (item instanceof Project) {
-//            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
-//        } else if (item instanceof Folder) {
-//            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
-//        } else if (item instanceof File) {
-//            String filename = item.getName();
-//
-//            // search exact match first
-//            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
-//
-//            // not found, try with extension
-//            if (icon == null) {
-//                String[] split = item.getName().split("\\.");
-//                String ext = split[split.length - 1];
-//                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
-//            }
-//        }
-//        if (icon == null) {
-//            return null;
-//        }
-//        return icon.getSVGImage();
-//    }
+        CurrentProject project = appContext.getCurrentProject();
+        Icon icon = null;
+
+        if (project == null) {
+            return null;
+        }
+
+        final String projectTypeId = project.getProjectDescription().getProjectTypeId();
+        if (item instanceof ProjectRootNode) {
+            icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
+        } else if (item instanceof FolderNode) {
+            icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
+        } else if (item instanceof FileNode) {
+            String filename = item.getName();
+
+            // search exact match first
+            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
+
+            // not found, try with extension
+            if (icon == null) {
+                String[] split = item.getName().split("\\.");
+                String ext = split[split.length - 1];
+                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
+        }
+        if (icon == null) {
+            return null;
+        }
+        return icon.getSVGImage();
+    }
 
     @Override
     public void updateNodeContents(TreeNodeElement<AbstractTreeNode<?>> treeNode) {
@@ -126,7 +137,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 //            } else {
 //                icon.setClassName(css.project());
 //            }
-//        } else if (treeNode.getData() instanceof ItemNode) {
+//        } else if (treeNode.getData() instanceof FileNode) {
 //            // Update folder icon based on it's state.
 //            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());

@@ -13,17 +13,13 @@ package com.codenvy.ide.selection;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.SelectionChangedEvent;
-import com.codenvy.ide.api.selection.Selection;
-import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
-import com.codenvy.ide.api.selection.SelectionKey;
-import com.codenvy.ide.api.selection.SelectionProvider;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.Set;
 
 
 /**
@@ -35,14 +31,11 @@ import java.util.Set;
 public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyListener, SelectionAgent {
 
     private PartPresenter activePart;
-
     private final EventBus eventBus;
-    private final Set<SelectionProvider> selectionProviders;
 
     @Inject
-    public SelectionAgentImpl(EventBus eventBus, Set<SelectionProvider> selectionProviders) {
+    public SelectionAgentImpl(EventBus eventBus) {
         this.eventBus = eventBus;
-        this.selectionProviders = selectionProviders;
         // bind event listener
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
     }
@@ -51,20 +44,6 @@ public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyLis
     @Override
     public Selection<?> getSelection() {
         return activePart != null ? activePart.getSelection() : null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public <T> Selection<T> getSelection(SelectionKey<T> key) {
-        Selection<?> selection = activePart.getSelection();
-        Object firstElement = selection.getFirstElement();
-        for (SelectionProvider selectionProvider : selectionProviders) {
-            T o = selectionProvider.get(firstElement, key);
-            if (o != null) {
-                return new Selection<>(o);
-            }
-        }
-        return null;
     }
 
     protected void notifySelectionChanged() {

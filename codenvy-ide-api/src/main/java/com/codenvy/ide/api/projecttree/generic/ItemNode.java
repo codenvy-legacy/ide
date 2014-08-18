@@ -8,16 +8,28 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.selection;
+package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 
 /**
- * //
+ * Node that represents a persisted item stored on file  system (file or folder).
  *
  * @author Artem Zatsarynnyy
  */
-public interface CoreSelectionTypes {
+public abstract class ItemNode extends AbstractTreeNode<ItemReference> {
+    public ItemNode(AbstractTreeNode parent, ItemReference data) {
+        super(parent, data);
+    }
 
-    public static final SelectionKey<ItemReference> ITEM_REFERENCE = new SelectionKey<>("ItemReferenceKey");
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    public String getPath() {
+        return data.getPath();
+    }
 }

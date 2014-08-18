@@ -24,16 +24,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Structure for displaying projects list.
+ * Structure for displaying list of all projects in the workspace.
  *
  * @author Artem Zatsarynnyy
  */
-class ProjectsListStructure extends AbstractTreeStructure {
+class ProjectListStructure extends AbstractTreeStructure {
     private EventBus               eventBus;
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    ProjectsListStructure(EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    ProjectListStructure(EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;

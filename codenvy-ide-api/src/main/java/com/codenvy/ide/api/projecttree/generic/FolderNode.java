@@ -8,17 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.selection;
+package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 
 /**
- * Returns {@link ItemReference} if item node is selected (in Project Explorer).
+ * Node that represents a folder.
  *
  * @author Artem Zatsarynnyy
  */
-public class ItemReferenceKey extends SelectionKey<ItemReference> {
-    public ItemReferenceKey(String name) {
-        super(name);
+public class FolderNode extends ItemNode {
+    public FolderNode(AbstractTreeNode parent, ItemReference data) {
+        super(parent, data);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isLeaf() {
+        return false;
     }
 }

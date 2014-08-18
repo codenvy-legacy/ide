@@ -84,7 +84,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onOpen() {
         // show list of all projects
-        setTree(new ProjectsListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
+        setTree(new ProjectListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
     }
 
     /** {@inheritDoc} */
@@ -126,7 +126,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                setTree(new ProjectsListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                setTree(new ProjectListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
                 view.hideProjectHeader();
             }
         });
@@ -143,11 +143,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onNodeSelected(@NotNull AbstractTreeNode<?> node) {
         selectedTreeNode = node;
-        if (node == null) {
-            setSelection(null);
-        } else {
-            setSelection(new Selection<>(node.getData()));
-        }
+        setSelection(new Selection<>(node));
     }
 
     /** {@inheritDoc} */
