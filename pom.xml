@@ -26,7 +26,6 @@
     <modules>
         <module>codenvy-ide-api</module>
         <module>codenvy-ide-ui</module>
-        <module>codenvy-ide-vfs-fs</module>
         <module>codenvy-ide-core</module>
         <module>codenvy-ext-builder</module>
         <module>codenvy-ext-runner</module>
