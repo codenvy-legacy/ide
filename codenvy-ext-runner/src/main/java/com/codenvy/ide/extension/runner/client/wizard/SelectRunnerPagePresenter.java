@@ -168,19 +168,23 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     }
 
     private void selectRunner() {
-        if (wizardContext.getData(ProjectWizard.RUNNER_NAME) != null) {
-            view.selectRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
-        }
+//        Log.info(SelectRunnerPagePresenter.class, "select runner" + wizardContext.getData(ProjectWizard.RUNNER_NAME));
+//        if (wizardContext.getData(ProjectWizard.RUNNER_NAME) != null) {
+//            view.selectRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
+//        }
     }
 
     @Override
     public void runnerSelected(RunnerDescriptor runner) {
         this.runner = runner;
         delegate.updateControls();
+        Log.info(SelectRunnerPagePresenter.class, "runner selected" + runner.getName());
+        wizardContext.putData(ProjectWizard.RUNNER_NAME, runner.getName());
     }
 
     @Override
     public void runnerEnvironmentSelected(String environmentId) {
+        wizardContext.putData(ProjectWizard.RUNNER_ENV_ID, environmentId);
         this.environmentId = environmentId;
     }
 }

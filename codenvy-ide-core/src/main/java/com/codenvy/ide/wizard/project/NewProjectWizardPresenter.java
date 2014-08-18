@@ -27,6 +27,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -165,6 +166,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
+        projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
+        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
         projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
