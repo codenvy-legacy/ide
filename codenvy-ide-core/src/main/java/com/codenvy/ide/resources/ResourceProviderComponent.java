@@ -109,6 +109,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVisibility(result.getVisibility());
+                project.setRunner(result.getRunner());
+                project.setBuilder(result.getBuilder());
+                project.setRunnerEnvId(result.getDefaultRunnerEnvironment());
                 project.setCurrentUserPermissions(result.getCurrentUserPermissions());
 
                 rootFolder.getChildren().clear();
@@ -187,6 +190,9 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
                 project.setParent(rootFolder);
                 project.setProject(project);
                 project.setVisibility(result.getVisibility());
+                project.setRunner(result.getRunner());
+                project.setBuilder(result.getBuilder());
+                project.setRunnerEnvId(result.getDefaultRunnerEnvironment());
 
                 rootFolder.getChildren().clear();
                 rootFolder.addChild(project);

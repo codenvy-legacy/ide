@@ -88,6 +88,9 @@ public class SelectProjectTypePresenter implements SelectProjectTypeView.ActionD
             protected void onSuccess(ProjectDescriptor result) {
                 project.setProjectType(result.getProjectTypeId());
                 project.setAttributes(result.getAttributes());
+                project.setRunner(result.getRunner());
+                project.setBuilder(result.getBuilder());
+                project.setRunnerEnvId(result.getDefaultRunnerEnvironment());
                 view.close();
                 callback.onSuccess(project);
             }

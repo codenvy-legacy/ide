@@ -310,7 +310,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         if (environment != null) {
             runOptions.setEnvironmentId(environment.getId());
+        } else  if(activeProject.getRunnerEnvId() != null) {
+            runOptions.setEnvironmentId(activeProject.getRunnerEnvId());
         }
+
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
         runOptions.setSkipBuild(Boolean.parseBoolean(activeProject.getAttributeValue("runner:skipBuild")));

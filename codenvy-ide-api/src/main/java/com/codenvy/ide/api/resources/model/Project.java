@@ -49,6 +49,35 @@ public class Project extends Folder {
     private         String                    projectTypeId;
     private         String                    visibility;
 
+    private String runner;
+    private String runnerEnvId;
+    private String builder;
+
+    public String getRunner() {
+        return runner;
+    }
+
+    public void setRunner(String runner) {
+        this.runner = runner;
+    }
+
+    public String getRunnerEnvId() {
+        return runnerEnvId;
+    }
+
+    public void setRunnerEnvId(String runnerEnvId) {
+        this.runnerEnvId = runnerEnvId;
+    }
+
+    public String getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(String builder) {
+        this.builder = builder;
+    }
+
+
     private List<String> currentUserPermissions;
 
     /**
