@@ -29,6 +29,7 @@ import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.welcome.WelcomePageResources;
+import com.codenvy.ide.wizard.buttonLoader.ButtonLoaderResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
@@ -50,7 +51,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, InfoPanel.Resources,
                                    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
                                    MenuResources, DialogBoxResources, WelcomePageResources, NotificationResources, DataGridResources,
-                                   CellTableResources, CategoriesList.Resources {
+                                   CellTableResources, CategoriesList.Resources, ButtonLoaderResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {

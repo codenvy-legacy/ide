@@ -36,6 +36,8 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setInfoVisibled(boolean enabled);
 
+    void setLoaderVisibled(boolean enabled);
+
     void setEnabledAnimation(boolean enabled);
 
     void close();
