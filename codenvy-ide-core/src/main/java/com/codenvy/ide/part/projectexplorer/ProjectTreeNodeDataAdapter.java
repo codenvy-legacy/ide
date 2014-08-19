@@ -25,7 +25,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public int compare(AbstractTreeNode<?> a, AbstractTreeNode<?> b) {
-        return a.getName().compareTo(b.getName());
+        return a.getPresentation().getDisplayName().compareTo(b.getPresentation().getDisplayName());
     }
 
     /** {@inheritDoc} */
@@ -43,13 +43,13 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public String getNodeId(AbstractTreeNode<?> data) {
-        return data.getName();
+        return data.getPresentation().getDisplayName();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNodeName(AbstractTreeNode<?> data) {
-        return data.getName();
+        return data.getPresentation().getDisplayName();
     }
 
     /** {@inheritDoc} */
@@ -61,7 +61,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public TreeNodeElement<AbstractTreeNode<?>> getRenderedTreeNode(AbstractTreeNode<?> data) {
-        return data.getTreeNodeElement();
+        return data.getPresentation().getTreeNodeElement();
     }
 
     /** {@inheritDoc} */
@@ -72,7 +72,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public void setRenderedTreeNode(AbstractTreeNode<?> data, TreeNodeElement<AbstractTreeNode<?>> renderedNode) {
-        data.setTreeNodeElement(renderedNode);
+        data.getPresentation().setTreeNodeElement(renderedNode);
     }
 
     /** {@inheritDoc} */
@@ -98,7 +98,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
                 localRoot = null;
                 for (int j = 0; j < children.size(); j++) {
                     AbstractTreeNode node = children.get(i);
-                    if (node.getName().equals(path)) {
+                    if (node.getPresentation().getDisplayName().equals(path)) {
                         localRoot = node;
                         break;
                     }

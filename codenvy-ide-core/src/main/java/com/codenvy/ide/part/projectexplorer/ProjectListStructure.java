@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -24,7 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Structure for displaying list of all projects in the workspace.
+ * Structure for displaying list of all projects from the workspace.
  *
  * @author Artem Zatsarynnyy
  */
@@ -33,7 +34,9 @@ class ProjectListStructure extends AbstractTreeStructure {
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    ProjectListStructure(EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    ProjectListStructure(TreeSettings settings, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        super(settings);
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -48,7 +51,7 @@ class ProjectListStructure extends AbstractTreeStructure {
             protected void onSuccess(Array<ProjectReference> result) {
                 Array<AbstractTreeNode<?>> array = Collections.createArray();
                 for (ProjectReference projectReference : result.asIterable()) {
-                    array.add(new ProjectNode(null, projectReference));
+                    array.add(new ProjectNode(null, projectReference, eventBus));
                 }
                 callback.onSuccess(array);
             }
@@ -60,37 +63,30 @@ class ProjectListStructure extends AbstractTreeStructure {
         });
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void refreshChildren(AbstractTreeNode<?> node, AsyncCallback<AbstractTreeNode<?>> callback) {
-        callback.onSuccess(node);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void processNodeAction(AbstractTreeNode<?> node) {
-        // open project
-        if (node instanceof ProjectNode) {
-            eventBus.fireEvent(new OpenProjectEvent(((ProjectNode)node).getData()));
-        }
-    }
-
     /** Node that represents project item. */
     private static class ProjectNode extends AbstractTreeNode<ProjectReference> {
-        ProjectNode(AbstractTreeNode parent, ProjectReference data) {
-            super(parent, data);
-        }
+        private EventBus eventBus;
 
-        /** {@inheritDoc} */
-        @Override
-        public String getName() {
-            return data.getName();
+        ProjectNode(AbstractTreeNode parent, ProjectReference data, EventBus eventBus) {
+            super(parent, data, data.getName());
+            this.eventBus = eventBus;
         }
 
         /** {@inheritDoc} */
         @Override
         public boolean isLeaf() {
             return true;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void processNodeAction() {
+            eventBus.fireEvent(new OpenProjectEvent(getData()));
         }
     }
 }

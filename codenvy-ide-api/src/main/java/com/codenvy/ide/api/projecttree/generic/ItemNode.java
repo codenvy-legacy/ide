@@ -20,15 +20,15 @@ import com.codenvy.ide.api.projecttree.AbstractTreeNode;
  */
 public abstract class ItemNode extends AbstractTreeNode<ItemReference> {
     public ItemNode(AbstractTreeNode parent, ItemReference data) {
-        super(parent, data);
+        super(parent, data, data.getName());
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /** Returns name of the {@link ItemReference} which this node represents. */
     public String getName() {
         return data.getName();
     }
 
+    /** Returns path of the {@link ItemReference} which this node represents. */
     public String getPath() {
         return data.getPath();
     }

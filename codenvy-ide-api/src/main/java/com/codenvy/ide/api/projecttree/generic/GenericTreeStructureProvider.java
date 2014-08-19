@@ -11,8 +11,10 @@
 package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProvider;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
@@ -37,7 +39,7 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
     }
 
     @Override
-    public AbstractTreeStructure getTreeStructure() {
-        return new GenericTreeStructure(eventBus, appContext, projectServiceClient, dtoUnmarshallerFactory);
+    public AbstractTreeStructure getTreeStructure(ProjectDescriptor project) {
+        return new GenericTreeStructure(TreeSettings.DEFAULT, project, eventBus, appContext, projectServiceClient, dtoUnmarshallerFactory);
     }
 }

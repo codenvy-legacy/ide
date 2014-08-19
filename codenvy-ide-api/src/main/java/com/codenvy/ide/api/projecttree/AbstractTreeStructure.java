@@ -13,58 +13,31 @@ package com.codenvy.ide.api.projecttree;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import javax.validation.constraints.NotNull;
+
 /**
- * Defines project's tree structure to display it in Project Explorer.
- * <p/>
- * Some of the methods gets nodes using
- * {@link com.google.gwt.user.client.rpc.AsyncCallback},
- * in order to be able to retrieve nodes asynchronously.
+ * Defines project's tree structure to display in 'Project Explorer'.
  *
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractTreeStructure {
-    private final Settings DEFAULT_SETTINGS = new Settings();
+    protected TreeSettings settings;
 
     /**
-     * Returns nodes at the root of the tree.
+     * Creates new tree structure with the specified settings.
+     *
+     * @param settings
+     *         {@link TreeSettings} instance
+     */
+    public AbstractTreeStructure(@NotNull TreeSettings settings) {
+        this.settings = settings;
+    }
+
+    /**
+     * Returns nodes at the root of the tree structure.
      *
      * @param callback
      *         callback to return root nodes
      */
     public abstract void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback);
-
-    /**
-     * Populate the specified node by children.
-     *
-     * @param node
-     *         tree node for which refreshing children is requested
-     * @param callback
-     *         callback to return node with refreshed children
-     */
-    public abstract void refreshChildren(AbstractTreeNode<?> node, AsyncCallback<AbstractTreeNode<?>> callback);
-
-    /**
-     * Process an action on node in the view
-     * (e.g. double-click on rendered node in the view).
-     *
-     * @param node
-     *         tree node to process an action on it
-     */
-    public abstract void processNodeAction(AbstractTreeNode<?> node);
-
-    public Settings getSettings() {
-        return DEFAULT_SETTINGS;
-    }
-
-    /** Settings for {@link AbstractTreeStructure}. */
-    public class Settings {
-        /**
-         * Should hidden items be shown?
-         *
-         * @return <code>true</code> - if hidden items should be shown, <code>false</code> - otherwise
-         */
-        public boolean isShowHiddenItems() {
-            return false;
-        }
-    }
 }

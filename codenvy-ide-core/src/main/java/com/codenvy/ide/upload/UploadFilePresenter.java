@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.upload;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.generic.FolderNode;
+import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -91,13 +93,14 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     private String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
-            if (selection.getFirstElement() instanceof ItemReference) {
-                ItemReference item = (ItemReference)selection.getFirstElement();
-                final String path = item.getPath();
-                if ("file".equals(item.getType())) {
-                    return path.substring(0, path.length() - item.getName().length());
-                } else if ("folder".equals(item.getType())) {
-                    return item.getPath();
+            if (selection.getFirstElement() instanceof ItemNode) {
+                final ItemNode selectedNode = (ItemNode)selection.getFirstElement();
+                final String nodePath = selectedNode.getPath();
+
+                if (selectedNode instanceof FileNode) {
+                    return nodePath.substring(0, nodePath.length() - selectedNode.getName().length());
+                } else if (selectedNode instanceof FolderNode) {
+                    return nodePath;
                 }
             }
         }

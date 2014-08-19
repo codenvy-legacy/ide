@@ -13,12 +13,12 @@ package com.codenvy.ide.part.projectexplorer;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.Presentation;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
@@ -42,7 +42,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>> {
     private final Css          css;
     private       IconRegistry iconRegistry;
-    private AppContext appContext;
+    private       AppContext   appContext;
 
     @Inject
     public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, AppContext appContext) {
@@ -62,11 +62,11 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
     }
 
     /** Renders the given information as a node. */
-    private SpanElement renderNodeContents(Css css, AbstractTreeNode item, boolean renderIcon) {
+    private SpanElement renderNodeContents(Css css, AbstractTreeNode node, boolean renderIcon) {
         SpanElement root = Elements.createSpanElement(css.root());
 
         if (renderIcon) {
-            SVGImage icon = detectIcon(item);
+            SVGImage icon = detectIcon(node);
             if (icon != null) {
                 icon.getElement().setAttribute("class", css.icon());
                 root.appendChild((Element)icon.getElement());
@@ -75,47 +75,45 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 
         Elements.addClassName(css.label(), root);
 
-        if (item.getData() instanceof ItemReference) {
-            switch (((ItemReference)item.getData()).getType()) {
-                case "file":
-                    Elements.addClassName(css.fileFont(), root);
-                case "folder":
-                    Elements.addClassName(css.folderFont(), root);
-                default:
-                    Elements.addClassName(css.defaultFont(), root);
-            }
+        if (node instanceof FileNode) {
+            Elements.addClassName(css.fileFont(), root);
+        } else if (node instanceof FolderNode) {
+            Elements.addClassName(css.folderFont(), root);
+        } else {
+            Elements.addClassName(css.defaultFont(), root);
         }
 
-        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + item.getName());
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + node.getPresentation().getDisplayName());
 
         // set 'id' property for rendered element (it's need for testing purpose)
-        setIdProperty((com.google.gwt.dom.client.Element)root, item);
+        setIdProperty((com.google.gwt.dom.client.Element)root, node);
         return root;
     }
 
-    private SVGImage detectIcon(AbstractTreeNode item) {
-//        Project project = item.getProject();
-        CurrentProject project = appContext.getCurrentProject();
-        Icon icon = null;
+    private SVGImage detectIcon(AbstractTreeNode<?> node) {
+        SVGImage nodeIcon = node.getPresentation().getSvgIcon();
+        if (nodeIcon != null) {
+            return nodeIcon;
+        }
 
+        CurrentProject project = appContext.getCurrentProject();
         if (project == null) {
             return null;
         }
 
+        Icon icon = null;
         final String projectTypeId = project.getProjectDescription().getProjectTypeId();
-        if (item instanceof ProjectRootNode) {
+        if (node instanceof ProjectRootNode) {
             icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
-        } else if (item instanceof FolderNode) {
+        } else if (node instanceof FolderNode) {
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
-        } else if (item instanceof FileNode) {
-            String filename = item.getName();
-
-            // search exact match first
-            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + filename + ".file.small.icon");
-
-            // not found, try with extension
+        } else if (node instanceof FileNode) {
+            final String fileName = ((FileNode)node).getName();
+            // try to get icon for file name
+            icon = iconRegistry.getIconIfExist(projectTypeId + "/" + fileName + ".file.small.icon");
+            // try to get icon for file extension
             if (icon == null) {
-                String[] split = item.getName().split("\\.");
+                String[] split = fileName.split("\\.");
                 String ext = split[split.length - 1];
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
             }
@@ -160,9 +158,9 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
      *         node for which the specified element is rendered
      */
     private void setIdProperty(com.google.gwt.dom.client.Element element, AbstractTreeNode node) {
-        String id = node.getName();
+        String id = node.getPresentation().getDisplayName();
         if (node.getParent() != null) {
-            id = node.getParent().getName() + node.getName();
+            id = node.getParent().getPresentation().getDisplayName() + node.getPresentation().getDisplayName();
         }
         UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(id));
     }

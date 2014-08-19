@@ -10,8 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Node that represents a folder.
@@ -19,13 +28,63 @@ import com.codenvy.ide.api.projecttree.AbstractTreeNode;
  * @author Artem Zatsarynnyy
  */
 public class FolderNode extends ItemNode {
-    public FolderNode(AbstractTreeNode parent, ItemReference data) {
+    protected TreeSettings           settings;
+    protected EventBus               eventBus;
+    protected ProjectServiceClient   projectServiceClient;
+    protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
+
+    public FolderNode(AbstractTreeNode parent, ItemReference data, TreeSettings settings, EventBus eventBus,
+                      ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data);
+        this.settings = settings;
+        this.eventBus = eventBus;
+        this.projectServiceClient = projectServiceClient;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isLeaf() {
         return false;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void refreshChildren(final AsyncCallback<AbstractTreeNode<?>> callback) {
+        final boolean isShowHiddenItems = settings.isShowHiddenItems();
+        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        projectServiceClient.getChildren(data.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+            @Override
+            protected void onSuccess(Array<ItemReference> children) {
+                Array<AbstractTreeNode<?>> newChildren = Collections.createArray();
+                setChildren(newChildren);
+                for (ItemReference item : children.asIterable()) {
+                    if (isShowHiddenItems || !item.getName().startsWith(".")) {
+                        if (isFile(item)) {
+                            newChildren.add(new FileNode(FolderNode.this, item, eventBus));
+                        } else if (isFolder(item)) {
+                            newChildren.add(new FolderNode(FolderNode.this, item, settings, eventBus, projectServiceClient,
+                                                           dtoUnmarshallerFactory));
+                        }
+                    }
+                }
+                callback.onSuccess(FolderNode.this);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+
+    /** Tests if the specified item is a file. */
+    protected static boolean isFile(ItemReference item) {
+        return "file".equals(item.getType());
+    }
+
+    /** Tests if the specified item is a folder. */
+    protected static boolean isFolder(ItemReference item) {
+        return "folder".equals(item.getType());
     }
 }

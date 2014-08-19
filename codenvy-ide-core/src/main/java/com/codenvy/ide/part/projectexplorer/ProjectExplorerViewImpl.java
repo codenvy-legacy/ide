@@ -20,6 +20,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.inject.Inject;
@@ -56,15 +57,16 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
-        rootNode = new AbstractTreeNode<Void>(null, null) {
-            @Override
-            public String getName() {
-                return "root";
-            }
-
+        // create special 'invisible' root node that will contain 'visible' root nodes
+        rootNode = new AbstractTreeNode<Void>(null, null, "ROOT") {
             @Override
             public boolean isLeaf() {
                 return false;
+            }
+
+            @Override
+            public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
+                // no need to refresh
             }
         };
     }

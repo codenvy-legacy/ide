@@ -10,18 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-
 /**
- * Tree structure provider responsible for creating tree structure instances.
+ * The settings for the project tree.
  *
  * @author Artem Zatsarynnyy
  */
-public interface TreeStructureProvider {
+public interface TreeSettings {
+    /** The default settings for the project tree. */
+    TreeSettings DEFAULT = new TreeSettings() {
+        @Override
+        public boolean isShowHiddenItems() {
+            return false;
+        }
+    };
+
     /**
-     * Creates a tree structure instance for the specified project.
+     * Checks if hidden items are shown in the "Project Explorer".
      *
-     * @return {@link AbstractTreeStructure} instance
+     * @return <code>true</code> - if hidden items should be shown, <code>false</code> - otherwise
      */
-    AbstractTreeStructure getTreeStructure(ProjectDescriptor project);
+    boolean isShowHiddenItems();
 }
