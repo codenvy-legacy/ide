@@ -535,7 +535,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     runCallback.onRun(descriptor, activeProject);
                 }
                 startCheckingAppHealth(descriptor);
-
+                console.onShellStarted(descriptor);
                 break;
             case STOPPED:
                 totalActiveTimeTimer.cancel();

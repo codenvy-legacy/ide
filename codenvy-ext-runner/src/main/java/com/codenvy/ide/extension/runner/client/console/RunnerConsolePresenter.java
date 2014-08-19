@@ -145,12 +145,17 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     /** Should be called when current app is stopped. */
     public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
-        shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL).getHref() : null;
         appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL).getHref() : null;
-        if (shellURL != null)
-            view.reloadTerminalFrame(shellURL);
         if (appURL != null && appTabOpened)
             view.reloadAppPreviewFrame(appURL);
+    }
+
+
+    /** Should be called when current app is stopped. */
+    public void onShellStarted(ApplicationProcessDescriptor processDescriptor) {
+        shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL).getHref() : null;
+        if (shellURL != null)
+            view.reloadTerminalFrame(shellURL);
     }
 
     /** Set URL to preview an app. */
