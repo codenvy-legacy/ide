@@ -169,10 +169,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
         projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
         projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
+        view.setLoaderVisibled(true);
         projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                view.setLoaderVisibled(false);
                 if (project.getVisibility().equals(visibility)) {
                     getProject(project.getName(), callback);
                 } else {
@@ -182,6 +184,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(exception);
             }
         });
@@ -194,6 +197,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        view.setLoaderVisibled(true);
         projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
@@ -201,11 +205,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 resourceProvider.getProject(name, new AsyncCallback<Project>() {
                     @Override
                     public void onSuccess(Project project) {
+                        view.setLoaderVisibled(false);
                         callback.onSuccess();
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
+                        view.setLoaderVisibled(false);
                         callback.onFailure(caught);
                     }
                 });
@@ -214,6 +220,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(exception);
             }
         });
@@ -222,17 +229,20 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void importProject(final WizardPage.CommitCallback callback,
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
+        view.setLoaderVisibled(true);
         projectService.importProject(projectName,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
+                                             view.setLoaderVisibled(false);
                                              updateProject(result, callback);
                                          }
 
                                          @Override
                                          protected void onFailure(Throwable exception) {
+                                             view.setLoaderVisibled(false);
                                              callback.onFailure(exception);
                                          }
                                      }
@@ -247,10 +257,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             projectDescriptor.setDescription(templateDescriptor.getDescription());
         } else projectDescriptor.setDescription(description);
 
+        view.setLoaderVisibled(true);
         projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                view.setLoaderVisibled(false);
                 if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
                     getProject(projectDescriptor.getName(), callback);
                 } else {
@@ -260,6 +272,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable throwable) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(throwable.getCause());
             }
         });
@@ -267,29 +280,35 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
+        view.setLoaderVisibled(true);
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
 
             @Override
             protected void onSuccess(Void result) {
+                view.setLoaderVisibled(false);
                 getProject(project.getName(), callback);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(exception);
             }
         });
     }
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
+        view.setLoaderVisibled(true);
         resourceProvider.getProject(name, new AsyncCallback<Project>() {
             @Override
             public void onSuccess(Project project) {
+                view.setLoaderVisibled(false);
                 callback.onSuccess();
             }
 
             @Override
             public void onFailure(Throwable caught) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(caught);
             }
         });
@@ -299,6 +318,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
+        view.setLoaderVisibled(false);
         view.close();
     }
 

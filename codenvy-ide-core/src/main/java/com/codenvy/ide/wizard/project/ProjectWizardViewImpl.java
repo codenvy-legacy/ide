@@ -68,6 +68,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     Button      saveButton;
     private ActionDelegate delegate;
     private Map<Presenter, Widget> pageCache = new HashMap<>();
+    private String saveButtonText;
 
 
     @Inject
@@ -91,11 +92,22 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
                     delegate.onBackClicked();
             }
         }, ClickEvent.getType());
+        saveButtonText = saveButton.getText();
+        saveButton.addStyleName(resources.Css().buttonLoader());
     }
 
     @UiHandler("saveButton")
     void saveClick(ClickEvent event) {
         delegate.onSaveClicked();
+    }
+
+    @Override
+    public void setLoaderVisibled(boolean enabled) {
+        if (enabled) {
+            saveButton.setHTML("<i></i>");
+        } else {
+            saveButton.setText(saveButtonText);
+        }
     }
 
     @Override
