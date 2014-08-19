@@ -12,9 +12,15 @@ package com.codenvy.ide.jseditor.client.infopanel;
 
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.events.CursorActivityEvent;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
+import com.codenvy.ide.jseditor.client.keymap.Keymap;
+import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
+import com.codenvy.ide.jseditor.client.keymap.KeymapChangeHandler;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -27,6 +33,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The presenter for the editor info panel.<br>
@@ -34,10 +43,13 @@ import com.google.gwt.user.client.ui.Label;
  * 
  * @author "Mickaël Leduque"
  */
-public class InfoPanel extends Composite implements CursorActivityHandler, FocusHandler, BlurHandler {
+public class InfoPanel extends Composite implements CursorActivityHandler, FocusHandler, BlurHandler, KeymapChangeHandler {
 
     /** The UI binder instance. */
     private static final InfoPanelUiBinder UIBINDER = GWT.create(InfoPanelUiBinder.class);
+
+
+    private final EditorTypeRegistry       editorTypeRegistry;
 
     /** The related editor view. */
     private EmbeddedTextEditorPartView     editor;
@@ -55,12 +67,25 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
     @UiField
     Label                                  fileType;
     @UiField
+    Label                                  editorTypeValue;
+    @UiField
+    Label                                  keybindingsValue;
+    @UiField
     Label                                  tabSize;
 
-    public InfoPanel(final EmbeddedTextEditorPartView editor, final JsEditorConstants constants) {
+    private EditorType                     editorType;
+
+    @AssistedInject
+    public InfoPanel(@Assisted final EmbeddedTextEditorPartView editor,
+                     final JsEditorConstants constants,
+                     final EditorTypeRegistry editorTypeRegistry,
+                     final EventBus eventBus) {
         this.editor = editor;
         this.constants = constants;
+        this.editorTypeRegistry = editorTypeRegistry;
         initWidget(UIBINDER.createAndBindUi(this));
+
+        eventBus.addHandler(KeymapChangeEvent.TYPE, this);
     }
 
     /**
@@ -70,10 +95,15 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
      * @param numberOfLines the file number of lines
      * @param tabSize the space-equivalent width of a tabulation character
      */
-    public void createDefaultState(final String fileContentDescription, final int numberOfLines, final int tabSize) {
+    public void createDefaultState(final String fileContentDescription,
+                                   final EditorType editorType,
+                                   final Keymap keymap,
+                                   final int numberOfLines, final int tabSize) {
         setCharPosition(null);
         setLineNumber(numberOfLines);
         setFileType(fileContentDescription);
+        setEditorTypeFromInstance(editorType);
+        setKeybindingsFromInstance(keymap);
         setTabSize(tabSize);
     }
 
@@ -155,6 +185,75 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
         } else {
             this.fileType.setText(type);
         }
+    }
+
+    /**
+     * Changes the displayed value of the editor type.
+     * 
+     * @param type the new value
+     */
+    private void setEditorType(final String type) {
+        if (type == null || type.isEmpty()) {
+            this.editorTypeValue.setText(constants.infoPanelUnknownEditorType());
+        } else {
+            this.editorTypeValue.setText(type);
+        }
+    }
+
+    private void setEditorTypeFromInstance(final EditorType type) {
+        this.editorType = type;
+        if (type != null) {
+            Log.debug(InfoPanel.class, "Editor type is " + type);
+            final String name = this.editorTypeRegistry.getName(type);
+            Log.debug(InfoPanel.class, "... got name " + name);
+            setEditorType(name);
+        } else {
+            Log.debug(InfoPanel.class, "Editor type: null");
+            setEditorType(null);
+        }
+    }
+
+    /**
+     * Changes the displayed value of the editor type.
+     * 
+     * @param type the new value
+     */
+    private void setKeybindings(final String bindings) {
+        if (bindings == null || bindings.isEmpty()) {
+            this.keybindingsValue.setText(constants.infoPanelUnknownKeybindings());
+        } else {
+            this.keybindingsValue.setText(bindings);
+        }
+    }
+
+    private void setKeybindingsFromKey(final String keymapKey) {
+        final Keymap keymap = Keymap.fromKey(keymapKey);
+        setKeybindingsFromInstance(keymap);
+    }
+
+    private void setKeybindingsFromInstance(final Keymap keymap) {
+        if (keymap != null) {
+            setKeybindings(keymap.getDisplay());
+        } else {
+            setKeybindings(null);
+        }
+    }
+
+    @Override
+    public void onKeymapChanged(final KeymapChangeEvent event) {
+        final String editorTypeKey = event.getEditorTypeKey();
+        if (editorTypeKey == null || editorTypeKey.isEmpty()) {
+            return;
+        }
+        final EditorType editorType = EditorType.fromKey(editorTypeKey);
+        if (editorType == null) {
+            return;
+        }
+        if (editorType.equals(this.editorType)) {
+            final String keymapKey = event.getKeymapKey();
+            setKeybindingsFromKey(keymapKey);
+        }
+        // else ignore, we're not in the same editor type
     }
 
     /**

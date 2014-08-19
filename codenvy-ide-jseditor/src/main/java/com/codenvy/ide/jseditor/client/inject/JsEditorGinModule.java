@@ -31,6 +31,7 @@ import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistryImpl;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.filetype.MultipleMethodFileIdentifier;
+import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
 import com.codenvy.ide.jseditor.client.preference.EditorTypePreferencePresenter;
 import com.codenvy.ide.jseditor.client.preference.EditorTypePreferenceView;
 import com.codenvy.ide.jseditor.client.preference.EditorTypePreferenceViewImpl;
@@ -73,6 +74,9 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the default editor
         bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
+
+        // bind the info panel factory
+        install(new GinFactoryModuleBuilder().build(InfoPanelFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation
