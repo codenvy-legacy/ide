@@ -48,5 +48,6 @@ public class StyleInjector {
         resources.cellTableStyle().ensureInjected();
         resources.infoPanelCss().ensureInjected();
         resources.defaultCategoriesListCss().ensureInjected();
+        resources.Css().ensureInjected();
     }
 }
