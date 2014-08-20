@@ -13,15 +13,18 @@ package com.codenvy.ide.api.projecttree;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 
 /**
- * Tree structure provider responsible for creating tree structure instances.
+ * Tree structure provider responsible for creating tree structure instances for project.
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProvider {
+    /** Returns ID of the project type for which this provider can provides tree structure. */
+    String getProjectTypeId();
+
     /**
-     * Creates a tree structure instance for the specified project.
+     * Creates a tree structure for the specified project.
      *
      * @return {@link AbstractTreeStructure} instance
      */
-    AbstractTreeStructure getTreeStructure(ProjectDescriptor project);
+    AbstractTreeStructure newTreeStructure(ProjectDescriptor project);
 }

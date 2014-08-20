@@ -18,6 +18,7 @@ import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProvider;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /** @author Artem Zatsarynnyy */
@@ -28,9 +29,7 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     @Inject
-    public GenericTreeStructureProvider(EventBus eventBus,
-                                        AppContext appContext,
-                                        ProjectServiceClient projectServiceClient,
+    public GenericTreeStructureProvider(EventBus eventBus, AppContext appContext, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
         this.appContext = appContext;
@@ -38,8 +37,15 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public AbstractTreeStructure getTreeStructure(ProjectDescriptor project) {
+    public String getProjectTypeId() {
+        return "codenvy_generic_tree";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AbstractTreeStructure newTreeStructure(ProjectDescriptor project) {
         return new GenericTreeStructure(TreeSettings.DEFAULT, project, eventBus, appContext, projectServiceClient, dtoUnmarshallerFactory);
     }
 }

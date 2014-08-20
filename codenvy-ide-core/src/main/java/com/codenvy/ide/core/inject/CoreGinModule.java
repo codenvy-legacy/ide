@@ -76,20 +76,18 @@ import com.codenvy.ide.api.wizard.WizardDialogFactory;
 import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
-import com.codenvy.ide.core.IconRegistryImpl;
 import com.codenvy.ide.core.ProjectStateHandler;
-import com.codenvy.ide.core.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.core.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
+import com.codenvy.ide.icon.IconRegistryImpl;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
@@ -123,6 +121,8 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
+import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
+import com.codenvy.ide.projecttype.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.selection.SelectionAgentImpl;
@@ -210,14 +210,12 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeDescriptionServiceClient.class).to(ProjectTypeDescriptionServiceClientImpl.class).in(Singleton.class);
 
-        bind(TreeStructureProviderRegistry.class).to(TreeStructureProviderRegistryImpl.class).in(Singleton.class);
-        bind(TreeStructureProvider.class).to(GenericTreeStructureProvider.class).in(Singleton.class);
-
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
         coreUiConfigure();
         editorAPIconfigure();
+        configureProjectTree();
         configureDeleteProviders();
         configureRenameProviders();
     }
@@ -293,6 +291,13 @@ public class CoreGinModule extends AbstractGinModule {
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+    }
+
+    /** Configure tree structure api. */
+    private void configureProjectTree() {
+        bind(TreeStructureProviderRegistry.class).to(TreeStructureProviderRegistryImpl.class).in(Singleton.class);
+        GinMultibinder<TreeStructureProvider> treeStructureBinder = GinMultibinder.newSetBinder(binder(), TreeStructureProvider.class);
+        treeStructureBinder.addBinding().to(GenericTreeStructureProvider.class);
     }
 
     /** Configure Delete Providers. */

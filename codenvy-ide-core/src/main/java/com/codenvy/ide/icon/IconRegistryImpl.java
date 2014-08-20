@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.core;
+package com.codenvy.ide.icon;
 
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
@@ -23,7 +23,6 @@ import java.util.Map;
  * @author Vitaly Parfonov
  * @author Artem Zatsarynnyy
  */
-@Singleton
 public class IconRegistryImpl implements IconRegistry {
 
     private Map<String, Icon> icons = new HashMap<>();

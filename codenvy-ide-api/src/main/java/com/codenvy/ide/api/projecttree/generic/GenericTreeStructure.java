@@ -34,8 +34,8 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     protected ProjectServiceClient   projectServiceClient;
     protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    public GenericTreeStructure(TreeSettings settings, ProjectDescriptor project, EventBus eventBus, AppContext appContext,
-                                ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    protected GenericTreeStructure(TreeSettings settings, ProjectDescriptor project, EventBus eventBus, AppContext appContext,
+                                   ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(settings);
         this.project = project;
         this.eventBus = eventBus;
@@ -47,8 +47,7 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     /** {@inheritDoc} */
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
-        Array<AbstractTreeNode<?>> roots = Collections.<AbstractTreeNode<?>>createArray(
-                new ProjectRootNode(project, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory));
-        callback.onSuccess(roots);
+        AbstractTreeNode projectRoot = new ProjectRootNode(project, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        callback.onSuccess(Collections.<AbstractTreeNode<?>>createArray(projectRoot));
     }
 }

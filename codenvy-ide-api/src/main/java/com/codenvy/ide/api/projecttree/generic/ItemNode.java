@@ -13,13 +13,15 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 
+import javax.annotation.Nonnull;
+
 /**
  * Node that represents a persisted item stored on file  system (file or folder).
  *
  * @author Artem Zatsarynnyy
  */
 public abstract class ItemNode extends AbstractTreeNode<ItemReference> {
-    public ItemNode(AbstractTreeNode parent, ItemReference data) {
+    public ItemNode(AbstractTreeNode parent, @Nonnull ItemReference data) {
         super(parent, data, data.getName());
     }
 

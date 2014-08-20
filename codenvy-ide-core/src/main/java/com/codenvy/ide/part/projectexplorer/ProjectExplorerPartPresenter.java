@@ -120,7 +120,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 final ProjectDescriptor project = event.getProject();
-                setTree(treeStructureProviderRegistry.getTreeStructureProvider(project.getProjectTypeId()).getTreeStructure(project));
+                setTree(treeStructureProviderRegistry.getTreeStructureProvider(project.getProjectTypeId()).newTreeStructure(project));
                 view.setProjectHeader(event.getProject());
             }
 

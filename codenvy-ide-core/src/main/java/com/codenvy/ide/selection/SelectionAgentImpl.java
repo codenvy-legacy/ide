@@ -21,13 +21,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-
 /**
  * Implements {@link SelectionAgent}
  *
  * @author Nikolay Zamosenchuk
  */
-@Singleton
 public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyListener, SelectionAgent {
 
     private PartPresenter activePart;

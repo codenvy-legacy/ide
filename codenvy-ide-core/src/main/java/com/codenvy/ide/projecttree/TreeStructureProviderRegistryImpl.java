@@ -8,13 +8,17 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.core.projecttree;
+package com.codenvy.ide.projecttree;
 
 import com.codenvy.ide.api.projecttree.TreeStructureProvider;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import java.util.Set;
 
 /**
  * Implementation of {@link TreeStructureProviderRegistry}.
@@ -22,27 +26,31 @@ import com.google.inject.Inject;
  * @author Artem Zatsarynnyy
  */
 public class TreeStructureProviderRegistryImpl implements TreeStructureProviderRegistry {
-    private final TreeStructureProvider            genericTreeStructureProvider;
-    private final StringMap<TreeStructureProvider> providers;
+    private final StringMap<TreeStructureProvider> providers = Collections.createStringMap();
 
     @Inject
-    public TreeStructureProviderRegistryImpl(TreeStructureProvider genericTreeStructureProvider) {
-        this.genericTreeStructureProvider = genericTreeStructureProvider;
-        providers = Collections.createStringMap();
+    public TreeStructureProviderRegistryImpl(Set<TreeStructureProvider> treeStructureProviders) {
+        for (TreeStructureProvider provider : treeStructureProviders) {
+            registerProvider(provider.getProjectTypeId(), provider);
+        }
     }
 
-    @Override
-    public void registerTreeStructureProvider(String id, TreeStructureProvider treeStructureProvider) {
-        providers.put(id, treeStructureProvider);
+    private void registerProvider(String id, TreeStructureProvider treeStructureProvider) {
+        if (providers.get(id) == null) {
+            providers.put(id, treeStructureProvider);
+        } else {
+            Log.warn(TreeStructureProviderRegistryImpl.class, "Tree structure provider for project type " + id + " already registered.");
+        }
     }
 
+    /** {@inheritDoc} */
     @Override
     public TreeStructureProvider getTreeStructureProvider(String id) {
         TreeStructureProvider treeStructure = providers.get(id);
         if (treeStructure != null) {
             return treeStructure;
+        } else {
+            return providers.get("codenvy_generic_tree");
         }
-        // return generic tree structure
-        return genericTreeStructureProvider;
     }
 }
