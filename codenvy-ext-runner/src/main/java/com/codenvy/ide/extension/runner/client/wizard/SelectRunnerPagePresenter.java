@@ -168,6 +168,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     }
 
     private void selectRunner() {
+        //TODO:temporary comment this method
 //        Log.info(SelectRunnerPagePresenter.class, "select runner" + wizardContext.getData(ProjectWizard.RUNNER_NAME));
 //        if (wizardContext.getData(ProjectWizard.RUNNER_NAME) != null) {
 //            view.selectRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));

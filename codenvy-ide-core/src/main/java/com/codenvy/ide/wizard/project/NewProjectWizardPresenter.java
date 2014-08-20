@@ -196,6 +196,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
+        projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
+        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         view.setLoaderVisibled(true);
         projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {

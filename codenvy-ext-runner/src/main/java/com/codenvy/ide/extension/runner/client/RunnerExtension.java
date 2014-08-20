@@ -10,11 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.ui.action.ActionManager;
 import com.codenvy.ide.api.ui.action.Anchor;
 import com.codenvy.ide.api.ui.action.Constraints;
 import com.codenvy.ide.api.ui.action.DefaultActionGroup;
+import com.codenvy.ide.api.ui.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.ui.wizard.ProjectWizard;
 import com.codenvy.ide.api.ui.workspace.PartStackType;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
@@ -31,8 +34,10 @@ import com.codenvy.ide.extension.runner.client.console.indicators.RunnerFinished
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerStartedIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTimeoutThresholdIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTotalTimeIndicator;
+import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
@@ -50,6 +55,7 @@ import static com.codenvy.ide.api.ui.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
     public static final String GROUP_RUNNER_CONSOLE_TOOLBAR = "RunnerConsoleToolbar";
+    private ProjectTypeWizardRegistry wizardRegistry;
 
     @Inject
     public RunnerExtension(RunnerLocalizationConstant localizationConstants,
@@ -69,7 +75,16 @@ public class RunnerExtension {
                            WorkspaceAgent workspaceAgent,
                            RunnerConsolePresenter runnerConsolePresenter,
                            RunnerResources runnerResources,
-                           @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
+                           @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar,
+                           ProjectTypeWizardRegistry wizardRegistry,
+                           Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
+
+
+        //TODO: temp solution for adding runner page for Blank project
+        ProjectWizard wizard = wizardRegistry.getWizard(Constants.BLANK_ID);
+        wizard.addPage(runnerPagePresenter);
+        wizardRegistry.addWizard(Constants.BLANK_ID, wizard);
+        ///////////////////////////////////
         runnerResources.runner().ensureInjected();
 
         // register actions
