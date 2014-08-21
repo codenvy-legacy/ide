@@ -190,22 +190,27 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     private SpanElement renderCategoryWithIcon(String title) {
-        SpanElement spanElement = Document.get().createSpanElement();
-        spanElement.setInnerText(title.toUpperCase());
+        SpanElement textElement = Document.get().createSpanElement();
+        textElement.setClassName(resources.defaultCategoriesListCss().headerText());
+        textElement.setInnerText(title.toUpperCase());
         Icon icon = iconRegistry.getIconIfExist(title.toLowerCase().replaceAll(" ", "") + ".samples.category.icon");
-        if (icon == null) return spanElement;
-        Element iconElement = null;
-        if (icon.getSVGImage() != null) {
-            iconElement = icon.getSVGImage().getElement();
-            iconElement.setAttribute("class", resources.defaultCategoriesListCss().headerIcon());
-        } else if (icon.getImage() != null) {
-            iconElement = icon.getImage().getElement();
-            iconElement.setClassName(resources.defaultCategoriesListCss().headerIcon());
+        if (icon != null) {
+            Element iconElement = null;
+            if (icon.getSVGImage() != null) {
+                iconElement = icon.getSVGImage().getElement();
+                iconElement.setAttribute("class", resources.defaultCategoriesListCss().headerIcon());
+            } else if (icon.getImage() != null) {
+                iconElement = icon.getImage().getElement();
+                iconElement.setClassName(resources.defaultCategoriesListCss().headerIcon());
+            }
+            if (iconElement != null) {
+                SpanElement spanElement = Document.get().createSpanElement();
+                spanElement.appendChild(iconElement);
+                spanElement.appendChild(textElement);
+                return spanElement;
+            }
         }
-        if (iconElement != null) {
-            spanElement.appendChild(iconElement);
-        }
-        return spanElement;
+        return textElement;
     }
 
     @Override

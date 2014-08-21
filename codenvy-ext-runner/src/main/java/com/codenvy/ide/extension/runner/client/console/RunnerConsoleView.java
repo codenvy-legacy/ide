@@ -32,6 +32,9 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
 
         /** Called when app preview loaded into frame. */
         void onAppPreviewLoaded();
+
+        /** Called when console tab opened. */
+        void onConsoleTabOpened();
     }
 
     /** @return toolbar panel */

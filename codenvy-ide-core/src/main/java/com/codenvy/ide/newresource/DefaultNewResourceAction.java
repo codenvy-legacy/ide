@@ -11,7 +11,6 @@
 package com.codenvy.ide.newresource;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
@@ -114,25 +113,34 @@ public class DefaultNewResourceAction extends Action {
         e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 
-    /** Returns extension for a new resource, e.g. html. Default implementation returns an empty string. */
+    /**
+     * Returns extension for a new resource, e.g. html.
+     * By default, returns an empty string.
+     */
     protected String getExtension() {
         return "";
     }
 
-    /** Returns default content for a new resource. Default implementation returns an empty string. */
+    /**
+     * Returns default content for a new resource.
+     * By default, returns an empty string.
+     */
     protected String getDefaultContent() {
         return "";
     }
 
-    /** Returns MIME-type for a new resource. Default implementation returns <code>text/plain</code>. */
+    /**
+     * Returns MIME-type for a new resource.
+     * By default, returns <code>null</code>.
+     */
     protected String getMimeType() {
-        return MimeType.TEXT_PLAIN;
+        return null;
     }
 
     /** Returns path to the parent folder for creating new resource. */
     protected String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null) {
+        if (selection != null && selection.getFirstElement() != null) {
             if (selection.getFirstElement() instanceof StorableNode) {
                 final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
                 final String nodePath = selectedNode.getPath();

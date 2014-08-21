@@ -26,6 +26,9 @@
             margin:auto;
             background-color: #1F1F1F;
             border: medium ridge #6f7277;
+            word-wrap: break-word;
+            -moz-user-select: initial;
+            -webkit-user-select: initial;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="160px" addStyleNames="{style.emptyBorder}">

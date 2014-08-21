@@ -81,10 +81,10 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @NotStrict
     CoreCss coreCss();
 
-    @Source("part/projectexplorer/project_explorer.png")
+    @Source("tree/project_explorer.png")
     ImageResource projectExplorer();
 
-    @Source("part/projectexplorer/project-closed.png")
+    @Source("tree/project-closed.png")
     ImageResource projectClosed();
 
     @Source("wizard/new_project_icon.png")

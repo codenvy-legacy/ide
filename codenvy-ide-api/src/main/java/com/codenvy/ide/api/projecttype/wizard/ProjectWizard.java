@@ -38,6 +38,8 @@ public class ProjectWizard extends DefaultWizard {
     public static final WizardContext.Key<ProjectDescriptor> PROJECT            = new WizardContext.Key<>("Project");
     public static final WizardContext.Key<Boolean>           PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");
     public static final WizardContext.Key<String>            RUNNER_NAME        = new WizardContext.Key<>("Runner name");
+    public static final WizardContext.Key<String>            RUNNER_ENV_ID      = new WizardContext.Key<>("Runner Environment ID");
+    public static final WizardContext.Key<String>            BUILDER_NAME       = new WizardContext.Key<>("Builder name");
 
     /**
      * Create default wizard.

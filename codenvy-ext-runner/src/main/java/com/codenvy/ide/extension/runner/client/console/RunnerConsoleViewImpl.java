@@ -121,6 +121,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             @Override
             public void onClick(ClickEvent event) {
                 setActiveTab(0);
+                delegate.onConsoleTabOpened();
             }
         }, ClickEvent.getType());
         terminalButton.addDomHandler(new ClickHandler() {

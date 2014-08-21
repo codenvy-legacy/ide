@@ -10,23 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client;
 
-import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.Anchor;
 import com.codenvy.ide.api.action.Constraints;
 import com.codenvy.ide.api.action.DefaultActionGroup;
+import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
+import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
+import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.builder.client.console.indicators.ArtifactURLIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildFinishedIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildStartedIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildStatusIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildTimeoutThresholdIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildTotalTimeIndicator;
-import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
-import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
-import com.codenvy.ide.extension.builder.client.console.ClearConsoleAction;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -58,16 +58,7 @@ public class BuilderExtension {
                             BuilderResources builderResources,
                             ActionManager actionManager,
                             BuildAction buildAction,
-                            ClearConsoleAction clearConsoleAction,
-                            ArtifactURLIndicator artifactURLIndicator,
-                            BuildStartedIndicator buildStartedIndicator,
-                            BuildFinishedIndicator buildFinishedIndicator,
-                            BuildTotalTimeIndicator buildTotalTimeIndicator,
-                            BuildTimeoutThresholdIndicator buildTimeoutThresholdIndicator,
-                            BuildStatusIndicator buildStatusIndicator,
-                            WorkspaceAgent workspaceAgent,
-                            BuilderConsolePresenter builderConsolePresenter,
-                            @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
+                            ClearConsoleAction clearConsoleAction) {
         builderResources.builder().ensureInjected();
 
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
@@ -91,8 +82,20 @@ public class BuilderExtension {
         DefaultActionGroup buildContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD_CONTEXT_MENU);
         buildContextGroup.add(buildAction);
         contextMenuGroup.add(buildContextGroup, new Constraints(Anchor.BEFORE, GROUP_RUN_CONTEXT_MENU));
+    }
 
-        // add Builder console
+    @Inject
+    private void addBuilderConsole(ActionManager actionManager,
+                                   ClearConsoleAction clearConsoleAction,
+                                   ArtifactURLIndicator artifactURLIndicator,
+                                   BuildStartedIndicator buildStartedIndicator,
+                                   BuildFinishedIndicator buildFinishedIndicator,
+                                   BuildTotalTimeIndicator buildTotalTimeIndicator,
+                                   BuildTimeoutThresholdIndicator buildTimeoutThresholdIndicator,
+                                   BuildStatusIndicator buildStatusIndicator,
+                                   WorkspaceAgent workspaceAgent,
+                                   BuilderConsolePresenter builderConsolePresenter,
+                                   @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
         workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
 
         // add toolbar with indicators to Builder console

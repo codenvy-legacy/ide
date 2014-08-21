@@ -78,7 +78,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     protected final DtoUnmarshallerFactory                   dtoUnmarshallerFactory;
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     protected       SubscriptionHandler<BuildTaskDescriptor> buildStatusHandler;
-    protected       SubscriptionHandler<LogMessage>          buildOutputHandler;
+    protected       LogMessagesHandler                       buildOutputHandler;
     /** Whether any build is performed now? */
     protected boolean isBuildInProgress = false;
     protected ProjectDescriptor   activeProject;
@@ -269,21 +269,33 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
+    private void stopCheckingOutput() {
+        buildOutputHandler.stop();
+        try {
+            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(BuildProjectPresenter.class, e);
+        }
+    }
+
+
     /** Process changing build status. */
     private void onBuildStatusUpdated(BuildTaskDescriptor descriptor) {
         switch (descriptor.getStatus()) {
             case SUCCESSFUL:
                 isBuildInProgress = false;
                 stopCheckingStatus();
-
+                stopCheckingOutput();
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(activeProject.getName()));
                 buildContext.setBuilding(false);
+
                 break;
             case FAILED:
                 isBuildInProgress = false;
                 stopCheckingStatus();
+                stopCheckingOutput();
 
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
@@ -293,6 +305,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             case CANCELLED:
                 isBuildInProgress = false;
                 stopCheckingStatus();
+                stopCheckingOutput();
 
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);

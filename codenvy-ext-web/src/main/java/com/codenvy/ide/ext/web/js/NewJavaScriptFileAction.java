@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.web.js;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -52,10 +51,5 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
     @Override
     protected String getExtension() {
         return "js";
-    }
-
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_JAVASCRIPT;
     }
 }

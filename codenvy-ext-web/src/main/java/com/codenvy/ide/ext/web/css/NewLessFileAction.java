@@ -11,7 +11,6 @@
 package com.codenvy.ide.ext.web.css;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -58,10 +57,5 @@ public class NewLessFileAction extends DefaultNewResourceAction {
     @Override
     protected String getDefaultContent() {
         return DEFAULT_CONTENT;
-    }
-
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_CSS;
     }
 }

@@ -145,7 +145,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 //Project with the same name does not exist
                 if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
+                    com.codenvy.api.project.shared.Constants.BLANK_ID
+                            .equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
                     createBlankProject(callback);
                     return;
                 }
@@ -157,7 +158,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 importProject(callback, templateDescriptor, projectName);
             }
         });
-
     }
 
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
@@ -166,10 +166,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
+        projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
+        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
+        view.setLoaderVisibled(true);
         projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                view.setLoaderVisibled(false);
                 if (project.getVisibility().equals(visibility)) {
                     getProject(project.getName(), callback);
                 } else {
@@ -179,6 +184,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(exception);
             }
         });
@@ -190,18 +196,24 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
         projectDescriptor.setVisibility(visibility ? "public" : "private");
         projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
+        projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
+        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        view.setLoaderVisibled(true);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
                 eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                view.setLoaderVisibled(false);
                 callback.onSuccess();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
+                view.setLoaderVisibled(false);
                 callback.onFailure(exception);
             }
         });
@@ -210,17 +222,20 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void importProject(final WizardPage.CommitCallback callback,
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
+        view.setLoaderVisibled(true);
         projectService.importProject(projectName,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
+                                             view.setLoaderVisibled(false);
                                              updateProject(result, callback);
                                          }
 
                                          @Override
                                          protected void onFailure(Throwable exception) {
+                                             view.setLoaderVisibled(false);
                                              callback.onFailure(exception);
                                          }
                                      }
@@ -230,6 +245,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
+
             @Override
             protected void onSuccess(Void result) {
                 getProject(project.getName(), callback);
@@ -245,12 +261,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(name);
         eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+        view.setLoaderVisibled(false);
         callback.onSuccess();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
+        view.setLoaderVisibled(false);
         view.close();
     }
 
@@ -329,7 +347,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
         setPage(mainPage);
         view.showDialog();
-        view.setEnabledAnimation(true);
+        view.setEnabledAnimation(false);
     }
 
     public void show(WizardContext context) {

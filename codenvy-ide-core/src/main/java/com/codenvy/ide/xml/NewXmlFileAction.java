@@ -12,7 +12,6 @@ package com.codenvy.ide.xml;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -61,9 +60,8 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
         return DEFAULT_CONTENT;
     }
 
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_XML;
-    }
-
+//    @Override
+//    protected String getMimeType() {
+//        return com.codenvy.ide.MimeType.TEXT_XML;
+//    }
 }

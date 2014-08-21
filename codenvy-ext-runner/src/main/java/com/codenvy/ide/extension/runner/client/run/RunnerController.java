@@ -100,25 +100,25 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final DtoFactory             dtoFactory;
-    private       EditorAgent            editorAgent;
-    private       MessageBus             messageBus;
     private final AppContext             appContext;
-    private       ProjectServiceClient   projectServiceClient;
-    private       EventBus               eventBus;
-    private WorkspaceAgent workspaceAgent;
-    private RunnerConsolePresenter     console;
-    private RunnerServiceClient        service;
-    private RunnerLocalizationConstant constant;
-    private NotificationManager        notificationManager;
-    private Notification               notification;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning = false;
+    protected LogMessagesHandler                                runnerOutputHandler;
+    protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
+    protected SubscriptionHandler<String>                       runnerHealthHandler;
+    private   EditorAgent                                       editorAgent;
+    private   MessageBus                                        messageBus;
+    private   ProjectServiceClient                              projectServiceClient;
+    private   EventBus                                          eventBus;
+    private   WorkspaceAgent                                    workspaceAgent;
+    private   RunnerConsolePresenter                            console;
+    private   RunnerServiceClient                               service;
+    private   RunnerLocalizationConstant                        constant;
+    private   NotificationManager                               notificationManager;
+    private   Notification                                      notification;
     /** Descriptor of the last launched application. */
     private   ApplicationProcessDescriptor                      lastApplicationDescriptor;
     private   ProjectRunCallback                                runCallback;
-    protected SubscriptionHandler<LogMessage>                   runnerOutputHandler;
-    protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
-    protected SubscriptionHandler<String>                       runnerHealthHandler;
     private   boolean                                           isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
@@ -283,8 +283,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction)
-    {
+    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject == null)
             return;
@@ -297,7 +296,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         runCallback = callback;
         lastApplicationDescriptor = null;
 
-        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS, RunnerController.this);
+        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
+                                        RunnerController.this);
         notificationManager.showNotification(notification);
         console.print("[INFO] " + notification.getMessage());
 
@@ -307,6 +307,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         if (environment != null) {
             runOptions.setEnvironmentId(environment.getId());
+        } else if (currentProject.getRunnerEnvId() != null) {
+            runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
         }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
@@ -350,15 +352,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
-        if (currentProject.getProcessDescriptor() != null && (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
-                || currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.RUNNING))) {
+        if (currentProject.getProcessDescriptor() != null &&
+            (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
+             || currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.RUNNING))) {
             Notification notification = new Notification(constant.projectRunningNow(
                     currentProject.getProjectDescription().getName()), ERROR);
             notificationManager.showNotification(notification);
             return;
         }
 
-        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS, RunnerController.this);
+        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
+                                        RunnerController.this);
         notificationManager.showNotification(notification);
         console.print("[INFO] " + notification.getMessage());
 
@@ -376,7 +380,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         protected void onSuccess(ApplicationProcessDescriptor result) {
                             isAnyAppRunning = true;
                             if (notification == null)
-                                notification = new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()), INFO);
+                                notification =
+                                        new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()),
+                                                         INFO);
                             currentProject.setProcessDescriptor(result);
                             currentProject.setIsRunningEnabled(false);
                             notification.setStatus(FINISHED);
@@ -403,7 +409,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (runnerMetric != null) {
             String value = runnerMetric.getValue();
             double v = NumberFormat.getDecimalFormat().parse(value);
-            initTime = (long)v/1000;
+            initTime = (long)v / 1000;
         }
         totalActiveTimeTimer = new TotalTimeTimer(initTime);
         totalActiveTimeTimer.scheduleRepeating(1000);
@@ -422,7 +428,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 if (exception instanceof ServerException &&
                     ((ServerException)exception).getHTTPStatus() == 500) {
                     ServiceError e = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class);
-                    onFail(constant.startApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()) + ": " + e.getMessage(), null);
+                    onFail(constant.startApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()) + ": " +
+                           e.getMessage(), null);
                 } else {
                     onFail(constant.startApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()), exception);
                 }
@@ -462,6 +469,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void stopCheckingAppOutput(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        runnerOutputHandler.stop();
         try {
             messageBus.unsubscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
         } catch (WebSocketException e) {
@@ -535,14 +543,17 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification = new Notification(constant.applicationStarted(projectName), INFO);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStarted(projectName));
+                console.print("[INFO] " + notification.getMessage());
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
                 }
-
+                startCheckingAppHealth(descriptor);
+                console.onShellStarted(descriptor);
                 break;
             case STOPPED:
                 totalActiveTimeTimer.cancel();
                 isAnyAppRunning = false;
+                isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
@@ -557,9 +568,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 }
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStopped(projectName));
+
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor = null;
                 break;
             case FAILED:
                 totalActiveTimeTimer.cancel();
@@ -567,6 +580,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
+                isLastAppHealthOk = false;
                 getLogs(false);
 
                 if (notification == null)
@@ -576,21 +590,24 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor = null;
                 break;
             case CANCELLED:
                 totalActiveTimeTimer.cancel();
                 isAnyAppRunning = false;
+                isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
                 if (notification == null)
-                    notification = new Notification(constant.applicationCanceled(projectName),WARNING);
+                    notification = new Notification(constant.applicationCanceled(projectName), WARNING);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationCanceled(projectName));
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
+                lastApplicationDescriptor = null;
                 break;
         }
     }
@@ -809,21 +826,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return url;
     }
 
-    private class TotalTimeTimer extends Timer {
-        long timeSeconds;
-
-        private TotalTimeTimer(long initTime) {
-            timeSeconds = initTime;
-        }
-
-        @Override
-        public void run() {
-            timeSeconds++;
-            String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
-            totalActiveTimeMetric.setValue(humanReadable);
-        }
-    }
-
     private static class RecipeFile extends FileNode {
         public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
             super(parent, data, eventBus, projectServiceClient);
@@ -851,6 +853,21 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     break;
                 }
             }
+        }
+    }
+
+    private class TotalTimeTimer extends Timer {
+        long timeSeconds;
+
+        private TotalTimeTimer(long initTime) {
+            timeSeconds = initTime;
+        }
+
+        @Override
+        public void run() {
+            timeSeconds++;
+            String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
+            totalActiveTimeMetric.setValue(humanReadable);
         }
     }
 

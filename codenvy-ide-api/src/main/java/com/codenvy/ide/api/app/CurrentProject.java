@@ -23,25 +23,23 @@ import java.util.List;
  */
 public class CurrentProject {
 
-
     private ProjectDescriptor projectDescription;
-
     private boolean isRunningEnabled = true;
-
     private ApplicationProcessDescriptor processDescriptor;
-
+    private String                       runner;
+    private String                       runnerEnvId;
+    private String                       builder;
 
     /**
      * By default:
-     *   isProjectRunning = false
-     *   isRunningEnabled = true
+     * isProjectRunning = false
+     * isRunningEnabled = true
+     *
      * @param projectDescription
      */
     public CurrentProject(ProjectDescriptor projectDescription) {
         this.projectDescription = projectDescription;
     }
-
-
 
     public ApplicationProcessDescriptor getProcessDescriptor() {
         return processDescriptor;
@@ -59,14 +57,11 @@ public class CurrentProject {
     }
 
     /**
-     *
      * @param projectDescription
      */
     public void setProjectDescription(ProjectDescriptor projectDescription) {
         this.projectDescription = projectDescription;
     }
-
-
 
     /**
      * @return true if current project available to run otherwise false
@@ -76,12 +71,36 @@ public class CurrentProject {
     }
 
     /**
-     * @param isRunningEnabled set true if current available to run
+     * @param isRunningEnabled
+     *         set true if current available to run
      */
     public void setIsRunningEnabled(boolean isRunningEnabled) {
         this.isRunningEnabled = isRunningEnabled;
     }
 
+    public String getRunner() {
+        return runner;
+    }
+
+    public void setRunner(String runner) {
+        this.runner = runner;
+    }
+
+    public String getRunnerEnvId() {
+        return runnerEnvId;
+    }
+
+    public void setRunnerEnvId(String runnerEnvId) {
+        this.runnerEnvId = runnerEnvId;
+    }
+
+    public String getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(String builder) {
+        this.builder = builder;
+    }
 
     /**
      * Get value of attribute <code>name</code>. It is shortcut for:

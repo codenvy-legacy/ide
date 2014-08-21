@@ -70,14 +70,14 @@
 }
 
 .category {
-    line-height: 16px;
+    line-height: 12px;
+    margin-right: 1px;
 }
 
 .categoryLabel {
     float: left;
     font-weight: bold;
     margin-left: 4px;
-    margin-top: 1px;
 }
 
 .itemContainer, .expandControl {
@@ -85,21 +85,15 @@
 
 .expandControl {
     float: right;
-    /*margin-right: 9px;*/
     transition: all 300ms;
     width: 15px;
     height: 15px;
-    text-align: center;
-    margin-top: 3px;
+    margin-top: 5px;
     margin-right: 1px;
 }
 
-.expandControl svg {
-    margin: auto;
-}
-
 .categoryHeader {
-    height: 18px;
+    height: 22px;
     background-color: partBackground;
     border-bottom: 1px solid #2b2b2b;
 }
@@ -107,15 +101,21 @@
 .expandedImage {
     transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
-    margin-top: 1px;
     margin-right: 3px
 }
 
 .headerIcon {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
     margin-right: 4px;
+    margin-top: 2px;
     float: left;
+}
+
+.headerText {
+    float: left;
+    margin-top: 5px;
+    white-space: nowrap;
 }
 
 svg.headerIcon {

@@ -123,14 +123,14 @@
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateName}"
                                      addStyleNames="{style.labelPosition}"/>
-                            <g:TextBox width="290px" height="14px" ui:field="projectName" addStyleNames="{style.projectName}"
+                            <g:TextBox width="290px" height="14px" ui:field="projectName" addStyleNames="{style.projectName}" tabIndex="1"
                                        debugId="file-newProject-projectName"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="60px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateDescription}"
                                      addStyleNames="{style.labelPosition}"/>
                             <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.projectDescription}"
-                                        debugId="file-newProject-projectDescription"/>
+                                        debugId="file-newProject-projectDescription" tabIndex="2"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="80px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}" addStyleNames="{style.labelPosition}"/>

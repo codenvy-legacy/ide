@@ -59,9 +59,4 @@ public class NewCssFileAction extends DefaultNewResourceAction {
     protected String getDefaultContent() {
         return DEFAULT_CONTENT;
     }
-
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_CSS;
-    }
 }

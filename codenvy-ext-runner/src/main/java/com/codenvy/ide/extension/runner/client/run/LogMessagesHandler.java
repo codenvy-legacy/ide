@@ -69,6 +69,14 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
         flushTimer.schedule(5000);
     }
 
+    /**
+     * Print all messages from buffer for the moment and stop handling
+     */
+    void stop() {
+        printAllPostponedMessages();
+        flushTimer.cancel();
+    }
+
     /** Print next postponed messages with contiguous line numbers. */
     private void printNextPostponedMessages() {
         LogMessage nextLogMessage = postponedMessages.get(lastPrintedMessageNum + 1);

@@ -190,9 +190,9 @@
             </g:FlowPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.bottomPanel}">
-            <g:Button ui:field="saveButton" text="CREATE" addStyleNames="{style.blueButton}"/>
-            <g:Button ui:field="nextStepButton" text="Next" addStyleNames="{style.button}"/>
-            <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{style.button}"/>
+            <g:Button ui:field="saveButton" text="CREATE" addStyleNames="{style.blueButton}" tabIndex="5"/>
+            <g:Button ui:field="nextStepButton" text="Next" addStyleNames="{style.button}" tabIndex="6"/>
+            <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{style.button}" tabIndex="7"/>
             <g:FlowPanel ui:field="infoRAMPanel" addStyleNames="{style.hidden}">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="RAM Required:" addStyleNames="{style.infoText}"/>

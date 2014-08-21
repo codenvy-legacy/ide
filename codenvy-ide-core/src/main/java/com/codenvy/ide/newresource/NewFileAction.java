@@ -46,9 +46,4 @@ public class NewFileAction extends DefaultNewResourceAction {
               projectServiceClient,
               eventBus);
     }
-
-    @Override
-    protected String getMimeType() {
-        return MimeType.TEXT_PLAIN;
-    }
 }
