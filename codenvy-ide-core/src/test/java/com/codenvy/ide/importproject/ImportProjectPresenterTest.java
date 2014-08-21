@@ -27,7 +27,6 @@ import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -125,16 +124,6 @@ public class ImportProjectPresenterTest {
             }
         }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, projectDescriptor);
-                return callback;
-            }
-        }).when(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
 
         view.showDialog();
         when(view.getUri()).thenReturn(URI);
@@ -275,58 +264,6 @@ public class ImportProjectPresenterTest {
         verify(projectWizardPresenter, never()).show((WizardContext)anyObject());
         verify(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).showWarning(anyString());
-    }
-
-    @Ignore
-    @Test
-    public void onImportClickedWhenImportProjectIsSuccessfulButGetProjectIsFailed() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[1];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, projectDescriptor);
-                return callback;
-            }
-        }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
-                                                    (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        view.showDialog();
-        when(view.getUri()).thenReturn(URI);
-        when(view.getImporter()).thenReturn(IMPORTER);
-        when(view.getProjectName()).thenReturn(PROJECT_NAME);
-        when(dtoFactory.createDto(ImportSourceDescriptor.class)).thenReturn(importSourceDescriptor);
-        when(importSourceDescriptor.withType(IMPORTER)).thenReturn(importSourceDescriptor);
-        when(importSourceDescriptor.withLocation(URI)).thenReturn(importSourceDescriptor);
-        ProjectReference projectReference = mock(ProjectReference.class);
-        when(dtoFactory.createDto(ProjectReference.class)).thenReturn(projectReference);
-        when(projectReference.withName(anyString())).thenReturn(projectReference);
-
-        presenter.onImportClicked();
-
-        verify(view).getUri();
-        verify(view).getImporter();
-        verify(view).getProjectName();
-        verify(view).close();
-        verify(dtoFactory).createDto(ImportSourceDescriptor.class);
-        verify(importSourceDescriptor).withType(anyString());
-        verify(importSourceDescriptor).withLocation(anyString());
-        verify(projectServiceClient)
-                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectWizardPresenter, never()).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
     }
 
     @Test

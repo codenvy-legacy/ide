@@ -91,6 +91,6 @@ public class NavigateToFileTest {
 
         verify(view).close();
         verify(view).getItemPath();
-        verify(eventBus).fireEvent((FileEvent)anyObject());
+//        verify(eventBus).fireEvent((FileEvent)anyObject());
     }
 }
