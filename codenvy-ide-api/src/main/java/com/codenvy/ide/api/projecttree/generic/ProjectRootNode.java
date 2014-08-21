@@ -24,11 +24,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Node that represents root item of opened project.
+ * Node that represents project root item.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> {
+public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> implements ItemNode {
     protected TreeSettings           settings;
     protected EventBus               eventBus;
     protected ProjectServiceClient   projectServiceClient;
@@ -41,6 +41,28 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> {
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+    }
+
+    /** Tests if the specified item is a file. */
+    protected static boolean isFile(ItemReference item) {
+        return "file".equals(item.getType());
+    }
+
+    /** Tests if the specified item is a folder. */
+    protected static boolean isFolder(ItemReference item) {
+        return "folder".equals(item.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPath() {
+        return data.getPath();
     }
 
     /** {@inheritDoc} */
@@ -77,15 +99,5 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> {
                 callback.onFailure(exception);
             }
         });
-    }
-
-    /** Tests if the specified item is a file. */
-    protected static boolean isFile(ItemReference item) {
-        return "file".equals(item.getType());
-    }
-
-    /** Tests if the specified item is a folder. */
-    protected static boolean isFolder(ItemReference item) {
-        return "folder".equals(item.getType());
     }
 }

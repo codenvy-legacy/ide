@@ -17,16 +17,28 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Node that represents a file.
+ * A node that represents a file.
  *
  * @author Artem Zatsarynnyy
  */
-public class FileNode extends ItemNode {
+public class FileNode extends AbstractTreeNode<ItemReference> implements ItemNode {
     protected EventBus eventBus;
 
     public FileNode(AbstractTreeNode parent, ItemReference data, EventBus eventBus) {
-        super(parent, data);
+        super(parent, data, data.getName());
         this.eventBus = eventBus;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPath() {
+        return data.getPath();
     }
 
     /** {@inheritDoc} */

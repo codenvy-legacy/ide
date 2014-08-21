@@ -23,11 +23,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Node that represents a folder.
+ * A node that represents a folder.
  *
  * @author Artem Zatsarynnyy
  */
-public class FolderNode extends ItemNode {
+public class FolderNode extends AbstractTreeNode<ItemReference> implements ItemNode {
     protected TreeSettings           settings;
     protected EventBus               eventBus;
     protected ProjectServiceClient   projectServiceClient;
@@ -35,11 +35,33 @@ public class FolderNode extends ItemNode {
 
     public FolderNode(AbstractTreeNode parent, ItemReference data, TreeSettings settings, EventBus eventBus,
                       ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data);
+        super(parent, data, data.getName());
         this.settings = settings;
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+    }
+
+    /** Tests if the specified item is a file. */
+    protected static boolean isFile(ItemReference item) {
+        return "file".equals(item.getType());
+    }
+
+    /** Tests if the specified item is a folder. */
+    protected static boolean isFolder(ItemReference item) {
+        return "folder".equals(item.getType());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return data.getName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPath() {
+        return data.getPath();
     }
 
     /** {@inheritDoc} */
@@ -76,15 +98,5 @@ public class FolderNode extends ItemNode {
                 callback.onFailure(exception);
             }
         });
-    }
-
-    /** Tests if the specified item is a file. */
-    protected static boolean isFile(ItemReference item) {
-        return "file".equals(item.getType());
-    }
-
-    /** Tests if the specified item is a folder. */
-    protected static boolean isFolder(ItemReference item) {
-        return "folder".equals(item.getType());
     }
 }

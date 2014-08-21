@@ -20,7 +20,7 @@ public interface TreeSettings {
     TreeSettings DEFAULT = new TreeSettings() {
         @Override
         public boolean isShowHiddenItems() {
-            return false;
+            return true;
         }
     };
 

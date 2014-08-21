@@ -16,7 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import javax.validation.constraints.NotNull;
 
 /**
- * Defines project's tree structure to display in 'Project Explorer'.
+ * Defines project's tree structure to display its in 'Project Explorer'.
  *
  * @author Artem Zatsarynnyy
  */

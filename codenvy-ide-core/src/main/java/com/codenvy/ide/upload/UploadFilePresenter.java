@@ -13,7 +13,6 @@ package com.codenvy.ide.upload;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -99,7 +98,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
                 if (selectedNode instanceof FileNode) {
                     return nodePath.substring(0, nodePath.length() - selectedNode.getName().length());
-                } else if (selectedNode instanceof FolderNode) {
+                } else {
                     return nodePath;
                 }
             }
