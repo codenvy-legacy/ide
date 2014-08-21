@@ -12,11 +12,11 @@ package com.codenvy.ide.api.projecttree.generic;
 
 /**
  * An interface defines methods common to all nodes
- * that represent an item retrieved from Codenvy Project API.
+ * represent an item retrieved from Codenvy Project API.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ItemNode {
+public interface StorableNode {
     /** Returns name of the item which this node represents. */
     String getName();
 

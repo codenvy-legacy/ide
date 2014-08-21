@@ -10,19 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 
 /** @author Evgen Vidolob */
 public class Breakpoint {
-    public enum Type {
-        BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
-    }
-
-    protected int    lineNumber;
-    private   Type   type;
-    private   String message;
-    private   String path;
-    protected ItemReference   file;
+    protected int      lineNumber;
+    protected FileNode file;
+    private   Type     type;
+    private   String   message;
+    private   String   path;
 
     /**
      * @param type
@@ -30,7 +26,7 @@ public class Breakpoint {
      * @param path
      * @param file
      */
-    public Breakpoint(Type type, int lineNumber, String path, ItemReference file) {
+    public Breakpoint(Type type, int lineNumber, String path, FileNode file) {
         this(type, lineNumber, path, file, null);
     }
 
@@ -41,7 +37,7 @@ public class Breakpoint {
      * @param file
      * @param message
      */
-    public Breakpoint(Type type, int lineNumber, String path, ItemReference file, String message) {
+    public Breakpoint(Type type, int lineNumber, String path, FileNode file, String message) {
         super();
         this.type = type;
         this.lineNumber = lineNumber;
@@ -75,7 +71,11 @@ public class Breakpoint {
      *
      * @return file with which this breakpoint is associated
      */
-    public ItemReference getFile() {
+    public FileNode getFile() {
         return file;
+    }
+
+    public enum Type {
+        BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
     }
 }

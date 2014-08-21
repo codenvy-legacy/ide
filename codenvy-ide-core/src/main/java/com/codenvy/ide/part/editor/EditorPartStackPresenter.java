@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.part.editor;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -19,6 +18,7 @@ import com.codenvy.ide.api.parts.EditorPartStack;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.PartStackPresenter;
@@ -167,7 +167,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     public void onShowListClicked(int x, int y, AsyncCallback<Void> callback) {
-        Array<ItemReference> openedFiles = Collections.createArray();
+        Array<FileNode> openedFiles = Collections.createArray();
         for (PartPresenter part : getParts().asIterable()) {
             if (part instanceof EditorPartPresenter) {
                 openedFiles.add(((EditorPartPresenter)part).getEditorInput().getFile());

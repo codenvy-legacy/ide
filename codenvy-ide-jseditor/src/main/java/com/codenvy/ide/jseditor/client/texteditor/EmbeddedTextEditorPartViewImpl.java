@@ -11,7 +11,7 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
@@ -72,14 +72,13 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
 
     }
 
-
     @Override
     public void configure(final EmbeddedTextEditorConfiguration configuration) {
         configure(configuration, null);
     }
 
     @Override
-    public void configure(final EmbeddedTextEditorConfiguration configuration, final ItemReference file) {
+    public void configure(final EmbeddedTextEditorConfiguration configuration, final FileNode file) {
         if (file != null) {
             List<String> types = this.fileTypeIdentifier.identifyType(file);
             if (types != null && !types.isEmpty()) {

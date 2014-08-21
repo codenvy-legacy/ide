@@ -10,22 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 
 import java.util.List;
 
 /**
  * An interface for a file identification service.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface FileTypeIdentifier {
 
     /**
      * Returns a list of possible content types for the file.
-     * 
-     * @param file the file to identify
+     *
+     * @param file
+     *         the file to identify
      * @return a list of content type or null if identification failed
      */
-    List<String> identifyType(ItemReference file);
+    List<String> identifyType(FileNode file);
 }

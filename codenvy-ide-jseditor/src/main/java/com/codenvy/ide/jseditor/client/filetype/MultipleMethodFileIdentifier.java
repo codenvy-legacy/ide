@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.util.loging.Log;
-import com.google.inject.Inject;
 
 import java.util.List;
 
@@ -23,19 +21,13 @@ import java.util.List;
  * @author "Mickaël Leduque"
  */
 public class MultipleMethodFileIdentifier implements FileTypeIdentifier {
-    private ProjectServiceClient projectServiceClient;
-
-    @Inject
-    public MultipleMethodFileIdentifier(ProjectServiceClient projectServiceClient) {
-        this.projectServiceClient = projectServiceClient;
-    }
 
     private final FileNameFileTypeIdentifier  fileNameFileTypeIdentifier  = new FileNameFileTypeIdentifier();
     private final ExtensionFileTypeIdentifier extensionFileTypeIdentifier = new ExtensionFileTypeIdentifier();
-    private final FirstLineFileTypeIdentifier firstLineFileTypeIdentifier = new FirstLineFileTypeIdentifier(projectServiceClient);
+    private final FirstLineFileTypeIdentifier firstLineFileTypeIdentifier = new FirstLineFileTypeIdentifier();
 
     @Override
-    public List<String> identifyType(final ItemReference file) {
+    public List<String> identifyType(final FileNode file) {
         Log.debug(MultipleMethodFileIdentifier.class, "Try identification by file name.");
         final List<String> firstTry = this.fileNameFileTypeIdentifier.identifyType(file);
         if (firstTry != null && !firstTry.isEmpty()) {

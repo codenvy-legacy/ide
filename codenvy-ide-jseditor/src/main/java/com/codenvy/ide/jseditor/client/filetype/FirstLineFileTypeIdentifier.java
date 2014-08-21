@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -33,25 +32,10 @@ public class FirstLineFileTypeIdentifier implements FileTypeIdentifier {
     // format: #!<loader> [options]\n
     /** Pattern to try to recognize scripts with a shebang. */
     private static final RegExp SHEBANG_PATTERN = RegExp.compile("^#!([^\\n\\s]+)\\s*([^\\n\\s]+)?.*\\n");
-    private final ProjectServiceClient projectServiceClient;
-
-    public FirstLineFileTypeIdentifier(ProjectServiceClient projectServiceClient) {
-        this.projectServiceClient = projectServiceClient;
-    }
 
     @Override
-    public List<String> identifyType(final ItemReference file) {
-//        projectServiceClient.getFileContent(file.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-//            @Override
-//            protected void onSuccess(String content) {
-//
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable throwable) {
-//
-//            }
-//        });
+    public List<String> identifyType(final FileNode file) {
+        // TODO: file's content retrieved asynchronously
         final String content = ""/*file.getContent()*/;
         if (isXml(content)) {
             Log.debug(FirstLineFileTypeIdentifier.class, "Identified file as XML.");

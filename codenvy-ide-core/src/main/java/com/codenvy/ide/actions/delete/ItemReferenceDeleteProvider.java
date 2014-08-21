@@ -67,7 +67,7 @@ public class ItemReferenceDeleteProvider implements DeleteProvider<ItemReference
                     protected void onSuccess(Void result) {
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
                         if ("file".equals(item.getType())) {
-                            eventBus.fireEvent(new FileEvent(item, FileEvent.FileOperation.CLOSE));
+//                            eventBus.fireEvent(new FileEvent(item, FileEvent.FileOperation.CLOSE));
                         } else if ("folder".equals(item.getType())) {
                             // close all opened child files since its has been deleted
                             for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {

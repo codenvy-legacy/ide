@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.filetypes;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 
 /**
@@ -41,7 +41,7 @@ public interface FileTypeRegistry {
      *         file for which type need to find
      * @return file type or default file type if no file type found
      */
-    FileType getFileTypeByFile(ItemReference file);
+    FileType getFileTypeByFile(FileNode file);
 
     /**
      * Returns the file type for the specified file extension.

@@ -19,6 +19,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -116,7 +117,7 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
                         }
 
                         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                            ItemReference openedFile = editor.getEditorInput().getFile();
+                            FileNode openedFile = editor.getEditorInput().getFile();
                             if (openedFile.getPath().startsWith(itemPathBeforeRenaming)) {
                                 String childFileNewPath = openedFile.getPath().replaceFirst(itemPathBeforeRenaming, itemPathAfterRenaming);
                                 ItemReference renamedItem = children.get(childFileNewPath);
@@ -139,7 +140,7 @@ public class ItemReferenceRenameProvider implements RenameProvider<ItemReference
     private void replaceFileInEditor(EditorPartPresenter editor, ItemReference renamedItem) {
         editorAgent.getOpenedEditors().remove(editor.getEditorInput().getFile().getPath());
         editorAgent.getOpenedEditors().put(renamedItem.getPath(), editor);
-        editor.getEditorInput().setFile(renamedItem);
+//        editor.getEditorInput().setFile(renamedItem);
         editor.onFileChanged();
     }
 

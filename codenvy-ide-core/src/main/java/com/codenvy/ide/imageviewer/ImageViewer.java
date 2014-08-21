@@ -16,9 +16,6 @@ import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -27,6 +24,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.inject.Inject;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Is used for displaying images in editor area.
@@ -109,7 +108,7 @@ public class ImageViewer extends AbstractEditorPresenter {
      */
     private Image getImage() {
         Link contentLink = null;
-        for (Link link : input.getFile().getLinks()) {
+        for (Link link : input.getFile().getData().getLinks()) {
             if ("get content".equals(link.getRel())) {
                 contentLink = link;
             }

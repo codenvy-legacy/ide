@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -41,7 +41,7 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
 
     Region getSelectedRegion();
 
-    void configure(EmbeddedTextEditorConfiguration configuration, ItemReference file);
+    void configure(EmbeddedTextEditorConfiguration configuration, FileNode file);
 
     EmbeddedDocument getEmbeddedDocument();
 

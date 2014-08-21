@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.openedfiles;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEvent.FileOperation;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Presenter for listing opened files of the editor.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -42,13 +42,16 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
 
     /**
      * Show the view with the list of opened files.
-     * 
-     * @param files opened files
-     * @param x x coordinate of the right top corner of the list view
-     * @param y y coordinate of the right top corner of the list view 
+     *
+     * @param files
+     *         opened files
+     * @param x
+     *         x coordinate of the right top corner of the list view
+     * @param y
+     *         y coordinate of the right top corner of the list view
      * @param callback
      */
-    public void showDialog(@NotNull Array<ItemReference> files, int x, int y, @NotNull AsyncCallback<Void> callback) {
+    public void showDialog(@NotNull Array<FileNode> files, int x, int y, @NotNull AsyncCallback<Void> callback) {
         this.callback = callback;
         view.setOpenedFiles(files);
         view.showDialog(x, y);
@@ -56,14 +59,14 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
 
     /** {@inheritDoc} */
     @Override
-    public void onFileSelected(ItemReference file) {
+    public void onFileSelected(FileNode file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.OPEN));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseFile(ItemReference file) {
+    public void onCloseFile(FileNode file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.CLOSE));
     }

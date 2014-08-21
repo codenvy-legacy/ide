@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.document;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.ImplementedBy;
 
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 
 @ImplementedBy(DocumentStorageImpl.class)
 public interface DocumentStorage {
-    void getDocument(@NotNull ItemReference file,
+    void getDocument(@NotNull FileNode file,
                      @NotNull final EmbeddedDocumentCallback callback);
 
     void saveDocument(@Nullable final EditorInput editorInput,
@@ -28,9 +28,9 @@ public interface DocumentStorage {
                       boolean overwrite,
                       @NotNull final AsyncCallback<EditorInput> callback);
 
+    public void documentClosed(@NotNull EmbeddedDocument document);
+
     public interface EmbeddedDocumentCallback {
         void onDocumentReceived(String content);
     }
-
-    public void documentClosed(@NotNull EmbeddedDocument document);
 }

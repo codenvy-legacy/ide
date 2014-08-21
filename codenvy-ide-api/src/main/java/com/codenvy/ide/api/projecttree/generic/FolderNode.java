@@ -27,7 +27,7 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author Artem Zatsarynnyy
  */
-public class FolderNode extends AbstractTreeNode<ItemReference> implements ItemNode {
+public class FolderNode extends AbstractTreeNode<ItemReference> implements StorableNode {
     protected TreeSettings           settings;
     protected EventBus               eventBus;
     protected ProjectServiceClient   projectServiceClient;
@@ -83,7 +83,7 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements ItemN
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         if (isFile(item)) {
-                            newChildren.add(new FileNode(FolderNode.this, item, eventBus));
+                            newChildren.add(new FileNode(FolderNode.this, item, eventBus, projectServiceClient));
                         } else if (isFolder(item)) {
                             newChildren.add(new FolderNode(FolderNode.this, item, settings, eventBus, projectServiceClient,
                                                            dtoUnmarshallerFactory));

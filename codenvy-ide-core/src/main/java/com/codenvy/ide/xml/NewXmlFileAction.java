@@ -18,7 +18,6 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -40,7 +39,6 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
                             EditorAgent editorAgent,
                             Resources resources,
                             ProjectServiceClient projectServiceClient,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             EventBus eventBus) {
         super(localizationConstant.actionNewXmlFileTitle(),
               localizationConstant.actionNewXmlFileDescription(),
@@ -50,7 +48,6 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              dtoUnmarshallerFactory,
               eventBus);
     }
 

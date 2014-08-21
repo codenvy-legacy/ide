@@ -10,22 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.DocumentFactory;
 import com.codenvy.ide.api.text.annotation.AnnotationModel;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -63,26 +57,17 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void getDocument(@NotNull EditorInput input, @NotNull final DocumentCallback callback) {
-        for (Link link : input.getFile().getLinks()) {
-            if ("get content".equals(link.getRel())) {
-                try {
-                    new RequestBuilder(RequestBuilder.GET, link.getHref()).sendRequest("", new RequestCallback() {
-                        @Override
-                        public void onResponseReceived(Request request, Response response) {
-                            contentReceived(response.getText(), callback);
-                        }
-
-                        @Override
-                        public void onError(Request request, Throwable exception) {
-                            Log.error(ResourceDocumentProvider.class, exception);
-                        }
-                    });
-                } catch (RequestException e) {
-                    Log.error(ResourceDocumentProvider.class, e);
-                }
-                break;
+        input.getFile().getContent(new AsyncCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                contentReceived(result, callback);
             }
-        }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(ResourceDocumentProvider.class, caught);
+            }
+        });
     }
 
     private void contentReceived(@NotNull String content, @NotNull DocumentCallback callback) {
@@ -94,17 +79,17 @@ public class ResourceDocumentProvider implements DocumentProvider {
     @Override
     public void saveDocument(@Nullable final EditorInput input, @NotNull Document document, boolean overwrite,
                              @NotNull final AsyncCallback<EditorInput> callback) {
-        final ItemReference file = input.getFile();
-        projectServiceClient.updateFile(file.getPath(), document.get(), file.getMediaType(), new AsyncRequestCallback<Void>() {
+        final FileNode file = input.getFile();
+        file.updateContent(document.get(), new AsyncCallback<Void>() {
             @Override
-            protected void onSuccess(Void result) {
+            public void onSuccess(Void result) {
                 eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));
                 callback.onSuccess(input);
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
         });
     }
@@ -112,10 +97,10 @@ public class ResourceDocumentProvider implements DocumentProvider {
     /** {@inheritDoc} */
     @Override
     public void saveDocumentAs(@NotNull EditorInput input, @NotNull Document document, boolean overwrite) {
-        final ItemReference file = input.getFile();
+        final FileNode file = input.getFile();
         final String path = file.getPath();
         final String parentPath = path.substring(0, path.length() - file.getName().length());
-        projectServiceClient.createFile(parentPath, file.getName(), document.get(), file.getMediaType(), new AsyncRequestCallback<Void>() {
+        projectServiceClient.createFile(parentPath, file.getName(), document.get(), file.getData().getMediaType(), new AsyncRequestCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
                 eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));

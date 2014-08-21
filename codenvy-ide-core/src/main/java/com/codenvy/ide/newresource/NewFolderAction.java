@@ -13,12 +13,11 @@ package com.codenvy.ide.newresource;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -41,7 +40,6 @@ public class NewFolderAction extends DefaultNewResourceAction {
                            SelectionAgent selectionAgent,
                            Resources resources,
                            ProjectServiceClient projectServiceClient,
-                           DtoUnmarshallerFactory dtoUnmarshallerFactory,
                            EventBus eventBus) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
@@ -51,7 +49,6 @@ public class NewFolderAction extends DefaultNewResourceAction {
               selectionAgent,
               null,
               projectServiceClient,
-              dtoUnmarshallerFactory,
               eventBus);
         this.localizationConstant = localizationConstant;
     }

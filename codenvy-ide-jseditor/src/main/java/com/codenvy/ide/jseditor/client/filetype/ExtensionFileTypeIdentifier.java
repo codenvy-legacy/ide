@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
     }
 
     @Override
-    public List<String> identifyType(final ItemReference file) {
+    public List<String> identifyType(final FileNode file) {
         final String filename = file.getName();
         if (filename != null) {
             final int dotPos = filename.lastIndexOf('.');

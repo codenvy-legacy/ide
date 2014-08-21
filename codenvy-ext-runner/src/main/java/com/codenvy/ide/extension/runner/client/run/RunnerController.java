@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
@@ -33,6 +34,8 @@ import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -53,6 +56,11 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.json.client.JSONObject;
@@ -90,17 +98,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     public static final String OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
     public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private final DtoFactory                 dtoFactory;
-    private       EditorAgent                editorAgent;
-    private       MessageBus                 messageBus;
-    private final AppContext                 appContext;
-    private       WorkspaceAgent             workspaceAgent;
-    private       RunnerConsolePresenter     console;
-    private       RunnerServiceClient        service;
-    private       RunnerLocalizationConstant constant;
-    private       NotificationManager        notificationManager;
-    private       Notification               notification;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final DtoFactory             dtoFactory;
+    private       EditorAgent            editorAgent;
+    private       MessageBus             messageBus;
+    private final AppContext             appContext;
+    private       ProjectServiceClient   projectServiceClient;
+    private       EventBus               eventBus;
+    private WorkspaceAgent workspaceAgent;
+    private RunnerConsolePresenter     console;
+    private RunnerServiceClient        service;
+    private RunnerLocalizationConstant constant;
+    private NotificationManager        notificationManager;
+    private Notification               notification;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning = false;
     /** Descriptor of the last launched application. */
@@ -116,7 +126,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     //show time in "Total Time" indicator start immediately  after launch running process
     private   Timer                                             totalActiveTimeTimer;
     private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
-    private String theme;
+    private   String                                            theme;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -130,7 +140,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                             MessageBus messageBus,
                             ThemeAgent themeAgent,
-                            final AppContext appContext) {
+                            final AppContext appContext,
+                            ProjectServiceClient projectServiceClient) {
+        this.eventBus = eventBus;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -141,6 +153,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
         this.appContext = appContext;
+        this.projectServiceClient = projectServiceClient;
         theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -669,7 +682,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                      .withPath("runner_recipe")
                                                      .withMediaType("text/plain")
                                                      .withLinks(links);
-                editorAgent.openEditor(recipeFile);
+                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient);
+                editorAgent.openEditor(recipeFileNode);
                 EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
                 if (editor instanceof CodenvyTextEditor) {
                     ((CodenvyTextEditor)editor).getView().setReadOnly(true);
@@ -807,6 +821,36 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             timeSeconds++;
             String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
             totalActiveTimeMetric.setValue(humanReadable);
+        }
+    }
+
+    private static class RecipeFile extends FileNode {
+        public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
+            super(parent, data, eventBus, projectServiceClient);
+        }
+
+        @Override
+        public void getContent(final AsyncCallback<String> callback) {
+            for (Link link : data.getLinks()) {
+                if ("get content".equals(link.getRel())) {
+                    try {
+                        new RequestBuilder(RequestBuilder.GET, link.getHref()).sendRequest("", new RequestCallback() {
+                            @Override
+                            public void onResponseReceived(Request request, Response response) {
+                                callback.onSuccess(response.getText());
+                            }
+
+                            @Override
+                            public void onError(Request request, Throwable exception) {
+                                Log.error(RecipeFile.class, exception);
+                            }
+                        });
+                    } catch (RequestException e) {
+                        Log.error(RecipeFile.class, e);
+                    }
+                    break;
+                }
+            }
         }
     }
 

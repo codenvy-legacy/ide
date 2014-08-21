@@ -404,7 +404,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
                 .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
-        verify(projectServiceClient).getProject(eq(PROJECT_PATH), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+        verify(projectServiceClient).getProject(eq(PROJECT_NAME), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(projectWizardPresenter).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());

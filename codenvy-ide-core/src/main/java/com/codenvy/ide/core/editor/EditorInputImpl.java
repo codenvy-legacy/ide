@@ -10,19 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 /** @author Vitaly Parfonov */
 final class EditorInputImpl implements EditorInput {
-    private ItemReference file;
-    private FileType      fileType;
+    private FileNode file;
+    private FileType fileType;
 
-    EditorInputImpl(FileType fileType, ItemReference file) {
+    EditorInputImpl(FileType fileType, FileNode file) {
         this.fileType = fileType;
         this.file = file;
     }
@@ -53,12 +53,12 @@ final class EditorInputImpl implements EditorInput {
     }
 
     @Override
-    public ItemReference getFile() {
+    public FileNode getFile() {
         return file;
     }
 
     @Override
-    public void setFile(ItemReference file) {
+    public void setFile(FileNode file) {
         this.file = file;
     }
 }

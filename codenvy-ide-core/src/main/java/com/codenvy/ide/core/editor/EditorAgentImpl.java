@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInitException;
@@ -21,17 +20,18 @@ import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.event.FileEvent.FileOperation;
+import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.event.FileEvent.FileOperation;
-import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -131,7 +131,7 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void openEditor(@NotNull final ItemReference file) {
+    public void openEditor(@NotNull final FileNode file) {
         if (openedEditors.containsKey(file.getPath())) {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {

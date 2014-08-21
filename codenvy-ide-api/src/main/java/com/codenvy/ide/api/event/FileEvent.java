@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -21,18 +21,18 @@ import com.google.gwt.event.shared.GwtEvent;
 public class FileEvent extends GwtEvent<FileEventHandler> {
 
     public static Type<FileEventHandler> TYPE = new Type<>();
-    private ItemReference file;
+    private FileNode      file;
     private FileOperation fileOperation;
 
     /**
      * Creates new {@link FileEvent}.
      *
      * @param file
-     *         {@link ItemReference} that represents an affected file
+     *         {@link FileNode} that represents an affected file
      * @param fileOperation
      *         file operation
      */
-    public FileEvent(ItemReference file, FileOperation fileOperation) {
+    public FileEvent(FileNode file, FileOperation fileOperation) {
         this.fileOperation = fileOperation;
         this.file = file;
     }
@@ -43,8 +43,8 @@ public class FileEvent extends GwtEvent<FileEventHandler> {
         return TYPE;
     }
 
-    /** @return {@link ItemReference} that represents an affected file */
-    public ItemReference getFile() {
+    /** @return {@link FileNode} that represents an affected file */
+    public FileNode getFile() {
         return file;
     }
 

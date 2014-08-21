@@ -11,8 +11,6 @@
 package com.codenvy.ide.newresource;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.gwt.client.QueryExpression;
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -20,13 +18,10 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.api.projecttree.generic.ItemNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -46,13 +41,12 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class DefaultNewResourceAction extends Action {
-    protected String                 title;
-    protected AppContext             appContext;
-    protected SelectionAgent         selectionAgent;
-    protected EditorAgent            editorAgent;
-    protected ProjectServiceClient   projectServiceClient;
-    protected EventBus               eventBus;
-    private   DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected String               title;
+    protected AppContext           appContext;
+    protected SelectionAgent       selectionAgent;
+    protected EditorAgent          editorAgent;
+    protected ProjectServiceClient projectServiceClient;
+    protected EventBus             eventBus;
 
     /**
      * Creates new action.
@@ -73,6 +67,7 @@ public class DefaultNewResourceAction extends Action {
      *         {@link com.codenvy.ide.api.editor.EditorAgent} instance. Need for opening created file in editor
      * @param projectServiceClient
      *         {@link com.codenvy.api.project.gwt.client.ProjectServiceClient} instance
+     * @param eventBus
      */
     public DefaultNewResourceAction(String title,
                                     String description,
@@ -82,7 +77,6 @@ public class DefaultNewResourceAction extends Action {
                                     SelectionAgent selectionAgent,
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient,
-                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                     EventBus eventBus) {
         super(title, description, icon, svgIcon);
         this.title = title;
@@ -90,7 +84,6 @@ public class DefaultNewResourceAction extends Action {
         this.selectionAgent = selectionAgent;
         this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.eventBus = eventBus;
     }
 
@@ -104,7 +97,6 @@ public class DefaultNewResourceAction extends Action {
                         .createFile(getParentPath(), name, getDefaultContent(), getMimeType(), new AsyncRequestCallback<Void>() {
                             @Override
                             protected void onSuccess(Void result) {
-                                openFileInEditor(getParentPath(), name);
                                 eventBus.fireEvent(new RefreshProjectTreeEvent());
                             }
 
@@ -141,8 +133,8 @@ public class DefaultNewResourceAction extends Action {
     protected String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
-            if (selection.getFirstElement() instanceof ItemNode) {
-                final ItemNode selectedNode = (ItemNode)selection.getFirstElement();
+            if (selection.getFirstElement() instanceof StorableNode) {
+                final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
                 final String nodePath = selectedNode.getPath();
 
                 if (selectedNode instanceof FileNode) {
@@ -153,23 +145,5 @@ public class DefaultNewResourceAction extends Action {
             }
         }
         return appContext.getCurrentProject().getProjectDescription().getPath();
-    }
-
-    private void openFileInEditor(String itemParentPath, String itemName) {
-        Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
-        projectServiceClient.search(new QueryExpression().setPath(itemParentPath).setName(itemName),
-                                    new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
-                                        @Override
-                                        protected void onSuccess(Array<ItemReference> itemReferenceArray) {
-                                            if (!itemReferenceArray.isEmpty()) {
-                                                editorAgent.openEditor(itemReferenceArray.get(0));
-                                            }
-                                        }
-
-                                        @Override
-                                        protected void onFailure(Throwable throwable) {
-
-                                        }
-                                    });
     }
 }

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -19,12 +18,13 @@ import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.texteditor.outline.OutlineModel;
+import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
-import com.codenvy.ide.api.texteditor.outline.OutlineModel;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -125,7 +125,6 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         // do nothing
     }
 
-
     @Override
     public OutlinePresenter getOutline() {
         if (outline != null) {
@@ -171,13 +170,12 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
             return;
         }
 
-        ItemReference eventFile = event.getFile();
-        ItemReference file = input.getFile();
+        FileNode eventFile = event.getFile();
+        FileNode file = input.getFile();
         if (file.equals(eventFile)) {
             workspaceAgent.removePart(this);
         }
     }
-
 
     @Override
     public void initialize(@NotNull EmbeddedTextEditorConfiguration configuration,

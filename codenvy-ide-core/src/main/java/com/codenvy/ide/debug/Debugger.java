@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -26,7 +26,7 @@ public interface Debugger {
      * @param lineNumber
      * @param callback
      */
-    void addBreakpoint(ItemReference file, int lineNumber, AsyncCallback<Breakpoint> callback);
+    void addBreakpoint(FileNode file, int lineNumber, AsyncCallback<Breakpoint> callback);
 
     /**
      * Deletes breakpoint on server.
@@ -35,5 +35,5 @@ public interface Debugger {
      * @param lineNumber
      * @param callback
      */
-    void deleteBreakpoint(ItemReference file, int lineNumber, AsyncCallback<Void> callback);
+    void deleteBreakpoint(FileNode file, int lineNumber, AsyncCallback<Void> callback);
 }

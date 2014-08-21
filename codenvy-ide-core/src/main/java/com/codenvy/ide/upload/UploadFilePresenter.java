@@ -13,7 +13,7 @@ package com.codenvy.ide.upload;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.api.projecttree.generic.ItemNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -92,8 +92,8 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     private String getParentPath() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
-            if (selection.getFirstElement() instanceof ItemNode) {
-                final ItemNode selectedNode = (ItemNode)selection.getFirstElement();
+            if (selection.getFirstElement() instanceof StorableNode) {
+                final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
                 final String nodePath = selectedNode.getPath();
 
                 if (selectedNode instanceof FileNode) {

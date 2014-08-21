@@ -105,7 +105,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     public void onFileSelected() {
         view.close();
         ItemReference selectedItem = resultMap.get(view.getItemPath());
-        eventBus.fireEvent(new FileEvent(selectedItem, FileEvent.FileOperation.OPEN));
+//        eventBus.fireEvent(new FileEvent(selectedItem, FileEvent.FileOperation.OPEN));
     }
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
