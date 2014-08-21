@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.navigation;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -42,9 +44,10 @@ import static com.google.gwt.http.client.RequestBuilder.GET;
 @Singleton
 public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegate {
 
-    private final MessageBus               wsMessageBus;
-    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final String                   SEARCH_URL;
+    private       MessageBus               wsMessageBus;
+    private       DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private       ProjectServiceClient     projectServiceClient;
     private       NavigateToFileView       view;
     private       AppContext               appContext;
     private       EventBus                 eventBus;
@@ -56,12 +59,14 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    EventBus eventBus,
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
-                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                   ProjectServiceClient projectServiceClient) {
         this.view = view;
         this.appContext = appContext;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectServiceClient = projectServiceClient;
 
         resultMap = Collections.createStringMap();
 
@@ -105,7 +110,8 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     public void onFileSelected() {
         view.close();
         ItemReference selectedItem = resultMap.get(view.getItemPath());
-//        eventBus.fireEvent(new FileEvent(selectedItem, FileEvent.FileOperation.OPEN));
+        FileNode file = new FileNode(null, selectedItem, eventBus, projectServiceClient);
+        eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.OPEN));
     }
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
