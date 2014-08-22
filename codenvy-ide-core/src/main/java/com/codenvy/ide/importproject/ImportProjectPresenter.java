@@ -49,7 +49,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectPresenter implements ImportProjectView.ActionDelegate {
 
-    private static final RegExp HTTPS_URL_Pattern = RegExp.compile("(https://)((([^\\\\\\\\@:;, (//)])+/){2,})[^\\\\\\\\@:; ,]+");
+    private static final RegExp HTTPS_URL_Pattern = RegExp.compile("((https|http)://)((([^\\\\\\\\@:;, (//)])+/){2,})[^\\\\\\\\@:; ,]+");
     private static final RegExp SSH_URL_Pattern   = RegExp.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)[^\\\\/@:]+)(:|/)|" +
                                                                    "([^\\\\/@:]+@[^\\\\/@:]+):)[^\\\\@:]+");
     private final ProjectServiceClient                   projectServiceClient;
