@@ -117,6 +117,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("jsp", makeList("application/x-jsp"));
         this.mappings.put("asp", makeList("application/x-aspx"));
         this.mappings.put("aspx", makeList("application/x-aspx"));
+        this.mappings.put("slim", makeList("text/x-slim"));
 
         this.mappings.put("ml", makeList("text/x-ocaml"));
         this.mappings.put("fs", makeList("text/x-fsharp"));
