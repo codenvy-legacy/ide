@@ -66,6 +66,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("gvy", Collections.singletonList("text/x-groovy"));
         this.mappings.put("gy", Collections.singletonList("text/x-groovy"));
         this.mappings.put("gradle", Collections.singletonList("text/x-groovy"));// gradle conf are groovy files
+        this.mappings.put("kt", Collections.singletonList("text/x-kotlin"));
 
         this.mappings.put("js", makeList("application/javascript", "text/javascript"));
         this.mappings.put("coffee", makeList("text/x-coffeescript"));
