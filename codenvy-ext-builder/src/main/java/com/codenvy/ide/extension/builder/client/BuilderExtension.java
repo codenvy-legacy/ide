@@ -27,6 +27,7 @@ import com.codenvy.ide.extension.builder.client.console.indicators.BuildStartedI
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildStatusIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildTimeoutThresholdIndicator;
 import com.codenvy.ide.extension.builder.client.console.indicators.BuildTotalTimeIndicator;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -96,7 +97,8 @@ public class BuilderExtension {
                                    WorkspaceAgent workspaceAgent,
                                    BuilderConsolePresenter builderConsolePresenter,
                                    @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
-        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
+        //TODO need to make a new binding for Events title
+        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Events"));
 
         // add toolbar with indicators to Builder console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_BUILDER_CONSOLE_TOOLBAR, false, actionManager);

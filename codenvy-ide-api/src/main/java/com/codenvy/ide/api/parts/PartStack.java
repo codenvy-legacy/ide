@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.parts;
 
+import com.codenvy.ide.api.action.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -37,6 +38,14 @@ public interface PartStack extends Presenter {
      * @param part
      */
     void addPart(PartPresenter part);
+
+    /**
+     * Add part to the PartStack with position constraint.
+     *
+     * @param part
+     * @param constraint
+     */
+    void addPart(PartPresenter part, Constraints constraint);
 
     /**
      * Ask if PartStack contains given Part.

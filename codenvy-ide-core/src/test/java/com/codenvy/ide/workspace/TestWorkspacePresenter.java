@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
+import com.codenvy.ide.api.action.Constraints;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.part.PartStackPresenter;
@@ -39,6 +40,8 @@ public class TestWorkspacePresenter {
      *
      */
     private static final PartStackType TYPE = PartStackType.EDITING;
+
+    private static final Constraints CONSTRAINT = Constraints.FIRST;
 
     @Mock
     Provider<PartStackPresenter> partStackProvider;
@@ -76,9 +79,9 @@ public class TestWorkspacePresenter {
     @Test
     public void shouldAddToStack() {
         PartPresenter part = mock(PartPresenter.class);
-        presenter.openPart(part, TYPE);
+        presenter.openPart(part, TYPE, CONSTRAINT);
         // verify part added to proper stack
-        verify(activePerspective).openPart(eq(part), eq(TYPE));
+        verify(activePerspective).openPart(eq(part), eq(TYPE), eq(CONSTRAINT));
     }
 
     @Test

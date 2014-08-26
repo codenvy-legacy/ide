@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
+import com.codenvy.ide.api.action.Anchor;
+import com.codenvy.ide.api.action.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.OutlinePart;
@@ -21,6 +23,7 @@ import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -87,7 +90,7 @@ public class WorkBenchPresenter implements Presenter {
 
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
-        openPart(notificationManager, PartStackType.INFORMATION);
+        openPart(notificationManager, PartStackType.INFORMATION, Constraints.FIRST);
 
         setActivePart(projectExplorerPart);
     }
@@ -168,10 +171,20 @@ public class WorkBenchPresenter implements Presenter {
      * @param type
      */
     public void openPart(PartPresenter part, PartStackType type) {
-        PartStack destPartStack = partStacks.get(type.toString());
-        destPartStack.addPart(part);
+        openPart( part, type, null);
     }
 
+    /**
+     * Opens part with constraint
+     *
+     * @param part
+     * @param type
+     * @param type
+     */
+    public void openPart(PartPresenter part, PartStackType type, Constraints constraint) {
+        PartStack destPartStack = partStacks.get(type.toString());
+        destPartStack.addPart(part, constraint);
+    }
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {

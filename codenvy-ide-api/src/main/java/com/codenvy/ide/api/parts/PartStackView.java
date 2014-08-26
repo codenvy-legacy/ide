@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.collections.Array;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -39,6 +40,9 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
 
     /** Set Active Tab */
     public void setActiveTab(int index);
+
+    /** Set new Tabs positions */
+    public void setTabpositions(Array<Integer> partPositions);
 
     /** Get Content Panel */
     public ForIsWidget getContentPanel();

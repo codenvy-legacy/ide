@@ -34,6 +34,7 @@ import com.codenvy.ide.extension.runner.client.console.indicators.RunnerStartedI
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTimeoutThresholdIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTotalTimeIndicator;
 import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPagePresenter;
+import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -118,7 +119,8 @@ public class RunnerExtension {
                                   WorkspaceAgent workspaceAgent,
                                   RunnerConsolePresenter runnerConsolePresenter,
                                   @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
-        workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION);
+        // TODO need to make a new binding for Builder title
+        workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Builder"));
 
         // add toolbar with actions on Runner console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_RUNNER_CONSOLE_TOOLBAR, false, actionManager);
