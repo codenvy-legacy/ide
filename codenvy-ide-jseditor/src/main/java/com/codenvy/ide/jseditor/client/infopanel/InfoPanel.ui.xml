@@ -51,6 +51,9 @@
             flex-shrink: 0; /* don't allow to shrink if there is not enough space */
             -webkit-flex-shrink: 0;
         }
+        .infoPanel-item-right {
+            margin-left: 1em;
+        }
 
         /* specific styles */
         .editorInfo {
@@ -77,6 +80,9 @@
         .rightPart {
             margin-right: 10px;
         }
+        .separator {
+            margin-right: 2em;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.editorInfo} {style.infoPanel-layout} {style.panelInfo}">
@@ -95,7 +101,12 @@
                 <g:InlineLabel ui:field="tabSize" addStyleNames="{style.infoPanel-item}" />
             </div>
             <div class="{style.rightPart}">
-                <g:InlineLabel ui:field="fileType" addStyleNames="{style.infoPanel-item}" />
+                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneEditorLabel}" /></span>
+                <g:InlineLabel ui:field="editorTypeValue" addStyleNames="{style.infoPanel-item}" />
+                <span class="{style.infoPanel-item} {style.infoPanel-item-right}"><ui:text from="{constants.infoPaneKeybindingLabel}" /></span>
+                <g:InlineLabel ui:field="keybindingsValue" addStyleNames="{style.infoPanel-item}" />
+                <span class="{style.separator}">&nbsp;</span>
+                <g:InlineLabel ui:field="fileType" addStyleNames="{style.infoPanel-item} {style.infoPanel-item-right}" />
             </div>
         </div>
     </g:HTMLPanel>

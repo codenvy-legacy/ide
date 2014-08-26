@@ -11,13 +11,16 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
+import java.util.Collections;
+import java.util.List;
+
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
+import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -27,10 +30,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-
-import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
@@ -58,11 +57,10 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
 
     private int                             tabSize     = 3;
 
-    @Inject
     public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
                                           final FileTypeIdentifier fileTypeIdentifier,
-                                          final JsEditorConstants constants) {
-        infoPanel = new InfoPanel(this, constants);
+                                          final InfoPanelFactory infoPanelFactory) {
+        infoPanel = infoPanelFactory.create(this);
 
         HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
@@ -107,7 +105,11 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         this.editor.setTabSize(this.tabSize);
 
         // set up infopanel
-        this.infoPanel.createDefaultState(this.editorModes.get(0), this.embeddedDocument.getLineCount(), this.editor.getTabSize());
+        this.infoPanel.createDefaultState(this.editorModes.get(0),
+                                          editor.getEditorType(),
+                                          editor.getKeymap(),
+                                          this.embeddedDocument.getLineCount(),
+                                          this.editor.getTabSize());
         this.editor.addCursorActivityHandler(this.infoPanel);
         this.editor.addBlurHandler(this.infoPanel);
         this.editor.addFocusHandler(this.infoPanel);
