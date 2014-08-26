@@ -22,7 +22,7 @@
         <g:center>
             <g:FlowPanel>
                 <g:Label ui:field="message" width="100%"/>
-                <g:TextBox ui:field="value" width="100%"/>
+                <g:TextBox ui:field="value" width="98%"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>
