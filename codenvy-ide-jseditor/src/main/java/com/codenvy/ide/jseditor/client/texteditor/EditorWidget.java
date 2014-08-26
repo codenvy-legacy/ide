@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
+import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
@@ -98,4 +100,13 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      * @return the selected range
      */
     Region getSelectedRange();
+
+    /**
+     * Returns the editor type for this editor.
+     * 
+     * @return the editor type
+     */
+    EditorType getEditorType();
+
+    Keymap getKeymap();
 }

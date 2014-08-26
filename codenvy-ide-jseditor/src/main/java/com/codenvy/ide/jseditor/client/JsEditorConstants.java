@@ -40,4 +40,16 @@ public interface JsEditorConstants extends Constants {
     @DefaultStringValue("Tab Size: ")
     String infoPaneTabSizeLabel();
 
+    @DefaultStringValue("Editor: ")
+    String infoPaneEditorLabel();
+
+    @DefaultStringValue("Key bindings: ")
+    String infoPaneKeybindingLabel();
+
+    @DefaultStringValue("Unknown")
+    String infoPanelUnknownEditorType();
+
+    @DefaultStringValue("Unknown")
+    String infoPanelUnknownKeybindings();
+
 }

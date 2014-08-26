@@ -63,6 +63,9 @@ public class EditorTypeRegistryImpl implements EditorTypeRegistry {
         if (item != null) {
             return item.getName();
         } else {
+            Log.warn(EditorTypeRegistryImpl.class,
+                     "Editor type not found: " + editorType
+                         + " - available ones are " + PrintMap.printMap(this.editorTypes));
             return null;
         }
     }
@@ -82,6 +85,11 @@ public class EditorTypeRegistryImpl implements EditorTypeRegistry {
 
         public EditorBuilder getEditorProvider() {
             return editorBuilder;
+        }
+
+        @Override
+        public String toString() {
+            return "<" + this.name + ", " + this.editorBuilder.getClass().getSimpleName() + ">";
         }
     }
 
