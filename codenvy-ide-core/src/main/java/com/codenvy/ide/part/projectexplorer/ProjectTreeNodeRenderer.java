@@ -15,6 +15,8 @@ import elemental.html.SpanElement;
 
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
@@ -42,11 +44,13 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>> {
     private final Css          css;
     private       IconRegistry iconRegistry;
+    private       FileTypeRegistry fileTypeRegistry;
     private       AppContext   appContext;
 
     @Inject
-    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, AppContext appContext) {
+    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, FileTypeRegistry fileTypeRegistry, AppContext appContext) {
         this.iconRegistry = iconRegistry;
+        this.fileTypeRegistry = fileTypeRegistry;
         this.appContext = appContext;
         this.css = resources.workspaceNavigationFileTreeNodeRendererCss();
     }
@@ -108,6 +112,11 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
         } else if (node instanceof FolderNode) {
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
         } else if (node instanceof FileNode) {
+            FileType fileType = fileTypeRegistry.getFileTypeByFile((FileNode)node);
+            if (fileType != null && fileType.getSVGImage() != null) {
+                return new SVGImage(fileType.getSVGImage());
+            }
+
             final String fileName = ((FileNode)node).getName();
             // try to get icon for file name
             icon = iconRegistry.getIconIfExist(projectTypeId + "/" + fileName + ".file.small.icon");

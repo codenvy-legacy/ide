@@ -65,4 +65,12 @@ public class WebModule extends AbstractGinModule {
     protected FileType provideHTMLFile(WebExtension.ParserResource res) {
         return new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
     }
+
+    @Provides
+    @Singleton
+    @Named("PHPFileType")
+    protected FileType providePHPFile(WebExtension.ParserResource res) {
+        return new FileType("PHP file", res.phpFile(), MimeType.APPLICATION_PHP, "php");
+    }
+
 }
