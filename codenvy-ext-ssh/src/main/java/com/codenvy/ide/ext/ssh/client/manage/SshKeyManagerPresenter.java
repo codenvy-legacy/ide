@@ -24,10 +24,10 @@ import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -54,7 +54,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private       SshLocalizationConstant constant;
     private       EventBus                eventBus;
     private       UserServiceClient       userService;
-    private       Loader                  loader;
+    private       AsyncRequestLoader      loader;
     private       SshKeyPresenter         sshKeyPresenter;
     private       UploadSshKeyPresenter   uploadSshKeyPresenter;
     private       NotificationManager     notificationManager;
@@ -76,7 +76,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   SshResources resources,
                                   SshLocalizationConstant constant,
                                   EventBus eventBus,
-                                  Loader loader,
+                                  AsyncRequestLoader loader,
                                   UserServiceClient userService,
                                   SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
