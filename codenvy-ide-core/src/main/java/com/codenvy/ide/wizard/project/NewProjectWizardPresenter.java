@@ -12,7 +12,6 @@ package com.codenvy.ide.wizard.project;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -205,8 +204,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
                 view.setLoaderVisibled(false);
                 callback.onSuccess();
             }
@@ -259,8 +257,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
-        ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(name);
-        eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+        eventBus.fireEvent(new OpenProjectEvent(name));
         view.setLoaderVisibled(false);
         callback.onSuccess();
     }

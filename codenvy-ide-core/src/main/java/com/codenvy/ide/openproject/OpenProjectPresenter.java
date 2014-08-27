@@ -58,7 +58,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onOpenClicked() {
-        eventBus.fireEvent(new OpenProjectEvent(selectedProject));
+        eventBus.fireEvent(new OpenProjectEvent(selectedProject.getName()));
         view.close();
     }
 

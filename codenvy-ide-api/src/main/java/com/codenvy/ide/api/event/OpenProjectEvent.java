@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -21,16 +20,16 @@ import com.google.gwt.event.shared.GwtEvent;
 public class OpenProjectEvent extends GwtEvent<OpenProjectHandler> {
 
     public static Type<OpenProjectHandler> TYPE = new Type<>();
-    private final ProjectReference project;
+    private final String projectName;
 
     /**
      * Creates an event to initiate opening the specified project.
      *
-     * @param project
-     *         project to open
+     * @param projectName
+     *         name of the project to open
      */
-    public OpenProjectEvent(ProjectReference project) {
-        this.project = project;
+    public OpenProjectEvent(String projectName) {
+        this.projectName = projectName;
     }
 
     @Override
@@ -39,12 +38,12 @@ public class OpenProjectEvent extends GwtEvent<OpenProjectHandler> {
     }
 
     /**
-     * Returns project to open.
+     * Returns name of the project to open.
      *
-     * @return project to open
+     * @return name of the project to open
      */
-    public ProjectReference getProject() {
-        return project;
+    public String getProjectName() {
+        return projectName;
     }
 
     @Override

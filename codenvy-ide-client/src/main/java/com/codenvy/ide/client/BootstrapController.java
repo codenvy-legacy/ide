@@ -16,7 +16,6 @@ import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
@@ -344,8 +343,7 @@ public class BootstrapController {
     private void processStartupParameters() {
         final String projectNameToOpen = Config.getProjectName();
         if (projectNameToOpen != null) {
-            ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(projectNameToOpen);
-            eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+            eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
             processStartupAction();
         } else {
             processStartupAction();

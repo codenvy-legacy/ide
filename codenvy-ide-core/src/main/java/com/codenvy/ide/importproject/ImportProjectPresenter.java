@@ -16,7 +16,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.notification.Notification;
@@ -160,8 +159,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                ProjectReference projectToOpen = dtoFactory.createDto(ProjectReference.class).withName(result.getName());
-                eventBus.fireEvent(new OpenProjectEvent(projectToOpen));
+                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
 
                 Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
                 notificationManager.showNotification(notification);

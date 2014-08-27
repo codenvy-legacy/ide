@@ -79,13 +79,13 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
         }
 
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.getProject(event.getProject().getName(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+        projectServiceClient.getProject(event.getProjectName(), new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
                 appContext.setCurrentProject(new CurrentProject(projectDescriptor));
 
                 Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle(projectDescriptor.getName()));
-                rewriteBrowserHistory(event.getProject().getName());
+                rewriteBrowserHistory(event.getProjectName());
 
                 // notify all listeners about opening project
                 eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(projectDescriptor));

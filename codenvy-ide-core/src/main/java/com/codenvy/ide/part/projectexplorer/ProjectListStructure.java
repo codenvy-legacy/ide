@@ -86,7 +86,7 @@ class ProjectListStructure extends AbstractTreeStructure {
         /** {@inheritDoc} */
         @Override
         public void processNodeAction() {
-            eventBus.fireEvent(new OpenProjectEvent(getData()));
+            eventBus.fireEvent(new OpenProjectEvent(getData().getName()));
         }
     }
 }
