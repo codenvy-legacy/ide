@@ -84,7 +84,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
                 appContext.setCurrentProject(new CurrentProject(projectDescriptor));
 
-                Document.get().setTitle(coreLocalizationConstant.projectOpenedTitle(projectDescriptor.getName()));
+                Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle(projectDescriptor.getName()));
                 rewriteBrowserHistory(event.getProject().getName());
 
                 // notify all listeners about opening project
@@ -107,7 +107,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
             // Note: currentProject must be null BEFORE firing ProjectClosedEvent
             appContext.setCurrentProject(null);
 
-            Document.get().setTitle(coreLocalizationConstant.projectClosedTitle());
+            Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle());
             rewriteBrowserHistory(null);
 
             // notify all listeners about closing project

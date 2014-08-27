@@ -22,6 +22,7 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -52,6 +53,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
@@ -85,8 +87,9 @@ public class BootstrapController {
     private final WorkspaceServiceClient              workspaceServiceClient;
     private final PreferencesManagerImpl              preferencesManager;
     private final StyleInjector                       styleInjector;
-    private final EventBus                            eventBus;
-    private final ActionManager                       actionManager;
+    private final CoreLocalizationConstant            coreLocalizationConstant;
+    private final EventBus eventBus;
+    private final ActionManager actionManager;
 
     /** Create controller. */
     @Inject
@@ -97,7 +100,7 @@ public class BootstrapController {
                                WorkspaceServiceClient workspaceServiceClient,
                                PreferencesManagerImpl preferencesManager,
                                StyleInjector styleInjector,
-
+                               CoreLocalizationConstant coreLocalizationConstant,
                                DtoRegistrar dtoRegistrar,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                AnalyticsEventLoggerExt analyticsEventLoggerExt,
@@ -117,6 +120,7 @@ public class BootstrapController {
         this.workspaceServiceClient = workspaceServiceClient;
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
+        this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.dtoFactory = dtoFactory;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
@@ -275,6 +279,8 @@ public class BootstrapController {
 
         // Display IDE
         workspacePresenter.go(mainPanel);
+
+        Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle());
 
         processStartupParameters();
 
