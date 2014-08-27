@@ -160,6 +160,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
+    /**
+     * This method called during changing project type
+     * @param project
+     * @param callback
+     */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
         final ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
         projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
@@ -186,6 +191,42 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 view.setLoaderVisibled(false);
                 callback.onFailure(exception);
+            }
+        });
+    }
+
+
+    /**
+     * This method called after importing new project.
+     * In need for changing visibility private/public and setting description from project template
+     * @param projectDescriptor
+     * @param callback
+     */
+    private void updateProjectAfterImport(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
+        String description = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+
+        if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
+            projectDescriptor.setDescription(templateDescriptor.getDescription());
+        } else projectDescriptor.setDescription(description);
+
+        view.setLoaderVisibled(true);
+        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+            @Override
+            protected void onSuccess(ProjectDescriptor projectDescriptor) {
+                view.setLoaderVisibled(false);
+                if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
+                    getProject(projectDescriptor.getName(), callback);
+                } else {
+                    switchVisibility(callback, projectDescriptor);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                view.setLoaderVisibled(false);
+                callback.onFailure(throwable.getCause());
             }
         });
     }
@@ -230,7 +271,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
                                              view.setLoaderVisibled(false);
-                                             updateProject(result, callback);
+                                             updateProjectAfterImport(result, callback);
                                          }
 
                                          @Override
