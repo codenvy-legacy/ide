@@ -45,4 +45,7 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
 
     EmbeddedDocument getEmbeddedDocument();
 
+    /** Gives the focus to the editor. */
+    void setFocus();
+
 }
