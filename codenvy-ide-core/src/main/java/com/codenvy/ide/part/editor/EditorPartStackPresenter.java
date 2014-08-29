@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.part.editor;
 
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -176,4 +177,9 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
         listOpenedFilesPresenter.showDialog(openedFiles, x, y, callback);
     }
+
+    @Override
+    protected void sortPartsOnView(Constraints constraint) {
+    }
+
 }

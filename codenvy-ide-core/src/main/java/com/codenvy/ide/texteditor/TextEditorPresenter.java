@@ -47,15 +47,6 @@ import javax.validation.constraints.NotNull;
 /** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
 
-    //    private final TextListener textListener = new TextListener() {
-//
-//        @Override
-//        public void onTextChange(TextChange textChange) {
-//            if (!isDirty()) {
-//                updateDirtyState(true);
-//            }
-//        }
-//    };
     protected TextEditorViewImpl      editor;
     private   Resources               resources;
     private   UserActivityManager     userActivityManager;
@@ -205,6 +196,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
     @Override
     public void activate() {
         editor.getBuffer().synchronizeScrollTop();
+        editor.getFocusManager().focus();
     }
 
     /** {@inheritDoc} */

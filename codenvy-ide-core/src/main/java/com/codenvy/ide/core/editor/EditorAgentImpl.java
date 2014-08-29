@@ -146,7 +146,7 @@ public class EditorAgentImpl implements EditorAgent {
             }
             workspace.openPart(editor, PartStackType.EDITING);
             openedEditors.put(file.getPath(), editor);
-            
+
             workspace.setActivePart(editor);
         }
     }
@@ -165,21 +165,17 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** @param editor */
     protected void editorClosed(EditorPartPresenter editor) {
-        if (activeEditor == editor) {
-            activeEditor = null;
-        }
+        String closedFilePath = editor.getEditorInput().getFile().getPath();
+        openedEditors.remove(closedFilePath);
+
         //call close() method
         if (editor instanceof TextEditorPresenter) {
             ((TextEditorPresenter)editor).close(false);
         }
-        Array<String> keys = openedEditors.getKeys();
-        for (int i = 0; i < keys.size(); i++) {
-            final String filePath = keys.get(i);
-            // same instance
-            if (openedEditors.get(filePath) == editor) {
-                openedEditors.remove(filePath);
-                return;
-            }
+
+        String activeFilePath = activeEditor.getEditorInput().getFile().getPath();
+        if (activeFilePath == closedFilePath) {
+            activeEditor = null;
         }
     }
 
