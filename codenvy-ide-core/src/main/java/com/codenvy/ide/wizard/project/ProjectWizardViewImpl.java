@@ -35,11 +35,9 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static final String                        defaultRAMRequired        = "2GB";
-    private static final String                        defaultRAMAvailable       = "2GB";
-    private static final String[]                      defaultBuilderEnvirConfig = new String[]{"Maven 3.1.1", "JDK 7.0"};
-    private static final String[]                      defaultRunnerEnvirConfig  = new String[]{"JDK 7.0", "Tomcat 7.0"};
-    private static       ProjectWizardViewImplUiBinder ourUiBinder               = GWT.create(ProjectWizardViewImplUiBinder.class);
+    private static final String                        defaultRAMRequired  = "256MB";
+    private static final String                        defaultRAMAvailable = "256MB";
+    private static       ProjectWizardViewImplUiBinder ourUiBinder         = GWT.create(ProjectWizardViewImplUiBinder.class);
 
 
     @UiField
@@ -47,15 +45,15 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     SimplePanel wizardPanel;
     @UiField
-    FlowPanel   environmentConfigurationPanel;
+    Label       builderEnvConfText;
     @UiField
-    Label       builderEnvironmentConfiguration;
+    Label       builderEnvConf;
     @UiField
-    Label       runnerEnvironmentConfiguration;
+    Label       runnerEnvConfText;
+    @UiField
+    Label       runnerEnvConf;
     @UiField
     FlowPanel   infoRAMPanel;
-    @UiField
-    HTMLPanel   linkGetMoreRAM;
     @UiField
     Label       RAMRequired;
     @UiField
@@ -94,6 +92,10 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         }, ClickEvent.getType());
         saveButtonText = saveButton.getText();
         saveButton.addStyleName(resources.Css().buttonLoader());
+        builderEnvConfText.setVisible(false);
+        builderEnvConf.setVisible(false);
+        runnerEnvConfText.setVisible(false);
+        runnerEnvConf.setVisible(false);
     }
 
     @UiHandler("saveButton")
@@ -105,8 +107,10 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     public void setLoaderVisibled(boolean enabled) {
         if (enabled) {
             saveButton.setHTML("<i></i>");
+            saveButton.setEnabled(false);
         } else {
             saveButton.setText(saveButtonText);
+            saveButton.setEnabled(true);
         }
     }
 
@@ -124,35 +128,45 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void setBuilderEnvirConfig(String configs[]) {
-        if (configs == null) configs = defaultBuilderEnvirConfig;
-        StringBuilder configsBuilder = new StringBuilder();
-        for (String config : configs) {
-            if (config.length() > 0) {
-                configsBuilder.append(": " + config);
+        if (configs == null) {
+            if (builderEnvConfText.isVisible()) builderEnvConfText.setVisible(false);
+            if (builderEnvConf.isVisible()) builderEnvConf.setVisible(false);
+        } else {
+            if (!builderEnvConfText.isVisible()) builderEnvConfText.setVisible(true);
+            if (!builderEnvConf.isVisible()) builderEnvConf.setVisible(true);
+            StringBuilder configsBuilder = new StringBuilder();
+            for (String config : configs) {
+                if (config.length() > 0) {
+                    configsBuilder.append(": " + config);
+                }
             }
+            builderEnvConf.setText(configsBuilder.toString());
         }
-        builderEnvironmentConfiguration.setText(configsBuilder.toString());
     }
 
     @Override
     public void setRunnerEnvirConfig(String configs[]) {
-        if (configs == null) configs = defaultRunnerEnvirConfig;
-        StringBuilder configsBuilder = new StringBuilder();
-        for (String config : configs) {
-            if (config.length() > 0) {
-                configsBuilder.append(": " + config);
+        if (configs == null) {
+            if (runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(false);
+            if (runnerEnvConf.isVisible()) runnerEnvConf.setVisible(false);
+        } else {
+            if (!runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(true);
+            if (!runnerEnvConf.isVisible()) runnerEnvConf.setVisible(true);
+            StringBuilder configsBuilder = new StringBuilder();
+            for (String config : configs) {
+                if (config.length() > 0) {
+                    configsBuilder.append(": " + config);
+                }
             }
+            runnerEnvConf.setText(configsBuilder.toString());
         }
-        runnerEnvironmentConfiguration.setText(configsBuilder.toString());
     }
 
     @Override
     public void setInfoVisibled(boolean enabled) {
         if (enabled) {
-            environmentConfigurationPanel.getElement().replaceClassName(style.hidden(), style.visible());
             infoRAMPanel.getElement().replaceClassName(style.hidden(), style.visible());
         } else {
-            environmentConfigurationPanel.getElement().replaceClassName(style.visible(), style.hidden());
             infoRAMPanel.getElement().replaceClassName(style.visible(), style.hidden());
         }
     }

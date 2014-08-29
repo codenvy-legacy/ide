@@ -49,7 +49,6 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class MainPageViewImpl implements MainPageView {
-    private static final String[] defaultOptions = new String[]{"JDK", "Application Server"};
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
@@ -162,7 +161,10 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     private void setConfigOptions(String options[]) {
-        if (options == null) options = defaultOptions;
+        if (options == null) {
+            configurationArea.getElement().setInnerText("");
+            return;
+        }
         StringBuilder optionsHTMLBuilder = new StringBuilder();
         for (String option : options) {
             if (option.length() > 0) {

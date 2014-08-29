@@ -11,9 +11,11 @@
 package com.codenvy.ide.wizard.project;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -27,6 +29,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,6 +37,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -161,6 +165,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     /**
      * This method called during changing project type
+     *
      * @param project
      * @param callback
      */
@@ -198,6 +203,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /**
      * This method called after importing new project.
      * In need for changing visibility private/public and setting description from project template
+     *
      * @param projectDescriptor
      * @param callback
      */
@@ -341,30 +347,44 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-            // TODO: add configuration to ProjectTemplateDescriptor
-            //leave the default
             view.setRunnerEnvirConfig(null);
             view.setBuilderEnvirConfig(null);
-            view.setRAMRequired(null);
-            // TODO: need workspace information
-            //leave the default
-            view.setRAMAvailable(null);
-            //set info visibled
+            String requiredMemorySize = null;
+            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
+            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
+            if (defaultEnvironment != null && configurations != null) {
+                RunnerEnvironmentConfigurationDescriptor configurationDescriptor = configurations.get(defaultEnvironment);
+                if (configurationDescriptor != null) {
+                    int memorySize = configurationDescriptor.getRecommendedMemorySize();
+                    if (memorySize > 0) {
+                        if (memorySize < 1000) {
+                            requiredMemorySize = memorySize + "Mb";
+                        } else {
+                            requiredMemorySize = memorySize / 1000 + "Gb";
+                        }
+                    }
+                }
+            }
+            view.setRAMRequired(requiredMemorySize);
+            //set info visible
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
-            // TODO: add configuration to ProjectTypeDescriptor
+
+            // TODO: need configuration
             view.setRunnerEnvirConfig(new String[]{"JDK 7.0"});
+            view.setBuilderEnvirConfig(new String[]{"JDK 7.0"});
+
             //leave the default
-            view.setBuilderEnvirConfig(null);
             view.setRAMRequired(null);
-            // TODO: need workspace information
-            //leave the default
-            view.setRAMAvailable(null);
-            //set info visibled
+            //set info visible
             view.setInfoVisibled(true);
         } else {
             view.setInfoVisibled(false);
         }
+
+        // TODO: need workspace information
+        view.setRAMAvailable(null);
+
     }
 
     /** {@inheritDoc} */
