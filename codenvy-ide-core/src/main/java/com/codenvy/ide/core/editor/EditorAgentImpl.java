@@ -146,6 +146,8 @@ public class EditorAgentImpl implements EditorAgent {
             }
             workspace.openPart(editor, PartStackType.EDITING);
             openedEditors.put(file.getPath(), editor);
+            
+            workspace.setActivePart(editor);
         }
     }
 
