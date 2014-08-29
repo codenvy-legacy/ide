@@ -17,8 +17,8 @@ import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.loader.Loader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -39,7 +39,7 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     private       SshKeyService          service;
     private       EventBus               eventBus;
     private       NotificationManager    notificationManager;
-    private       Loader                 loader;
+    private       AsyncRequestLoader     loader;
 
     /**
      * Create presenter.
@@ -53,7 +53,7 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     public SshKeyPresenter(SshKeyView view,
                            SshKeyService service,
                            EventBus eventBus,
-                           Loader loader,
+                           AsyncRequestLoader loader,
                            NotificationManager notificationManager,
                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;

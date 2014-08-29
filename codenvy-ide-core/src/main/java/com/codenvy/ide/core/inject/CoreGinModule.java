@@ -124,6 +124,7 @@ import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.projecttype.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestFactory;
+import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactoryImpl;
@@ -141,7 +142,6 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
-import com.codenvy.ide.ui.loader.Loader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
 import com.codenvy.ide.util.Config;
@@ -179,7 +179,7 @@ public class CoreGinModule extends AbstractGinModule {
     protected void configure() {
         // generic bindings
         bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
-        bind(Loader.class).to(IdeLoader.class).in(Singleton.class);
+        bind(AsyncRequestLoader.class).to(IdeLoader.class).in(Singleton.class);
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
