@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.action;
 
+import com.codenvy.ide.api.constraints.Anchor;
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.util.Pair;
 import com.codenvy.ide.util.loging.Log;
 

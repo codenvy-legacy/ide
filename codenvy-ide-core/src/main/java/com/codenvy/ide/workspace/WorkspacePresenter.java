@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackType;
@@ -77,7 +78,13 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void openPart(PartPresenter part, PartStackType type) {
-        workBenchPresenter.openPart(part, type);
+        openPart(part, type, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void openPart(PartPresenter part, PartStackType type, Constraints constraint){
+        workBenchPresenter.openPart(part, type, constraint);
     }
 
     /** {@inheritDoc} */

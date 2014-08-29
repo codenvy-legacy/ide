@@ -12,8 +12,8 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.api.action.ActionManager;
-import com.codenvy.ide.api.action.Anchor;
-import com.codenvy.ide.api.action.Constraints;
+import com.codenvy.ide.api.constraints.Anchor;
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
@@ -118,7 +118,8 @@ public class RunnerExtension {
                                   WorkspaceAgent workspaceAgent,
                                   RunnerConsolePresenter runnerConsolePresenter,
                                   @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
-        workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION);
+        // TODO need to make a new binding for Builder title
+        workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Builder"));
 
         // add toolbar with actions on Runner console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_RUNNER_CONSOLE_TOOLBAR, false, actionManager);
