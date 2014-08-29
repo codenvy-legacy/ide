@@ -137,6 +137,14 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
+    public void setTabpositions(Array<Integer> partPositions) {
+        for (int pos = 0; pos < partPositions.size(); pos++) {
+            tabsPanel.insert(tabButtons.get(partPositions.get(pos)), pos);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setActiveTab(int index) {
         if (activeTabButton != null) {
             activeTabButton.removeStyleName(resources.partStackCss().idePartStackToolTabSelected());

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.action;
+package com.codenvy.ide.api.constraints;
 
 /**
  * Defines possible positions of an action relative to another action.

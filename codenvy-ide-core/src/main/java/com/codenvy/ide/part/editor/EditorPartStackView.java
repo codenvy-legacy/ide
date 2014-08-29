@@ -159,6 +159,12 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
+    public void setTabpositions(Array<Integer> partPositions) {
+        //TODO not implemented. need to add for sorting
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void removeTab(int index) {
         if (index < tabs.size()) {
             TabButton removed = tabs.remove(index);

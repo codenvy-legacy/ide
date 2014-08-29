@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.part;
 
+import com.codenvy.ide.api.constraints.Anchor;
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
@@ -36,6 +38,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
  * <p/>
@@ -46,10 +51,12 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final int                  DEFAULT_SIZE = 200;
-    private              Double               partsSize    = (double)DEFAULT_SIZE;
+    private static final int                      DEFAULT_SIZE        = 200;
+    private              Double                   partsSize           = (double)DEFAULT_SIZE;
     /** list of parts */
-    protected final      Array<PartPresenter> parts        = Collections.createArray();
+    protected final      Array<PartPresenter>     parts               = Collections.createArray();
+    protected final      Array<Integer>           viewPartPositions   = Collections.createArray();
+    private              Map<String, Constraints> priorityPositionMap = new HashMap<>();
     /** view implementation */
     protected final PartStackView view;
     private final   EventBus      eventBus;
@@ -91,6 +98,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         view.setDelegate(this);
     }
 
+
+
     /**
      * Update part tab, it's may be title, icon or tooltip
      *
@@ -123,6 +132,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void addPart(PartPresenter part) {
+        addPart(part, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addPart(PartPresenter part, Constraints constraint) {
         if (parts.contains(part)) {
             // part already exists
             // activate it
@@ -136,6 +151,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         partsSize = (part.getSize() > partsSize) ? part.getSize() : partsSize;
         parts.add(part);
+        viewPartPositions.add(parts.indexOf(part));
 
         part.addPropertyListener(propertyListener);
         // include close button
@@ -146,6 +162,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                                   part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
         part.go(partViewContainer);
+        sortPartsOnView(constraint);
         part.onOpen();
         // request focus
         onRequestFocus();
@@ -305,5 +322,90 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         /** PartStack is being clicked and requests Focus */
         void onRequestFocus(PartStack partStack);
+    }
+
+    /**
+     * Sort parts depending on constraint.
+     *
+     * @param constraint
+     */
+    private void sortPartsOnView(Constraints constraint) {
+        int boofPartPosition;
+        int partPositionsSize = viewPartPositions.size();
+        int positionOfLastElement = viewPartPositions.get(partPositionsSize - 1);
+        int lastPositionOfSorting = partPositionsSize - 1;
+
+        if (partPositionsSize > 1) {
+            Constraints previousConstraint = priorityPositionMap.get(parts.get(viewPartPositions.get(partPositionsSize - 2)).getTitle());
+            if (previousConstraint != null && previousConstraint.myAnchor.equals(Anchor.LAST)) {
+                boofPartPosition = viewPartPositions.get(partPositionsSize - 2);
+                viewPartPositions.set(partPositionsSize - 2, viewPartPositions.get(partPositionsSize - 1));
+                viewPartPositions.set(partPositionsSize - 1, boofPartPosition);
+                lastPositionOfSorting = partPositionsSize - 2;
+            }
+        }
+        if (constraint != null) {
+            priorityPositionMap.put(parts.get(positionOfLastElement).getTitle(), constraint);
+        } else if (priorityPositionMap.size() == 0) return;
+        for (int labelOfPartsPos = 0; labelOfPartsPos < partPositionsSize; labelOfPartsPos++) {
+            Constraints localeConstraint = priorityPositionMap.get(parts.get(viewPartPositions.get(labelOfPartsPos)).getTitle());
+            if (localeConstraint != null) {
+                if (localeConstraint.myAnchor == Anchor.LAST) {
+                    if (viewPartPositions.get(labelOfPartsPos) != positionOfLastElement) {
+                        boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                        for (int partPosition = labelOfPartsPos; partPosition < partPositionsSize - 1; partPosition++) {
+                            viewPartPositions.set(partPosition, viewPartPositions.get(partPosition + 1));
+                        }
+                        viewPartPositions.set(partPositionsSize - 1, boofPartPosition);
+                    }
+                    continue;
+                }
+                if (localeConstraint.myAnchor == Anchor.FIRST) {
+                    if (viewPartPositions.get(labelOfPartsPos) != 0) {
+                        boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                        for (int partPosition = labelOfPartsPos; partPosition > 0; partPosition--) {
+                            viewPartPositions.set(partPosition, viewPartPositions.get(partPosition - 1));
+                        }
+                        viewPartPositions.set(0, boofPartPosition);
+                    }
+                    continue;
+                }
+                if (localeConstraint.myAnchor == Anchor.BEFORE) {
+                    if (partPositionsSize > labelOfPartsPos + 1) {
+                        if (parts.get(viewPartPositions.get(labelOfPartsPos + 1)).getTitle().equals(localeConstraint.myRelativeToActionId))
+                            continue;
+                    }
+                } else {//Anchor.AFTER
+                    if (labelOfPartsPos > 1) {
+                        if (parts.get(viewPartPositions.get(labelOfPartsPos - 1)).getTitle().equals(localeConstraint.myRelativeToActionId))
+                            continue;
+                    }
+                }
+                if (labelOfPartsPos < lastPositionOfSorting) {
+                    boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                    for (int partPosition = labelOfPartsPos; partPosition < lastPositionOfSorting; partPosition++) {
+                        viewPartPositions.set(partPosition, viewPartPositions.get(partPosition + 1));
+                    }
+                    viewPartPositions.set(lastPositionOfSorting, boofPartPosition);
+                }
+                boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                for (int partPosition = lastPositionOfSorting; partPosition > 0; partPosition--) {
+                    if (parts.get(viewPartPositions.get(partPosition - 1)).getTitle().equals(localeConstraint.myRelativeToActionId)) {
+                        if (localeConstraint.myAnchor == Anchor.BEFORE) {
+                            viewPartPositions.set(partPosition, boofPartPosition);
+                        } else {
+                            if (partPosition > 1) {
+                                viewPartPositions.set(partPosition, viewPartPositions.get(partPosition - 1));
+                                viewPartPositions.set(partPosition - 1, boofPartPosition);
+                            }
+                        }
+                        break;
+                    } else {
+                        if (partPosition > 1) viewPartPositions.set(partPosition, viewPartPositions.get(partPosition - 1));
+                    }
+                }
+            }
+        }
+        view.setTabpositions(viewPartPositions);
     }
 }

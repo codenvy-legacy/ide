@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.parts;
 
 
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.extension.SDK;
 
 
@@ -37,6 +38,15 @@ public interface WorkspaceAgent {
      * @param type
      */
     void openPart(PartPresenter part, PartStackType type);
+
+    /**
+     * Opens Part with constraint
+     *
+     * @param part
+     * @param type
+     * @param constraint
+     */
+    void openPart(PartPresenter part, PartStackType type, Constraints constraint);
 
     /**
      * Hides given Part

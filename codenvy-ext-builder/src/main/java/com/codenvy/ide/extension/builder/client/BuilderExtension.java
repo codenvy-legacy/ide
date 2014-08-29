@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.action.ActionManager;
-import com.codenvy.ide.api.action.Anchor;
-import com.codenvy.ide.api.action.Constraints;
+import com.codenvy.ide.api.constraints.Anchor;
+import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
@@ -96,7 +96,8 @@ public class BuilderExtension {
                                    WorkspaceAgent workspaceAgent,
                                    BuilderConsolePresenter builderConsolePresenter,
                                    @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
-        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION);
+        //TODO need to make a new binding for Events title
+        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Events"));
 
         // add toolbar with indicators to Builder console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_BUILDER_CONSOLE_TOOLBAR, false, actionManager);

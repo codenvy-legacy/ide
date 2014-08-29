@@ -8,11 +8,11 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.action;
+package com.codenvy.ide.api.constraints;
 
 /**
  * Represents constraints for some action. Constraints are used to specify
- * action's position in the default group, see {@link DefaultActionGroup}.
+ * action's position in the default group, see {@link com.codenvy.ide.api.action.DefaultActionGroup}.
  *
  * @author Evgen Vidolob
  */
