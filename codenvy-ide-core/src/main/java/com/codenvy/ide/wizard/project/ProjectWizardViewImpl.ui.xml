@@ -117,12 +117,13 @@
         .button {
             margin: 5px;
         }
-        .blueButton, .blueButton[disabled]:hover{
+
+        .blueButton, .blueButton[disabled]:hover {
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
             margin: 5px 25px 0px 8px;
         }
 
-		.blueButton:hover {
+        .blueButton:hover {
             background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3263A2 1px, #3263A2 100%);
         }
 
@@ -150,6 +151,8 @@
 
         .infoText a {
             color: #66CD00;
+            top: 4px;
+            position: relative;
         }
 
         .infoText a:hover {
@@ -178,15 +181,13 @@
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}">
-            <g:FlowPanel ui:field="environmentConfigurationPanel" addStyleNames="{style.hidden}">
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
-                    <g:Label text="Runner Environment Configuration" addStyleNames="{style.infoText}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="builderEnvironmentConfiguration"/>
-                    <g:Label ui:field="runnerEnvironmentConfiguration"/>
-                </g:FlowPanel>
+            <g:FlowPanel addStyleNames="{style.labelPanel}">
+                <g:Label ui:field="builderEnvConfText" text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
+                <g:Label ui:field="runnerEnvConfText" text="Runner Environment Configuration" addStyleNames="{style.infoText}"/>
+            </g:FlowPanel>
+            <g:FlowPanel addStyleNames="{style.labelPanel}">
+                <g:Label ui:field="builderEnvConf"/>
+                <g:Label ui:field="runnerEnvConf"/>
             </g:FlowPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.bottomPanel}">
@@ -206,10 +207,9 @@
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label ui:field="RAMAvailable" addStyleNames="{style.infoValue}"/>
                 </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:HTMLPanel ui:field="linkGetMoreRAM" addStyleNames="{style.infoText}">
-                        <a href="{locale.createProjectFromTemplatelinkGetMoreRAM}">Get More RAM</a>
-                    </g:HTMLPanel>
+                <g:FlowPanel addStyleNames="{style.labelPanel} {style.infoText}">
+                    <g:Anchor text="Get More RAM" href="{locale.createProjectFromTemplatelinkGetMoreRAM}" target="_blank"
+                              addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>

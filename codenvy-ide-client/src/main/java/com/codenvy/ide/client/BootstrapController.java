@@ -15,7 +15,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
-import com.codenvy.api.project.gwt.client.ProjectTypeDescriptionServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
@@ -72,23 +72,23 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt             analyticsEventLoggerExt;
-    private final DtoFactory                          dtoFactory;
-    private final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient;
-    private final ProjectTypeDescriptorRegistry       projectTypeDescriptorRegistry;
-    private final IconRegistry                        iconRegistry;
-    private final ThemeAgent                          themeAgent;
-    private final Provider<ComponentRegistry>         componentRegistry;
-    private final Provider<WorkspacePresenter>        workspaceProvider;
-    private final ExtensionInitializer                extensionInitializer;
-    private final UserProfileServiceClient            userProfileService;
-    private final WorkspaceServiceClient              workspaceServiceClient;
-    private final PreferencesManagerImpl              preferencesManager;
-    private final StyleInjector                       styleInjector;
-    private final CoreLocalizationConstant            coreLocalizationConstant;
-    private final EventBus eventBus;
-    private final ActionManager actionManager;
+    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
+    private final DtoFactory                    dtoFactory;
+    private final ProjectTypeServiceClient      projectTypeDescriptionServiceClient;
+    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
+    private final IconRegistry                  iconRegistry;
+    private final ThemeAgent                    themeAgent;
+    private final Provider<ComponentRegistry>   componentRegistry;
+    private final Provider<WorkspacePresenter>  workspaceProvider;
+    private final ExtensionInitializer          extensionInitializer;
+    private final UserProfileServiceClient      userProfileService;
+    private final WorkspaceServiceClient        workspaceServiceClient;
+    private final PreferencesManagerImpl        preferencesManager;
+    private final StyleInjector                 styleInjector;
+    private final CoreLocalizationConstant      coreLocalizationConstant;
+    private final EventBus                      eventBus;
+    private final ActionManager                 actionManager;
 
     /** Create controller. */
     @Inject
@@ -107,7 +107,7 @@ public class BootstrapController {
                                EventBus eventBus,
                                DtoFactory dtoFactory,
 
-                               final ProjectTypeDescriptionServiceClient projectTypeDescriptionServiceClient,
+                               final ProjectTypeServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
@@ -150,19 +150,19 @@ public class BootstrapController {
                                           }
 
                                           @Override
-                            public void onFailure(Exception e) {
-                                Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
-                                initializationFailed("Unable to inject CodeMirror parsers");
-                            }
-                        }).inject();
-                }
+                                          public void onFailure(Exception e) {
+                                              Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
+                                              initializationFailed("Unable to inject CodeMirror parsers");
+                                          }
+                                      }).inject();
+                          }
 
-                @Override
-                public void onFailure(Exception e) {
-                    Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
-                    initializationFailed("Unable to inject CodeMirror");
-                }
-            }).inject();
+                          @Override
+                          public void onFailure(Exception e) {
+                              Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
+                              initializationFailed("Unable to inject CodeMirror");
+                          }
+                      }).inject();
     }
 
     /**
@@ -170,52 +170,54 @@ public class BootstrapController {
      */
     private void loadWorkspace() {
         workspaceServiceClient.getWorkspace(Config.getWorkspaceId(),
-                    new AsyncRequestCallback<WorkspaceDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(WorkspaceDescriptor.class)) {
-                        @Override
-                        protected void onSuccess(WorkspaceDescriptor result) {
-                            Config.setCurrentWorkspace(result);
-                            loadUserProfile();
-                        }
+                                            new AsyncRequestCallback<WorkspaceDescriptor>(
+                                                    dtoUnmarshallerFactory.newUnmarshaller(WorkspaceDescriptor.class)) {
+                                                @Override
+                                                protected void onSuccess(WorkspaceDescriptor result) {
+                                                    Config.setCurrentWorkspace(result);
+                                                    loadUserProfile();
+                                                }
 
-                        @Override
-                        protected void onFailure(Throwable throwable) {
-                            Log.error(BootstrapController.class, "Unable to get Workspace", throwable);
-                            initializationFailed("Unable to get Workspace");
-                        }
-                    }
-               );
+                                                @Override
+                                                protected void onFailure(Throwable throwable) {
+                                                    Log.error(BootstrapController.class, "Unable to get Workspace", throwable);
+                                                    initializationFailed("Unable to get Workspace");
+                                                }
+                                            }
+                                           );
     }
 
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
         userProfileService.getCurrentProfile(null,
-                 new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
-                     @Override
-                     protected void onSuccess(final ProfileDescriptor profile) {
-                         Config.setCurrentProfile(profile);
+                                             new AsyncRequestCallback<ProfileDescriptor>(
+                                                     dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
+                                                 @Override
+                                                 protected void onSuccess(final ProfileDescriptor profile) {
+                                                     Config.setCurrentProfile(profile);
 
-                         /**
-                          * Profile received, restore preferences and theme
-                          */
-                         preferencesManager.load(profile.getPreferences());
-                         setTheme();
-                         styleInjector.inject();
+                                                     /**
+                                                      * Profile received, restore preferences and theme
+                                                      */
+                                                     preferencesManager.load(profile.getPreferences());
+                                                     setTheme();
+                                                     styleInjector.inject();
 
-                         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                             @Override
-                             public void execute() {
-                                 initializeComponentRegistry();
-                             }
-                         });
-                     }
+                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                                                         @Override
+                                                         public void execute() {
+                                                             initializeComponentRegistry();
+                                                         }
+                                                     });
+                                                 }
 
-                     @Override
-                     protected void onFailure(Throwable error) {
-                         Log.error(BootstrapController.class, "Unable to get Profile", error);
-                         initializationFailed("Unable to get Profile");
-                     }
-                 }
-            );
+                                                 @Override
+                                                 protected void onFailure(Throwable error) {
+                                                     Log.error(BootstrapController.class, "Unable to get Profile", error);
+                                                     initializationFailed("Unable to get Profile");
+                                                 }
+                                             }
+                                            );
     }
 
 
@@ -246,7 +248,7 @@ public class BootstrapController {
             @Override
             protected void onSuccess(Array<ProjectTypeDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
-                        projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
+                    projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
                 }
 
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -384,7 +386,8 @@ public class BootstrapController {
      * Handles any of initialization errors.
      * Tries to call predefined IDE.eventHandlers.ideInitializationFailed function.
      *
-     * @param message error message
+     * @param message
+     *         error message
      */
     private native void initializationFailed(String message) /*-{
         try {
