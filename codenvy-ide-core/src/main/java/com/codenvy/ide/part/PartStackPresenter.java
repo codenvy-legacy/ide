@@ -262,6 +262,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                 setActivePart(newPart);
             }
             view.removeTab(partIndex);
+            viewPartPositions.remove(viewPartPositions.indexOf(parts.indexOf(part)));
             parts.remove(part);
             part.removePropertyListener(propertyListener);
         }
