@@ -74,14 +74,20 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     /** {@inheritDoc} */
     @Override
     public void setRootNodes(final Array<AbstractTreeNode<?>> rootNodes) {
+        // provided rootNodes should be set as child nodes for rootNode
         rootNode.setChildren(rootNodes);
-
         for (AbstractTreeNode treeNode : rootNodes.asIterable()) {
             treeNode.setParent(rootNode);
         }
 
         tree.getModel().setRoot(rootNode);
         tree.renderTree(0);
+
+        // expand first node that usually represents project itself
+        if (!rootNodes.get(0).isLeaf()) {
+            tree.autoExpandAndSelectNode(rootNodes.get(0), false);
+            delegate.onNodeExpanded(rootNodes.get(0));
+        }
     }
 
     /** {@inheritDoc} */
