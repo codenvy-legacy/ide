@@ -11,12 +11,17 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.gwt.client.QueryExpression;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
@@ -27,6 +32,8 @@ import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.part.projectexplorer.ProjectListStructure;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -34,6 +41,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -53,7 +61,9 @@ public class RenameItemAction extends Action {
     private final AnalyticsEventLogger     eventLogger;
     private final NotificationManager      notificationManager;
     private final EventBus                 eventBus;
+    private final EditorAgent              editorAgent;
     private final CoreLocalizationConstant localization;
+    private final ProjectServiceClient     projectServiceClient;
     private final RunnerServiceClient      runnerServiceClient;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final SelectionAgent           selectionAgent;
@@ -64,7 +74,9 @@ public class RenameItemAction extends Action {
                             SelectionAgent selectionAgent,
                             NotificationManager notificationManager,
                             EventBus eventBus,
+                            EditorAgent editorAgent,
                             CoreLocalizationConstant localization,
+                            ProjectServiceClient projectServiceClient,
                             RunnerServiceClient runnerServiceClient,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(localization.renameItemActionText(), localization.renameItemActionDescription(), null, resources.rename());
@@ -72,7 +84,9 @@ public class RenameItemAction extends Action {
         this.eventLogger = eventLogger;
         this.notificationManager = notificationManager;
         this.eventBus = eventBus;
+        this.editorAgent = editorAgent;
         this.localization = localization;
+        this.projectServiceClient = projectServiceClient;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
@@ -122,10 +136,13 @@ public class RenameItemAction extends Action {
     private void askForRenamingNode(final AbstractTreeNode nodeToRename) {
         new AskValueDialog(getDialogTitle(nodeToRename), localization.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
-            public void onOk(final String value) {
-                nodeToRename.rename(value, new AsyncCallback<Void>() {
+            public void onOk(final String newName) {
+                nodeToRename.rename(newName, new AsyncCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
+                        if (nodeToRename instanceof FileNode || nodeToRename instanceof FolderNode) {
+                            checkOpenedFiles(nodeToRename, newName);
+                        }
                         eventBus.fireEvent(new RefreshProjectTreeEvent());
                     }
 
@@ -171,6 +188,76 @@ public class RenameItemAction extends Action {
                                                         callback.onFailure(exception);
                                                     }
                                                 });
+    }
+
+    private void checkOpenedFiles(final AbstractTreeNode node, String newName) {
+        final ItemReference itemBeforeRenaming;
+        if (node instanceof FileNode) {
+            itemBeforeRenaming = ((FileNode)node).getData();
+        } else if (node instanceof FolderNode) {
+            itemBeforeRenaming = ((FolderNode)node).getData();
+        } else {
+            return;
+        }
+
+        final String itemPathBeforeRenaming = itemBeforeRenaming.getPath();
+        final String parentPathBeforeRenaming =
+                itemPathBeforeRenaming.substring(0, itemPathBeforeRenaming.length() - itemBeforeRenaming.getName().length());
+        final String itemPathAfterRenaming = parentPathBeforeRenaming + newName;
+
+        QueryExpression query = null;
+        if ("file".equals(itemBeforeRenaming.getType())) {
+            query = new QueryExpression().setPath(parentPathBeforeRenaming).setName(newName);
+        } else if ("folder".equals(itemBeforeRenaming.getType())) {
+            query = new QueryExpression().setPath(itemPathAfterRenaming);
+        }
+
+        if (query != null) {
+            Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+            projectServiceClient.search(query, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+                @Override
+                protected void onSuccess(Array<ItemReference> result) {
+                    if ("file".equals(itemBeforeRenaming.getType())) {
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            if (itemPathBeforeRenaming.equals(editor.getEditorInput().getFile().getPath())) {
+                                // result array should contain one item only
+                                ItemReference renamedItem = result.get(0);
+                                replaceFileInEditor(editor, renamedItem);
+                                break;
+                            }
+                        }
+                    } else if ("folder".equals(itemBeforeRenaming.getType())) {
+                        StringMap<ItemReference> children = Collections.createStringMap();
+                        for (ItemReference itemReference : result.asIterable()) {
+                            children.put(itemReference.getPath(), itemReference);
+                        }
+
+                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                            FileNode openedFile = editor.getEditorInput().getFile();
+                            if (openedFile.getPath().startsWith(itemPathBeforeRenaming)) {
+                                String childFileNewPath = openedFile.getPath().replaceFirst(itemPathBeforeRenaming, itemPathAfterRenaming);
+                                ItemReference renamedItem = children.get(childFileNewPath);
+                                if (renamedItem != null) {
+                                    replaceFileInEditor(editor, renamedItem);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Log.error(RenameItemAction.class, exception);
+                }
+            });
+        }
+    }
+
+    private void replaceFileInEditor(EditorPartPresenter editor, ItemReference renamedItem) {
+        editorAgent.getOpenedEditors().remove(editor.getEditorInput().getFile().getPath());
+        editorAgent.getOpenedEditors().put(renamedItem.getPath(), editor);
+        editor.getEditorInput().getFile().setData(renamedItem);
+        editor.onFileChanged();
     }
 
     private String getDialogTitle(AbstractTreeNode node) {

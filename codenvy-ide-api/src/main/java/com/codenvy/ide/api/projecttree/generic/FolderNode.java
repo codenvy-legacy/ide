@@ -115,8 +115,18 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
 
     /** {@inheritDoc} */
     @Override
-    public void rename(String newName, AsyncCallback<Void> callback) {
-        // TODO
+    public void rename(String newName, final AsyncCallback<Void> callback) {
+        projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                callback.onSuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
     }
 
     /** {@inheritDoc} */

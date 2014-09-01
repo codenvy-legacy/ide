@@ -99,10 +99,18 @@ public class ProjectListStructure extends AbstractTreeStructure {
 
         /** {@inheritDoc} */
         @Override
-        public void rename(String newName, AsyncCallback<Void> callback) {
-            // TODO
-            // need to check launched processes and inform user that
-            // he should stop all process before renaming project
+        public void rename(String newName, final AsyncCallback<Void> callback) {
+            projectServiceClient.rename(data.getPath(), newName, null, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
         }
 
         /** {@inheritDoc} */

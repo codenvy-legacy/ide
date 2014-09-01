@@ -71,11 +71,10 @@ public class FileNode extends AbstractTreeNode<ItemReference> implements Storabl
 
     /** {@inheritDoc} */
     @Override
-    public void rename(String newName, final AsyncCallback<Void> callback) {
+    public void rename(final String newName, final AsyncCallback<Void> callback) {
         projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                // TODO: checkOpenedFiles(item, value);
                 callback.onSuccess(result);
             }
 
