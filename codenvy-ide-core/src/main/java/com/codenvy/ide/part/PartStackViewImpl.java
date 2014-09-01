@@ -139,7 +139,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public void setTabpositions(Array<Integer> partPositions) {
         for (int pos = 0; pos < partPositions.size(); pos++) {
-            tabsPanel.insert(tabButtons.get(partPositions.get(pos)), pos);
+            if(tabButtons.size() > pos) tabsPanel.insert(tabButtons.get(partPositions.get(pos)), pos);
         }
     }
 

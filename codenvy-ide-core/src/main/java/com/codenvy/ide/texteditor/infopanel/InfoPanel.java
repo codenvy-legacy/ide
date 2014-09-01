@@ -12,6 +12,7 @@ package com.codenvy.ide.texteditor.infopanel;
 
 import elemental.dom.Element;
 
+import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.LineInfo;
@@ -61,7 +62,10 @@ public class InfoPanel extends UiComponent<InfoPanel.View> {
             @Override
             public void onFocusChange(boolean hasFocus) {
                 getView().setCharPosition(null);
-                getView().setLineNumber(editor.getDocument().getNumberOfLines());
+                Document document = editor.getDocument();
+                if (editor.getDocument() != null) {
+                    getView().setLineNumber(document.getNumberOfLines());
+                }
             }
         });
 

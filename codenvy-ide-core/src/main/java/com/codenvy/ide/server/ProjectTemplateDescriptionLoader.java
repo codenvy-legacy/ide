@@ -11,7 +11,9 @@
 package com.codenvy.ide.server;
 
 import com.codenvy.api.project.shared.ProjectTemplateDescription;
+import com.codenvy.api.project.shared.RunnerEnvironmentConfiguration;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.dto.server.DtoFactory;
 import com.codenvy.dto.shared.JsonArray;
 
@@ -19,7 +21,9 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Reads project template descriptions that may be described in separate .json files
@@ -52,9 +56,30 @@ public class ProjectTemplateDescriptionLoader {
                             template.getSource().getType(),
                             template.getDisplayName(),
                             template.getDescription(),
-                            template.getSource().getLocation()));
+                            template.getSource().getLocation(),
+                            template.getDefaultBuilderEnvironment(),
+                            template.getDefaultRunnerEnvironment(),
+                            getReformatedRunnerEnvConfigs(template)));
                 }
             }
         }
+    }
+
+    private Map<String, RunnerEnvironmentConfiguration> getReformatedRunnerEnvConfigs(ProjectTemplateDescriptor template) {
+        String defaultRunnerEnvironment = template.getDefaultRunnerEnvironment();
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
+                template.getRunnerEnvironmentConfigurations();
+        Map<String, RunnerEnvironmentConfiguration> runnerEnvConfigs = new LinkedHashMap<>();
+        if (template.getRunnerEnvironmentConfigurations() != null) {
+            if (runnerEnvironmentConfigurations != null) {
+                RunnerEnvironmentConfigurationDescriptor descriptor =
+                        runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+                if (descriptor != null) {
+                    runnerEnvConfigs.put(defaultRunnerEnvironment,
+                                         new RunnerEnvironmentConfiguration(-1, descriptor.getRecommendedMemorySize()));
+                }
+            }
+        }
+        return runnerEnvConfigs;
     }
 }

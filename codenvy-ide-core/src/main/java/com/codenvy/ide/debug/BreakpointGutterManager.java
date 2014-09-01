@@ -151,6 +151,10 @@ public class BreakpointGutterManager {
      * @return <code>true</code> if the breakpoint exist, and <code>false</code> otherwise
      */
     public boolean isBreakPointExist(int lineNumber) {
+        if (editorAgent.getActiveEditor() == null) {
+            return false;
+        }
+
         FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         Array<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null) {

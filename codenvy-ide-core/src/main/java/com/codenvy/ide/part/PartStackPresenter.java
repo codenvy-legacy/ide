@@ -190,6 +190,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     @Override
     public void setActivePart(PartPresenter part) {
         if (activePart == part) {
+            // request part stack to get the focus
+            onRequestFocus();
+
             // partsSize.set(parts.indexOf(part), workBenchPartController.getSize());
             // workBenchPartController.setHidden(true);
             // activePart = null;
@@ -259,6 +262,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                 setActivePart(newPart);
             }
             view.removeTab(partIndex);
+            viewPartPositions.remove(viewPartPositions.indexOf(parts.indexOf(part)));
             parts.remove(part);
             part.removePropertyListener(propertyListener);
         }
@@ -275,17 +279,21 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             @Override
             public void onClick(ClickEvent event) {
                 if (activePart == part) {
-                    if (workBenchPartController != null) {
-                        partsSize = workBenchPartController.getSize();
-                        workBenchPartController.setHidden(true);
+                    if (partsClosable) {
+                        // request part stack to get the focus
+                        onRequestFocus();
+                    } else {
+                        if (workBenchPartController != null) {
+                            partsSize = workBenchPartController.getSize();
+                            workBenchPartController.setHidden(true);
+                        }
+                        activePart = null;
+                        view.setActiveTab(-1);
                     }
-                    activePart = null;
-                    view.setActiveTab(-1);
-                    return;
+                } else {
+                    // make active
+                    setActivePart(part);
                 }
-
-                // make active
-                setActivePart(part);
             }
         });
 
@@ -329,7 +337,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
      *
      * @param constraint
      */
-    private void sortPartsOnView(Constraints constraint) {
+    protected void sortPartsOnView(Constraints constraint) {
         int boofPartPosition;
         int partPositionsSize = viewPartPositions.size();
         int positionOfLastElement = viewPartPositions.get(partPositionsSize - 1);
