@@ -13,7 +13,6 @@ package com.codenvy.ide.wizard.project;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -35,10 +34,7 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static final String                        defaultRAMRequired  = "256MB";
-    private static final String                        defaultRAMAvailable = "256MB";
-    private static       ProjectWizardViewImplUiBinder ourUiBinder         = GWT.create(ProjectWizardViewImplUiBinder.class);
-
+    private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
 
     @UiField
     Style       style;
@@ -116,49 +112,37 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void setRAMRequired(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultRAMRequired;
+        if (amountOfRAM == null) return;
         RAMRequired.setText(amountOfRAM);
     }
 
     @Override
     public void setRAMAvailable(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultRAMAvailable;
+        if (amountOfRAM == null) return;
         RAMAvailable.setText(amountOfRAM);
     }
 
     @Override
-    public void setBuilderEnvirConfig(String configs[]) {
-        if (configs == null) {
+    public void setBuilderEnvirConfig(String text) {
+        if (text == null) {
             if (builderEnvConfText.isVisible()) builderEnvConfText.setVisible(false);
             if (builderEnvConf.isVisible()) builderEnvConf.setVisible(false);
         } else {
             if (!builderEnvConfText.isVisible()) builderEnvConfText.setVisible(true);
             if (!builderEnvConf.isVisible()) builderEnvConf.setVisible(true);
-            StringBuilder configsBuilder = new StringBuilder();
-            for (String config : configs) {
-                if (config.length() > 0) {
-                    configsBuilder.append(": " + config);
-                }
-            }
-            builderEnvConf.setText(configsBuilder.toString());
+            builderEnvConf.setText(text);
         }
     }
 
     @Override
-    public void setRunnerEnvirConfig(String configs[]) {
-        if (configs == null) {
+    public void setRunnerEnvirConfig(String text) {
+        if (text == null) {
             if (runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(false);
             if (runnerEnvConf.isVisible()) runnerEnvConf.setVisible(false);
         } else {
             if (!runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(true);
             if (!runnerEnvConf.isVisible()) runnerEnvConf.setVisible(true);
-            StringBuilder configsBuilder = new StringBuilder();
-            for (String config : configs) {
-                if (config.length() > 0) {
-                    configsBuilder.append(": " + config);
-                }
-            }
-            runnerEnvConf.setText(configsBuilder.toString());
+            runnerEnvConf.setText(text);
         }
     }
 
