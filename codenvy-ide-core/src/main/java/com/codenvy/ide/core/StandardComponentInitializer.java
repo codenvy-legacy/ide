@@ -29,20 +29,22 @@ import com.codenvy.ide.actions.ShowAboutAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UndoAction;
 import com.codenvy.ide.actions.UploadFileAction;
-import com.codenvy.ide.actions.delete.DeleteItemAction;
+import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.find.FindActionAction;
-import com.codenvy.ide.actions.rename.RenameItemAction;
-import com.codenvy.ide.api.editor.EditorRegistry;
-import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.icon.Icon;
-import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.actions.RenameItemAction;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.action.IdeActions;
+import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.api.filetypes.FileTypeRegistry;
+import com.codenvy.ide.api.icon.Icon;
+import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.keybinding.KeyBuilder;
+import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.imageviewer.ImageViewerProvider;
@@ -175,6 +177,12 @@ public class StandardComponentInitializer {
 
     @Inject
     private ExpandEditorAction expandEditorAction;
+
+    @Inject
+    private TreeStructureProviderRegistry treeStructureProviderRegistry;
+
+    @Inject
+    private GenericTreeStructureProvider genericTreeStructureProvider;
 
     @Inject
     @Named("XMLFileType")
@@ -379,5 +387,7 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
         wizardRegistry.addWizard(com.codenvy.api.project.shared.Constants.BLANK_ID, new ProjectWizard(notificationManager));
+
+        treeStructureProviderRegistry.registerProvider("codenvy_generic_tree", genericTreeStructureProvider);
     }
 }

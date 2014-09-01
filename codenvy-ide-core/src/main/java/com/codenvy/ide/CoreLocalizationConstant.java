@@ -81,6 +81,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.delete.description")
     String deleteItemActionDescription();
 
+    @Key("deleteNodeDialogTitle")
+    String deleteNodeDialogTitle();
+
     @Key("deleteFileDialogTitle")
     String deleteFileDialogTitle();
 
@@ -89,6 +92,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("deleteProjectDialogTitle")
     String deleteProjectDialogTitle();
+
+    @Key("deleteNodeDialogQuestion")
+    String deleteNodeDialogQuestion(String name);
 
     @Key("deleteFileDialogQuestion")
     String deleteFileDialogQuestion(String name);
@@ -99,12 +105,18 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("deleteProjectDialogQuestion")
     String deleteProjectDialogQuestion(String name);
 
+    @Key("stopProcessesBeforeDeletingProject")
+    String stopProcessesBeforeDeletingProject();
+
     /* RenameItem */
     @Key("action.rename.text")
     String renameItemActionText();
 
     @Key("action.rename.description")
     String renameItemActionDescription();
+
+    @Key("renameNodeDialogTitle")
+    String renameNodeDialogTitle();
 
     @Key("renameFileDialogTitle")
     String renameFileDialogTitle();
@@ -126,6 +138,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("renameFieldTitle")
     String renameFieldTitle();
+
+    @Key("stopProcessesBeforeRenamingProject")
+    String stopProcessesBeforeRenamingProject();
 
     @Key("createProjectFromTemplate.descriptionField")
     String createProjectFromTemplateDescription();

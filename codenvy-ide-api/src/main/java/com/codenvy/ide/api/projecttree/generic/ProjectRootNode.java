@@ -13,6 +13,7 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
@@ -29,14 +30,16 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode {
-    protected TreeSettings           settings;
-    protected EventBus               eventBus;
-    protected ProjectServiceClient   projectServiceClient;
-    protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected final GenericTreeStructure   treeStructure;
+    protected final ProjectServiceClient   projectServiceClient;
+    protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected final EventBus               eventBus;
+    protected       TreeSettings           settings;
 
-    public ProjectRootNode(ProjectDescriptor data, TreeSettings settings, EventBus eventBus,
+    public ProjectRootNode(ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings, EventBus eventBus,
                            ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(null, data, data.getName());
+        this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
@@ -84,14 +87,36 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         if (isFile(item)) {
-                            newChildren.add(new FileNode(ProjectRootNode.this, item, eventBus, projectServiceClient));
+                            newChildren.add(treeStructure.newFileNode(ProjectRootNode.this, item));
                         } else if (isFolder(item)) {
-                            newChildren.add(new FolderNode(ProjectRootNode.this, item, settings, eventBus, projectServiceClient,
-                                                           dtoUnmarshallerFactory));
+                            newChildren.add(treeStructure.newFolderNode(ProjectRootNode.this, item));
                         }
                     }
                 }
                 callback.onSuccess(ProjectRootNode.this);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isDeletable() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(final AsyncCallback<Void> callback) {
+        projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                eventBus.fireEvent(new CloseCurrentProjectEvent());
+                callback.onSuccess(result);
             }
 
             @Override

@@ -12,6 +12,9 @@ package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
@@ -28,16 +31,21 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 public class FolderNode extends AbstractTreeNode<ItemReference> implements StorableNode {
-    protected TreeSettings           settings;
-    protected EventBus               eventBus;
-    protected ProjectServiceClient   projectServiceClient;
-    protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected final GenericTreeStructure   treeStructure;
+    protected final EventBus               eventBus;
+    protected final EditorAgent            editorAgent;
+    protected final ProjectServiceClient   projectServiceClient;
+    protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected       TreeSettings           settings;
 
-    public FolderNode(AbstractTreeNode parent, ItemReference data, TreeSettings settings, EventBus eventBus,
-                      ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public FolderNode(AbstractTreeNode parent, ItemReference data, GenericTreeStructure treeStructure, TreeSettings settings,
+                      EventBus eventBus, EditorAgent editorAgent, ProjectServiceClient projectServiceClient,
+                      DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, data.getName());
+        this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
+        this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
@@ -83,14 +91,53 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         if (isFile(item)) {
-                            newChildren.add(new FileNode(FolderNode.this, item, eventBus, projectServiceClient));
+                            newChildren.add(treeStructure.newFileNode(FolderNode.this, item));
                         } else if (isFolder(item)) {
-                            newChildren.add(new FolderNode(FolderNode.this, item, settings, eventBus, projectServiceClient,
-                                                           dtoUnmarshallerFactory));
+                            newChildren.add(treeStructure.newFolderNode(FolderNode.this, item));
                         }
                     }
                 }
                 callback.onSuccess(FolderNode.this);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isRenemable() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void rename(String newName, AsyncCallback<Void> callback) {
+        // TODO
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isDeletable() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(final AsyncCallback<Void> callback) {
+        projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                // close all opened child files
+                for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                    if (editor.getEditorInput().getFile().getPath().startsWith(getPath())) {
+                        eventBus.fireEvent(new FileEvent(editor.getEditorInput().getFile(), FileEvent.FileOperation.CLOSE));
+                    }
+                }
+                callback.onSuccess(result);
             }
 
             @Override

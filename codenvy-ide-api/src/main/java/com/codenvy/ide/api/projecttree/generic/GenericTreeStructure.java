@@ -11,8 +11,10 @@
 package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeSettings;
@@ -30,15 +32,18 @@ import com.google.web.bindery.event.shared.EventBus;
 public class GenericTreeStructure extends AbstractTreeStructure {
     protected ProjectDescriptor      project;
     protected EventBus               eventBus;
+    protected EditorAgent            editorAgent;
     protected AppContext             appContext;
     protected ProjectServiceClient   projectServiceClient;
     protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    protected GenericTreeStructure(TreeSettings settings, ProjectDescriptor project, EventBus eventBus, AppContext appContext,
-                                   ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    protected GenericTreeStructure(TreeSettings settings, ProjectDescriptor project, EventBus eventBus, EditorAgent editorAgent,
+                                   AppContext appContext, ProjectServiceClient projectServiceClient,
+                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(settings);
         this.project = project;
         this.eventBus = eventBus;
+        this.editorAgent = editorAgent;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -47,7 +52,16 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     /** {@inheritDoc} */
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
-        AbstractTreeNode projectRoot = new ProjectRootNode(project, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        AbstractTreeNode projectRoot =
+                new ProjectRootNode(project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         callback.onSuccess(Collections.<AbstractTreeNode<?>>createArray(projectRoot));
+    }
+
+    public FileNode newFileNode(AbstractTreeNode parent, ItemReference data) {
+        return new FileNode(parent, data, eventBus, projectServiceClient);
+    }
+
+    public FolderNode newFolderNode(AbstractTreeNode parent, ItemReference data) {
+        return new FolderNode(parent, data, this, settings, eventBus, editorAgent, projectServiceClient, dtoUnmarshallerFactory);
     }
 }
