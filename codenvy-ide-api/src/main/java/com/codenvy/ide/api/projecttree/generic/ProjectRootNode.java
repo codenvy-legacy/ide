@@ -36,9 +36,9 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     protected final EventBus               eventBus;
     protected       TreeSettings           settings;
 
-    public ProjectRootNode(ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings, EventBus eventBus,
-                           ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(null, data, data.getName());
+    public ProjectRootNode(AbstractTreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
+                           EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        super(parent, data, data.getName());
         this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
@@ -66,6 +66,11 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     @Override
     public String getPath() {
         return data.getPath();
+    }
+
+    @Override
+    public ProjectRootNode getProject() {
+        return this;
     }
 
     /** {@inheritDoc} */

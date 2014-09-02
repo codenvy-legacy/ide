@@ -41,12 +41,6 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectTypeId() {
-        return "codenvy_generic_tree";
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public AbstractTreeStructure newTreeStructure(ProjectDescriptor project) {
         return new GenericTreeStructure(TreeSettings.DEFAULT, project, eventBus, editorAgent, appContext, projectServiceClient,
                                         dtoUnmarshallerFactory);

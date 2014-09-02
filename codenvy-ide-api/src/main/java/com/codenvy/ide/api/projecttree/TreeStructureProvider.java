@@ -18,9 +18,6 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProvider {
-    /** Returns ID of the project type for which this provider can provides tree structure. */
-    String getProjectTypeId();
-
     /**
      * Creates a tree structure for the specified project.
      *

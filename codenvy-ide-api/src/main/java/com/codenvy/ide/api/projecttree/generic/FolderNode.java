@@ -74,6 +74,16 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
 
     /** {@inheritDoc} */
     @Override
+    public ProjectRootNode getProject() {
+        AbstractTreeNode<?> parent = getParent();
+        while (!(parent instanceof ProjectRootNode)) {
+            parent = parent.getParent();
+        }
+        return (ProjectRootNode)parent;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean isLeaf() {
         return false;
     }

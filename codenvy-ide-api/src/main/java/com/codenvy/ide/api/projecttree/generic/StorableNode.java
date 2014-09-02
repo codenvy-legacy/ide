@@ -22,4 +22,7 @@ public interface StorableNode {
 
     /** Returns path of the item which this node represents. */
     String getPath();
+
+    /** Returns node's project. */
+    ProjectRootNode getProject();
 }

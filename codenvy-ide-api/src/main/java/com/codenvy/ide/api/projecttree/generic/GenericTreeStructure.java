@@ -53,7 +53,7 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     @Override
     public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
         AbstractTreeNode projectRoot =
-                new ProjectRootNode(project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+                new ProjectRootNode(null, project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         callback.onSuccess(Collections.<AbstractTreeNode<?>>createArray(projectRoot));
     }
 
