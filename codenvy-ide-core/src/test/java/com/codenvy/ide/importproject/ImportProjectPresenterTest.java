@@ -117,12 +117,12 @@ public class ImportProjectPresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, projectDescriptor);
                 return callback;
             }
-        }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
+        }).when(projectServiceClient).importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
 
         view.showDialog();
@@ -144,7 +144,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());
@@ -235,12 +235,12 @@ public class ImportProjectPresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[3];
                 Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
                 onFailure.invoke(callback, mock(Throwable.class));
                 return callback;
             }
-        }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
+        }).when(projectServiceClient).importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         view.showDialog();
         when(view.getUri()).thenReturn(URI);
@@ -260,7 +260,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false),  (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectWizardPresenter, never()).show((WizardContext)anyObject());
         verify(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).showWarning(anyString());
@@ -314,12 +314,12 @@ public class ImportProjectPresenterTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[2];
+                AsyncRequestCallback<ProjectDescriptor> callback = (AsyncRequestCallback<ProjectDescriptor>)arguments[3];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, projectDescriptor);
                 return callback;
             }
-        }).when(projectServiceClient).importProject(anyString(), (ImportSourceDescriptor)anyObject(),
+        }).when(projectServiceClient).importProject(anyString(),  eq(false), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         view.showDialog();
 
@@ -340,7 +340,7 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(eq(PROJECT_NAME), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager).showNotification((Notification)anyObject());

@@ -50,6 +50,7 @@ public class AboutViewImpl extends Window implements AboutView {
         this.locale = locale;
         this.setTitle(locale.aboutViewTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
+        this.ensureDebugId("aboutView-window");
        
         btnOk = createButton(coreLocale.ok(), "help-about-ok", new ClickHandler() {
             

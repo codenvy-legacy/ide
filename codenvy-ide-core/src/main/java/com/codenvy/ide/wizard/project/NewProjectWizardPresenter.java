@@ -268,7 +268,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         view.setLoaderVisibled(true);
-        projectService.importProject(projectName,
+        projectService.importProject(projectName, false,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
@@ -329,7 +329,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                         wizard.addPage(mainPageProvider, 0, false);
                     }
                     wizard.flipToFirst();
-                    mainPage.setContext(wizardContext);
+
+                    // Update context to all pages as some pages may be skipped, they need
+                    // to have the wizard Context for their commit() methods that will be called
+                    Iterable<WizardPage> pages = wizard.getPages().asIterable();
+                    for (WizardPage page : pages) {
+                        page.setContext(wizardContext);
+                    }
                 }
 
             }
