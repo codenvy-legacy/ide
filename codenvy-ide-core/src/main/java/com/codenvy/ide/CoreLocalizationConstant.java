@@ -139,6 +139,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("renameFieldTitle")
     String renameFieldTitle();
 
+    @Key("closeProjectBeforeRenaming")
+    String closeProjectBeforeRenaming();
+
     @Key("stopProcessesBeforeRenamingProject")
     String stopProcessesBeforeRenamingProject();
 
