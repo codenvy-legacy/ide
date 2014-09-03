@@ -25,6 +25,8 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nullable;
+
 /**
  * A node that represents a folder.
  *
@@ -100,10 +102,9 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
                 setChildren(newChildren);
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
-                        if (isFile(item)) {
-                            newChildren.add(treeStructure.newFileNode(FolderNode.this, item));
-                        } else if (isFolder(item)) {
-                            newChildren.add(treeStructure.newFolderNode(FolderNode.this, item));
+                        AbstractTreeNode node = createNode(item);
+                        if (node != null) {
+                            newChildren.add(node);
                         }
                     }
                 }
@@ -115,6 +116,23 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
                 callback.onFailure(exception);
             }
         });
+    }
+
+    /**
+     * Creates node for the specified item.
+     *
+     * @param item
+     *         {@link ItemReference} for which need to create node
+     * @return new node instance or <code>null</code> if the specified item is not supported
+     */
+    @Nullable
+    protected AbstractTreeNode<?> createNode(ItemReference item) {
+        if (isFile(item)) {
+            return treeStructure.newFileNode(this, item);
+        } else if (isFolder(item)) {
+            return treeStructure.newFolderNode(this, item);
+        }
+        return null;
     }
 
     /** {@inheritDoc} */
