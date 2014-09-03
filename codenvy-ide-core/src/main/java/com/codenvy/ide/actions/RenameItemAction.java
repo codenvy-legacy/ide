@@ -130,7 +130,7 @@ public class RenameItemAction extends Action {
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
             isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isRenemable();
         }
-        e.getPresentation().setEnabledAndVisible(isEnabled);
+        e.getPresentation().setEnabled(isEnabled);
     }
 
     private void askForRenamingNode(final AbstractTreeNode nodeToRename) {
