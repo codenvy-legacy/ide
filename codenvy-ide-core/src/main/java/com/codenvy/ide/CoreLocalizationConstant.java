@@ -208,6 +208,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.messageSuccess")
     String importProjectMessageSuccess();
 
+    @Key("importProject.messageFailure")
+    String importProjectMessageFailure();
+
     @Key("importProject.name")
     String importProjectName();
 
@@ -216,6 +219,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.importButton")
     String importProjectButton();
+
+    @Key("importProject.importing")
+    String importingProject();
 
     @Key("importProject.importerFieldTitle")
     String importProjectImporterFieldTitle();
