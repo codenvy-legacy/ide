@@ -269,6 +269,12 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         }
     }
 
+    public void showRunningBuild(BuildTaskDescriptor buildTaskDescriptor, String initialMessage) {
+        console.setActive();
+        console.print(initialMessage);
+        this.startCheckingOutput(buildTaskDescriptor);
+    }
+
     private void stopCheckingOutput() {
         buildOutputHandler.stop();
         try {
