@@ -155,7 +155,9 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     }
 
     /**
-     * Creates node for the specified item.
+     * Creates node for the specified item. Method called for every child item in {@link #refreshChildren(AsyncCallback)} method.
+     * <p/>
+     * May be overridden in order to provide a way to create a node for the specified by.
      *
      * @param item
      *         {@link ItemReference} for which need to create node
