@@ -23,6 +23,7 @@ import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -78,6 +79,8 @@ public class ImportProjectPresenterTest {
     private ProjectServiceClient          projectServiceClient;
     @Mock
     private NewProjectWizardPresenter     projectWizardPresenter;
+    @Mock
+    private MessageBus                    messageBus;
     @Mock
     private ImportSourceDescriptor        importSourceDescriptor;
     @Mock
