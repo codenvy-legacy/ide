@@ -13,7 +13,7 @@ package com.codenvy.ide.wizard.project;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -68,6 +68,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private Map<Presenter, Widget> pageCache = new HashMap<>();
     private String saveButtonText;
 
+    private HandlerRegistration nativePreviewHandlerRegistration = null;
 
     @Inject
     public ProjectWizardViewImpl(com.codenvy.ide.Resources resources) {
@@ -185,6 +186,22 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @Override
     public void showDialog() {
         show();
+
+        if (nativePreviewHandlerRegistration == null) {
+            nativePreviewHandlerRegistration = Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
+                @Override
+                public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
+                    if (event.getTypeInt() == Event.ONKEYUP &&
+                        event.getNativeEvent().getKeyCode() == '\r') {
+                        if (nextStepButton.isEnabled()) {
+                            delegate.onNextClicked();
+                        } else if (saveButton.isEnabled()) {
+                            delegate.onSaveClicked();
+                        }
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -194,6 +211,11 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void close() {
+        if (nativePreviewHandlerRegistration != null) {
+            nativePreviewHandlerRegistration.removeHandler();
+            nativePreviewHandlerRegistration = null;
+        }
+
         hide();
         pageCache.clear();
     }

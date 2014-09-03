@@ -22,7 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -130,11 +130,19 @@ public class MainPageViewImpl implements MainPageView {
 
     @UiHandler("projectName")
     void onProjectNameChanged(KeyUpEvent event) {
+        if (event.getNativeKeyCode() == '\r') {
+            return;
+        }
+
         delegate.projectNameChanged(projectName.getText());
     }
 
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
+        if (event.getNativeKeyCode() == '\r') {
+            return;
+        }
+
         delegate.projectDescriptionChanged(projectDescription.getValue());
     }
 
