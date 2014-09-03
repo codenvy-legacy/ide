@@ -14,6 +14,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
+import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -34,12 +35,13 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class SshKeyPresenter implements SshKeyView.ActionDelegate {
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private       SshKeyView             view;
-    private       SshKeyService          service;
-    private       EventBus               eventBus;
-    private       NotificationManager    notificationManager;
-    private       AsyncRequestLoader     loader;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private       SshKeyView              view;
+    private       SshKeyService           service;
+    private       EventBus                eventBus;
+    private       SshLocalizationConstant constant;
+    private       NotificationManager     notificationManager;
+    private       AsyncRequestLoader      loader;
 
     /**
      * Create presenter.
@@ -54,6 +56,7 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
                            SshKeyService service,
                            EventBus eventBus,
                            AsyncRequestLoader loader,
+                           SshLocalizationConstant constant,
                            NotificationManager notificationManager,
                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.view = view;
@@ -62,24 +65,25 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
         this.service = service;
         this.eventBus = eventBus;
         this.loader = loader;
+        this.constant = constant;
         this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
-    public void showDialog(@NotNull KeyItem keyItem) {
+    public void showDialog(@NotNull final KeyItem keyItem) {
         view.addHostToTitle(keyItem.getHost());
 
         service.getPublicKey(keyItem, new AsyncRequestCallback<PublicKey>(dtoUnmarshallerFactory.newUnmarshaller(PublicKey.class)) {
             @Override
             public void onSuccess(PublicKey result) {
-                loader.hide();
+                loader.hide(constant.loaderGetPublicSshKeyMessage(keyItem.getHost()));
                 view.setKey(result.getKey());
                 view.showDialog();
             }
 
             @Override
             public void onFailure(Throwable exception) {
-                loader.hide();
+                loader.hide(constant.loaderGetPublicSshKeyMessage(keyItem.getHost()));
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));

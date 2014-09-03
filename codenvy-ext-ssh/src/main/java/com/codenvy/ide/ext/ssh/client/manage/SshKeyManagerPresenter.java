@@ -115,17 +115,17 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         ask.show();
     }
 
-    private void deleteKey(KeyItem key) {
+    private void deleteKey(final KeyItem key) {
         service.deleteKey(key, new AsyncRequestCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                loader.hide();
+                loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
                 refreshKeys();
             }
 
             @Override
             public void onFailure(Throwable exception) {
-                loader.hide();
+                loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
@@ -177,18 +177,17 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         userService.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
             @Override
             protected void onSuccess(User result) {
+                loader.hide();
                 if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
                     service.getSshKeyProviders().get(GITHUB_HOST)
                            .generateKey(result.getId(), new AsyncCallback<Void>() {
                                @Override
                                public void onSuccess(Void result) {
-                                   loader.hide();
                                    refreshKeys();
                                }
 
                                @Override
                                public void onFailure(Throwable exception) {
-                                   loader.hide();
                                    getFailedKey(GITHUB_HOST);
                                }
                            });
@@ -200,6 +199,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
             @Override
             protected void onFailure(Throwable exception) {
+                loader.hide();
                 Log.error(SshKeyManagerPresenter.class, exception);
             }
         });
@@ -210,6 +210,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
             @Override
             public void onSuccess(Array<KeyItem> result) {
+                loader.hide(constant.loaderGetSshKeysMessage());
                 for (int i = 0; i < result.size(); i++) {
                     KeyItem key = result.get(i);
                     if (key.getHost().equals(host)) {
@@ -222,7 +223,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
             @Override
             public void onFailure(Throwable exception) {
-                loader.hide();
+                loader.hide(constant.loaderGetSshKeysMessage());
                 refreshKeys();
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
@@ -237,10 +238,11 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param key
      *         failed key
      */
-    private void removeFailedKey(@NotNull KeyItem key) {
+    private void removeFailedKey(@NotNull final KeyItem key) {
         service.deleteKey(key, new AsyncRequestCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
+                loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
                 Notification notification = new Notification(constant.deleteSshKeyFailed(), ERROR);
                 notificationManager.showNotification(notification);
                 refreshKeys();
@@ -248,6 +250,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
             @Override
             public void onSuccess(Void result) {
+                loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
                 refreshKeys();
             }
         });
@@ -277,13 +280,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         service.getAllKeys(new AsyncRequestCallback<Array<KeyItem>>(dtoUnmarshallerFactory.newArrayUnmarshaller(KeyItem.class)) {
             @Override
             public void onSuccess(Array<KeyItem> result) {
-                loader.hide();
+                loader.hide(constant.loaderGetSshKeysMessage());
                 view.setKeys(result);
             }
 
             @Override
             public void onFailure(Throwable exception) {
-                loader.hide();
+                loader.hide(constant.loaderGetSshKeysMessage());
                 Notification notification = new Notification(exception.getMessage(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
