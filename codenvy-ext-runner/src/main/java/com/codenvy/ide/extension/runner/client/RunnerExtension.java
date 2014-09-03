@@ -55,6 +55,11 @@ import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_TOOLBAR;
 public class RunnerExtension {
     public static final String GROUP_RUNNER_CONSOLE_TOOLBAR = "RunnerConsoleToolbar";
 
+    /**
+     * Key for user preference which contains default RAM size
+     */
+    public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
+
     @Inject
     public RunnerExtension(RunnerLocalizationConstant localizationConstants,
                            ActionManager actionManager,

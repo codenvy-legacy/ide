@@ -137,6 +137,14 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("runner.pannel.starts-after-launch")
     String startsAfterLaunch();
 
+    @Key("titles.ram-manager")
+    @DefaultMessage("RAM Manager")
+    String titlesRamManager();
+
+    @Key("ram-manager.ram-size-must-multiple")
+    @DefaultMessage("RAM size muat be a value that is a multiple of {0} MB")
+    String ramSizeMustBeMultipleOf(String multiple);
+
     /* RunConfigurationView */
     @Key("view.runConfiguration.title")
     String runConfigurationViewTitle();
@@ -146,7 +154,7 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.runConfiguration.memorySizeLabel")
     String runConfigurationViewMemorySizeLabel();
-    
+
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();
 }

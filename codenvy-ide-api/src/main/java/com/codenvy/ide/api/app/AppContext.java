@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.app;
 
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 
 import javax.annotation.Nullable;
@@ -26,6 +27,8 @@ public class AppContext {
     private WorkspaceDescriptor workspace;
 
     private CurrentProject      currentProject;
+
+    private ProfileDescriptor    profile;
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;
@@ -54,5 +57,21 @@ public class AppContext {
      */
     public void setCurrentProject(CurrentProject currentProject) {
         this.currentProject = currentProject;
+    }
+
+    /**
+     * Return current ProfileDescriptor
+     * @return
+     */
+    public ProfileDescriptor getProfile() {
+        return profile;
+    }
+
+    /**
+     * 
+     * @param profile
+     */
+    public void setProfile(ProfileDescriptor profile) {
+        this.profile = profile;
     }
 }
