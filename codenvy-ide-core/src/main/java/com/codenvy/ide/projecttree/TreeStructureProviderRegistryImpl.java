@@ -15,10 +15,6 @@ import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.loging.Log;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import java.util.Set;
 
 /**
  * Implementation of {@link TreeStructureProviderRegistry}.
@@ -28,14 +24,9 @@ import java.util.Set;
 public class TreeStructureProviderRegistryImpl implements TreeStructureProviderRegistry {
     private final StringMap<TreeStructureProvider> providers = Collections.createStringMap();
 
-    @Inject
-    public TreeStructureProviderRegistryImpl(Set<TreeStructureProvider> treeStructureProviders) {
-        for (TreeStructureProvider provider : treeStructureProviders) {
-            registerProvider(provider.getProjectTypeId(), provider);
-        }
-    }
-
-    private void registerProvider(String id, TreeStructureProvider treeStructureProvider) {
+    /** {@inheritDoc} */
+    @Override
+    public void registerProvider(String id, TreeStructureProvider treeStructureProvider) {
         if (providers.get(id) == null) {
             providers.put(id, treeStructureProvider);
         } else {

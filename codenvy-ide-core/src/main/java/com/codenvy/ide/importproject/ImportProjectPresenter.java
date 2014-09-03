@@ -24,14 +24,22 @@ import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.Message;
+import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
@@ -40,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Provides importing project.
@@ -62,6 +69,8 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     private NewProjectWizardPresenter              wizardPresenter;
     private EventBus                               eventBus;
     private Map<String, ProjectImporterDescriptor> importers;
+    private String                                 workspaceId;
+    private MessageBus                             messageBus;
 
     @Inject
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
@@ -72,7 +81,9 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                                   ProjectImportersServiceClient projectImportersService,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                   NewProjectWizardPresenter wizardPresenter,
-                                  EventBus eventBus) {
+                                  EventBus eventBus,
+                                  @Named("workspaceId") String workspaceId,
+                                  MessageBus messageBus) {
         this.projectServiceClient = projectServiceClient;
         this.notificationManager = notificationManager;
         this.locale = locale;
@@ -82,6 +93,8 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.wizardPresenter = wizardPresenter;
         this.eventBus = eventBus;
+        this.workspaceId = workspaceId;
+        this.messageBus = messageBus;
 
         this.view.setDelegate(this);
     }
@@ -152,17 +165,57 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     }
 
     private void importProject(String url, final String projectName) {
+
+        final String wsChannel = "importProject:output:" + workspaceId + ":"
+                                 + projectName;
+        final Notification notification = new Notification(locale.importingProject(), Notification.Status.PROGRESS);
+
+        final SubscriptionHandler<String> importProjectOutputWShandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
+            @Override
+            protected void onMessageReceived(String result) {
+                notification.setMessage(locale.importingProject() + " " + result);
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable throwable) {
+                try {
+                    messageBus.unsubscribe(wsChannel, this);
+                    notification.setType(Notification.Type.ERROR);
+                    notification.setImportant(true);
+                    notification.setMessage(locale.importProjectMessageFailure() + " " + throwable.getMessage());
+                    Log.error(getClass(), throwable);
+                } catch (WebSocketException e) {
+                    Log.error(getClass(), e);
+                }
+            }
+        };
+
+        try {
+            messageBus.subscribe(wsChannel, importProjectOutputWShandler);
+        } catch (WebSocketException e1) {
+            Log.error(ImportProjectPresenter.class, e1);
+        }
+
+
         String importer = view.getImporter();
         ImportSourceDescriptor importSourceDescriptor =
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.importProject(projectName, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+
+        notificationManager.showNotification(notification);
+
+        projectServiceClient.importProject(projectName, false, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                try {
+                    messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
+                } catch (WebSocketException e) {
+                    Log.error(getClass(), e);
+                }
+                notification.setStatus(Notification.Status.FINISHED);
+                notification.setMessage(locale.importProjectMessageSuccess());
 
-                Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
-                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
 
                 if (result.getProjectTypeId() == null ||
                     com.codenvy.api.project.shared.Constants.BLANK_ID.equals(result.getProjectTypeId())) {
@@ -184,10 +237,41 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                     Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
                     errorMessage = exception.getMessage();
                 }
+
+                try {
+                    messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
+                } catch (WebSocketException e) {
+                    Log.error(getClass(), e);
+                }
+                notification.setStatus(Notification.Status.FINISHED);
+                notification.setType(Notification.Type.ERROR);
+                notification.setImportant(true);
+                notification.setMessage(locale.importProjectMessageFailure() + " " + exception.getMessage());
+
                 view.showWarning(errorMessage);
                 deleteFolder(projectName);
             }
         });
+    }
+
+    static class LineUnmarshaller implements com.codenvy.ide.websocket.rest.Unmarshallable<String> {
+        private String line;
+
+        @Override
+        public void unmarshal(Message response) throws UnmarshallerException {
+            JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
+            if (jsonObject == null) {
+                return;
+            }
+            if (jsonObject.containsKey("line")) {
+                line = jsonObject.get("line").isString().stringValue();
+            }
+        }
+
+        @Override
+        public String getPayload() {
+            return line;
+        }
     }
 
     private void deleteFolder(String name) {

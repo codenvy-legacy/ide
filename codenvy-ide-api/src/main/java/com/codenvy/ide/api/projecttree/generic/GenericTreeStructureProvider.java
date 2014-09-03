@@ -13,25 +13,27 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProvider;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /** @author Artem Zatsarynnyy */
 public class GenericTreeStructureProvider implements TreeStructureProvider {
-    private EventBus               eventBus;
-    private AppContext             appContext;
-    private ProjectServiceClient   projectServiceClient;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final EventBus               eventBus;
+    private final EditorAgent            editorAgent;
+    private final AppContext             appContext;
+    private final ProjectServiceClient   projectServiceClient;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     @Inject
-    public GenericTreeStructureProvider(EventBus eventBus, AppContext appContext, ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public GenericTreeStructureProvider(EventBus eventBus, EditorAgent editorAgent, AppContext appContext,
+                                        ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
+        this.editorAgent = editorAgent;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -39,13 +41,8 @@ public class GenericTreeStructureProvider implements TreeStructureProvider {
 
     /** {@inheritDoc} */
     @Override
-    public String getProjectTypeId() {
-        return "codenvy_generic_tree";
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public AbstractTreeStructure newTreeStructure(ProjectDescriptor project) {
-        return new GenericTreeStructure(TreeSettings.DEFAULT, project, eventBus, appContext, projectServiceClient, dtoUnmarshallerFactory);
+        return new GenericTreeStructure(TreeSettings.DEFAULT, project, eventBus, editorAgent, appContext, projectServiceClient,
+                                        dtoUnmarshallerFactory);
     }
 }

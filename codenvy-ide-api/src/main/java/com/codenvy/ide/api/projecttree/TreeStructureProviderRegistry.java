@@ -19,6 +19,16 @@ import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
  */
 public interface TreeStructureProviderRegistry {
     /**
+     * Register specified {@link TreeStructureProvider} instance for the given project type ID.
+     *
+     * @param id
+     *         id of the project type for which {@link TreeStructureProvider} need to register
+     * @param provider
+     *         {@link TreeStructureProvider} to register
+     */
+    void registerProvider(String id, TreeStructureProvider provider);
+
+    /**
      * Returns {@link TreeStructureProvider} instance for the given project type ID
      * or {@link GenericTreeStructureProvider} if none was found.
      *

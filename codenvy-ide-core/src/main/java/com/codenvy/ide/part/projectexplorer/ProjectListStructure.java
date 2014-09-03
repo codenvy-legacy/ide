@@ -29,7 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author Artem Zatsarynnyy
  */
-class ProjectListStructure extends AbstractTreeStructure {
+public class ProjectListStructure extends AbstractTreeStructure {
     private EventBus               eventBus;
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
@@ -51,7 +51,7 @@ class ProjectListStructure extends AbstractTreeStructure {
             protected void onSuccess(Array<ProjectReference> result) {
                 Array<AbstractTreeNode<?>> array = Collections.createArray();
                 for (ProjectReference projectReference : result.asIterable()) {
-                    array.add(new ProjectNode(null, projectReference, eventBus));
+                    array.add(new ProjectNode(null, projectReference, eventBus, projectServiceClient));
                 }
                 callback.onSuccess(array);
             }
@@ -64,12 +64,14 @@ class ProjectListStructure extends AbstractTreeStructure {
     }
 
     /** Node that represents project item. */
-    private static class ProjectNode extends AbstractTreeNode<ProjectReference> {
-        private EventBus eventBus;
+    public static class ProjectNode extends AbstractTreeNode<ProjectReference> {
+        private EventBus             eventBus;
+        private ProjectServiceClient projectServiceClient;
 
-        ProjectNode(AbstractTreeNode parent, ProjectReference data, EventBus eventBus) {
+        ProjectNode(AbstractTreeNode parent, ProjectReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
             super(parent, data, data.getName());
             this.eventBus = eventBus;
+            this.projectServiceClient = projectServiceClient;
         }
 
         /** {@inheritDoc} */
@@ -87,6 +89,50 @@ class ProjectListStructure extends AbstractTreeStructure {
         @Override
         public void processNodeAction() {
             eventBus.fireEvent(new OpenProjectEvent(getData().getName()));
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean isRenemable() {
+            return true;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void rename(String newName, final AsyncCallback<Void> callback) {
+            projectServiceClient.rename(data.getPath(), newName, null, new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean isDeletable() {
+            return true;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void delete(final AsyncCallback<Void> callback) {
+            projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    callback.onSuccess(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    callback.onFailure(exception);
+                }
+            });
         }
     }
 }

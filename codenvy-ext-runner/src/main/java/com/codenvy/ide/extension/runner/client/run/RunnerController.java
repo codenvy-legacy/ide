@@ -41,6 +41,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
+import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
@@ -75,6 +76,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -311,6 +313,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         runOptions.getShellOptions().put("WebShellTheme", theme);
         runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
 
+
+        setDefaultRam2runOptions(runOptions);
+
+
         if (isUserAction) {
             console.setActive();
         }
@@ -370,6 +376,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         runOptions.getShellOptions().put("WebShellTheme", theme);
         runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
 
+        setDefaultRam2runOptions(runOptions);
+
         service.run(currentProject.getProjectDescription().getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -394,6 +402,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
                     }
                    );
+    }
+
+    private void setDefaultRam2runOptions(RunOptions runOptions) {
+        Map<String, String> preferences = appContext.getProfile().getPreferences();
+        if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+            try {
+                Log.info(RunnerController.class,preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                int ram = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                runOptions.setMemorySize(ram);
+            } catch (NumberFormatException e) {
+                Log.error(RunnerController.class, e);
+            }
+        }
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {

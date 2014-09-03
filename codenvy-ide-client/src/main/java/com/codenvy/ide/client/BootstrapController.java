@@ -26,6 +26,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.icon.Icon;
@@ -72,10 +73,11 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
-    private final DtoFactory                    dtoFactory;
-    private final ProjectTypeServiceClient      projectTypeDescriptionServiceClient;
+    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt analyticsEventLoggerExt;
+    private final DtoFactory              dtoFactory;
+    private       AppContext              appContext;
+    private final ProjectTypeServiceClient projectTypeDescriptionServiceClient;
     private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private final IconRegistry                  iconRegistry;
     private final ThemeAgent                    themeAgent;
@@ -106,7 +108,7 @@ public class BootstrapController {
                                Resources resources,
                                EventBus eventBus,
                                DtoFactory dtoFactory,
-
+                               AppContext appContext,
                                final ProjectTypeServiceClient projectTypeDescriptionServiceClient,
                                final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
@@ -122,6 +124,7 @@ public class BootstrapController {
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.dtoFactory = dtoFactory;
+        this.appContext = appContext;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
@@ -194,7 +197,7 @@ public class BootstrapController {
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
                                                  protected void onSuccess(final ProfileDescriptor profile) {
-                                                     Config.setCurrentProfile(profile);
+                                                     appContext.setProfile(profile);
 
                                                      /**
                                                       * Profile received, restore preferences and theme
@@ -299,7 +302,7 @@ public class BootstrapController {
             }
         });
 
-        final String sessionID = UUID.uuid();
+        final SessionID sessionID = new SessionID();
         elemental.html.Window window = Browser.getWindow();
 
         window.addEventListener(Event.FOCUS, new EventListener() {
@@ -320,9 +323,11 @@ public class BootstrapController {
         sessionIsStarted(sessionID);
     }
 
-    private void sessionIsStarted(String sessionID) {
+    private void sessionIsStarted(SessionID sessionID) {
+        sessionID.generateNew();
+
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID);
+        parameters.put("SESSION-ID", sessionID.getId());
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_STARTED, parameters);
 
@@ -331,9 +336,9 @@ public class BootstrapController {
         }
     }
 
-    private void sessionIsStopped(String sessionID) {
+    private void sessionIsStopped(SessionID sessionID) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID);
+        parameters.put("SESSION-ID", sessionID.getId());
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FINISHED, parameters);
 
@@ -397,4 +402,21 @@ public class BootstrapController {
         }
     }-*/;
 
+
+    /** Wrapper for sessionID. It allows to generate new id for every new session. */
+    private static class SessionID {
+        private String id;
+
+        private SessionID() {
+            this.id = UUID.uuid();
+        }
+
+        private String getId() {
+            return id;
+        }
+
+        private void generateNew() {
+            this.id = UUID.uuid();
+        }
+    }
 }

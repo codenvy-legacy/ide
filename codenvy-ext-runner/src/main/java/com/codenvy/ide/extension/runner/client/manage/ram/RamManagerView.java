@@ -8,20 +8,28 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.projecttree;
+package com.codenvy.ide.extension.runner.client.manage.ram;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+
+import com.codenvy.ide.api.mvp.View;
+
+import javax.annotation.Nonnull;
 
 /**
- * Tree structure provider responsible for creating tree structure instances for project.
- *
- * @author Artem Zatsarynnyy
+ * @author Vitaly Parfonov
  */
-public interface TreeStructureProvider {
-    /**
-     * Creates a tree structure for the specified project.
-     *
-     * @return {@link AbstractTreeStructure} instance
-     */
-    AbstractTreeStructure newTreeStructure(ProjectDescriptor project);
+public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
+
+    public interface ActionDelegate {
+
+        void setDirty(boolean b);
+
+        void validateRamSize(String value);
+
+    }
+    String getRam();
+
+    void showRam(String ram);
+
+    void showWarnMessage(String s);
 }

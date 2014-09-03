@@ -13,6 +13,7 @@ package com.codenvy.ide.part.projectexplorer;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
@@ -53,6 +54,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private ProjectServiceClient          projectServiceClient;
     private DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private CoreLocalizationConstant      coreLocalizationConstant;
+    private AppContext                    appContext;
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
     private AbstractTreeNode<?>           selectedTreeNode;
@@ -61,7 +63,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
-                                        CoreLocalizationConstant coreLocalizationConstant,
+                                        CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
                                         TreeStructureProviderRegistry treeStructureProviderRegistry) {
         this.view = view;
         this.eventBus = eventBus;
@@ -69,6 +71,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.coreLocalizationConstant = coreLocalizationConstant;
+        this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
@@ -126,8 +129,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
-                view.hideProjectHeader();
+                if (appContext.getCurrentProject() == null) {
+                    // this is case when some project is opening and previously opened project is closing
+                    setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                    view.hideProjectHeader();
+                }
             }
         });
 
@@ -180,10 +186,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
+        currentTreeStructure = treeStructure;
         treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
             @Override
             public void onSuccess(Array<AbstractTreeNode<?>> result) {
-                currentTreeStructure = treeStructure;
                 view.setRootNodes(result);
             }
 
@@ -192,8 +198,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 Log.error(ProjectExplorerPartPresenter.class, caught.getMessage());
             }
         });
-
-        onNodeSelected(null);
     }
 
     private void updateTree() {
