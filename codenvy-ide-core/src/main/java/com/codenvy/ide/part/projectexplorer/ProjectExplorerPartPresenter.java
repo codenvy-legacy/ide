@@ -186,10 +186,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
+        currentTreeStructure = treeStructure;
         treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
             @Override
             public void onSuccess(Array<AbstractTreeNode<?>> result) {
-                currentTreeStructure = treeStructure;
                 view.setRootNodes(result);
             }
 
@@ -198,8 +198,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 Log.error(ProjectExplorerPartPresenter.class, caught.getMessage());
             }
         });
-
-        onNodeSelected(null);
     }
 
     private void updateTree() {
