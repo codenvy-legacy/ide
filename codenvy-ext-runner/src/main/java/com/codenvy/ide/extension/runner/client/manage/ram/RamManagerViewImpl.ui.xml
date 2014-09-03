@@ -1,0 +1,53 @@
+<!--
+
+    Copyright (c) 2012-2014 Codenvy, S.A.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+      Codenvy, S.A. - initial API and implementation
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
+    <ui:with field='res' type='com.codenvy.ide.extension.runner.client.RunnerResources'/>
+    <ui:style>
+        .vertical {
+            display: inline;
+        }
+
+        .alignLeft {
+            float: left;
+        }
+
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .space {
+            margin-left: 5px;
+        }
+
+        .gwt-SuggestBox {
+            background-color: #4b4a4a;
+            border: 1px solid #000000;
+            color: #ffffff;
+            bottom: 4px;
+        }
+    </ui:style>
+
+    <g:FlowPanel width="100%">
+        <g:FlowPanel addStyleNames="{style.emptyBorder} {style.vertical}">
+                <g:Label text="Default RAM for running application (MB):" addStyleNames="{style.alignLeft} {style.space}"/>
+                <g:SuggestBox ui:field="memoryField" height="15px" width="40px"
+                              addStyleNames="{style.gwt-SuggestBox} {style.alignLeft} {style.space}"
+                              debugId="window-preferences-runner-customRun-memory-input"/>
+                <g:Label ui:field="warnMessage"></g:Label>
+        </g:FlowPanel>
+    </g:FlowPanel>
+
+</ui:UiBinder>

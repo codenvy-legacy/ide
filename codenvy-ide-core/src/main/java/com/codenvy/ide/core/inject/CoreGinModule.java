@@ -17,6 +17,8 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClientImpl;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
@@ -210,6 +212,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
+        bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
     }
 
     /** API Bindings, binds API interfaces to the implementations */
