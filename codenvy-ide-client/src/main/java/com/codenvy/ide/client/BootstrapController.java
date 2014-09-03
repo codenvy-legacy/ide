@@ -302,7 +302,7 @@ public class BootstrapController {
             }
         });
 
-        final String sessionID = UUID.uuid();
+        final SessionID sessionID = new SessionID();
         elemental.html.Window window = Browser.getWindow();
 
         window.addEventListener(Event.FOCUS, new EventListener() {
@@ -323,9 +323,11 @@ public class BootstrapController {
         sessionIsStarted(sessionID);
     }
 
-    private void sessionIsStarted(String sessionID) {
+    private void sessionIsStarted(SessionID sessionID) {
+        sessionID.generateNew();
+
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID);
+        parameters.put("SESSION-ID", sessionID.getId());
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_STARTED, parameters);
 
@@ -334,9 +336,9 @@ public class BootstrapController {
         }
     }
 
-    private void sessionIsStopped(String sessionID) {
+    private void sessionIsStopped(SessionID sessionID) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID);
+        parameters.put("SESSION-ID", sessionID.getId());
 
         analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FINISHED, parameters);
 
@@ -400,4 +402,21 @@ public class BootstrapController {
         }
     }-*/;
 
+
+    /** Wrapper for sessionID. It allows to generate new id for every new session. */
+    private static class SessionID {
+        private String id;
+
+        private SessionID() {
+            this.id = UUID.uuid();
+        }
+
+        private String getId() {
+            return id;
+        }
+
+        private void generateNew() {
+            this.id = UUID.uuid();
+        }
+    }
 }
