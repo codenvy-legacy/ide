@@ -35,9 +35,7 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
-    private static final String                        defaultRAMRequired  = "256MB";
-    private static final String                        defaultRAMAvailable = "256MB";
-    private static       ProjectWizardViewImplUiBinder ourUiBinder         = GWT.create(ProjectWizardViewImplUiBinder.class);
+    private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
 
 
     @UiField
@@ -55,9 +53,9 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     FlowPanel   infoRAMPanel;
     @UiField
-    Label       RAMRequired;
+    Label       requiredRAM;
     @UiField
-    Label       RAMAvailable;
+    Label       availableRAM;
     @UiField
     Button      nextStepButton;
     @UiField
@@ -65,7 +63,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     Button      saveButton;
     private ActionDelegate delegate;
-    private Map<Presenter, Widget> pageCache = new HashMap<>();
+    private Map<Presenter, Widget> pageCache = new HashMap<Presenter, Widget>();
     private String saveButtonText;
 
     private HandlerRegistration nativePreviewHandlerRegistration = null;
@@ -117,49 +115,37 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void setRAMRequired(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultRAMRequired;
-        RAMRequired.setText(amountOfRAM);
+        if (amountOfRAM == null) return;
+        requiredRAM.setText(amountOfRAM);
     }
 
     @Override
     public void setRAMAvailable(String amountOfRAM) {
-        if (amountOfRAM == null) amountOfRAM = defaultRAMAvailable;
-        RAMAvailable.setText(amountOfRAM);
+        if (amountOfRAM == null) return;
+        availableRAM.setText(amountOfRAM);
     }
 
     @Override
-    public void setBuilderEnvirConfig(String configs[]) {
-        if (configs == null) {
+    public void setBuilderEnvirConfig(String text) {
+        if (text == null) {
             if (builderEnvConfText.isVisible()) builderEnvConfText.setVisible(false);
             if (builderEnvConf.isVisible()) builderEnvConf.setVisible(false);
         } else {
             if (!builderEnvConfText.isVisible()) builderEnvConfText.setVisible(true);
             if (!builderEnvConf.isVisible()) builderEnvConf.setVisible(true);
-            StringBuilder configsBuilder = new StringBuilder();
-            for (String config : configs) {
-                if (config.length() > 0) {
-                    configsBuilder.append(": " + config);
-                }
-            }
-            builderEnvConf.setText(configsBuilder.toString());
+            builderEnvConf.setText(text);
         }
     }
 
     @Override
-    public void setRunnerEnvirConfig(String configs[]) {
-        if (configs == null) {
+    public void setRunnerEnvirConfig(String text) {
+        if (text == null) {
             if (runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(false);
             if (runnerEnvConf.isVisible()) runnerEnvConf.setVisible(false);
         } else {
             if (!runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(true);
             if (!runnerEnvConf.isVisible()) runnerEnvConf.setVisible(true);
-            StringBuilder configsBuilder = new StringBuilder();
-            for (String config : configs) {
-                if (config.length() > 0) {
-                    configsBuilder.append(": " + config);
-                }
-            }
-            runnerEnvConf.setText(configsBuilder.toString());
+            runnerEnvConf.setText(text);
         }
     }
 

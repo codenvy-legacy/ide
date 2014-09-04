@@ -57,7 +57,10 @@ public class ProjectTemplateDescriptionLoader {
                             template.getDisplayName(),
                             template.getDescription(),
                             template.getSource().getLocation(),
+                            template.getSource().getParameters(),
+                            template.getBuilderName(),
                             template.getDefaultBuilderEnvironment(),
+                            template.getRunnerName(),
                             template.getDefaultRunnerEnvironment(),
                             getReformatedRunnerEnvConfigs(template)));
                 }
