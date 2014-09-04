@@ -132,7 +132,7 @@ public class MainPageViewImpl implements MainPageView {
     void onProjectNameChanged(KeyUpEvent event) {
         delegate.projectNameChanged(projectName.getText());
     }
-
+    
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
         delegate.projectDescriptionChanged(projectDescription.getValue());
