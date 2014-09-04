@@ -28,7 +28,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.project.exists")
     String createProjectFromTemplateProjectExists(String projectName);
-
+    
     @Key("chooseTechnology")
     String chooseTechnology();
 
@@ -246,7 +246,19 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.warningTitle")
     String importProjectWarningTitle();
-
+    
+    @Key("importProject.importer.info")
+    String importProjectImporterInfo();
+    
+    @Key("importProject.name.prompt")
+    String importProjectNamePrompt();
+    
+    @Key("importProject.description.prompt")
+    String importProjectDescriptionPrompt();
+    
+    @Key("import.project.error")
+    String importProjectError();
+    
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();

@@ -136,7 +136,7 @@ public class MainPageViewImpl implements MainPageView {
 
         delegate.projectNameChanged(projectName.getText());
     }
-
+    
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
         if (event.getNativeKeyCode() == '\r') {
