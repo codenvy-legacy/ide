@@ -122,9 +122,9 @@ public class MainPageViewImpl implements MainPageView {
         this.iconRegistry = iconRegistry;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
-        projectName.getElement().setAttribute("title", "Define the name of your project...");
+        projectName.getElement().setAttribute("placeholder", "Define the name of your project...");
         projectName.getElement().setAttribute("maxlength", "32");
-        projectDescription.getElement().setAttribute("title", "Add a description to your project...");
+        projectDescription.getElement().setAttribute("placeholder", "Add a description to your project...");
         projectDescription.getElement().setAttribute("maxlength", "256");
     }
 
