@@ -12,8 +12,6 @@ package com.codenvy.ide.wizard.project;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.mvp.View;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -30,9 +28,9 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setRAMAvailable(String amountOfRAM);
 
-    void setBuilderEnvirConfig(String configs[]);
+    void setBuilderEnvirConfig(String text);
 
-    void setRunnerEnvirConfig(String configs[]);
+    void setRunnerEnvirConfig(String text);
 
     void setInfoVisibled(boolean enabled);
 

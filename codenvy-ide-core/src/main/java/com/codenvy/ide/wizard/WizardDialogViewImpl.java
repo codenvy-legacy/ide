@@ -82,7 +82,6 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
     
     private void createButtons(){
         btnCancel = createButton(locale.cancel(), "file-newOther-cancel", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelClicked();
@@ -91,7 +90,6 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
         getFooter().add(btnCancel);
 
         btnFinish = createButton(locale.finish(), "file-newOther-finish", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onFinishClicked();
@@ -100,7 +98,6 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
         getFooter().add(btnFinish);
 
         btnNext = createButton(locale.next(), "file-newOther-next", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onNextClicked();
@@ -109,7 +106,6 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
         getFooter().add(btnNext);
 
         btnBack = createButton(locale.back(), "file-newOther-back", new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onBackClicked();

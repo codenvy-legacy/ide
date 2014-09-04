@@ -174,23 +174,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- GWT Maven Plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <configuration>
-                    <module>com.codenvy.ide.IDE</module>
-                    <logLevel>INFO</logLevel>
-                    <extraJvmArgs>-Xss512m -Xmx2048m -XX:MaxPermSize=1024m</extraJvmArgs>
-                    <runTarget>ws/default</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                </configuration>
-            </plugin>
             <!-- Copy static web files before executing gwt:run -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

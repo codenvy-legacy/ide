@@ -45,7 +45,7 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
     @Inject
     public ExtensionManagerPresenter(Resources resources, CoreLocalizationConstant constant, ExtensionManagerView view,
                                      ExtensionRegistry extensionRegistry, PreferencesManager preferencesManager) {
-        super(constant.extensionTitle(), resources.extension());
+        super(constant.extensionTitle(), constant.extensionCategory(), resources.extension());
         this.view = view;
         this.extensionRegistry = extensionRegistry;
         this.preferencesManager = preferencesManager;

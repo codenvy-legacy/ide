@@ -83,11 +83,16 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.getModel().setRoot(rootNode);
         tree.renderTree(0);
 
-        // expand first node that usually represents project itself
-        if (!rootNodes.isEmpty() && !rootNodes.get(0).isLeaf()) {
-            tree.autoExpandAndSelectNode(rootNodes.get(0), false);
-            delegate.onNodeExpanded(rootNodes.get(0));
-            delegate.onNodeSelected(rootNodes.get(0));
+        if (!rootNodes.isEmpty()) {
+            final AbstractTreeNode<?> firstNode = rootNodes.get(0);
+            if (!firstNode.isLeaf()) {
+                // expand first node that usually represents project itself
+                tree.autoExpandAndSelectNode(firstNode, false);
+                delegate.onNodeExpanded(firstNode);
+            }
+            // auto-select first node
+            tree.getSelectionModel().selectSingleNode(firstNode);
+            delegate.onNodeSelected(firstNode);
         }
     }
 

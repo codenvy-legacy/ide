@@ -14,13 +14,16 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * I18n Constants for the preference window.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface EditorPrefLocalizationConstant extends Messages {
 
     @Key("editortype.title")
     String editorTypeTitle();
+
+    @Key("editortype.category")
+    String editorTypeCategory();
 
     @DefaultMessage("Editor preferences could not be saved.")
     String flushError();

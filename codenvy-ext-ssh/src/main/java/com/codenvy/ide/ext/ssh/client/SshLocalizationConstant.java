@@ -49,7 +49,10 @@ public interface SshLocalizationConstant extends Messages {
 
     @Key("key.manager.title")
     String sshManagerTitle();
-    
+
+    @Key("key.manager.category")
+    String sshManagerCategory();
+
     @Key("public.sshkey.field")
     String publicSshKeyField();
     
@@ -78,5 +81,13 @@ public interface SshLocalizationConstant extends Messages {
 
     @Key("sshkeys.provider.not.found")
     String sshKeysProviderNotFound(String host);
-    
+
+    @Key("loader.deleteSshKey.message")
+    String loaderDeleteSshKeyMessage(String host);
+
+    @Key("loader.getSshKeys.message")
+    String loaderGetSshKeysMessage();
+
+    @Key("loader.getPublicSshKey.message")
+    String loaderGetPublicSshKeyMessage(String host);
 }

@@ -199,13 +199,13 @@
                     <g:Label text="RAM Required:" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="RAMRequired" addStyleNames="{style.infoValue}"/>
+                    <g:Label ui:field="requiredRAM" addStyleNames="{style.infoValue}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="RAM Available:" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="RAMAvailable" addStyleNames="{style.infoValue}"/>
+                    <g:Label ui:field="availableRAM" addStyleNames="{style.infoValue}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel} {style.infoText}">
                     <g:Anchor text="Get More RAM" href="{locale.createProjectFromTemplatelinkGetMoreRAM}" target="_blank"

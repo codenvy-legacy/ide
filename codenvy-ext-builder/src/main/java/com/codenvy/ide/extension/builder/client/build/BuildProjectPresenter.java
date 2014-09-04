@@ -19,7 +19,6 @@ import com.codenvy.api.builder.internal.Constants;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -133,8 +132,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         workspaceAgent.setActivePart(console);
     }
 
-    /** Build active project.
-     * @param isUserAction points whether the build is started directly by user interaction
+    /**
+     * Build active project.
+     *
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
      */
     public void buildActiveProject(final boolean isUserAction) {
         //Save the files before building if necessary
@@ -172,7 +174,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
      *
      * @param buildOptions
      *         options to configure build process
-     * @param isUserAction points whether the build is started directly by user interaction        
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
      */
     public void buildActiveProject(BuildOptions buildOptions, boolean isUserAction) {
         if (isBuildInProgress) {
@@ -188,7 +191,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
-        if (isUserAction){
+        if (isUserAction) {
             console.setActive();
         }
         service.build(activeProject.getPath(),
@@ -296,7 +299,6 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(activeProject.getName()));
                 buildContext.setBuilding(false);
-
                 break;
             case FAILED:
                 isBuildInProgress = false;
@@ -328,7 +330,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             Link downloadResultLink = getLink(lastBuildTaskDescriptor, Constants.LINK_REL_DOWNLOAD_RESULT);
             if (downloadResultLink != null)
                 return downloadResultLink.getHref();
-            if (lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS) || lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE))
+            if (lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS) ||
+                lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE))
                 return constant.atifactNotReady();
         }
         return null;
@@ -337,11 +340,11 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     /** Returns startTime {@link BuilderMetric}. */
     @Nullable
     public BuilderMetric getStartedTime() {
-        if (lastBuildTaskDescriptor != null)
         if (lastBuildTaskDescriptor != null && lastBuildTaskDescriptor.getCreationTime() > 0) {
             Date startDate = new Date(lastBuildTaskDescriptor.getCreationTime());
             String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(BuilderMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+            return dtoFactory.createDto(BuilderMetric.class).withDescription("Process started at")
+                             .withValue(startDateFormatted);
         }
         return null;
     }
@@ -359,7 +362,8 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             final double terminationTimeout = terminationTime - System.currentTimeMillis();
             final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
             return dtoFactory.createDto(BuilderMetric.class).withDescription(waitingTimeLimit.getDescription())
-                      .withValue(waitingTimeLimit.getName()).withValue(value);
+                             .withName(waitingTimeLimit.getName())
+                             .withValue(value);
         }
         return null;
     }
@@ -368,7 +372,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     @Nullable
     public BuilderMetric getLastBuildEndTime() {
         BuilderMetric builderMetric = getBuilderMetric(BuilderMetric.END_TIME);
-        if (builderMetric != null &&  builderMetric.getValue() != null) {
+        if (builderMetric != null && builderMetric.getValue() != null) {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(builderMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
@@ -399,11 +403,13 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
             value.append(mm > 9 ? mm : "0" + mm).append("m:");
             value.append(ss > 9 ? ss : "0" + ss).append("s");
 
-            return dtoFactory.createDto(BuilderMetric.class).withName(builderMetric.getName()).withDescription(builderMetric.getDescription()).withValue(value.toString());
+            return dtoFactory.createDto(BuilderMetric.class).withName(builderMetric.getName())
+                             .withDescription(builderMetric.getDescription())
+                             .withValue(value.toString());
         }
         return builderMetric;
     }
-    
+
 //    /**
 //     * Parses given string to find the decimal number.
 //     * @param str input to parse
@@ -443,8 +449,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     private static Link getLink(BuildTaskDescriptor descriptor, String rel) {
         List<Link> links = descriptor.getLinks();
         for (Link link : links) {
-            if (link.getRel().equalsIgnoreCase(rel))
+            if (link.getRel().equalsIgnoreCase(rel)) {
                 return link;
+            }
         }
         return null;
     }

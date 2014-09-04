@@ -22,7 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -122,19 +122,27 @@ public class MainPageViewImpl implements MainPageView {
         this.iconRegistry = iconRegistry;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
-        projectName.getElement().setAttribute("title", "Define the name of your project...");
+        projectName.getElement().setAttribute("placeholder", "Define the name of your project...");
         projectName.getElement().setAttribute("maxlength", "32");
-        projectDescription.getElement().setAttribute("title", "Add a description to your project...");
+        projectDescription.getElement().setAttribute("placeholder", "Add a description to your project...");
         projectDescription.getElement().setAttribute("maxlength", "256");
     }
 
     @UiHandler("projectName")
     void onProjectNameChanged(KeyUpEvent event) {
+        if (event.getNativeKeyCode() == '\r') {
+            return;
+        }
+
         delegate.projectNameChanged(projectName.getText());
     }
     
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
+        if (event.getNativeKeyCode() == '\r') {
+            return;
+        }
+
         delegate.projectDescriptionChanged(projectDescription.getValue());
     }
 

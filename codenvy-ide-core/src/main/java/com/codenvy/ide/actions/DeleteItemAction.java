@@ -116,7 +116,7 @@ public class DeleteItemAction extends Action {
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
             isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isDeletable();
         }
-        e.getPresentation().setEnabledAndVisible(isEnabled);
+        e.getPresentation().setEnabled(isEnabled);
     }
 
     private void askForDeletingNode(final AbstractTreeNode nodeToDelete) {

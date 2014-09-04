@@ -110,6 +110,14 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
+    public boolean isRenemable() {
+        // Rename is not available for opened project.
+        // Special message will be shown for user in this case (see RenameItemAction).
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean isDeletable() {
         return true;
     }

@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class BuildAction extends Action {
 
-    private final AppContext appContext;
+    private final AppContext            appContext;
     private final BuildProjectPresenter presenter;
     private final AnalyticsEventLogger  eventLogger;
     private       BuildContext          buildContext;

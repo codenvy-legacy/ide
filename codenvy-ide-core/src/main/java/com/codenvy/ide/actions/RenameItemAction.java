@@ -100,7 +100,9 @@ public class RenameItemAction extends Action {
         if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof AbstractTreeNode) {
             final AbstractTreeNode selectedNode = (AbstractTreeNode)selection.getFirstElement();
 
-            if (selectedNode instanceof ProjectRootNode || selectedNode instanceof ProjectListStructure.ProjectNode) {
+            if (selectedNode instanceof ProjectRootNode) {
+                new Info(localization.closeProjectBeforeRenaming()).show();
+            } else if (selectedNode instanceof ProjectListStructure.ProjectNode) {
                 checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
                     @Override
                     public void onSuccess(Boolean hasRunningProcesses) {
@@ -130,7 +132,7 @@ public class RenameItemAction extends Action {
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
             isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isRenemable();
         }
-        e.getPresentation().setEnabledAndVisible(isEnabled);
+        e.getPresentation().setEnabled(isEnabled);
     }
 
     private void askForRenamingNode(final AbstractTreeNode nodeToRename) {

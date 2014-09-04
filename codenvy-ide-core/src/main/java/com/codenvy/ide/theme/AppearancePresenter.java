@@ -40,7 +40,7 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
     @Inject
     public AppearancePresenter(AppearanceView view, CoreLocalizationConstant constant, ThemeAgent themeAgent,
                                PreferencesManager preferencesManager) {
-        super(constant.appearanceTitle(), null);
+        super(constant.appearanceTitle(), constant.appearanceCategory(), null);
         this.view = view;
         this.themeAgent = themeAgent;
         this.preferencesManager = preferencesManager;
