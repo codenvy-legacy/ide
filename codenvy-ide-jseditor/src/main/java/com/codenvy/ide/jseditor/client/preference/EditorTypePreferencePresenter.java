@@ -41,20 +41,20 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Preference page presenter for the editors.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 @Singleton
 public class EditorTypePreferencePresenter extends AbstractPreferencesPagePresenter implements EditorTypePreferenceView.ActionDelegate {
 
-    private final EditorTypePreferenceView       view;
-    private final EditorTypeMapping              editorTypeMapping;
-    private final PreferencesManager             preferencesManager;
+    private final EditorTypePreferenceView view;
+    private final EditorTypeMapping        editorTypeMapping;
+    private final PreferencesManager       preferencesManager;
 
-    private final KeymapValuesHolder             keymapValuesHolder;
-    private final KeymapValuesHolder             prefKeymaps;
+    private final KeymapValuesHolder keymapValuesHolder;
+    private final KeymapValuesHolder prefKeymaps;
 
-    private final EventBus                       eventBus;
+    private final EventBus eventBus;
 
     private final AbstractDataProvider<FileType> fileTypeDataProvider;
     private final RefreshableDataProvider        refreshableDataProvider;
@@ -64,8 +64,8 @@ public class EditorTypePreferencePresenter extends AbstractPreferencesPagePresen
 
 
     // dirty states
-    private boolean                              editorTypeDirty = false;
-    private boolean                              keymapsDirty    = false;
+    private boolean editorTypeDirty = false;
+    private boolean keymapsDirty    = false;
 
     @Inject
     public EditorTypePreferencePresenter(final EditorTypePreferenceView view,
@@ -77,8 +77,8 @@ public class EditorTypePreferencePresenter extends AbstractPreferencesPagePresen
                                          final EventBus eventBus,
                                          final EditorPreferenceResource resource,
                                          final @PlainTextFileType FileType plainTextFileType) {
-        super(constant.editorTypeTitle(), resource.editorPrefIconTemporary());// TODO use svg icon when the PreferencesPagePresenter allow
-                                                                              // it
+        super(constant.editorTypeTitle(), constant.editorTypeCategory(),
+              resource.editorPrefIconTemporary());// TODO use svg icon when the PreferencesPagePresenter allow it
         this.view = view;
         this.eventBus = eventBus;
         this.editorTypeMapping = editorTypeMapping;

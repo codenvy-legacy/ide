@@ -28,8 +28,8 @@
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="600px" height="400px" addStyleNames="{style.emptyBorder}">
-        <g:west size="180.0">
-            <g:ScrollPanel ui:field="preferences" addStyleNames="{res.coreCss.simpleListContainer}"
+        <g:west size="250.0">
+            <g:SimplePanel ui:field="preferences" addStyleNames="{res.coreCss.simpleListContainer}"
                            debugId="window-preferences-scrollPanel-preferences"/>
         </g:west>
         <g:center>

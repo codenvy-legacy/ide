@@ -12,9 +12,10 @@ package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface of Preferences view.
@@ -78,5 +79,5 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
      *
      * @param preferences
      */
-    void setPreferences(Array<PreferencesPagePresenter> preferences);
+    void setPreferences(Map<String, Set<PreferencesPagePresenter>> preferences, PreferencesPagePresenter firstPage);
 }

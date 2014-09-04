@@ -10,30 +10,32 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
-import elemental.dom.Element;
-import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ui.list.SimpleList;
+import com.codenvy.ide.ui.list.CategoriesList;
+import com.codenvy.ide.ui.list.Category;
+import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -49,59 +51,41 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
     }
 
-    Button      btnClose;
-    Button      btnOk;
-    Button      btnApply;
+    Button btnClose;
+    Button btnOk;
+    Button btnApply;
     @UiField
-    ScrollPanel preferences;
+    SimplePanel               preferences;
     @UiField
-    SimplePanel contentPanel;
+    SimplePanel               contentPanel;
     @UiField(provided = true)
-    com.codenvy.ide.Resources   res;
+    com.codenvy.ide.Resources res;
     private CoreLocalizationConstant locale;
-    private ActionDelegate                       delegate;
-    private PreferencesPagePresenter             firstPage;
-    private SimpleList<PreferencesPagePresenter> list;
-    private SimpleList.ListItemRenderer<PreferencesPagePresenter>  listItemRenderer =
-            new SimpleList.ListItemRenderer<PreferencesPagePresenter>() {
+    private ActionDelegate           delegate;
+    private PreferencesPagePresenter firstPage;
+    private CategoriesList           list;
+
+    private final Category.CategoryEventDelegate<PreferencesPagePresenter> PreferencesPageDelegate =
+            new Category.CategoryEventDelegate<PreferencesPagePresenter>() {
                 @Override
-                public void render(Element itemElement, PreferencesPagePresenter itemData) {
-                    TableCellElement label = Elements.createTDElement();
-
-                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
-                    // Add icon
-                    sb.appendHtmlConstant("<table><tr><td>");
-                    ImageResource icon = itemData.getIcon();
-                    if (icon != null) {
-                        sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-                    }
-                    sb.appendHtmlConstant("</td>");
-
-                    // Add title
-                    sb.appendHtmlConstant("<td>");
-                    sb.appendHtmlConstant(
-                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-" + itemData.getTitle() + "\">");
-                    sb.appendEscaped(itemData.getTitle());
-                    sb.appendHtmlConstant("</td></tr></table>");
-
-                    label.setInnerHTML(sb.toSafeHtml().asString());
-
-                    itemElement.appendChild(label);
-                }
-
-                @Override
-                public Element createElement() {
-                    return Elements.createTRElement();
-                }
-            };
-    private SimpleList.ListEventDelegate<PreferencesPagePresenter> listDelegate     =
-            new SimpleList.ListEventDelegate<PreferencesPagePresenter>() {
-                public void onListItemClicked(Element itemElement, PreferencesPagePresenter itemData) {
-                    list.getSelectionModel().setSelectedItem(itemData);
+                public void onListItemClicked(com.google.gwt.dom.client.Element listItemBase, PreferencesPagePresenter itemData) {
                     delegate.selectedPreference(itemData);
                 }
+            };
 
-                public void onListItemDoubleClicked(Element listItemBase, PreferencesPagePresenter itemData) {
+    private final CategoryRenderer<PreferencesPagePresenter> PreferencesPageRenderer =
+            new CategoryRenderer<PreferencesPagePresenter>() {
+                @Override
+                public void renderElement(com.google.gwt.dom.client.Element element, PreferencesPagePresenter preference) {
+                    element.setInnerText(preference.getTitle());
+                }
+
+                @Override
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<PreferencesPagePresenter> category) {
+                    SpanElement spanElement = Document.get().createSpanElement();
+                    spanElement.setClassName(res.defaultCategoriesListCss().headerText());
+                    spanElement.setInnerText(category.getTitle());
+                    return spanElement;
                 }
             };
 
@@ -111,7 +95,8 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
      * @param resources
      */
     @Inject
-    protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder, CoreLocalizationConstant locale) {
+    protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder,
+                                  CoreLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
 
@@ -123,12 +108,12 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
         //create list of preferences
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = SimpleList.create((SimpleList.View)tableElement, res.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        list = new CategoriesList(res);
         this.preferences.add(list);
         createButtons();
     }
-    
-    private void createButtons(){
+
+    private void createButtons() {
         btnClose = createButton(locale.close(), "window-preferences-close", new ClickHandler() {
 
             @Override
@@ -164,7 +149,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
         //show first page if page is exist
         if (firstPage != null) {
-            listDelegate.onListItemClicked(null, firstPage);
+            PreferencesPageDelegate.onListItemClicked(null, firstPage);
         } else {
             btnApply.setEnabled(false);
         }
@@ -196,12 +181,16 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setPreferences(Array<PreferencesPagePresenter> preferences) {
-        list.render(preferences);
+    public void setPreferences(Map<String, Set<PreferencesPagePresenter>> preferences, PreferencesPagePresenter firstPage) {
+        this.firstPage = firstPage;
 
-        if (preferences.size() > 0) {
-            firstPage = preferences.get(0);
+        List<Category<?>> categoriesList = new ArrayList<Category<?>>();
+        for (String s : preferences.keySet()) {
+            Category<PreferencesPagePresenter> category =
+                    new Category<PreferencesPagePresenter>(s, PreferencesPageRenderer, preferences.get(s), PreferencesPageDelegate);
+            categoriesList.add(category);
         }
+        list.render(categoriesList);
     }
 
     /** {@inheritDoc} */

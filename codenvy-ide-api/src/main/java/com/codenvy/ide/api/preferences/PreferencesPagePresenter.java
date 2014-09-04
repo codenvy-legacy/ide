@@ -46,7 +46,7 @@ public interface PreferencesPagePresenter extends Presenter {
      * when the information is changed.
      *
      * @return <code>true</code> if this page is changed, and
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     boolean isDirty();
 
@@ -63,4 +63,11 @@ public interface PreferencesPagePresenter extends Presenter {
      * @return
      */
     ImageResource getIcon();
+
+    /**
+     * Return preference category. This category will used for grouping elements.
+     *
+     * @return
+     */
+    String getCategory();
 }

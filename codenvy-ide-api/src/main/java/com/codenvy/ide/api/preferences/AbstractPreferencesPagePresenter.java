@@ -21,7 +21,11 @@ import com.google.gwt.resources.client.ImageResource;
 public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter {
     protected DirtyStateListener delegate;
 
+    private static String  defaultCategory = "IDE Settings";
+
     private String title;
+
+    private String category;
 
     private ImageResource icon;
 
@@ -29,11 +33,23 @@ public abstract class AbstractPreferencesPagePresenter implements PreferencesPag
      * Create preference page.
      *
      * @param title
+     * @param category
+     * @param icon
+     */
+    public AbstractPreferencesPagePresenter(String title, String category, ImageResource icon) {
+        this.title = title;
+        this.category = category;
+        this.icon = icon;
+    }
+
+    /**
+     * Create preference page with a default category for grouping elements.
+     *
+     * @param title
      * @param icon
      */
     public AbstractPreferencesPagePresenter(String title, ImageResource icon) {
-        this.title = title;
-        this.icon = icon;
+        this(title, defaultCategory, icon);
     }
 
     /** {@inheritDoc} */
@@ -52,5 +68,11 @@ public abstract class AbstractPreferencesPagePresenter implements PreferencesPag
     @Override
     public ImageResource getIcon() {
         return icon;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getCategory() {
+        return category;
     }
 }

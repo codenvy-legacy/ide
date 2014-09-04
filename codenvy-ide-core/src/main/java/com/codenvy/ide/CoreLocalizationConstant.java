@@ -53,6 +53,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("extension.title")
     String extensionTitle();
 
+    @Key("extension.category")
+    String extensionCategory();
+
     @Key("enteringResourceName")
     String enteringResourceName();
 
@@ -73,6 +76,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("appearance.title")
     String appearanceTitle();
+
+    @Key("appearance.category")
+    String appearanceCategory();
 
     /* DeleteItem */
     @Key("action.delete.text")

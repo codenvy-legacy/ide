@@ -50,12 +50,15 @@ public interface SshLocalizationConstant extends Messages {
     @Key("key.manager.title")
     String sshManagerTitle();
 
+    @Key("key.manager.category")
+    String sshManagerCategory();
+
     @Key("public.sshkey.field")
     String publicSshKeyField();
-
+    
     @Key("hostname.field")
     String hostNameField();
-
+    
     @Key("delete.sshkey.question")
     String deleteSshKeyQuestion(String host);
 
@@ -66,10 +69,10 @@ public interface SshLocalizationConstant extends Messages {
 
     @Key("delete.sshkey.failed")
     String deleteSshKeyFailed();
-
+    
     @Key("get.sshkey.failed")
     String getSshKeyFailed();
-
+    
     @Key("login.oauth.title")
     String loginOAuthTitle();
 
