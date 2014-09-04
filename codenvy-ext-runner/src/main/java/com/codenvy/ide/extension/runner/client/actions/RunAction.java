@@ -18,6 +18,7 @@ import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,7 +63,7 @@ public class RunAction extends Action {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(currentProject.getAttributeValue("runner.name") != null
+            e.getPresentation().setVisible(currentProject.getRunner() != null
                                            || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
             e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !runnerController.isAnyAppRunning());
         } else {
