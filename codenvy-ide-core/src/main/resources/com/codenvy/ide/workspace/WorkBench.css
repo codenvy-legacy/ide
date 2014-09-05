@@ -17,18 +17,19 @@
 .ide-work-bench-tool-panel-left {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    width: 17px;
-    border-right: 1px solid tabBorderShadow;
+    border-right: 1px solid tabBorder;
+    width: 100%;
     box-sizing: border-box;
     -moz-box-sizing: border-box; /* Firefox */
     -webkit-box-sizing: border-box;
 }
 .ide-work-bench-tool-panel-left:before {
     /* panel where tab-buttons created*/
-	height: 100%;
-	border: 1px solid tabBorder;
-	position: absolute;
-	left: 17px;
+    position: absolute;
+    box-shadow: -1px 0px 0px 0px tabBorderShadow;
+    left: 100%;
+    height: 100%;
+    width: 2px;
 	content: "";
 }
 
@@ -61,9 +62,8 @@ svg[name="workBenchIconMinimize"] {
     margin: 2px 5px;
     width: 14px;
     height: 11px;
-    fill: minimizeIconColor; 
+    fill: minimizeIconColor;
 }
-
 
 .ide-work-bench-split-panel-left svg[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(180deg);
