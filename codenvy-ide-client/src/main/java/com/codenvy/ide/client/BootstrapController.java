@@ -27,6 +27,7 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.icon.Icon;
@@ -197,7 +198,7 @@ public class BootstrapController {
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
                                                  protected void onSuccess(final ProfileDescriptor profile) {
-                                                     appContext.setProfile(profile);
+                                                     appContext.setCurrentUser(new CurrentUser(profile));
 
                                                      /**
                                                       * Profile received, restore preferences and theme

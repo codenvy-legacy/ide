@@ -18,7 +18,6 @@ import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerController;
-import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -54,7 +53,7 @@ public class RunAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Run application");
-        runnerController.runActiveProject(true);
+        runnerController.runActiveProject(null, true);
     }
 
     /** {@inheritDoc} */

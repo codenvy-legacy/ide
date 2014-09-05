@@ -114,7 +114,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 String usedMemory = result.getUsedMemory();
                 if (totalMemory != null) {
                     Integer memorySize = Integer.valueOf(totalMemory);
-                    if (usedMemory == null) memorySize -= Integer.valueOf(usedMemory);
+                    if (usedMemory != null) memorySize -= Integer.valueOf(usedMemory);
                     if (memorySize > 0) {
                         if (memorySize < 1000) {
                             requiredMemorySize = memorySize + "MB";

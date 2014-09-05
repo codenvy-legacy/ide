@@ -332,6 +332,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.unable-open-file")
     String unableOpenFile(String path);
 
+    @Key("messages.appWillBeStopped")
+    String appWillBeStopped(String appName);
+
     /* Buttons */
     @Key("ok")
     String ok();
@@ -369,4 +372,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("action.expandEditor.title")
     String actionExpandEditorTitle();
+
+    @Key("closeProject.askWindow.title")
+    String closeProjectAskTitle();
 }

@@ -161,7 +161,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public void activate() {
-        // TODO
+        this.editor.setFocus();
     }
 
     @Override

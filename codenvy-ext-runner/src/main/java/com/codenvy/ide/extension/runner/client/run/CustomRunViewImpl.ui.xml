@@ -16,20 +16,13 @@
     <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
     <ui:with field='resources' type='com.codenvy.ide.extension.runner.client.RunnerResources'/>
     <ui:style>
+
         .spacingTop {
-            margin-top: 20px;
+            margin-top: 5px;
         }
 
         .labelMargin {
             margin-bottom: 5px;
-        }
-
-        .labelSpacingTop {
-            margin-top: 10px;
-        }
-
-		.labelSpacingLeft {
-            margin-left: 5px;
         }
 
         .emptyBorder {
@@ -40,23 +33,16 @@
             resize: none;
         }
 
-        .alignLeft {
-            float: left;
-        }
-
-        .alignRight {
-            float: right;
-        }
-
-        .gwt-SuggestBox {
+        .gwt-ListBox {
             background-color: #4b4a4a;
             border: 1px solid #000000;
             color: #ffffff;
             position: relative;
+            text-align: right;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="220px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}" debugId="customRun-panel">
-        <g:north size="80.0">
+    <g:DockLayoutPanel unit="PX" width="350px" height="280px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}" debugId="customRun-panel">
+        <g:north size="65.0">
             <g:FlowPanel addStyleNames="{style.spacingTop}">
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" height="20px" width="100%"
                          addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
@@ -65,9 +51,23 @@
         </g:north>
         <g:north size="30">
             <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
-                <g:Label text="{locale.runConfigurationViewMemorySizeLabel}" width="304px" addStyleNames="{resources.runner.mainStyle}"/>
-                <g:SuggestBox ui:field="memoryField" height="15px" width="40px" addStyleNames="{style.gwt-SuggestBox}"
-                              debugId="project-customRun-memory"/>
+                <g:Label text="{locale.runConfigurationViewMemoryRunnerLabel}" width="284px" addStyleNames="{resources.runner.mainStyle}"/>
+                <g:ListBox ui:field="memoryRunner" height="20px" width="100%" addStyleNames="{style.gwt-ListBox}"
+                              debugId="project-customRun-memoryRunner"/>
+            </g:HorizontalPanel>
+        </g:north>
+        <g:north size="30">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
+                <g:Label text="{locale.runConfigurationViewMemoryTotalLabel}" width="302px" addStyleNames="{resources.runner.mainStyle}"/>
+                <g:TextBox readOnly="true" ui:field="memoryTotal" height="12px" width="40px" addStyleNames="{style.gwt-ListBox}"
+                           debugId="project-customRun-memoryTotal"/>
+            </g:HorizontalPanel>
+        </g:north>
+        <g:north size="30">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
+                <g:Label text="{locale.runConfigurationViewMemoryAvailableLabel}" width="302px" addStyleNames="{resources.runner.mainStyle}"/>
+                <g:TextBox readOnly="true" ui:field="memoryAvailable" height="12px" width="40px" addStyleNames="{style.gwt-ListBox}"
+                           debugId="project-customRun-memoryAvailable"/>
             </g:HorizontalPanel>
         </g:north>
         <g:north size="30">

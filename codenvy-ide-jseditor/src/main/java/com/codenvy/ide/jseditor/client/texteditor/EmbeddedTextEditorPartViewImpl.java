@@ -56,6 +56,7 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     private List<String>                    editorModes = null;
 
     private int                             tabSize     = 3;
+    private boolean                         delayedFocus = false;
 
     public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
                                           final FileTypeIdentifier fileTypeIdentifier,
@@ -113,6 +114,13 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         this.editor.addCursorActivityHandler(this.infoPanel);
         this.editor.addBlurHandler(this.infoPanel);
         this.editor.addFocusHandler(this.infoPanel);
+
+        // handle delayed focus
+        // should also check if I am visible, but how ?
+        if (delayedFocus) {
+            this.editor.setFocus();
+            this.delayedFocus = false;
+        }
     }
 
     @Override
@@ -171,6 +179,15 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     @Override
     public Region getSelectedRegion() {
         return this.editor.getSelectedRange();
+    }
+
+    @Override
+    public void setFocus() {
+        if (this.editor != null) {
+            this.editor.setFocus();
+        } else {
+            this.delayedFocus = true;
+        }
     }
 
     /**

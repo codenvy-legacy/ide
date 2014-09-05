@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.ide.Constants;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.notification.Notification;
@@ -22,12 +22,14 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -76,7 +78,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                     protected void onSuccess(Array<RunnerDescriptor> result) {
                         CurrentProject activeProject = appContext.getCurrentProject();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
-                        view.showDialog();
+                        setMemoryFields();
                     }
 
                     @Override
@@ -87,9 +89,40 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                       );
     }
 
+    private void setMemoryFields() {
+        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+            @Override
+            protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
+                int runnerMemory = 0;
+                Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
+                if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                    try {
+                        runnerMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                    } catch (NumberFormatException e) {
+                        //do nothing
+                    }
+                }
+                int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
+                int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
+                runnerMemory = ((runnerMemory > 0) && (runnerMemory % 128 == 0)) ? runnerMemory : 256;
+
+                view.setRunnerMemorySize(runnerMemory);
+                view.setTotalMemorySize(totalMemory);
+                view.setAvailableMemorySize(totalMemory - usedMemory);
+                view.showDialog();
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                notificationManager.showNotification(new Notification(constant.getResourcesFailed(), ERROR));
+            }
+        });
+    }
+
     private Array<RunnerEnvironment> getEnvironmentsForProject(CurrentProject project, Array<RunnerDescriptor> runners) {
         Array<RunnerEnvironment> environments = Collections.createArray();
-        final String runnerName = project.getAttributeValue(Constants.RUNNER_NAME);
+        final String runnerName = project.getRunner();
         for (RunnerDescriptor runnerDescriptor : runners.asIterable()) {
             if (runnerName.equals(runnerDescriptor.getName())) {
                 for (RunnerEnvironment environment : runnerDescriptor.getEnvironments().values()) {
@@ -104,27 +137,14 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     @Override
     public void onRunClicked() {
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+        runOptions.setMemorySize(view.getRunnerMemorySize());
+        runOptions.setSkipBuild(view.isSkipBuildSelected());
 
-        if (!view.getMemorySize().isEmpty()) {
-            try {
-                int memorySize = Integer.valueOf(view.getMemorySize());
-                if (memorySize <= 0) {
-                    throw new NumberFormatException();
-                }
-                runOptions.setMemorySize(memorySize);
-            } catch (NumberFormatException e) {
-                Info infoWindow = new Info(constant.titlesWarning(), constant.enteredValueNotCorrect());
-                infoWindow.show();
-                return;
-            }
-        }
         if (view.getSelectedEnvironment() != null) {
             runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
         }
-        runOptions.setSkipBuild(view.isSkipBuildSelected());
-
         view.close();
-        runnerController.runActiveProject(runOptions, null, true);
+        runnerController.runActiveProject(runOptions, true);
     }
 
     @Override
