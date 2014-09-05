@@ -441,7 +441,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void setDefaultRam2runOptions(RunOptions runOptions) {
-        Map<String, String> preferences = appContext.getProfile().getPreferences();
+        Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
         if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
             try {
                 Log.info(RunnerController.class, preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
@@ -454,7 +454,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
-        totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time").withName("total_time");
+        totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time")
+                                          .withName("total_time");
 
         //checking if it's ALWAYS ON app and we reopen running project
         // in this case we initiate timer with UP_TIME metric
@@ -744,7 +745,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             final Link recipeLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), "runner recipe");
             if (recipeLink != null) {
                 List<Link> links = new ArrayList<>(1);
-                links.add(dtoFactory.createDto(Link.class).withHref(recipeLink.getHref()).withRel("get content"));
+                links.add(dtoFactory.createDto(Link.class).withHref(recipeLink.getHref())
+                                    .withRel("get content"));
                 ItemReference recipeFile = dtoFactory.createDto(ItemReference.class)
                                                      .withName("Runner Recipe")
                                                      .withPath("runner_recipe")
@@ -804,7 +806,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             }
         }
         RunnerMetric lifeTimeMetric = getRunnerMetric(RunnerMetric.LIFETIME);
-        if (lifeTimeMetric != null && processDescriptor != null && processDescriptor.getStatus().equals(NEW)) {
+        if (lifeTimeMetric != null && processDescriptor.getStatus().equals(NEW)) {
             if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.LIFETIME).getValue()))
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription())
                                  .withValue(getRunnerMetric(RunnerMetric.LIFETIME).getValue());
