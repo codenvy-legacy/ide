@@ -106,7 +106,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
         }
 
         Icon icon = null;
-        final String projectTypeId = project.getProjectDescription().getProjectTypeId();
+        final String projectTypeId = project.getRootProject().getProjectTypeId();
         if (node instanceof ProjectRootNode) {
             icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
         } else if (node instanceof FolderNode) {

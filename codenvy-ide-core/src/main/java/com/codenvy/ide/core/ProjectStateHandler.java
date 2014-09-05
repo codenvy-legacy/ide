@@ -75,7 +75,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
     public void onOpenProject(final OpenProjectEvent event) {
         // previously opened project should be correctly closed
         if (appContext.getCurrentProject() != null) {
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject().getProjectDescription()));
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(appContext.getCurrentProject().getRootProject()));
         }
 
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
@@ -103,7 +103,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
     public void onCloseCurrentProject(CloseCurrentProjectEvent event) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
-            ProjectDescriptor closedProject = currentProject.getProjectDescription();
+            ProjectDescriptor closedProject = currentProject.getRootProject();
             // Note: currentProject must be null BEFORE firing ProjectClosedEvent
             appContext.setCurrentProject(null);
 

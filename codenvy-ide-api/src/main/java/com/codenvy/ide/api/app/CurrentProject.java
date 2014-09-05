@@ -26,7 +26,7 @@ public class CurrentProject {
     private ProjectDescriptor projectDescription;
     private boolean isRunningEnabled = true;
     private ApplicationProcessDescriptor processDescriptor;
-
+    private ProjectDescriptor rootProject;
 
     /**
      * By default:
@@ -37,6 +37,7 @@ public class CurrentProject {
      */
     public CurrentProject(ProjectDescriptor projectDescription) {
         this.projectDescription = projectDescription;
+        this.rootProject = projectDescription;
     }
 
     public ApplicationProcessDescriptor getProcessDescriptor() {
@@ -86,6 +87,14 @@ public class CurrentProject {
 
     public String getBuilder() {
         return projectDescription.getBuilder();
+    }
+
+    public ProjectDescriptor getRootProject() {
+        return rootProject;
+    }
+
+    public void setRootProject(ProjectDescriptor rootProject) {
+        this.rootProject = rootProject;
     }
 
     /**

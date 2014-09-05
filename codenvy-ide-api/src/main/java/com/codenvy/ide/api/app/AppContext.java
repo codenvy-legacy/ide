@@ -26,9 +26,9 @@ import javax.inject.Singleton;
 public class AppContext {
     private WorkspaceDescriptor workspace;
 
-    private CurrentProject      currentProject;
+    private CurrentProject currentProject;
 
-    private ProfileDescriptor    profile;
+    private ProfileDescriptor profile;
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;
@@ -41,6 +41,8 @@ public class AppContext {
     /**
      * Returns {@link CurrentProject} instance that describes the project
      * that is currently opened or <code>null</code> if none opened.
+     * <p/>
+     * Note that current project may also represent a project's module.
      *
      * @return opened project or <code>null</code> if none opened
      */
@@ -61,6 +63,7 @@ public class AppContext {
 
     /**
      * Return current ProfileDescriptor
+     *
      * @return
      */
     public ProfileDescriptor getProfile() {
@@ -68,7 +71,6 @@ public class AppContext {
     }
 
     /**
-     * 
      * @param profile
      */
     public void setProfile(ProfileDescriptor profile) {

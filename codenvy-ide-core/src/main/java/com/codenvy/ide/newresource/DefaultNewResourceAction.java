@@ -152,6 +152,6 @@ public class DefaultNewResourceAction extends Action {
                 }
             }
         }
-        return appContext.getCurrentProject().getProjectDescription().getPath();
+        return appContext.getCurrentProject().getRootProject().getPath();
     }
 }

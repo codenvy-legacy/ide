@@ -103,6 +103,6 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
                 }
             }
         }
-        return appContext.getCurrentProject().getProjectDescription().getPath();
+        return appContext.getCurrentProject().getRootProject().getPath();
     }
 }

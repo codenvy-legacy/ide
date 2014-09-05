@@ -121,8 +121,8 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
                                        Map<String, String> additionalParams) {
         CurrentProject project = appContext.getCurrentProject();
         if (project != null) {
-            putIfNotNull(PROJECT_NAME_PARAM, project.getProjectDescription().getName(), additionalParams);
-            putIfNotNull(PROJECT_TYPE_PARAM, project.getProjectDescription().getProjectTypeId(), additionalParams);
+            putIfNotNull(PROJECT_NAME_PARAM, project.getRootProject().getName(), additionalParams);
+            putIfNotNull(PROJECT_TYPE_PARAM, project.getRootProject().getProjectTypeId(), additionalParams);
         }
 
         putIfNotNull(USER_PARAM, currentUser, additionalParams);

@@ -60,6 +60,7 @@ public class UploadFilePresenterTest {
     public void setUp() {
         CurrentProject project = mock(CurrentProject.class);
         when(project.getProjectDescription()).thenReturn(mock(ProjectDescriptor.class));
+        when(project.getRootProject()).thenReturn(mock(ProjectDescriptor.class));
         when(appContext.getCurrentProject()).thenReturn(project);
     }
 

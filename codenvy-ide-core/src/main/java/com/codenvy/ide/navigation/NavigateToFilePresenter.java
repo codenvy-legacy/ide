@@ -115,7 +115,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     }
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
-        final String projectPath = appContext.getCurrentProject().getProjectDescription().getPath();
+        final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
         final String url = SEARCH_URL + projectPath + "?name=" + fileName;
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);

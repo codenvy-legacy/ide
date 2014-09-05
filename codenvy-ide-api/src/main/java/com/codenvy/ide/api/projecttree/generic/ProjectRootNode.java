@@ -25,6 +25,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Node that represents project root item.
@@ -162,6 +163,11 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
         });
     }
 
+    /** Get unique ID of type of project. */
+    public String getProjectTypeId() {
+        return data.getProjectTypeId();
+    }
+
     /**
      * Creates node for the specified item. Method called for every child item in {@link #refreshChildren(AsyncCallback)} method.
      * <p/>
@@ -179,5 +185,34 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
             return treeStructure.newFolderNode(ProjectRootNode.this, item);
         }
         return null;
+    }
+
+    /**
+     * Returns value of the specified attribute.
+     *
+     * @param attributeName
+     *         name of the attribute to get its value
+     * @return value of the specified attribute or <code>null</code> if attribute does not exists
+     */
+    @Nullable
+    public String getAttributeValue(String attributeName) {
+        List<String> attributeValues = getAttributeValues(attributeName);
+        if (attributeValues != null && !attributeValues.isEmpty()) {
+            return attributeValues.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Returns values list of the specified attribute.
+     *
+     * @param attributeName
+     *         name of the attribute to get its values
+     * @return {@link List} of attribute values or <code>null</code> if attribute does not exists
+     * @see #getAttributeValue(String)
+     */
+    @Nullable
+    public List<String> getAttributeValues(String attributeName) {
+        return data.getAttributes().get(attributeName);
     }
 }

@@ -24,6 +24,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.contexmenu.ContextMenuPresenter;
@@ -150,6 +151,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     public void onNodeSelected(@NotNull AbstractTreeNode<?> node) {
         selectedTreeNode = node;
         setSelection(new Selection<>(node));
+
+        updateAppContext(node);
+    }
+
+    private void updateAppContext(AbstractTreeNode<?> node) {
+        if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
+            appContext.getCurrentProject().setProjectDescription(((StorableNode)node).getProject().getData());
+        }
     }
 
     /** {@inheritDoc} */
