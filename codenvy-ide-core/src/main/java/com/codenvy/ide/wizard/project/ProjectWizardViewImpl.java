@@ -13,6 +13,7 @@ package com.codenvy.ide.wizard.project;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -192,7 +193,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
                 @Override
                 public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
                     if (event.getTypeInt() == Event.ONKEYUP &&
-                        event.getNativeEvent().getKeyCode() == '\r') {
+                        event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
                         if (nextStepButton.isEnabled()) {
                             delegate.onNextClicked();
                         } else if (saveButton.isEnabled()) {

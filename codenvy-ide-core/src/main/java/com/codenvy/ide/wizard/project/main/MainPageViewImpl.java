@@ -130,7 +130,7 @@ public class MainPageViewImpl implements MainPageView {
 
     @UiHandler("projectName")
     void onProjectNameChanged(KeyUpEvent event) {
-        if (event.getNativeKeyCode() == '\r') {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             return;
         }
 
@@ -139,7 +139,7 @@ public class MainPageViewImpl implements MainPageView {
 
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
-        if (event.getNativeKeyCode() == '\r') {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             return;
         }
 
