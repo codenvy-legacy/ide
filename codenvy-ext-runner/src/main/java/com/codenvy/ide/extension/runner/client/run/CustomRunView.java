@@ -46,14 +46,26 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
      */
     void setEnvironments(@NotNull Array<RunnerEnvironment> environments);
 
+    /** Set memory size for runner. */
+    void setRunnerMemorySize(int memorySize);
+
+    /** Get memory size for runner. */
+    int getRunnerMemorySize();
+
+    /** Set Total Workspace RAM. */
+    void setTotalMemorySize(int memorySize);
+
+    /**
+     * Set Available memory size.
+     * It's value is calculated as (Workspace RAM - RAM allocated to current Runners)
+     */
+    void setAvailableMemorySize(int memorySize);
+
     /** Close dialog. */
     void close();
 
     /** Show dialog. */
     void showDialog();
-
-    /** Get memory size from memory field. */
-    String getMemorySize();
 
     /** Performs when user select skip build. */
     boolean isSkipBuildSelected();
