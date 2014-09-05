@@ -24,13 +24,13 @@
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{res.workBenchCss.ideWorkBenchParentPanel}">
-        <g:east size="16">
+        <g:east size="18">
             <g:FlowPanel ui:field="rightPanel" addStyleNames="{res.workBenchCss.ideWorkBenchToolPanelRight}"/>
         </g:east>
         <g:west size="18">
             <g:FlowPanel ui:field="leftPanel" addStyleNames="{res.workBenchCss.ideWorkBenchToolPanelLeft}"/>
         </g:west>
-        <g:south size="16">
+        <g:south size="18">
             <g:FlowPanel ui:field="bottomPanel" addStyleNames="{res.workBenchCss.ideWorkBenchToolPanelBottom}"/>
         </g:south>
         <g:center>

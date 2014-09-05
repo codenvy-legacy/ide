@@ -193,7 +193,6 @@
     box-shadow: 1px -1px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
-    margin-top: -1px;
     white-space: nowrap;
 }
 
@@ -234,6 +233,7 @@
     cursor: pointer;
     cursor: hand;
     height: 18px;
+    top: -2px;
     font-size: 11px;
     display: inline-block;
 }
