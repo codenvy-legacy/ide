@@ -35,7 +35,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
     private UserProfileServiceClient   userProfileService;
     private RamManagerView             view;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private AppContext appContext;
+    private AppContext                 appContext;
     private boolean dirty = false;
 
     /**
@@ -124,18 +124,19 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
                 Map<String, String> preferences = result.getPreferences();
                 preferences.put(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
 
-                userProfileService.updatePreferences(preferences, new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(
-                        ProfileDescriptor.class)) {
-                    @Override
-                    protected void onSuccess(ProfileDescriptor result) {
-                        appContext.setProfile(result);
-                    }
+                userProfileService.updatePreferences(preferences,
+                                                     new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(
+                                                             ProfileDescriptor.class)) {
+                                                         @Override
+                                                         protected void onSuccess(ProfileDescriptor result) {
+                                                             appContext.getCurrentUser().setProfile(result);
+                                                         }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
+                                                         @Override
+                                                         protected void onFailure(Throwable exception) {
 
-                    }
-                });
+                                                         }
+                                                     });
 
 
             }

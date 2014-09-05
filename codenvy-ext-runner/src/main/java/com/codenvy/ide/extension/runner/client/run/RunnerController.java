@@ -458,8 +458,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 } catch (WebSocketException e) {
                     Log.error(RunnerController.class, e);
                 }
-                appContext.getCurrentProject().
-                        setProcessDescriptor(null);
+                appContext.getCurrentProject().setProcessDescriptor(null);
                 appContext.getCurrentProject().setIsRunningEnabled(true);
             }
         };
@@ -823,8 +822,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private String getAppLink() {
         String url = null;
-        final Link appLink = RunnerUtils
-                .getLink(appContext.getCurrentProject().getProcessDescriptor(), com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
+                                                 com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
