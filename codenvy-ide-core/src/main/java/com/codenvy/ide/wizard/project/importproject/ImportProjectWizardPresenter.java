@@ -119,6 +119,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     /** {@inheritDoc} */
     @Override
     public void show() {
+        wizardContext.clear();
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
         view.showDialog();
         setPage(mainPage);
     }
@@ -247,7 +249,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                                                                          ServiceError.class);
                                                  errorMessage = serverError.getMessage();
                                              } else {
-                                                 Log.error(ImportProjectPresenter.class, locale.importProjectError() + exception);
+                                                 Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
                                                  errorMessage = exception.getMessage();
                                              }
                                              Notification notification = new Notification(errorMessage, Type.ERROR);
@@ -264,18 +266,17 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
      * @param callback wizard's callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-        final ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility ? "public" : "private");
-        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
+        project.setVisibility(visibility ? "public" : "private");
+        project.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
         projectService.updateProject(project.getPath(),
-                                     projectDescriptor,
+                                     project,
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                                                                  dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
                                              view.setLoaderVisibility(false);
-                                             if (project.getVisibility().equals(visibility)) {
+                                             if (result.getVisibility().equals(visibility)) {
                                                  getProject(project.getName(), callback);
                                              } else {
                                                  switchVisibility(callback, result);

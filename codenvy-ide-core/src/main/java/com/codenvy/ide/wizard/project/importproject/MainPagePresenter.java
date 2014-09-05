@@ -181,7 +181,10 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             @Override
             protected void onSuccess(Array<ProjectImporterDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
-                    importersSet.add(result.get(i));
+                    //do not show internal importers:
+                    if (!result.get(i).isInternal()) {
+                        importersSet.add(result.get(i));
+                    }
                 }
                 Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
                 importers.put("Importers", importersSet);
