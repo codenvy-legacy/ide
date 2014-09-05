@@ -15,6 +15,7 @@ import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
+import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -76,7 +77,7 @@ public class CustomRunTest extends BaseTest {
     public void shouldShowDialog() throws Exception {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
-        when(appContext.getProfile()).thenReturn(profileDescriptor);
+        when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(profileDescriptor.getPreferences()).thenReturn(null);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");

@@ -95,7 +95,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
                 int runnerMemory = 0;
-                Map<String, String> preferences = appContext.getProfile().getPreferences();
+                Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
                 if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
                     try {
                         runnerMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
