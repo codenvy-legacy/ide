@@ -16,6 +16,9 @@ import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -30,8 +33,8 @@ import java.util.Set;
  */
 @Singleton
 public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencesPagePresenter.DirtyStateListener {
-    private PreferencesView view;
-    private Set<PreferencesPagePresenter> presenters;
+    private PreferencesView                 view;
+    private Set<PreferencesPagePresenter>   presenters;
     private PreferencesPagePresenter        currentPage;
     private Array<PreferencesPagePresenter> preferences;
     private boolean                         hasDirtyPage;
@@ -93,18 +96,24 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
 
     /** Shows preferences. */
     public void showPreferences() {
+        Map<String, Set<PreferencesPagePresenter>> preferencesMap = new HashMap<>();
         if (preferences == null) {
             preferences = Collections.createArray();
             for (PreferencesPagePresenter presenter : presenters) {
                 preferences.add(presenter);
+                Set<PreferencesPagePresenter> preferences;
+                if (!preferencesMap.isEmpty() && preferencesMap.containsKey(presenter.getCategory())) {
+                    preferences = preferencesMap.get(presenter.getCategory());
+                } else {
+                    preferences = new HashSet<PreferencesPagePresenter>();
+                }
+                preferences.add(presenter);
+                preferencesMap.put(presenter.getCategory(), preferences);
             }
         }
-        this.view.setPreferences(preferences);
-        if (currentPage != null) {
-            selectedPreference(currentPage);
-        } else if (!preferences.isEmpty()) {
-            selectedPreference(preferences.get(0));
-        }
+        if (currentPage == null) currentPage = preferences.get(0);
+        this.view.setPreferences(preferencesMap, currentPage);
+        selectedPreference(currentPage);
         view.showPreferences();
     }
 

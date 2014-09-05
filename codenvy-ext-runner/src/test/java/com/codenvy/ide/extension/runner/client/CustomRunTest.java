@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -33,6 +35,7 @@ import org.mockito.stubbing.Answer;
 import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -66,11 +69,18 @@ public class CustomRunTest extends BaseTest {
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
         runnerDescriptors.add(runnerDescriptor);
 
-        when(activeProject.getAttributeValue(anyString())).thenReturn(RUNNER_NAME);
+        when(activeProject.getRunner()).thenReturn(RUNNER_NAME);
     }
 
     @Test
     public void shouldShowDialog() throws Exception {
+        final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
+        ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
+        when(appContext.getProfile()).thenReturn(profileDescriptor);
+        when(profileDescriptor.getPreferences()).thenReturn(null);
+        when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
+        when(resourcesDescriptor.getUsedMemory()).thenReturn("256");
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -82,11 +92,25 @@ public class CustomRunTest extends BaseTest {
             }
         }).when(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
 
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<ResourcesDescriptor> callback = (AsyncRequestCallback<ResourcesDescriptor>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, resourcesDescriptor);
+                return callback;
+            }
+        }).when(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
+
         presenter.showDialog();
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(view).setEnvironments(Matchers.<Array<RunnerEnvironment>>anyObject());
-        verify(view, times(1)).showDialog();
+        verify(view).setRunnerMemorySize(anyInt());
+        verify(view).setTotalMemorySize(anyInt());
+        verify(view).setAvailableMemorySize(anyInt());
+        verify(view).showDialog();
     }
 
     @Test
@@ -112,7 +136,7 @@ public class CustomRunTest extends BaseTest {
     @Test
     public void shouldRunProject() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getMemorySize()).thenReturn("128");
+        when(view.getRunnerMemorySize()).thenReturn(128);
         when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
 
         presenter.onRunClicked();
@@ -120,9 +144,9 @@ public class CustomRunTest extends BaseTest {
         verify(view).close();
         verify(dtoFactory).createDto(eq(RunOptions.class));
         verify(view).getSelectedEnvironment();
-        verify(view, times(2)).getMemorySize();
+        verify(view).getRunnerMemorySize();
         verify(runOptions).setMemorySize(eq(128));
-        verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runnerController).runActiveProject((RunOptions)anyObject(), anyBoolean());
     }
 
     @Test

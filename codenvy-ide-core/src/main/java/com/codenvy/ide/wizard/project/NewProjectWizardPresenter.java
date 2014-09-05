@@ -10,12 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.api.builder.dto.BuilderDescriptor;
+import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
+import com.codenvy.api.runner.dto.RunnerDescriptor;
+import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -24,6 +31,7 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardPage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -37,6 +45,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,6 +55,8 @@ import java.util.Map;
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
     private final ProjectServiceClient      projectService;
     private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private final RunnerServiceClient       runnerServiceClient;
+    private final BuilderServiceClient      builderServiceClient;
     private final CoreLocalizationConstant  constant;
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       DtoFactory                dtoFactory;
@@ -53,7 +64,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       WizardPage                currentPage;
     private       ProjectWizardView         view;
     private       MainPagePresenter         mainPage;
-    private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
+    private Map<String, String>  runnersDescriptionMap = new HashMap<String, String>();
+    private Map<String, String>  builderDescriptionMap = new HashMap<String, String>();
+    private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
             return mainPage;
@@ -62,6 +75,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private WizardContext wizardContext;
     private ProjectWizard wizard;
 
+
     @Inject
     public NewProjectWizardPresenter(ProjectWizardView view,
                                      MainPagePresenter mainPage,
@@ -69,6 +83,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectTypeWizardRegistry wizardRegistry,
                                      CoreLocalizationConstant constant,
+                                     RunnerServiceClient runnerServiceClient,
+                                     BuilderServiceClient builderServiceClient,
                                      DtoFactory dtoFactory,
                                      EventBus eventBus) {
         this.view = view;
@@ -82,6 +98,94 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         mainPage.setUpdateDelegate(this);
         view.setDelegate(this);
         wizardContext = new WizardContext();
+        this.runnerServiceClient = runnerServiceClient;
+        this.builderServiceClient = builderServiceClient;
+        updateBuildersDescriptor();
+        updateRunnersDescriptor();
+    }
+
+    private void updateMemoryInfo() {
+        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+            @Override
+            protected void onSuccess(ResourcesDescriptor result) {
+                String requiredMemorySize = "undefined";
+                String totalMemory = result.getTotalMemory();
+                String usedMemory = result.getUsedMemory();
+                if (totalMemory != null) {
+                    Integer memorySize = Integer.valueOf(totalMemory);
+                    if (usedMemory != null) memorySize -= Integer.valueOf(usedMemory);
+                    if (memorySize > 0) {
+                        if (memorySize < 1000) {
+                            requiredMemorySize = memorySize + "MB";
+                        } else {
+                            requiredMemorySize = memorySize / 1000 + "." + memorySize % 1000 + "GB";
+                        }
+                    }
+
+                }
+                view.setRAMAvailable(requiredMemorySize);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(getClass(), exception.getMessage());
+            }
+        });
+    }
+
+    private void updateBuildersDescriptor() {
+        builderServiceClient.getRegisteredServers(Config.getWorkspaceId(), new AsyncRequestCallback<Array<BuilderDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(BuilderDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<BuilderDescriptor> results) {
+                for (int pos = 0; pos < results.size(); pos++) {
+                    BuilderDescriptor builderDescriptor = results.get(pos);
+                    String builderDescriptionStr = new String();
+                    for (BuilderEnvironment environment : builderDescriptor.getEnvironments().values()) {
+                        String builderDisplayName = environment.getDisplayName();
+                        if (builderDisplayName == null) builderDisplayName = environment.getId();
+                        if (builderDisplayName != null) {
+                            builderDescriptionStr += ": " + builderDisplayName;
+                        }
+                    }
+                    if (builderDescriptionStr.length() == 0) builderDescriptionStr = "undefined";
+                    builderDescriptionMap.put(builderDescriptor.getName(), builderDescriptionStr);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(getClass(), exception.getMessage());
+            }
+        });
+    }
+
+    private void updateRunnersDescriptor() {
+        runnerServiceClient.getRunners(new AsyncRequestCallback<Array<RunnerDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<RunnerDescriptor> results) {
+                for (int pos = 0; pos < results.size(); pos++) {
+                    RunnerDescriptor runnerDescriptior = results.get(pos);
+                    String runnerDescriptionStr = new String();
+                    for (RunnerEnvironment environment : runnerDescriptior.getEnvironments().values()) {
+                        String runnerDisplayName = environment.getDisplayName();
+                        if (runnerDisplayName == null) runnerDisplayName = environment.getId();
+                        if (runnerDisplayName != null) {
+                            runnerDescriptionStr += ": " + runnerDisplayName;
+                        }
+                    }
+                    if (runnerDescriptionStr.length() == 0) runnerDescriptionStr = "undefined";
+                    runnersDescriptionMap.put(runnerDescriptior.getName(), runnerDescriptionStr);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(getClass(), exception.getMessage());
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -351,11 +455,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                     (descriptor != null && descriptor.getProjectTypeId().equals(
                                             com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
+        String requiredMemorySize = "undefined";
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-            view.setRunnerEnvirConfig(null);
-            view.setBuilderEnvirConfig(null);
-            String requiredMemorySize = null;
+            view.setRunnerEnvirConfig(runnersDescriptionMap.get(templateDescriptor.getRunnerName()));
+            view.setBuilderEnvirConfig(builderDescriptionMap.get(templateDescriptor.getBuilderName()));
             String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
             Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
             if (defaultEnvironment != null && configurations != null) {
@@ -364,9 +468,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                     int memorySize = configurationDescriptor.getRecommendedMemorySize();
                     if (memorySize > 0) {
                         if (memorySize < 1000) {
-                            requiredMemorySize = memorySize + "Mb";
+                            requiredMemorySize = memorySize + "MB";
                         } else {
-                            requiredMemorySize = memorySize / 1000 + "Gb";
+                            requiredMemorySize = memorySize / 1000 + "." + memorySize % 1000 + "GB";
                         }
                     }
                 }
@@ -375,21 +479,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             //set info visible
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
-
-            // TODO: need configuration
-            view.setRunnerEnvirConfig(new String[]{"JDK 7.0"});
-            view.setBuilderEnvirConfig(new String[]{"JDK 7.0"});
-
-            //leave the default
-            view.setRAMRequired(null);
-            //set info visible
+            view.setRunnerEnvirConfig(runnersDescriptionMap.get(descriptor.getRunner()));
+            view.setBuilderEnvirConfig(builderDescriptionMap.get(descriptor.getBuilder()));
+            view.setRAMRequired(requiredMemorySize);
             view.setInfoVisibled(true);
         } else {
             view.setInfoVisibled(false);
         }
 
-        // TODO: need workspace information
-        view.setRAMAvailable(null);
+        updateMemoryInfo();
 
     }
 

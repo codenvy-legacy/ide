@@ -20,8 +20,8 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -46,6 +46,8 @@ import java.util.List;
 public class ExtensionManagerViewImpl implements ExtensionManagerView {
     private static ExtensionManagerViewImplUiBinder ourUiBinder = GWT.create(ExtensionManagerViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
+    @UiField
+    Style                          style;
     @UiField(provided = true)
     DataGrid<ExtensionDescription> dataGrid;
     @UiField
@@ -58,12 +60,12 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
     public ExtensionManagerViewImpl(ToolbarPresenter toolbarPresenter, ActionManager actionManager, Resources resources) {
         dataGrid = new DataGrid<ExtensionDescription>(100, resources);
         rootElement = ourUiBinder.createAndBindUi(this);
-        toolbarPresenter.go(toolBarPanel);
+//        toolbarPresenter.go(toolBarPanel);
         DefaultActionGroup actionGroup = new DefaultActionGroup("extensionManager", false, actionManager);
         actionManager.registerAction("extensionManagerGroup", actionGroup);
-        SortByStatusAction sortByStatusAction = new SortByStatusAction(this, resources);
-        actionManager.registerAction("extensionManagerSortByStatus", sortByStatusAction);
-        actionGroup.add(sortByStatusAction);
+//        SortByStatusAction sortByStatusAction = new SortByStatusAction(this, resources);
+//        actionManager.registerAction("extensionManagerSortByStatus", sortByStatusAction);
+//        actionGroup.add(sortByStatusAction);
         toolbarPresenter.bindMainGroup(actionGroup);
         UIObject.ensureDebugId(descriptionArea, "window-preferences-extensions-descriptionArea");
 
@@ -76,7 +78,8 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
 
             @Override
             public void render(Cell.Context context, ExtensionDescription object, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant(
+                        "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
                 super.render(context, object, sb);
             }
         };
@@ -88,8 +91,10 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
                 delegate.setDirty();
             }
         });
+        enabledColumn.setCellStyleNames(style.enabledColumn());
+
         dataGrid.addColumn(enabledColumn);
-        dataGrid.setColumnWidth(enabledColumn, 40, Style.Unit.PX);
+        dataGrid.setColumnWidth(enabledColumn, 75, com.google.gwt.dom.client.Style.Unit.PX);
 
         Column<ExtensionDescription, String> titleColumn = new Column<ExtensionDescription, String>(new TextCell()) {
             @Override
@@ -97,6 +102,8 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
                 return object.getTitle();
             }
         };
+        titleColumn.setCellStyleNames(style.titleColumn());
+
         dataGrid.addColumn(titleColumn);
         SingleSelectionModel<ExtensionDescription> selectionModel = new SingleSelectionModel<ExtensionDescription>();
         dataGrid.setSelectionModel(selectionModel);
@@ -134,5 +141,23 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
 
     interface ExtensionManagerViewImplUiBinder
             extends UiBinder<DockLayoutPanel, ExtensionManagerViewImpl> {
+    }
+
+    interface Style extends CssResource {
+        String headerTitle();
+
+        String labelActivate();
+
+        String labelName();
+
+        String enabledColumn();
+
+        String titleColumn();
+
+        String leftSeparator();
+
+        String chatMessageInput();
+
+        String messageInputContainer();
     }
 }

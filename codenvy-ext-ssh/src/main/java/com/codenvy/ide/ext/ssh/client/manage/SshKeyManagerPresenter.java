@@ -82,7 +82,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(constant.sshManagerTitle(), resources.sshKeyManager());
+        super(constant.sshManagerTitle(), constant.sshManagerCategory(), resources.sshKeyManager());
 
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;

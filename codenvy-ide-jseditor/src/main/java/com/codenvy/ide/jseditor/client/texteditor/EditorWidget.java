@@ -109,4 +109,7 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     EditorType getEditorType();
 
     Keymap getKeymap();
+
+    /** Give the focus to the editor. */
+    void setFocus();
 }

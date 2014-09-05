@@ -26,9 +26,7 @@ public class CurrentProject {
     private ProjectDescriptor projectDescription;
     private boolean isRunningEnabled = true;
     private ApplicationProcessDescriptor processDescriptor;
-    private String                       runner;
-    private String                       runnerEnvId;
-    private String                       builder;
+
 
     /**
      * By default:
@@ -79,27 +77,15 @@ public class CurrentProject {
     }
 
     public String getRunner() {
-        return runner;
-    }
-
-    public void setRunner(String runner) {
-        this.runner = runner;
+        return projectDescription.getRunner();
     }
 
     public String getRunnerEnvId() {
-        return runnerEnvId;
-    }
-
-    public void setRunnerEnvId(String runnerEnvId) {
-        this.runnerEnvId = runnerEnvId;
+        return projectDescription.getDefaultRunnerEnvironment();
     }
 
     public String getBuilder() {
-        return builder;
-    }
-
-    public void setBuilder(String builder) {
-        this.builder = builder;
+        return projectDescription.getBuilder();
     }
 
     /**

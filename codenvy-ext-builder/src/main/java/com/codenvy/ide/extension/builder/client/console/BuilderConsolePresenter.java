@@ -31,10 +31,10 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
-    private static final String      TITLE   = "Builder";
+    private static final String TITLE = "Builder";
     private final BuilderConsoleView view;
     private final ToolbarPresenter   consoleToolbar;
-    private boolean                  isUnread = false;
+    private boolean isUnread = false;
 
     @Inject
     public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
@@ -42,18 +42,18 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
         this.consoleToolbar = consoleToolbar;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
-        
+
         eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
-            
+
             @Override
             public void onActivePartChanged(ActivePartChangedEvent event) {
-                onPartActivated(event.getActivePart());;
+                onPartActivated(event.getActivePart());
             }
         });
     }
-    
-    private void onPartActivated(PartPresenter part){
-        if (part != null && part.equals(this) && isUnread){
+
+    private void onPartActivated(PartPresenter part) {
+        if (part != null && part.equals(this) && isUnread) {
             isUnread = false;
             firePropertyChange(TITLE_PROPERTY);
         }
@@ -102,14 +102,14 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
             view.print(line);
         }
         view.scrollBottom();
-        
+
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             isUnread = true;
             firePropertyChange(TITLE_PROPERTY);
         }
     }
-    
+
     /**
      * Set the console active (selected) in the parts stack.
      */

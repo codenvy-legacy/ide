@@ -97,6 +97,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("startAppFailed")
     String startApplicationFailed(String name);
 
+    @Key("getResourcesFailed")
+    String getResourcesFailed();
+
     @Key("getAppLogsFailed")
     String getApplicationLogsFailed();
 
@@ -117,6 +120,9 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("messages.promptSaveFiles")
     String messagePromptSaveFiles();
+
+    @Key("messages.failedSaveFiles")
+    String messageFailedSaveFiles();
 
     @Key("appWillBeStopped")
     String appWillBeStopped(String appName);
@@ -152,8 +158,14 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.runConfiguration.environmentLabel")
     String runConfigurationViewEnvironmentLabel();
 
-    @Key("view.runConfiguration.memorySizeLabel")
-    String runConfigurationViewMemorySizeLabel();
+    @Key("view.runConfiguration.memoryRunnerLabel")
+    String runConfigurationViewMemoryRunnerLabel();
+
+    @Key("view.runConfiguration.memoryTotalLabel")
+    String runConfigurationViewMemoryTotalLabel();
+
+    @Key("view.runConfiguration.memoryAvailableLabel")
+    String runConfigurationViewMemoryAvailableLabel();
 
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();

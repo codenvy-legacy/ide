@@ -17,10 +17,12 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
@@ -43,7 +45,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
-import com.codenvy.ide.extension.runner.client.RunnerUtils;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -182,14 +183,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                 @Override
                                                 protected void onFailure(Throwable ignore) {
                                                 }
-                                            });
+                                            }
+                                           );
             }
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                    stopActiveProject(false);
-                }
                 console.clear();
             }
         });
@@ -225,12 +224,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         return isAnyAppRunning;
     }
 
-    /** Run active project. */
-    public void runActiveProject(final boolean isUserAction) {
+    /**
+     * Check whether the files is saved before running and run active project.
+     *
+     * @param runOptions
+     *         options to configure run process
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
+     */
+    public void runActiveProject(final RunOptions runOptions, final boolean isUserAction) {
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            runActiveProject(null, false, null, isUserAction);
+            runProject(runOptions, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -239,22 +245,54 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         @Override
                         public void onFailure(Throwable caught) {
                             Log.error(getClass(), caught.getMessage());
+
+                            Notification notification = new Notification(constant.messageFailedSaveFiles(), ERROR);
+                            notificationManager.showNotification(notification);
                         }
 
                         @Override
                         public void onSuccess(Object result) {
-                            runActiveProject(null, false, null, isUserAction);
+                            runProject(runOptions, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    runActiveProject(null, false, null, isUserAction);
+                    runProject(runOptions, isUserAction);
                 }
             });
             askWindow.show();
         }
+    }
+
+    /**
+     * Check the RAM and run active project.
+     *
+     * @param runOptions
+     *         options to configure run process
+     * @param isUserAction
+     *         points whether the build is started directly by user interaction
+     */
+    private void runProject(final RunOptions runOptions, final boolean isUserAction) {
+        service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+            @Override
+            protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
+                //TODO Add RAM Check for each Runner Request
+
+                if (runOptions != null) {
+                    runActiveProject(runOptions, null, isUserAction);
+                } else {
+                    runActiveProject(null, false, null, isUserAction);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                onFail(constant.getResourcesFailed(), throwable);
+            }
+        });
     }
 
     /**
@@ -376,8 +414,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         runOptions.getShellOptions().put("WebShellTheme", theme);
         runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
 
-        setDefaultRam2runOptions(runOptions);
-
         service.run(currentProject.getProjectDescription().getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -408,7 +444,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         Map<String, String> preferences = appContext.getProfile().getPreferences();
         if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
             try {
-                Log.info(RunnerController.class,preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                Log.info(RunnerController.class, preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                 int ram = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                 runOptions.setMemorySize(ram);
             } catch (NumberFormatException e) {
@@ -695,7 +731,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
-        if (isAnyAppRunning() && appContext.getCurrentProject().getProjectDescription() != null) {
+        if (isAnyAppRunning() && appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
             Link recipeLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_RUNNER_RECIPE);
             return recipeLink != null;
         }
@@ -807,11 +843,13 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     @Nullable
     private RunnerMetric getRunnerMetric(String metricName) {
-        ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
-        if (processDescriptor != null) {
-            for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
-                if (metricName.equals(runnerStat.getName())) {
-                    return runnerStat;
+        if (appContext.getCurrentProject() != null) {
+            ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();
+            if (processDescriptor != null) {
+                for (RunnerMetric runnerStat : processDescriptor.getRunStats()) {
+                    if (metricName.equals(runnerStat.getName())) {
+                        return runnerStat;
+                    }
                 }
             }
         }
@@ -820,7 +858,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private String getAppLink() {
         String url = null;
-        final Link appLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils
+                .getLink(appContext.getCurrentProject().getProcessDescriptor(), com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 

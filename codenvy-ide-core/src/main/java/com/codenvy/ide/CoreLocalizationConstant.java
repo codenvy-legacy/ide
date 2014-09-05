@@ -28,7 +28,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.project.exists")
     String createProjectFromTemplateProjectExists(String projectName);
-
+    
     @Key("chooseTechnology")
     String chooseTechnology();
 
@@ -53,6 +53,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("extension.title")
     String extensionTitle();
 
+    @Key("extension.category")
+    String extensionCategory();
+
     @Key("enteringResourceName")
     String enteringResourceName();
 
@@ -73,6 +76,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("appearance.title")
     String appearanceTitle();
+
+    @Key("appearance.category")
+    String appearanceCategory();
 
     /* DeleteItem */
     @Key("action.delete.text")
@@ -240,7 +246,19 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.warningTitle")
     String importProjectWarningTitle();
-
+    
+    @Key("importProject.importer.info")
+    String importProjectImporterInfo();
+    
+    @Key("importProject.name.prompt")
+    String importProjectNamePrompt();
+    
+    @Key("importProject.description.prompt")
+    String importProjectDescriptionPrompt();
+    
+    @Key("import.project.error")
+    String importProjectError();
+    
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();
@@ -314,6 +332,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.unable-open-file")
     String unableOpenFile(String path);
 
+    @Key("messages.appWillBeStopped")
+    String appWillBeStopped(String appName);
+
     /* Buttons */
     @Key("ok")
     String ok();
@@ -351,4 +372,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("action.expandEditor.title")
     String actionExpandEditorTitle();
+
+    @Key("closeProject.askWindow.title")
+    String closeProjectAskTitle();
 }

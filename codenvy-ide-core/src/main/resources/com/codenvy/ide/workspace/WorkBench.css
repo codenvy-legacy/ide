@@ -17,40 +17,50 @@
 .ide-work-bench-tool-panel-left {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    width: 17px;
-    border-right: 1px solid tabBorderShadow;
+    border-right: 1px solid tabBorder;
+    width: 100%;
     box-sizing: border-box;
     -moz-box-sizing: border-box; /* Firefox */
     -webkit-box-sizing: border-box;
 }
 .ide-work-bench-tool-panel-left:before {
     /* panel where tab-buttons created*/
-	height: 100%;
-	border: 1px solid tabBorder;
-	position: absolute;
-	left: 17px;
-	content: "";
+    position: absolute;
+    border-right: 1px solid tabBorderShadow;
+    right: 0px;
+    height: 100%;
+    width: 1px;
+    content: "";
 }
 
 .ide-work-bench-tool-panel-right {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    width: 17px;
-    margin-left: -1px;
-    border-left: 1px solid tabBorderShadow;
-    box-shadow: -1px 0px 0px 0px tabBorder;
+    border-left: 1px solid tabBorder;
     z-index: 5;
+}
+.ide-work-bench-tool-panel-right:before {
+    /* panel where tab-buttons created*/
+    border-left: 1px solid tabBorderShadow;
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    content: "";
 }
 
 .ide-work-bench-tool-panel-bottom {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    height: 17px;
-    margin-top: -1px;
-    border-top: 1px solid tabBorderShadow;
-    box-shadow: 0px -1px 0px 0px tabBorder;
+    border-top: 1px solid tabBorder;
     z-index: 4;
-
+}
+.ide-work-bench-tool-panel-bottom:before {
+    /* panel where tab-buttons created*/
+    border-top: 1px solid tabBorderShadow;
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    content: "";
 }
 
 .ide-work-bench-parent-panel > div {
@@ -61,9 +71,8 @@ svg[name="workBenchIconMinimize"] {
     margin: 2px 5px;
     width: 14px;
     height: 11px;
-    fill: minimizeIconColor; 
+    fill: minimizeIconColor;
 }
-
 
 .ide-work-bench-split-panel-left svg[name="workBenchIconMinimize"] {
     -webkit-transform: rotate(180deg);

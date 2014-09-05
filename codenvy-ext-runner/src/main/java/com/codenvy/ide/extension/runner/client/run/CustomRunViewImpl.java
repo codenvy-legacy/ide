@@ -25,15 +25,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.validation.constraints.NotNull;
-import java.util.Arrays;
 
 /**
  * The implementation of {@link CustomRunView}.
@@ -46,13 +44,17 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @UiField
-    ListBox    environmentField;
+    ListBox  environmentField;
     @UiField
-    SuggestBox memoryField;
+    ListBox  memoryRunner;
     @UiField
-    CheckBox   skipBuild;
+    TextBox  memoryTotal;
     @UiField
-    TextArea   descriptionField;
+    TextBox  memoryAvailable;
+    @UiField
+    CheckBox skipBuild;
+    @UiField
+    TextArea descriptionField;
     Button runButton;
     Button cancelButton;
     @UiField(provided = true)
@@ -80,10 +82,10 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         });
         createButtons();
 
-        MultiWordSuggestOracle suggestSizes = (MultiWordSuggestOracle)memoryField.getSuggestOracle();
-        String[] memorySizes = {String.valueOf(32), String.valueOf(64), String.valueOf(128), String.valueOf(256), String.valueOf(512),
-                                String.valueOf(1024)};
-        suggestSizes.addAll(Arrays.asList(memorySizes));
+        String[] memorySizes = {"128MB", "256MB", "512MB", "1GB", "2GB"};
+        for (String item : memorySizes) {
+            memoryRunner.addItem(item);
+        }
     }
 
     private void createButtons() {
@@ -108,7 +110,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @NotNull
     @Override
     public RunnerEnvironment getSelectedEnvironment() {
-        return runnerEnvironments.get(environmentField.getSelectedIndex());
+        int selectedIndex = environmentField.getSelectedIndex();
+        if (selectedIndex != -1) {
+            return runnerEnvironments.get(selectedIndex);
+        }
+        return null;
     }
 
     @Override
@@ -125,19 +131,52 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
+    public void setRunnerMemorySize(int memorySize) {
+        int index = 1;
+        switch (memorySize) {
+            case 128:
+                index = 0;
+                break;
+            case 256:
+                index = 1;
+                break;
+            case 512:
+                index = 2;
+                break;
+            case 1024:
+                index = 3;
+                break;
+            case 2048:
+                index = 4;
+                break;
+        }
+        memoryRunner.setSelectedIndex(index);
+    }
+
+    @Override
+    public int getRunnerMemorySize() {
+        return memoryToInt(memoryRunner.getValue(memoryRunner.getSelectedIndex()));
+    }
+
+    @Override
+    public void setTotalMemorySize(int memorySize) {
+        this.memoryTotal.setText(memoryToString(memorySize));
+    }
+
+    @Override
+    public void setAvailableMemorySize(int memorySize) {
+        this.memoryAvailable.setText(memoryToString(memorySize));
+    }
+
+    @Override
     public void close() {
+        clear();
         this.hide();
     }
 
     @Override
     public void showDialog() {
-        clear();
         this.show();
-    }
-
-    @Override
-    public String getMemorySize() {
-        return memoryField.getValue();
     }
 
     @Override
@@ -155,8 +194,39 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         //do nothing
     }
 
+    private String memoryToString (int memory) {
+        switch (memory) {
+            case 128:
+                return "128MB";
+            case 256:
+                return "256MB";
+            case 512:
+                return "512MB";
+            case 1024:
+                return "1GB";
+            case 2048:
+                return "2GB";
+        }
+        return "256MB";
+    }
+
+    private int memoryToInt (String memory) {
+        switch (memory) {
+            case "128MB":
+                return 128;
+            case "256MB":
+                return 256;
+            case "512MB":
+                return 512;
+            case "1GB":
+                return 1024;
+            case "2GB":
+                return 2048;
+        }
+        return 256;
+    }
+
     private void clear() {
-        memoryField.setValue("");
         descriptionField.setText("");
         skipBuild.setValue(false);
     }
