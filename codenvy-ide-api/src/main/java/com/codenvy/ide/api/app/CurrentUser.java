@@ -21,12 +21,16 @@ public class CurrentUser {
 
     private ProfileDescriptor profileDescriptor;
 
+    public CurrentUser() {
+    }
+
     public CurrentUser(ProfileDescriptor profileDescriptor) {
         this.profileDescriptor = profileDescriptor;
     }
 
     /**
      * Return current ProfileDescriptor
+     *
      * @return
      */
     public ProfileDescriptor getProfile() {
