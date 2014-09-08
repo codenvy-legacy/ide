@@ -87,6 +87,8 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 }
             });
             tabsPanel.add(dashboardTabButton);
+        } else if (tabPosition == RIGHT) {
+            top -= 2;
         }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
