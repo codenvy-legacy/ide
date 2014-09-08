@@ -114,6 +114,7 @@
     vertical-align: middle;
     font-weight: bold;
     font-size: smallFontSize;
+    position: relative;
 }
 
 .notificationMessage > svg {
