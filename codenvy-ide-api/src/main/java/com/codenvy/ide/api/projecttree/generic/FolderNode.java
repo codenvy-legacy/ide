@@ -102,7 +102,7 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
                 setChildren(newChildren);
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
-                        AbstractTreeNode node = createNode(item);
+                        AbstractTreeNode node = createChildNode(item);
                         if (node != null) {
                             newChildren.add(node);
                         }
@@ -128,7 +128,7 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
      * @return new node instance or <code>null</code> if the specified item is not supported
      */
     @Nullable
-    protected AbstractTreeNode<?> createNode(ItemReference item) {
+    protected AbstractTreeNode<?> createChildNode(ItemReference item) {
         if (isFile(item)) {
             return treeStructure.newFileNode(this, item);
         } else if (isFolder(item)) {
