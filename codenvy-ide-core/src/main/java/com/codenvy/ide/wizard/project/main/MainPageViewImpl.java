@@ -352,7 +352,8 @@ public class MainPageViewImpl implements MainPageView {
         style.setWidth(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setHeight(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
-        descriptionArea.clear();
+        descriptionArea.getElement().setInnerHTML("");
+        configurationArea.getElement().setInnerText("");
     }
 
     interface MainPageViewImplUiBinder
