@@ -97,7 +97,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
                 Array<AbstractTreeNode> children = localRoot.getChildren();
                 localRoot = null;
                 for (int j = 0; j < children.size(); j++) {
-                    AbstractTreeNode node = children.get(i);
+                    AbstractTreeNode node = children.get(j);
                     if (node.getPresentation().getDisplayName().equals(path)) {
                         localRoot = node;
                         break;

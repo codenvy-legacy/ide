@@ -261,7 +261,6 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
         private boolean isVisibilityOfErrorMark;
 
-
         /**
          * Create button.
          *
@@ -282,7 +281,9 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 elementOfGroupOfIcons.appendChild(icon.getElement());
                 tabItem.getElement().appendChild(elementOfGroupOfIcons);
             }
-            tabItemTittle = new InlineLabel(title);
+
+            tabItemTittle = new InlineLabel("");
+            tabItemTittle.getElement().setInnerHTML(title);
             tabItem.add(tabItemTittle);
             if (closable) {
                 image = new Image(partStackUIResources.close());
