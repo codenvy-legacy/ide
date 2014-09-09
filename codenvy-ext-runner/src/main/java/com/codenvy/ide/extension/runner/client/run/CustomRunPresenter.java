@@ -136,15 +136,18 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     @Override
     public void onRunClicked() {
-        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-        runOptions.setMemorySize(view.getRunnerMemorySize());
-        runOptions.setSkipBuild(view.isSkipBuildSelected());
+        if (isRunnerMemoryCorrect()) {
 
-        if (view.getSelectedEnvironment() != null) {
-            runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
+            RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+            runOptions.setMemorySize(view.getRunnerMemorySize());
+            runOptions.setSkipBuild(view.isSkipBuildSelected());
+
+            if (view.getSelectedEnvironment() != null) {
+                runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
+            }
+            view.close();
+            runnerController.runActiveProject(runOptions, true);
         }
-        view.close();
-        runnerController.runActiveProject(runOptions, true);
     }
 
     @Override
@@ -152,4 +155,20 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         view.close();
     }
 
+    private boolean isRunnerMemoryCorrect() {
+        int runnerMemory = view.getRunnerMemorySize();
+        int totalMemory = view.getTotalMemorySize();
+        int availableMemory = view.getAvailableMemorySize();
+
+        if (runnerMemory > totalMemory) {
+            view.showWarning(constant.messagesTotalLessCustomRunMemory(runnerMemory, totalMemory));
+            return false;
+        }
+
+        if (runnerMemory > availableMemory) {
+            view.showWarning(constant.messagesAvailableLessOverrideMemory(runnerMemory, totalMemory, totalMemory - availableMemory));
+            return false;
+        }
+        return true;
+    }
 }
