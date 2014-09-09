@@ -780,7 +780,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (processDescriptor != null && processDescriptor.getCreationTime() >= 0) {
             Date startDate = new Date(processDescriptor.getCreationTime());
             String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at")
+                             .withValue(startDateFormatted);
         }
         return null;
     }
@@ -794,22 +795,26 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         RunnerMetric terminationMetric = getRunnerMetric(RunnerMetric.TERMINATION_TIME);
         if (terminationMetric != null) {
-            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue()))
+            if (RunnerMetric.ALWAYS_ON.equals(terminationMetric.getValue()))
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
-                                 .withValue(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue());
+                                 .withValue(terminationMetric.getValue());
             // if app is running now, count uptime on the client-side
             if (terminationMetric.getValue() != null) {
                 double terminationTime = NumberFormat.getDecimalFormat().parse(terminationMetric.getValue());
                 final double terminationTimeout = terminationTime - System.currentTimeMillis();
+                if (terminationTimeout <= 0) {
+                    return null;
+                }
                 final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
-                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription()).withValue(value);
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
+                                 .withValue(value);
             }
         }
         RunnerMetric lifeTimeMetric = getRunnerMetric(RunnerMetric.LIFETIME);
         if (lifeTimeMetric != null && processDescriptor.getStatus().equals(NEW)) {
-            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.LIFETIME).getValue()))
+            if (RunnerMetric.ALWAYS_ON.equals(lifeTimeMetric.getValue()))
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription())
-                                 .withValue(getRunnerMetric(RunnerMetric.LIFETIME).getValue());
+                                 .withValue(lifeTimeMetric.getValue());
             if (lifeTimeMetric.getValue() != null) {
                 double lifeTime = NumberFormat.getDecimalFormat().parse(lifeTimeMetric.getValue());
                 final String value = StringUtils.timeMlsToHumanReadable((long)lifeTime);
@@ -829,7 +834,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription())
+                             .withValue(stopDateFormatted);
         }
         return null;
     }
@@ -860,8 +866,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private String getAppLink() {
         String url = null;
-        final Link appLink = RunnerUtils
-                .getLink(appContext.getCurrentProject().getProcessDescriptor(), com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
+                                                 com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 
