@@ -52,7 +52,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]*$");
+        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]+$");
         if (regExp.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
             view.removeNameError();
