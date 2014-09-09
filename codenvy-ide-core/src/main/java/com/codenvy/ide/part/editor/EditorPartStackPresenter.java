@@ -40,6 +40,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * Perspectives and used to display Editors.
  *
  * @author Nikolay Zamosenchuk
+ * @author Stéphane Daviet
  */
 @Singleton
 public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack, ShowListButtonClickHandler {
@@ -93,9 +94,16 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         parts.add(part);
         part.addPropertyListener(propertyListener);
         // include close button
-        SVGResource titleSVGImage = part.getTitleSVGImage();
+        SVGResource titleSVGResource = part.getTitleSVGImage();
+        SVGImage titleSVGImage = null;
+        if (titleSVGResource != null) {
+            titleSVGImage = part.decorateIcon(new SVGImage(titleSVGResource));
+        }
         PartStackView.TabItem tabItem =
-                view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(), part.getTitleToolTip(), null,
+                view.addTabButton(titleSVGImage,
+                                  part.getTitle(),
+                                  part.getTitleToolTip(),
+                                  null,
                                   partsClosable);
 
         if (part instanceof TextEditorPresenter) {

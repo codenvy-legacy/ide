@@ -15,12 +15,12 @@ import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PartStackView.TabItem;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -48,6 +47,7 @@ import java.util.Map;
  * user what component is currently active.
  *
  * @author Nikolay Zamosenchuk
+ * @author Stéphane Daviet
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
@@ -155,9 +155,14 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         part.addPropertyListener(propertyListener);
         // include close button
-        SVGResource titleSVGImage = part.getTitleSVGImage();
+        SVGResource titleSVGResource = part.getTitleSVGImage();
+        SVGImage titleSVGImage = null;
+        if (titleSVGResource != null) {
+            titleSVGImage = part.decorateIcon(new SVGImage(titleSVGResource));
+        }
         TabItem tabItem =
-                view.addTabButton(titleSVGImage == null ? null : new SVGImage(titleSVGImage), part.getTitle(),
+                view.addTabButton(titleSVGImage,
+                                  part.getTitle(),
                                   part.getTitleToolTip(),
                                   part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
