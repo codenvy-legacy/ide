@@ -102,6 +102,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.builderServiceClient = builderServiceClient;
         updateBuildersDescriptor();
         updateRunnersDescriptor();
+        updateMemoryInfo();
     }
 
     private void updateMemoryInfo() {
@@ -486,9 +487,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         } else {
             view.setInfoVisibled(false);
         }
-
-        updateMemoryInfo();
-
     }
 
     /** {@inheritDoc} */
