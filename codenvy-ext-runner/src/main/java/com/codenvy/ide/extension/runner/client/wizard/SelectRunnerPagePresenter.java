@@ -97,7 +97,6 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     @Override
     public void setUpdateDelegate(@NotNull Wizard.UpdateDelegate delegate) {
         super.setUpdateDelegate(delegate);
-        selectRunner();
     }
 
     @Override
@@ -167,11 +166,10 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     }
 
     private void selectRunner() {
-        //TODO:temporary comment this method
-//        Log.info(SelectRunnerPagePresenter.class, "select runner" + wizardContext.getData(ProjectWizard.RUNNER_NAME));
-//        if (wizardContext.getData(ProjectWizard.RUNNER_NAME) != null) {
-//            view.selectRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
-//        }
+        String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
+        if (runnerName != null){
+            view.selectRunner(runnerName);
+        }
     }
 
     @Override
