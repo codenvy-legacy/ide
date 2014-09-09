@@ -191,7 +191,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
                 view.setImporters(importers);
                 if (importersSet.iterator().hasNext()) {
-                    view.selectImporter(importersSet.iterator().next().getId());
+                    view.selectImporter(importersSet.iterator().next());
                 }
             }
 

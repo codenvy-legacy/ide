@@ -261,8 +261,8 @@ public class MainPageViewImpl implements MainPageView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectImporter(String importerId) {
-        //TODO
+    public void selectImporter(ProjectImporterDescriptor importer) {
+       list.selectElement(importer); 
     }
 
     /** {@inheritDoc} */

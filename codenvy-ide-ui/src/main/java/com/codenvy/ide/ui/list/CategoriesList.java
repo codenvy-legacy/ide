@@ -11,6 +11,8 @@
 
 package com.codenvy.ide.ui.list;
 
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
@@ -26,13 +28,15 @@ import java.util.List;
  */
 public class CategoriesList extends Composite {
     /** Defines the attribute used to indicate selection. */
-    private static final String SELECTED_ATTRIBUTE = "SELECTED";
-    private final Resources        resources;
-    private final SelectionManager selectionManager;
-    private       FlowPanel        root;
+    private static final String       SELECTED_ATTRIBUTE = "SELECTED";
+    private final Resources           resources;
+    private final SelectionManager    selectionManager;
+    private FlowPanel                 root;
+    private Array<CategoryNodeElement> categoryNodeElements;
 
     public CategoriesList(Resources resources) {
         this.resources = resources;
+        this.categoryNodeElements = Collections.createArray();
         root = new FlowPanel();
         initWidget(root);
         root.setStyleName(resources.defaultCategoriesListCss().listContainer());
@@ -48,10 +52,31 @@ public class CategoriesList extends Composite {
      *         the categories
      */
     public void render(List<Category<?>> categories) {
+        this.categoryNodeElements = Collections.createArray();
         for (Category category : categories) {
             CategoryNodeElement categoryNodeElement = new CategoryNodeElement(category, selectionManager, resources);
+            categoryNodeElements.add(categoryNodeElement);
             root.add(categoryNodeElement);
         }
+    }
+    
+    /**
+     * Select object in the list.
+     * 
+     * @param element
+     * @return
+     */
+    public boolean selectElement(Object element){
+        if (categoryNodeElements == null || categoryNodeElements.isEmpty()) {
+            return false;
+        }
+        for (CategoryNodeElement category : categoryNodeElements.asIterable()) {
+            if (category.containsItem(element)){
+                category.selectItem(element);
+                return true;
+            }
+        }
+        return false;
     }
 
     class SelectionManager {

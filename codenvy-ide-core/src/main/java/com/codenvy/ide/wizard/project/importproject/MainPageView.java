@@ -66,11 +66,11 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
     void setImporterDescription(String text);
     
     /**
-     * Select importer by id.
+     * Select importer in the list.
      * 
-     * @param importerId select importer
+     * @param importer importer to select
      */
-    void selectImporter(String importerId);
+    void selectImporter(ProjectImporterDescriptor importer);
     
     /**
      * Get the project's name value.
