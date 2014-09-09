@@ -111,10 +111,9 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
                 preferencesMap.put(presenter.getCategory(), preferences);
             }
         }
-        if (currentPage == null) currentPage = preferences.get(0);
         this.view.setPreferences(preferencesMap, currentPage);
-        selectedPreference(currentPage);
         view.showPreferences();
+        view.selectPreference(preferences.get(0));
     }
 
     /** {@inheritDoc} */

@@ -50,7 +50,15 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
          *         selected preference
          */
         void selectedPreference(PreferencesPagePresenter preference);
+        
     }
+    /**
+     * Select the pointed preference.
+     * 
+     * @param preference preference to select.
+     */
+    void selectPreference(PreferencesPagePresenter preference);
+    
 
     /** Close view. */
     void close();
