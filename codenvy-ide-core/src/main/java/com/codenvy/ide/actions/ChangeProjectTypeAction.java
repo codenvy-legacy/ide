@@ -32,7 +32,7 @@ public class ChangeProjectTypeAction extends Action {
 
     @Inject
     public ChangeProjectTypeAction(AppContext appContext, NewProjectWizardPresenter wizardPresenter) {
-        super("Change Project Type", "Change project type", null, null);
+        super("Project Configuration", "Change project type", null, null);
         this.appContext = appContext;
         this.wizardPresenter = wizardPresenter;
     }
