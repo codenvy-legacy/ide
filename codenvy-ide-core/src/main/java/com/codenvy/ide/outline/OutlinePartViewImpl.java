@@ -12,8 +12,12 @@ package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 
@@ -24,17 +28,21 @@ import com.google.inject.Inject;
  */
 public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate> implements OutlinePartView {
 
-    private SimplePanel container;
+    private static OutlinePartViewImplUiBinder ourUiBinder = GWT.create(OutlinePartViewImplUiBinder.class);
 
-    private Label noOutline;
+    @UiField
+    Style                                      style;
+
+    @UiField
+    SimplePanel                                container;
+
+    @UiField
+    DockLayoutPanel                            noOutline;
 
     @Inject
     public OutlinePartViewImpl(PartStackUIResources resources) {
-
         super(resources);
-        //TODO extract message constant
-        noOutline = new Label("An outline is not available.");
-        container = new SimplePanel();
+        ourUiBinder.createAndBindUi(this);
         super.container.add(container);
         minimizeButton.ensureDebugId("outline-minimizeBut");
     }
@@ -57,4 +65,8 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     public AcceptsOneWidget getContainer() {
         return container;
     }
+
+    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {}
+
+    interface Style extends CssResource {}
 }
