@@ -13,6 +13,8 @@ package com.codenvy.ide.ext.ssh.client;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshResources May 18, 2011 9:23:17 AM evgen $
@@ -21,6 +23,6 @@ public interface SshResources extends ClientBundle {
     @Source("ssh-key-manager.png")
     ImageResource sshKeyManager();
 
-    @Source("github-generate.png")
-    ImageResource sshKeyGithubGenerate();
+    @Source("github-generate.svg")
+    SVGResource sshKeyGithubGenerate();
 }

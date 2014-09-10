@@ -12,50 +12,66 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
-    <ui:with field='locale' type='com.codenvy.ide.ext.ssh.client.SshLocalizationConstant'/>
-    <ui:with field='res' type='com.codenvy.ide.ext.ssh.client.SshResources'/>
-    <ui:style>
-        .alignRight {
-            float: right;
-        }
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+	xmlns:svgui='urn:import:org.vectomatic.dom.svg.ui'
+	xmlns:p1='urn:import:com.google.gwt.user.cellview.client'>
+	<ui:with field='locale'
+		type='com.codenvy.ide.ext.ssh.client.SshLocalizationConstant' />
+	<ui:with field='res' type='com.codenvy.ide.ext.ssh.client.SshResources' />
+	<ui:style>
+		.alignRight {
+		float: right;
+		}
 
-        .alignLeft {
-            float: left;
-        }
+		.alignLeft {
+		float: left;
+		}
 
-        .emptyBorder {
-            margin: 6px;
-        }
+		.emptyBorder {
+		margin: 6px;
+		}
 
-        .space {
-            margin-left: 5px;
+		.space {
+		margin-left: 5px;
+		}
+
+		.button-layout {
+            flex-grow: 0;
+            -webkit-flex-grow: 0;
+            flex-shrink: 0;
+            -webkit-flex-shrink: 0;
+			padding: 0 3px;
         }
-    </ui:style>
-    <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-        <g:south size="36.0">
-            <g:FlowPanel width="100%">
-                <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                    <g:Button addStyleNames="{style.alignLeft}" height="22px"  ui:field="btnGenerate" debugId="window-preferences-sshKeys-generate">
-                        <ui:text from="{locale.managerGenerateButton}"/></g:Button>
-                    <g:Button addStyleNames="{style.alignLeft} {style.space}" height="22px" ui:field="btnUpload" debugId="window-preferences-sshKeys-upload">
-                        <ui:text from="{locale.managerUploadButton}"/></g:Button>
-                    <g:PushButton addStyleNames="{style.alignRight} {style.space}" width="16px" height="17px"
-                              ui:field="btnGenerateGithubKey"
-                              title="Generate key and upload it to GitHub" debugId="window-preferences-sshKeys-generateGithubKey">
-                        <g:downFace image="{res.sshKeyGithubGenerate}" />
-                        <g:upFace image="{res.sshKeyGithubGenerate}"/>
-                              </g:PushButton>
-                </g:FlowPanel>
-            </g:FlowPanel>
-        </g:south>
-        <g:center>
-            <g:FlowPanel addStyleNames="{style.emptyBorder}">
-                <g:SimplePanel>
-                    <p1:CellTable width="100%" ui:field="keys" focus="false" debugId="window-preferences-sshKeys-cellTable-keys"/>
-                </g:SimplePanel>
-            </g:FlowPanel>
-        </g:center>
-    </g:DockLayoutPanel>
+		.button-layout svg {
+			width: 20px;
+			height: 22px;
+		}
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" width="100%" height="100%">
+		<g:south size="36.0">
+			<g:FlowPanel width="100%">
+				<g:FlowPanel addStyleNames="{style.emptyBorder}">
+					<g:Button addStyleNames="{style.alignLeft}" height="22px"
+						ui:field="btnGenerate" debugId="window-preferences-sshKeys-generate">
+						<ui:text from="{locale.managerGenerateButton}" />
+					</g:Button>
+					<g:Button addStyleNames="{style.alignLeft} {style.space}"
+						height="22px" ui:field="btnUpload" debugId="window-preferences-sshKeys-upload">
+						<ui:text from="{locale.managerUploadButton}" />
+					</g:Button>
+					<g:SimplePanel ui:field="btnGenerateGithubKey" debugId="window-preferences-sshKeys-generateGithubKey" title="Generate key and upload it to GitHub" addStyleNames="gwt-Button {style.button-layout} {style.alignRight} {style.space}">
+                   		<svgui:SVGImage resource="{res.sshKeyGithubGenerate}"/>
+               		 </g:SimplePanel>
+				</g:FlowPanel>
+			</g:FlowPanel>
+		</g:south>
+		<g:center>
+			<g:FlowPanel addStyleNames="{style.emptyBorder}">
+				<g:SimplePanel>
+					<p1:CellTable width="100%" ui:field="keys" focus="false"
+						debugId="window-preferences-sshKeys-cellTable-keys" />
+				</g:SimplePanel>
+			</g:FlowPanel>
+		</g:center>
+	</g:DockLayoutPanel>
 </ui:UiBinder>
