@@ -136,7 +136,7 @@ public class MainPageViewImpl implements MainPageView {
 
         delegate.projectNameChanged(projectName.getText());
     }
-    
+
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
@@ -190,6 +190,9 @@ public class MainPageViewImpl implements MainPageView {
 
     private void changeEnabledState(boolean enabled) {
         projectName.setEnabled(enabled);
+        if(enabled){
+            projectName.setFocus(true);
+        }
         changeEnabledStateAll(enabled);
     }
 
@@ -305,7 +308,9 @@ public class MainPageViewImpl implements MainPageView {
                     break;
                 }
             }
-            if (typeDescriptor != null) break;
+            if (typeDescriptor != null) {
+                break;
+            }
         }
         if (typeDescriptor != null) {
             for (String key : templateOrType.keySet()) {
@@ -316,6 +321,7 @@ public class MainPageViewImpl implements MainPageView {
                 }
             }
         }
+        projectName.setFocus(true);
     }
 
     @Override
@@ -352,7 +358,8 @@ public class MainPageViewImpl implements MainPageView {
         style.setWidth(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setHeight(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
-        descriptionArea.clear();
+        descriptionArea.getElement().setInnerHTML("");
+        configurationArea.getElement().setInnerText("");
     }
 
     interface MainPageViewImplUiBinder
