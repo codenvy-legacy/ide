@@ -13,6 +13,17 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
+        .field {
+            background-color: InputBackgroundColor;
+            color: #dbdbdb;
+            border: 1px solid #191c1e;
+            border-radius: 1px;
+            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
+            font-size: 12px;
+            padding-left: 8px;
+            height: 20px;
+        }
         .spaceRight {
             margin-right: 8px;
             margin-top: 1px;
@@ -41,7 +52,7 @@
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:ListBox ui:field="runnerBox" width="396px" height="29px"/>
+                            <g:ListBox ui:field="runnerBox" width="396px" height="29px" addStyleNames="{style.field}"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
@@ -57,7 +68,7 @@
                 <g:center>
                     <g:SimplePanel addStyleNames="{style.spaceRight}">
                         <g:SimplePanel>
-                            <g:ListBox ui:field="environmentBox" width="396px" height="29px"/>
+                            <g:ListBox ui:field="environmentBox" width="396px" height="29px" addStyleNames="{style.field}"/>
                         </g:SimplePanel>
                     </g:SimplePanel>
                 </g:center>
