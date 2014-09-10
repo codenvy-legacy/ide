@@ -246,6 +246,12 @@ public class MainPageViewImpl implements MainPageView {
     public void setName(String name) {
         projectName.setValue(name, true);
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void setDescription(String description) {
+        projectDescription.setValue(description);
+    }
 
     @Override
     public void setVisibility(boolean visible) {
