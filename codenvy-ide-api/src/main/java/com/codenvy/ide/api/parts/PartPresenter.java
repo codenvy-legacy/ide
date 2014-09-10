@@ -15,6 +15,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nullable;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
  * Part is a main UI block of the IDE.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Stéphane Daviet
  */
 public interface PartPresenter extends Presenter {
     /** The property id for <code>getTitle</code>, <code>getTitleImage</code> and <code>getTitleToolTip</code>. */
@@ -56,6 +58,15 @@ public interface PartPresenter extends Presenter {
      */
     @Nullable
     SVGResource getTitleSVGImage();
+
+    /**
+     * Decorate the title SVG image of this part. A convenient method to be able to size, color or perform any CSS related styling
+     * operation.
+     * @param svgImage the title SVG image
+     * @return the image decorated, could be or not the same reference, no matter.
+     */
+    @Nullable
+    SVGImage decorateIcon(SVGImage svgImage);
 
     /**
      * Returns the widget to be displayed in the title of this part. If this value changes the part must fire a property listener event
