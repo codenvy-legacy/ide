@@ -59,28 +59,39 @@
             padding-left: 7px;
             padding-bottom: 5px;
             padding-top: 5px;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
         }
-	
+
         .console pre {
             font-family: "Droid Sans Mono", monospace;
             font-size: 11px;
         }
 
-        .terminalFrame {
+        .appPanel {
+            position: relative;
             width: 100%;
             height: 100%;
+            overflow: hidden;
+        }
+
+        .terminalFrame {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
             border: 0px;
-            margin-top: -1px;
             overflow: hidden;
         }
 
         .appFrame {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
             border: 0px;
-            margin-top: -1px;
             overflow: hidden;
         }
 
@@ -124,11 +135,15 @@
                 </g:ScrollPanel>
                 <g:DeckPanel ui:field="terminalPanel">
                     <g:Label text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}"/>
-                    <g:Frame ui:field="terminalFrame" addStyleNames="{style.terminalFrame}"/>
+                    <g:FlowPanel addStyleNames="{style.appPanel}">
+                        <g:Frame ui:field="terminalFrame" width="100%" height="100%" addStyleNames="{style.terminalFrame}"/>
+                    </g:FlowPanel>
                 </g:DeckPanel>
                 <g:DeckPanel ui:field="appPreviewPanel">
                     <g:Label text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}"/>
-                    <g:Frame ui:field="appPreviewFrame" addStyleNames="{style.appFrame}"/>
+                    <g:FlowPanel addStyleNames="{style.appPanel}">
+                        <g:Frame ui:field="appPreviewFrame" width="100%" height="100%" addStyleNames="{style.appFrame}"/>
+                    </g:FlowPanel>
                 </g:DeckPanel>
             </g:DeckPanel>
         </g:center>
