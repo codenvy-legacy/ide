@@ -113,7 +113,9 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
         }
         this.view.setPreferences(preferencesMap, currentPage);
         view.showPreferences();
-        view.selectPreference(preferences.get(0));
+        if (preferences != null && preferences.size() > 0){
+            view.selectPreference(preferences.get(0));
+        }
     }
 
     /** {@inheritDoc} */
