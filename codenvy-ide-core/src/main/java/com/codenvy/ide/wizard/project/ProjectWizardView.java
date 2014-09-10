@@ -16,6 +16,7 @@ import com.google.inject.ImplementedBy;
 
 /**
  * @author Evgen Vidolob
+ * @author Oleksii Orel
  */
 @ImplementedBy(ProjectWizardViewImpl.class)
 public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate> {
@@ -33,6 +34,8 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
     void setRunnerEnvirConfig(String text);
 
     void setInfoVisibled(boolean enabled);
+
+    void setSaveActionTitle(boolean isSaveActionTitle);
 
     void setLoaderVisibled(boolean enabled);
 
