@@ -503,7 +503,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
-                            isAnyAppRunning = true;
                             if (notification == null)
                                 notification =
                                         new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()),
@@ -687,7 +686,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        isAnyAppRunning = true;
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
         startCheckingAppStatus(applicationProcessDescriptor);
@@ -700,6 +698,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
         switch (descriptor.getStatus()) {
             case RUNNING:
+                isAnyAppRunning = true;
                 startCheckingAppHealth(descriptor);
                 if (notification == null)
                     notification = new Notification(constant.applicationStarted(projectName), INFO);
