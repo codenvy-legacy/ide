@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.part.projectexplorer;
 
+import elemental.events.KeyboardEvent;
+
 import elemental.events.MouseEvent;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -52,7 +54,9 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
+        
         tree = Tree.create(resources, new ProjectTreeNodeDataAdapter(), projectTreeNodeRenderer);
+        
         container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
@@ -143,6 +147,14 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             @Override
             public void onRootDragDrop(MouseEvent event) {
             }
+            
+            @Override
+            public void onKeyboard(KeyboardEvent event) {
+                if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE){
+                    delegate.onDeleteKey();
+                }
+            }
+            
         });
     }
 

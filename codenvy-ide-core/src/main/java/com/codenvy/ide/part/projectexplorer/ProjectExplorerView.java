@@ -96,5 +96,10 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          *         the mouse y-position within the browser window's client area.
          */
         void onContextMenu(int mouseX, int mouseY);
+        
+        /**
+         * Performs any actions appropriate in response to the user having pressed the DELETE key.
+         */
+        void onDeleteKey();
     }
 }
