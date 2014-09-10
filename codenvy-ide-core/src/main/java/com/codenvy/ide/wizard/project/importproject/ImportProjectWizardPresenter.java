@@ -34,6 +34,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -58,6 +59,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private final ImportProjectWizardRegistry wizardRegistry;
     private final WizardContext               wizardContext;
     private ImportProjectWizard               wizard;
+    private NewProjectWizardPresenter         newProjectWizardPresenter;
     private MainPagePresenter                 mainPage;
     private final EventBus                    eventBus;
     private final NotificationManager         notificationManager;
@@ -67,7 +69,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                                        return mainPage;
                                                                    }
                                                                };
-
+    private ProjectDescriptor                 importedProject;                                                           
+                                                               
     @Inject
     public ImportProjectWizardPresenter(ImportProjectWizardView view,
                                         MainPagePresenter mainPage,
@@ -75,11 +78,15 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                         CoreLocalizationConstant locale,
                                         ImportProjectWizardRegistry wizardRegistry,
-                                        DtoFactory factory, EventBus eventBus, NotificationManager notificationManager) {
+                                        DtoFactory factory,
+                                        EventBus eventBus,
+                                        NotificationManager notificationManager,
+                                        NewProjectWizardPresenter newProjectWizardPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.wizardRegistry = wizardRegistry;
         this.notificationManager = notificationManager;
+        this.newProjectWizardPresenter = newProjectWizardPresenter;
         this.projectService = projectService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.locale = locale;
@@ -164,6 +171,14 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 view.close();
                 Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
                 notificationManager.showNotification(notification);
+
+                if (importedProject != null && (importedProject.getProjectTypeId() == null ||
+                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getProjectTypeId()))) {
+
+                    WizardContext context = new WizardContext();
+                    context.putData(ProjectWizard.PROJECT, importedProject);
+                    newProjectWizardPresenter.show(context);
+                }
             }
 
             @Override
@@ -212,10 +227,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                final String projectName,
                                final WizardPage.CommitCallback callback) {
 
-
+        importedProject = null;
         ImportSourceDescriptor importSourceDescriptor =
                                                         dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
                                                                   .withLocation(url);
+        
         view.setLoaderVisibility(true);
         projectService.importProject(projectName,
                                      false,
@@ -224,6 +240,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                                                  dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
+                                             importedProject = result;
                                              view.setLoaderVisibility(false);
 
                                              String projectDescription = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);

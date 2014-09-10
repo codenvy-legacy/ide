@@ -135,6 +135,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.selectProjectType(project.getProjectTypeId());
             view.setVisibility(project.getVisibility().equals("public"));
             view.setName(project.getName());
+            view.setDescription(project.getDescription());
         }
     }
 

@@ -22,15 +22,17 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -58,7 +60,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     @UiField
     Button                                       btnUpload;
     @UiField
-    PushButton                                   btnGenerateGithubKey;
+    SimplePanel                                btnGenerateGithubKey;
     @UiField(provided = true)
     CellTable<KeyItem>                           keys;
     @UiField(provided = true)
@@ -77,10 +79,18 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale, Resources res) {
         this.res = resources;
         this.locale = locale;
-
+        
         initSshKeyTable(res);
-
         initWidget(ourUiBinder.createAndBindUi(this));
+        btnGenerateGithubKey.sinkEvents(Event.ONCLICK);
+        btnGenerateGithubKey.addHandler(new ClickHandler() {
+            
+            @Override
+            public void onClick(ClickEvent event) {
+                delegate.onGenerateGithubKeyClicked();
+                
+            }
+        }, ClickEvent.getType());
     }
 
     /** Creates table what contains list of available ssh keys. */
@@ -94,7 +104,8 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-host-" + context.getIndex() + "\">");
+                sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-host-"
+                                      + context.getIndex() + "\">");
                 super.render(context, object, sb);
             }
         };
@@ -114,7 +125,8 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
-                    sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-key-" + context.getIndex() + "\">");
+                    sb.appendHtmlConstant("<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-key-"
+                                          + context.getIndex() + "\">");
                     super.render(context, object, sb);
                 }
             }
@@ -137,7 +149,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
                     sb.appendHtmlConstant(
-                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() + "\">");
+                      "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() + "\">");
                     super.render(context, object, sb);
                 }
             }
@@ -186,10 +198,5 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     @UiHandler("btnUpload")
     public void onUpdateClicked(ClickEvent event) {
         delegate.onUploadClicked();
-    }
-
-    @UiHandler("btnGenerateGithubKey")
-    public void onGenerateGithubKeyClicked(ClickEvent event) {
-        delegate.onGenerateGithubKeyClicked();
     }
 }

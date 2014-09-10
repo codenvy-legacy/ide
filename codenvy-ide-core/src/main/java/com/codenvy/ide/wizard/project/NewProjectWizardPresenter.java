@@ -102,6 +102,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.builderServiceClient = builderServiceClient;
         updateBuildersDescriptor();
         updateRunnersDescriptor();
+        updateMemoryInfo();
     }
 
     private void updateMemoryInfo() {
@@ -222,6 +223,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             public void onSuccess() {
                 view.close();
+                view.setLoaderVisibled(false);
             }
 
             @Override
@@ -409,7 +411,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         eventBus.fireEvent(new OpenProjectEvent(name));
-        view.setLoaderVisibled(false);
         callback.onSuccess();
     }
 
@@ -486,9 +487,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         } else {
             view.setInfoVisibled(false);
         }
-
-        updateMemoryInfo();
-
     }
 
     /** {@inheritDoc} */
@@ -506,6 +504,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             boolean aPublic = project.getVisibility().equals("public") ? true : false;
             wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
+            wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, project.getDescription());
         }
         setPage(mainPage);
         view.showDialog();

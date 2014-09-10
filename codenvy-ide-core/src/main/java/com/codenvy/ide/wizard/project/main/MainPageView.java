@@ -38,6 +38,8 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
     void disableInput();
 
     void setName(String name);
+    
+    void setDescription(String description);
 
     void setVisibility(boolean visible);
 

@@ -14,7 +14,7 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.ui.IsWidget;
-
+import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nullable;
@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
  * Abstract base implementation of all PartPresenter
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @author Stéphane Daviet
  */
 public abstract class AbstractPartPresenter implements PartPresenter {
     private ListenerManager<PropertyListener> manager;
@@ -105,5 +106,11 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     @Override
     public SVGResource getTitleSVGImage() {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public SVGImage decorateIcon(SVGImage svgImage) {
+        return svgImage;
     }
 }

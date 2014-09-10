@@ -234,14 +234,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param runOptions
      *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    public void runActiveProject(final RunOptions runOptions, final boolean isUserAction) {
+    public void runCurrentProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            checkRamAndRunProject(runOptions, isUserAction);
+            checkRamAndRunProject(runOptions, callback, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -257,14 +259,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         @Override
                         public void onSuccess(Object result) {
-                            checkRamAndRunProject(runOptions, isUserAction);
+                            checkRamAndRunProject(runOptions, callback, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    checkRamAndRunProject(runOptions, isUserAction);
+                    checkRamAndRunProject(runOptions, callback, isUserAction);
                 }
             });
             askWindow.show();
@@ -276,10 +278,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param runOptions
      *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    private void checkRamAndRunProject(final RunOptions runOptions, final boolean isUserAction) {
+    private void checkRamAndRunProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
         service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
@@ -308,7 +312,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                                        @Override
                                                                        public void onOk() {
                                                                            runOptions.setMemorySize(requiredMemory);
-                                                                           runActiveProject(runOptions, null, isUserAction);
+                                                                           runActiveProject(runOptions, callback, isUserAction);
                                                                        }
                                                                    }
                                                  );
@@ -320,7 +324,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         return;
                     }
                     runOptions.setMemorySize(overrideRAM);
-                    runActiveProject(runOptions, null, isUserAction);
+                    runActiveProject(runOptions, callback, isUserAction);
 
                 } else {
                     requiredMemory = getRequiredMemory("default");
@@ -351,7 +355,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                                        @Override
                                                                        public void onOk() {
                                                                            overrideRAM = requiredMemory;
-                                                                           runActiveProject(null, false, null, isUserAction);
+                                                                           runActiveProject(null, false, callback, isUserAction);
                                                                        }
                                                                    }
                                                  );
@@ -363,7 +367,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         return;
                     }
 
-                    runActiveProject(null, false, null, isUserAction);
+                    runActiveProject(null, false, callback, isUserAction);
                 }
             }
 
@@ -470,6 +474,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             notificationManager.showNotification(notification);
             return;
         }
+
+        runCallback = callback;
 
         if (currentProject.getProcessDescriptor() != null &&
             (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
