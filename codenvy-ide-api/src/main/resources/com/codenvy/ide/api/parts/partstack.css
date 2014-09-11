@@ -65,24 +65,13 @@
 }
 
 .ide-PartStack-Tab-Icon {
+    float: left;
+    position: relative;
+    top: 1px;
     max-width: 16px;
     max-height: 16px;
     margin-right: 2px;
     opacity: 0.6;
-}
-
-.ide-PartStack-Tab-Icons-Group-Element {
-    display: inline;
-    position: relative;
-}
-
-.ide-PartStack-Tab-Icon-Image {
-    max-width: 7px;
-    max-height: 7px;
-    float: left;
-    position: absolute;
-    right: 10px;
-    top: 1px;
 }
 
 @sprite .ide-PartStack-Tab-Line-Error {

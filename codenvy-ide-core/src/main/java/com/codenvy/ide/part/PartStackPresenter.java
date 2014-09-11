@@ -110,7 +110,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
         }
         int index = parts.indexOf(part);
-        view.updateTabItem(index, part.getTitleSVGImage(), part.getTitle(), part.getTitleToolTip(),
+        view.updateTabItem(index,
+                           part.decorateIcon(part.getTitleSVGImage() != null ? new SVGImage(part.getTitleSVGImage()) : null),
+                           part.getTitle(),
+                           part.getTitleToolTip(),
                            part.getTitleWidget());
     }
 
