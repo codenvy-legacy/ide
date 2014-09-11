@@ -41,6 +41,24 @@ public interface RunnerResources extends ClientBundle {
     @Source("view-recipe.svg")
     SVGResource viewRecipe();
 
+    @Source("in-queue.svg")
+    SVGResource inQueue();
+
+    @Source("in-progress.svg")
+    SVGResource inProgress();
+
+    @Source("running.svg")
+    SVGResource running();
+
+    @Source("done.svg")
+    SVGResource done();
+
+    @Source("failed.svg")
+    SVGResource failed();
+
+    @Source("timeout.svg")
+    SVGResource timeout();
+
     public interface Css extends CssResource {
         @ClassName("info-panel")
         String infoPanel();
@@ -53,6 +71,27 @@ public interface RunnerResources extends ClientBundle {
 
         @ClassName("tab-selected")
         String tabSelected();
+
+        @ClassName("partIcon")
+        String partIcon();
+
+        @ClassName("inQueue")
+        String inQueue();
+
+        @ClassName("inProgress")
+        String inProgress();
+
+        @ClassName("running")
+        String running();
+
+        @ClassName("done")
+        String done();
+
+        @ClassName("failed")
+        String failed();
+
+        @ClassName("timeout")
+        String timeout();
     }
 
     @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})

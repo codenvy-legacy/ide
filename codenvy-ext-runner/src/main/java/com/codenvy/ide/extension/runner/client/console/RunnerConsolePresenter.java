@@ -17,13 +17,17 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.run.RunnerStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
@@ -36,11 +40,13 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private static final String TITLE = "Runner";
     private       RunnerConsoleView view;
     private final ToolbarPresenter  consoleToolbar;
+    private       RunnerResources   runnerResources;
     private       String            appURL;
     private       String            shellURL;
     private boolean isUnread = false;
     private boolean isTerminalFrameAlreadyLoaded;
     private boolean isAppPreviewFrameAlreadyLoaded;
+    private RunnerStatus currentRunnerStatus = RunnerStatus.IDLE;
 
     private enum Tab {
         CONSOLE, TERMINAL, APP
@@ -49,9 +55,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private Tab activeTab = Tab.CONSOLE;
 
     @Inject
-    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
+    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
+                                  RunnerResources runnerResources) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
+        this.runnerResources = runnerResources;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
 
@@ -85,7 +93,55 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     /** {@inheritDoc} */
     @Override
     public SVGResource getTitleSVGImage() {
-        return null;
+        switch (currentRunnerStatus) {
+            case IN_QUEUE:
+                return runnerResources.inQueue();
+            case IN_PROGRESS:
+                return runnerResources.inProgress();
+            case RUNNING:
+                return runnerResources.running();
+            case DONE:
+                return runnerResources.done();
+            case FAILED:
+                return runnerResources.failed();
+            case TIMEOUT:
+                return runnerResources.timeout();
+            case IDLE:
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public SVGImage decorateIcon(SVGImage svgImage) {
+        if (svgImage == null) {
+            return null;
+        }
+        svgImage.setClassNameBaseVal(runnerResources.runner().partIcon());
+        switch (currentRunnerStatus) {
+            case IN_QUEUE:
+                svgImage.addClassNameBaseVal(runnerResources.runner().inQueue());
+                break;
+            case IN_PROGRESS:
+                svgImage.addClassNameBaseVal(runnerResources.runner().inProgress());
+                break;
+            case RUNNING:
+                svgImage.addClassNameBaseVal(runnerResources.runner().running());
+                break;
+            case DONE:
+                svgImage.addClassNameBaseVal(runnerResources.runner().done());
+                break;
+            case FAILED:
+                svgImage.addClassNameBaseVal(runnerResources.runner().failed());
+                break;
+            case TIMEOUT:
+                svgImage.addClassNameBaseVal(runnerResources.runner().timeout());
+                break;
+            case IDLE:
+            default:
+                break;
+        }
+        return svgImage;
     }
 
     /** {@inheritDoc} */
@@ -94,11 +150,20 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         return "Displays Runner output";
     }
 
+    @Override
+    public IsWidget getTitleWidget() {
+        return super.getTitleWidget();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         consoleToolbar.go(view.getToolbarPanel());
         container.setWidget(view);
+    }
+
+    public void setCurrentRunnerStatus(RunnerStatus currentRunnerStatus) {
+        this.currentRunnerStatus = currentRunnerStatus;
     }
 
     /**
@@ -111,10 +176,10 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             isUnread = true;
-            firePropertyChange(TITLE_PROPERTY);
         }
         view.print(message);
         view.scrollBottom();
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /** Sets the console active (selected) in the parts stack. */
