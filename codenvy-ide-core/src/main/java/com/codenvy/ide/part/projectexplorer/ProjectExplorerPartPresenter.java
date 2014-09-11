@@ -59,14 +59,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
     private AbstractTreeNode< ? >         selectedTreeNode;
-    private DeleteItemPresenter           deleteItemPresenter;
+    private DeleteItemHandler           deleteItemPresenter;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteItemPresenter deleteItemPresenter) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteItemHandler deleteItemPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;

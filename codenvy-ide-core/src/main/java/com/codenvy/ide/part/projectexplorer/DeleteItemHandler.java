@@ -40,7 +40,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * 
  * @author Ann Shumilova
  */
-public class DeleteItemPresenter {
+public class DeleteItemHandler {
     private NotificationManager      notificationManager;
     private EventBus                 eventBus;
     private CoreLocalizationConstant localization;
@@ -48,7 +48,7 @@ public class DeleteItemPresenter {
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
-    public DeleteItemPresenter(NotificationManager notificationManager,
+    public DeleteItemHandler(NotificationManager notificationManager,
                                EventBus eventBus,
                                CoreLocalizationConstant localization,
                                RunnerServiceClient runnerServiceClient,

@@ -18,7 +18,7 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.part.projectexplorer.DeleteItemPresenter;
+import com.codenvy.ide.part.projectexplorer.DeleteItemHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,13 +31,13 @@ import com.google.inject.Singleton;
 public class DeleteItemAction extends Action {
     private AnalyticsEventLogger eventLogger;
     private SelectionAgent       selectionAgent;
-    private DeleteItemPresenter  deleteItemPresenter;
+    private DeleteItemHandler  deleteItemPresenter;
 
     @Inject
     public DeleteItemAction(Resources resources,
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
-                            DeleteItemPresenter deleteItemPresenter, CoreLocalizationConstant localization) {
+                            DeleteItemHandler deleteItemPresenter, CoreLocalizationConstant localization) {
         super(localization.deleteItemActionText(), localization.deleteItemActionDescription(), null, resources.delete());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
