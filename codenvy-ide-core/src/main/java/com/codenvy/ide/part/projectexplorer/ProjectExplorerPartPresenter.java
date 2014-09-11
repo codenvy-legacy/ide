@@ -43,7 +43,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
- *
+ * 
  * @author Nikolay Zamosenchuk
  * @author Artem Zatsarynnyy
  */
@@ -58,14 +58,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private AppContext                    appContext;
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
-    private AbstractTreeNode<?>           selectedTreeNode;
+    private AbstractTreeNode< ? >         selectedTreeNode;
+    private DeleteItemHandler           deleteItemPresenter;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteItemHandler deleteItemPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;
@@ -75,7 +76,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
-
+        this.deleteItemPresenter = deleteItemPresenter;
+        
         bind();
     }
 
@@ -148,14 +150,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeSelected(@NotNull AbstractTreeNode<?> node) {
+    public void onNodeSelected(@NotNull AbstractTreeNode< ? > node) {
         selectedTreeNode = node;
         setSelection(new Selection<>(node));
 
         updateAppContext(node);
     }
 
-    private void updateAppContext(AbstractTreeNode<?> node) {
+    private void updateAppContext(AbstractTreeNode< ? > node) {
         if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
             appContext.getCurrentProject().setProjectDescription(((StorableNode)node).getProject().getData());
         }
@@ -163,12 +165,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeExpanded(final AbstractTreeNode<?> node) {
+    public void onNodeExpanded(final AbstractTreeNode< ? > node) {
         if (node.getChildren().isEmpty()) {
             // If children is empty then may be it doesn't refreshed yet?
-            node.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
+            node.refreshChildren(new AsyncCallback<AbstractTreeNode< ? >>() {
                 @Override
-                public void onSuccess(AbstractTreeNode<?> result) {
+                public void onSuccess(AbstractTreeNode< ? > result) {
                     if (!result.getChildren().isEmpty()) {
                         view.updateNode(node, result);
                     }
@@ -184,7 +186,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeAction(@NotNull AbstractTreeNode<?> node) {
+    public void onNodeAction(@NotNull AbstractTreeNode< ? > node) {
         node.processNodeAction();
     }
 
@@ -196,9 +198,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
-        treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
+        treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode< ? >>>() {
             @Override
-            public void onSuccess(Array<AbstractTreeNode<?>> result) {
+            public void onSuccess(Array<AbstractTreeNode< ? >> result) {
                 view.setRootNodes(result);
             }
 
@@ -210,13 +212,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     private void updateTree() {
-        final AbstractTreeNode<?> parent = selectedTreeNode.getParent();
+        final AbstractTreeNode< ? > parent = selectedTreeNode.getParent();
         if (parent.getParent() == null) {
             setTree(currentTreeStructure); // refresh entire tree
         } else {
-            parent.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
+            parent.refreshChildren(new AsyncCallback<AbstractTreeNode< ? >>() {
                 @Override
-                public void onSuccess(AbstractTreeNode<?> result) {
+                public void onSuccess(AbstractTreeNode< ? > result) {
                     view.updateNode(parent, result);
                 }
 
@@ -225,6 +227,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     Log.error(ProjectExplorerPartPresenter.class, caught);
                 }
             });
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteKey() {
+        if (selectedTreeNode != null) {
+            deleteItemPresenter.delete(selectedTreeNode);
         }
     }
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+ import elemental.events.KeyboardEvent;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
@@ -130,6 +132,10 @@ public class OutlineImpl implements OutlinePresenter {
 
             @Override
             public void onRootDragDrop(MouseEvent event) {
+            }
+
+            @Override
+            public void onKeyboard(KeyboardEvent event) {
             }
         });
 
