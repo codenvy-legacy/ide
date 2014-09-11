@@ -29,13 +29,11 @@ import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.importproject.ImportProjectPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -49,7 +47,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  * 
  * @author Ann Shumilova
  */
-public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate {
+public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate, ImportProjectWizardView.EnterPressedDelegate {
     private final ProjectServiceClient        projectService;
     private final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
     private final CoreLocalizationConstant    locale;
@@ -69,7 +67,10 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                                        return mainPage;
                                                                    }
                                                                };
-    private ProjectDescriptor                 importedProject;                                                           
+    private ProjectDescriptor                 importedProject;
+    private boolean                           canImport = false;
+    private boolean                           canGoNext = false;
+    
                                                                
     @Inject
     public ImportProjectWizardPresenter(ImportProjectWizardView view,
@@ -94,6 +95,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         this.mainPage = mainPage;
         this.wizardContext = new WizardContext();
         mainPage.setUpdateDelegate(this);
+        mainPage.setEnterPressedDelegate(this);
         view.setDelegate(this);
     }
 
@@ -118,9 +120,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
         // change the buttons' state:
         view.setBackButtonEnabled(currentPage != mainPage);
-        view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
-        view.setImportButtonEnabled((currentPage.isCompleted() && importer != null && wizard != null && wizard.canFinish())
-                                    || (currentPage.isCompleted() && importer != null && wizard == null));
+        canGoNext = wizard != null && wizard.hasNext() && currentPage.isCompleted();
+        view.setNextButtonEnabled(canGoNext);
+        canImport = (currentPage.isCompleted() && importer != null && wizard != null && wizard.canFinish())
+                    || (currentPage.isCompleted() && importer != null && wizard == null);
+        view.setImportButtonEnabled(canImport);
     }
 
     /** {@inheritDoc} */
@@ -210,7 +214,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        view.setLoaderVisibility(false);
+        showProcessing(false);
         view.close();
     }
 
@@ -232,7 +236,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                         dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
                                                                   .withLocation(url);
         
-        view.setLoaderVisibility(true);
+        showProcessing(true);
         projectService.importProject(projectName,
                                      false,
                                      importSourceDescriptor,
@@ -241,7 +245,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
                                              importedProject = result;
-                                             view.setLoaderVisibility(false);
+                                             showProcessing(false);
 
                                              String projectDescription = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
                                              final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
@@ -257,7 +261,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
                                          @Override
                                          protected void onFailure(Throwable exception) {
-                                             view.setLoaderVisibility(false);
+                                             showProcessing(false);
                                              String errorMessage;
                                              if (exception instanceof UnauthorizedException) {
                                                  ServiceError serverError =
@@ -292,7 +296,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                                                  dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
-                                             view.setLoaderVisibility(false);
+                                             showProcessing(false);
                                              if (result.getVisibility().equals(visibility)) {
                                                  getProject(project.getName(), callback);
                                              } else {
@@ -302,7 +306,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
                                          @Override
                                          protected void onFailure(Throwable exception) {
-                                             view.setLoaderVisibility(false);
+                                             showProcessing(false);
                                              callback.onFailure(exception);
                                          }
                                      });
@@ -316,18 +320,18 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
      */
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
-        view.setLoaderVisibility(true);
+        showProcessing(true);
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
 
             @Override
             protected void onSuccess(Void result) {
-                view.setLoaderVisibility(false);
+                showProcessing(false);
                 getProject(project.getName(), callback);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                view.setLoaderVisibility(false);
+                showProcessing(false);
                 callback.onFailure(exception);
             }
         });
@@ -341,7 +345,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
      */
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         eventBus.fireEvent(new OpenProjectEvent(name));
-        view.setLoaderVisibility(false);
+        showProcessing(false);
         callback.onSuccess();
     }
 
@@ -375,4 +379,34 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         view.showPage(currentPage);
     }
 
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEnterKeyPressed() {
+        if (canGoNext) {
+            canGoNext = false;
+            onNextClicked();
+        } else if (canImport) {
+            canImport = false;
+            onImportClicked();
+        }
+    }
+    
+    /**
+     * Shown the state that the request is processing.
+     * 
+     * @param inProgress
+     */
+    private void showProcessing(boolean inProgress) {
+        view.setLoaderVisibility(inProgress);
+        if (inProgress) {
+            if (mainPage == currentPage) {
+                mainPage.disableInputs();
+            }
+        } else {
+            if (mainPage == currentPage) {
+                mainPage.enableInputs();
+            }
+        }
+    }
 }

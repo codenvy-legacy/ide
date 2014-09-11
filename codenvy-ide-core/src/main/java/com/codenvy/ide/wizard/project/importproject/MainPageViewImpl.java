@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.importproject;
 
+import elemental.events.KeyboardEvent.KeyCode;
+
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.icon.Icon;
@@ -22,6 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -126,6 +129,13 @@ public class MainPageViewImpl implements MainPageView {
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
         delegate.projectDescriptionChanged(projectDescription.getValue());
+    }
+    
+    @UiHandler({"projectDescription", "projectUrl", "projectName"})
+    void onEnterClicked(KeyPressEvent event) {
+        if (event.getNativeEvent().getKeyCode() == KeyCode.ENTER) {
+            delegate.onEnterClicked();
+        }
     }
 
     @UiHandler({"projectPublic", "projectPrivate"})
@@ -275,5 +285,19 @@ public class MainPageViewImpl implements MainPageView {
     @Override
     public void setProjectName(String projectName) {
         this.projectName.setValue(projectName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void focusInUrlInput() {
+        projectUrl.setFocus(true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setInputsEnableState(boolean isEnabled) {
+        projectName.setEnabled(isEnabled);
+        projectDescription.setEnabled(isEnabled);
+        projectUrl.setEnabled(isEnabled);
     }
 }

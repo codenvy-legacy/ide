@@ -15,9 +15,7 @@ import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
@@ -25,6 +23,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
+import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardView.EnterPressedDelegate;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -56,6 +55,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private final CoreLocalizationConstant      locale;
     private ProjectImporterDescriptor           projectImporter;
+    private EnterPressedDelegate                enterPressedDelegate;
 
     @Inject
     public MainPagePresenter(ProjectImportersServiceClient projectImportersService,
@@ -70,7 +70,24 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.locale = locale;
     }
+    
+    public void setEnterPressedDelegate(EnterPressedDelegate enterPressedDelegate) {
+        this.enterPressedDelegate = enterPressedDelegate;
+    }
+    
+    /**
+     * Disable all page inputs.
+     */
+    public void disableInputs() {
+        view.setInputsEnableState(false);
+    }
 
+    /**
+     * Enable all page inputs.
+     */
+    public void enableInputs() {
+        view.setInputsEnableState(true);
+    }
 
     @Override
     public void projectNameChanged(String name) {
@@ -108,6 +125,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.projectImporter = importer;
         wizardContext.putData(ImportProjectWizard.PROJECT_IMPORTER, importer);
         view.setImporterDescription(importer.getDescription());
+        view.focusInUrlInput();
         delegate.updateControls();
     }
 
@@ -174,6 +192,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         projectImporter = null;
         view.reset();
         container.setWidget(view);
+        view.setInputsEnableState(true);
 
         final Set<ProjectImporterDescriptor> importersSet = new HashSet<ProjectImporterDescriptor>();
         projectImportersService.getProjectImporters(new AsyncRequestCallback<Array<ProjectImporterDescriptor>>(
@@ -202,5 +221,14 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                 notificationManager.showNotification(notification);
             }
         });
+    }
+
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEnterClicked() {
+        if (enterPressedDelegate != null) {
+            enterPressedDelegate.onEnterKeyPressed();
+        }
     }
 }

@@ -85,7 +85,19 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
      * @param projectName project's name to set
      */
     void setProjectName(String projectName);
-
+    
+    /**
+     * Give focus to project's URL input.
+     */
+    void focusInUrlInput();
+    
+    /**
+     * Set the enable state of the inputs.
+     * 
+     * @param isEnabled <code>true</code> if enabled, <code>false</code> if disabled
+     */
+    void setInputsEnableState(boolean isEnabled);
+    
     public interface ActionDelegate {
         
         /** Performs any actions appropriate in response to the user having changed the project's name. */
@@ -100,5 +112,7 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
         ProjectWizardView.ActionDelegate getProjectWizardDelegate();
         /** Performs any actions appropriate in response to the user having selected the importer. */
         void projectImporterSelected(ProjectImporterDescriptor importer);
+        /** Performs any actions appropriate in response to the user having clicked the Enter key.*/
+        void onEnterClicked();
     }
 }

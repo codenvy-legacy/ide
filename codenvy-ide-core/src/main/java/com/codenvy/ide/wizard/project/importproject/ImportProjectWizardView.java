@@ -21,7 +21,12 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(ImportProjectWizardViewImpl.class)
 public interface ImportProjectWizardView extends View<ImportProjectWizardView.ActionDelegate> {
-
+    /** Required for delegating Enter key pressed function in a wizard model. */
+    public interface EnterPressedDelegate {
+        /** Performs some actions in response to a user's pressed Enter key. */
+        void onEnterKeyPressed();
+    }
+    
     /**
      * Show wizard page.
      * 
