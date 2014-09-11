@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
@@ -41,7 +42,6 @@ import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,9 +116,9 @@ public class MainPageViewImpl implements MainPageView {
     private ActionDelegate                              delegate;
     private Map<String, Set<ProjectTypeDescriptor>>     categories;
     private Map<String, Set<ProjectTemplateDescriptor>> samples;
-    private Map<String, Object>                         templateOrType;
     private Resources                                   resources;
     private CategoriesList                              list;
+    private Array<ProjectTypeDescriptor>                availableProjectTypes;
 
     @Inject
     public MainPageViewImpl(Resources resources, IconRegistry iconRegistry) {
@@ -321,11 +321,10 @@ public class MainPageViewImpl implements MainPageView {
             }
         }
         if (typeDescriptor != null) {
-            for (String key : templateOrType.keySet()) {
-                if (templateOrType.get(key) == typeDescriptor) {
-//                    categoriesTree.getSelectionModel().selectSingleNode(key);
+            for (ProjectTypeDescriptor existingProjectTypeDescriptor : availableProjectTypes.asIterable()) {
+                if (existingProjectTypeDescriptor.getProjectTypeId().equals(typeDescriptor.getProjectTypeId())) {
+                    list.selectElement(typeDescriptor);
                     selectNextWizardType(typeDescriptor);
-
                 }
             }
         }
@@ -333,11 +332,15 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     @Override
+    public void setAvailableProjectTypeDescriptors(Array<ProjectTypeDescriptor> availableProjectTypes) {
+        this.availableProjectTypes = availableProjectTypes;
+    }
+
+    @Override
     public void setProjectTypeCategories(Map<String, Set<ProjectTypeDescriptor>> categories,
                                          Map<String, Set<ProjectTemplateDescriptor>> samples) {
         this.categories = categories;
         this.samples = samples;
-        templateOrType = new HashMap<>();
 
         List<Category<?>> categoriesList = new ArrayList<>();
         for (String s : categories.keySet()) {

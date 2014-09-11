@@ -130,7 +130,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             }
         }
         container.setWidget(view);
-
+        view.setAvailableProjectTypeDescriptors(descriptors);
         view.setProjectTypeCategories(descriptorsByCategory, samples);
         if (project != null) {
             view.selectProjectType(project.getProjectTypeId());
