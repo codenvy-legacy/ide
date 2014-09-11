@@ -15,9 +15,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.ide.Constants;
-import com.codenvy.ide.api.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
@@ -26,15 +26,14 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -45,6 +44,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private RunnerServiceClient    runnerServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private ProjectServiceClient   projectServiceClient;
+    private EventBus               eventBus;
     private DtoFactory             factory;
     private RunnerDescriptor       runner;
     private String                 environmentId;
@@ -63,12 +63,14 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
+                                     EventBus eventBus,
                                      DtoFactory factory) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
+        this.eventBus = eventBus;
         this.factory = factory;
         view.setDelegate(this);
     }
@@ -106,28 +108,19 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             return;
         }
 
-        if(runner == null){
+        if (runner == null) {
             callback.onSuccess();
             return;
         }
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
 
-        final ProjectDescriptor projectDescriptor = factory.createDto(ProjectDescriptor.class);
-
-        Map<String, List<String>> attributes = project.getAttributes();
-        attributes.put(Constants.RUNNER_NAME, Arrays.asList(runner.getName()));
-        if(environmentId != null) {
-            attributes.put(Constants.RUNNER_ENV_ID, Arrays.asList(environmentId));
-        } else {
-            attributes.remove(Constants.RUNNER_ENV_ID);
-        }
-
-        projectDescriptor.setAttributes(attributes);
-        projectDescriptor.setVisibility(project.getVisibility());
-        projectDescriptor.setProjectTypeId(project.getProjectTypeId());
-        projectServiceClient.updateProject(project.getPath(),projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>() {
+        project.setRunner(runner.getName());
+        project.setDefaultRunnerEnvironment(environmentId);
+        projectServiceClient.updateProject(project.getPath(), project, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
                 callback.onSuccess();
             }
 
@@ -167,7 +160,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     private void selectRunner() {
         String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
-        if (runnerName != null){
+        if (runnerName != null) {
             view.selectRunner(runnerName);
         }
     }

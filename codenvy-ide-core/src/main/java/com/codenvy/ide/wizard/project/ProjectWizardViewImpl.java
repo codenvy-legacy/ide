@@ -34,10 +34,19 @@ import java.util.Map;
 
 /**
  * @author Evgen Vidolob
+ * @author Oleksii Orel
  */
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
 
+    private static final String                 defaultTitleText                 = "Create New Project";
+    private static final String                 titleText                        = "Project Configuration";
+    private static final String                 defaultSaveButtonText            = "Create";
+    private static final String                 saveButtonText                   = "Save";
+    private              Map<Presenter, Widget> pageCache                        = new HashMap<Presenter, Widget>();
+    private              HandlerRegistration    nativePreviewHandlerRegistration = null;
+    private boolean        isSaveActionTitle;
+    private ActionDelegate delegate;
 
     @UiField
     Style       style;
@@ -63,16 +72,12 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     Button      previousStepButton;
     @UiField
     Button      saveButton;
-    private ActionDelegate delegate;
-    private Map<Presenter, Widget> pageCache = new HashMap<Presenter, Widget>();
-    private String saveButtonText;
-
-    private HandlerRegistration nativePreviewHandlerRegistration = null;
 
     @Inject
     public ProjectWizardViewImpl(com.codenvy.ide.Resources resources) {
         super(false);
-        setTitle("Project Configuration");
+        isSaveActionTitle = false;
+        setTitle(defaultTitleText);
         setWidget(ourUiBinder.createAndBindUi(this));
         nextStepButton.sinkEvents(Event.ONCLICK);
         previousStepButton.sinkEvents(Event.ONCLICK);
@@ -90,8 +95,8 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
                     delegate.onBackClicked();
             }
         }, ClickEvent.getType());
-        saveButtonText = saveButton.getText();
         saveButton.addStyleName(resources.Css().buttonLoader());
+        saveButton.setText(defaultSaveButtonText);
         builderEnvConfText.setVisible(false);
         builderEnvConf.setVisible(false);
         runnerEnvConfText.setVisible(false);
@@ -104,12 +109,28 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
+    public void setSaveActionTitle(boolean isSaveActionTitle) {
+        this.isSaveActionTitle = isSaveActionTitle;
+        if (isSaveActionTitle) {
+            setTitle(titleText);
+            saveButton.setText(saveButtonText);
+        } else {
+            setTitle(defaultTitleText);
+            saveButton.setText(defaultSaveButtonText);
+        }
+    }
+
+    @Override
     public void setLoaderVisibled(boolean enabled) {
         if (enabled) {
             saveButton.setHTML("<i></i>");
             saveButton.setEnabled(false);
         } else {
-            saveButton.setText(saveButtonText);
+            if (isSaveActionTitle) {
+                saveButton.setText(saveButtonText);
+            } else {
+                saveButton.setText(defaultSaveButtonText);
+            }
             saveButton.setEnabled(true);
         }
     }

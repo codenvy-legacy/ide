@@ -50,6 +50,7 @@ import java.util.Map;
 
 /**
  * @author Evgen Vidolob
+ * @author Oleksii Orel
  */
 @Singleton
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
@@ -493,6 +494,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void show() {
         wizardContext.clear();
+        view.setSaveActionTitle(false);
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
         showFirstPage();
     }
@@ -513,6 +515,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     public void show(WizardContext context) {
         wizardContext = context;
+        view.setSaveActionTitle(wizardContext.getData(ProjectWizard.PROJECT) != null);
         showFirstPage();
     }
 
