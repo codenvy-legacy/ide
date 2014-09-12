@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -136,6 +137,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.setVisibility(project.getVisibility().equals("public"));
             view.setName(project.getName());
             view.setDescription(project.getDescription());
+            view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
         }
     }
 
