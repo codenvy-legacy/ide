@@ -197,4 +197,10 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     @Override
     protected void onClose() {
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectPreference(PreferencesPagePresenter preference) {
+        list.selectElement(preference);
+    }
 }

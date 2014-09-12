@@ -42,11 +42,10 @@
 
     <g:FlowPanel width="100%">
         <g:FlowPanel addStyleNames="{style.emptyBorder} {style.vertical}">
-                <g:Label text="Default RAM for running application (MB):" addStyleNames="{style.alignLeft} {style.space}"/>
-                <g:SuggestBox ui:field="memoryField" height="15px" width="40px"
-                              addStyleNames="{style.gwt-SuggestBox} {style.alignLeft} {style.space}"
-                              debugId="window-preferences-runner-customRun-memory-input"/>
-                <g:Label ui:field="warnMessage"></g:Label>
+            <g:Label text="Default RAM for running application (MB):" addStyleNames="{style.alignLeft} {style.space}"/>
+            <g:SuggestBox ui:field="memoryField" height="15px" width="40px"
+                          addStyleNames="{style.gwt-SuggestBox} {style.alignLeft} {style.space}"
+                          debugId="window-preferences-ramManager-memory"/>
         </g:FlowPanel>
     </g:FlowPanel>
 

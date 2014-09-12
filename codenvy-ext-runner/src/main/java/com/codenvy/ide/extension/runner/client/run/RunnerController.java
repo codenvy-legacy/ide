@@ -14,6 +14,8 @@ import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.dto.DebugMode;
@@ -52,6 +54,8 @@ import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -128,6 +132,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   Timer                                             totalActiveTimeTimer;
     private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
     private   String                                            theme;
+    private   int                                               overrideRAM;
 
     @Inject
     public RunnerController(EventBus eventBus,
@@ -229,14 +234,16 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param runOptions
      *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    public void runActiveProject(final RunOptions runOptions, final boolean isUserAction) {
+    public void runCurrentProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            runProject(runOptions, isUserAction);
+            checkRamAndRunProject(runOptions, callback, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -252,14 +259,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
                         @Override
                         public void onSuccess(Object result) {
-                            runProject(runOptions, isUserAction);
+                            checkRamAndRunProject(runOptions, callback, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    runProject(runOptions, isUserAction);
+                    checkRamAndRunProject(runOptions, callback, isUserAction);
                 }
             });
             askWindow.show();
@@ -271,20 +278,96 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param runOptions
      *         options to configure run process
+     * @param callback
+     *         callback that will be notified when project will be run
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    private void runProject(final RunOptions runOptions, final boolean isUserAction) {
+    private void checkRamAndRunProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
         service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
-                //TODO Add RAM Check for each Runner Request
+                final int requiredMemory;
+                int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
+                int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
 
                 if (runOptions != null) {
-                    runActiveProject(runOptions, null, isUserAction);
+                    requiredMemory = getRequiredMemory(runOptions.getEnvironmentId());
+                    overrideRAM = runOptions.getMemorySize();
+                    overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
+
+                    if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
+                        return;
+                    }
+
+                    if (overrideRAM < requiredMemory) {
+                        Info warningWindow =
+                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
+                                         new InfoHandler() {
+                                             @Override
+                                             public void onOk() {
+                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
+                                                                   new AskHandler() {
+                                                                       @Override
+                                                                       public void onOk() {
+                                                                           runOptions.setMemorySize(requiredMemory);
+                                                                           runActiveProject(runOptions, callback, isUserAction);
+                                                                       }
+                                                                   }
+                                                 );
+                                                 ask.show();
+                                             }
+                                         }
+                                );
+                        warningWindow.show();
+                        return;
+                    }
+                    runOptions.setMemorySize(overrideRAM);
+                    runActiveProject(runOptions, callback, isUserAction);
+
                 } else {
-                    runActiveProject(null, false, null, isUserAction);
+                    requiredMemory = getRequiredMemory("default");
+                    overrideRAM = 0;
+
+                    Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
+                    if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                        try {
+                            overrideRAM = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                        } catch (NumberFormatException e) {
+                            //do nothing
+                        }
+                    }
+                    overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
+
+                    if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
+                        return;
+                    }
+
+                    if (overrideRAM < requiredMemory) {
+                        Info warningWindow =
+                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
+                                         new InfoHandler() {
+                                             @Override
+                                             public void onOk() {
+                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
+                                                                   new AskHandler() {
+                                                                       @Override
+                                                                       public void onOk() {
+                                                                           overrideRAM = requiredMemory;
+                                                                           runActiveProject(null, false, callback, isUserAction);
+                                                                       }
+                                                                   }
+                                                 );
+                                                 ask.show();
+                                             }
+                                         }
+                                );
+                        warningWindow.show();
+                        return;
+                    }
+
+                    runActiveProject(null, false, callback, isUserAction);
                 }
             }
 
@@ -347,13 +430,12 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         } else if (currentProject.getRunnerEnvId() != null) {
             runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
         }
+        if (overrideRAM > 0 ) {
+            runOptions.setMemorySize(overrideRAM);
+        }
 
         runOptions.getShellOptions().put("WebShellTheme", theme);
         runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
-
-
-        setDefaultRam2runOptions(runOptions);
-
 
         if (isUserAction) {
             console.setActive();
@@ -393,6 +475,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        runCallback = callback;
+
         if (currentProject.getProcessDescriptor() != null &&
             (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
              || currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.RUNNING))) {
@@ -419,7 +503,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                             dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
-                            isAnyAppRunning = true;
                             if (notification == null)
                                 notification =
                                         new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()),
@@ -440,17 +523,40 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                    );
     }
 
-    private void setDefaultRam2runOptions(RunOptions runOptions) {
-        Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
-        if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
-            try {
-                Log.info(RunnerController.class, preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
-                int ram = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
-                runOptions.setMemorySize(ram);
-            } catch (NumberFormatException e) {
-                Log.error(RunnerController.class, e);
-            }
+    private boolean isSufficientMemory(int totalMemory, int usedMemory, final int requiredMemory) {
+        int availableMemory = totalMemory - usedMemory;
+        if (totalMemory < requiredMemory) {
+            showWarning(constant.messagesTotalLessRequiredMemory(totalMemory, requiredMemory));
+            return false;
         }
+        if (availableMemory < requiredMemory) {
+            showWarning(constant.messagesAvailableLessRequiredMemory(totalMemory, usedMemory, requiredMemory));
+            return false;
+        }
+        if (totalMemory < overrideRAM) {
+            showWarning(constant.messagesTotalLessOverrideMemory(overrideRAM, totalMemory));
+            return false;
+        }
+        if (availableMemory < overrideRAM) {
+            showWarning(constant.messagesAvailableLessOverrideMemory(overrideRAM, totalMemory, usedMemory));
+            return false;
+        }
+        return true;
+    }
+
+    private int getRequiredMemory(String environmentId) {
+        int requiredMemory = 0;
+        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+
+        if(runEnvConfigurations != null && runEnvConfigurations.containsKey(environmentId)) {
+            return runEnvConfigurations.get(environmentId).getRequiredMemorySize();
+        }
+
+        if(runEnvConfigurations != null && runEnvConfigurations.containsKey("default")) {
+            return runEnvConfigurations.get("default").getRequiredMemorySize();
+        }
+        return requiredMemory;
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
@@ -580,7 +686,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        isAnyAppRunning = true;
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
         startCheckingAppStatus(applicationProcessDescriptor);
@@ -593,6 +698,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
         switch (descriptor.getStatus()) {
             case RUNNING:
+                isAnyAppRunning = true;
                 startCheckingAppHealth(descriptor);
                 if (notification == null)
                     notification = new Notification(constant.applicationStarted(projectName), INFO);
@@ -762,6 +868,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
     }
 
+    private void showWarning(String warning) {
+        Info warningWindow = new Info(constant.titlesWarning(), warning);
+        warningWindow.show();
+    }
+
     /** Returns URL of the application which is currently running. */
     @Nullable
     public String getCurrentAppURL() {
@@ -780,7 +891,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (processDescriptor != null && processDescriptor.getCreationTime() >= 0) {
             Date startDate = new Date(processDescriptor.getCreationTime());
             String startDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at").withValue(startDateFormatted);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription("Process started at")
+                             .withValue(startDateFormatted);
         }
         return null;
     }
@@ -794,22 +906,26 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         }
         RunnerMetric terminationMetric = getRunnerMetric(RunnerMetric.TERMINATION_TIME);
         if (terminationMetric != null) {
-            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue()))
+            if (RunnerMetric.ALWAYS_ON.equals(terminationMetric.getValue()))
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
-                                 .withValue(getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue());
+                                 .withValue(terminationMetric.getValue());
             // if app is running now, count uptime on the client-side
             if (terminationMetric.getValue() != null) {
                 double terminationTime = NumberFormat.getDecimalFormat().parse(terminationMetric.getValue());
                 final double terminationTimeout = terminationTime - System.currentTimeMillis();
+                if (terminationTimeout <= 0) {
+                    return null;
+                }
                 final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
-                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription()).withValue(value);
+                return dtoFactory.createDto(RunnerMetric.class).withDescription(terminationMetric.getDescription())
+                                 .withValue(value);
             }
         }
         RunnerMetric lifeTimeMetric = getRunnerMetric(RunnerMetric.LIFETIME);
         if (lifeTimeMetric != null && processDescriptor.getStatus().equals(NEW)) {
-            if (RunnerMetric.ALWAYS_ON.equals(getRunnerMetric(RunnerMetric.LIFETIME).getValue()))
+            if (RunnerMetric.ALWAYS_ON.equals(lifeTimeMetric.getValue()))
                 return dtoFactory.createDto(RunnerMetric.class).withDescription(lifeTimeMetric.getDescription())
-                                 .withValue(getRunnerMetric(RunnerMetric.LIFETIME).getValue());
+                                 .withValue(lifeTimeMetric.getValue());
             if (lifeTimeMetric.getValue() != null) {
                 double lifeTime = NumberFormat.getDecimalFormat().parse(lifeTimeMetric.getValue());
                 final String value = StringUtils.timeMlsToHumanReadable((long)lifeTime);
@@ -829,7 +945,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
             double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription()).withValue(stopDateFormatted);
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription())
+                             .withValue(stopDateFormatted);
         }
         return null;
     }
@@ -860,8 +977,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     private String getAppLink() {
         String url = null;
-        final Link appLink = RunnerUtils
-                .getLink(appContext.getCurrentProject().getProcessDescriptor(), com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
+        final Link appLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
+                                                 com.codenvy.api.runner.internal.Constants.LINK_REL_WEB_URL);
         if (appLink != null) {
             url = appLink.getHref();
 

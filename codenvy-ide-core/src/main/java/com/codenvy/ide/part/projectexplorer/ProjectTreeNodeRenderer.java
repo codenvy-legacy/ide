@@ -166,9 +166,11 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
      *         node for which the specified element is rendered
      */
     private void setIdProperty(com.google.gwt.dom.client.Element element, AbstractTreeNode node) {
-        String id = node.getDisplayName();
-        if (node.getParent() != null) {
-            id = node.getParent().getDisplayName() + node.getDisplayName();
+        String id = "/" + node.getDisplayName();
+        AbstractTreeNode parent = node.getParent();
+        while (parent != null && !parent.getDisplayName().equals("ROOT")) {
+            id = "/" + parent.getDisplayName() + id;
+            parent = parent.getParent();
         }
         UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(id));
     }

@@ -98,9 +98,13 @@ public class WebExtension {
 
         // Register and add actions
         actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);
+        newCssFileAction.getTemplatePresentation().setSVGIcon(res.cssFile());
         actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
+        newLessFileAction.getTemplatePresentation().setSVGIcon(res.lessFile());
         actionManager.registerAction(constant.newHtmlFileActionId(), newHtmlFileAction);
+        newHtmlFileAction.getTemplatePresentation().setSVGIcon(res.htmlFile());
         actionManager.registerAction(constant.newJavaScriptFileActionId(), newJavaScriptFileAction);
+        newJavaScriptFileAction.getTemplatePresentation().setSVGIcon(res.jsFile());
         DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
         newGroup.addSeparator();
         newGroup.add(newCssFileAction);

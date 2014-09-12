@@ -15,6 +15,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -164,8 +165,18 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
+    public int getTotalMemorySize() {
+        return memoryToInt(memoryTotal.getText());
+    }
+
+    @Override
     public void setAvailableMemorySize(int memorySize) {
         this.memoryAvailable.setText(memoryToString(memorySize));
+    }
+
+    @Override
+    public int getAvailableMemorySize() {
+        return memoryToInt(memoryAvailable.getText());
     }
 
     @Override
@@ -229,5 +240,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     private void clear() {
         descriptionField.setText("");
         skipBuild.setValue(false);
+    }
+
+    @Override
+    public void showWarning(String warning) {
+        Info warningWindow = new Info("Warning", warning);
+        warningWindow.show();
     }
 }

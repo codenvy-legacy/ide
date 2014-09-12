@@ -61,13 +61,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
     private AbstractTreeNode<?>           selectedTreeNode;
+    private DeleteItemHandler             deleteItemHandler;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteItemHandler deleteItemHandler) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;
@@ -77,6 +78,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
+        this.deleteItemHandler = deleteItemHandler;
 
         bind();
     }
@@ -258,6 +260,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     Log.error(ProjectExplorerPartPresenter.class, caught);
                 }
             });
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteKey() {
+        if (selectedTreeNode != null && selectedTreeNode instanceof StorableNode) {
+            deleteItemHandler.delete((StorableNode)selectedTreeNode);
         }
     }
 }

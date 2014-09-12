@@ -42,6 +42,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,6 +72,44 @@ public class CustomRunTest extends BaseTest {
         runnerDescriptors.add(runnerDescriptor);
 
         when(activeProject.getRunner()).thenReturn(RUNNER_NAME);
+    }
+
+    @Test
+    public void shouldNotShowDialogWhenGetResourcesFailed() throws Exception {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<Array<RunnerDescriptor>> callback = (AsyncRequestCallback<Array<RunnerDescriptor>>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, runnerDescriptors);
+                return callback;
+            }
+        }).when(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncRequestCallback<ResourcesDescriptor> callback = (AsyncRequestCallback<ResourcesDescriptor>)arguments[0];
+                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+                onFailure.invoke(callback, mock(Throwable.class));
+                return callback;
+            }
+        }).when(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
+
+
+        presenter.showDialog();
+
+        verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
+        verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
+        verify(appContext).getCurrentProject();
+        verify(view).setEnvironments((Array<RunnerEnvironment>)anyObject());
+        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(view, never()).setRunnerMemorySize(anyInt());
+        verify(view, never()).setTotalMemorySize(anyInt());
+        verify(view, never()).setAvailableMemorySize(anyInt());
+        verify(view, never()).showDialog();
     }
 
     @Test
@@ -107,15 +146,17 @@ public class CustomRunTest extends BaseTest {
         presenter.showDialog();
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
+        verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
         verify(view).setEnvironments(Matchers.<Array<RunnerEnvironment>>anyObject());
         verify(view).setRunnerMemorySize(anyInt());
         verify(view).setTotalMemorySize(anyInt());
         verify(view).setAvailableMemorySize(anyInt());
         verify(view).showDialog();
+        verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
 
     @Test
-    public void shouldNotShowDialog() throws Exception {
+    public void shouldNotShowDialogWhenGetRunnersFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -135,9 +176,11 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
-    public void shouldRunProject() throws Exception {
+    public void onRunClickedAndRunnerMemoryCorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn(128);
+        when(view.getTotalMemorySize()).thenReturn(512);
+        when(view.getAvailableMemorySize()).thenReturn(256);
         when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
 
         presenter.onRunClicked();
@@ -145,9 +188,49 @@ public class CustomRunTest extends BaseTest {
         verify(view).close();
         verify(dtoFactory).createDto(eq(RunOptions.class));
         verify(view).getSelectedEnvironment();
-        verify(view).getRunnerMemorySize();
+        verify(view, times(2)).getRunnerMemorySize();
+        verify(view).getTotalMemorySize();
+        verify(view).getAvailableMemorySize();
         verify(runOptions).setMemorySize(eq(128));
-        verify(runnerController).runActiveProject((RunOptions)anyObject(), anyBoolean());
+        verify(runnerController).runCurrentProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+    }
+
+    @Test
+    public void onRunClickedAndTotalLessCustomRunMemory() throws Exception {
+        RunOptions runOptions = mock(RunOptions.class);
+        when(view.getRunnerMemorySize()).thenReturn(1024);
+        when(view.getTotalMemorySize()).thenReturn(512);
+        when(view.getAvailableMemorySize()).thenReturn(256);
+
+        presenter.onRunClicked();
+
+        verify(view).getRunnerMemorySize();
+        verify(view).getTotalMemorySize();
+        verify(view).getAvailableMemorySize();
+        verify(view).showWarning(anyString());
+        verify(runOptions, never()).setMemorySize(anyInt());
+        verify(runOptions, never()).setSkipBuild(anyBoolean());
+        verify(view, never()).close();
+        verify(runnerController, never()).runCurrentProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+    }
+
+    @Test
+    public void onRunClickedAndAvailableLessCustomRunMemory() throws Exception {
+        RunOptions runOptions = mock(RunOptions.class);
+        when(view.getRunnerMemorySize()).thenReturn(512);
+        when(view.getTotalMemorySize()).thenReturn(512);
+        when(view.getAvailableMemorySize()).thenReturn(256);
+
+        presenter.onRunClicked();
+
+        verify(view).getRunnerMemorySize();
+        verify(view).getTotalMemorySize();
+        verify(view).getAvailableMemorySize();
+        verify(view).showWarning(anyString());
+        verify(runOptions, never()).setMemorySize(anyInt());
+        verify(runOptions, never()).setSkipBuild(anyBoolean());
+        verify(view, never()).close();
+        verify(runnerController, never()).runCurrentProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test

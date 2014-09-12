@@ -50,6 +50,7 @@ import java.util.Map;
 
 /**
  * @author Evgen Vidolob
+ * @author Oleksii Orel
  */
 @Singleton
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
@@ -102,6 +103,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.builderServiceClient = builderServiceClient;
         updateBuildersDescriptor();
         updateRunnersDescriptor();
+        updateMemoryInfo();
     }
 
     private void updateMemoryInfo() {
@@ -222,6 +224,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             public void onSuccess() {
                 view.close();
+                view.setLoaderVisibled(false);
             }
 
             @Override
@@ -409,7 +412,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         eventBus.fireEvent(new OpenProjectEvent(name));
-        view.setLoaderVisibled(false);
         callback.onSuccess();
     }
 
@@ -486,15 +488,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         } else {
             view.setInfoVisibled(false);
         }
-
-        updateMemoryInfo();
-
     }
 
     /** {@inheritDoc} */
     @Override
     public void show() {
         wizardContext.clear();
+        view.setSaveActionTitle(false);
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
         showFirstPage();
     }
@@ -506,6 +506,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             boolean aPublic = project.getVisibility().equals("public") ? true : false;
             wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
             wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
+            wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, project.getDescription());
         }
         setPage(mainPage);
         view.showDialog();
@@ -514,6 +515,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     public void show(WizardContext context) {
         wizardContext = context;
+        view.setSaveActionTitle(wizardContext.getData(ProjectWizard.PROJECT) != null);
         showFirstPage();
     }
 

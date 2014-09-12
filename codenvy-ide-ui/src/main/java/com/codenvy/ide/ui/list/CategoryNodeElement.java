@@ -21,6 +21,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 
+import java.util.HashMap;
+
 /**
  * Overlay type for the base element for a Category Node in the list.
  * Nodes that have children, but that have never been expanded (nodes render
@@ -41,13 +43,14 @@ import com.google.gwt.user.client.ui.FlowPanel;
  * @author Evgen Vidolob
  */
 public class CategoryNodeElement extends FlowPanel {
-    private final Category                        category;
-    private       CategoriesList.SelectionManager selectionManager;
-    private final FlowPanel                       container;
-    private final AnimationController             animator;
-    private       CategoriesList.Resources        resources;
-    private       boolean                         expanded;
-    private final DivElement                      expandControl;
+    private final Category                  category;
+    private CategoriesList.SelectionManager selectionManager;
+    private final FlowPanel                 container;
+    private final AnimationController       animator;
+    private CategoriesList.Resources        resources;
+    private boolean                         expanded;
+    private final DivElement                expandControl;
+    private HashMap<Object, Element>        elementsMap;
 
     @SuppressWarnings("unchecked")
     CategoryNodeElement(Category category,
@@ -84,7 +87,7 @@ public class CategoryNodeElement extends FlowPanel {
             @Override
             public void onClick(ClickEvent event) {
                 event.getNativeEvent().getEventTarget();
-                selectItem(Element.as(event.getNativeEvent().getEventTarget()));
+                selectElement(Element.as(event.getNativeEvent().getEventTarget()));
             }
         }, ClickEvent.getType());
         add(header);
@@ -98,7 +101,7 @@ public class CategoryNodeElement extends FlowPanel {
     }
 
     @SuppressWarnings("unchecked")
-    private void selectItem(Element eventTarget) {
+    private void selectElement(Element eventTarget) {
         selectionManager.selectItem(eventTarget);
         category.getEventDelegate().onListItemClicked(eventTarget, ListItem.cast(eventTarget).getData());
     }
@@ -120,14 +123,44 @@ public class CategoryNodeElement extends FlowPanel {
 
     @SuppressWarnings("unchecked")
     private void renderChildren() {
+        elementsMap = new HashMap<Object, Element>();
         CategoryRenderer categoryRenderer = category.getRenderer();
         for (Object o : category.getData()) {
             ListItem<?> element = ListItem.create(categoryRenderer, resources.defaultCategoriesListCss(), o);
             categoryRenderer.renderElement(element, o);
+            elementsMap.put(o, element);
             container.getElement().appendChild(element);
         }
     }
-
+    
+    /**
+     * Checks whether the category contains the pointed item.
+     * 
+     * @param item item to find
+     * @return boolean <code>true</code> if contains
+     */
+    public boolean containsItem(Object item){
+        if (elementsMap == null || elementsMap.isEmpty()){
+            return false;
+        }
+        return elementsMap.containsKey(item);
+    }
+    
+    /**
+     * Selects the item in the category list.
+     * 
+     * @param item
+     */
+    public void selectItem(Object item){
+        if (elementsMap == null || elementsMap.isEmpty()){
+            return;
+        }
+        
+        if (elementsMap.containsKey(item)){
+            selectElement(elementsMap.get(item));
+        }
+    }
+    
     /**
      * A javascript overlay object which ties a list item's DOM element to its
      * associated data.

@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.manage.ram;
 
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,9 +35,6 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
 
     @UiField
     SuggestBox memoryField;
-
-    @UiField
-    Label warnMessage;
 
     interface RamManagerViewImplUiBinder extends UiBinder<Widget, RamManagerViewImpl> {
     }
@@ -70,8 +68,9 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
     }
 
     @Override
-    public void showWarnMessage(String s) {
-        warnMessage.setText(s);
+    public void showWarnMessage(String warning) {
+        Info warningWindow = new Info("Warning", warning);
+        warningWindow.show();
     }
 
 

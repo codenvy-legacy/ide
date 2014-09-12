@@ -11,66 +11,38 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.api.projecttree.generic.FolderNode;
-import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.part.projectexplorer.ProjectListStructure;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.ide.part.projectexplorer.DeleteItemHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.api.runner.ApplicationStatus.NEW;
-import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
 /**
- * Action for renaming an item which is selected in 'Project Explorer'.
+ * Action for deleting an item which is selected in 'Project Explorer'.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DeleteItemAction extends Action {
-    private AnalyticsEventLogger     eventLogger;
-    private NotificationManager      notificationManager;
-    private CoreLocalizationConstant localization;
-    private RunnerServiceClient      runnerServiceClient;
-    private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private SelectionAgent           selectionAgent;
+    private AnalyticsEventLogger eventLogger;
+    private SelectionAgent       selectionAgent;
+    private DeleteItemHandler    deleteItemPresenter;
 
     @Inject
     public DeleteItemAction(Resources resources,
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
-                            NotificationManager notificationManager,
-                            CoreLocalizationConstant localization,
-                            RunnerServiceClient runnerServiceClient,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                            DeleteItemHandler deleteItemPresenter, CoreLocalizationConstant localization) {
         super(localization.deleteItemActionText(), localization.deleteItemActionDescription(), null, resources.delete());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
-        this.notificationManager = notificationManager;
-        this.localization = localization;
-        this.runnerServiceClient = runnerServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.deleteItemPresenter = deleteItemPresenter;
     }
 
     /** {@inheritDoc} */
@@ -80,27 +52,7 @@ public class DeleteItemAction extends Action {
 
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
-            final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
-
-            if (selectedNode instanceof ProjectRootNode || selectedNode instanceof ProjectListStructure.ProjectNode) {
-                checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean hasRunningProcesses) {
-                        if (hasRunningProcesses) {
-                            new Info(localization.stopProcessesBeforeDeletingProject()).show();
-                        } else {
-                            askForDeletingNode(selectedNode);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        askForDeletingNode(selectedNode);
-                    }
-                });
-            } else {
-                askForDeletingNode(selectedNode);
-            }
+            deleteItemPresenter.delete((StorableNode)selection.getFirstElement());
         }
     }
 
@@ -110,76 +62,9 @@ public class DeleteItemAction extends Action {
         boolean isEnabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isDeletable() && selection.getFirstElement() instanceof StorableNode;
+            isEnabled =
+                    ((AbstractTreeNode)selection.getFirstElement()).isDeletable() && selection.getFirstElement() instanceof StorableNode;
         }
         e.getPresentation().setEnabled(isEnabled);
-    }
-
-    private void askForDeletingNode(final StorableNode nodeToDelete) {
-        new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
-            @Override
-            public void onOk() {
-                nodeToDelete.delete(new AsyncCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
-                    }
-                });
-            }
-        }).show();
-    }
-
-    /**
-     * @param callback
-     *         callback returns true if project has any running processes and false - otherwise
-     */
-    private void checkRunningProcessesForProject(StorableNode projectNode, final AsyncCallback<Boolean> callback) {
-        Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
-        runnerServiceClient.getRunningProcesses(projectNode.getPath(),
-                                                new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
-                                                    @Override
-                                                    protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
-                                                        boolean hasRunningProcesses = false;
-                                                        for (ApplicationProcessDescriptor descriptor : result.asIterable()) {
-                                                            if (descriptor.getStatus() == NEW || descriptor.getStatus() == RUNNING) {
-                                                                hasRunningProcesses = true;
-                                                                break;
-                                                            }
-                                                        }
-                                                        callback.onSuccess(hasRunningProcesses);
-                                                    }
-
-                                                    @Override
-                                                    protected void onFailure(Throwable exception) {
-                                                        callback.onFailure(exception);
-                                                    }
-                                                });
-    }
-
-    private String getDialogTitle(StorableNode node) {
-        if (node instanceof FileNode) {
-            return localization.deleteFileDialogTitle();
-        } else if (node instanceof FolderNode) {
-            return localization.deleteFolderDialogTitle();
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
-            return localization.deleteProjectDialogTitle();
-        }
-        return localization.deleteNodeDialogTitle();
-    }
-
-    private String getDialogQuestion(StorableNode node) {
-        if (node instanceof FileNode) {
-            return localization.deleteFileDialogQuestion(node.getName());
-        } else if (node instanceof FolderNode) {
-            return localization.deleteFolderDialogQuestion(node.getName());
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
-            return localization.deleteProjectDialogQuestion(node.getName());
-        }
-        return localization.deleteNodeDialogQuestion(node.getName());
     }
 }

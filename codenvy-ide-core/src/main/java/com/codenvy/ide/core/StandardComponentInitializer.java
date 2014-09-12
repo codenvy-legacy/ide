@@ -269,6 +269,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("newFile", newFileAction);
         actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newXmlFile", newXmlFileAction);
+        newXmlFileAction.getTemplatePresentation().setSVGIcon(xmlFile.getSVGImage());
 
         newGroup.addAction(newProjectWizardAction);
         newGroup.addSeparator();

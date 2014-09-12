@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]*$");
+        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]+$");
         if (regExp.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
             view.removeNameError();
@@ -135,6 +136,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.selectProjectType(project.getProjectTypeId());
             view.setVisibility(project.getVisibility().equals("public"));
             view.setName(project.getName());
+            view.setDescription(project.getDescription());
+            view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
         }
     }
 

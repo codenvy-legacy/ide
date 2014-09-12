@@ -204,4 +204,7 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
 
     @Source("defaulticons/image-icon.svg")
     SVGResource defaultImage();
+
+    @Source("part/outline/no-outline.svg")
+    SVGResource noOutline();
 }

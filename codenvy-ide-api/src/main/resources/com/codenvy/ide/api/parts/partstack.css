@@ -138,9 +138,8 @@
 }
 
 .ide-PartStack-Button-Left {
-    border-right: 1px solid tabBorder;
     cursor: pointer;
-    height: 18px;
+    height: 17px;
     min-width: 14px;
 }
 
@@ -166,7 +165,7 @@
     position: relative;
     border-right: none !important;
     border-left: 1px solid tabBorder;
-    box-shadow: -1px -1px 0px 0px tabBorderShadow;
+    box-shadow: -1px 0px 0px 0px tabBorderShadow;
     padding-left: 15px;
     padding-right: 15px;
     white-space: nowrap;
@@ -186,7 +185,7 @@
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     transform: rotate(90deg);
-    transform-origin: 8px 9px;
+    transform-origin: 9px 9px;
     -webkit-transform-origin: 8px 9px; /* Safari and Chrome */
     -moz-transform-origin: 8px 9px; /* Firefox */
     position: relative;
@@ -199,11 +198,11 @@
 .ide-PartStack-Tab-Below {
     /* tab button */
     border-right: 1px solid tabBorder;
-    box-shadow: 1px 1px 0px 0px tabBorderShadow;
+    box-shadow: 1px 0px 0px 0px tabBorderShadow;
     cursor: pointer;
     cursor: hand;
     position: relative;
-    top: -3px;
+    top: -2px;
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -211,7 +210,6 @@
 .ide-PartStack-Tool-Tab-selected {
     /* tab that is currently selected (active) */
     cursor: default;
-    color: inherit !important;
     color: #ffffff;
 }
 
@@ -223,7 +221,6 @@
 
 .ide-PartStack-Tab-Right.ide-PartStack-Tool-Tab-selected:before {
     right: 0px;
-    bottom: 1px;
     width: 100%;
     border-bottom: 1px solid #47afdd !important;
     border-top: 16px solid #454545;
@@ -231,7 +228,7 @@
 
 .ide-PartStack-Tab-Left.ide-PartStack-Tool-Tab-selected:before {
     left: 0px;
-    bottom: 1px;
+    bottom: 0px;
     width: literal("calc(100% - 1px)");
     border-top: 16px solid #454545;
     border-bottom: 1px solid #47afdd !important;
@@ -264,8 +261,7 @@
     border-right: 1px solid tabBorder;
     cursor: pointer;
     cursor: hand;
-    height: 18px;
-    top: -2px;
+    height: 17px;
     font-size: 11px;
     display: inline-block;
 }
@@ -282,7 +278,6 @@
 
 .ide-PartStack-Tab-Right.ide-PartStack-Tool-Tab:hover:before {
     right: 0px;
-    bottom: 1px;
     width: 100%;
     border-top: 16px solid #7d7d7d;
     border-bottom: 1px solid #7d7d7d;
@@ -290,7 +285,7 @@
 
 .ide-PartStack-Tab-Left.ide-PartStack-Tool-Tab:hover:before {
     left: 0px;
-    bottom: 1px;
+    bottom: 0px;
     width: literal("calc(100% - 1px)");
     border-top: 16px solid #7d7d7d;
     border-bottom: 1px solid #7d7d7d;

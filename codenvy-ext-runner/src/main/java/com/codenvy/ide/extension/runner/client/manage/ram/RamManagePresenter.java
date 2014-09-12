@@ -78,10 +78,9 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
     @Override
     public void validateRamSize(String value) {
         try {
-            if (Integer.parseInt(value) % 128 == 0) {
-                view.showWarnMessage("");
+            int ram = Integer.parseInt(value);
+            if (ram > 0 && ram % 128 == 0) {
                 setDirty(true);
-
             } else {
                 view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
                 setDirty(false);
@@ -89,7 +88,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
             delegate.onDirtyChanged();
         } catch (NumberFormatException e) {
             Log.error(RamManagePresenter.class, e.getMessage());
-            view.showWarnMessage(e.getMessage());
+            view.showWarnMessage(localizationConstant.enteredValueNotCorrect());
         }
     }
 

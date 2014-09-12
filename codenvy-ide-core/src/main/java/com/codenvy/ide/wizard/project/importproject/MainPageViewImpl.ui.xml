@@ -46,6 +46,10 @@
             overflow: hidden;
             display: block;
         }
+		
+		.marginTop {
+			margin-top: 5px;		
+		}
 
         .projectName, .projectDescription {
             margin-top: 4px;
@@ -116,6 +120,21 @@
             <g:DockLayoutPanel unit="PCT">
                 <g:east size="53">
                     <g:FlowPanel addStyleNames="{style.rightPart}">
+                         <g:FlowPanel height="20px" addStyleNames="{style.namePanel} {style.marginTop}">
+                            <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>
+                            <g:Label text="{locale.importProjectImporterInfo}" addStyleNames="{style.label}"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="30px" addStyleNames="{style.namePanel}">
+                            <g:HTMLPanel debugId="importProject-descriptionArea" ui:field="descriptionArea"
+                                         addStyleNames="{style.description}"/>
+                        </g:FlowPanel>
+                        <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
+                            <g:Label text="{locale.importProjectUriFieldTitle}"
+                                     addStyleNames="{style.labelPosition}"/>
+                             <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
+                                       debugId="file-importProject-projectUrl"/>
+                        </g:FlowPanel>
+                        
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateName}"
                                      addStyleNames="{style.labelPosition}"/>
@@ -136,20 +155,6 @@
                             <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}"
                                            addStyleNames="{style.radioButtonPosition}"
                                            ui:field="projectPrivate" debugId="file-importProject-private"/>
-                        </g:FlowPanel>
-                        <g:FlowPanel height="20px" addStyleNames="{style.namePanel}">
-                            <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>
-                            <g:Label text="{locale.importProjectImporterInfo}" addStyleNames="{style.label}"/>
-                        </g:FlowPanel>
-                        <g:FlowPanel height="40px" addStyleNames="{style.namePanel}">
-                            <g:HTMLPanel debugId="importProject-descriptionArea" ui:field="descriptionArea"
-                                         addStyleNames="{style.description}"/>
-                        </g:FlowPanel>
-                        <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
-                            <g:Label text="{locale.importProjectUriFieldTitle}"
-                                     addStyleNames="{style.labelPosition}"/>
-                             <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
-                                       debugId="file-importProject-projectUrl"/>
                         </g:FlowPanel>
                     </g:FlowPanel>
                 </g:east>

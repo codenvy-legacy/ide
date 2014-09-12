@@ -30,6 +30,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -47,6 +48,7 @@ import java.util.Set;
 
 /**
  * @author Evgen Vidolob
+ * @author Oleksii Orel
  */
 public class MainPageViewImpl implements MainPageView {
 
@@ -99,6 +101,8 @@ public class MainPageViewImpl implements MainPageView {
     @UiField
     HTMLPanel   descriptionArea;
     @UiField
+    Label       configurationAreaText;
+    @UiField
     HTMLPanel   configurationArea;
     @UiField
     TextBox     projectName;
@@ -126,6 +130,7 @@ public class MainPageViewImpl implements MainPageView {
         projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("placeholder", "Add a description to your project...");
         projectDescription.getElement().setAttribute("maxlength", "256");
+        setConfigOptions(null);
     }
 
     @UiHandler("projectName")
@@ -136,7 +141,7 @@ public class MainPageViewImpl implements MainPageView {
 
         delegate.projectNameChanged(projectName.getText());
     }
-    
+
     @UiHandler("projectDescription")
     void onProjectDescriptionChanged(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
@@ -155,33 +160,13 @@ public class MainPageViewImpl implements MainPageView {
         if (itemData instanceof ProjectTemplateDescriptor) {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
-            setConfigOptions(null);
-            // TODO: add 'Environment Configuration Options' to ProjectTemplateDescriptor
         } else if (itemData instanceof ProjectTypeDescriptor) {
             delegate.projectTypeSelected((ProjectTypeDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
-            setConfigOptions(new String[]{"JDK"});
-            // TODO: add 'Environment Configuration Options' to ProjectTypeDescriptor
         } else {
             descriptionArea.getElement().setInnerText("");
             resetConfigOptions();
         }
-    }
-
-    private void setConfigOptions(String options[]) {
-        if (options == null) {
-            configurationArea.getElement().setInnerText("");
-            return;
-        }
-        StringBuilder optionsHTMLBuilder = new StringBuilder();
-        for (String option : options) {
-            if (option.length() > 0) {
-                optionsHTMLBuilder.append("<p>");
-                optionsHTMLBuilder.append("- " + option);
-                optionsHTMLBuilder.append("</p>\n");
-            }
-        }
-        configurationArea.getElement().setInnerHTML(optionsHTMLBuilder.toString());
     }
 
     private void resetConfigOptions() {
@@ -190,6 +175,9 @@ public class MainPageViewImpl implements MainPageView {
 
     private void changeEnabledState(boolean enabled) {
         projectName.setEnabled(enabled);
+        if(enabled){
+            projectName.setFocus(true);
+        }
         changeEnabledStateAll(enabled);
     }
 
@@ -224,6 +212,29 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     @Override
+    public void setConfigOptions(List<String> options) {
+        StringBuilder optionsHTMLBuilder = new StringBuilder();
+        if (options != null) {
+            for (String option : options) {
+                if (option != null && option.length() > 0) {
+                    optionsHTMLBuilder.append("<p>");
+                    optionsHTMLBuilder.append("- " + option);
+                    optionsHTMLBuilder.append("</p>\n");
+                }
+            }
+        }
+        if (optionsHTMLBuilder.length() > 0) {
+            configurationArea.getElement().setInnerHTML(optionsHTMLBuilder.toString());
+            configurationAreaText.setVisible(true);
+            configurationArea.setVisible(true);
+        } else {
+            configurationAreaText.setVisible(false);
+            configurationArea.setVisible(false);
+            configurationArea.getElement().setInnerText("");
+        }
+    }
+
+    @Override
     public void resetName() {
         projectName.setText("");
         projectDescription.setText("");
@@ -245,6 +256,12 @@ public class MainPageViewImpl implements MainPageView {
     @Override
     public void setName(String name) {
         projectName.setValue(name, true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setDescription(String description) {
+        projectDescription.setValue(description);
     }
 
     @Override
@@ -299,7 +316,9 @@ public class MainPageViewImpl implements MainPageView {
                     break;
                 }
             }
-            if (typeDescriptor != null) break;
+            if (typeDescriptor != null) {
+                break;
+            }
         }
         if (typeDescriptor != null) {
             for (String key : templateOrType.keySet()) {
@@ -310,6 +329,7 @@ public class MainPageViewImpl implements MainPageView {
                 }
             }
         }
+        projectName.setFocus(true);
     }
 
     @Override
@@ -346,7 +366,8 @@ public class MainPageViewImpl implements MainPageView {
         style.setWidth(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setHeight(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
-        descriptionArea.clear();
+        descriptionArea.getElement().setInnerHTML("");
+        configurationArea.getElement().setInnerText("");
     }
 
     interface MainPageViewImplUiBinder

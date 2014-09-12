@@ -289,62 +289,57 @@ public class BootstrapController {
 
         processStartupParameters();
 
+        final AnalyticsSessions analyticsSessions = new AnalyticsSessions();
+
         // Bind browser's window events
         Window.addWindowClosingHandler(new Window.ClosingHandler() {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
+                logSessionUsageEvent(analyticsSessions);
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
+                logSessionUsageEvent(analyticsSessions);
             }
         });
 
-        final SessionID sessionID = new SessionID();
         elemental.html.Window window = Browser.getWindow();
 
         window.addEventListener(Event.FOCUS, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                sessionIsStarted(sessionID);
+                logSessionUsageEvent(analyticsSessions);
             }
         }, true);
 
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                sessionIsStopped(sessionID);
+                logSessionUsageEvent(analyticsSessions);
             }
         }, true);
 
-        //This is necessary to forcibly print the first log
-        sessionIsStarted(sessionID);
+        logSessionUsageEvent(analyticsSessions); // This is necessary to forcibly print the very first event
     }
 
-    private void sessionIsStarted(SessionID sessionID) {
-        sessionID.generateNew();
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID.getId());
-
-        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_STARTED, parameters);
-
-        if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
-            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STARTED, parameters);
+    private void logSessionUsageEvent(AnalyticsSessions analyticsSessions) {
+        if (analyticsSessions.getIdleTime() > 600000) { // 10 min
+            analyticsSessions.makeNew();
         }
-    }
 
-    private void sessionIsStopped(SessionID sessionID) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("SESSION-ID", sessionID.getId());
+        parameters.put("START-TIME", Long.toString(analyticsSessions.getStartTime()));
+        parameters.put("USAGE-TIME", Long.toString(analyticsSessions.getUsageTime()));
+        parameters.put("SESSION-ID", analyticsSessions.getId());
 
-        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FINISHED, parameters);
+        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_USAGE, parameters);
 
         if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
-            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_STOPPED, parameters);
+            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
         }
     }
 
@@ -404,20 +399,36 @@ public class BootstrapController {
     }-*/;
 
 
-    /** Wrapper for sessionID. It allows to generate new id for every new session. */
-    private static class SessionID {
+    private static class AnalyticsSessions {
         private String id;
+        private long startTime;
+        private long lastRequestTime;
 
-        private SessionID() {
-            this.id = UUID.uuid();
+        private AnalyticsSessions() {
+            makeNew();
         }
 
-        private String getId() {
+        public String getId() {
             return id;
         }
 
-        private void generateNew() {
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public long getUsageTime() {
+            lastRequestTime = System.currentTimeMillis();
+            return lastRequestTime - startTime;
+        }
+
+        public void makeNew() {
             this.id = UUID.uuid();
+            this.startTime = System.currentTimeMillis();
+            this.lastRequestTime = startTime;
+        }
+
+        public long getIdleTime() {
+            return System.currentTimeMillis() - lastRequestTime;
         }
     }
 }

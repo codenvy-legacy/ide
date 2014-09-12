@@ -103,8 +103,8 @@
         }
 
         .inputError {
-            border-color: red;
-            box-shadow: 0 0 5px red;
+            border-color: #ffe400;
+            box-shadow: 0 0 5px #ffe400;
         }
 
         .horizontalLine {
@@ -150,7 +150,8 @@
                                          addStyleNames="{style.description}"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="20px" addStyleNames="{style.namePanel}">
-                            <g:Label text="Environment Configuration Options:" addStyleNames="{style.label}"/>
+                            <g:Label ui:field="configurationAreaText" text="Environment Configuration Options:"
+                                     addStyleNames="{style.label}"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="70px">
                             <g:HTMLPanel debugId="newProject-configurationArea" ui:field="configurationArea"
