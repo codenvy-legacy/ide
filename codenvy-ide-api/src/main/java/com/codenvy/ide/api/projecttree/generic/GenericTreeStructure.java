@@ -58,7 +58,7 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     }
 
     public FileNode newFileNode(AbstractTreeNode parent, ItemReference data) {
-        return new FileNode(parent, data, eventBus, projectServiceClient);
+        return new FileNode(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
     public FolderNode newFolderNode(AbstractTreeNode parent, ItemReference data) {

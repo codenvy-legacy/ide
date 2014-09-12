@@ -32,24 +32,18 @@ import javax.annotation.Nullable;
  *
  * @author Artem Zatsarynnyy
  */
-public class FolderNode extends AbstractTreeNode<ItemReference> implements StorableNode {
+public class FolderNode extends ItemNode {
     protected final GenericTreeStructure   treeStructure;
-    protected final EventBus               eventBus;
     protected final EditorAgent            editorAgent;
-    protected final ProjectServiceClient   projectServiceClient;
-    protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     protected       TreeSettings           settings;
 
     public FolderNode(AbstractTreeNode parent, ItemReference data, GenericTreeStructure treeStructure, TreeSettings settings,
                       EventBus eventBus, EditorAgent editorAgent, ProjectServiceClient projectServiceClient,
                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, data.getName());
+        super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         this.treeStructure = treeStructure;
         this.settings = settings;
-        this.eventBus = eventBus;
         this.editorAgent = editorAgent;
-        this.projectServiceClient = projectServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /** Tests if the specified item is a file. */
@@ -60,28 +54,6 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
     /** Tests if the specified item is a folder. */
     protected static boolean isFolder(ItemReference item) {
         return "folder".equals(item.getType());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return data.getName();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getPath() {
-        return data.getPath();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ProjectRootNode getProject() {
-        AbstractTreeNode<?> parent = getParent();
-        while (!(parent instanceof ProjectRootNode)) {
-            parent = parent.getParent();
-        }
-        return (ProjectRootNode)parent;
     }
 
     /** {@inheritDoc} */
@@ -97,14 +69,15 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(data.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
-            protected void onSuccess(Array<ItemReference> children) {
-                Array<AbstractTreeNode<?>> newChildren = Collections.createArray();
-                setChildren(newChildren);
-                for (ItemReference item : children.asIterable()) {
+            protected void onSuccess(Array<ItemReference> childItems) {
+                // remove child nodes for not existed items
+                purgeNodes(childItems);
+                // add child nodes for new items
+                for (ItemReference item : filterNewItems(childItems).asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         AbstractTreeNode node = createChildNode(item);
                         if (node != null) {
-                            newChildren.add(node);
+                            children.add(node);
                         }
                     }
                 }
@@ -116,6 +89,35 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
                 callback.onFailure(exception);
             }
         });
+    }
+
+    /** Throw away child nodes which was removed (for which we haven't appropriate item in {@code items}). */
+    private void purgeNodes(Array<ItemReference> items) {
+        Iterable<AbstractTreeNode<?>> it = getChildren().asIterable();
+        for (AbstractTreeNode<?> node : it) {
+            if (node.getData() instanceof ItemReference && !items.contains((ItemReference)node.getData())) {
+                it.iterator().remove();
+            }
+        }
+    }
+
+    /**
+     * Returns filtered {@code items} array that contains only items
+     * for which we haven't appropriate node in this node's children.
+     *
+     * @param items
+     *         array of {@link ItemReference} to filter
+     * @return an array of new items, or an empty array if there are no new items
+     */
+    private Array<ItemReference> filterNewItems(Array<ItemReference> items) {
+        Array<ItemReference> newItems = Collections.createArray(items.asIterable());
+        Iterable<AbstractTreeNode<?>> it = getChildren().asIterable();
+        for (AbstractTreeNode<?> node : it) {
+            if (node.getData() instanceof ItemReference && items.contains((ItemReference)node.getData())) {
+                newItems.remove((ItemReference)node.getData());
+            }
+        }
+        return newItems;
     }
 
     /**
@@ -139,39 +141,10 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
 
     /** {@inheritDoc} */
     @Override
-    public boolean isRenemable() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void rename(String newName, final AsyncCallback<Void> callback) {
-        projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
-            @Override
-            protected void onSuccess(Void result) {
-                callback.onSuccess(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isDeletable() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void delete(final AsyncCallback<Void> callback) {
-        projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
+        super.delete(new AsyncCallback<Void>() {
             @Override
-            protected void onSuccess(Void result) {
-                // close all opened child files
+            public void onSuccess(Void result) {
                 for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
                     if (editor.getEditorInput().getFile().getPath().startsWith(getPath())) {
                         eventBus.fireEvent(new FileEvent(editor.getEditorInput().getFile(), FileEvent.FileOperation.CLOSE));
@@ -181,8 +154,8 @@ public class FolderNode extends AbstractTreeNode<ItemReference> implements Stora
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
         });
     }

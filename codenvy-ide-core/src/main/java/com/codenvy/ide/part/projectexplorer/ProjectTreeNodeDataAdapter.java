@@ -25,7 +25,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public int compare(AbstractTreeNode<?> a, AbstractTreeNode<?> b) {
-        return a.getPresentation().getDisplayName().compareTo(b.getPresentation().getDisplayName());
+        return a.getDisplayName().compareTo(b.getDisplayName());
     }
 
     /** {@inheritDoc} */
@@ -43,13 +43,13 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public String getNodeId(AbstractTreeNode<?> data) {
-        return data.getPresentation().getDisplayName();
+        return data.getDisplayName();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getNodeName(AbstractTreeNode<?> data) {
-        return data.getPresentation().getDisplayName();
+        return data.getDisplayName();
     }
 
     /** {@inheritDoc} */
@@ -90,25 +90,25 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public AbstractTreeNode<?> getNodeByPath(AbstractTreeNode<?> root, Array<String> relativeNodePath) {
-        AbstractTreeNode localRoot = root;
-        for (int i = 0; i < relativeNodePath.size(); i++) {
-            final String path = relativeNodePath.get(i);
-            if (localRoot != null) {
-                Array<AbstractTreeNode> children = localRoot.getChildren();
-                localRoot = null;
-                for (int j = 0; j < children.size(); j++) {
-                    AbstractTreeNode node = children.get(i);
-                    if (node.getPresentation().getDisplayName().equals(path)) {
-                        localRoot = node;
-                        break;
-                    }
-                }
-
-                if (i == (relativeNodePath.size() - 1)) {
-                    return localRoot;
-                }
-            }
-        }
+//        AbstractTreeNode localRoot = root;
+//        for (int i = 0; i < relativeNodePath.size(); i++) {
+//            final String path = relativeNodePath.get(i);
+//            if (localRoot != null) {
+//                Array<AbstractTreeNode> children = localRoot.getChildren();
+//                localRoot = null;
+//                for (int j = 0; j < children.size(); j++) {
+//                    AbstractTreeNode node = children.get(i);
+//                    if (node.getDisplayName().equals(path)) {
+//                        localRoot = node;
+//                        break;
+//                    }
+//                }
+//
+//                if (i == (relativeNodePath.size() - 1)) {
+//                    return localRoot;
+//                }
+//            }
+//        }
         return null;
     }
 }

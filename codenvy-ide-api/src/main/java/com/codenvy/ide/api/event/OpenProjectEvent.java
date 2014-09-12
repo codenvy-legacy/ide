@@ -19,6 +19,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class OpenProjectEvent extends GwtEvent<OpenProjectHandler> {
 
+    /** Type class used to register this event. */
     public static Type<OpenProjectHandler> TYPE = new Type<>();
     private final String projectName;
 

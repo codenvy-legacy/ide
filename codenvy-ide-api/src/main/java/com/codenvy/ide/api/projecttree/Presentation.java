@@ -14,46 +14,23 @@ import com.codenvy.ide.ui.tree.TreeNodeElement;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
-import javax.annotation.Nonnull;
-
 /**
  * The presentation of a node in 'Project Explorer'.
  *
  * @author Artem Zatsarynnyy
  */
 public class Presentation {
-    private String                               displayName;
     private SVGImage                             svgIcon;
-    private String                               cssClassName;
     private TreeNodeElement<AbstractTreeNode<?>> treeNodeElement;
 
-    /** Returns the node's name that will be displayed in the 'Project Explorer'. */
-    @Nonnull
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    /** Set node's display name. */
-    public void setDisplayName(@Nonnull String displayName) {
-        this.displayName = displayName;
-    }
-
-    /** Returns an icon for the node. */
+    /** Provides an SVG icon to be used for graphical representation of the node. */
     public SVGImage getSvgIcon() {
         return svgIcon;
     }
 
-    /** Set node's icon. */
+    /** Set an SVG icon to be used for graphical representation of the node. */
     public void setSvgIcon(SVGImage icon) {
         this.svgIcon = icon;
-    }
-
-    public String getCssClassName() {
-        return cssClassName;
-    }
-
-    public void setCssClassName(String cssClassName) {
-        this.cssClassName = cssClassName;
     }
 
     /**

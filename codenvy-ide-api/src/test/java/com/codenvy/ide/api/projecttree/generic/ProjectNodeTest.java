@@ -94,7 +94,7 @@ public class ProjectNodeTest {
 
     @Test
     public void shouldBeRenemable() throws Exception {
-        assertTrue(projectNode.isRenemable());
+        assertTrue(projectNode.isRenamable());
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ProjectNodeTest {
     }
 
     @Test
-    public void shouldInvokeCallbackWhenDeleteIsSuccessful() throws Exception {
+    public void testDeleteWhenDeleteIsSuccessful() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -123,7 +123,7 @@ public class ProjectNodeTest {
     }
 
     @Test
-    public void shouldInvokeCallbackWhenDeleteIsFailed() throws Exception {
+    public void testDeleteWhenDeleteIsFailed() throws Exception {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {

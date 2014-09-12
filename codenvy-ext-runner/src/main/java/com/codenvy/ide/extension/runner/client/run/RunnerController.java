@@ -752,7 +752,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                      .withPath("runner_recipe")
                                                      .withMediaType("text/plain")
                                                      .withLinks(links);
-                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient);
+                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient, dtoUnmarshallerFactory);
                 editorAgent.openEditor(recipeFileNode);
                 EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
                 if (editor instanceof CodenvyTextEditor) {
@@ -887,8 +887,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private static class RecipeFile extends FileNode {
-        public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
-            super(parent, data, eventBus, projectServiceClient);
+        public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                          DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         }
 
         @Override

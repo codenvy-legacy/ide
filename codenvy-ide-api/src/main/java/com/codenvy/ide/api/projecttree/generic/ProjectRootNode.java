@@ -24,6 +24,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     public ProjectRootNode(AbstractTreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
                            EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, data.getName());
+        super(parent, data, eventBus);
         this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
@@ -71,9 +72,16 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
         return data.getPath();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ProjectRootNode getProject() {
         return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getDisplayName() {
+        return data.getName();
     }
 
     /** {@inheritDoc} */
@@ -111,10 +119,15 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public boolean isRenemable() {
+    public boolean isRenamable() {
         // Rename is not available for opened project.
         // Special message will be shown for user in this case (see RenameItemAction).
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void rename(String newName, AsyncCallback<Void> callback) {
     }
 
     /** {@inheritDoc} */
@@ -129,6 +142,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
         projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
+                ProjectRootNode.this.delete();
                 eventBus.fireEvent(new CloseCurrentProjectEvent());
                 callback.onSuccess(result);
             }

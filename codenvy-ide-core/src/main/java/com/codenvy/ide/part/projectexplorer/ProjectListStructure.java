@@ -16,6 +16,8 @@ import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -23,6 +25,8 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.annotation.Nonnull;
 
 /**
  * Structure for displaying list of all projects from the workspace.
@@ -64,14 +68,21 @@ public class ProjectListStructure extends AbstractTreeStructure {
     }
 
     /** Node that represents project item. */
-    public static class ProjectNode extends AbstractTreeNode<ProjectReference> {
+    public static class ProjectNode extends AbstractTreeNode<ProjectReference> implements StorableNode {
         private EventBus             eventBus;
         private ProjectServiceClient projectServiceClient;
 
         ProjectNode(AbstractTreeNode parent, ProjectReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
-            super(parent, data, data.getName());
+            super(parent, data, eventBus);
             this.eventBus = eventBus;
             this.projectServiceClient = projectServiceClient;
+        }
+
+        /** {@inheritDoc} */
+        @Nonnull
+        @Override
+        public String getDisplayName() {
+            return data.getName();
         }
 
         /** {@inheritDoc} */
@@ -93,16 +104,35 @@ public class ProjectListStructure extends AbstractTreeStructure {
 
         /** {@inheritDoc} */
         @Override
-        public boolean isRenemable() {
+        public boolean isRenamable() {
             return true;
         }
 
         /** {@inheritDoc} */
         @Override
-        public void rename(String newName, final AsyncCallback<Void> callback) {
+        public String getName() {
+            return data.getName();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String getPath() {
+            return data.getPath();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public ProjectRootNode getProject() {
+            return null;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void rename(final String newName, final AsyncCallback<Void> callback) {
             projectServiceClient.rename(data.getPath(), newName, null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
+                    ProjectNode.this.rename(newName);
                     callback.onSuccess(result);
                 }
 
@@ -125,6 +155,7 @@ public class ProjectListStructure extends AbstractTreeStructure {
             projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
+                    ProjectNode.this.delete();
                     callback.onSuccess(result);
                 }
 

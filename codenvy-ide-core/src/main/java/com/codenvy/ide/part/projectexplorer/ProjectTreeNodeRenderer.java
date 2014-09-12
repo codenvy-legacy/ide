@@ -20,7 +20,6 @@ import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.projecttree.Presentation;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
@@ -87,7 +86,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
             Elements.addClassName(css.defaultFont(), root);
         }
 
-        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + node.getPresentation().getDisplayName());
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + node.getDisplayName());
 
         // set 'id' property for rendered element (it's need for testing purpose)
         setIdProperty((com.google.gwt.dom.client.Element)root, node);
@@ -167,9 +166,9 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
      *         node for which the specified element is rendered
      */
     private void setIdProperty(com.google.gwt.dom.client.Element element, AbstractTreeNode node) {
-        String id = node.getPresentation().getDisplayName();
+        String id = node.getDisplayName();
         if (node.getParent() != null) {
-            id = node.getParent().getPresentation().getDisplayName() + node.getPresentation().getDisplayName();
+            id = node.getParent().getDisplayName() + node.getDisplayName();
         }
         UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(id));
     }

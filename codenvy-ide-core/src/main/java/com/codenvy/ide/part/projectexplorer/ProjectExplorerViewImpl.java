@@ -28,6 +28,7 @@ import com.google.inject.Singleton;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -58,7 +59,13 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
         // create special 'invisible' root node that will contain 'visible' root nodes
-        rootNode = new AbstractTreeNode<Void>(null, null, "ROOT") {
+        rootNode = new AbstractTreeNode<Void>(null, null, null) {
+            @Nonnull
+            @Override
+            public String getDisplayName() {
+                return "ROOT";
+            }
+
             @Override
             public boolean isLeaf() {
                 return false;
@@ -66,7 +73,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
-                // no need to refresh
             }
         };
     }
@@ -151,6 +157,13 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public void updateNode(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
         Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, false);
         tree.expandPaths(pathsToExpand, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectNode(AbstractTreeNode<?> node) {
+        tree.getSelectionModel().selectSingleNode(node);
+        delegate.onNodeSelected(node);
     }
 
     /** {@inheritDoc} */

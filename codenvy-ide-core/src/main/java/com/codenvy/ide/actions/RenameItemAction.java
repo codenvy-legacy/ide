@@ -22,13 +22,14 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
+import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.collections.Array;
@@ -45,7 +46,6 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -60,7 +60,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class RenameItemAction extends Action {
     private final AnalyticsEventLogger     eventLogger;
     private final NotificationManager      notificationManager;
-    private final EventBus                 eventBus;
     private final EditorAgent              editorAgent;
     private final CoreLocalizationConstant localization;
     private final ProjectServiceClient     projectServiceClient;
@@ -73,7 +72,6 @@ public class RenameItemAction extends Action {
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
                             NotificationManager notificationManager,
-                            EventBus eventBus,
                             EditorAgent editorAgent,
                             CoreLocalizationConstant localization,
                             ProjectServiceClient projectServiceClient,
@@ -83,7 +81,6 @@ public class RenameItemAction extends Action {
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
         this.notificationManager = notificationManager;
-        this.eventBus = eventBus;
         this.editorAgent = editorAgent;
         this.localization = localization;
         this.projectServiceClient = projectServiceClient;
@@ -97,10 +94,11 @@ public class RenameItemAction extends Action {
         eventLogger.log("IDE: File rename");
 
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            final AbstractTreeNode selectedNode = (AbstractTreeNode)selection.getFirstElement();
+        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
+            final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
 
             if (selectedNode instanceof ProjectRootNode) {
+                // TODO: implement renaming for ProjectRootNode
                 new Info(localization.closeProjectBeforeRenaming()).show();
             } else if (selectedNode instanceof ProjectListStructure.ProjectNode) {
                 checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
@@ -130,22 +128,22 @@ public class RenameItemAction extends Action {
         boolean isEnabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isRenemable();
+            isEnabled =
+                    ((AbstractTreeNode)selection.getFirstElement()).isRenamable() && selection.getFirstElement() instanceof StorableNode;
         }
         e.getPresentation().setEnabled(isEnabled);
     }
 
-    private void askForRenamingNode(final AbstractTreeNode nodeToRename) {
+    private void askForRenamingNode(final StorableNode nodeToRename) {
         new AskValueDialog(getDialogTitle(nodeToRename), localization.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
             public void onOk(final String newName) {
                 nodeToRename.rename(newName, new AsyncCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
-                        if (nodeToRename instanceof FileNode || nodeToRename instanceof FolderNode) {
-                            checkOpenedFiles(nodeToRename, newName);
+                        if (nodeToRename instanceof ItemNode) {
+                            checkOpenedFiles((ItemNode)nodeToRename, newName);
                         }
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
                     }
 
                     @Override
@@ -161,17 +159,10 @@ public class RenameItemAction extends Action {
      * @param callback
      *         callback returns true if project has any running processes and false - otherwise
      */
-    private void checkRunningProcessesForProject(AbstractTreeNode projectNode, final AsyncCallback<Boolean> callback) {
-        String projectPath = "";
-        if (projectNode instanceof ProjectRootNode) {
-            projectPath = ((ProjectRootNode)projectNode).getPath();
-        } else if (projectNode instanceof ProjectListStructure.ProjectNode) {
-            projectPath = ((ProjectListStructure.ProjectNode)projectNode).getData().getPath();
-        }
-
+    private void checkRunningProcessesForProject(StorableNode projectNode, final AsyncCallback<Boolean> callback) {
         Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
                 dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
-        runnerServiceClient.getRunningProcesses(projectPath,
+        runnerServiceClient.getRunningProcesses(projectNode.getPath(),
                                                 new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
                                                     @Override
                                                     protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
@@ -192,16 +183,8 @@ public class RenameItemAction extends Action {
                                                 });
     }
 
-    private void checkOpenedFiles(final AbstractTreeNode node, String newName) {
-        final ItemReference itemBeforeRenaming;
-        if (node instanceof FileNode) {
-            itemBeforeRenaming = ((FileNode)node).getData();
-        } else if (node instanceof FolderNode) {
-            itemBeforeRenaming = ((FolderNode)node).getData();
-        } else {
-            return;
-        }
-
+    private void checkOpenedFiles(final ItemNode node, String newName) {
+        final ItemReference itemBeforeRenaming = node.getData();
         final String itemPathBeforeRenaming = itemBeforeRenaming.getPath();
         final String parentPathBeforeRenaming =
                 itemPathBeforeRenaming.substring(0, itemPathBeforeRenaming.length() - itemBeforeRenaming.getName().length());
@@ -262,7 +245,7 @@ public class RenameItemAction extends Action {
         editor.onFileChanged();
     }
 
-    private String getDialogTitle(AbstractTreeNode node) {
+    private String getDialogTitle(StorableNode node) {
         if (node instanceof FileNode) {
             return localization.renameFileDialogTitle();
         } else if (node instanceof FolderNode) {

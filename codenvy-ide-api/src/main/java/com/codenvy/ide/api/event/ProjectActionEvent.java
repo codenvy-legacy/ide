@@ -20,6 +20,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
 
+    /** Type class used to register this event. */
     public static Type<ProjectActionHandler> TYPE = new Type<>();
     private final ProjectDescriptor project;
     private final ProjectAction     projectAction;

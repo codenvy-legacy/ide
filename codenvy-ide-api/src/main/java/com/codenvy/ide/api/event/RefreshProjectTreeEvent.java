@@ -21,6 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler> {
 
+    /** Type class used to register this event. */
     public static Type<RefreshProjectTreeHandler> TYPE = new Type<>();
 
     @Override

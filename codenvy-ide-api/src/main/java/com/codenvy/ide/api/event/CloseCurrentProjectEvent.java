@@ -19,6 +19,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class CloseCurrentProjectEvent extends GwtEvent<CloseCurrentProjectHandler> {
 
+    /** Type class used to register this event. */
     public static Type<CloseCurrentProjectHandler> TYPE = new Type<>();
 
     @Override

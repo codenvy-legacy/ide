@@ -110,7 +110,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     public void onFileSelected() {
         view.close();
         ItemReference selectedItem = resultMap.get(view.getItemPath());
-        FileNode file = new FileNode(null, selectedItem, eventBus, projectServiceClient);
+        FileNode file = new FileNode(null, selectedItem, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.OPEN));
     }
 

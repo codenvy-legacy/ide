@@ -17,13 +17,13 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.collections.Array;
@@ -37,7 +37,6 @@ import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -52,7 +51,6 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class DeleteItemAction extends Action {
     private AnalyticsEventLogger     eventLogger;
     private NotificationManager      notificationManager;
-    private EventBus                 eventBus;
     private CoreLocalizationConstant localization;
     private RunnerServiceClient      runnerServiceClient;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
@@ -63,7 +61,6 @@ public class DeleteItemAction extends Action {
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
                             NotificationManager notificationManager,
-                            EventBus eventBus,
                             CoreLocalizationConstant localization,
                             RunnerServiceClient runnerServiceClient,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory) {
@@ -71,7 +68,6 @@ public class DeleteItemAction extends Action {
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
         this.notificationManager = notificationManager;
-        this.eventBus = eventBus;
         this.localization = localization;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -83,8 +79,8 @@ public class DeleteItemAction extends Action {
         eventLogger.log("IDE: Delete file");
 
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            final AbstractTreeNode selectedNode = (AbstractTreeNode)selection.getFirstElement();
+        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
+            final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
 
             if (selectedNode instanceof ProjectRootNode || selectedNode instanceof ProjectListStructure.ProjectNode) {
                 checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
@@ -114,19 +110,18 @@ public class DeleteItemAction extends Action {
         boolean isEnabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isDeletable();
+            isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isDeletable() && selection.getFirstElement() instanceof StorableNode;
         }
         e.getPresentation().setEnabled(isEnabled);
     }
 
-    private void askForDeletingNode(final AbstractTreeNode nodeToDelete) {
+    private void askForDeletingNode(final StorableNode nodeToDelete) {
         new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
             @Override
             public void onOk() {
                 nodeToDelete.delete(new AsyncCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
                     }
 
                     @Override
@@ -142,17 +137,10 @@ public class DeleteItemAction extends Action {
      * @param callback
      *         callback returns true if project has any running processes and false - otherwise
      */
-    private void checkRunningProcessesForProject(AbstractTreeNode projectNode, final AsyncCallback<Boolean> callback) {
-        String projectPath = "";
-        if (projectNode instanceof ProjectRootNode) {
-            projectPath = ((ProjectRootNode)projectNode).getPath();
-        } else if (projectNode instanceof ProjectListStructure.ProjectNode) {
-            projectPath = ((ProjectListStructure.ProjectNode)projectNode).getData().getPath();
-        }
-
+    private void checkRunningProcessesForProject(StorableNode projectNode, final AsyncCallback<Boolean> callback) {
         Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
                 dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
-        runnerServiceClient.getRunningProcesses(projectPath,
+        runnerServiceClient.getRunningProcesses(projectNode.getPath(),
                                                 new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
                                                     @Override
                                                     protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
@@ -173,7 +161,7 @@ public class DeleteItemAction extends Action {
                                                 });
     }
 
-    private String getDialogTitle(AbstractTreeNode node) {
+    private String getDialogTitle(StorableNode node) {
         if (node instanceof FileNode) {
             return localization.deleteFileDialogTitle();
         } else if (node instanceof FolderNode) {
@@ -184,14 +172,14 @@ public class DeleteItemAction extends Action {
         return localization.deleteNodeDialogTitle();
     }
 
-    private String getDialogQuestion(AbstractTreeNode node) {
+    private String getDialogQuestion(StorableNode node) {
         if (node instanceof FileNode) {
-            return localization.deleteFileDialogQuestion(node.getPresentation().getDisplayName());
+            return localization.deleteFileDialogQuestion(node.getName());
         } else if (node instanceof FolderNode) {
-            return localization.deleteFolderDialogQuestion(node.getPresentation().getDisplayName());
+            return localization.deleteFolderDialogQuestion(node.getName());
         } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
-            return localization.deleteProjectDialogQuestion(node.getPresentation().getDisplayName());
+            return localization.deleteProjectDialogQuestion(node.getName());
         }
-        return localization.deleteNodeDialogQuestion(node.getPresentation().getDisplayName());
+        return localization.deleteNodeDialogQuestion(node.getName());
     }
 }

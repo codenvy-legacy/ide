@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 /**
- * An interface defines methods common to all nodes
- * represent an item retrieved from Codenvy Project API.
+ * An interface defines methods common to all nodes represent an item
+ * retrieved from Codenvy Project API (e.g. file, folder, project, module).
  *
  * @author Artem Zatsarynnyy
  */
@@ -23,6 +25,21 @@ public interface StorableNode {
     /** Returns path of the item which this node represents. */
     String getPath();
 
-    /** Returns node's project. */
-    ProjectRootNode getProject();
+    /**
+     * Provides a way to rename node.
+     *
+     * @param newName
+     *         new name
+     * @param callback
+     *         callback to return result
+     */
+    void rename(String newName, AsyncCallback<Void> callback);
+
+    /**
+     * Provides a way to delete node.
+     *
+     * @param callback
+     *         callback to return result
+     */
+    public void delete(AsyncCallback<Void> callback);
 }

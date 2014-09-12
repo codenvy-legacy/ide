@@ -14,6 +14,8 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.event.NodeChangedEvent;
+import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
@@ -144,6 +146,33 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 updateTree();
             }
         });
+
+        eventBus.addHandler(NodeChangedEvent.TYPE, new NodeChangedHandler() {
+            @Override
+            public void onNodeRenamed(NodeChangedEvent event) {
+                if (appContext.getCurrentProject() != null) {
+                    updateNode(event.getNode().getParent());
+                    view.selectNode(event.getNode());
+                } else {
+                    setTree(currentTreeStructure);
+                }
+            }
+
+            @Override
+            public void onNodeChildrenChanged(NodeChangedEvent event) {
+                final AbstractTreeNode<?> node = event.getNode();
+                node.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
+                    @Override
+                    public void onSuccess(AbstractTreeNode<?> result) {
+                        updateNode(node);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                    }
+                });
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -157,7 +186,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void updateAppContext(AbstractTreeNode<?> node) {
         if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
-            appContext.getCurrentProject().setProjectDescription(((StorableNode)node).getProject().getData());
+            appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
         }
     }
 
@@ -207,6 +236,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 Log.error(ProjectExplorerPartPresenter.class, caught.getMessage());
             }
         });
+    }
+
+    private void updateNode(final AbstractTreeNode<?> node) {
+        view.updateNode(node, node);
     }
 
     private void updateTree() {

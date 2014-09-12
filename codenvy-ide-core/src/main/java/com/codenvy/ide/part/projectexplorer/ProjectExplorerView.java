@@ -36,10 +36,18 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     /**
      * Updates the specified node.
      *
-     * @param oldResource
-     * @param newResource
+     * @param oldNode
+     * @param newNode
      */
-    void updateNode(@NotNull AbstractTreeNode<?> oldResource, @NotNull AbstractTreeNode<?> newResource);
+    void updateNode(@NotNull AbstractTreeNode<?> oldNode, @NotNull AbstractTreeNode<?> newNode);
+
+    /**
+     * Select the specified node in the view.
+     *
+     * @param node
+     *         node to select
+     */
+    void selectNode(@NotNull AbstractTreeNode<?> node);
 
     /**
      * Sets title of part.
