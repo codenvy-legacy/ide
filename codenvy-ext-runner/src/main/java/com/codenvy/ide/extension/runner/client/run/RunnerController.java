@@ -16,12 +16,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
-import com.codenvy.api.runner.ApplicationStatus;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.api.runner.dto.DebugMode;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.dto.RunnerMetric;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
@@ -239,11 +236,21 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    public void runCurrentProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
+    public void runActiveProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
+        if (isAnyAppRunning) {
+            notification = new Notification(constant.anotherProjectRunningNow(), ERROR);
+            notificationManager.showNotification(notification);
+            return;
+        }
+        if (appContext.getCurrentProject() == null) {
+            return;
+        }
+        runCallback = callback;
+
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
-            checkRamAndRunProject(runOptions, callback, isUserAction);
+            checkRamAndRunProject(runOptions, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
                 @Override
@@ -251,22 +258,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
-                            Log.error(getClass(), caught.getMessage());
-
-                            Notification notification = new Notification(constant.messageFailedSaveFiles(), ERROR);
+                            notification = new Notification(constant.messageFailedSaveFiles(), ERROR);
                             notificationManager.showNotification(notification);
                         }
 
                         @Override
                         public void onSuccess(Object result) {
-                            checkRamAndRunProject(runOptions, callback, isUserAction);
+                            checkRamAndRunProject(runOptions, isUserAction);
                         }
                     });
                 }
 
                 @Override
                 public void onCancel() {
-                    checkRamAndRunProject(runOptions, callback, isUserAction);
+                    checkRamAndRunProject(runOptions, isUserAction);
                 }
             });
             askWindow.show();
@@ -278,14 +283,11 @@ public class RunnerController implements Notification.OpenNotificationHandler {
      *
      * @param runOptions
      *         options to configure run process
-     * @param callback
-     *         callback that will be notified when project will be run
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    private void checkRamAndRunProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
-        service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+    private void checkRamAndRunProject(final RunOptions runOptions, final boolean isUserAction) {
+        service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
                 final int requiredMemory;
@@ -296,39 +298,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     requiredMemory = getRequiredMemory(runOptions.getEnvironmentId());
                     overrideRAM = runOptions.getMemorySize();
                     overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
-
-                    if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
-                        return;
-                    }
-
-                    if (overrideRAM < requiredMemory) {
-                        Info warningWindow =
-                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
-                                         new InfoHandler() {
-                                             @Override
-                                             public void onOk() {
-                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
-                                                                   new AskHandler() {
-                                                                       @Override
-                                                                       public void onOk() {
-                                                                           runOptions.setMemorySize(requiredMemory);
-                                                                           runActiveProject(runOptions, callback, isUserAction);
-                                                                       }
-                                                                   }
-                                                 );
-                                                 ask.show();
-                                             }
-                                         }
-                                );
-                        warningWindow.show();
-                        return;
-                    }
-                    runOptions.setMemorySize(overrideRAM);
-                    runActiveProject(runOptions, callback, isUserAction);
-
                 } else {
                     requiredMemory = getRequiredMemory("default");
-                    overrideRAM = 0;
 
                     Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
                     if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
@@ -339,36 +310,35 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         }
                     }
                     overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
-
-                    if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
-                        return;
-                    }
-
-                    if (overrideRAM < requiredMemory) {
-                        Info warningWindow =
-                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
-                                         new InfoHandler() {
-                                             @Override
-                                             public void onOk() {
-                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
-                                                                   new AskHandler() {
-                                                                       @Override
-                                                                       public void onOk() {
-                                                                           overrideRAM = requiredMemory;
-                                                                           runActiveProject(null, false, callback, isUserAction);
-                                                                       }
-                                                                   }
-                                                 );
-                                                 ask.show();
-                                             }
-                                         }
-                                );
-                        warningWindow.show();
-                        return;
-                    }
-
-                    runActiveProject(null, false, callback, isUserAction);
                 }
+
+                if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
+                    return;
+                }
+
+                if (overrideRAM < requiredMemory) {
+                    Info warningWindow =
+                            new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
+                                     new InfoHandler() {
+                                         @Override
+                                         public void onOk() {
+                                             Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
+                                                               new AskHandler() {
+                                                                   @Override
+                                                                   public void onOk() {
+                                                                       overrideRAM = requiredMemory;
+                                                                       runProject(runOptions, isUserAction);
+                                                                   }
+                                                               }
+                                             );
+                                             ask.show();
+                                         }
+                                     }
+                            );
+                    warningWindow.show();
+                    return;
+                }
+                runProject(runOptions, isUserAction);
             }
 
             @Override
@@ -379,67 +349,34 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     /**
-     * Run active project.
+     * Run project.
      *
-     * @param debug
-     *         if <code>true</code> - run in debug mode
-     * @param callback
-     *         callback that will be notified when project will be run
+     * @param runOptions
+     *         options to configure run process
      * @param isUserAction
      *         points whether the build is started directly by user interaction
      */
-    public void runActiveProject(boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
-        runActiveProject(null, debug, callback, isUserAction);
-    }
-
-    /**
-     * Run active project.
-     *
-     * @param environment
-     *         environment which will be used to run project
-     * @param debug
-     *         if <code>true</code> - run in debug mode
-     * @param callback
-     *         callback that will be notified when project will be run
-     * @param isUserAction
-     *         points whether the build is started directly by user interaction
-     */
-    public void runActiveProject(RunnerEnvironment environment, boolean debug, final ProjectRunCallback callback, boolean isUserAction) {
+    private void runProject(RunOptions runOptions, final boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject == null)
-            return;
-        if (isAnyAppRunning) {
-            Notification notification = new Notification(constant.anotherProjectRunningNow(), ERROR);
-            notificationManager.showNotification(notification);
-            return;
-        }
-
-        runCallback = callback;
-
         notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
                                         RunnerController.this);
         notificationManager.showNotification(notification);
         console.print("[INFO] " + notification.getMessage());
 
-        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-        if (debug) {
-            runOptions.setDebugMode(dtoFactory.createDto(DebugMode.class).withMode("default"));
+        if (isUserAction) {
+            console.setActive();
         }
-        if (environment != null) {
-            runOptions.setEnvironmentId(environment.getId());
-        } else if (currentProject.getRunnerEnvId() != null) {
-            runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
+        if(runOptions == null) {
+            runOptions = dtoFactory.createDto(RunOptions.class);
+            runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
         }
         if (overrideRAM > 0 ) {
             runOptions.setMemorySize(overrideRAM);
         }
-
-        runOptions.getShellOptions().put("WebShellTheme", theme);
-        runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
-
-        if (isUserAction) {
-            console.setActive();
+        if (runOptions.getEnvironmentId() == null && currentProject.getRunnerEnvId() != null) {
+            runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
         }
+        runOptions.getShellOptions().put("WebShellTheme", theme);
 
         service.run(currentProject.getProjectDescription().getPath(), runOptions,
                     new AsyncRequestCallback<ApplicationProcessDescriptor>(
@@ -447,72 +384,6 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                         @Override
                         protected void onSuccess(ApplicationProcessDescriptor result) {
                             onAppLaunched(result);
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            onFail(constant.startApplicationFailed(currentProject.getProjectDescription().getName()), exception);
-                        }
-                    }
-                   );
-    }
-
-    /**
-     * Run active project.
-     *
-     * @param runOptions
-     *         options to configure run process
-     * @param callback
-     *         callback that will be notified when project will be run
-     */
-    public void runActiveProject(RunOptions runOptions, final ProjectRunCallback callback, boolean isUserAction) {
-        final CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject == null)
-            return;
-        if (isAnyAppRunning) {
-            Notification notification = new Notification(constant.anotherProjectRunningNow(), ERROR);
-            notificationManager.showNotification(notification);
-            return;
-        }
-
-        runCallback = callback;
-
-        if (currentProject.getProcessDescriptor() != null &&
-            (currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.NEW)
-             || currentProject.getProcessDescriptor().getStatus().equals(ApplicationStatus.RUNNING))) {
-            Notification notification = new Notification(constant.projectRunningNow(
-                    currentProject.getProjectDescription().getName()), ERROR);
-            notificationManager.showNotification(notification);
-            return;
-        }
-
-        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
-                                        RunnerController.this);
-        notificationManager.showNotification(notification);
-        console.print("[INFO] " + notification.getMessage());
-
-        if (isUserAction) {
-            console.setActive();
-        }
-
-        runOptions.getShellOptions().put("WebShellTheme", theme);
-        runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
-
-        service.run(currentProject.getProjectDescription().getPath(), runOptions,
-                    new AsyncRequestCallback<ApplicationProcessDescriptor>(
-                            dtoUnmarshallerFactory.newUnmarshaller(ApplicationProcessDescriptor.class)) {
-                        @Override
-                        protected void onSuccess(ApplicationProcessDescriptor result) {
-                            if (notification == null)
-                                notification =
-                                        new Notification(constant.applicationStarted(currentProject.getProjectDescription().getName()),
-                                                         INFO);
-                            currentProject.setProcessDescriptor(result);
-                            currentProject.setIsRunningEnabled(false);
-                            notification.setStatus(FINISHED);
-                            notification.setMessage(constant.applicationStarted(currentProject.getProjectDescription().getName()));
-                            startCheckingAppStatus(result);
-                            startCheckingAppOutput(result);
                         }
 
                         @Override
@@ -694,8 +565,20 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
-        appContext.getCurrentProject().setProcessDescriptor(descriptor);
+
+        //app was stopped in CloseProjectAction
+        if (appContext.getCurrentProject() == null) {
+            totalActiveTimeTimer.cancel();
+            isAnyAppRunning = false;
+            isLastAppHealthOk = false;
+
+            stopCheckingAppStatus(descriptor);
+            stopCheckingAppOutput(descriptor);
+            return;
+        }
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
+        appContext.getCurrentProject().setProcessDescriptor(descriptor);
+
         switch (descriptor.getStatus()) {
             case RUNNING:
                 isAnyAppRunning = true;
@@ -716,6 +599,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
+                appContext.getCurrentProject().setProcessDescriptor(null);
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
