@@ -105,9 +105,10 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          */
         void onContextMenu(int mouseX, int mouseY);
         
-        /**
-         * Performs any actions appropriate in response to the user having pressed the DELETE key.
-         */
+        /** Performs any actions appropriate in response to the user having pressed the DELETE key. */
         void onDeleteKey();
+
+        /** Performs any actions appropriate in response to the user having pressed the ENTER key. */
+        void onEnterKey();
     }
 }

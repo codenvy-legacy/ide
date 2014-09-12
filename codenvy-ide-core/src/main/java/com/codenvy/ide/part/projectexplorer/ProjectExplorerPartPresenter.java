@@ -272,4 +272,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             deleteItemHandler.delete((StorableNode)selectedTreeNode);
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEnterKey() {
+        if (selectedTreeNode != null) {
+            selectedTreeNode.processNodeAction();
+        }
+    }
 }
