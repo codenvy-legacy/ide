@@ -11,7 +11,6 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import elemental.events.KeyboardEvent;
-
 import elemental.events.MouseEvent;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -19,6 +18,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
@@ -55,9 +55,9 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
-        
+
         tree = Tree.create(resources, new ProjectTreeNodeDataAdapter(), projectTreeNodeRenderer);
-        
+
         container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
@@ -118,7 +118,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeClosed(TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onNodeSelected(node.getData());
             }
 
             @Override
@@ -153,22 +152,33 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             @Override
             public void onRootDragDrop(MouseEvent event) {
             }
-            
+
             @Override
             public void onKeyboard(KeyboardEvent event) {
-                if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE){
+                if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE) {
                     delegate.onDeleteKey();
                 }
             }
-            
         });
     }
 
     /** {@inheritDoc} */
     @Override
     public void updateNode(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
+        // get currently selected node
+        final JsoArray<AbstractTreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
+        AbstractTreeNode<?> selectedNode = null;
+        if (!selectedNodes.isEmpty()) {
+            selectedNode = selectedNodes.get(0);
+        }
+
         Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, false);
         tree.expandPaths(pathsToExpand, false);
+
+        // restore selected node
+        if (selectedNode != null) {
+            tree.getSelectionModel().selectSingleNode(selectedNode);
+        }
     }
 
     /** {@inheritDoc} */

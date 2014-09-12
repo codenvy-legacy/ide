@@ -28,7 +28,6 @@ import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -41,19 +40,16 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 public class DeleteItemHandler {
     private NotificationManager      notificationManager;
-    private EventBus                 eventBus;
     private CoreLocalizationConstant localization;
     private RunnerServiceClient      runnerServiceClient;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
     public DeleteItemHandler(NotificationManager notificationManager,
-                             EventBus eventBus,
                              CoreLocalizationConstant localization,
                              RunnerServiceClient runnerServiceClient,
                              DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.notificationManager = notificationManager;
-        this.eventBus = eventBus;
         this.localization = localization;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -94,7 +90,6 @@ public class DeleteItemHandler {
      */
     private void askForDeletingNode(final StorableNode nodeToDelete) {
         new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
-            @SuppressWarnings("unchecked")
             @Override
             public void onOk() {
                 nodeToDelete.delete(new AsyncCallback<Void>() {

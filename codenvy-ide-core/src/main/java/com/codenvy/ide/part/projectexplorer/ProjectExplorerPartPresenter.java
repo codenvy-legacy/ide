@@ -156,6 +156,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     updateNode(event.getNode().getParent());
                     view.selectNode(event.getNode());
                 } else {
+                    // no opened project - all projects list is shown
                     setTree(currentTreeStructure);
                 }
             }
@@ -167,6 +168,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     @Override
                     public void onSuccess(AbstractTreeNode<?> result) {
                         updateNode(node);
+                        view.selectNode(node);
                     }
 
                     @Override
