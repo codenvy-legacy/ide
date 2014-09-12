@@ -94,7 +94,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
     }
 
     private SVGImage detectIcon(AbstractTreeNode<?> node) {
-        SVGImage nodeIcon = node.getPresentation().getSvgIcon();
+        SVGImage nodeIcon = node.getDisplayIcon();
         if (nodeIcon != null) {
             return nodeIcon;
         }

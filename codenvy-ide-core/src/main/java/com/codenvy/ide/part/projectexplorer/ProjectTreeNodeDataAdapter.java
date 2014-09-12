@@ -61,7 +61,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public TreeNodeElement<AbstractTreeNode<?>> getRenderedTreeNode(AbstractTreeNode<?> data) {
-        return data.getPresentation().getTreeNodeElement();
+        return data.getTreeNodeElement();
     }
 
     /** {@inheritDoc} */
@@ -72,7 +72,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeN
     /** {@inheritDoc} */
     @Override
     public void setRenderedTreeNode(AbstractTreeNode<?> data, TreeNodeElement<AbstractTreeNode<?>> renderedNode) {
-        data.getPresentation().setTreeNodeElement(renderedNode);
+        data.setTreeNodeElement(renderedNode);
     }
 
     /** {@inheritDoc} */

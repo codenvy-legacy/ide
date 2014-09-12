@@ -34,9 +34,10 @@ import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
- * Is used for performing the item deleting.
+ * Used for performing the item deleting.
  *
  * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
 public class DeleteItemHandler {
     private NotificationManager      notificationManager;
@@ -56,7 +57,7 @@ public class DeleteItemHandler {
     }
 
     /**
-     * Delete the pointed node.
+     * Delete the specified node.
      *
      * @param nodeToDelete
      *         node to be deleted

@@ -79,6 +79,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getDisplayName() {
         return data.getName();

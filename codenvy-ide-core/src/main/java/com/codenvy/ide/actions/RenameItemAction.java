@@ -138,12 +138,11 @@ public class RenameItemAction extends Action {
         new AskValueDialog(getDialogTitle(nodeToRename), localization.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
             public void onOk(final String newName) {
+                final ItemReference itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
                 nodeToRename.rename(newName, new AsyncCallback<Void>() {
                     @Override
                     public void onSuccess(Void result) {
-                        if (nodeToRename instanceof ItemNode) {
-                            checkOpenedFiles((ItemNode)nodeToRename, newName);
-                        }
+                        checkOpenedFiles(itemReferenceBeforeRenaming, newName);
                     }
 
                     @Override
@@ -183,8 +182,7 @@ public class RenameItemAction extends Action {
                                                 });
     }
 
-    private void checkOpenedFiles(final ItemNode node, String newName) {
-        final ItemReference itemBeforeRenaming = node.getData();
+    private void checkOpenedFiles(final ItemReference itemBeforeRenaming, String newName) {
         final String itemPathBeforeRenaming = itemBeforeRenaming.getPath();
         final String parentPathBeforeRenaming =
                 itemPathBeforeRenaming.substring(0, itemPathBeforeRenaming.length() - itemBeforeRenaming.getName().length());
