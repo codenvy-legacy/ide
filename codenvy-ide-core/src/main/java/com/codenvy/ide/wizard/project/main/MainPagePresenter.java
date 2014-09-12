@@ -16,6 +16,7 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.collections.Array;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,18 +38,21 @@ import java.util.Set;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
+
     private MainPageView                  view;
     private ProjectTypeDescriptorRegistry registry;
     private ProjectTypeWizardRegistry     wizardRegistry;
     private ProjectTypeDescriptor         typeDescriptor;
     private ProjectTemplateDescriptor     template;
+    private PreSelectedProjectTypeManager preSelectedProjectTypeManager;
 
     @Inject
-    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry) {
+    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry, PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
         super("Choose Project", null);
         this.view = view;
         this.registry = registry;
         this.wizardRegistry = wizardRegistry;
+        this.preSelectedProjectTypeManager = preSelectedProjectTypeManager;
         view.setDelegate(this);
     }
 
@@ -105,6 +110,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         view.reset();
         typeDescriptor = null;
         template = null;
+        ProjectTypeDescriptor defaultProjectTypeDescriptor = null;
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
@@ -115,6 +121,11 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                     descriptorsByCategory.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
                 }
                 descriptorsByCategory.get(descriptor.getProjectTypeCategory()).add(descriptor);
+
+                // if exist, save the default project type descriptor
+                if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(descriptor.getProjectTypeId())) {
+                    defaultProjectTypeDescriptor = descriptor;
+                }
             }
             if (project == null) {
                 if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
@@ -130,7 +141,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             }
         }
         container.setWidget(view);
-
+        view.setAvailableProjectTypeDescriptors(descriptors);
         view.setProjectTypeCategories(descriptorsByCategory, samples);
         if (project != null) {
             view.selectProjectType(project.getProjectTypeId());
@@ -138,6 +149,11 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.setName(project.getName());
             view.setDescription(project.getDescription());
             view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
+        }
+        else if (defaultProjectTypeDescriptor != null) {
+            // if no project type, pre select maven
+            view.selectProjectType(defaultProjectTypeDescriptor.getProjectTypeId());
+            view.focusOnName();
         }
     }
 

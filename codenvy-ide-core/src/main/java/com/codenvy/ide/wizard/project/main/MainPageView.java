@@ -13,6 +13,7 @@ package com.codenvy.ide.wizard.project.main;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.inject.ImplementedBy;
 
@@ -68,4 +69,6 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
         void projectTypeSelected(ProjectTypeDescriptor typeDescriptor);
     }
+
+    void setAvailableProjectTypeDescriptors(Array<ProjectTypeDescriptor> availableProjectTypes);
 }
