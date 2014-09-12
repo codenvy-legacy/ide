@@ -16,6 +16,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.inject.ImplementedBy;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,12 +34,14 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     void resetName();
 
+    void setConfigOptions(List<String> options);
+
     void enableInput();
 
     void disableInput();
 
     void setName(String name);
-    
+
     void setDescription(String description);
 
     void setVisibility(boolean visible);
