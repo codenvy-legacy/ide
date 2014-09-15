@@ -53,7 +53,7 @@ public class RunAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Run application");
-        runnerController.runCurrentProject(null, null, true);
+        runnerController.runActiveProject(null, null, true);
     }
 
     /** {@inheritDoc} */

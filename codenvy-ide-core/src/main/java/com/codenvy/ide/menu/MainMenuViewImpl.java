@@ -207,7 +207,6 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             ActionGroup group = (ActionGroup)action;
             table.setText(0, menuBarItems.size(), presentation.getText());
             Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
-            UIObject.ensureDebugId(element, place + "/" + actionManager.getId(group));
             MenuBarItem item =
                     new MenuBarItem(group, actionManager, presentationFactory, place, element, this, keyBindingAgent, resources.menuCss());
 

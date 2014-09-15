@@ -59,6 +59,7 @@ import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.text.DocumentFactory;
@@ -140,6 +141,7 @@ import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
+import com.codenvy.ide.wizard.project.PreSelectedProjectTypeManagerImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
@@ -193,6 +195,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
 
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
+        bind(PreSelectedProjectTypeManager.class).to(PreSelectedProjectTypeManagerImpl.class).in(Singleton.class);
         bind(ImportProjectWizardRegistry.class).to(ImportProjectWizardRegistryImpl.class).in(Singleton.class);
 
         configurePlatformApiGwtClients();

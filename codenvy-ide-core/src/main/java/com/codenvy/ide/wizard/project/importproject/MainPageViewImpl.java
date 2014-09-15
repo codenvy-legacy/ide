@@ -69,7 +69,14 @@ public class MainPageViewImpl implements MainPageView {
                                                                                                           @Override
                                                                                                           public void renderElement(com.google.gwt.dom.client.Element element,
                                                                                                                                     ProjectImporterDescriptor data) {
-                                                                                                              element.setInnerText(data.getId());
+                                                                                                              String str = data.getId();
+                                                                                                              str =
+                                                                                                                    str.length() > 1
+                                                                                                                        ? Character.toUpperCase(str.charAt(0))
+                                                                                                                          +
+                                                                                                                          str.substring(1)
+                                                                                                                        : str.toUpperCase();
+                                                                                                              element.setInnerText(str);
                                                                                                           }
 
                                                                                                           @Override

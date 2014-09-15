@@ -75,7 +75,7 @@ public class CloseProjectAction extends Action {
                         runnerMetric = runnerStat;
                     }
                 }
-                if (RunnerMetric.ALWAYS_ON.equals(runnerMetric.getValue()))
+                if (runnerMetric != null && RunnerMetric.ALWAYS_ON.equals(runnerMetric.getValue()))
                     eventBus.fireEvent(new CloseCurrentProjectEvent());
                 else {
                     String projectName = appContext.getCurrentProject().getProjectDescription().getName();

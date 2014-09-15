@@ -296,14 +296,14 @@ public class BootstrapController {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
-                logSessionUsageEvent(analyticsSessions);
+                onFocusOut(analyticsSessions);
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
-                logSessionUsageEvent(analyticsSessions);
+                onFocusOut(analyticsSessions);
             }
         });
 
@@ -312,25 +312,33 @@ public class BootstrapController {
         window.addEventListener(Event.FOCUS, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                logSessionUsageEvent(analyticsSessions);
+                onFocusIn(analyticsSessions);
             }
         }, true);
 
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                logSessionUsageEvent(analyticsSessions);
+                onFocusOut(analyticsSessions);
             }
         }, true);
 
-        logSessionUsageEvent(analyticsSessions); // This is necessary to forcibly print the very first event
+        onFocusIn(analyticsSessions); // This is necessary to forcibly print the very first event
     }
 
-    private void logSessionUsageEvent(AnalyticsSessions analyticsSessions) {
+    private void onFocusIn(AnalyticsSessions analyticsSessions) {
         if (analyticsSessions.getIdleTime() > 600000) { // 10 min
             analyticsSessions.makeNew();
         }
 
+        logSessionUsageEvent(analyticsSessions);
+    }
+
+    private void onFocusOut(AnalyticsSessions analyticsSessions) {
+        logSessionUsageEvent(analyticsSessions);
+    }
+
+    private void logSessionUsageEvent(AnalyticsSessions analyticsSessions) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("START-TIME", Long.toString(analyticsSessions.getStartTime()));
         parameters.put("USAGE-TIME", Long.toString(analyticsSessions.getUsageTime()));

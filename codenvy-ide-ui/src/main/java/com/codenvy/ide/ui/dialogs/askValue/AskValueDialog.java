@@ -10,13 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs.askValue;
 
+import elemental.events.KeyboardEvent.KeyCode;
+
 import com.codenvy.ide.ui.Locale;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -36,6 +40,8 @@ public class AskValueDialog extends Window {
 
     @UiField
     TextBox value;
+    
+    private AskValueCallback callback;
 
     interface AskUiBinder extends UiBinder<Widget, AskValueDialog> {
     }
@@ -55,6 +61,7 @@ public class AskValueDialog extends Window {
      *         the callback that call after user interact
      */
     public AskValueDialog(String title, String message, final AskValueCallback callback) {
+        this.callback = callback;
         Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
         this.message.setText(message);
@@ -76,7 +83,15 @@ public class AskValueDialog extends Window {
         getFooter().add(cancel);
         getFooter().add(ok);
     }
-
+    
+    @UiHandler("value")
+    void onKeyPress(KeyPressEvent event) {
+        if (event.getNativeEvent().getKeyCode() == KeyCode.ENTER && callback != null) {
+            callback.onOk(value.getValue());
+            onClose();
+        }
+    }
+    
     @Override
     public void show() {
         new Timer() {
