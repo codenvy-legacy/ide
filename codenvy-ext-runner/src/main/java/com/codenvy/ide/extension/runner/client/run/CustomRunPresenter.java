@@ -107,9 +107,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
                 runnerMemory = ((runnerMemory > 0) && (runnerMemory % 128 == 0)) ? runnerMemory : 256;
 
-                view.setRunnerMemorySize(runnerMemory);
-                view.setTotalMemorySize(totalMemory);
-                view.setAvailableMemorySize(totalMemory - usedMemory);
+                view.setRunnerMemorySize(String.valueOf(runnerMemory));
+                view.setTotalMemorySize(String.valueOf(totalMemory));
+                view.setAvailableMemorySize(String.valueOf(totalMemory - usedMemory));
                 view.showDialog();
             }
 
@@ -137,9 +137,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     @Override
     public void onRunClicked() {
         if (isRunnerMemoryCorrect()) {
-
             RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-            runOptions.setMemorySize(view.getRunnerMemorySize());
+            runOptions.setMemorySize(Integer.valueOf(view.getRunnerMemorySize()));
             runOptions.setSkipBuild(view.isSkipBuildSelected());
 
             if (view.getSelectedEnvironment() != null) {
@@ -156,9 +155,20 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     }
 
     private boolean isRunnerMemoryCorrect() {
-        int runnerMemory = view.getRunnerMemorySize();
-        int totalMemory = view.getTotalMemorySize();
-        int availableMemory = view.getAvailableMemorySize();
+        int runnerMemory;
+        try {
+            runnerMemory = Integer.parseInt(view.getRunnerMemorySize());
+            if (runnerMemory < 0 || runnerMemory % 128 != 0) {
+                view.showWarning(constant.ramSizeMustBeMultipleOf("128"));
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            view.showWarning(constant.enteredValueNotCorrect());
+            return false;
+        }
+
+        int totalMemory = Integer.valueOf(view.getTotalMemorySize());
+        int availableMemory = Integer.valueOf(view.getAvailableMemorySize());
 
         if (runnerMemory > totalMemory) {
             view.showWarning(constant.messagesTotalLessCustomRunMemory(runnerMemory, totalMemory));

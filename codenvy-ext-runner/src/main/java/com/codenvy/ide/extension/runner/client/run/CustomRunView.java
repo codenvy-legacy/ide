@@ -47,25 +47,25 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
     void setEnvironments(@NotNull Array<RunnerEnvironment> environments);
 
     /** Set memory size for runner. */
-    void setRunnerMemorySize(int memorySize);
+    void setRunnerMemorySize(String memorySize);
 
     /** Get memory size for runner. */
-    int getRunnerMemorySize();
+    String getRunnerMemorySize();
 
     /** Set Total Workspace RAM. */
-    void setTotalMemorySize(int memorySize);
+    void setTotalMemorySize(String memorySize);
 
     /** Get Total Workspace RAM. */
-    int getTotalMemorySize();
+    String getTotalMemorySize();
 
     /**
      * Set Available memory size.
      * It's value is calculated as (Workspace RAM - RAM allocated to current Runners)
      */
-    void setAvailableMemorySize(int memorySize);
+    void setAvailableMemorySize(String memorySize);
 
     /** Get Available memory size. */
-    int getAvailableMemorySize();
+    String getAvailableMemorySize();
 
     /** Close dialog. */
     void close();
