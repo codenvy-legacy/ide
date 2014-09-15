@@ -70,14 +70,14 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onSubmitComplete(@NotNull String result) {
         view.close();
-        eventBus.fireEvent(new RefreshProjectTreeEvent());
+        eventBus.fireEvent(new RefreshProjectTreeEvent(getParent()));
     }
 
     /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParentPath());
+        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParent().getPath());
         view.submit();
     }
 
@@ -89,20 +89,18 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
         view.setEnabledUploadButton(enabled);
     }
 
-    private String getParentPath() {
+    private StorableNode getParent() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null) {
             if (selection.getFirstElement() instanceof StorableNode) {
                 final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
-                final String nodePath = selectedNode.getPath();
-
                 if (selectedNode instanceof FileNode) {
-                    return nodePath.substring(0, nodePath.length() - selectedNode.getName().length());
+                    return (StorableNode)selectedNode.getParent();
                 } else {
-                    return nodePath;
+                    return selectedNode;
                 }
             }
         }
-        return appContext.getCurrentProject().getRootProject().getPath();
+        return null;
     }
 }

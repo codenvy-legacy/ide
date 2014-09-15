@@ -145,7 +145,24 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(RefreshProjectTreeEvent.TYPE, new RefreshProjectTreeHandler() {
             @Override
             public void onRefresh(RefreshProjectTreeEvent event) {
-                updateTree();
+                final TreeNode<?> node = event.getNode();
+                if (node == null) {
+                    // refresh tree's root
+                    setTree(currentTreeStructure);
+                } else {
+                    node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
+                        @Override
+                        public void onSuccess(TreeNode<?> result) {
+                            updateNode(node);
+                            view.selectNode(node);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, caught);
+                        }
+                    });
+                }
             }
         });
 
@@ -176,7 +193,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                         }
 
                         @Override
-                        public void onFailure(Throwable ignore) {
+                        public void onFailure(Throwable caught) {
+                            Log.error(ProjectExplorerPartPresenter.class, caught);
                         }
                     });
                 }
@@ -249,25 +267,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
-    }
-
-    private void updateTree() {
-        final TreeNode<?> parent = selectedNode.getParent();
-        if (parent.getParent() == null) {
-            setTree(currentTreeStructure); // refresh entire tree
-        } else {
-            parent.refreshChildren(new AsyncCallback<TreeNode<?>>() {
-                @Override
-                public void onSuccess(TreeNode<?> result) {
-                    view.updateNode(parent, result);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Log.error(ProjectExplorerPartPresenter.class, caught);
-                }
-            });
-        }
     }
 
     /** {@inheritDoc} */

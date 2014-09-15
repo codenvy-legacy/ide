@@ -20,8 +20,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface RefreshProjectTreeHandler extends EventHandler {
     /**
      * Called when project tree should be refreshed.
-     * <p/>
-     * Note that refresh will be performed for the selected node's parent node.
      *
      * @param event
      *         the fired {@link RefreshProjectTreeEvent}

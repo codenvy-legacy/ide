@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.upload;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -81,7 +81,7 @@ public class UploadFilePresenterTest {
     @Test
     public void onUploadClickedShouldBeExecuted() {
         Selection select = mock(Selection.class);
-        ItemReference item = mock(ItemReference.class);
+        FolderNode item = mock(FolderNode.class);
         when(selectionAgent.getSelection()).thenReturn(select);
         when(select.getFirstElement()).thenReturn(item);
 
