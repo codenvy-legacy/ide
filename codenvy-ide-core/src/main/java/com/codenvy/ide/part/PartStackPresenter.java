@@ -384,8 +384,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                         viewPartPositions.set(partPositionsSize - 1, boofPartPosition);
                     }
                     continue;
-                }
-                if (localeConstraint.myAnchor == Anchor.FIRST) {
+                } else if (localeConstraint.myAnchor == Anchor.FIRST) {
                     if (viewPartPositions.get(labelOfPartsPos) != 0) {
                         boofPartPosition = viewPartPositions.get(labelOfPartsPos);
                         for (int partPosition = labelOfPartsPos; partPosition > 0; partPosition--) {
@@ -394,8 +393,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                         viewPartPositions.set(0, boofPartPosition);
                     }
                     continue;
-                }
-                if (localeConstraint.myAnchor == Anchor.BEFORE) {
+                } else if (localeConstraint.myAnchor == Anchor.BEFORE) {
                     if (partPositionsSize > labelOfPartsPos + 1) {
                         if (parts.get(viewPartPositions.get(labelOfPartsPos + 1)).getTitle().equals(localeConstraint.myRelativeToActionId))
                             continue;

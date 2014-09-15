@@ -132,8 +132,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                 top -= removed.getElement().getOffsetWidth() - margin * 2 - 1;
                 if (tabPosition == LEFT) {
                     top += 3;
-                }
-                if (tabPosition == RIGHT) {
+                } else if (tabPosition == RIGHT) {
                     top += 1;
                 }
             }
