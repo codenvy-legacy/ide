@@ -130,8 +130,12 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             TabButton removed = tabButtons.remove(index);
             if (tabPosition != BELOW) {
                 top -= removed.getElement().getOffsetWidth() - margin * 2 - 1;
-                if (tabPosition == LEFT) top += 3;
-                if (tabPosition == RIGHT) top += 1;
+                if (tabPosition == LEFT) {
+                    top += 3;
+                }
+                if (tabPosition == RIGHT) {
+                    top += 1;
+                }
             }
             tabsPanel.remove(tabsPanel.getWidgetIndex(removed));
             contentPanel.remove(contentPanel.getWidget(index));
@@ -142,7 +146,10 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public void setTabpositions(Array<Integer> partPositions) {
         for (int pos = 0; pos < partPositions.size(); pos++) {
-            if(tabButtons.size() > pos) tabsPanel.insert(tabButtons.get(partPositions.get(pos)), pos);
+            int realPartPos = partPositions.get(pos);
+            if (realPartPos < tabButtons.size()) {
+                tabsPanel.insert(tabButtons.get(realPartPos), pos);
+            }
         }
     }
 

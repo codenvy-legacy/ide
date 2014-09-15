@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
+
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -97,7 +98,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         };
         view.setDelegate(this);
     }
-
 
 
     /**
@@ -259,15 +259,22 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             int partIndex = parts.indexOf(part);
             if (activePart == part) {
                 PartPresenter newPart = null;
-                for (int i = parts.size() - 1; i >= 0; i--) {
-                    if (parts.get(i) instanceof ProjectExplorerPartPresenter) {
-                        newPart = parts.get(i);
+                for (int pos = parts.size() - 1; pos >= 0; pos--) {
+                    if (parts.get(pos) instanceof ProjectExplorerPartPresenter) {
+                        newPart = parts.get(pos);
                     }
                 }
                 setActivePart(newPart);
             }
             view.removeTab(partIndex);
-            viewPartPositions.remove(viewPartPositions.indexOf(parts.indexOf(part)));
+            int viewPartPositionsIndex = viewPartPositions.indexOf(partIndex);
+            if (viewPartPositionsIndex >= 0) {
+                int lastPosOfViewPart = viewPartPositions.size() - 1;
+                for (; viewPartPositionsIndex < lastPosOfViewPart; viewPartPositionsIndex++) {
+                    viewPartPositions.set(viewPartPositions.get(viewPartPositionsIndex + 1), viewPartPositionsIndex);
+                }
+                viewPartPositions.remove(lastPosOfViewPart);
+            }
             parts.remove(part);
             part.removePropertyListener(propertyListener);
         }
@@ -347,9 +354,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         int partPositionsSize = viewPartPositions.size();
         int positionOfLastElement = viewPartPositions.get(partPositionsSize - 1);
         int lastPositionOfSorting = partPositionsSize - 1;
+        PartPresenter checkPart;
 
         if (partPositionsSize > 1) {
-            Constraints previousConstraint = priorityPositionMap.get(parts.get(viewPartPositions.get(partPositionsSize - 2)).getTitle());
+            checkPart = parts.get(viewPartPositions.get(partPositionsSize - 2));
+            Constraints previousConstraint = priorityPositionMap.get(checkPart.getTitle());
             if (previousConstraint != null && previousConstraint.myAnchor.equals(Anchor.LAST)) {
                 boofPartPosition = viewPartPositions.get(partPositionsSize - 2);
                 viewPartPositions.set(partPositionsSize - 2, viewPartPositions.get(partPositionsSize - 1));
@@ -359,9 +368,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
         if (constraint != null) {
             priorityPositionMap.put(parts.get(positionOfLastElement).getTitle(), constraint);
-        } else if (priorityPositionMap.size() == 0) return;
+        } else if (priorityPositionMap.size() == 0) {
+            return;
+        }
         for (int labelOfPartsPos = 0; labelOfPartsPos < partPositionsSize; labelOfPartsPos++) {
-            Constraints localeConstraint = priorityPositionMap.get(parts.get(viewPartPositions.get(labelOfPartsPos)).getTitle());
+            checkPart = parts.get(viewPartPositions.get(labelOfPartsPos));
+            Constraints localeConstraint = priorityPositionMap.get(checkPart.getTitle());
             if (localeConstraint != null) {
                 if (localeConstraint.myAnchor == Anchor.LAST) {
                     if (viewPartPositions.get(labelOfPartsPos) != positionOfLastElement) {
