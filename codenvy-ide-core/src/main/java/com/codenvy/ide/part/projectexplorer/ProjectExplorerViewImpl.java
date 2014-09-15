@@ -17,6 +17,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ui.tree.Tree;
@@ -41,10 +42,10 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
-    protected Tree<AbstractTreeNode<?>> tree;
-    private   Resources                 resources;
-    private   FlowPanel                 projectHeader;
-    private   AbstractTreeNode<?>       rootNode;
+    protected Tree<TreeNode<?>>   tree;
+    private   Resources           resources;
+    private   FlowPanel           projectHeader;
+    private   AbstractTreeNode<?> rootNode;
 
     /** Create view. */
     @Inject
@@ -76,17 +77,17 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
+            public void refreshChildren(AsyncCallback<TreeNode<?>> callback) {
             }
         };
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setRootNodes(final Array<AbstractTreeNode<?>> rootNodes) {
+    public void setRootNodes(final Array<TreeNode<?>> rootNodes) {
         // provided rootNodes should be set as child nodes for rootNode
         rootNode.setChildren(rootNodes);
-        for (AbstractTreeNode<?> treeNode : rootNodes.asIterable()) {
+        for (TreeNode<?> treeNode : rootNodes.asIterable()) {
             treeNode.setParent(rootNode);
         }
 
@@ -94,7 +95,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.renderTree(0);
 
         if (!rootNodes.isEmpty()) {
-            final AbstractTreeNode<?> firstNode = rootNodes.get(0);
+            final TreeNode<?> firstNode = rootNodes.get(0);
             if (!firstNode.isLeaf()) {
                 // expand first node that usually represents project itself
                 tree.autoExpandAndSelectNode(firstNode, false);
@@ -110,37 +111,37 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void setDelegate(final ActionDelegate delegate) {
         this.delegate = delegate;
-        tree.setTreeEventHandler(new Tree.Listener<AbstractTreeNode<?>>() {
+        tree.setTreeEventHandler(new Tree.Listener<TreeNode<?>>() {
             @Override
-            public void onNodeAction(TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeAction(TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeAction(node.getData());
             }
 
             @Override
-            public void onNodeClosed(TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeClosed(TreeNodeElement<TreeNode<?>> node) {
             }
 
             @Override
-            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeSelected(node.getData());
                 delegate.onContextMenu(mouseX, mouseY);
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<AbstractTreeNode<?>> node, MouseEvent event) {
+            public void onNodeDragStart(TreeNodeElement<TreeNode<?>> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<AbstractTreeNode<?>> node, MouseEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<TreeNode<?>> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeExpanded(TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeExpanded(TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeExpanded(node.getData());
             }
 
             @Override
-            public void onNodeSelected(TreeNodeElement<AbstractTreeNode<?>> node, SignalEvent event) {
+            public void onNodeSelected(TreeNodeElement<TreeNode<?>> node, SignalEvent event) {
                 delegate.onNodeSelected(node.getData());
             }
 
@@ -166,10 +167,10 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void updateNode(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
+    public void updateNode(TreeNode<?> oldResource, TreeNode<?> newResource) {
         // get currently selected node
-        final JsoArray<AbstractTreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
-        AbstractTreeNode<?> selectedNode = null;
+        final JsoArray<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
+        TreeNode<?> selectedNode = null;
         if (!selectedNodes.isEmpty()) {
             selectedNode = selectedNodes.get(0);
         }
@@ -185,7 +186,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void selectNode(AbstractTreeNode<?> node) {
+    public void selectNode(TreeNode<?> node) {
         tree.getSelectionModel().selectSingleNode(node);
         delegate.onNodeSelected(node);
     }

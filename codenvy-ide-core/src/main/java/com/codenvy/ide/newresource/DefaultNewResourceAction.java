@@ -148,7 +148,7 @@ public class DefaultNewResourceAction extends Action {
             if (selection.getFirstElement() instanceof StorableNode) {
                 final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
                 if (selectedNode instanceof FileNode) {
-                    return (StorableNode)((FileNode)selectedNode).getParent();
+                    return (StorableNode)selectedNode.getParent();
                 }
                 return selectedNode;
             }

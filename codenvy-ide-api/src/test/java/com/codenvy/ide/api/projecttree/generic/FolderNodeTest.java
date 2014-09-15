@@ -69,18 +69,18 @@ public class FolderNodeTest {
     @Mock
     private ProjectDescriptor      projectDescriptor;
     @Mock
-    private ProjectRootNode        projectRootNode;
+    private ProjectNode            projectNode;
     private FolderNode             folderNode;
 
     @Before
     public void setUp() {
         when(itemReference.getPath()).thenReturn(ITEM_PATH);
         when(itemReference.getName()).thenReturn(ITEM_NAME);
-        folderNode = new FolderNode(projectRootNode, itemReference, null, null, eventBus, editorAgent, projectServiceClient,
+        folderNode = new FolderNode(projectNode, itemReference, null, null, eventBus, editorAgent, projectServiceClient,
                                     dtoUnmarshallerFactory);
 
         final Array<AbstractTreeNode<?>> children = Collections.createArray();
-        when(projectRootNode.getChildren()).thenReturn(children);
+        when(projectNode.getChildren()).thenReturn(children);
 
         StringMap<EditorPartPresenter> editorsMap = Collections.createStringMap();
         when(editorAgent.getOpenedEditors()).thenReturn(editorsMap);
@@ -98,7 +98,7 @@ public class FolderNodeTest {
 
     @Test
     public void testGetProject() throws Exception {
-        assertEquals(projectRootNode, folderNode.getProject());
+        assertEquals(projectNode, folderNode.getProject());
     }
 
     @Test

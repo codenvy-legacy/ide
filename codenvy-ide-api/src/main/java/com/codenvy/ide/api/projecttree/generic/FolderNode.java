@@ -16,6 +16,7 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -33,11 +34,11 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class FolderNode extends ItemNode {
-    protected final GenericTreeStructure   treeStructure;
-    protected final EditorAgent            editorAgent;
-    protected       TreeSettings           settings;
+    protected final GenericTreeStructure treeStructure;
+    protected final EditorAgent          editorAgent;
+    protected       TreeSettings         settings;
 
-    public FolderNode(AbstractTreeNode parent, ItemReference data, GenericTreeStructure treeStructure, TreeSettings settings,
+    public FolderNode(TreeNode<?> parent, ItemReference data, GenericTreeStructure treeStructure, TreeSettings settings,
                       EventBus eventBus, EditorAgent editorAgent, ProjectServiceClient projectServiceClient,
                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
@@ -64,7 +65,7 @@ public class FolderNode extends ItemNode {
 
     /** {@inheritDoc} */
     @Override
-    public void refreshChildren(final AsyncCallback<AbstractTreeNode<?>> callback) {
+    public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
         final boolean isShowHiddenItems = settings.isShowHiddenItems();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(data.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
@@ -93,8 +94,8 @@ public class FolderNode extends ItemNode {
 
     /** Throw away child nodes which was removed (for which we haven't appropriate item in {@code items}). */
     private void purgeNodes(Array<ItemReference> items) {
-        Iterable<AbstractTreeNode<?>> it = getChildren().asIterable();
-        for (AbstractTreeNode<?> node : it) {
+        Iterable<TreeNode<?>> it = getChildren().asIterable();
+        for (TreeNode<?> node : it) {
             if (node.getData() instanceof ItemReference && !items.contains((ItemReference)node.getData())) {
                 it.iterator().remove();
             }
@@ -111,8 +112,8 @@ public class FolderNode extends ItemNode {
      */
     private Array<ItemReference> filterNewItems(Array<ItemReference> items) {
         Array<ItemReference> newItems = Collections.createArray(items.asIterable());
-        Iterable<AbstractTreeNode<?>> it = getChildren().asIterable();
-        for (AbstractTreeNode<?> node : it) {
+        Iterable<TreeNode<?>> it = getChildren().asIterable();
+        for (TreeNode<?> node : it) {
             if (node.getData() instanceof ItemReference && items.contains((ItemReference)node.getData())) {
                 newItems.remove((ItemReference)node.getData());
             }
@@ -141,16 +142,16 @@ public class FolderNode extends ItemNode {
 
     /** {@inheritDoc} */
     @Override
-    public void delete(final AsyncCallback<Void> callback) {
-        super.delete(new AsyncCallback<Void>() {
+    public void delete(final DeleteCallback callback) {
+        super.delete(new DeleteCallback() {
             @Override
-            public void onSuccess(Void result) {
+            public void onDeleted() {
                 for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
                     if (editor.getEditorInput().getFile().getPath().startsWith(getPath())) {
                         eventBus.fireEvent(new FileEvent(editor.getEditorInput().getFile(), FileEvent.FileOperation.CLOSE));
                     }
                 }
-                callback.onSuccess(result);
+                callback.onDeleted();
             }
 
             @Override

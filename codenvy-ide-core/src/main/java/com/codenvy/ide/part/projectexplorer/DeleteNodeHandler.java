@@ -17,7 +17,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
-import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -32,21 +32,22 @@ import com.google.inject.Inject;
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 
 /**
- * Used for performing the item deleting.
+ * Used for deleting a {@link StorableNode}.
  *
  * @author Ann Shumilova
  * @author Artem Zatsarynnyy
  */
-public class DeleteItemHandler {
+public class DeleteNodeHandler {
     private NotificationManager      notificationManager;
     private CoreLocalizationConstant localization;
     private RunnerServiceClient      runnerServiceClient;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
-    public DeleteItemHandler(NotificationManager notificationManager,
+    public DeleteNodeHandler(NotificationManager notificationManager,
                              CoreLocalizationConstant localization,
                              RunnerServiceClient runnerServiceClient,
                              DtoUnmarshallerFactory dtoUnmarshallerFactory) {
@@ -63,7 +64,7 @@ public class DeleteItemHandler {
      *         node to be deleted
      */
     public void delete(final StorableNode nodeToDelete) {
-        if (nodeToDelete instanceof ProjectRootNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
+        if (nodeToDelete instanceof ProjectNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
             checkRunningProcessesForProject(nodeToDelete, new AsyncCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean hasRunningProcesses) {
@@ -93,9 +94,9 @@ public class DeleteItemHandler {
         new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
             @Override
             public void onOk() {
-                nodeToDelete.delete(new AsyncCallback<Void>() {
+                nodeToDelete.delete(new DeleteCallback() {
                     @Override
-                    public void onSuccess(Void result) {
+                    public void onDeleted() {
                     }
 
                     @Override
@@ -149,7 +150,7 @@ public class DeleteItemHandler {
             return localization.deleteFileDialogTitle();
         } else if (node instanceof FolderNode) {
             return localization.deleteFolderDialogTitle();
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
+        } else if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
             return localization.deleteProjectDialogTitle();
         }
         return localization.deleteNodeDialogTitle();
@@ -166,7 +167,7 @@ public class DeleteItemHandler {
             return localization.deleteFileDialogQuestion(node.getName());
         } else if (node instanceof FolderNode) {
             return localization.deleteFolderDialogQuestion(node.getName());
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
+        } else if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
             return localization.deleteProjectDialogQuestion(node.getName());
         }
         return localization.deleteNodeDialogQuestion(node.getName());

@@ -19,10 +19,10 @@ import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
-import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -36,18 +36,19 @@ import com.google.inject.Inject;
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
- * {@link NodeRenderer} to renderer {@code AbstractTreeNode}.
+ * {@link NodeRenderer} to renderer {@code TreeNode}.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>> {
-    private final Css          css;
-    private       IconRegistry iconRegistry;
+public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
+    private final Css              css;
+    private       IconRegistry     iconRegistry;
     private       FileTypeRegistry fileTypeRegistry;
-    private       AppContext   appContext;
+    private       AppContext       appContext;
 
     @Inject
-    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, FileTypeRegistry fileTypeRegistry, AppContext appContext) {
+    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, FileTypeRegistry fileTypeRegistry,
+                                   AppContext appContext) {
         this.iconRegistry = iconRegistry;
         this.fileTypeRegistry = fileTypeRegistry;
         this.appContext = appContext;
@@ -60,12 +61,12 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
     }
 
     @Override
-    public SpanElement renderNodeContents(AbstractTreeNode data) {
+    public SpanElement renderNodeContents(TreeNode<?> data) {
         return renderNodeContents(css, data, true);
     }
 
     /** Renders the given information as a node. */
-    private SpanElement renderNodeContents(Css css, AbstractTreeNode node, boolean renderIcon) {
+    private SpanElement renderNodeContents(Css css, TreeNode<?> node, boolean renderIcon) {
         SpanElement root = Elements.createSpanElement(css.root());
 
         if (renderIcon) {
@@ -93,7 +94,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
         return root;
     }
 
-    private SVGImage detectIcon(AbstractTreeNode<?> node) {
+    private SVGImage detectIcon(TreeNode<?> node) {
         SVGImage nodeIcon = node.getDisplayIcon();
         if (nodeIcon != null) {
             return nodeIcon;
@@ -106,7 +107,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
 
         Icon icon = null;
         final String projectTypeId = project.getRootProject().getProjectTypeId();
-        if (node instanceof ProjectRootNode) {
+        if (node instanceof ProjectNode) {
             icon = iconRegistry.getIconIfExist(projectTypeId + ".projecttype.small.icon");
         } else if (node instanceof FolderNode) {
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
@@ -133,8 +134,8 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
     }
 
     @Override
-    public void updateNodeContents(TreeNodeElement<AbstractTreeNode<?>> treeNode) {
-//        if (treeNode.getData() instanceof ProjectRootNode) {
+    public void updateNodeContents(TreeNodeElement<TreeNode<?>> treeNode) {
+//        if (treeNode.getData() instanceof ProjectNode) {
 //            // Update project icon based on it's state.
 //            Element icon = treeNode.getNodeLabel();
 //            icon.setClassName(css.icon());
@@ -165,9 +166,9 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<AbstractTreeNode<?>
      * @param node
      *         node for which the specified element is rendered
      */
-    private void setIdProperty(com.google.gwt.dom.client.Element element, AbstractTreeNode node) {
+    private void setIdProperty(com.google.gwt.dom.client.Element element, TreeNode<?> node) {
         String id = "/" + node.getDisplayName();
-        AbstractTreeNode parent = node.getParent();
+        TreeNode<?> parent = node.getParent();
         while (parent != null && !parent.getDisplayName().equals("ROOT")) {
             id = "/" + parent.getDisplayName() + id;
             parent = parent.getParent();

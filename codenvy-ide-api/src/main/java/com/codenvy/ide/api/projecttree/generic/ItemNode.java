@@ -13,6 +13,7 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
  *
  * @author Artem Zatsarynnyy
  */
-public abstract class ItemNode extends AbstractTreeNode<ItemReference> implements StorableNode {
+public abstract class ItemNode extends AbstractTreeNode<ItemReference> implements StorableNode<ItemReference> {
     protected ProjectServiceClient   projectServiceClient;
     protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
@@ -42,7 +43,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
      * @param projectServiceClient
      * @param dtoUnmarshallerFactory
      */
-    public ItemNode(AbstractTreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+    public ItemNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus);
         this.projectServiceClient = projectServiceClient;
@@ -58,7 +59,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
 
     /** {@inheritDoc} */
     @Override
-    public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
+    public void refreshChildren(AsyncCallback<TreeNode<?>> callback) {
     }
 
     /** {@inheritDoc} */
@@ -81,7 +82,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
 
     /** Rename appropriate {@link ItemReference} using Codenvy Project API. */
     @Override
-    public void rename(final String newName, final AsyncCallback<Void> callback) {
+    public void rename(final String newName, final RenameCallback callback) {
         projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(final Void result) {
@@ -99,9 +100,19 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
                                 break;
                             }
                         }
-                        ItemNode.this.rename(newName);
                         updateChildrenData(ItemNode.this);
-                        callback.onSuccess(result);
+
+                        ItemNode.super.rename(newName, new RenameCallback() {
+                            @Override
+                            public void onRenamed() {
+                                callback.onRenamed();
+                            }
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                callback.onFailure(caught);
+                            }
+                        });
                     }
 
                     @Override
@@ -124,7 +135,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
         projectServiceClient.getChildren(itemNode.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
-                for (AbstractTreeNode<?> childNode : itemNode.getChildren().asIterable()) {
+                for (TreeNode<?> childNode : itemNode.getChildren().asIterable()) {
                     if (childNode instanceof ItemNode) {
                         final ItemNode childItemNode = (ItemNode)childNode;
                         for (ItemReference itemReference : result.asIterable()) {
@@ -155,12 +166,21 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
 
     /** Delete appropriate {@link ItemReference} using Codenvy Project API. */
     @Override
-    public void delete(final AsyncCallback<Void> callback) {
+    public void delete(final DeleteCallback callback) {
         projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                ItemNode.this.delete();
-                callback.onSuccess(result);
+                ItemNode.super.delete(new DeleteCallback() {
+                    @Override
+                    public void onDeleted() {
+                        callback.onDeleted();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                });
             }
 
             @Override

@@ -54,27 +54,27 @@ public class FileNodeTest {
     private static final String ITEM_PATH = "/project/folder/file_name";
     private static final String ITEM_NAME = "file_name";
     @Mock
-    private EventBus             eventBus;
+    private EventBus               eventBus;
     @Mock
-    private ProjectServiceClient projectServiceClient;
+    private ProjectServiceClient   projectServiceClient;
     @Mock
-    private ItemReference        itemReference;
+    private ItemReference          itemReference;
     @Mock
-    private ProjectDescriptor    projectDescriptor;
+    private ProjectDescriptor      projectDescriptor;
     @Mock
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     @Mock
-    private ProjectRootNode      projectRootNode;
-    private FileNode             fileNode;
+    private ProjectNode            projectNode;
+    private FileNode               fileNode;
 
     @Before
     public void setUp() {
         when(itemReference.getPath()).thenReturn(ITEM_PATH);
         when(itemReference.getName()).thenReturn(ITEM_NAME);
-        fileNode = new FileNode(projectRootNode, itemReference, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        fileNode = new FileNode(projectNode, itemReference, eventBus, projectServiceClient, dtoUnmarshallerFactory);
 
         final Array<AbstractTreeNode<?>> children = Collections.createArray();
-        when(projectRootNode.getChildren()).thenReturn(children);
+        when(projectNode.getChildren()).thenReturn(children);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class FileNodeTest {
 
     @Test
     public void testGetProject() throws Exception {
-        assertEquals(projectRootNode, fileNode.getProject());
+        assertEquals(projectNode, fileNode.getProject());
     }
 
     @Test

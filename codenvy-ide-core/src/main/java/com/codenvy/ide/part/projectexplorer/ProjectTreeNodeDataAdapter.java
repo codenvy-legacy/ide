@@ -11,6 +11,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
@@ -20,84 +21,84 @@ import com.codenvy.ide.ui.tree.TreeNodeElement;
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<AbstractTreeNode<?>> {
+public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> {
 
     /** {@inheritDoc} */
     @Override
-    public int compare(AbstractTreeNode<?> a, AbstractTreeNode<?> b) {
+    public int compare(TreeNode<?> a, TreeNode<?> b) {
         return a.getDisplayName().compareTo(b.getDisplayName());
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean hasChildren(AbstractTreeNode<?> data) {
+    public boolean hasChildren(TreeNode<?> data) {
         return !data.isLeaf();
     }
 
     /** {@inheritDoc} */
     @Override
-    public Array<AbstractTreeNode<?>> getChildren(AbstractTreeNode<?> data) {
+    public Array<TreeNode<?>> getChildren(TreeNode<?> data) {
         return data.getChildren();
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getNodeId(AbstractTreeNode<?> data) {
+    public String getNodeId(TreeNode<?> data) {
         return data.getDisplayName();
     }
 
     /** {@inheritDoc} */
     @Override
-    public String getNodeName(AbstractTreeNode<?> data) {
+    public String getNodeName(TreeNode<?> data) {
         return data.getDisplayName();
     }
 
     /** {@inheritDoc} */
     @Override
-    public AbstractTreeNode<?> getParent(AbstractTreeNode<?> data) {
+    public TreeNode<?> getParent(TreeNode<?> data) {
         return data.getParent();
     }
 
     /** {@inheritDoc} */
     @Override
-    public TreeNodeElement<AbstractTreeNode<?>> getRenderedTreeNode(AbstractTreeNode<?> data) {
+    public TreeNodeElement<TreeNode<?>> getRenderedTreeNode(TreeNode<?> data) {
         return data.getTreeNodeElement();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setNodeName(AbstractTreeNode<?> data, String name) {
+    public void setNodeName(TreeNode<?> data, String name) {
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setRenderedTreeNode(AbstractTreeNode<?> data, TreeNodeElement<AbstractTreeNode<?>> renderedNode) {
+    public void setRenderedTreeNode(TreeNode<?> data, TreeNodeElement<TreeNode<?>> renderedNode) {
         data.setTreeNodeElement(renderedNode);
     }
 
     /** {@inheritDoc} */
     @Override
-    public AbstractTreeNode getDragDropTarget(AbstractTreeNode<?> data) {
+    public TreeNode<?> getDragDropTarget(TreeNode<?> data) {
         return null;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Array<String> getNodePath(AbstractTreeNode<?> data) {
+    public Array<String> getNodePath(TreeNode<?> data) {
         return PathUtils.getNodePath(this, data);
     }
 
     /** {@inheritDoc} */
     @Override
-    public AbstractTreeNode<?> getNodeByPath(AbstractTreeNode<?> root, Array<String> relativeNodePath) {
-//        AbstractTreeNode localRoot = root;
+    public TreeNode<?> getNodeByPath(TreeNode<?> root, Array<String> relativeNodePath) {
+//        TreeNode localRoot = root;
 //        for (int i = 0; i < relativeNodePath.size(); i++) {
 //            final String path = relativeNodePath.get(i);
 //            if (localRoot != null) {
-//                Array<AbstractTreeNode> children = localRoot.getChildren();
+//                Array<TreeNode> children = localRoot.getChildren();
 //                localRoot = null;
 //                for (int j = 0; j < children.size(); j++) {
-//                    AbstractTreeNode node = children.get(i);
+//                    TreeNode node = children.get(i);
 //                    if (node.getDisplayName().equals(path)) {
 //                        localRoot = node;
 //                        break;

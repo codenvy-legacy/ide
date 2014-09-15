@@ -13,7 +13,7 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -27,7 +27,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class FileNode extends ItemNode {
 
-    public FileNode(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+    public FileNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
@@ -46,12 +46,12 @@ public class FileNode extends ItemNode {
 
     /** {@inheritDoc} */
     @Override
-    public void delete(final AsyncCallback<Void> callback) {
-        super.delete(new AsyncCallback<Void>() {
+    public void delete(final DeleteCallback callback) {
+        super.delete(new DeleteCallback() {
             @Override
-            public void onSuccess(Void result) {
+            public void onDeleted() {
                 eventBus.fireEvent(new FileEvent(FileNode.this, FileEvent.FileOperation.CLOSE));
-                callback.onSuccess(result);
+                callback.onDeleted();
             }
 
             @Override

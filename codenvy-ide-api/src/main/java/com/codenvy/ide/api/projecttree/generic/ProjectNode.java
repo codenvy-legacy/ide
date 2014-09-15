@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -29,19 +30,19 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Node that represents project root item.
+ * Node that represents project item.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode {
+public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor> {
     protected final GenericTreeStructure   treeStructure;
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     protected final EventBus               eventBus;
     protected       TreeSettings           settings;
 
-    public ProjectRootNode(AbstractTreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
-                           EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public ProjectNode(TreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
+                       EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus);
         this.treeStructure = treeStructure;
         this.settings = settings;
@@ -74,7 +75,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public ProjectRootNode getProject() {
+    public ProjectNode getProject() {
         return this;
     }
 
@@ -93,12 +94,12 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public void refreshChildren(final AsyncCallback<AbstractTreeNode<?>> callback) {
+    public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
         getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> children) {
                 final boolean isShowHiddenItems = settings.isShowHiddenItems();
-                Array<AbstractTreeNode<?>> newChildren = Collections.createArray();
+                Array<TreeNode<?>> newChildren = Collections.createArray();
                 setChildren(newChildren);
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
@@ -108,7 +109,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
                         }
                     }
                 }
-                callback.onSuccess(ProjectRootNode.this);
+                callback.onSuccess(ProjectNode.this);
             }
 
             @Override
@@ -128,7 +129,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public void rename(String newName, AsyncCallback<Void> callback) {
+    public void rename(String newName, RenameCallback callback) {
     }
 
     /** {@inheritDoc} */
@@ -139,13 +140,22 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public void delete(final AsyncCallback<Void> callback) {
+    public void delete(final DeleteCallback callback) {
         projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                ProjectRootNode.this.delete();
                 eventBus.fireEvent(new CloseCurrentProjectEvent());
-                callback.onSuccess(result);
+                ProjectNode.super.delete(new DeleteCallback() {
+                    @Override
+                    public void onDeleted() {
+                        callback.onDeleted();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+                });
             }
 
             @Override
@@ -195,9 +205,9 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     @Nullable
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
         if (isFile(item)) {
-            return treeStructure.newFileNode(ProjectRootNode.this, item);
+            return treeStructure.newFileNode(ProjectNode.this, item);
         } else if (isFolder(item)) {
-            return treeStructure.newFolderNode(ProjectRootNode.this, item);
+            return treeStructure.newFolderNode(ProjectNode.this, item);
         }
         return null;
     }

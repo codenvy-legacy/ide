@@ -28,7 +28,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ItemNode;
-import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -50,6 +50,7 @@ import com.google.inject.Singleton;
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
 
 /**
  * Action for renaming an item which is selected in 'Project Explorer'.
@@ -97,8 +98,8 @@ public class RenameItemAction extends Action {
         if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
             final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
 
-            if (selectedNode instanceof ProjectRootNode) {
-                // TODO: implement renaming for ProjectRootNode
+            if (selectedNode instanceof ProjectNode) {
+                // TODO: implement renaming for ProjectNode
                 new Info(localization.closeProjectBeforeRenaming()).show();
             } else if (selectedNode instanceof ProjectListStructure.ProjectNode) {
                 checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
@@ -138,11 +139,18 @@ public class RenameItemAction extends Action {
         new AskValueDialog(getDialogTitle(nodeToRename), localization.renameDialogNewNameLabel(), new AskValueCallback() {
             @Override
             public void onOk(final String newName) {
-                final ItemReference itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
-                nodeToRename.rename(newName, new AsyncCallback<Void>() {
+                ItemReference itemReferenceBeforeRenaming = null;
+                if (nodeToRename instanceof ItemNode) {
+                    itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
+                }
+
+                final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
+                nodeToRename.rename(newName, new RenameCallback() {
                     @Override
-                    public void onSuccess(Void result) {
-                        checkOpenedFiles(itemReferenceBeforeRenaming, newName);
+                    public void onRenamed() {
+                        if (finalItemReferenceBeforeRenaming != null) {
+                            checkOpenedFiles(finalItemReferenceBeforeRenaming, newName);
+                        }
                     }
 
                     @Override
@@ -182,48 +190,31 @@ public class RenameItemAction extends Action {
                                                 });
     }
 
-    private void checkOpenedFiles(final ItemReference itemBeforeRenaming, String newName) {
+    private void checkOpenedFiles(ItemReference itemBeforeRenaming, String newName) {
         final String itemPathBeforeRenaming = itemBeforeRenaming.getPath();
         final String parentPathBeforeRenaming =
                 itemPathBeforeRenaming.substring(0, itemPathBeforeRenaming.length() - itemBeforeRenaming.getName().length());
         final String itemPathAfterRenaming = parentPathBeforeRenaming + newName;
 
-        QueryExpression query = null;
         if ("file".equals(itemBeforeRenaming.getType())) {
-            query = new QueryExpression().setPath(parentPathBeforeRenaming).setName(newName);
+            checkEditor(itemPathBeforeRenaming, itemPathAfterRenaming);
         } else if ("folder".equals(itemBeforeRenaming.getType())) {
-            query = new QueryExpression().setPath(itemPathAfterRenaming);
-        }
-
-        if (query != null) {
+            QueryExpression query = new QueryExpression().setPath(itemPathAfterRenaming);
             Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
             projectServiceClient.search(query, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
                 @Override
                 protected void onSuccess(Array<ItemReference> result) {
-                    if ("file".equals(itemBeforeRenaming.getType())) {
-                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                            if (itemPathBeforeRenaming.equals(editor.getEditorInput().getFile().getPath())) {
-                                // result array should contain one item only
-                                ItemReference renamedItem = result.get(0);
-                                replaceFileInEditor(editor, renamedItem);
-                                break;
-                            }
-                        }
-                    } else if ("folder".equals(itemBeforeRenaming.getType())) {
-                        StringMap<ItemReference> children = Collections.createStringMap();
-                        for (ItemReference itemReference : result.asIterable()) {
-                            children.put(itemReference.getPath(), itemReference);
-                        }
+                    StringMap<ItemReference> children = Collections.createStringMap();
+                    for (ItemReference itemReference : result.asIterable()) {
+                        children.put(itemReference.getPath(), itemReference);
+                    }
 
-                        for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                            FileNode openedFile = editor.getEditorInput().getFile();
-                            if (openedFile.getPath().startsWith(itemPathBeforeRenaming)) {
-                                String childFileNewPath = openedFile.getPath().replaceFirst(itemPathBeforeRenaming, itemPathAfterRenaming);
-                                ItemReference renamedItem = children.get(childFileNewPath);
-                                if (renamedItem != null) {
-                                    replaceFileInEditor(editor, renamedItem);
-                                }
-                            }
+                    for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
+                        FileNode openedFile = editor.getEditorInput().getFile();
+
+                        if (children.get(openedFile.getPath()) != null) {
+                            String pathBeforeRenaming = openedFile.getPath().replaceFirst(itemPathAfterRenaming, itemPathBeforeRenaming);
+                            checkEditor(pathBeforeRenaming, openedFile.getPath());
                         }
                     }
                 }
@@ -236,11 +227,12 @@ public class RenameItemAction extends Action {
         }
     }
 
-    private void replaceFileInEditor(EditorPartPresenter editor, ItemReference renamedItem) {
-        editorAgent.getOpenedEditors().remove(editor.getEditorInput().getFile().getPath());
-        editorAgent.getOpenedEditors().put(renamedItem.getPath(), editor);
-        editor.getEditorInput().getFile().setData(renamedItem);
-        editor.onFileChanged();
+    private void checkEditor(String filePathBeforeRename, String filePathAfterRename) {
+        final EditorPartPresenter editor = editorAgent.getOpenedEditors().remove(filePathBeforeRename);
+        if (editor != null) {
+            editorAgent.getOpenedEditors().put(filePathAfterRename, editor);
+            editor.onFileChanged();
+        }
     }
 
     private String getDialogTitle(StorableNode node) {
@@ -248,7 +240,7 @@ public class RenameItemAction extends Action {
             return localization.renameFileDialogTitle();
         } else if (node instanceof FolderNode) {
             return localization.renameFolderDialogTitle();
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
+        } else if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
             return localization.renameProjectDialogTitle();
         }
         return localization.renameNodeDialogTitle();

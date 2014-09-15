@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link ProjectRootNode} functionality.
+ * Testing {@link ProjectNode} functionality.
  *
  * @author Artem Zatsarynnyy
  */
@@ -63,7 +63,7 @@ public class ProjectNodeTest {
     @Mock
     private ProjectDescriptor      projectDescriptor;
     @InjectMocks
-    private ProjectRootNode        projectNode;
+    private ProjectNode            projectNode;
 
     @Before
     public void setUp() {

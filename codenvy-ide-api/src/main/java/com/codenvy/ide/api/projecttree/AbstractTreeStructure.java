@@ -39,5 +39,5 @@ public abstract class AbstractTreeStructure {
      * @param callback
      *         callback to return root nodes
      */
-    public abstract void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback);
+    public abstract void getRoots(AsyncCallback<Array<TreeNode<?>>> callback);
 }

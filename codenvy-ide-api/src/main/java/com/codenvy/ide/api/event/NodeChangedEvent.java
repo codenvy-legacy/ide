@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.event;
 
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -22,8 +22,8 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
 
     /** Type class used to register this event. */
     public static Type<NodeChangedHandler> TYPE = new Type<>();
-    private final AbstractTreeNode<?> node;
-    private final NodeAction          nodeAction;
+    private final TreeNode<?> node;
+    private final NodeAction  nodeAction;
 
     /**
      * Create new {@link NodeChangedEvent}.
@@ -33,7 +33,7 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
      * @param nodeAction
      *         the type of change
      */
-    protected NodeChangedEvent(AbstractTreeNode<?> node, NodeAction nodeAction) {
+    protected NodeChangedEvent(TreeNode<?> node, NodeAction nodeAction) {
         this.node = node;
         this.nodeAction = nodeAction;
     }
@@ -45,7 +45,7 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
      *         the node that was renamed
      * @return new {@link NodeChangedEvent}
      */
-    public static NodeChangedEvent createNodeRenamedEvent(AbstractTreeNode<?> node) {
+    public static NodeChangedEvent createNodeRenamedEvent(TreeNode<?> node) {
         return new NodeChangedEvent(node, NodeAction.RENAMED);
     }
 
@@ -56,7 +56,7 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
      *         the node whose children have changed
      * @return new {@link NodeChangedEvent}
      */
-    public static NodeChangedEvent createNodeChildrenChangedEvent(AbstractTreeNode<?> node) {
+    public static NodeChangedEvent createNodeChildrenChangedEvent(TreeNode<?> node) {
         return new NodeChangedEvent(node, NodeAction.CHILDREN_CHANGED);
     }
 
@@ -65,7 +65,7 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
         return TYPE;
     }
 
-    public AbstractTreeNode<?> getNode() {
+    public TreeNode<?> getNode() {
         return node;
     }
 

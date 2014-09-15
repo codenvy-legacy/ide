@@ -22,8 +22,8 @@ import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
@@ -60,15 +60,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private AppContext                    appContext;
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
-    private AbstractTreeNode<?>           selectedTreeNode;
-    private DeleteItemHandler             deleteItemHandler;
+    private TreeNode<?>                   selectedNode;
+    private DeleteNodeHandler             deleteNodeHandler;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteItemHandler deleteItemHandler) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenuPresenter = contextMenuPresenter;
@@ -78,7 +78,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
-        this.deleteItemHandler = deleteItemHandler;
+        this.deleteNodeHandler = deleteNodeHandler;
 
         bind();
     }
@@ -152,43 +152,48 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(NodeChangedEvent.TYPE, new NodeChangedHandler() {
             @Override
             public void onNodeRenamed(NodeChangedEvent event) {
-                if (appContext.getCurrentProject() != null) {
+                if (appContext.getCurrentProject() == null) {
+                    // any opened project - all projects list is shown
+                    setTree(currentTreeStructure);
+                } else {
                     updateNode(event.getNode().getParent());
                     view.selectNode(event.getNode());
-                } else {
-                    // no opened project - all projects list is shown
-                    setTree(currentTreeStructure);
                 }
             }
 
             @Override
             public void onNodeChildrenChanged(NodeChangedEvent event) {
-                final AbstractTreeNode<?> node = event.getNode();
-                node.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
-                    @Override
-                    public void onSuccess(AbstractTreeNode<?> result) {
-                        updateNode(node);
-                        view.selectNode(node);
-                    }
+                if (appContext.getCurrentProject() == null) {
+                    // any opened project - all projects list is shown
+                    setTree(currentTreeStructure);
+                } else {
+                    final TreeNode<?> node = event.getNode();
+                    node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
+                        @Override
+                        public void onSuccess(TreeNode<?> result) {
+                            updateNode(node);
+                            view.selectNode(node);
+                        }
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
-                });
+                        @Override
+                        public void onFailure(Throwable ignore) {
+                        }
+                    });
+                }
             }
         });
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeSelected(@NotNull AbstractTreeNode<?> node) {
-        selectedTreeNode = node;
+    public void onNodeSelected(@NotNull TreeNode<?> node) {
+        selectedNode = node;
         setSelection(new Selection<>(node));
 
         updateAppContext(node);
     }
 
-    private void updateAppContext(AbstractTreeNode<?> node) {
+    private void updateAppContext(TreeNode<?> node) {
         if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
             appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
         }
@@ -196,12 +201,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeExpanded(final AbstractTreeNode<?> node) {
+    public void onNodeExpanded(final TreeNode<?> node) {
         if (node.getChildren().isEmpty()) {
             // If children is empty then may be it doesn't refreshed yet?
-            node.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
+            node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                 @Override
-                public void onSuccess(AbstractTreeNode<?> result) {
+                public void onSuccess(TreeNode<?> result) {
                     if (!result.getChildren().isEmpty()) {
                         view.updateNode(node, result);
                     }
@@ -217,7 +222,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeAction(@NotNull AbstractTreeNode<?> node) {
+    public void onNodeAction(@NotNull TreeNode<?> node) {
         node.processNodeAction();
     }
 
@@ -229,9 +234,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
-        treeStructure.getRoots(new AsyncCallback<Array<AbstractTreeNode<?>>>() {
+        treeStructure.getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
             @Override
-            public void onSuccess(Array<AbstractTreeNode<?>> result) {
+            public void onSuccess(Array<TreeNode<?>> result) {
                 view.setRootNodes(result);
             }
 
@@ -242,18 +247,18 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         });
     }
 
-    private void updateNode(final AbstractTreeNode<?> node) {
+    private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
     }
 
     private void updateTree() {
-        final AbstractTreeNode<?> parent = selectedTreeNode.getParent();
+        final TreeNode<?> parent = selectedNode.getParent();
         if (parent.getParent() == null) {
             setTree(currentTreeStructure); // refresh entire tree
         } else {
-            parent.refreshChildren(new AsyncCallback<AbstractTreeNode<?>>() {
+            parent.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                 @Override
-                public void onSuccess(AbstractTreeNode<?> result) {
+                public void onSuccess(TreeNode<?> result) {
                     view.updateNode(parent, result);
                 }
 
@@ -268,16 +273,16 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onDeleteKey() {
-        if (selectedTreeNode != null && selectedTreeNode instanceof StorableNode) {
-            deleteItemHandler.delete((StorableNode)selectedTreeNode);
+        if (selectedNode != null && selectedNode instanceof StorableNode) {
+            deleteNodeHandler.delete((StorableNode)selectedNode);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onEnterKey() {
-        if (selectedTreeNode != null) {
-            selectedTreeNode.processNodeAction();
+        if (selectedNode != null) {
+            selectedNode.processNodeAction();
         }
     }
 }

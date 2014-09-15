@@ -38,7 +38,7 @@ import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
@@ -1004,7 +1004,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private static class RecipeFile extends FileNode {
-        public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+        public RecipeFile(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
             super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         }
