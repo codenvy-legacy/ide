@@ -51,7 +51,7 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
     public void setFocus(boolean focused);
 
     /** Update Tab */
-    public void updateTabItem(int index, SVGResource icon, String title, String toolTip, IsWidget widget);
+    public void updateTabItem(int index, SVGImage icon, String title, String toolTip, IsWidget widget);
 
     /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
     public interface ActionDelegate {

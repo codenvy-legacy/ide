@@ -88,30 +88,6 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @Source("part/projectexplorer/project-closed.png")
     ImageResource projectClosed();
 
-    @Source("wizard/new_project_icon.png")
-    ImageResource newProjectIcon();
-
-    @Source("wizard/new_project_icon.png")
-    ImageResource newResourceIcon();
-
-    @Source("wizard/new_resource_icon.png")
-    ImageResource templateIcon();
-
-    @Source("wizard/back.png")
-    ImageResource back();
-
-    @Source("wizard/next.png")
-    ImageResource next();
-
-    @Source("wizard/cancel.png")
-    ImageResource cancel();
-
-    @Source("wizard/ok.png")
-    ImageResource ok();
-
-    @Source("wizard/question.png")
-    ImageResource question();
-
     @Source("wizard/arrow.svg")
     SVGResource wizardArrow();
 

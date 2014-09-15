@@ -207,11 +207,11 @@ public class PartStackViewImpl extends Composite implements PartStackView {
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, SVGResource icon, String title, String toolTip, IsWidget widget) {
+    public void updateTabItem(int index, SVGImage icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabButtons.get(index);
         tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
-        tabButton.updateWidget(widget);
+        tabButton.update(icon, widget);
     }
 
     /** Special button for tab title. */
@@ -257,7 +257,15 @@ public class PartStackViewImpl extends Composite implements PartStackView {
             }
         }
 
-        protected void updateWidget(IsWidget widget) {
+        protected void update(SVGImage icon, IsWidget widget) {
+            if (this.icon != null) {
+                tabItem.remove(this.icon);
+            }
+            this.icon = icon;
+            if (this.icon != null) {
+                tabItem.add(this.icon);
+            }
+
             if (this.widget != null) {
                 tabItem.remove(this.widget);
             }

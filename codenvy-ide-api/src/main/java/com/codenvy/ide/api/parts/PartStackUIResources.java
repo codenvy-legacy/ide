@@ -95,14 +95,8 @@ public interface PartStackUIResources extends ClientBundle {
         @ClassName("ide-PartStack-Button-Left")
         String idePartStackButtonLeft();
 
-        @ClassName("ide-PartStack-Tab-Icons-Group-Element")
-        String idePartStackElementOfGroupOfIcons();
-
         @ClassName("ide-PartStack-Tab-Icon")
         String idePartStackTabIcon();
-
-        @ClassName("ide-PartStack-Tab-Icon-Image")
-        String markImage();
 
         @ClassName("ide-PartStack-Tab-Line-Warning")
         String lineWarning();

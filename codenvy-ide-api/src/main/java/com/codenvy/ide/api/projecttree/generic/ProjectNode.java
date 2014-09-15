@@ -34,12 +34,13 @@ import java.util.List;
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor> {
+public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor>, Openable {
     protected final GenericTreeStructure   treeStructure;
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     protected final EventBus               eventBus;
     protected       TreeSettings           settings;
+    private         boolean                opened;
 
     public ProjectNode(TreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
                        EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
@@ -239,5 +240,20 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     @Nullable
     public List<String> getAttributeValues(String attributeName) {
         return data.getAttributes().get(attributeName);
+    }
+
+    @Override
+    public void close() {
+        opened = false;
+    }
+
+    @Override
+    public boolean isOpened() {
+        return opened;
+    }
+
+    @Override
+    public void open() {
+        opened = true;
     }
 }

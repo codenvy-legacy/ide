@@ -106,9 +106,9 @@ public class CustomRunTest extends BaseTest {
         verify(appContext).getCurrentProject();
         verify(view).setEnvironments((Array<RunnerEnvironment>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
-        verify(view, never()).setRunnerMemorySize(anyInt());
-        verify(view, never()).setTotalMemorySize(anyInt());
-        verify(view, never()).setAvailableMemorySize(anyInt());
+        verify(view, never()).setRunnerMemorySize(anyString());
+        verify(view, never()).setTotalMemorySize(anyString());
+        verify(view, never()).setAvailableMemorySize(anyString());
         verify(view, never()).showDialog();
     }
 
@@ -148,9 +148,9 @@ public class CustomRunTest extends BaseTest {
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
         verify(view).setEnvironments(Matchers.<Array<RunnerEnvironment>>anyObject());
-        verify(view).setRunnerMemorySize(anyInt());
-        verify(view).setTotalMemorySize(anyInt());
-        verify(view).setAvailableMemorySize(anyInt());
+        verify(view).setRunnerMemorySize(anyString());
+        verify(view).setTotalMemorySize(anyString());
+        verify(view).setAvailableMemorySize(anyString());
         verify(view).showDialog();
         verify(notificationManager, never()).showNotification((Notification)anyObject());
     }
@@ -178,9 +178,9 @@ public class CustomRunTest extends BaseTest {
     @Test
     public void onRunClickedAndRunnerMemoryCorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getRunnerMemorySize()).thenReturn(128);
-        when(view.getTotalMemorySize()).thenReturn(512);
-        when(view.getAvailableMemorySize()).thenReturn(256);
+        when(view.getRunnerMemorySize()).thenReturn("128");
+        when(view.getTotalMemorySize()).thenReturn("512");
+        when(view.getAvailableMemorySize()).thenReturn("256");
         when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
 
         presenter.onRunClicked();
@@ -198,9 +198,9 @@ public class CustomRunTest extends BaseTest {
     @Test
     public void onRunClickedAndTotalLessCustomRunMemory() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getRunnerMemorySize()).thenReturn(1024);
-        when(view.getTotalMemorySize()).thenReturn(512);
-        when(view.getAvailableMemorySize()).thenReturn(256);
+        when(view.getRunnerMemorySize()).thenReturn("1024");
+        when(view.getTotalMemorySize()).thenReturn("512");
+        when(view.getAvailableMemorySize()).thenReturn("256");
 
         presenter.onRunClicked();
 
@@ -215,11 +215,41 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
+    public void onRunClickedAndCustomRunMemoryIncorrect() throws Exception {
+        RunOptions runOptions = mock(RunOptions.class);
+        when(view.getRunnerMemorySize()).thenReturn("not int");
+
+        presenter.onRunClicked();
+
+        verify(view).getRunnerMemorySize();
+        verify(view).showWarning(anyString());
+        verify(runOptions, never()).setMemorySize(anyInt());
+        verify(runOptions, never()).setSkipBuild(anyBoolean());
+        verify(view, never()).close();
+        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+    }
+
+    @Test
+    public void onRunClickedAndCustomRunMemoryNotMultipleOf128() throws Exception {
+        RunOptions runOptions = mock(RunOptions.class);
+        when(view.getRunnerMemorySize()).thenReturn("255");
+
+        presenter.onRunClicked();
+
+        verify(view).getRunnerMemorySize();
+        verify(view).showWarning(anyString());
+        verify(runOptions, never()).setMemorySize(anyInt());
+        verify(runOptions, never()).setSkipBuild(anyBoolean());
+        verify(view, never()).close();
+        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+    }
+
+    @Test
     public void onRunClickedAndAvailableLessCustomRunMemory() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getRunnerMemorySize()).thenReturn(512);
-        when(view.getTotalMemorySize()).thenReturn(512);
-        when(view.getAvailableMemorySize()).thenReturn(256);
+        when(view.getRunnerMemorySize()).thenReturn("512");
+        when(view.getTotalMemorySize()).thenReturn("512");
+        when(view.getAvailableMemorySize()).thenReturn("256");
 
         presenter.onRunClicked();
 

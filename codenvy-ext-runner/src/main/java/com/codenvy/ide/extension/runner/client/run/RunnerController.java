@@ -361,6 +361,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
                                         RunnerController.this);
         notificationManager.showNotification(notification);
+        console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
         console.print("[INFO] " + notification.getMessage());
 
         if (isUserAction) {
@@ -557,6 +558,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
         startCheckingAppStatus(applicationProcessDescriptor);
@@ -587,7 +589,10 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification = new Notification(constant.applicationStarted(projectName), INFO);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStarted(projectName));
+
+                console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
                 console.print("[INFO] " + notification.getMessage());
+
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
                 }
@@ -614,6 +619,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationStopped(projectName));
 
+                console.setCurrentRunnerStatus(RunnerStatus.DONE);
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -631,6 +637,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification = new Notification(constant.applicationFailed(projectName), ERROR);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationFailed(projectName));
+
+                console.setCurrentRunnerStatus(RunnerStatus.FAILED);
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -647,6 +655,8 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                     notification = new Notification(constant.applicationCanceled(projectName), WARNING);
                 notification.setStatus(FINISHED);
                 notification.setMessage(constant.applicationCanceled(projectName));
+
+                console.setCurrentRunnerStatus(RunnerStatus.DONE);
                 console.print("[INFO] " + notification.getMessage());
 
                 console.onAppStopped();
@@ -688,6 +698,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
+        console.setCurrentRunnerStatus(RunnerStatus.FAILED);
         console.print(message);
     }
 
