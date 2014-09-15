@@ -15,13 +15,12 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -36,6 +35,8 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
+import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -79,7 +80,7 @@ public class FolderNodeTest {
         folderNode = new FolderNode(projectNode, itemReference, null, null, eventBus, editorAgent, projectServiceClient,
                                     dtoUnmarshallerFactory);
 
-        final Array<AbstractTreeNode<?>> children = Collections.createArray();
+        final Array<TreeNode<?>> children = Collections.createArray();
         when(projectNode.getChildren()).thenReturn(children);
 
         StringMap<EditorPartPresenter> editorsMap = Collections.createStringMap();
@@ -125,12 +126,12 @@ public class FolderNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        RenameCallback callback = mock(RenameCallback.class);
 
         folderNode.rename(newName, callback);
 
         verify(projectServiceClient).rename(eq(ITEM_PATH), eq(newName), anyString(), Matchers.<AsyncRequestCallback<Void>>anyObject());
-//        verify(callback).onSuccess(Matchers.<Void>anyObject());
+        verify(callback).onRenamed();
     }
 
     @Test
@@ -147,7 +148,7 @@ public class FolderNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        RenameCallback callback = mock(RenameCallback.class);
 
         folderNode.rename(newName, callback);
 
@@ -172,12 +173,12 @@ public class FolderNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        DeleteCallback callback = mock(DeleteCallback.class);
 
         folderNode.delete(callback);
 
         verify(projectServiceClient).delete(eq(ITEM_PATH), Matchers.<AsyncRequestCallback<Void>>anyObject());
-        verify(callback).onSuccess(Matchers.<Void>anyObject());
+        verify(callback).onDeleted();
     }
 
     @Test
@@ -192,7 +193,7 @@ public class FolderNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        DeleteCallback callback = mock(DeleteCallback.class);
 
         folderNode.delete(callback);
 

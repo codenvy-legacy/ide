@@ -14,7 +14,7 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -34,6 +34,8 @@ import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
 
+import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
+import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.anyObject;
@@ -73,7 +75,7 @@ public class FileNodeTest {
         when(itemReference.getName()).thenReturn(ITEM_NAME);
         fileNode = new FileNode(projectNode, itemReference, eventBus, projectServiceClient, dtoUnmarshallerFactory);
 
-        final Array<AbstractTreeNode<?>> children = Collections.createArray();
+        final Array<TreeNode<?>> children = Collections.createArray();
         when(projectNode.getChildren()).thenReturn(children);
     }
 
@@ -122,12 +124,12 @@ public class FileNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        RenameCallback callback = mock(RenameCallback.class);
 
         fileNode.rename(newName, callback);
 
         verify(projectServiceClient).rename(eq(ITEM_PATH), eq(newName), anyString(), Matchers.<AsyncRequestCallback<Void>>anyObject());
-//        verify(callback).onSuccess(Matchers.<Void>anyObject());
+//        verify(callback).onRenamed();
     }
 
     @Test
@@ -144,7 +146,7 @@ public class FileNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        RenameCallback callback = mock(RenameCallback.class);
 
         fileNode.rename(newName, callback);
 
@@ -169,12 +171,12 @@ public class FileNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        DeleteCallback callback = mock(DeleteCallback.class);
 
         fileNode.delete(callback);
 
         verify(projectServiceClient).delete(eq(ITEM_PATH), Matchers.<AsyncRequestCallback<Void>>anyObject());
-        verify(callback).onSuccess(Matchers.<Void>anyObject());
+        verify(callback).onDeleted();
     }
 
     @Test
@@ -189,7 +191,7 @@ public class FileNodeTest {
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
-        AsyncCallback<Void> callback = mock(AsyncCallback.class);
+        DeleteCallback callback = mock(DeleteCallback.class);
 
         fileNode.delete(callback);
 
