@@ -35,7 +35,7 @@ import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
@@ -742,7 +742,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                                                      .withPath("runner_recipe")
                                                      .withMediaType("text/plain")
                                                      .withLinks(links);
-                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient);
+                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient, dtoUnmarshallerFactory);
                 editorAgent.openEditor(recipeFileNode);
                 EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
                 if (editor instanceof CodenvyTextEditor) {
@@ -888,8 +888,9 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     }
 
     private static class RecipeFile extends FileNode {
-        public RecipeFile(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
-            super(parent, data, eventBus, projectServiceClient);
+        public RecipeFile(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                          DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         }
 
         @Override

@@ -15,7 +15,8 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.event.NodeChangedEvent;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
@@ -35,7 +36,6 @@ import javax.annotation.Nullable;
  * Implementation of an {@link Action} that provides ability to create new file.
  * After performing this action, it asks user for the new file's name with {@link AskValueDialog}
  * and then creates new file in the user selected folder.
- * By default, this action enabled and visible when any project is opened.
  *
  * @author Artem Zatsarynnyy
  */
@@ -92,25 +92,28 @@ public class DefaultNewResourceAction extends Action {
             @Override
             public void onOk(String value) {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
-                projectServiceClient
-                        .createFile(getParentPath(), name, getDefaultContent(), getMimeType(), new AsyncRequestCallback<Void>() {
-                            @Override
-                            protected void onSuccess(Void result) {
-                                eventBus.fireEvent(new RefreshProjectTreeEvent());
-                            }
+                final StorableNode parent = getParent();
+                projectServiceClient.createFile(parent.getPath(), name, getDefaultContent(), getMimeType(),
+                                                new AsyncRequestCallback<Void>() {
+                                                    @Override
+                                                    protected void onSuccess(Void result) {
+                                                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent(
+                                                                (AbstractTreeNode<?>)parent));
+                                                    }
 
-                            @Override
-                            protected void onFailure(Throwable exception) {
-                                Log.error(DefaultNewResourceAction.class, exception);
-                            }
-                        });
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        Log.error(DefaultNewResourceAction.class, exception);
+                                                    }
+                                                });
             }
         }).show();
     }
 
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
+        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
+        e.getPresentation().setEnabled(getParent() != null);
     }
 
     /**
@@ -137,21 +140,19 @@ public class DefaultNewResourceAction extends Action {
         return null;
     }
 
-    /** Returns path to the parent folder for creating new resource. */
-    protected String getParentPath() {
+    /** Returns parent for creating new item. */
+    @Nullable
+    protected StorableNode getParent() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() != null) {
             if (selection.getFirstElement() instanceof StorableNode) {
                 final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
-                final String nodePath = selectedNode.getPath();
-
                 if (selectedNode instanceof FileNode) {
-                    return nodePath.substring(0, nodePath.length() - selectedNode.getName().length());
-                } else {
-                    return nodePath;
+                    return (StorableNode)selectedNode.getParent();
                 }
+                return selectedNode;
             }
         }
-        return appContext.getCurrentProject().getRootProject().getPath();
+        return null;
     }
 }

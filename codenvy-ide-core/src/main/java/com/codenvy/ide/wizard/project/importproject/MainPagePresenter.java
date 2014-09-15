@@ -25,6 +25,7 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardView.EnterPressedDelegate;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -200,18 +201,25 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             @Override
             protected void onSuccess(Array<ProjectImporterDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
-                    //do not show internal importers:
+                    // do not show internal importers:
                     if (!result.get(i).isInternal()) {
                         importersSet.add(result.get(i));
                     }
                 }
-                Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
+                final Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
                 importers.put("Importers", importersSet);
 
-                view.setImporters(importers);
-                if (importersSet.iterator().hasNext()) {
-                    view.selectImporter(importersSet.iterator().next());
-                }
+                new Timer() {
+                    @Override
+                    public void run() {
+                        view.setImporters(importers);
+                        if (importersSet.iterator().hasNext()) {
+                            view.selectImporter(importersSet.iterator().next());
+                        }
+                        view.focusInUrlInput();
+                    }
+                }.schedule(300);
+
             }
 
             @Override

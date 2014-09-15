@@ -17,6 +17,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -51,17 +52,17 @@ public class GenericTreeStructure extends AbstractTreeStructure {
 
     /** {@inheritDoc} */
     @Override
-    public void getRoots(AsyncCallback<Array<AbstractTreeNode<?>>> callback) {
+    public void getRoots(AsyncCallback<Array<TreeNode<?>>> callback) {
         AbstractTreeNode projectRoot =
-                new ProjectRootNode(null, project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
-        callback.onSuccess(Collections.<AbstractTreeNode<?>>createArray(projectRoot));
+                new ProjectNode(null, project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        callback.onSuccess(Collections.<TreeNode<?>>createArray(projectRoot));
     }
 
-    public FileNode newFileNode(AbstractTreeNode parent, ItemReference data) {
-        return new FileNode(parent, data, eventBus, projectServiceClient);
+    public FileNode newFileNode(TreeNode parent, ItemReference data) {
+        return new FileNode(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
-    public FolderNode newFolderNode(AbstractTreeNode parent, ItemReference data) {
+    public FolderNode newFolderNode(TreeNode parent, ItemReference data) {
         return new FolderNode(parent, data, this, settings, eventBus, editorAgent, projectServiceClient, dtoUnmarshallerFactory);
     }
 }

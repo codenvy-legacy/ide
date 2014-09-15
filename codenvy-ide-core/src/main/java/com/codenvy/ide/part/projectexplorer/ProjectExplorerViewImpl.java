@@ -11,14 +11,15 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import elemental.events.KeyboardEvent;
-
 import elemental.events.MouseEvent;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
@@ -30,6 +31,7 @@ import com.google.inject.Singleton;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -40,10 +42,10 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
-    protected Tree<AbstractTreeNode<?>> tree;
-    private   Resources                 resources;
-    private   FlowPanel                 projectHeader;
-    private   AbstractTreeNode<?>       rootNode;
+    protected Tree<TreeNode<?>>   tree;
+    private   Resources           resources;
+    private   FlowPanel           projectHeader;
+    private   AbstractTreeNode<?> rootNode;
 
     /** Create view. */
     @Inject
@@ -54,33 +56,38 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
-        
+
         tree = Tree.create(resources, new ProjectTreeNodeDataAdapter(), projectTreeNodeRenderer);
-        
+
         container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
         // create special 'invisible' root node that will contain 'visible' root nodes
-        rootNode = new AbstractTreeNode<Void>(null, null, "ROOT") {
+        rootNode = new AbstractTreeNode<Void>(null, null, null) {
+            @Nonnull
+            @Override
+            public String getDisplayName() {
+                return "ROOT";
+            }
+
             @Override
             public boolean isLeaf() {
                 return false;
             }
 
             @Override
-            public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
-                // no need to refresh
+            public void refreshChildren(AsyncCallback<TreeNode<?>> callback) {
             }
         };
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setRootNodes(final Array<AbstractTreeNode<?>> rootNodes) {
+    public void setRootNodes(final Array<TreeNode<?>> rootNodes) {
         // provided rootNodes should be set as child nodes for rootNode
         rootNode.setChildren(rootNodes);
-        for (AbstractTreeNode<?> treeNode : rootNodes.asIterable()) {
+        for (TreeNode<?> treeNode : rootNodes.asIterable()) {
             treeNode.setParent(rootNode);
         }
 
@@ -88,7 +95,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.renderTree(0);
 
         if (!rootNodes.isEmpty()) {
-            final AbstractTreeNode<?> firstNode = rootNodes.get(0);
+            final TreeNode<?> firstNode = rootNodes.get(0);
             if (!firstNode.isLeaf()) {
                 // expand first node that usually represents project itself
                 tree.autoExpandAndSelectNode(firstNode, false);
@@ -104,38 +111,37 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void setDelegate(final ActionDelegate delegate) {
         this.delegate = delegate;
-        tree.setTreeEventHandler(new Tree.Listener<AbstractTreeNode<?>>() {
+        tree.setTreeEventHandler(new Tree.Listener<TreeNode<?>>() {
             @Override
-            public void onNodeAction(TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeAction(TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeAction(node.getData());
             }
 
             @Override
-            public void onNodeClosed(TreeNodeElement<AbstractTreeNode<?>> node) {
-                delegate.onNodeSelected(node.getData());
+            public void onNodeClosed(TreeNodeElement<TreeNode<?>> node) {
             }
 
             @Override
-            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeSelected(node.getData());
                 delegate.onContextMenu(mouseX, mouseY);
             }
 
             @Override
-            public void onNodeDragStart(TreeNodeElement<AbstractTreeNode<?>> node, MouseEvent event) {
+            public void onNodeDragStart(TreeNodeElement<TreeNode<?>> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeDragDrop(TreeNodeElement<AbstractTreeNode<?>> node, MouseEvent event) {
+            public void onNodeDragDrop(TreeNodeElement<TreeNode<?>> node, MouseEvent event) {
             }
 
             @Override
-            public void onNodeExpanded(TreeNodeElement<AbstractTreeNode<?>> node) {
+            public void onNodeExpanded(TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeExpanded(node.getData());
             }
 
             @Override
-            public void onNodeSelected(TreeNodeElement<AbstractTreeNode<?>> node, SignalEvent event) {
+            public void onNodeSelected(TreeNodeElement<TreeNode<?>> node, SignalEvent event) {
                 delegate.onNodeSelected(node.getData());
             }
 
@@ -147,22 +153,42 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             @Override
             public void onRootDragDrop(MouseEvent event) {
             }
-            
+
             @Override
             public void onKeyboard(KeyboardEvent event) {
-                if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE){
+                if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE) {
                     delegate.onDeleteKey();
+                } else if (event.getKeyCode() == KeyboardEvent.KeyCode.ENTER) {
+                    delegate.onEnterKey();
                 }
             }
-            
         });
     }
 
     /** {@inheritDoc} */
     @Override
-    public void updateNode(AbstractTreeNode<?> oldResource, AbstractTreeNode<?> newResource) {
+    public void updateNode(TreeNode<?> oldResource, TreeNode<?> newResource) {
+        // get currently selected node
+        final JsoArray<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
+        TreeNode<?> selectedNode = null;
+        if (!selectedNodes.isEmpty()) {
+            selectedNode = selectedNodes.get(0);
+        }
+
         Array<Array<String>> pathsToExpand = tree.replaceSubtree(oldResource, newResource, false);
         tree.expandPaths(pathsToExpand, false);
+
+        // restore selected node
+        if (selectedNode != null) {
+            tree.getSelectionModel().selectSingleNode(selectedNode);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void selectNode(TreeNode<?> node) {
+        tree.getSelectionModel().selectSingleNode(node);
+        delegate.onNodeSelected(node);
     }
 
     /** {@inheritDoc} */

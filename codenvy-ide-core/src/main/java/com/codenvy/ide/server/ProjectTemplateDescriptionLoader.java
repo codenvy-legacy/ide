@@ -79,7 +79,8 @@ public class ProjectTemplateDescriptionLoader {
                         runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
                 if (descriptor != null) {
                     runnerEnvConfigs.put(defaultRunnerEnvironment,
-                                         new RunnerEnvironmentConfiguration(-1, descriptor.getRecommendedMemorySize()));
+                                         new RunnerEnvironmentConfiguration(-1, descriptor.getRecommendedMemorySize(),
+                                                                            descriptor.getDefaultMemorySize()));
                 }
             }
         }

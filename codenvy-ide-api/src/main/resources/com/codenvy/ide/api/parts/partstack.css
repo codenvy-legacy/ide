@@ -141,6 +141,7 @@
     cursor: pointer;
     height: 17px;
     min-width: 14px;
+    z-index: 1;
 }
 
 .ide-PartStack-Button-Left > svg {

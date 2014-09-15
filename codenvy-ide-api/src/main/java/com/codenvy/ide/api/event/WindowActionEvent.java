@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Window;
  */
 public class WindowActionEvent extends GwtEvent<WindowActionHandler> {
 
+    /** Type class used to register this event. */
     public static Type<WindowActionHandler> TYPE = new Type<>();
 
     /** Set of possible Window Actions. */

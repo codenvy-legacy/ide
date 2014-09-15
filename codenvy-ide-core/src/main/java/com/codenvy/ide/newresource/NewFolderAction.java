@@ -15,7 +15,9 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.event.NodeChangedEvent;
+import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
@@ -59,10 +61,11 @@ public class NewFolderAction extends DefaultNewResourceAction {
                            localizationConstant.newResourceLabel(), new AskValueCallback() {
             @Override
             public void onOk(String value) {
-                projectServiceClient.createFolder(getParentPath() + '/' + value, new AsyncRequestCallback<Void>() {
+                final StorableNode parent = getParent();
+                projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<Void>() {
                     @Override
                     protected void onSuccess(Void result) {
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
+                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
                     }
 
                     @Override

@@ -10,19 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
+import com.codenvy.ide.api.projecttree.TreeNode;
+
 /**
- * An interface defines methods common to all nodes
- * represent an item retrieved from Codenvy Project API.
+ * An interface defines methods common to all nodes represent an item which
+ * retrieved from Codenvy Project API (e.g. file, folder, project, module).
  *
+ * @param <T>
+ *         the type of the associated data
  * @author Artem Zatsarynnyy
  */
-public interface StorableNode {
+public interface StorableNode<T> extends TreeNode<T> {
     /** Returns name of the item which this node represents. */
     String getName();
 
     /** Returns path of the item which this node represents. */
     String getPath();
-
-    /** Returns node's project. */
-    ProjectRootNode getProject();
 }

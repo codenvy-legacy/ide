@@ -17,6 +17,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event that describes the fact that file is going to be opened.
  *
  * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
  */
 public class FileEvent extends GwtEvent<FileEventHandler> {
 
@@ -33,8 +34,8 @@ public class FileEvent extends GwtEvent<FileEventHandler> {
      *         file operation
      */
     public FileEvent(FileNode file, FileOperation fileOperation) {
-        this.fileOperation = fileOperation;
         this.file = file;
+        this.fileOperation = fileOperation;
     }
 
     /** {@inheritDoc} */

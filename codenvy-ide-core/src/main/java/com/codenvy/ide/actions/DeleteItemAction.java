@@ -15,33 +15,33 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.part.projectexplorer.DeleteItemHandler;
+import com.codenvy.ide.part.projectexplorer.DeleteNodeHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * Action for deleting an item which is selected in 'Project Explorer'.
- * 
+ *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class DeleteItemAction extends Action {
     private AnalyticsEventLogger eventLogger;
     private SelectionAgent       selectionAgent;
-    private DeleteItemHandler  deleteItemPresenter;
+    private DeleteNodeHandler    deleteNodeHandler;
 
     @Inject
     public DeleteItemAction(Resources resources,
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
-                            DeleteItemHandler deleteItemPresenter, CoreLocalizationConstant localization) {
+                            DeleteNodeHandler deleteNodeHandler, CoreLocalizationConstant localization) {
         super(localization.deleteItemActionText(), localization.deleteItemActionDescription(), null, resources.delete());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
-        this.deleteItemPresenter = deleteItemPresenter;
+        this.deleteNodeHandler = deleteNodeHandler;
     }
 
     /** {@inheritDoc} */
@@ -49,9 +49,9 @@ public class DeleteItemAction extends Action {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Delete file");
 
-        Selection< ? > selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            deleteItemPresenter.delete((AbstractTreeNode)selection.getFirstElement());
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
+            deleteNodeHandler.delete((StorableNode)selection.getFirstElement());
         }
     }
 
@@ -59,9 +59,9 @@ public class DeleteItemAction extends Action {
     @Override
     public void update(ActionEvent e) {
         boolean isEnabled = false;
-        Selection< ? > selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            isEnabled = ((AbstractTreeNode)selection.getFirstElement()).isDeletable();
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null && selection.getFirstElement() instanceof StorableNode) {
+            isEnabled = ((StorableNode)selection.getFirstElement()).isDeletable();
         }
         e.getPresentation().setEnabled(isEnabled);
     }

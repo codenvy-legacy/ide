@@ -21,6 +21,7 @@ import com.codenvy.ide.toolbar.PopupMenu;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.toolbar.Utils;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.UIObject;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -157,6 +158,7 @@ public class MenuBarItem implements ActionSelectedHandler {
         } else {
             element.setClassName(css.menuBarItemDisabled());
         }
+        UIObject.ensureDebugId(element, place + "/" + actionManager.getId(group) + "-" + enabled);
     }
 
     /** {@inheritDoc} */

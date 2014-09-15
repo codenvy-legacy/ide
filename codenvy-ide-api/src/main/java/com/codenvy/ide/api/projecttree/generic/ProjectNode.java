@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -24,15 +25,16 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Node that represents project root item.
+ * Node that represents project item.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode, Openable {
+public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor>, Openable {
     protected final GenericTreeStructure   treeStructure;
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
@@ -40,9 +42,9 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     protected       TreeSettings           settings;
     private         boolean                opened;
 
-    public ProjectRootNode(AbstractTreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
-                           EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, data.getName());
+    public ProjectNode(TreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
+                       EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        super(parent, data, eventBus);
         this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
@@ -72,9 +74,17 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
         return data.getPath();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public ProjectRootNode getProject() {
+    public ProjectNode getProject() {
         return this;
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+        return data.getName();
     }
 
     /** {@inheritDoc} */
@@ -85,12 +95,12 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public void refreshChildren(final AsyncCallback<AbstractTreeNode<?>> callback) {
+    public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
         getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> children) {
                 final boolean isShowHiddenItems = settings.isShowHiddenItems();
-                Array<AbstractTreeNode<?>> newChildren = Collections.createArray();
+                Array<TreeNode<?>> newChildren = Collections.createArray();
                 setChildren(newChildren);
                 for (ItemReference item : children.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
@@ -100,7 +110,7 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
                         }
                     }
                 }
-                callback.onSuccess(ProjectRootNode.this);
+                callback.onSuccess(ProjectNode.this);
             }
 
             @Override
@@ -112,10 +122,15 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public boolean isRenemable() {
+    public boolean isRenamable() {
         // Rename is not available for opened project.
         // Special message will be shown for user in this case (see RenameItemAction).
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void rename(String newName, RenameCallback callback) {
     }
 
     /** {@inheritDoc} */
@@ -126,12 +141,22 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
 
     /** {@inheritDoc} */
     @Override
-    public void delete(final AsyncCallback<Void> callback) {
+    public void delete(final DeleteCallback callback) {
         projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 eventBus.fireEvent(new CloseCurrentProjectEvent());
-                callback.onSuccess(result);
+                ProjectNode.super.delete(new DeleteCallback() {
+                    @Override
+                    public void onDeleted() {
+                        callback.onDeleted();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+                });
             }
 
             @Override
@@ -181,9 +206,9 @@ public class ProjectRootNode extends AbstractTreeNode<ProjectDescriptor> impleme
     @Nullable
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
         if (isFile(item)) {
-            return treeStructure.newFileNode(ProjectRootNode.this, item);
+            return treeStructure.newFileNode(ProjectNode.this, item);
         } else if (isFolder(item)) {
-            return treeStructure.newFolderNode(ProjectRootNode.this, item);
+            return treeStructure.newFolderNode(ProjectNode.this, item);
         }
         return null;
     }

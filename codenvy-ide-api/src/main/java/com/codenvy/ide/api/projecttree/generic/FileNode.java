@@ -13,8 +13,9 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,36 +25,11 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author Artem Zatsarynnyy
  */
-public class FileNode extends AbstractTreeNode<ItemReference> implements StorableNode {
-    protected EventBus             eventBus;
-    protected ProjectServiceClient projectServiceClient;
+public class FileNode extends ItemNode {
 
-    public FileNode(AbstractTreeNode parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
-        super(parent, data, data.getName());
-        this.eventBus = eventBus;
-        this.projectServiceClient = projectServiceClient;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getName() {
-        return data.getName();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getPath() {
-        return data.getPath();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ProjectRootNode getProject() {
-        AbstractTreeNode<?> parent = getParent();
-        while (!(parent instanceof ProjectRootNode)) {
-            parent = parent.getParent();
-        }
-        return (ProjectRootNode)parent;
+    public FileNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
     /** {@inheritDoc} */
@@ -64,56 +40,23 @@ public class FileNode extends AbstractTreeNode<ItemReference> implements Storabl
 
     /** {@inheritDoc} */
     @Override
-    public void refreshChildren(AsyncCallback<AbstractTreeNode<?>> callback) {
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void processNodeAction() {
         eventBus.fireEvent(new FileEvent(this, FileEvent.FileOperation.OPEN));
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isRenemable() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void rename(final String newName, final AsyncCallback<Void> callback) {
-        projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
+    public void delete(final DeleteCallback callback) {
+        super.delete(new DeleteCallback() {
             @Override
-            protected void onSuccess(Void result) {
-                callback.onSuccess(result);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isDeletable() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void delete(final AsyncCallback<Void> callback) {
-        projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
-            @Override
-            protected void onSuccess(Void result) {
+            public void onDeleted() {
                 eventBus.fireEvent(new FileEvent(FileNode.this, FileEvent.FileOperation.CLOSE));
-                callback.onSuccess(result);
+                callback.onDeleted();
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
             }
         });
     }

@@ -13,7 +13,7 @@ package com.codenvy.ide.part.projectexplorer;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.base.BaseActionDelegate;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 
 import javax.validation.constraints.NotNull;
@@ -31,15 +31,23 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param rootNodes
      *         root nodes to set
      */
-    void setRootNodes(@NotNull Array<AbstractTreeNode<?>> rootNodes);
+    void setRootNodes(@NotNull Array<TreeNode<?>> rootNodes);
 
     /**
      * Updates the specified node.
      *
-     * @param oldResource
-     * @param newResource
+     * @param oldNode
+     * @param newNode
      */
-    void updateNode(@NotNull AbstractTreeNode<?> oldResource, @NotNull AbstractTreeNode<?> newResource);
+    void updateNode(@NotNull TreeNode<?> oldNode, @NotNull TreeNode<?> newNode);
+
+    /**
+     * Select the specified node in the view.
+     *
+     * @param node
+     *         node to select
+     */
+    void selectNode(@NotNull TreeNode<?> node);
 
     /**
      * Sets title of part.
@@ -69,7 +77,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         selected node
          */
-        void onNodeSelected(@NotNull AbstractTreeNode<?> node);
+        void onNodeSelected(@NotNull TreeNode<?> node);
 
         /**
          * Performs any actions in response to node expanded (opened) action.
@@ -77,7 +85,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         expanded node
          */
-        void onNodeExpanded(@NotNull AbstractTreeNode<?> node);
+        void onNodeExpanded(@NotNull TreeNode<?> node);
 
         /**
          * Performs any actions in response to some node action.
@@ -85,7 +93,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         node
          */
-        void onNodeAction(@NotNull AbstractTreeNode<?> node);
+        void onNodeAction(@NotNull TreeNode<?> node);
 
         /**
          * Performs any actions appropriate in response to the user having clicked right button on mouse.
@@ -96,10 +104,11 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          *         the mouse y-position within the browser window's client area.
          */
         void onContextMenu(int mouseX, int mouseY);
-        
-        /**
-         * Performs any actions appropriate in response to the user having pressed the DELETE key.
-         */
+
+        /** Performs any actions appropriate in response to the user having pressed the DELETE key. */
         void onDeleteKey();
+
+        /** Performs any actions appropriate in response to the user having pressed the ENTER key. */
+        void onEnterKey();
     }
 }

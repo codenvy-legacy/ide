@@ -13,13 +13,12 @@ package com.codenvy.ide.part.projectexplorer;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
-import com.codenvy.ide.api.projecttree.generic.ProjectRootNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectNode;
+import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -29,78 +28,75 @@ import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 
 /**
- * Is used for performing the item deleting.
- * 
+ * Used for deleting a {@link StorableNode}.
+ *
  * @author Ann Shumilova
+ * @author Artem Zatsarynnyy
  */
-public class DeleteItemHandler {
+public class DeleteNodeHandler {
     private NotificationManager      notificationManager;
-    private EventBus                 eventBus;
     private CoreLocalizationConstant localization;
     private RunnerServiceClient      runnerServiceClient;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
 
     @Inject
-    public DeleteItemHandler(NotificationManager notificationManager,
-                               EventBus eventBus,
-                               CoreLocalizationConstant localization,
-                               RunnerServiceClient runnerServiceClient,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public DeleteNodeHandler(NotificationManager notificationManager,
+                             CoreLocalizationConstant localization,
+                             RunnerServiceClient runnerServiceClient,
+                             DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.notificationManager = notificationManager;
-        this.eventBus = eventBus;
         this.localization = localization;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
     /**
-     * Delete the pointed node.
-     * 
-     * @param nodeToDelete node to be deleted
+     * Delete the specified node.
+     *
+     * @param nodeToDelete
+     *         node to be deleted
      */
-    public void delete(final AbstractTreeNode nodeToDelete) {
-        if (nodeToDelete instanceof ProjectRootNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
-                checkRunningProcessesForProject(nodeToDelete, new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean hasRunningProcesses) {
-                        if (hasRunningProcesses) {
-                            new Info(localization.stopProcessesBeforeDeletingProject()).show();
-                        } else {
-                            askForDeletingNode(nodeToDelete);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
+    public void delete(final StorableNode nodeToDelete) {
+        if (nodeToDelete instanceof ProjectNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
+            checkRunningProcessesForProject(nodeToDelete, new AsyncCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean hasRunningProcesses) {
+                    if (hasRunningProcesses) {
+                        new Info(localization.stopProcessesBeforeDeletingProject()).show();
+                    } else {
                         askForDeletingNode(nodeToDelete);
                     }
-                });
-            } else {
-                askForDeletingNode(nodeToDelete);
-            }
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    askForDeletingNode(nodeToDelete);
+                }
+            });
+        } else {
+            askForDeletingNode(nodeToDelete);
+        }
     }
 
     /**
      * Ask the user to confirm the delete operation.
-     * 
+     *
      * @param nodeToDelete
      */
-    private void askForDeletingNode(final AbstractTreeNode nodeToDelete) {
+    private void askForDeletingNode(final StorableNode nodeToDelete) {
         new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
-            @SuppressWarnings("unchecked")
             @Override
             public void onOk() {
-                nodeToDelete.delete(new AsyncCallback<Void>() {
+                nodeToDelete.delete(new DeleteCallback() {
                     @Override
-                    public void onSuccess(Void result) {
-                        eventBus.fireEvent(new RefreshProjectTreeEvent());
+                    public void onDeleted() {
                     }
 
                     @Override
@@ -114,21 +110,15 @@ public class DeleteItemHandler {
 
     /**
      * Check whether there are running processes for the resource that will be deleted.
-     * 
+     *
      * @param projectNode
-     * @param callback callback returns true if project has any running processes and false - otherwise
+     * @param callback
+     *         callback returns true if project has any running processes and false - otherwise
      */
-    private void checkRunningProcessesForProject(AbstractTreeNode projectNode, final AsyncCallback<Boolean> callback) {
-        String projectPath = "";
-        if (projectNode instanceof ProjectRootNode) {
-            projectPath = ((ProjectRootNode)projectNode).getPath();
-        } else if (projectNode instanceof ProjectListStructure.ProjectNode) {
-            projectPath = ((ProjectListStructure.ProjectNode)projectNode).getData().getPath();
-        }
-
+    private void checkRunningProcessesForProject(StorableNode projectNode, final AsyncCallback<Boolean> callback) {
         Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
-                                                                           dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
-        runnerServiceClient.getRunningProcesses(projectPath,
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
+        runnerServiceClient.getRunningProcesses(projectNode.getPath(),
                                                 new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
                                                     @Override
                                                     protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
@@ -151,16 +141,16 @@ public class DeleteItemHandler {
 
     /**
      * Return the title of the deletion dialog due the resource type.
-     * 
+     *
      * @param node
      * @return {@link String} title
      */
-    private String getDialogTitle(AbstractTreeNode node) {
+    private String getDialogTitle(StorableNode node) {
         if (node instanceof FileNode) {
             return localization.deleteFileDialogTitle();
         } else if (node instanceof FolderNode) {
             return localization.deleteFolderDialogTitle();
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
+        } else if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
             return localization.deleteProjectDialogTitle();
         }
         return localization.deleteNodeDialogTitle();
@@ -168,18 +158,18 @@ public class DeleteItemHandler {
 
     /**
      * Return the content of the deletion dialog due the resource type.
-     * 
+     *
      * @param node
-     * @return {@link String} content 
+     * @return {@link String} content
      */
-    private String getDialogQuestion(AbstractTreeNode node) {
+    private String getDialogQuestion(StorableNode node) {
         if (node instanceof FileNode) {
-            return localization.deleteFileDialogQuestion(node.getPresentation().getDisplayName());
+            return localization.deleteFileDialogQuestion(node.getName());
         } else if (node instanceof FolderNode) {
-            return localization.deleteFolderDialogQuestion(node.getPresentation().getDisplayName());
-        } else if (node instanceof ProjectRootNode || node instanceof ProjectListStructure.ProjectNode) {
-            return localization.deleteProjectDialogQuestion(node.getPresentation().getDisplayName());
+            return localization.deleteFolderDialogQuestion(node.getName());
+        } else if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
+            return localization.deleteProjectDialogQuestion(node.getName());
         }
-        return localization.deleteNodeDialogQuestion(node.getPresentation().getDisplayName());
+        return localization.deleteNodeDialogQuestion(node.getName());
     }
 }
