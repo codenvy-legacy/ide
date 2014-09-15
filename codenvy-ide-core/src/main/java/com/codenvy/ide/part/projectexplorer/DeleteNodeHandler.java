@@ -28,6 +28,7 @@ import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -40,6 +41,7 @@ import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
  * @author Ann Shumilova
  * @author Artem Zatsarynnyy
  */
+@Singleton
 public class DeleteNodeHandler {
     private NotificationManager      notificationManager;
     private CoreLocalizationConstant localization;
