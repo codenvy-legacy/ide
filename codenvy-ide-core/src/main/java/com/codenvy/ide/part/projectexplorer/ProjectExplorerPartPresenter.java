@@ -26,6 +26,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.collections.Array;
@@ -207,6 +208,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                 @Override
                 public void onSuccess(TreeNode<?> result) {
+                    if(node instanceof Openable){
+                        ((Openable)node).open();
+                    }
                     if (!result.getChildren().isEmpty()) {
                         view.updateNode(node, result);
                     }
