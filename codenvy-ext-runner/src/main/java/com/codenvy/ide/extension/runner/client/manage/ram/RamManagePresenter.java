@@ -77,6 +77,9 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
 
     @Override
     public void validateRamSize(String value) {
+        if (value.isEmpty()) {
+            return;
+        }
         try {
             int ram = Integer.parseInt(value);
             if (ram > 0 && ram % 128 == 0) {

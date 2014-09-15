@@ -156,6 +156,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @Override
     public void setRunnerMemorySize(String memorySize) {
         clearStandardMemoryFilds();
+        otherValueMemory.setText("");
 
         int index;
         switch (memorySize) {
