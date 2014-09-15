@@ -98,15 +98,16 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
         getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
-            public void onSuccess(Array<ItemReference> children) {
+            public void onSuccess(Array<ItemReference> childItems) {
                 final boolean isShowHiddenItems = settings.isShowHiddenItems();
-                Array<TreeNode<?>> newChildren = Collections.createArray();
-                setChildren(newChildren);
-                for (ItemReference item : children.asIterable()) {
+                // remove child nodes for not existed items
+                purgeNodes(childItems);
+                // add child nodes for new items
+                for (ItemReference item : filterNewItems(childItems).asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         AbstractTreeNode node = createChildNode(item);
                         if (node != null) {
-                            newChildren.add(node);
+                            children.add(node);
                         }
                     }
                 }
@@ -187,6 +188,35 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
                 callback.onFailure(exception);
             }
         });
+    }
+
+    /** Throw away child nodes which was removed (for which we haven't appropriate item in {@code items}). */
+    private void purgeNodes(Array<ItemReference> items) {
+        Iterable<TreeNode<?>> it = getChildren().asIterable();
+        for (TreeNode<?> node : it) {
+            if (node.getData() instanceof ItemReference && !items.contains((ItemReference)node.getData())) {
+                it.iterator().remove();
+            }
+        }
+    }
+
+    /**
+     * Returns filtered {@code items} array that contains only items
+     * for which we haven't appropriate node in this node's children.
+     *
+     * @param items
+     *         array of {@link ItemReference} to filter
+     * @return an array of new items, or an empty array if there are no new items
+     */
+    private Array<ItemReference> filterNewItems(Array<ItemReference> items) {
+        Array<ItemReference> newItems = Collections.createArray(items.asIterable());
+        Iterable<TreeNode<?>> it = getChildren().asIterable();
+        for (TreeNode<?> node : it) {
+            if (node.getData() instanceof ItemReference && items.contains((ItemReference)node.getData())) {
+                newItems.remove((ItemReference)node.getData());
+            }
+        }
+        return newItems;
     }
 
     /** Get unique ID of type of project. */

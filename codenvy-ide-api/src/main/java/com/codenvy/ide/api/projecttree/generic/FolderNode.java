@@ -66,11 +66,10 @@ public class FolderNode extends ItemNode {
     /** {@inheritDoc} */
     @Override
     public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
-        final boolean isShowHiddenItems = settings.isShowHiddenItems();
-        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
-        projectServiceClient.getChildren(data.getPath(), new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+        getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
-            protected void onSuccess(Array<ItemReference> childItems) {
+            public void onSuccess(Array<ItemReference> childItems) {
+                final boolean isShowHiddenItems = settings.isShowHiddenItems();
                 // remove child nodes for not existed items
                 purgeNodes(childItems);
                 // add child nodes for new items
@@ -83,6 +82,29 @@ public class FolderNode extends ItemNode {
                     }
                 }
                 callback.onSuccess(FolderNode.this);
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                callback.onFailure(exception);
+            }
+        });
+    }
+
+    /**
+     * Method helps to retrieve children by the specified path using Codenvy Project API.
+     *
+     * @param path
+     *         path to retrieve children
+     * @param callback
+     *         callback to return retrieved children
+     */
+    protected void getChildren(String path, final AsyncCallback<Array<ItemReference>> callback) {
+        final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
+        projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
+            @Override
+            protected void onSuccess(Array<ItemReference> result) {
+                callback.onSuccess(result);
             }
 
             @Override
