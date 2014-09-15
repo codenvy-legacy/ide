@@ -34,3 +34,30 @@
     color: #00B7EC;
     border-right-color: #343434;
 }
+
+svg.partIcon {
+    width: 14px;
+    height: 14px;
+    float: right;
+    position: relative;
+    top: 1px;
+}
+
+.inQueue {
+    fill: mainFontColor;
+}
+.inProgress {
+    fill: #56e33b;
+}
+.running {
+    fill: #52ade1;
+}
+.done {
+    fill: #56e33b;
+}
+.failed {
+    fill: #ff3333;
+}
+.timeout {
+    fill: #ffba00;
+}

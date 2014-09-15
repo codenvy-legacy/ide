@@ -11,6 +11,7 @@
 package com.codenvy.ide.part.editor;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Array;
@@ -240,10 +241,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public void updateTabItem(int index, SVGResource icon, String title, String toolTip, IsWidget widget) {
+    public void updateTabItem(int index, SVGImage icon, String title, String toolTip, IsWidget widget) {
         TabButton tabButton = tabs.get(index);
         tabButton.tabItemTittle.setText(title);
         tabButton.setTitle(toolTip);
+        tabButton.update(icon, widget);
     }
 
     /** Special button for tab title. */
@@ -255,7 +257,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
         private InlineLabel tabItemTittle;
 
-        private Element elementOfGroupOfIcons;
+        private SVGImage icon;
 
         private boolean isVisibilityOfWarningMark;
 
@@ -270,18 +272,15 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
          * @param closable
          */
         private TabButton(SVGImage icon, String title, String toolTip, boolean closable) {
+            this.icon = icon;
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
             initWidget(tabItem);
             this.setStyleName(partStackUIResources.partStackCss().idePartStackTab());
             if (icon != null) {
-                elementOfGroupOfIcons =
-                        (Element)Elements.createDivElement(partStackUIResources.partStackCss().idePartStackElementOfGroupOfIcons());
-                icon.getElement().setAttribute("class", partStackUIResources.partStackCss().idePartStackTabIcon());
-                elementOfGroupOfIcons.appendChild(icon.getElement());
-                tabItem.getElement().appendChild(elementOfGroupOfIcons);
+                icon.setClassNameBaseVal(partStackUIResources.partStackCss().idePartStackTabIcon());
+                tabItem.add(icon);
             }
-
             tabItemTittle = new InlineLabel("");
             tabItemTittle.getElement().setInnerHTML(title);
             tabItem.add(tabItemTittle);
@@ -292,6 +291,17 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 addHandlers();
             }
             this.ensureDebugId("tabButton-" + title);
+        }
+
+        protected void update(SVGImage icon, IsWidget widget) {
+            if (this.icon != null) {
+                tabItem.remove(this.icon);
+            }
+            this.icon = icon;
+            if (this.icon != null) {
+                icon.setClassNameBaseVal(partStackUIResources.partStackCss().idePartStackTabIcon());
+                tabItem.add(this.icon);
+            }
         }
 
         @Override
