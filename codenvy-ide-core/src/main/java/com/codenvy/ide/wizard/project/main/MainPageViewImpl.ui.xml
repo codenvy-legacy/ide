@@ -67,6 +67,15 @@
             font-size: 12px;
         }
 
+        .labelTitle {
+            position: relative;
+            line-height: 35px;
+            margin-bottom: 9px;
+            font-weight: bold;
+            float: left;
+            font-size: 15px;
+        }
+
         .radioButtonPosition {
             position: relative;
             float: right;
@@ -120,6 +129,10 @@
             <g:DockLayoutPanel unit="PCT">
                 <g:east size="53">
                     <g:FlowPanel addStyleNames="{style.rightPart}">
+                        <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
+                            <g:Label ui:field="projectType"
+                                     addStyleNames="{style.labelTitle}"/>
+                        </g:FlowPanel>
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateName}"
                                      addStyleNames="{style.labelPosition}"/>
