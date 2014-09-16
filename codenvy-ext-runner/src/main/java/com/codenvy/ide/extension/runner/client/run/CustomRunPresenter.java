@@ -40,7 +40,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
-    private RunnerController           runnerController;
+    private RunController              runController;
     private RunnerServiceClient        runnerServiceClient;
     private CustomRunView              view;
     private DtoFactory                 dtoFactory;
@@ -51,7 +51,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     /** Create presenter. */
     @Inject
-    protected CustomRunPresenter(RunnerController runnerController,
+    protected CustomRunPresenter(RunController runController,
                                  RunnerServiceClient runnerServiceClient,
                                  CustomRunView view,
                                  DtoFactory dtoFactory,
@@ -59,7 +59,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  NotificationManager notificationManager,
                                  AppContext appContext,
                                  RunnerLocalizationConstant constant) {
-        this.runnerController = runnerController;
+        this.runController = runController;
         this.runnerServiceClient = runnerServiceClient;
         this.view = view;
         this.dtoFactory = dtoFactory;
@@ -145,7 +145,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
             }
             view.close();
-            runnerController.runActiveProject(runOptions, null, true);
+            runController.runActiveProject(runOptions, null, true);
         }
     }
 

@@ -192,7 +192,7 @@ public class CustomRunTest extends BaseTest {
         verify(view).getTotalMemorySize();
         verify(view).getAvailableMemorySize();
         verify(runOptions).setMemorySize(eq(128));
-        verify(runnerController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runController).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test
@@ -211,7 +211,7 @@ public class CustomRunTest extends BaseTest {
         verify(runOptions, never()).setMemorySize(anyInt());
         verify(runOptions, never()).setSkipBuild(anyBoolean());
         verify(view, never()).close();
-        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test
@@ -226,7 +226,7 @@ public class CustomRunTest extends BaseTest {
         verify(runOptions, never()).setMemorySize(anyInt());
         verify(runOptions, never()).setSkipBuild(anyBoolean());
         verify(view, never()).close();
-        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test
@@ -241,7 +241,7 @@ public class CustomRunTest extends BaseTest {
         verify(runOptions, never()).setMemorySize(anyInt());
         verify(runOptions, never()).setSkipBuild(anyBoolean());
         verify(view, never()).close();
-        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test
@@ -260,7 +260,7 @@ public class CustomRunTest extends BaseTest {
         verify(runOptions, never()).setMemorySize(anyInt());
         verify(runOptions, never()).setSkipBuild(anyBoolean());
         verify(view, never()).close();
-        verify(runnerController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
+        verify(runController, never()).runActiveProject((RunOptions)anyObject(), (ProjectRunCallback)anyObject(), anyBoolean());
     }
 
     @Test

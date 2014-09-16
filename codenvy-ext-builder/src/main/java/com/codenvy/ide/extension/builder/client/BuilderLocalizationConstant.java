@@ -55,7 +55,7 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
 
-    /* BuildProjectPresenter */
+    /* BuildController */
     @Key("build.started")
     String buildStarted(String project);
 

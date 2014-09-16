@@ -15,7 +15,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,13 +26,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerTotalTimeIndicator extends IndicatorAction {
-    private final RunnerController runnerController;
-    private final AppContext appContext;
+    private final RunController runController;
+    private final AppContext    appContext;
 
     @Inject
-    public RunnerTotalTimeIndicator(RunnerController runnerController, RunnerResources resources, AppContext appContext) {
+    public RunnerTotalTimeIndicator(RunController runController, RunnerResources resources, AppContext appContext) {
         super("Time Active", false, 170, resources);
-        this.runnerController = runnerController;
+        this.runController = runController;
         this.appContext = appContext;
     }
 
@@ -40,7 +40,7 @@ public class RunnerTotalTimeIndicator extends IndicatorAction {
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() != null) {
             final Presentation presentation = e.getPresentation();
-            final RunnerMetric metric = runnerController.getTotalTime();
+            final RunnerMetric metric = runController.getTotalTime();
             if (metric != null) {
                 presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
                 presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

@@ -15,7 +15,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,13 +26,13 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
-    private final RunnerController runnerController;
-    private AppContext appContext;
+    private final RunController runController;
+    private       AppContext    appContext;
 
     @Inject
-    public RunnerTimeoutThresholdIndicator(RunnerController runnerController, RunnerResources resources, AppContext appContext) {
+    public RunnerTimeoutThresholdIndicator(RunController runController, RunnerResources resources, AppContext appContext) {
         super("Timeout", false, 240, resources);
-        this.runnerController = runnerController;
+        this.runController = runController;
         this.appContext = appContext;
     }
 
@@ -40,7 +40,7 @@ public class RunnerTimeoutThresholdIndicator extends IndicatorAction {
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() != null) {
             final Presentation presentation = e.getPresentation();
-            final RunnerMetric metric = runnerController.getCurrentAppTerminationTime();
+            final RunnerMetric metric = runController.getCurrentAppTerminationTime();
             if (metric != null) {
                 presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
                 presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

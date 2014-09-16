@@ -17,7 +17,7 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.builder.client.build.BuildController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,18 +29,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class BuildAction extends Action {
 
-    private final AppContext            appContext;
-    private final BuildProjectPresenter presenter;
-    private final AnalyticsEventLogger  eventLogger;
-    private       BuildContext          buildContext;
+    private final AppContext           appContext;
+    private final BuildController      buildController;
+    private final AnalyticsEventLogger eventLogger;
+    private       BuildContext         buildContext;
 
     @Inject
-    public BuildAction(BuildProjectPresenter presenter, BuilderResources resources,
+    public BuildAction(BuildController buildController, BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant, AppContext appContext,
                        AnalyticsEventLogger eventLogger, BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), null, resources.build());
-        this.presenter = presenter;
+        this.buildController = buildController;
         this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
@@ -50,7 +50,7 @@ public class BuildAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log("IDE: Build project");
-        presenter.buildActiveProject(true);
+        buildController.buildActiveProject(true);
     }
 
     /** {@inheritDoc} */

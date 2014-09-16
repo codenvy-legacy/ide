@@ -64,7 +64,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildProjectPresenter implements Notification.OpenNotificationHandler {
+public class BuildController implements Notification.OpenNotificationHandler {
 
     protected final AppContext                               appContext;
     protected final BuilderConsolePresenter                  console;
@@ -89,18 +89,18 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
     private   EditorAgent         editorAgent;
 
     @Inject
-    protected BuildProjectPresenter(EventBus eventBus,
-                                    WorkspaceAgent workspaceAgent,
-                                    AppContext appContext,
-                                    final BuilderConsolePresenter console,
-                                    BuilderServiceClient service,
-                                    BuilderLocalizationConstant constant,
-                                    NotificationManager notificationManager,
-                                    DtoFactory dtoFactory,
-                                    EditorAgent editorAgent,
-                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                    MessageBus messageBus,
-                                    BuildContext buildContext) {
+    protected BuildController(EventBus eventBus,
+                              WorkspaceAgent workspaceAgent,
+                              AppContext appContext,
+                              final BuilderConsolePresenter console,
+                              BuilderServiceClient service,
+                              BuilderLocalizationConstant constant,
+                              NotificationManager notificationManager,
+                              DtoFactory dtoFactory,
+                              EditorAgent editorAgent,
+                              DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                              MessageBus messageBus,
+                              BuildContext buildContext) {
         this.workspaceAgent = workspaceAgent;
         this.appContext = appContext;
         this.console = console;
@@ -188,7 +188,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         lastBuildTaskDescriptor = null;
         activeProject = appContext.getCurrentProject().getProjectDescription();
 
-        notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildProjectPresenter.this);
+        notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildController.this);
         notificationManager.showNotification(notification);
         buildContext.setBuilding(true);
         if (isUserAction) {
@@ -237,9 +237,9 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
                         isBuildInProgress = false;
                         try {
                             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
-                            Log.error(BuildProjectPresenter.class, exception);
+                            Log.error(BuildController.class, exception);
                         } catch (WebSocketException e) {
-                            Log.error(BuildProjectPresenter.class, e);
+                            Log.error(BuildController.class, e);
                         }
                         notification.setType(ERROR);
                         notification.setStatus(FINISHED);
@@ -251,7 +251,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         try {
             messageBus.subscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuildController.class, e);
         }
     }
 
@@ -259,7 +259,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuildController.class, e);
         }
     }
 
@@ -268,7 +268,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         try {
             messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuildController.class, e);
         }
     }
 
@@ -283,7 +283,7 @@ public class BuildProjectPresenter implements Notification.OpenNotificationHandl
         try {
             messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
-            Log.error(BuildProjectPresenter.class, e);
+            Log.error(BuildController.class, e);
         }
     }
 

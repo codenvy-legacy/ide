@@ -94,7 +94,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunnerController implements Notification.OpenNotificationHandler {
+public class RunController implements Notification.OpenNotificationHandler {
 
     /** WebSocket channel to get application's status. */
     public static final String STATUS_CHANNEL     = "runner:status:";
@@ -132,19 +132,19 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private   int                                               overrideRAM;
 
     @Inject
-    public RunnerController(EventBus eventBus,
-                            final WorkspaceAgent workspaceAgent,
-                            final RunnerConsolePresenter console,
-                            final RunnerServiceClient service,
-                            final RunnerLocalizationConstant constant,
-                            final NotificationManager notificationManager,
-                            DtoFactory dtoFactory,
-                            EditorAgent editorAgent,
-                            final DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                            MessageBus messageBus,
-                            ThemeAgent themeAgent,
-                            final AppContext appContext,
-                            ProjectServiceClient projectServiceClient) {
+    public RunController(EventBus eventBus,
+                         final WorkspaceAgent workspaceAgent,
+                         final RunnerConsolePresenter console,
+                         final RunnerServiceClient service,
+                         final RunnerLocalizationConstant constant,
+                         final NotificationManager notificationManager,
+                         DtoFactory dtoFactory,
+                         EditorAgent editorAgent,
+                         final DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                         MessageBus messageBus,
+                         ThemeAgent themeAgent,
+                         final AppContext appContext,
+                         ProjectServiceClient projectServiceClient) {
         this.eventBus = eventBus;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
@@ -359,7 +359,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
     private void runProject(RunOptions runOptions, final boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
-                                        RunnerController.this);
+                                        RunController.this);
         notificationManager.showNotification(notification);
         console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
         console.print("[INFO] " + notification.getMessage());
@@ -470,7 +470,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
                 try {
                     messageBus.unsubscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), this);
                 } catch (WebSocketException e) {
-                    Log.error(RunnerController.class, e);
+                    Log.error(RunController.class, e);
                 }
                 appContext.getCurrentProject().setProcessDescriptor(null);
                 appContext.getCurrentProject().setIsRunningEnabled(true);
@@ -480,7 +480,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         try {
             messageBus.subscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
@@ -488,7 +488,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         try {
             messageBus.unsubscribe(STATUS_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerStatusHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
@@ -497,7 +497,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         try {
             messageBus.subscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
@@ -506,7 +506,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         try {
             messageBus.unsubscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
@@ -537,14 +537,14 @@ public class RunnerController implements Notification.OpenNotificationHandler {
 
             @Override
             protected void onErrorReceived(Throwable exception) {
-                Log.error(RunnerController.class, exception);
+                Log.error(RunController.class, exception);
             }
         };
 
         try {
             messageBus.subscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
@@ -553,7 +553,7 @@ public class RunnerController implements Notification.OpenNotificationHandler {
         try {
             messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
         } catch (WebSocketException e) {
-            Log.error(RunnerController.class, e);
+            Log.error(RunController.class, e);
         }
     }
 
