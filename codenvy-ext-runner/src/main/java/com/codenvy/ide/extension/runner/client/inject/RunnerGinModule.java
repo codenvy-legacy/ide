@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.extension.runner.client.ImageActionManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleView;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
@@ -37,5 +38,6 @@ public class RunnerGinModule extends AbstractGinModule {
         bind(RamManagerView.class).to(RamManagerViewImpl.class).in(Singleton.class);
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(RamManagePresenter.class);
+        bind(ImageActionManager.class).asEagerSingleton();
     }
 }

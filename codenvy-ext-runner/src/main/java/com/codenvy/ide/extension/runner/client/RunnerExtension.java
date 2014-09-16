@@ -54,6 +54,7 @@ import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
     public static final String GROUP_RUNNER_CONSOLE_TOOLBAR  = "RunnerConsoleToolbar";
+    public static final String GROUP_CUSTOM_IMAGES           = "CustomImagesGroup";
     /** Key for user preference which contains default RAM size. */
     public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
 
@@ -71,6 +72,7 @@ public class RunnerExtension {
 
     @Inject
     private void prepareActions(RunnerLocalizationConstant localizationConstants,
+                                RunnerResources resources,
                                 ActionManager actionManager,
                                 RunAction runAction,
                                 CustomRunAction customRunAction,
@@ -107,6 +109,12 @@ public class RunnerExtension {
         runContextGroup.addSeparator();
         runContextGroup.add(runAction);
         contextMenuGroup.add(runContextGroup);
+
+        // add 'Custom Images' group
+        DefaultActionGroup customImagesGroup = new DefaultActionGroup(localizationConstants.customImagesActionTitle(), true, actionManager);
+        customImagesGroup.getTemplatePresentation().setSVGIcon(resources.launchApp());
+        actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
+        runMenuActionGroup.add(customImagesGroup, new Constraints(Anchor.AFTER, localizationConstants.customRunAppActionId()));
     }
 
     @Inject

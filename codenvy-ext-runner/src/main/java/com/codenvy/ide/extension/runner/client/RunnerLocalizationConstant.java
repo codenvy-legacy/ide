@@ -81,6 +81,18 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.viewRecipe.description")
     String viewRecipeDescription();
 
+    @Key("control.customImages.title")
+    String customImagesActionTitle();
+
+    @Key("control.image.id")
+    String imageActionId(int id);
+
+    @Key("control.image.text")
+    String imageActionText(int id);
+
+    @Key("control.image.description")
+    String imageActionDescription(int id);
+
     /* Messages */
     @Key("another.project.running.now")
     String anotherProjectRunningNow();
