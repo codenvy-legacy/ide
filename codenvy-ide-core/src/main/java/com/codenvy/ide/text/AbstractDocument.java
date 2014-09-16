@@ -28,6 +28,7 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1075,16 +1076,6 @@ public abstract class AbstractDocument implements Document {
         return fFindReplaceDocumentAdapter;
     }
 
-//   /**
-//    * Flushes all registered post notification changes.
-//    * 
-//    */
-//   private void flushPostNotificationChanges()
-//   {
-//      if (fPostNotificationChanges != null)
-//         fPostNotificationChanges.clear();
-//   }
-
     /*
      * @see org.eclipse.jface.text.IDocumentExtension2#acceptPostNotificationReplaces ()
      * @since 2.1
@@ -1625,8 +1616,7 @@ public abstract class AbstractDocument implements Document {
      * @since 3.6
      */
     private static void log(final Exception ex) {
-        // TODO log exception
-        ex.printStackTrace();
+        Log.error(AbstractDocument.class, ex);
     }
 
 }
