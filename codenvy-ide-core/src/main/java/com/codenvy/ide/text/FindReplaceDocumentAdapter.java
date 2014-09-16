@@ -318,6 +318,7 @@ public class FindReplaceDocumentAdapter implements CharSequence {
                     if (i + 1 < length && string.charAt(i + 1) == '\n')
                         i++;
                     //$FALL-THROUGH$
+                    break;
                 case '\n':
                     pattern.append("\\R"); //$NON-NLS-1$
                     break;

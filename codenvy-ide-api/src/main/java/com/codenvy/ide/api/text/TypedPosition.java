@@ -16,7 +16,7 @@ package com.codenvy.ide.api.text;
  * {@link TypedRegion}.
  * <p/>
  * As {@link Position},<code>TypedPosition</code> can
- * not be used as key in hash tables as it overrides <code>equals</code> and
+ * not be used as key in hash tables as it overrides <code>isEquals</code> and
  * <code>hashCode</code> as it would be a value object.
  */
 public class TypedPosition extends Position {
@@ -60,7 +60,7 @@ public class TypedPosition extends Position {
     }
 
     /*
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see java.lang.Object#isEquals(java.lang.Object)
      */
     public boolean equals(Object o) {
         if (o instanceof TypedPosition) {

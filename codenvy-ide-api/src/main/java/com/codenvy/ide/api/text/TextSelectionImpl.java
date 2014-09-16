@@ -153,7 +153,7 @@ public class TextSelectionImpl implements TextSelection {
     }
 
     /*
-     * @see java.lang.Object#equals(Object)
+     * @see java.lang.Object#isEquals(Object)
      */
     public boolean equals(Object obj) {
         if (obj == this)

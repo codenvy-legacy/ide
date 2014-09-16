@@ -99,7 +99,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> 
 //                localRoot = null;
 //                for (int j = 0; j < children.size(); j++) {
 //                    TreeNode node = children.get(i);
-//                    if (node.getDisplayName().equals(path)) {
+//                    if (node.getDisplayName().isEquals(path)) {
 //                        localRoot = node;
 //                        break;
 //                    }

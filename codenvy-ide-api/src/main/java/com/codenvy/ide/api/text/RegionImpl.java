@@ -42,7 +42,7 @@ public class RegionImpl implements Region {
         return fOffset;
     }
 
-    /* @see java.lang.Object#equals(java.lang.Object) */
+    /* @see java.lang.Object#isEquals(java.lang.Object) */
     public boolean equals(Object o) {
         if (o instanceof Region) {
             Region r = (Region)o;
