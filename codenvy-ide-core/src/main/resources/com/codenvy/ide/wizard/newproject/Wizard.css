@@ -41,7 +41,7 @@
     border-style: solid;
     margin: 5px;
     color: rgba(255, 255, 255, 1);
-    box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 0px 0px rgba(110, 110, 110, 1);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px rgba(110, 110, 110, 1);
     border-color: rgba(12, 12, 13, 0.7);
 }
 
@@ -51,7 +51,7 @@
 
 .button:ACTIVE {
     background:#414141;
-    box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
 }
 
 .button[disabled], .button[disabled]:HOVER {
@@ -62,7 +62,7 @@
 /* Blue button styles */
 .blueButton {
     background: #256c9f;
-    box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 0px 0px rgba(55, 126, 172, 1);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px rgba(55, 126, 172, 1);
     border-color: #2f3237;
     margin: 5px 25px 0px 8px;
 }
@@ -73,7 +73,7 @@
 
 .blueButton:ACTIVE {
     background: #18537e;
-    box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
 }
 
 .blueButton[disabled], .blueButton[disabled]:HOVER {
