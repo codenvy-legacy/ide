@@ -28,7 +28,7 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.JavaScriptException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -494,7 +494,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 l.documentPartitioningChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
     }
@@ -514,7 +514,7 @@ public abstract class AbstractDocument implements Document {
                 try {
                     p.documentAboutToBeChanged(event);
                 } catch (Exception ex) {
-                    log(ex);
+                    fail(ex);
                 }
             }
         }
@@ -524,7 +524,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -533,7 +533,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -619,7 +619,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -628,7 +628,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
     }
@@ -1615,8 +1615,8 @@ public abstract class AbstractDocument implements Document {
      *         the exception
      * @since 3.6
      */
-    private static void log(final Exception ex) {
-        Log.error(AbstractDocument.class, ex);
+    private static void fail(final Exception ex) {
+        throw new JavaScriptException(ex);
     }
 
 }
