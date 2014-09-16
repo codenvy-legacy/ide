@@ -111,24 +111,59 @@
             border-radius: 1px;
             height: 28px;
             min-width: 65px;
-            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+            color: rgba(255, 255, 255, 1);
         }
 
+        /* button styles */
         .button {
+            background: #515151;
+            border-width: 1px;
+            border-style: solid;
             margin: 5px;
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 0px 0px rgba(110, 110, 110, 1);
+            border-color: rgba(12, 12, 13, 0.7);
         }
 
-        .blueButton, .blueButton[disabled]:hover {
-            background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3a68a2 1px, #3a68a2 100%);
+        .button:HOVER {
+            background: #414141;
+        }
+
+        .button:ACTIVE {
+            background:#414141;
+            box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+        }
+
+        .button[disabled], .button[disabled]:HOVER {
+            background: rgba(81, 81, 81, 0.35);
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Blue button styles */
+        .blueButton {
+            background: #256c9f;
+            box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 0px 0px rgba(55, 126, 172, 1);
+            border-color: #2f3237;
             margin: 5px 25px 0px 8px;
         }
 
-        .blueButton:hover {
-            background: linear-gradient(to bottom, #497bae 0, #497bae 1px, #3263A2 1px, #3263A2 100%);
+        .blueButton:HOVER {
+            background: #18537e;
+        }
+
+        .blueButton:ACTIVE {
+            background: #18537e;
+            box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+        }
+
+        .blueButton[disabled], .blueButton[disabled]:HOVER {
+            background: rgba(37, 108, 159, 0.35);
+            color: rgba(255, 255, 255, 0.35);
         }
 
         .disabled {
-            opacity: 0.4;
+            /* opacity now done in button/blueButton[disabled] in the text color and background */
+            /* opacity: 0.35; */
         }
 
         .labelPanel {
