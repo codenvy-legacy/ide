@@ -54,8 +54,8 @@ public class DtoFactoryVisitorRegistryGenerator {
                     rootDirPath = args[0].substring(GeneratorUtils.ROOT_DIR_PARAMETER.length());
                 } else {
                     System.err.print("Wrong usage. There is only one allowed argument : "
-                                     + GeneratorUtils.ROOT_DIR_PARAMETER);
-                    System.exit(1);
+                                     + GeneratorUtils.ROOT_DIR_PARAMETER);//NOSONAR
+                    System.exit(1);//NOSONAR
                 }
             }
 
@@ -70,7 +70,7 @@ public class DtoFactoryVisitorRegistryGenerator {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             // error
-            System.exit(1);
+            System.exit(1);//NOSONAR
         }
     }
 
