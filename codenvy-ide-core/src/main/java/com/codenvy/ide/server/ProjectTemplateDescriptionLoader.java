@@ -62,25 +62,26 @@ public class ProjectTemplateDescriptionLoader {
                             template.getDefaultBuilderEnvironment(),
                             template.getRunnerName(),
                             template.getDefaultRunnerEnvironment(),
-                            getReformatedRunnerEnvConfigs(template)));
+                            getReformattedRunnerEnvConfigs(template)));
                 }
             }
         }
     }
 
-    private Map<String, RunnerEnvironmentConfiguration> getReformatedRunnerEnvConfigs(ProjectTemplateDescriptor template) {
+    private Map<String, RunnerEnvironmentConfiguration> getReformattedRunnerEnvConfigs(ProjectTemplateDescriptor template) {
         String defaultRunnerEnvironment = template.getDefaultRunnerEnvironment();
         Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
                 template.getRunnerEnvironmentConfigurations();
         Map<String, RunnerEnvironmentConfiguration> runnerEnvConfigs = new LinkedHashMap<>();
         if (template.getRunnerEnvironmentConfigurations() != null) {
             if (runnerEnvironmentConfigurations != null) {
-                RunnerEnvironmentConfigurationDescriptor descriptor =
-                        runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+                RunnerEnvironmentConfigurationDescriptor descriptor = runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
                 if (descriptor != null) {
                     runnerEnvConfigs.put(defaultRunnerEnvironment,
-                                         new RunnerEnvironmentConfiguration(-1, descriptor.getRecommendedMemorySize(),
-                                                                            descriptor.getDefaultMemorySize()));
+                                         new RunnerEnvironmentConfiguration(descriptor.getRequiredMemorySize(),
+                                                                            descriptor.getRecommendedMemorySize(),
+                                                                            descriptor.getDefaultMemorySize(),
+                                                                            descriptor.getOptions()));
                 }
             }
         }
