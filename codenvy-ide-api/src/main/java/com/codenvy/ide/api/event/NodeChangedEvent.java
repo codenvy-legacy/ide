@@ -82,6 +82,7 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
                 break;
             case CHILDREN_CHANGED:
                 handler.onNodeChildrenChanged(this);
+                break;
             default:
                 break;
         }

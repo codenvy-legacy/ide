@@ -15,7 +15,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.googlecode.gwt.test.GwtModule;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @GwtModule("com.codenvy.ide.extension.runner.Runner")
 public abstract class BaseTest extends GwtTestWithMockito {
     @Mock
-    protected RunnerController           runnerController;
+    protected RunController              runController;
     @Mock
     protected RunnerConsolePresenter     runnerConsolePresenter;
     @Mock

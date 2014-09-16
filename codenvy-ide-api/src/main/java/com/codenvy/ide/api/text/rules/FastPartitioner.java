@@ -756,13 +756,13 @@ public class FastPartitioner implements DocumentPartitioner {
                 if (!positions[i].equals(fCachedPositions[i]))
                     System.err.println(
                             "FastPartitioner.getPositions(): cached position is not up to date: from document: " + toString(positions[i]) +
-                            " in cache: " + toString(fCachedPositions[i])); //$NON-NLS-1$ //$NON-NLS-2$
+                            " in cache: " + toString(fCachedPositions[i])); //NOSONAR $NON-NLS-1$ //$NON-NLS-2$
             }
             for (int i = len; i < positions.length; i++)
-                System.err.println("FastPartitioner.getPositions(): new position in document: " + toString(positions[i])); //$NON-NLS-1$
+                System.err.println("FastPartitioner.getPositions(): new position in document: " + toString(positions[i])); //NOSONAR $NON-NLS-1$
             for (int i = len; i < fCachedPositions.length; i++)
                 System.err
-                      .println("FastPartitioner.getPositions(): stale position in cache: " + toString(fCachedPositions[i])); //$NON-NLS-1$
+                      .println("FastPartitioner.getPositions(): stale position in cache: " + toString(fCachedPositions[i])); //NOSONAR $NON-NLS-1$
         }
         return fCachedPositions;
     }

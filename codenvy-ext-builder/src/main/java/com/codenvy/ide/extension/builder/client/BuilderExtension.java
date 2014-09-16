@@ -11,9 +11,9 @@
 package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.constraints.Anchor;
 import com.codenvy.ide.api.constraints.Constraints;
-import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
@@ -54,13 +54,16 @@ public class BuilderExtension {
     public static final String GROUP_BUILDER_CONSOLE_TOOLBAR = "BuilderConsoleToolbar";
 
     @Inject
-    public BuilderExtension(BuilderLocalizationConstant localizationConstants,
-                            BuilderResources builderResources,
-                            ActionManager actionManager,
-                            BuildAction buildAction,
-                            ClearConsoleAction clearConsoleAction) {
+    public BuilderExtension(BuilderResources builderResources) {
         builderResources.builder().ensureInjected();
+    }
 
+    @Inject
+    private void prepareActions(BuilderLocalizationConstant localizationConstants,
+                                ActionManager actionManager,
+                                BuildAction buildAction,
+                                ClearConsoleAction clearConsoleAction) {
+        // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
         actionManager.registerAction(localizationConstants.clearConsoleControlId(), clearConsoleAction);
 
@@ -85,18 +88,17 @@ public class BuilderExtension {
     }
 
     @Inject
-    private void addBuilderConsole(ActionManager actionManager,
-                                   ClearConsoleAction clearConsoleAction,
-                                   ArtifactURLIndicator artifactURLIndicator,
-                                   BuildStartedIndicator buildStartedIndicator,
-                                   BuildFinishedIndicator buildFinishedIndicator,
-                                   BuildTotalTimeIndicator buildTotalTimeIndicator,
-                                   BuildTimeoutThresholdIndicator buildTimeoutThresholdIndicator,
-                                   BuildStatusIndicator buildStatusIndicator,
-                                   WorkspaceAgent workspaceAgent,
-                                   BuilderConsolePresenter builderConsolePresenter,
-                                   @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
-        //TODO need to make a new binding for Events title
+    private void prepareBuilderConsole(ActionManager actionManager,
+                                       ClearConsoleAction clearConsoleAction,
+                                       ArtifactURLIndicator artifactURLIndicator,
+                                       BuildStartedIndicator buildStartedIndicator,
+                                       BuildFinishedIndicator buildFinishedIndicator,
+                                       BuildTotalTimeIndicator buildTotalTimeIndicator,
+                                       BuildTimeoutThresholdIndicator buildTimeoutThresholdIndicator,
+                                       BuildStatusIndicator buildStatusIndicator,
+                                       WorkspaceAgent workspaceAgent,
+                                       BuilderConsolePresenter builderConsolePresenter,
+                                       @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
         workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Events"));
 
         // add toolbar with indicators to Builder console

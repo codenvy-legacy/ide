@@ -467,7 +467,7 @@ public abstract class TextEdit {
      * @see Object#equals(java.lang.Object)
      */
     public final boolean equals(Object obj) {
-        return this == obj; // equivalent to Object.equals
+        return this == obj; // equivalent to Object.isEquals
     }
 
     /**

@@ -41,8 +41,8 @@ public class IDEInjectorGenerator {
             "com/codenvy/ide/client/inject/IDEInjector.java";
 
     /** Set containing all the FQNs of GinModules */
-    public static final Set<String> extensionsFqn = new HashSet<String>();
-    public static final String      CLIENT_MODULE = "com.codenvy.ide.client.inject.IDEClientModule";
+    public static final Set<String> EXTENSIONS_FQN = new HashSet<String>();
+    public static final String      CLIENT_MODULE  = "com.codenvy.ide.client.inject.IDEClientModule";
 
     /**
      * Entry point. --rootDir is the optional parameter.
@@ -59,8 +59,8 @@ public class IDEInjectorGenerator {
                     rootDirPath = args[0].substring(GeneratorUtils.ROOT_DIR_PARAMETER.length());
                 } else {
                     System.err.print("Wrong usage. There is only one allowed argument : "
-                                     + GeneratorUtils.ROOT_DIR_PARAMETER);
-                    System.exit(1);
+                                     + GeneratorUtils.ROOT_DIR_PARAMETER);//NOSONAR
+                    System.exit(1);//NOSONAR
                 }
             }
             File rootFolder = new File(rootDirPath);
@@ -73,7 +73,7 @@ public class IDEInjectorGenerator {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             // error
-            System.exit(1);
+            System.exit(1);//NOSONAR
         }
 
     }
@@ -85,11 +85,6 @@ public class IDEInjectorGenerator {
      */
     public static void generateExtensionManager(File rootFolder) throws IOException {
         File extManager = new File(rootFolder, IDE_INJECTOR_PATH);
-//        if (!extManager.exists()) {
-//            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
-//                                                IDE_INJECTOR_PATH));
-//        }
-
         StringBuilder builder = new StringBuilder();
         // declare package name
         builder.append("package " + "com.codenvy.ide.client.inject;\n\n");
@@ -138,7 +133,7 @@ public class IDEInjectorGenerator {
      */
     public static void generateListOfModules(StringBuilder builder) {
         // Generate the list of GinModules declarations
-        Iterator<String> entryIterator = extensionsFqn.iterator();
+        Iterator<String> entryIterator = EXTENSIONS_FQN.iterator();
         while (entryIterator.hasNext()) {
             // <FullFQN, ClassName>
             String ginModuleFQN = entryIterator.next();
@@ -155,40 +150,15 @@ public class IDEInjectorGenerator {
      */
     @SuppressWarnings("unchecked")
     public static void findGinModules(File rootFolder) throws IOException {
-//        // list all Java Files
-//        String[] extensions = {"java"};
-//        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
-//        for (File file : listFiles) {
-//            String fileContent = FileUtils.readFileToString(file);
-//            // check file has annotation ExtensionGinModule
-//            if (fileContent.contains(GIN_MODULE_ANNOTATION)) {
-//                // read package name and class name
-//                String className = file.getName().split("\\.")[0];
-//                String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
-//                // exclude "com.codenvy.ide.util"
-//                if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
-//                    String fullFqn = packageName + "." + className;
-//                    if (!extensionsFqn.contains(fullFqn)) {
-//                        extensionsFqn.add(fullFqn);
-//                        System.out.println(String.format("New Gin Module Found: %s.%s", packageName, className));
-//                    }
-//                } else {
-//                    // skip this class, cause it is an utility, not the actual extension.
-//                    //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
-//                    //                     packageName, className));
-//                }
-//            }
-//        }
-//        System.out.println(String.format("Found: %d Gin Modules", extensionsFqn.size()));
         Reflections reflection = new Reflections(new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(ExtensionGinModule.class);
         for (Class clazz : classes) {
-            extensionsFqn.add(clazz.getCanonicalName());
+            EXTENSIONS_FQN.add(clazz.getCanonicalName());
             System.out.println(String.format("New Gin Module Found: %s", clazz.getCanonicalName()));
         }
-        extensionsFqn.add(CLIENT_MODULE);
+        EXTENSIONS_FQN.add(CLIENT_MODULE);
         System.out.println(String.format("New Gin Module Found: %s", CLIENT_MODULE));
-        System.out.println(String.format("Found: %d Gin Modules", extensionsFqn.size()));
+        System.out.println(String.format("Found: %d Gin Modules", EXTENSIONS_FQN.size()));
     }
 
 }

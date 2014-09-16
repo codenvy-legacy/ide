@@ -23,7 +23,7 @@ import com.codenvy.ide.runtime.Assert;
  * position updaters are not allowed to access these public fields.
  * </p>
  * <p>
- * Positions cannot be used as keys in hash tables as they override <code>equals</code> and <code>hashCode</code> as they would be
+ * Positions cannot be used as keys in hash tables as they override <code>isEquals</code> and <code>hashCode</code> as they would be
  * value objects.
  * </p>
  *
@@ -85,7 +85,7 @@ public class Position {
         isDeleted = false;
     }
 
-    /* @see java.lang.Object#equals(java.lang.Object) */
+    /* @see java.lang.Object#isEquals(java.lang.Object) */
     public boolean equals(Object other) {
         if (other instanceof Position) {
             Position rp = (Position)other;

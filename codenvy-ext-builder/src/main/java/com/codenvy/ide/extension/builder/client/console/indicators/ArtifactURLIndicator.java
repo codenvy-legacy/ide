@@ -13,7 +13,7 @@ package com.codenvy.ide.extension.builder.client.console.indicators;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
-import com.codenvy.ide.extension.builder.client.build.BuildProjectPresenter;
+import com.codenvy.ide.extension.builder.client.build.BuildController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -24,17 +24,17 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ArtifactURLIndicator extends IndicatorAction {
-    private final BuildProjectPresenter buildProjectPresenter;
+    private final BuildController buildController;
 
     @Inject
-    public ArtifactURLIndicator(BuildProjectPresenter buildProjectPresenter, BuilderResources resources) {
+    public ArtifactURLIndicator(BuildController buildController, BuilderResources resources) {
         super("Artifact", true, 205, resources);
-        this.buildProjectPresenter = buildProjectPresenter;
+        this.buildController = buildController;
     }
 
     @Override
     public void update(ActionEvent e) {
         final Presentation presentation = e.getPresentation();
-        presentation.putClientProperty(Properties.DATA_PROPERTY, buildProjectPresenter.getLastBuildResultURL());
+        presentation.putClientProperty(Properties.DATA_PROPERTY, buildController.getLastBuildResultURL());
     }
 }

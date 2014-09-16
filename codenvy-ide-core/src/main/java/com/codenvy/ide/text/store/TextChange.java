@@ -32,7 +32,7 @@ public class TextChange {
         return new TextChange(Type.INSERT, line, lineNumber, column, lastLine, lastLineNumber, text);
     }
 
-    // This class implements equals and hashCode, make sure to update!
+    // This class implements isEquals and hashCode, make sure to update!
     private final int    column;
     private final Line   lastLine;
     private final int    lastLineNumber;

@@ -149,7 +149,7 @@ public class TextUtilities {
     }
 
     /**
-     * Returns the index of the first compare string that equals the given text or <code>-1</code> if none is equal.
+     * Returns the index of the first compare string that isEquals the given text or <code>-1</code> if none is equal.
      *
      * @param compareStrings
      *         the strings to compare with
@@ -157,7 +157,7 @@ public class TextUtilities {
      *         the text to check
      * @return the index of the first equal compare string or <code>-1</code>
      */
-    public static int equals(String[] compareStrings, String text) {
+    public static int isEquals(String[] compareStrings, String text) {
         for (int i = 0; i < compareStrings.length; i++) {
             if (text.equals(compareStrings[i]))
                 return i;

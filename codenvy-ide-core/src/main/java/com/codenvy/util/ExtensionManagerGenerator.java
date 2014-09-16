@@ -46,7 +46,7 @@ public class ExtensionManagerGenerator {
             "com/codenvy/ide/client/ExtensionManager.java";
 
     /** Map containing <FullFQN, ClassName> */
-    protected static final Map<String, String> extensionsFqn = new HashMap<String, String>();
+    protected static final Map<String, String> EXTENSIONS_FQN = new HashMap<String, String>();
 
     /**
      * Entry point. --rootDir is the optional parameter.
@@ -62,8 +62,8 @@ public class ExtensionManagerGenerator {
                     rootDirPath = args[0].substring(GeneratorUtils.ROOT_DIR_PARAMETER.length());
                 } else {
                     System.err.print("Wrong usage. There is only one allowed argument : "
-                                     + GeneratorUtils.ROOT_DIR_PARAMETER);
-                    System.exit(1);
+                                     + GeneratorUtils.ROOT_DIR_PARAMETER);//NOSONAR
+                    System.exit(1);//NOSONAR
                 }
             }
             File rootFolder = new File(rootDirPath);
@@ -76,7 +76,7 @@ public class ExtensionManagerGenerator {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             // error
-            System.exit(1);
+            System.exit(1);//NOSONAR
         }
     }
 
@@ -87,11 +87,6 @@ public class ExtensionManagerGenerator {
      */
     public static void generateExtensionManager(File rootFolder) throws IOException {
         File extManager = new File(rootFolder, EXT_MANAGER_PATH);
-//        if (!extManager.exists()) {
-//            throw new IOException(String.format("File \"%s\" not found. Utility seems to be started in wrong folder",
-//                                                EXT_MANAGER_PATH));
-//        }
-
         StringBuilder builder = new StringBuilder();
         builder.append("package " + "com.codenvy.ide.client;\n\n");
         generateImports(builder);
@@ -129,7 +124,7 @@ public class ExtensionManagerGenerator {
         builder.append(GeneratorUtils.TAB + "public ExtensionManager(\n");
 
         // paste args here
-        Iterator<Entry<String, String>> entryIterator = extensionsFqn.entrySet().iterator();
+        Iterator<Entry<String, String>> entryIterator = EXTENSIONS_FQN.entrySet().iterator();
         while (entryIterator.hasNext()) {
             // <FullFQN, ClassName>
             Entry<String, String> extensionEntry = entryIterator.next();
@@ -145,7 +140,7 @@ public class ExtensionManagerGenerator {
         builder.append(GeneratorUtils.TAB + "{\n");
 
         // paste add here
-        for (Entry<String, String> extension : extensionsFqn.entrySet()) {
+        for (Entry<String, String> extension : EXTENSIONS_FQN.entrySet()) {
             String fullFqn = extension.getKey();
             String variableName = extension.getValue().toLowerCase();
 
@@ -182,13 +177,6 @@ public class ExtensionManagerGenerator {
 
         builder.append("import com.codenvy.ide.collections.StringMap;\n");
         builder.append("import com.codenvy.ide.collections.Collections;\n");
-
-        // add all Extensions into the import
-        // NO NEED TO GENERATE IMPORT FOR EXTENSION, SINCE FULL FQN USED IN CONSTRUCTOR ARGUMENTS
-        //      for (String fqn : extensionsFqn.keySet())
-        //      {
-        //         builder.append("import " + fqn + ";\n");
-        //      }
     }
 
     /**
@@ -198,42 +186,12 @@ public class ExtensionManagerGenerator {
      */
     @SuppressWarnings("unchecked")
     public static void findExtensions() throws IOException {
-
-//        // list all Java Files
-//        String[] extensions = {"java"};
-//        Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
-//        for (File file : listFiles) {
-//            // check file has annotation @Extension
-//            String fileContent = FileUtils.readFileToString(file);
-//
-//            // quick filter is "@Extension" text exists, later, need to check with regexp
-//            if (fileContent.contains(EXT_ANNOTATION)) {
-//                // for sure file contains Extension annotation, not just "@Extension" in the javadocs or whatever
-//                if (EXT_PATTERN.matcher(fileContent).matches()) {
-//                    // read package name and class name
-//                    String className = file.getName().split("\\.")[0];
-//                    String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
-//                    if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL)) {
-//
-//                        String fullFqn = packageName + "." + className;
-//                        if (!extensionsFqn.containsKey(fullFqn)) {
-//                            extensionsFqn.put(fullFqn, className);
-//                            System.out.println(String.format("New Extension Found: %s.%s", packageName, className));
-//                        }
-//                    } else {
-//                        // skip this class, cause it is an utility, not the actual extension.
-//                        //                  System.out.println(String.format("Skipping class %s.%s as it is utility, not the extension",
-//                        //                     packageName, className));
-//                    }
-//                }
-//            }
-//        }
         Reflections reflection = new Reflections(new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(Extension.class);
         for (Class clazz : classes) {
-            extensionsFqn.put(clazz.getCanonicalName(), clazz.getSimpleName());
+            EXTENSIONS_FQN.put(clazz.getCanonicalName(), clazz.getSimpleName());
             System.out.println(String.format("New Extension Found: %s", clazz.getCanonicalName()));
         }
-        System.out.println(String.format("Found: %d extensions", extensionsFqn.size()));
+        System.out.println(String.format("Found: %d extensions", EXTENSIONS_FQN.size()));
     }
 }

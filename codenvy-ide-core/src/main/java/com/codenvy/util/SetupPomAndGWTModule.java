@@ -96,9 +96,9 @@ public class SetupPomAndGWTModule {
         try {
             projectWithExtensionsInitializer.setupProject();
         } catch (IOException e) {
-            System.err.println("failed to setup the project.");
-            e.printStackTrace(); // display on console
-            System.exit(1); // abnormal exit, exception ocurred.
+            System.err.println("failed to setup the project.");//NOSONAR
+            e.printStackTrace(); //NOSONAR // display on console
+            System.exit(1); //NOSONAR abnormal exit, exception ocurred.
         }
     }
 

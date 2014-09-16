@@ -114,8 +114,10 @@ public class IndicatorView extends Composite {
             switch (e.getPropertyName()) {
                 case Properties.DATA_PROPERTY:
                     setData((String)e.getNewValue());
+                    break;
                 case Properties.HINT_PROPERTY:
                     setHint((String)e.getNewValue());
+                    break;
             }
         }
     }

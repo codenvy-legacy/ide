@@ -28,6 +28,7 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.runtime.Assert;
+import com.google.gwt.core.client.JavaScriptException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,19 +85,6 @@ public abstract class AbstractDocument implements Document {
     /** All registered document position updaters */
     private List<PositionUpdater> fPositionUpdaters;
 
-//   /**
-//    * The list of post notification changes
-//    * 
-//    */
-//
-//   private List fPostNotificationChanges;
-
-//   /**
-//    * The reentrance count for post notification changes.
-//    * 
-//    */
-//   private int fReentranceCount = 0;
-//
     /** Indicates whether post notification change processing has been stopped. */
     private int fStoppedCount = 0;
 
@@ -121,18 +109,6 @@ public abstract class AbstractDocument implements Document {
      * @since 3.0
      */
     private FindReplaceDocumentAdapter fFindReplaceDocumentAdapter;
-
-    // /**
-    // * The active document rewrite session.
-    // * @since 3.1
-    // */
-    // private DocumentRewriteSession fDocumentRewriteSession;
-
-    //   /**
-    //    * The registered document rewrite session listeners.
-    //    *
-    //    */
-    //   private List fDocumentRewriteSessionListeners;
 
     /**
      * The current modification stamp.
@@ -407,21 +383,6 @@ public abstract class AbstractDocument implements Document {
         return false;
     }
 
-    //   /**
-    //    * Computes the index in the list of positions at which a position with the given offset would be inserted. The position is
-    //    * supposed to become the first in this list of all positions with the same offset.
-    //    *
-    //    * @param positions the list in which the index is computed
-    //    * @param offset the offset for which the index is computed
-    //    * @return the computed index
-    //    *
-    //    * @see IDocument#computeIndexInCategory(String, int)
-    //    * @deprecated As of 3.4, replaced by {@link #computeIndexInPositionList(List, int, boolean)}
-    //    */
-    //   protected int computeIndexInPositionList(List positions, int offset)
-    //   {
-    //      return computeIndexInPositionList(positions, offset, true);
-    //   }
 
     /**
      * Computes the index in the list of positions at which a position with the given position would be inserted. The position to
@@ -514,55 +475,6 @@ public abstract class AbstractDocument implements Document {
         return computeIndexInPositionList(c, offset, true);
     }
 
-    //   /**
-    //    * Fires the document partitioning changed notification to all registered document partitioning listeners. Uses a robust
-    //    * iterator.
-    //    *
-    //    * @deprecated as of 2.0. Use <code>fireDocumentPartitioningChanged(IRegion)</code> instead.
-    //    */
-    //   protected void fireDocumentPartitioningChanged()
-    //   {
-    //      if (fDocumentPartitioningListeners == null)
-    //         return;
-    //
-    //      Object[] listeners = fDocumentPartitioningListeners.getListeners();
-    //      for (int i = 0; i < listeners.length; i++)
-    //         ((IDocumentPartitioningListener)listeners[i]).documentPartitioningChanged(this);
-    //   }
-
-//   /**
-//    * Fires the document partitioning changed notification to all registered document partitioning listeners. Uses a robust
-//    * iterator.
-//    * 
-//    * @param region the region in which partitioning has changed
-//    * 
-//    * @see IDocumentPartitioningListenerExtension
-//    * @since 2.0
-//    * @deprecated as of 3.0. Use <code>fireDocumentPartitioningChanged(DocumentPartitioningChangedEvent)</code> instead.
-//    */
-//   protected void fireDocumentPartitioningChanged(IRegion region)
-//   {
-//      if (fDocumentPartitioningListeners == null)
-//         return;
-//
-//      Object[] listeners = fDocumentPartitioningListeners.getListeners();
-//      for (int i = 0; i < listeners.length; i++)
-//      {
-//         DocumentPartitioningListener l = (DocumentPartitioningListener)listeners[i];
-//         try
-//         {
-//            if (l instanceof IDocumentPartitioningListenerExtension)
-//               ((IDocumentPartitioningListenerExtension)l).documentPartitioningChanged(this, region);
-//            else
-//               l.documentPartitioningChanged(this);
-//         }
-//         catch (Exception ex)
-//         {
-//            log(ex);
-//         }
-//      }
-//   }
-
     /**
      * Fires the document partitioning changed notification to all registered document partitioning listeners. Uses a robust
      * iterator.
@@ -582,7 +494,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 l.documentPartitioningChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
     }
@@ -595,24 +507,14 @@ public abstract class AbstractDocument implements Document {
      *         the event to be sent out
      */
     protected void fireDocumentAboutToBeChanged(DocumentEvent event) {
-
-        // IDocumentExtension
-//      if (fReentranceCount == 0)
-//         flushPostNotificationChanges();
-
         if (fDocumentPartitioners != null) {
             Iterator<DocumentPartitioner> e = fDocumentPartitioners.values().iterator();
             while (e.hasNext()) {
                 DocumentPartitioner p = e.next();
-                // if (p instanceof IDocumentPartitionerExtension3) {
-                // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
-                // if (extension.getActiveRewriteSession() != null)
-                // continue;
-                // }
                 try {
                     p.documentAboutToBeChanged(event);
                 } catch (Exception ex) {
-                    log(ex);
+                    fail(ex);
                 }
             }
         }
@@ -622,7 +524,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -631,7 +533,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -652,25 +554,9 @@ public abstract class AbstractDocument implements Document {
                 String partitioning = e.next();
                 DocumentPartitioner partitioner = (DocumentPartitioner)fDocumentPartitioners.get(partitioning);
 
-                // if (partitioner instanceof IDocumentPartitionerExtension3) {
-                // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) partitioner;
-                // if (extension.getActiveRewriteSession() != null)
-                // continue;
-                // }
-
-//            if (partitioner instanceof IDocumentPartitionerExtension)
-//            {
-//               IDocumentPartitionerExtension extension = (IDocumentPartitionerExtension)partitioner;
-//               IRegion r = partitioner.documentChanged2(event);
-//               if (r != null)
-//                  fDocumentPartitioningChangedEvent.setPartitionChange(partitioning, r.getOffset(), r.getLength());
-//            }
-//            else
-//            {
                 if (partitioner.documentChanged(event))
                     fDocumentPartitioningChangedEvent
                             .setPartitionChange(partitioning, 0, event.getDocument().getLength());
-//            }
             }
         }
 
@@ -733,7 +619,7 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
 
@@ -742,19 +628,9 @@ public abstract class AbstractDocument implements Document {
             try {
                 ((DocumentListener)listeners[i]).documentChanged(event);
             } catch (Exception ex) {
-                log(ex);
+                fail(ex);
             }
         }
-
-        // IDocumentExtension
-        //      ++fReentranceCount;
-        //      try
-        //      {
-        //      }
-        //      finally
-        //      {
-        //         --fReentranceCount;
-        //      }
     }
 
     /**
@@ -1187,23 +1063,6 @@ public abstract class AbstractDocument implements Document {
         }
     }
 
-    // /**
-    // * {@inheritDoc}
-    // *
-    // * @deprecated as of 3.0 search is provided by {@link FindReplaceDocumentAdapter}
-    // */
-    // public int search(int startPosition, String findString, boolean forwardSearch, boolean caseSensitive, boolean wholeWord)
-    // throws BadLocationException {
-    // try {
-    // IRegion region= getFindReplaceDocumentAdapter().find(startPosition, findString, forwardSearch, caseSensitive, wholeWord,
-    // false);
-    // return region == null ? -1 : region.getOffset();
-    // } catch (IllegalStateException ex) {
-    // return -1;
-    // } catch (PatternSyntaxException ex) {
-    // return -1;
-    // }
-    // }
 
     /**
      * Returns the find/replace adapter for this document.
@@ -1216,16 +1075,6 @@ public abstract class AbstractDocument implements Document {
 
         return fFindReplaceDocumentAdapter;
     }
-
-//   /**
-//    * Flushes all registered post notification changes.
-//    * 
-//    */
-//   private void flushPostNotificationChanges()
-//   {
-//      if (fPostNotificationChanges != null)
-//         fPostNotificationChanges.clear();
-//   }
 
     /*
      * @see org.eclipse.jface.text.IDocumentExtension2#acceptPostNotificationReplaces ()
@@ -1766,9 +1615,8 @@ public abstract class AbstractDocument implements Document {
      *         the exception
      * @since 3.6
      */
-    private static void log(final Exception ex) {
-        // TODO log exception
-        ex.printStackTrace();
+    private static void fail(final Exception ex) {
+        throw new JavaScriptException(ex);
     }
 
 }

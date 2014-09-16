@@ -13,6 +13,7 @@ package com.codenvy.ide.text.store;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.LineTracker;
 import com.codenvy.ide.text.TextStore;
+import com.codenvy.ide.util.loging.Log;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -45,8 +46,7 @@ public class DocumentTextStore extends DocumentModel implements TextStore {
             return getText(line.line(), offset - lineOffset, length);
 
         } catch (BadLocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(DocumentTextStore.class, e);
         }
         return "";
     }
@@ -75,8 +75,7 @@ public class DocumentTextStore extends DocumentModel implements TextStore {
                 return;
             insertText(line.line(), lineNumber, offset - lineOffset, text);
         } catch (BadLocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(DocumentTextStore.class, e);
         }
     }
 

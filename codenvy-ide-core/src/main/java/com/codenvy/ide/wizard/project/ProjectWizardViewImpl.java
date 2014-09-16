@@ -267,8 +267,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
         String project();
 
-        String bottomPanel();
-
         String privacy();
 
         String tab();
@@ -280,10 +278,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         String topPanel();
 
         String centerPanel();
-
-        String blueButton();
-
-        String button();
 
         String disabled();
 

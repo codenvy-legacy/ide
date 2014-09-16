@@ -15,7 +15,7 @@ import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,14 +26,14 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ApplicationURLIndicator extends IndicatorAction {
-    private AppContext       appContext;
-    private RunnerController runnerController;
+    private AppContext    appContext;
+    private RunController runController;
 
     @Inject
-    public ApplicationURLIndicator(RunnerResources resources, AppContext appContext, RunnerController runnerController) {
+    public ApplicationURLIndicator(RunnerResources resources, AppContext appContext, RunController runController) {
         super("Application", true, 205, resources);
         this.appContext = appContext;
-        this.runnerController = runnerController;
+        this.runController = runController;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ApplicationURLIndicator extends IndicatorAction {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null && currentProject.getProcessDescriptor() != null) {
             final Presentation presentation = e.getPresentation();
-            presentation.putClientProperty(Properties.DATA_PROPERTY, runnerController.getCurrentAppURL());
+            presentation.putClientProperty(Properties.DATA_PROPERTY, runController.getCurrentAppURL());
         }
     }
 }

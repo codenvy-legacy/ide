@@ -559,6 +559,23 @@ public final class Notification {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        int result = message != null ? message.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (important ? 1 : 0);
+        result = 31 * result + (openHandler != null ? openHandler.hashCode() : 0);
+        result = 31 * result + (closeHandler != null ? closeHandler.hashCode() : 0);
+        result = 31 * result + (observers != null ? observers.hashCode() : 0);
+        return result;
+    }
+
+
+
+
     /**
      * Add a notification's observer.
      *

@@ -15,7 +15,7 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.RunnerController;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,22 +26,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerFinishedIndicator extends IndicatorAction {
-    private AppContext appContext;
-    private RunnerController runnerController;
+    private AppContext    appContext;
+    private RunController runController;
 
     @Inject
     public RunnerFinishedIndicator(RunnerResources resources, AppContext appContext,
-                                   RunnerController runnerController) {
+                                   RunController runController) {
         super("Finished", false, 215, resources);
         this.appContext = appContext;
-        this.runnerController = runnerController;
+        this.runController = runController;
     }
 
     @Override
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
             final Presentation presentation = e.getPresentation();
-            final RunnerMetric metric = runnerController.getCurrentAppStopTime();
+            final RunnerMetric metric = runController.getCurrentAppStopTime();
             if (metric != null) {
                 presentation.putClientProperty(Properties.DATA_PROPERTY, metric.getValue());
                 presentation.putClientProperty(Properties.HINT_PROPERTY, metric.getDescription());

@@ -68,7 +68,7 @@ public class ComponentRegistry {
         // initialize standard components
         try {
             componentInitializer.initialize();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Log.error(ComponentRegistry.class, e);
         }
 

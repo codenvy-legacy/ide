@@ -1042,7 +1042,7 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
                 length = replacedText.length();
                 String[] delimiters = fDocument.getLegalLineDelimiters();
 
-                if ((length == 1) || TextUtilities.equals(delimiters, replacedText) > -1) {
+                if ((length == 1) || TextUtilities.isEquals(delimiters, replacedText) > -1) {
 
                     // whereby selection is empty
 
@@ -1098,7 +1098,7 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
                     length = replacedText.length();
                     String[] delimiters = fDocument.getLegalLineDelimiters();
 
-                    if ((length == 1) || TextUtilities.equals(delimiters, replacedText) > -1) {
+                    if ((length == 1) || TextUtilities.isEquals(delimiters, replacedText) > -1) {
                         // because of overwrite mode or model manipulation
                         if (!fOverwriting || (modelStart != fCurrent.fStart + fTextBuffer.length())) {
                             fCurrent.fRedoModificationStamp = beforeChangeModificationStamp;
