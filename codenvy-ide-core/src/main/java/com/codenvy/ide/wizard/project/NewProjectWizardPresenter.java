@@ -111,7 +111,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
             protected void onSuccess(ResourcesDescriptor result) {
-                String requiredMemorySize = "undefined";
+                String availableMemorySize = "undefined";
                 String totalMemory = result.getTotalMemory();
                 String usedMemory = result.getUsedMemory();
                 if (totalMemory != null) {
@@ -119,14 +119,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                     if (usedMemory != null) memorySize -= Integer.valueOf(usedMemory);
                     if (memorySize > 0) {
                         if (memorySize < 1000) {
-                            requiredMemorySize = memorySize + "MB";
+                            availableMemorySize = memorySize + "MB";
                         } else {
-                            requiredMemorySize = memorySize / 1000 + "." + memorySize % 1000 + "GB";
+                            availableMemorySize = memorySize / 1000 + "." + memorySize % 1000 + "GB";
                         }
                     }
 
                 }
-                view.setRAMAvailable(requiredMemorySize);
+                view.setRAMAvailable(availableMemorySize);
             }
 
             @Override
