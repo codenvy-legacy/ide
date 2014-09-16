@@ -12,9 +12,9 @@ package com.codenvy.ide.extension.runner.client;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.constraints.Anchor;
 import com.codenvy.ide.api.constraints.Constraints;
-import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
@@ -53,32 +53,31 @@ import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Singleton
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
-    public static final String GROUP_RUNNER_CONSOLE_TOOLBAR = "RunnerConsoleToolbar";
-
-    /**
-     * Key for user preference which contains default RAM size
-     */
+    public static final String GROUP_RUNNER_CONSOLE_TOOLBAR  = "RunnerConsoleToolbar";
+    /** Key for user preference which contains default RAM size. */
     public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
 
     @Inject
-    public RunnerExtension(RunnerLocalizationConstant localizationConstants,
-                           ActionManager actionManager,
-                           RunAction runAction,
-                           CustomRunAction customRunAction,
-                           GetLogsAction getLogsAction,
-                           StopAction stopAction,
-                           ClearConsoleAction clearConsoleAction,
-                           ViewRecipeAction viewRecipeAction,
-                           RunnerResources runnerResources,
+    public RunnerExtension(RunnerResources runnerResources,
                            ProjectTypeWizardRegistry wizardRegistry,
                            Provider<SelectRunnerPagePresenter> runnerPagePresenter) {
-        // TODO: temp solution to add runner page for Blank project
+        runnerResources.runner().ensureInjected();
+
+        // TODO: temporary solution to add runner page for Blank project
         ProjectWizard wizard = wizardRegistry.getWizard(Constants.BLANK_ID);
         wizard.addPage(runnerPagePresenter);
         wizardRegistry.addWizard(Constants.BLANK_ID, wizard);
+    }
 
-        runnerResources.runner().ensureInjected();
-
+    @Inject
+    private void prepareActions(RunnerLocalizationConstant localizationConstants,
+                                ActionManager actionManager,
+                                RunAction runAction,
+                                CustomRunAction customRunAction,
+                                GetLogsAction getLogsAction,
+                                StopAction stopAction,
+                                ClearConsoleAction clearConsoleAction,
+                                ViewRecipeAction viewRecipeAction) {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
@@ -111,19 +110,18 @@ public class RunnerExtension {
     }
 
     @Inject
-    private void addRunnerConsole(ActionManager actionManager,
-                                  StopAction stopAction,
-                                  ClearConsoleAction clearConsoleAction,
-                                  ViewRecipeAction viewRecipeAction,
-                                  ApplicationURLIndicator applicationURLIndicator,
-                                  RunnerStartedIndicator runnerStartedIndicator,
-                                  RunnerTimeoutThresholdIndicator runnerTimeoutThresholdIndicator,
-                                  RunnerFinishedIndicator runnerFinishedIndicator,
-                                  RunnerTotalTimeIndicator runnerTotalTimeIndicator,
-                                  WorkspaceAgent workspaceAgent,
-                                  RunnerConsolePresenter runnerConsolePresenter,
-                                  @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
-        // TODO need to make a new binding for Builder title
+    private void prepareRunnerConsole(ActionManager actionManager,
+                                      StopAction stopAction,
+                                      ClearConsoleAction clearConsoleAction,
+                                      ViewRecipeAction viewRecipeAction,
+                                      ApplicationURLIndicator applicationURLIndicator,
+                                      RunnerStartedIndicator runnerStartedIndicator,
+                                      RunnerTimeoutThresholdIndicator runnerTimeoutThresholdIndicator,
+                                      RunnerFinishedIndicator runnerFinishedIndicator,
+                                      RunnerTotalTimeIndicator runnerTotalTimeIndicator,
+                                      WorkspaceAgent workspaceAgent,
+                                      RunnerConsolePresenter runnerConsolePresenter,
+                                      @RunnerConsoleToolbar ToolbarPresenter runnerConsoleToolbar) {
         workspaceAgent.openPart(runnerConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Builder"));
 
         // add toolbar with actions on Runner console
