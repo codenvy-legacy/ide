@@ -175,7 +175,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
-        bind(AppContext.class).in(Singleton.class);
         bind(ProjectStateHandler.class).asEagerSingleton();
         bind(BuildContext.class).to(BuildContextImpl.class).in(Singleton.class);
 
@@ -185,9 +184,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PreferencesManager.class).to(PreferencesManagerImpl.class).in(Singleton.class);
         bind(NotificationManager.class).to(NotificationManagerImpl.class).in(Singleton.class);
         bind(ThemeAgent.class).to(ThemeAgentImpl.class).in(Singleton.class);
-        bind(DtoFactory.class).in(Singleton.class);
-        bind(DtoUnmarshallerFactory.class).in(Singleton.class);
-        bind(AsyncRequestFactory.class).in(Singleton.class);
         bind(MessageBus.class).to(MessageBusImpl.class).in(Singleton.class);
         bind(FileTypeRegistry.class).to(FileTypeRegistryImpl.class).in(Singleton.class);
 
