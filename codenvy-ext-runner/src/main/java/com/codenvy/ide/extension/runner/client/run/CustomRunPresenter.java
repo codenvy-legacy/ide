@@ -28,6 +28,7 @@ import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -96,21 +97,45 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
-                int runnerMemory = 0;
-                Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
-                if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
-                    try {
-                        runnerMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
-                    } catch (NumberFormatException e) {
-                        //do nothing
+                int defaultRunnerMemory = 0;
+                int requiredMemory = 0;
+                int recommendedMemorySize = 0;
+                String defaultRunnerEnvironment = appContext.getCurrentProject().getProjectDescription().getDefaultRunnerEnvironment();
+                Log.info(CustomRunPresenter.class, defaultRunnerEnvironment);
+                if (defaultRunnerEnvironment != null) {
+                    Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
+                            appContext.getCurrentProject().getProjectDescription().getRunnerEnvironmentConfigurations();
+                    RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor =
+                            runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+                    if (runnerEnvironmentConfigurationDescriptor != null) {
+                        defaultRunnerMemory = runnerEnvironmentConfigurationDescriptor.getDefaultMemorySize();
+                        requiredMemory = runnerEnvironmentConfigurationDescriptor.getRequiredMemorySize();
+                        recommendedMemorySize = runnerEnvironmentConfigurationDescriptor.getRecommendedMemorySize();
                     }
                 }
+                if (defaultRunnerMemory <= 0) {
+                    Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
+                    if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                        try {
+                            defaultRunnerMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                        } catch (NumberFormatException e) {
+                            //do nothing
+                        }
+                    }
+                }
+
                 int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
-                runnerMemory = (runnerMemory > 0 && runnerMemory <= totalMemory && runnerMemory % 128 == 0) ? runnerMemory : 256;
+                if (defaultRunnerMemory <= 0)
+                    defaultRunnerMemory = recommendedMemorySize > 0 ? recommendedMemorySize : requiredMemory;
+                Log.info(CustomRunPresenter.class, defaultRunnerMemory + "hhh");
+                if (defaultRunnerMemory <= 0)
+                    defaultRunnerMemory = (defaultRunnerMemory > 0 && defaultRunnerMemory <= totalMemory && defaultRunnerMemory % 128 == 0) ? defaultRunnerMemory : 256;
+
+                Log.info(CustomRunPresenter.class, defaultRunnerMemory);
 
                 view.setEnabledRadioButtons(totalMemory);
-                view.setRunnerMemorySize(String.valueOf(runnerMemory));
+                view.setRunnerMemorySize(String.valueOf(defaultRunnerMemory));
                 view.setTotalMemorySize(String.valueOf(totalMemory));
                 view.setAvailableMemorySize(String.valueOf(totalMemory - usedMemory));
                 view.showDialog();
