@@ -104,7 +104,9 @@ public class ImageActionManager implements ProjectActionHandler {
         customImagesGroup.add(imageAction);
 
         // bind hot-key to the action
-        keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(imageNum + 48).build(), actionId);
+        if (imageNum < 10) {
+            keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(imageNum + 48).build(), actionId);
+        }
     }
 
     /** Remove and unregister all previously added 'Image' actions. */
