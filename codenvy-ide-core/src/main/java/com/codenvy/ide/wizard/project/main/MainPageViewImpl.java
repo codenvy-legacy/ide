@@ -105,6 +105,8 @@ public class MainPageViewImpl implements MainPageView {
     @UiField
     HTMLPanel   configurationArea;
     @UiField
+    Label       projectType;
+    @UiField
     TextBox     projectName;
     @UiField
     TextArea    projectDescription;
@@ -160,12 +162,15 @@ public class MainPageViewImpl implements MainPageView {
         if (itemData instanceof ProjectTemplateDescriptor) {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
+            projectType.setText(((ProjectTemplateDescriptor)itemData).getDisplayName());
         } else if (itemData instanceof ProjectTypeDescriptor) {
             delegate.projectTypeSelected((ProjectTypeDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
+            projectType.setText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
         } else {
             descriptionArea.getElement().setInnerText("");
             resetConfigOptions();
+            projectType.setText("");
         }
     }
 

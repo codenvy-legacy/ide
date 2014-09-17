@@ -13,7 +13,8 @@
  ****************************************************************************************/
 
 .popupMenuMain {
-    background-color: mainMenuBkgColor;
+    /*background-color: mainMenuBkgColor;*/
+    background-color: #545454;
     position: absolute;
     box-shadow: 3px 3px 5px 0px rgba(50, 50, 50, 0.75);
 }
@@ -86,8 +87,11 @@
     fill: toolbarIconColor;
 }
 
-.popupMenuTitleField {
-    /*color: #333333;*/
+.popupMenuTitleField,
+.popupMenuTitleFieldOver,
+.popupMenuHotKeyField,
+.popupMenuHotKeyFieldOver {
+    text-shadow: 0 1px 0px rgba(0, 0, 0, 1);
 }
 
 .popupMenuHotKeyField {
@@ -102,7 +106,7 @@
 .popupMenuSubMenuField svg,
 .popupMenuSubMenuFieldOver svg,
 .popupMenuSubMenuFieldDisabled svg {
-    fill: #1F1F1F;
+    fill: #dbdbdb;
     width: 7px;
     height: 7px;
 }
@@ -130,8 +134,8 @@
 .popupMenuIconFieldDisabled,
 .popupMenuTitleFieldDisabled,
 .popupMenuHotKeyFieldDisabled,
-.popupMenuSubMenuFieldDisabled {
+.popupMenuSubMenuFieldDisabled,
+.popupMenuSubMenuFieldDisabled svg {
     color: disabledMenuItemColor;
+    fill: disabledMenuItemColor;
 }
-
-

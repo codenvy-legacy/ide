@@ -13,6 +13,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
         .emptyBorder {

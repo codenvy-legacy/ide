@@ -190,6 +190,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildController.this);
         notificationManager.showNotification(notification);
+        console.setCurrentBuilderStatus(BuilderStatus.IN_PROGRESS);
+
         buildContext.setBuilding(true);
         if (isUserAction) {
             console.setActive();
@@ -216,6 +218,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               notification.setStatus(FINISHED);
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
+                              console.setCurrentBuilderStatus(BuilderStatus.FAILED);
                               console.print(exception.getMessage());
                               buildContext.setBuilding(false);
                           }
@@ -244,6 +247,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                         notification.setType(ERROR);
                         notification.setStatus(FINISHED);
                         notification.setMessage(exception.getMessage());
+                        console.setCurrentBuilderStatus(BuilderStatus.FAILED);
                         buildContext.setBuilding(false);
                     }
                 };
@@ -298,6 +302,10 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 notification.setType(INFO);
                 notification.setMessage(constant.buildFinished(activeProject.getName()));
+
+                console.setCurrentBuilderStatus(BuilderStatus.DONE);
+                console.print("[INFO] " + notification.getMessage());
+
                 buildContext.setBuilding(false);
                 break;
             case FAILED:
@@ -308,6 +316,10 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 notification.setType(ERROR);
                 notification.setMessage(constant.buildFailed());
+
+                console.setCurrentBuilderStatus(BuilderStatus.FAILED);
+                console.print("[ERROR] " + notification.getMessage());
+
                 buildContext.setBuilding(false);
                 break;
             case CANCELLED:
@@ -318,6 +330,10 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 notification.setStatus(FINISHED);
                 notification.setType(WARNING);
                 notification.setMessage(constant.buildCanceled(activeProject.getName()));
+
+                console.setCurrentBuilderStatus(BuilderStatus.FAILED);
+                console.print("[ERROR] " + notification.getMessage());
+
                 buildContext.setBuilding(false);
                 break;
         }

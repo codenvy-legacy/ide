@@ -27,12 +27,45 @@ public interface BuilderResources extends ClientBundle {
     @Source("clear-logs.svg")
     SVGResource clear();
 
+    @Source("in-queue.svg")
+    SVGResource inQueue();
+
+    @Source("in-progress.svg")
+    SVGResource inProgress();
+
+    @Source("done.svg")
+    SVGResource done();
+
+    @Source("failed.svg")
+    SVGResource failed();
+
+    @Source("timeout.svg")
+    SVGResource timeout();
+
     public interface Css extends CssResource {
         @ClassName("info-panel")
         String infoPanel();
 
         @ClassName("data-label")
         String dataLabel();
+
+        @ClassName("partIcon")
+        String partIcon();
+
+        @ClassName("inQueue")
+        String inQueue();
+
+        @ClassName("inProgress")
+        String inProgress();
+
+        @ClassName("done")
+        String done();
+
+        @ClassName("failed")
+        String failed();
+
+        @ClassName("timeout")
+        String timeout();
     }
 
     @Source({"builder.css", "com/codenvy/ide/api/ui/style.css"})

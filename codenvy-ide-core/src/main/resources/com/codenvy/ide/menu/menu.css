@@ -37,7 +37,7 @@
         font-weight: normal;
         font-style: normal;
         vertical-align: middle;
-        text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+        text-shadow: 0 1px 0px rgba(0, 0, 0, 1);
     }
 
     .menuBar {
@@ -47,15 +47,21 @@
     }
 
     .menuBarItem {
-
     }
 
-    .menuBarItemOver {
-
+    .menuBarItem:HOVER,
+    .menuBarItemOver:HOVER {
+        box-shadow: inset 0px -3px 0px -1px #49a2e6;
+        background-color: #525252;
     }
 
     .menuBarItemSelected {
-        background-color: selectionBackground;
+        background-color: #545454;
+        box-shadow:
+            inset -2px 0px 0px -1px #242424,
+            inset 2px 0px 0px -1px #242424,
+            inset 0px 2px 0px -1px #242424,
+            inset 0px -3px 0px -1px #49a2e6;
     }
 
     .menuBarItemDisabled {

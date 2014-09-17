@@ -15,25 +15,26 @@
     <ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
-    
-       	.rootPanel {
-       		position: relative;
-       		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-       	}
-       	
-       	.tab {
-       		left: 0px;
-       		top: 0px;
-       		right: 0px;
-       		bottom: 0px;
-       		position: absolute !important;
-       	}
-       	
-       	.centerPanel {
-       		position: relative;
-       		box-shadow: 0 -1px 0 0 tabBorder;
-       	}
-       </ui:style>
+
+        .rootPanel {
+            position: relative;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .tab {
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            position: absolute !important;
+        }
+
+        .centerPanel {
+            position: relative;
+            box-shadow: 0 -1px 0 0 tabBorder;
+        }
+
+    </ui:style>
     <g:FlowPanel width="774px" height="510px" addStyleNames="{style.rootPanel}">
         <g:FlowPanel width="774px" height="470px" addStyleNames="{style.centerPanel}">
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
