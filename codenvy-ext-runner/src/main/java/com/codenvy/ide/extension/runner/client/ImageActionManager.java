@@ -16,6 +16,8 @@ import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.keybinding.KeyBuilder;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
@@ -38,6 +40,7 @@ public class ImageActionManager implements ProjectActionHandler {
     private static final String SCRIPTS_FOLDER_REL_LOCATION = "/src/main";
     private final RunnerLocalizationConstant localizationConstants;
     private final ActionManager              actionManager;
+    private final KeyBindingAgent            keyBindingAgent;
     private final RunnerResources            resources;
     private final ProjectServiceClient       projectServiceClient;
     private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
@@ -46,12 +49,14 @@ public class ImageActionManager implements ProjectActionHandler {
     @Inject
     public ImageActionManager(RunnerLocalizationConstant localizationConstants,
                               ActionManager actionManager,
+                              KeyBindingAgent keyBindingAgent,
                               RunnerResources resources,
                               EventBus eventBus,
                               ProjectServiceClient projectServiceClient,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.localizationConstants = localizationConstants;
         this.actionManager = actionManager;
+        this.keyBindingAgent = keyBindingAgent;
         this.resources = resources;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -90,12 +95,16 @@ public class ImageActionManager implements ProjectActionHandler {
         final ImageAction imageAction = new ImageAction(localizationConstants.imageActionText(imageNum),
                                                         localizationConstants.imageActionDescription(imageNum),
                                                         resources.launchApp());
-        actions.add(localizationConstants.imageActionId(imageNum));
-        actionManager.registerAction(localizationConstants.imageActionId(imageNum), imageAction);
+        final String actionId = localizationConstants.imageActionId(imageNum);
+        actions.add(actionId);
+        actionManager.registerAction(actionId, imageAction);
 
         // add actions in 'Custom Images' menu group
         DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(RunnerExtension.GROUP_CUSTOM_IMAGES);
         customImagesGroup.add(imageAction);
+
+        // bind hot-key to the action
+        keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(imageNum + 48).build(), actionId);
     }
 
     /** Remove and unregister all previously added 'Image' actions. */
