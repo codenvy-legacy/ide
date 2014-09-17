@@ -19,6 +19,7 @@ import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -60,6 +61,9 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     SimplePanel               contentPanel;
     @UiField(provided = true)
     com.codenvy.ide.Resources res;
+    @UiField(provided = true)
+    final ProjectWizardResources wizardResources;
+
     private CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
     private PreferencesPagePresenter firstPage;
@@ -96,9 +100,10 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
      */
     @Inject
     protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder,
-                                  CoreLocalizationConstant locale) {
+                                  CoreLocalizationConstant locale, ProjectWizardResources wizardResources) {
         this.res = resources;
         this.locale = locale;
+        this.wizardResources = wizardResources;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -121,6 +126,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onCloseClicked();
             }
         });
+        btnClose.addStyleName(wizardResources.css().button());
         getFooter().add(btnClose);
 
         btnOk = createButton(locale.ok(), "window-preferences-ok", new ClickHandler() {
@@ -130,6 +136,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onOkClicked();
             }
         });
+        btnOk.addStyleName(wizardResources.css().button());
         getFooter().add(btnOk);
 
         btnApply = createButton(locale.apply(), "window-preferences-apply", new ClickHandler() {
@@ -139,6 +146,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onApplyClicked();
             }
         });
+        btnApply.addStyleName(wizardResources.css().button());
         getFooter().add(btnApply);
     }
 
