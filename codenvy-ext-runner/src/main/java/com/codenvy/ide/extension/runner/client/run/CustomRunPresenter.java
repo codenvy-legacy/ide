@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
@@ -105,8 +107,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 }
                 int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
-                runnerMemory = ((runnerMemory > 0) && (runnerMemory % 128 == 0)) ? runnerMemory : 256;
+                runnerMemory = (runnerMemory > 0 && runnerMemory <= totalMemory && runnerMemory % 128 == 0) ? runnerMemory : 256;
 
+                view.setEnabledRadioButtons(totalMemory);
                 view.setRunnerMemorySize(String.valueOf(runnerMemory));
                 view.setTotalMemorySize(String.valueOf(totalMemory));
                 view.setAvailableMemorySize(String.valueOf(totalMemory - usedMemory));

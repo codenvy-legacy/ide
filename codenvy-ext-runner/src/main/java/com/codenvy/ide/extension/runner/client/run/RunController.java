@@ -129,7 +129,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     private   Timer                                             totalActiveTimeTimer;
     private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
     private   String                                            theme;
-    private   int                                               overrideRAM;
+    private   int                                               runnerMemory;
 
     @Inject
     public RunController(EventBus eventBus,
@@ -290,52 +290,122 @@ public class RunController implements Notification.OpenNotificationHandler {
         service.getResources(new AsyncRequestCallback<ResourcesDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
-                final int requiredMemory;
+                runnerMemory = 0;
+                int overrideMemory = 0;
+                int defaultMemory = 0;
+                int recommendedMemory = 0;
+                int requiredMemory = 0;
                 int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
+                int availableMemory = totalMemory - usedMemory;
+
+                ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+                Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations =
+                        projectDescriptor.getRunnerEnvironmentConfigurations();
+                RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = null;
 
                 if (runOptions != null) {
-                    requiredMemory = getRequiredMemory(runOptions.getEnvironmentId());
-                    overrideRAM = runOptions.getMemorySize();
-                    overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
+                    if (runEnvConfigurations != null && runEnvConfigurations.containsKey(runOptions.getEnvironmentId())) {
+                        runEnvConfDescriptor = runEnvConfigurations.get(runOptions.getEnvironmentId());
+                    } else if (runEnvConfigurations != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
+                        runEnvConfDescriptor = runEnvConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
+                    }
+                    overrideMemory = runOptions.getMemorySize();
                 } else {
-                    requiredMemory = getRequiredMemory("default");
-
+                    if (runEnvConfigurations != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
+                        runEnvConfDescriptor = runEnvConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
+                    }
                     Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
                     if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
                         try {
-                            overrideRAM = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                            overrideMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                         } catch (NumberFormatException e) {
                             //do nothing
                         }
                     }
-                    overrideRAM = (overrideRAM > 0) ? overrideRAM : requiredMemory;
+                }
+                if (runEnvConfDescriptor != null) {
+                    defaultMemory = runEnvConfDescriptor.getDefaultMemorySize();
+                    recommendedMemory = runEnvConfDescriptor.getRecommendedMemorySize();
+                    requiredMemory = runEnvConfDescriptor.getRequiredMemorySize();
                 }
 
                 if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
                     return;
                 }
 
-                if (overrideRAM < requiredMemory) {
-                    Info warningWindow =
-                            new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideRAM, requiredMemory),
-                                     new InfoHandler() {
-                                         @Override
-                                         public void onOk() {
-                                             Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
-                                                               new AskHandler() {
-                                                                   @Override
-                                                                   public void onOk() {
-                                                                       overrideRAM = requiredMemory;
-                                                                       runProject(runOptions, isUserAction);
+                if (defaultMemory > 0) {
+                    if (!isDefaultMemoryCorrect(totalMemory, usedMemory, defaultMemory)) {
+                        return;
+                    }
+                    if (defaultMemory < requiredMemory) {
+                        final int finalRequiredMemory = requiredMemory;
+                        Info warningWindow =
+                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(defaultMemory, requiredMemory),
+                                         new InfoHandler() {
+                                             @Override
+                                             public void onOk() {
+                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesDefaultMemory(finalRequiredMemory),
+                                                                   new AskHandler() {
+                                                                       @Override
+                                                                       public void onOk() {
+                                                                           runnerMemory = finalRequiredMemory;
+                                                                           runProject(runOptions, isUserAction);
+                                                                       }
                                                                    }
-                                                               }
-                                             );
-                                             ask.show();
+                                                 );
+                                                 ask.show();
+                                             }
                                          }
-                                     }
-                            );
-                    warningWindow.show();
+                                );
+                        warningWindow.show();
+                        return;
+                    }
+                    runnerMemory = defaultMemory;
+                    runProject(runOptions, isUserAction);
+                    return;
+                }
+
+                if (overrideMemory > 0) {
+                    if (!isOverrideMemoryCorrect(totalMemory, usedMemory, overrideMemory)) {
+                        return;
+                    }
+                    if (overrideMemory < requiredMemory) {
+                        final int finalRequiredMemory = requiredMemory;
+                        Info warningWindow =
+                                new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
+                                         new InfoHandler() {
+                                             @Override
+                                             public void onOk() {
+                                                 Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
+                                                                   new AskHandler() {
+                                                                       @Override
+                                                                       public void onOk() {
+                                                                           runnerMemory = finalRequiredMemory;
+                                                                           runProject(runOptions, isUserAction);
+                                                                       }
+                                                                   }
+                                                 );
+                                                 ask.show();
+                                             }
+                                         }
+                                );
+                        warningWindow.show();
+                        return;
+                    }
+                    runnerMemory = overrideMemory;
+                    runProject(runOptions, isUserAction);
+                    return;
+                }
+                if (recommendedMemory > 0 && recommendedMemory < totalMemory && recommendedMemory < availableMemory) {
+                    runnerMemory = recommendedMemory;
+                    runProject(runOptions, isUserAction);
+                    return;
+                }
+                if (requiredMemory > 0 ) {
+                    //check for requiredMemory < totalMemory && requiredMemory < availableMemory was in isSufficientRequiredMemory()
+                    runnerMemory = requiredMemory;
+                    runProject(runOptions, isUserAction);
                     return;
                 }
                 runProject(runOptions, isUserAction);
@@ -367,12 +437,12 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (isUserAction) {
             console.setActive();
         }
-        if(runOptions == null) {
+        if (runOptions == null) {
             runOptions = dtoFactory.createDto(RunOptions.class);
             runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
         }
-        if (overrideRAM > 0 ) {
-            runOptions.setMemorySize(overrideRAM);
+        if (runnerMemory > 0) {
+            runOptions.setMemorySize(runnerMemory);
         }
         if (runOptions.getEnvironmentId() == null && currentProject.getRunnerEnvId() != null) {
             runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
@@ -405,30 +475,33 @@ public class RunController implements Notification.OpenNotificationHandler {
             showWarning(constant.messagesAvailableLessRequiredMemory(totalMemory, usedMemory, requiredMemory));
             return false;
         }
-        if (totalMemory < overrideRAM) {
-            showWarning(constant.messagesTotalLessOverrideMemory(overrideRAM, totalMemory));
+        return true;
+    }
+
+    private boolean isDefaultMemoryCorrect(int totalMemory, int usedMemory, final int defaultMemory) {
+        int availableMemory = totalMemory - usedMemory;
+        if (totalMemory < defaultMemory) {
+            showWarning(constant.messagesTotalLessDefaultMemory(defaultMemory, totalMemory));
             return false;
         }
-        if (availableMemory < overrideRAM) {
-            showWarning(constant.messagesAvailableLessOverrideMemory(overrideRAM, totalMemory, usedMemory));
+        if (availableMemory < defaultMemory) {
+            showWarning(constant.messagesAvailableLessDefaultMemory(defaultMemory, totalMemory, usedMemory));
             return false;
         }
         return true;
     }
 
-    private int getRequiredMemory(String environmentId) {
-        int requiredMemory = 0;
-        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
-        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
-
-        if(runEnvConfigurations != null && runEnvConfigurations.containsKey(environmentId)) {
-            return runEnvConfigurations.get(environmentId).getRequiredMemorySize();
+    private boolean isOverrideMemoryCorrect(int totalMemory, int usedMemory, final int overrideMemory) {
+        int availableMemory = totalMemory - usedMemory;
+        if (totalMemory < overrideMemory) {
+            showWarning(constant.messagesTotalLessOverrideMemory(overrideMemory, totalMemory));
+            return false;
         }
-
-        if(runEnvConfigurations != null && runEnvConfigurations.containsKey("default")) {
-            return runEnvConfigurations.get("default").getRequiredMemorySize();
+        if (availableMemory < overrideMemory) {
+            showWarning(constant.messagesAvailableLessOverrideMemory(overrideMemory, totalMemory, usedMemory));
+            return false;
         }
-        return requiredMemory;
+        return true;
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {

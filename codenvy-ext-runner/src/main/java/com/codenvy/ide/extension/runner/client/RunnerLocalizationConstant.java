@@ -130,11 +130,17 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.totalLessOverrideMemory")
     String messagesTotalLessOverrideMemory(int overrideRAM, int totalRAM);
 
+    @Key("messages.totalLessDefaultMemory")
+    String messagesTotalLessDefaultMemory(int defaultRAM, int totalRAM);
+
     @Key("messages.totalLessCustomRunMemory")
     String messagesTotalLessCustomRunMemory(int customRunRAM, int totalRAM);
 
     @Key("messages.availableLessOverrideMemory")
     String messagesAvailableLessOverrideMemory(int overrideRAM, int totalRAM, int usedRAM);
+
+    @Key("messages.availableLessDefaultMemory")
+    String messagesAvailableLessDefaultMemory(int defaultRAM, int totalRAM, int usedRAM);
 
     @Key("messages.availableLessRequiredMemory")
     String messagesAvailableLessRequiredMemory(int totalRAM, int usedRAM, int requestedRAM);
@@ -144,6 +150,9 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("messages.overrideMemory")
     String messagesOverrideMemory();
+
+    @Key("messages.defaultMemory")
+    String messagesDefaultMemory(int requiredRam);
 
     @Key("appWillBeStopped")
     String appWillBeStopped(String appName);

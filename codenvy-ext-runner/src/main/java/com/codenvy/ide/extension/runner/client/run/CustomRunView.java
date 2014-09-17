@@ -47,7 +47,7 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
     void setEnvironments(@NotNull Array<RunnerEnvironment> environments);
 
     /** Set memory size for runner. */
-    void setRunnerMemorySize(String memorySize);
+    void setRunnerMemorySize(String runnerRam);
 
     /** Get memory size for runner. */
     String getRunnerMemorySize();
@@ -66,6 +66,9 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
     /** Get Available memory size. */
     String getAvailableMemorySize();
+
+    /** Set "enable" state of the radio buttons, the value memory of which is < than workspaceRam.*/
+    void setEnabledRadioButtons(int workspaceRam);
 
     /** Close dialog. */
     void close();
