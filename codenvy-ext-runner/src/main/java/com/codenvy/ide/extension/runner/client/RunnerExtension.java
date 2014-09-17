@@ -90,12 +90,12 @@ public class RunnerExtension {
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         actionManager.registerAction(localizationConstants.viewRecipeActionId(), viewRecipeAction);
 
-        // add actions on main toolbar
-        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
-        actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
-        runToolbarGroup.add(runAction);
-        mainToolbarGroup.add(runToolbarGroup);
+        // add 'Custom Images' group
+        DefaultActionGroup customImagesGroup = new DefaultActionGroup(localizationConstants.customImagesActionTitle(), true, actionManager);
+        customImagesGroup.getTemplatePresentation().setSVGIcon(resources.customImages());
+        actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
+        customImagesGroup.add(editImagesAction);
+        customImagesGroup.addSeparator();
 
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
@@ -104,22 +104,24 @@ public class RunnerExtension {
         runContextGroup.add(runAction);
         contextMenuGroup.add(runContextGroup);
 
-        // add 'Custom Images' group
-        DefaultActionGroup customImagesGroup = new DefaultActionGroup(localizationConstants.customImagesActionTitle(), true, actionManager);
-        customImagesGroup.getTemplatePresentation().setSVGIcon(resources.launchApp());
-        actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
-        customImagesGroup.add(editImagesAction);
-        customImagesGroup.addSeparator();
-
         // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
         runMenuActionGroup.add(runAction);
         runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
-        runMenuActionGroup.add(customImagesGroup, new Constraints(Anchor.AFTER, localizationConstants.customRunAppActionId()));
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
         runMenuActionGroup.add(clearConsoleAction);
+        runMenuActionGroup.addSeparator();
         runMenuActionGroup.add(viewRecipeAction);
+        runMenuActionGroup.add(customImagesGroup, new Constraints(Anchor.AFTER, localizationConstants.viewRecipeActionId()));
+
+        // add actions on main toolbar
+        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
+        DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
+        actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
+        runToolbarGroup.add(runAction);
+        runToolbarGroup.add(customImagesGroup);
+        mainToolbarGroup.add(runToolbarGroup);
     }
 
     @Inject

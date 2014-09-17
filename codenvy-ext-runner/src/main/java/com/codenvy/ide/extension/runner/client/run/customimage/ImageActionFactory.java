@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customimage;
 
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.extension.runner.client.actions.RunImageAction;
 import com.google.inject.assistedinject.Assisted;
 
@@ -31,5 +32,6 @@ public interface ImageActionFactory {
      * @return new {@link com.codenvy.ide.extension.runner.client.actions.RunImageAction}
      */
     @Nonnull
-    RunImageAction createAction(@Nonnull @Assisted("title") String title, @Nonnull @Assisted("description") String description);
+    RunImageAction createAction(@Nonnull @Assisted("title") String title, @Nonnull @Assisted("description") String description,
+                                ItemReference scriptFile);
 }

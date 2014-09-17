@@ -31,10 +31,9 @@ public class EditImagesAction extends Action {
 
     @Inject
     public EditImagesAction(RunnerResources resources,
-                            RunnerLocalizationConstant localizationConstants,
+                            RunnerLocalizationConstant constants,
                             AppContext appContext) {
-        super(localizationConstants.editImagesActionText(), localizationConstants.editImagesActionDescription(), null,
-              resources.launchApp());
+        super(constants.editImagesActionText(), constants.editImagesActionDescription(), null, resources.editImages());
         this.appContext = appContext;
     }
 
