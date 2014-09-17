@@ -11,6 +11,8 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
@@ -210,6 +212,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
         bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
+        bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
     }
 
     /** API Bindings, binds API interfaces to the implementations */
