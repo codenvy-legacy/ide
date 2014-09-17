@@ -21,6 +21,7 @@ import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
+import com.codenvy.ide.extension.runner.client.actions.EditImagesAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
@@ -76,6 +77,7 @@ public class RunnerExtension {
                                 ActionManager actionManager,
                                 RunAction runAction,
                                 CustomRunAction customRunAction,
+                                EditImagesAction editImagesAction,
                                 GetLogsAction getLogsAction,
                                 StopAction stopAction,
                                 ClearConsoleAction clearConsoleAction,
@@ -83,18 +85,10 @@ public class RunnerExtension {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
+        actionManager.registerAction(localizationConstants.editImagesActionId(), editImagesAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         actionManager.registerAction(localizationConstants.viewRecipeActionId(), viewRecipeAction);
-
-        // add actions in main menu
-        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
-        runMenuActionGroup.add(runAction);
-        runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
-        runMenuActionGroup.add(getLogsAction);
-        runMenuActionGroup.add(stopAction);
-        runMenuActionGroup.add(clearConsoleAction);
-        runMenuActionGroup.add(viewRecipeAction);
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
@@ -114,7 +108,18 @@ public class RunnerExtension {
         DefaultActionGroup customImagesGroup = new DefaultActionGroup(localizationConstants.customImagesActionTitle(), true, actionManager);
         customImagesGroup.getTemplatePresentation().setSVGIcon(resources.launchApp());
         actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
+        customImagesGroup.add(editImagesAction);
+        customImagesGroup.addSeparator();
+
+        // add actions in main menu
+        DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
+        runMenuActionGroup.add(runAction);
+        runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
         runMenuActionGroup.add(customImagesGroup, new Constraints(Anchor.AFTER, localizationConstants.customRunAppActionId()));
+        runMenuActionGroup.add(getLogsAction);
+        runMenuActionGroup.add(stopAction);
+        runMenuActionGroup.add(clearConsoleAction);
+        runMenuActionGroup.add(viewRecipeAction);
     }
 
     @Inject

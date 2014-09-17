@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.ide.extension.runner.client.run.customimage;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
@@ -21,7 +21,10 @@ import com.codenvy.ide.api.keybinding.KeyBuilder;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringSet;
-import com.codenvy.ide.extension.runner.client.actions.ImageAction;
+import com.codenvy.ide.extension.runner.client.RunnerExtension;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.actions.RunImageAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -38,6 +41,7 @@ public class ImageActionManager implements ProjectActionHandler {
 
     /** Project-relative path to the custom Docker-scripts folder. */
     private static final String SCRIPTS_FOLDER_REL_LOCATION = "/src/main";
+    private final ImageActionFactory         imageActionFactory;
     private final RunnerLocalizationConstant localizationConstants;
     private final ActionManager              actionManager;
     private final KeyBindingAgent            keyBindingAgent;
@@ -47,13 +51,15 @@ public class ImageActionManager implements ProjectActionHandler {
     private final StringSet                  actions;
 
     @Inject
-    public ImageActionManager(RunnerLocalizationConstant localizationConstants,
+    public ImageActionManager(ImageActionFactory imageActionFactory,
+                              RunnerLocalizationConstant localizationConstants,
                               ActionManager actionManager,
                               KeyBindingAgent keyBindingAgent,
                               RunnerResources resources,
                               EventBus eventBus,
                               ProjectServiceClient projectServiceClient,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        this.imageActionFactory = imageActionFactory;
         this.localizationConstants = localizationConstants;
         this.actionManager = actionManager;
         this.keyBindingAgent = keyBindingAgent;
@@ -92,16 +98,15 @@ public class ImageActionManager implements ProjectActionHandler {
 
     private void addImageAction(int imageNum) {
         // register action
-        final ImageAction imageAction = new ImageAction(localizationConstants.imageActionText(imageNum),
-                                                        localizationConstants.imageActionDescription(imageNum),
-                                                        resources.launchApp());
+        final RunImageAction runImageAction = imageActionFactory.createAction(localizationConstants.imageActionText(imageNum),
+                                                                        localizationConstants.imageActionDescription(imageNum));
         final String actionId = localizationConstants.imageActionId(imageNum);
         actions.add(actionId);
-        actionManager.registerAction(actionId, imageAction);
+        actionManager.registerAction(actionId, runImageAction);
 
         // add actions in 'Custom Images' menu group
         DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(RunnerExtension.GROUP_CUSTOM_IMAGES);
-        customImagesGroup.add(imageAction);
+        customImagesGroup.add(runImageAction);
 
         // bind hot-key to the action
         if (imageNum < 10) {

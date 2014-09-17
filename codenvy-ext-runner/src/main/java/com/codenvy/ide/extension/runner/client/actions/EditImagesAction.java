@@ -12,30 +12,41 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.user.client.Window;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- * Action to executing a Docker-script as on runner.
+ * Action to open a dialog for editing custom Docker-images.
  *
  * @author Artem Zatsarynnyy
  */
-public class ImageAction extends Action {
+@Singleton
+public class EditImagesAction extends Action {
 
-    public ImageAction(String title, String description, SVGResource icon) {
-        super(title, description, null, icon);
+    private AppContext appContext;
+
+    @Inject
+    public EditImagesAction(RunnerResources resources,
+                            RunnerLocalizationConstant localizationConstants,
+                            AppContext appContext) {
+        super(localizationConstants.editImagesActionText(), localizationConstants.editImagesActionDescription(), null,
+              resources.launchApp());
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Window.alert("Executing " + getTemplatePresentation().getText() + "...");
+        Window.alert("Will be, soon... )");
     }
 
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(true);
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 }

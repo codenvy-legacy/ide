@@ -45,6 +45,15 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.customRunApp.description")
     String customRunAppActionDescription();
 
+    @Key("control.editImages.id")
+    String editImagesActionId();
+
+    @Key("control.editImages.text")
+    String editImagesActionText();
+
+    @Key("control.editImages.description")
+    String editImagesActionDescription();
+
     @Key("control.getAppLogs.id")
     String getAppLogsActionId();
 

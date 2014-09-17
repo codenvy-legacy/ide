@@ -12,7 +12,6 @@ package com.codenvy.ide.extension.runner.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.extension.runner.client.ImageActionManager;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleView;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
@@ -21,8 +20,11 @@ import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
 import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionFactory;
+import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionManager;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
 import com.google.inject.Singleton;
 
@@ -33,11 +35,15 @@ public class RunnerGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(CustomRunView.class).to(CustomRunViewImpl.class).in(Singleton.class);
+
         bind(RunnerConsoleView.class).to(RunnerConsoleViewImpl.class).in(Singleton.class);
         bind(ToolbarPresenter.class).annotatedWith(RunnerConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
+
         bind(RamManagerView.class).to(RamManagerViewImpl.class).in(Singleton.class);
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(RamManagePresenter.class);
+
         bind(ImageActionManager.class).asEagerSingleton();
+        install(new GinFactoryModuleBuilder().build(ImageActionFactory.class));
     }
 }
