@@ -108,6 +108,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
                 String defaultRunnerEnvironment = appContext.getCurrentProject().getProjectDescription().getDefaultRunnerEnvironment();
                 if (defaultRunnerEnvironment != null) {
+                    //trying to get the value of memory from runnerEnvironmentConfigurationDescriptor
                     Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
                             appContext.getCurrentProject().getProjectDescription().getRunnerEnvironmentConfigurations();
                     RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor =
@@ -120,6 +121,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                     }
                 }
                 if (defaultRunnerMemory <= 0) {
+                    //the value of memory from runnerEnvironmentConfigurationDescriptor <= 0
+                    //trying to get the value of memory from user preferences
                     Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
                     if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
                         try {
@@ -129,10 +132,20 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                         }
                     }
                 }
-                if (defaultRunnerMemory <= 0)
+                if (defaultRunnerMemory <= 0) {
+                    // the value of memory from runnerEnvironmentConfigurationDescriptor <= 0 &&
+                    //the value of memory from user preferences <= 0
                     defaultRunnerMemory = recommendedMemorySize > 0 ? recommendedMemorySize : requiredMemory;
-                if (defaultRunnerMemory <= 0)
-                    defaultRunnerMemory = (defaultRunnerMemory > 0 && defaultRunnerMemory <= totalMemory && defaultRunnerMemory % 128 == 0) ? defaultRunnerMemory : 256;
+                }
+                /* Provide runnerMemorySize = 256 if:
+                * - the value of 'defaultMemorySize' from runnerEnvironmentConfigurationDescriptor <= 0 &&
+                * - the value of memory from user preferences <= 0 &&
+                * - recommendedMemorySize <=0 &&
+                * - requiredMemory <=0
+                * or the resulting value > workspaceMemory or the resulting value is not a multiple of 128
+                */
+                defaultRunnerMemory = (defaultRunnerMemory > 0 && defaultRunnerMemory <= totalMemory && defaultRunnerMemory % 128 == 0)
+                                      ? defaultRunnerMemory : 256;
 
                 view.setEnabledRadioButtons(totalMemory);
                 view.setRunnerMemorySize(String.valueOf(defaultRunnerMemory));
@@ -204,7 +217,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                //TODO
+                //TODO Add fire event
             }
 
             @Override

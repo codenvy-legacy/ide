@@ -317,6 +317,10 @@ public class RunController implements Notification.OpenNotificationHandler {
                             return;
                         }
                         if (overrideMemory < requiredMemory) {
+                            /* Offer the user to run an application with requiredMemory
+                            * If the user selects OK, then runnerMemory = requiredMemory
+                            * Else we should terminate the Runner process.
+                            */
                             final int finalRequiredMemory = requiredMemory;
                             Info warningWindow =
                                     new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
@@ -371,6 +375,10 @@ public class RunController implements Notification.OpenNotificationHandler {
                         return;
                     }
                     if (defaultMemory < requiredMemory) {
+                        /* Offer the user to run an application with requiredMemory
+                        * If the user selects OK, then runnerMemory = requiredMemory
+                        * Else we should terminate the Runner process.
+                        */
                         final int finalRequiredMemory = requiredMemory;
                         Info warningWindow =
                                 new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(defaultMemory, requiredMemory),
@@ -403,6 +411,10 @@ public class RunController implements Notification.OpenNotificationHandler {
                         return;
                     }
                     if (overrideMemory < requiredMemory) {
+                        /* Offer the user to run an application with requiredMemory
+                        * If the user selects OK, then runnerMemory = requiredMemory
+                        * Else we should terminate the Runner process.
+                        */
                         final int finalRequiredMemory = requiredMemory;
                         Info warningWindow =
                                 new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
@@ -442,6 +454,13 @@ public class RunController implements Notification.OpenNotificationHandler {
                     runProject(runOptions, isUserAction);
                     return;
                 }
+                /* Do not provide any value runnerMemorySize if:
+                * - defaultMemory <= 0 &&
+                * - overrideMemory <= 0 &&
+                * - recommendedMemory <=0 &&
+                * - requiredMemory <=0
+                * or the resulting value > workspaceMemory or the resulting value > availableMemory
+                */
                 runProject(runOptions, isUserAction);
             }
 
@@ -475,9 +494,17 @@ public class RunController implements Notification.OpenNotificationHandler {
             runOptions = dtoFactory.createDto(RunOptions.class);
             runOptions.setSkipBuild(Boolean.parseBoolean(currentProject.getAttributeValue("runner:skipBuild")));
         }
+        /* Do not provide any value runnerMemorySize if:
+         * - defaultMemory <= 0 &&
+         * - overrideMemory <= 0 &&
+         * - recommendedMemory <=0 &&
+         * - requiredMemory <=0
+         * or the resulting value > workspaceMemory or the resulting value > availableMemory
+         */
         if (runnerMemory > 0) {
             runOptions.setMemorySize(runnerMemory);
         }
+        Log.error(getClass(), runOptions.getMemorySize());
         if (runOptions.getEnvironmentId() == null && currentProject.getRunnerEnvId() != null) {
             runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
         }
