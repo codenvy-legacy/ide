@@ -58,6 +58,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @UiField
     CheckBox        skipBuild;
     @UiField
+    CheckBox        rememberRunMemory;
+    @UiField
     TextArea        descriptionField;
     @UiField
     RadioButton     radioButOther;
@@ -117,6 +119,20 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
         getFooter().add(cancelButton);
         getFooter().add(runButton);
+    }
+
+    @Override
+    public void setEnabledRadioButtons(int workspaceRam) {
+        for (RadioButton radioButton : radioButtons.asIterable()) {
+            int runnerMemory = 0;
+            try {
+                runnerMemory = Integer.parseInt(parseRadioButMemoryValue(radioButton.getText()));
+            } catch (NumberFormatException e) {
+                //do nothing
+            }
+            radioButton.setEnabled(runnerMemory > 0 && runnerMemory <= workspaceRam);
+        }
+        radioButOther.setEnabled(true);
     }
 
     @NotNull
@@ -230,6 +246,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
+    public boolean isRememberOptionsSelected() {
+        return rememberRunMemory.getValue();
+    }
+
+    @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
@@ -251,7 +272,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
                 return "1024";
             case "2GB":
                 return "2048";
-            case "Other (MB):":
+            case "Other (MB) :":
                 return otherValueMemory.getText();
             default:
                 return "256";
@@ -261,6 +282,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     private void clear() {
         descriptionField.setText("");
         skipBuild.setValue(false);
+        rememberRunMemory.setValue(false);
     }
 
     private void clearStandardMemoryFilds() {
