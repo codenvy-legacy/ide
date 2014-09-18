@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
@@ -117,6 +118,9 @@ public class CustomRunTest extends BaseTest {
     public void shouldShowDialog() throws Exception {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
+        ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
+        when(activeProject.getProjectDescription()).thenReturn(projectDescriptor);
+        when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(profileDescriptor.getPreferences()).thenReturn(null);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");

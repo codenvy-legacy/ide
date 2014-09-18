@@ -79,6 +79,12 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     /** {@inheritDoc} */
     @Override
+    public void addPart(PartPresenter part, Constraints constraint) {
+        addPart(part);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void addPart(PartPresenter part) {
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");

@@ -14,6 +14,8 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
+import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
+import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
@@ -34,7 +36,8 @@ import java.util.List;
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor>, Openable {
+public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor>, Openable,
+                                                                                ProjectDescriptorChangedHandler {
     protected final GenericTreeStructure   treeStructure;
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
@@ -45,6 +48,8 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     public ProjectNode(TreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
                        EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus);
+        eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
+
         this.treeStructure = treeStructure;
         this.settings = settings;
         this.eventBus = eventBus;
@@ -285,5 +290,12 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     @Override
     public void open() {
         opened = true;
+    }
+
+    @Override
+    public void onProjectDescriptorChanged(ProjectDescriptorChangedEvent event) {
+        String path = event.getProjectDescriptor().getPath();
+        if (getPath().equals(path))
+            setData(event.getProjectDescriptor());
     }
 }

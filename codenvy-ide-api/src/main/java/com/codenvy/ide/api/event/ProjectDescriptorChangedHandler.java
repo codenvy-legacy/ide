@@ -8,41 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-.info-panel {
-    display: inline;
-    font-size: 11px;
-    padding-top: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    overflow: hidden;
-    white-space: nowrap;
-    /*border-right: 1px solid #232323;*/
-}
+package com.codenvy.ide.api.event;
 
-.data-label {
-    padding-left: 5px;
-}
+import com.google.gwt.event.shared.EventHandler;
 
-svg.partIcon {
-    width: 14px;
-    height: 14px;
-    float: right;
-    position: relative;
-    top: 1px;
-}
+/**
+ * @author Vitaly Parfonov
+ */
+public interface ProjectDescriptorChangedHandler extends EventHandler {
 
-.inQueue {
-    fill: mainFontColor;
-}
-.inProgress {
-    fill: #56e33b;
-}
-.done {
-    fill: #56e33b;
-}
-.failed {
-    fill: #ff3333;
-}
-.timeout {
-    fill: #ffba00;
+
+    public void onProjectDescriptorChanged(ProjectDescriptorChangedEvent event);
 }

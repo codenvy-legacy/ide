@@ -12,17 +12,19 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
-import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.extension.builder.client.BuilderResources;
+import com.codenvy.ide.extension.builder.client.build.BuilderStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Builder console.
@@ -34,12 +36,16 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     private static final String TITLE = "Builder";
     private final BuilderConsoleView view;
     private final ToolbarPresenter   consoleToolbar;
-    private boolean isUnread = false;
+    private final BuilderResources   builderResources;
+    private boolean       isUnread            = false;
+    private BuilderStatus currentBuilderStatus = BuilderStatus.IDLE;
 
     @Inject
-    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus) {
+    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
+                                   BuilderResources builderResources) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
+        this.builderResources = builderResources;
         this.view.setTitle(TITLE);
         this.view.setDelegate(this);
 
@@ -55,8 +61,8 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     private void onPartActivated(PartPresenter part) {
         if (part != null && part.equals(this) && isUnread) {
             isUnread = false;
-            firePropertyChange(TITLE_PROPERTY);
         }
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /** {@inheritDoc} */
@@ -74,13 +80,61 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** {@inheritDoc} */
     @Override
     public SVGResource getTitleSVGImage() {
-        return null;
+        switch (currentBuilderStatus) {
+            case IN_QUEUE:
+                return builderResources.inQueue();
+            case IN_PROGRESS:
+                return builderResources.inProgress();
+            case DONE:
+                return builderResources.done();
+            case FAILED:
+                return builderResources.failed();
+            case TIMEOUT:
+                return builderResources.timeout();
+            case IDLE:
+            default:
+                return null;
+        }
     }
+
+    @Override
+    public SVGImage decorateIcon(SVGImage svgImage) {
+        if (svgImage == null) {
+            return null;
+        }
+        svgImage.setClassNameBaseVal(builderResources.builder().partIcon());
+        switch (currentBuilderStatus) {
+            case IN_QUEUE:
+                svgImage.addClassNameBaseVal(builderResources.builder().inQueue());
+                break;
+            case IN_PROGRESS:
+                svgImage.addClassNameBaseVal(builderResources.builder().inProgress());
+                break;
+            case DONE:
+                svgImage.addClassNameBaseVal(builderResources.builder().done());
+                break;
+            case FAILED:
+                svgImage.addClassNameBaseVal(builderResources.builder().failed());
+                break;
+            case TIMEOUT:
+                svgImage.addClassNameBaseVal(builderResources.builder().timeout());
+                break;
+            case IDLE:
+            default:
+                break;
+        }
+        return svgImage;
+    }
+
 
     /** {@inheritDoc} */
     @Override
     public String getTitleToolTip() {
         return "Displays Builder output";
+    }
+
+    public void setCurrentBuilderStatus(BuilderStatus currentBuilderStatus) {
+        this.currentBuilderStatus = currentBuilderStatus;
     }
 
     /** {@inheritDoc} */
@@ -106,8 +160,8 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             isUnread = true;
-            firePropertyChange(TITLE_PROPERTY);
         }
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /**

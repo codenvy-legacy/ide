@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.inject;
 
-import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
-import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleView;
@@ -26,7 +24,6 @@ public class BuilderGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
-        bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
         bind(BuilderConsoleView.class).to(BuilderConsoleViewImpl.class).in(Singleton.class);
         bind(ToolbarPresenter.class).annotatedWith(BuilderConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
     }
