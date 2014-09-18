@@ -124,17 +124,26 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.failedSaveFiles")
     String messageFailedSaveFiles();
 
+    @Key("messages.failedRememberOptions")
+    String messagesFailedRememberOptions();
+
     @Key("messages.totalLessRequiredMemory")
     String messagesTotalLessRequiredMemory(int totalRAM, int requestedRAM);
 
     @Key("messages.totalLessOverrideMemory")
     String messagesTotalLessOverrideMemory(int overrideRAM, int totalRAM);
 
+    @Key("messages.totalLessDefaultMemory")
+    String messagesTotalLessDefaultMemory(int defaultRAM, int totalRAM);
+
     @Key("messages.totalLessCustomRunMemory")
     String messagesTotalLessCustomRunMemory(int customRunRAM, int totalRAM);
 
     @Key("messages.availableLessOverrideMemory")
     String messagesAvailableLessOverrideMemory(int overrideRAM, int totalRAM, int usedRAM);
+
+    @Key("messages.availableLessDefaultMemory")
+    String messagesAvailableLessDefaultMemory(int defaultRAM, int totalRAM, int usedRAM);
 
     @Key("messages.availableLessRequiredMemory")
     String messagesAvailableLessRequiredMemory(int totalRAM, int usedRAM, int requestedRAM);
@@ -144,6 +153,9 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("messages.overrideMemory")
     String messagesOverrideMemory();
+
+    @Key("messages.defaultMemory")
+    String messagesDefaultMemory(int requiredRam);
 
     @Key("appWillBeStopped")
     String appWillBeStopped(String appName);
@@ -190,4 +202,7 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();
+
+    @Key("view.customRun.rememberRunMemoryLabel")
+    String customRunViewRememberRunMemoryLabel();
 }
