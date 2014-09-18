@@ -125,9 +125,9 @@ public class ImageActionManager implements ProjectActionHandler {
         customImagesGroup.add(action);
 
         CharCodeWithModifiers hotKey = null;
-        // bind hot-key only for the first 9 actions
-        if (actionNum <= 9) {
-            hotKey = new KeyBuilder().action().alt().charCode(actionNum + 48).build();
+        // bind hot-key only for the first 10 actions
+        if (actionNum <= 10) {
+            hotKey = new KeyBuilder().action().alt().charCode(actionNum + 47).build();
             keyBindingAgent.getGlobal().addKey(hotKey, actionId);
         }
         actions2HotKeys.put(action, hotKey);

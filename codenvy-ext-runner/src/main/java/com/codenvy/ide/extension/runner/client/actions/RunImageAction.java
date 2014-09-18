@@ -56,6 +56,7 @@ public class RunImageAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(true);
+        e.getPresentation().setVisible(true);
+        e.getPresentation().setEnabled(!runController.isAnyAppRunning());
     }
 }
