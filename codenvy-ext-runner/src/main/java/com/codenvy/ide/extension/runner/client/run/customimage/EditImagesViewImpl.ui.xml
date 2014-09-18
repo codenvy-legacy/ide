@@ -15,14 +15,14 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
-        .emptyBorder {
+        .border {
             padding: 6px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="320px" height="320px">
         <g:center>
-            <g:ScrollPanel ui:field="listPanel" addStyleNames="{style.emptyBorder}"
-                           debugId="file-openProject-listPanel"/>
+            <g:ScrollPanel ui:field="listPanel" addStyleNames="{style.border}"
+                           debugId="file-editImages-listPanel"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -41,7 +41,6 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     @UiField
     ScrollPanel listPanel;
-    private Button                     btnClose;
     private Button                     btnEdit;
     private ActionDelegate             delegate;
     private RunnerLocalizationConstant localizationConstants;
@@ -51,11 +50,10 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
     protected EditImagesViewImpl(com.codenvy.ide.Resources resources, RunnerLocalizationConstant localizationConstants,
                                  EditImagesViewImplUiBinder uiBinder) {
         this.localizationConstants = localizationConstants;
-
+        this.setTitle(localizationConstants.editImagesViewTitle());
         Widget widget = uiBinder.createAndBindUi(this);
-
-        TableElement tableElement = Elements.createTableElement();
-        tableElement.setAttribute("style", "width: 100%");
+        this.setWidget(widget);
+        createButtons();
 
         final SimpleList.ListEventDelegate<ItemReference> listDelegate = new SimpleList.ListEventDelegate<ItemReference>() {
             public void onListItemClicked(Element itemElement, ItemReference itemData) {
@@ -85,12 +83,11 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
             }
         };
 
-        list = SimpleList.create((SimpleList.View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
-        this.listPanel.add(list);
+        TableElement tableElement = Elements.createTableElement();
+        tableElement.setAttribute("style", "width: 100%");
 
-        this.setTitle(localizationConstants.editImagesViewTitle());
-        this.setWidget(widget);
-        createButtons();
+        list = SimpleList.create((SimpleList.View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        listPanel.add(list);
     }
 
     private void createButtons() {
@@ -101,7 +98,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
             }
         });
 
-        btnClose = createButton(localizationConstants.buttonClose(), "editImages-close", new ClickHandler() {
+        final Button btnClose = createButton(localizationConstants.buttonClose(), "editImages-close", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCloseClicked();
@@ -137,7 +134,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
+    public void closeDialog() {
         this.hide();
     }
 

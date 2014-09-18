@@ -72,7 +72,7 @@ public class ImageActionManager implements ProjectActionHandler {
 
     @Override
     public void onProjectOpened(ProjectActionEvent event) {
-        retrieveCustomScripts(event.getProject(), new AsyncCallback<Array<ItemReference>>() {
+        retrieveCustomImages(event.getProject(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {
@@ -92,7 +92,7 @@ public class ImageActionManager implements ProjectActionHandler {
         removeAllImageActions();
     }
 
-    void retrieveCustomScripts(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
+    void retrieveCustomImages(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(project.getPath() + SCRIPTS_FOLDER_REL_LOCATION,
                                          new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {

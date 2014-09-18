@@ -37,7 +37,7 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
     void setImages(Array<ItemReference> images);
 
     /** Close the dialog. */
-    void close();
+    void closeDialog();
 
     /** Show the dialog. */
     void showDialog();

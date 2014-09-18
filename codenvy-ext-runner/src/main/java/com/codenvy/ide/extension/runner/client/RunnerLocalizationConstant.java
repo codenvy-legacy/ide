@@ -181,6 +181,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("runnerNotReady")
     String runnerNotReady();
 
+    @Key("retrievingImagesFailed")
+    String retrievingImagesFailed();
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
