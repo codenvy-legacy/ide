@@ -26,6 +26,12 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("button.cancel")
     String buttonCancel();
 
+    @Key("button.add")
+    String buttonAdd();
+
+    @Key("button.remove")
+    String buttonRemove();
+
     @Key("button.close")
     String buttonClose();
 

@@ -46,7 +46,7 @@ import static com.codenvy.ide.extension.runner.client.RunnerExtension.GROUP_CUST
 public class ImageActionManager implements ProjectActionHandler {
 
     /** Project-relative path to the custom Docker-scripts folder. */
-    private static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy/scripts";
+    static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy/scripts";
     private final Map<RunImageAction, CharCodeWithModifiers> actions2HotKeys;
     private final ImageActionFactory                         imageActionFactory;
     private final RunnerLocalizationConstant                 localizationConstants;

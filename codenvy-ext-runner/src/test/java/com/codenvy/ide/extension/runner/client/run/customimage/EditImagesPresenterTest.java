@@ -34,7 +34,6 @@ import java.lang.reflect.Method;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -90,17 +89,6 @@ public class EditImagesPresenterTest extends BaseTest {
     }
 
     @Test
-    public void shouldNotShowDialogWhenNoOpenedProject() throws Exception {
-        when(appContext.getCurrentProject()).thenReturn(null);
-
-        presenter.showDialog();
-
-        verify(imageActionManager, never()).retrieveCustomImages(Matchers.<ProjectDescriptor>anyObject(),
-                                                                 Matchers.<AsyncCallback<Array<ItemReference>>>anyObject());
-        verify(view, never()).showDialog();
-    }
-
-    @Test
     public void shouldCloseDialog() throws Exception {
         presenter.onCloseClicked();
 
@@ -108,9 +96,11 @@ public class EditImagesPresenterTest extends BaseTest {
     }
 
     @Test
-    public void shouldEnableEditButtonOnSelectingImage() throws Exception {
+    public void shouldEnableEditAndRemoveButtonsOnSelectingImage() throws Exception {
         presenter.onImageSelected(mock(ItemReference.class));
+
         verify(view).setEditButtonEnabled(eq(true));
+        verify(view).setRemoveButtonEnabled(eq(true));
     }
 
     @Test

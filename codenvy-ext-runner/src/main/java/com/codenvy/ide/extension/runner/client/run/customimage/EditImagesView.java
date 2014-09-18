@@ -29,6 +29,14 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
     void setEditButtonEnabled(boolean isEnabled);
 
     /**
+     * Set state of the 'Remove' button.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code> to disable it
+     */
+    void setRemoveButtonEnabled(boolean isEnabled);
+
+    /**
      * Set existing images.
      *
      * @param images
@@ -44,6 +52,12 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
 
     /** Needs for delegate some function into ChangePerspective view. */
     public interface ActionDelegate {
+        /** Called when 'Add' button clicked. */
+        void onAddClicked();
+
+        /** Called when 'Remove' button clicked. */
+        void onRemoveClicked();
+
         /** Called when 'Edit' button clicked. */
         void onEditClicked();
 
