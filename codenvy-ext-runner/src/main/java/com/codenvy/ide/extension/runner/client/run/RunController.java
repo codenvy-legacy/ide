@@ -504,7 +504,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (runnerMemory > 0) {
             runOptions.setMemorySize(runnerMemory);
         }
-        Log.error(getClass(), runOptions.getMemorySize());
+
         if (runOptions.getEnvironmentId() == null && currentProject.getRunnerEnvId() != null) {
             runOptions.setEnvironmentId(currentProject.getRunnerEnvId());
         }
