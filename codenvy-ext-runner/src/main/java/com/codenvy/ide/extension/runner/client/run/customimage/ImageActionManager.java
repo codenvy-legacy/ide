@@ -20,7 +20,6 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.keybinding.KeyBuilder;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -28,9 +27,13 @@ import com.codenvy.ide.extension.runner.client.actions.RunImageAction;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Listens for opening/closing a project and adds
@@ -42,13 +45,13 @@ public class ImageActionManager implements ProjectActionHandler {
 
     /** Project-relative path to the custom Docker-scripts folder. */
     private static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy/scripts";
-    private final ImageActionFactory         imageActionFactory;
-    private final RunnerLocalizationConstant localizationConstants;
-    private final ActionManager              actionManager;
-    private final KeyBindingAgent            keyBindingAgent;
-    private final ProjectServiceClient       projectServiceClient;
-    private final DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private final Array<RunImageAction>      actions;
+    private final ImageActionFactory                         imageActionFactory;
+    private final RunnerLocalizationConstant                 localizationConstants;
+    private final ActionManager                              actionManager;
+    private final KeyBindingAgent                            keyBindingAgent;
+    private final ProjectServiceClient                       projectServiceClient;
+    private final DtoUnmarshallerFactory                     dtoUnmarshallerFactory;
+    private final Map<RunImageAction, CharCodeWithModifiers> actions2HotKeys;
 
     @Inject
     public ImageActionManager(ImageActionFactory imageActionFactory,
@@ -66,7 +69,7 @@ public class ImageActionManager implements ProjectActionHandler {
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
-        actions = Collections.createArray();
+        actions2HotKeys = new HashMap<>();
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
     }
 
@@ -109,32 +112,40 @@ public class ImageActionManager implements ProjectActionHandler {
     }
 
     private void addImageAction(ItemReference scriptFile) {
+        final int actionNum = actions2HotKeys.size() + 1;
+
         final RunImageAction action = imageActionFactory.createAction(localizationConstants.imageActionText(scriptFile.getName()),
                                                                       localizationConstants.imageActionDescription(scriptFile.getName()),
                                                                       scriptFile);
-        actions.add(action);
-        final String actionId = localizationConstants.imageActionId(actions.size());
+        final String actionId = localizationConstants.imageActionId(actionNum);
 
         actionManager.registerAction(actionId, action);
 
         DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(RunnerExtension.GROUP_CUSTOM_IMAGES);
         customImagesGroup.add(action);
 
+        CharCodeWithModifiers hotKey = null;
         // bind hot-key only for the first 9 actions
-        if (actions.size() <= 9) {
-            keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(actions.size() + 48).build(), actionId);
+        if (actionNum <= 9) {
+            hotKey = new KeyBuilder().action().alt().charCode(actionNum + 48).build();
+            keyBindingAgent.getGlobal().addKey(hotKey, actionId);
         }
+        actions2HotKeys.put(action, hotKey);
     }
 
     /** Remove and unregister all previously added 'Image' actions. */
     private void removeAllImageActions() {
         DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(RunnerExtension.GROUP_CUSTOM_IMAGES);
-        for (RunImageAction action : actions.asIterable()) {
-            customImagesGroup.remove(action);
-            actionManager.unregisterAction(actionManager.getId(action));
+        for (Map.Entry<RunImageAction, CharCodeWithModifiers> entry : actions2HotKeys.entrySet()) {
+            customImagesGroup.remove(entry.getKey());
+            final String actionId = actionManager.getId(entry.getKey());
+            actionManager.unregisterAction(actionId);
 
-            // TODO: unbind hot-key
+            // unbind hot-key
+            if (entry.getValue() != null) {
+                keyBindingAgent.getGlobal().removeKey(entry.getValue(), actionId);
+            }
         }
-        actions.clear();
+        actions2HotKeys.clear();
     }
 }
