@@ -311,6 +311,38 @@ public class RunController implements Notification.OpenNotificationHandler {
                         runEnvConfDescriptor = runEnvConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
                     }
                     overrideMemory = runOptions.getMemorySize();
+
+                    if (overrideMemory > 0) {
+                        if (!isOverrideMemoryCorrect(totalMemory, usedMemory, overrideMemory)) {
+                            return;
+                        }
+                        if (overrideMemory < requiredMemory) {
+                            final int finalRequiredMemory = requiredMemory;
+                            Info warningWindow =
+                                    new Info(constant.titlesWarning(), constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
+                                             new InfoHandler() {
+                                                 @Override
+                                                 public void onOk() {
+                                                     Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
+                                                                       new AskHandler() {
+                                                                           @Override
+                                                                           public void onOk() {
+                                                                               runnerMemory = finalRequiredMemory;
+                                                                               runProject(runOptions, isUserAction);
+                                                                           }
+                                                                       }
+                                                     );
+                                                     ask.show();
+                                                 }
+                                             }
+                                    );
+                            warningWindow.show();
+                            return;
+                        }
+                        runnerMemory = overrideMemory;
+                        runProject(runOptions, isUserAction);
+                        return;
+                    }
                 } else {
                     if (runEnvConfigurations != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
                         runEnvConfDescriptor = runEnvConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
@@ -397,11 +429,13 @@ public class RunController implements Notification.OpenNotificationHandler {
                     runProject(runOptions, isUserAction);
                     return;
                 }
-                if (recommendedMemory > 0 && recommendedMemory < totalMemory && recommendedMemory < availableMemory) {
+
+                if (recommendedMemory > 0 && recommendedMemory <= totalMemory && recommendedMemory <= availableMemory) {
                     runnerMemory = recommendedMemory;
                     runProject(runOptions, isUserAction);
                     return;
                 }
+
                 if (requiredMemory > 0 ) {
                     //check for requiredMemory < totalMemory && requiredMemory < availableMemory was in isSufficientRequiredMemory()
                     runnerMemory = requiredMemory;

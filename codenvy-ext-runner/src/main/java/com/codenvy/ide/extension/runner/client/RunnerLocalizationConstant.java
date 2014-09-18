@@ -124,6 +124,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.failedSaveFiles")
     String messageFailedSaveFiles();
 
+    @Key("messages.failedRememberOptions")
+    String messagesFailedRememberOptions();
+
     @Key("messages.totalLessRequiredMemory")
     String messagesTotalLessRequiredMemory(int totalRAM, int requestedRAM);
 
@@ -199,4 +202,7 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();
+
+    @Key("view.customRun.rememberRunMemoryLabel")
+    String customRunViewRememberRunMemoryLabel();
 }

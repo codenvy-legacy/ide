@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
@@ -28,7 +29,6 @@ import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -45,6 +45,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     private RunController              runController;
     private RunnerServiceClient        runnerServiceClient;
+    private ProjectServiceClient       projectService;
     private CustomRunView              view;
     private DtoFactory                 dtoFactory;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
@@ -56,6 +57,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     @Inject
     protected CustomRunPresenter(RunController runController,
                                  RunnerServiceClient runnerServiceClient,
+                                 ProjectServiceClient projectService,
                                  CustomRunView view,
                                  DtoFactory dtoFactory,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -64,6 +66,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  RunnerLocalizationConstant constant) {
         this.runController = runController;
         this.runnerServiceClient = runnerServiceClient;
+        this.projectService = projectService;
         this.view = view;
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -100,13 +103,16 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 int defaultRunnerMemory = 0;
                 int requiredMemory = 0;
                 int recommendedMemorySize = 0;
+                int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
+                int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
+
                 String defaultRunnerEnvironment = appContext.getCurrentProject().getProjectDescription().getDefaultRunnerEnvironment();
-                Log.info(CustomRunPresenter.class, defaultRunnerEnvironment);
                 if (defaultRunnerEnvironment != null) {
                     Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
                             appContext.getCurrentProject().getProjectDescription().getRunnerEnvironmentConfigurations();
                     RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor =
                             runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+
                     if (runnerEnvironmentConfigurationDescriptor != null) {
                         defaultRunnerMemory = runnerEnvironmentConfigurationDescriptor.getDefaultMemorySize();
                         requiredMemory = runnerEnvironmentConfigurationDescriptor.getRequiredMemorySize();
@@ -123,16 +129,10 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                         }
                     }
                 }
-
-                int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
-                int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
                 if (defaultRunnerMemory <= 0)
                     defaultRunnerMemory = recommendedMemorySize > 0 ? recommendedMemorySize : requiredMemory;
-                Log.info(CustomRunPresenter.class, defaultRunnerMemory + "hhh");
                 if (defaultRunnerMemory <= 0)
                     defaultRunnerMemory = (defaultRunnerMemory > 0 && defaultRunnerMemory <= totalMemory && defaultRunnerMemory % 128 == 0) ? defaultRunnerMemory : 256;
-
-                Log.info(CustomRunPresenter.class, defaultRunnerMemory);
 
                 view.setEnabledRadioButtons(totalMemory);
                 view.setRunnerMemorySize(String.valueOf(defaultRunnerMemory));
@@ -164,6 +164,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     @Override
     public void onRunClicked() {
+        if (view.isRememberOptionsSelected()) {
+            updateProject();
+        }
         if (isRunnerMemoryCorrect()) {
             RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
             runOptions.setMemorySize(Integer.valueOf(view.getRunnerMemorySize()));
@@ -175,6 +178,40 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
             view.close();
             runController.runActiveProject(runOptions, null, true);
         }
+    }
+
+    private void updateProject() {
+        String defaultRunnerEnvironment = view.getSelectedEnvironment().getId();
+        int defaultMemorySize = Integer.valueOf(view.getRunnerMemorySize());
+
+        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
+
+        if (defaultRunnerEnvironment != null && runEnvConfigurations != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
+            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+        }
+
+        if (runnerEnvironmentConfigurationDescriptor == null) {
+            runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+        }
+        runnerEnvironmentConfigurationDescriptor.setDefaultMemorySize(defaultMemorySize);
+        runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
+
+        projectDescriptor.setDefaultRunnerEnvironment(view.getSelectedEnvironment().getId());
+
+        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+            @Override
+            protected void onSuccess(ProjectDescriptor result) {
+                //TODO
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                view.showWarning(constant.messagesFailedRememberOptions());
+            }
+        });
     }
 
     @Override

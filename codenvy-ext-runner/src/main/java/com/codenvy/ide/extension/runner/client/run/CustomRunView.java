@@ -82,4 +82,7 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
     /** Performs when user select skip build. */
     boolean isSkipBuildSelected();
 
+    /** Performs when user select 'Remember my options'. */
+    boolean isRememberOptionsSelected();
+
 }
