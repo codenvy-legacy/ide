@@ -20,6 +20,7 @@ import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.collections.Array;
@@ -31,6 +32,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.Map;
 
@@ -52,6 +54,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     private NotificationManager        notificationManager;
     private AppContext                 appContext;
     private RunnerLocalizationConstant constant;
+    private EventBus                   eventBus;
 
     /** Create presenter. */
     @Inject
@@ -63,7 +66,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                  NotificationManager notificationManager,
                                  AppContext appContext,
-                                 RunnerLocalizationConstant constant) {
+                                 RunnerLocalizationConstant constant,
+                                 EventBus eventBus) {
         this.runController = runController;
         this.runnerServiceClient = runnerServiceClient;
         this.projectService = projectService;
@@ -73,6 +77,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.notificationManager = notificationManager;
         this.appContext = appContext;
         this.constant = constant;
+        this.eventBus = eventBus;
         this.view.setDelegate(this);
     }
 
@@ -217,7 +222,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                //TODO Add fire event
+                eventBus.fireEvent(new ProjectDescriptorChangedEvent(result));
             }
 
             @Override

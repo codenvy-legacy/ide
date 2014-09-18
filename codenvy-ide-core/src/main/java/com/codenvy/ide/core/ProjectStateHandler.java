@@ -22,6 +22,8 @@ import com.codenvy.ide.api.event.CloseCurrentProjectHandler;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
+import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -50,7 +52,7 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProjectHandler {
+public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProjectHandler, ProjectDescriptorChangedHandler {
     private EventBus                 eventBus;
     private AppContext               appContext;
     private ProjectServiceClient     projectServiceClient;
@@ -68,6 +70,7 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
 
         eventBus.addHandler(OpenProjectEvent.TYPE, this);
         eventBus.addHandler(CloseCurrentProjectEvent.TYPE, this);
+        eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
     }
 
     /** {@inheritDoc} */
@@ -121,5 +124,13 @@ public class ProjectStateHandler implements OpenProjectHandler, CloseCurrentProj
             url += "/" + projectName;
         }
         Browser.getWindow().getHistory().replaceState(null, Window.getTitle(), url);
+    }
+
+    @Override
+    public void onProjectDescriptorChanged(ProjectDescriptorChangedEvent event) {
+        String path = event.getProjectDescriptor().getPath();
+        if (appContext.getCurrentProject().getProjectDescription().getPath().equals(path)) {
+            appContext.getCurrentProject().setProjectDescription(event.getProjectDescriptor());
+        }
     }
 }
