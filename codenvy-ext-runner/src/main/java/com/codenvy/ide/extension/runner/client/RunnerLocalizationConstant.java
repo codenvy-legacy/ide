@@ -26,6 +26,12 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("button.cancel")
     String buttonCancel();
 
+    @Key("button.close")
+    String buttonClose();
+
+    @Key("button.edit")
+    String buttonEdit();
+
     /* Actions */
     @Key("control.runApp.id")
     String runAppActionId();
@@ -97,10 +103,10 @@ public interface RunnerLocalizationConstant extends Messages {
     String imageActionId(int id);
 
     @Key("control.image.text")
-    String imageActionText(int id);
+    String imageActionText(String id);
 
     @Key("control.image.description")
-    String imageActionDescription(int id);
+    String imageActionDescription(String id);
 
     /* Messages */
     @Key("another.project.running.now")
@@ -211,4 +217,8 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.runConfiguration.skipBuildLabel")
     String runConfigurationViewSkipBuildLabel();
+
+    /* EditImagesView */
+    @Key("view.editImages.title")
+    String editImagesViewTitle();
 }

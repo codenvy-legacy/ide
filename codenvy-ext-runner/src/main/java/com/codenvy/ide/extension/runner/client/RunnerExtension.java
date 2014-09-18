@@ -20,6 +20,7 @@ import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.extension.runner.client.actions.CustomImagesGroup;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
 import com.codenvy.ide.extension.runner.client.actions.EditImagesAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
@@ -77,6 +78,7 @@ public class RunnerExtension {
                                 ActionManager actionManager,
                                 RunAction runAction,
                                 CustomRunAction customRunAction,
+                                CustomImagesGroup customImagesGroup,
                                 EditImagesAction editImagesAction,
                                 GetLogsAction getLogsAction,
                                 StopAction stopAction,
@@ -89,11 +91,9 @@ public class RunnerExtension {
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         actionManager.registerAction(localizationConstants.viewRecipeActionId(), viewRecipeAction);
-
-        // add 'Custom Images' group
-        DefaultActionGroup customImagesGroup = new DefaultActionGroup(localizationConstants.customImagesActionTitle(), true, actionManager);
-        customImagesGroup.getTemplatePresentation().setSVGIcon(resources.customImages());
         actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
+
+        // prepare 'Custom Images' group
         customImagesGroup.add(editImagesAction);
         customImagesGroup.addSeparator();
 
@@ -120,7 +120,7 @@ public class RunnerExtension {
         DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
         actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
         runToolbarGroup.add(runAction);
-        runToolbarGroup.add(customImagesGroup);
+        runToolbarGroup.add(customImagesGroup, Constraints.LAST);
         mainToolbarGroup.add(runToolbarGroup);
     }
 

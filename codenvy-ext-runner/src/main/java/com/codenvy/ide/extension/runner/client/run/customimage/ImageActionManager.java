@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
 public class ImageActionManager implements ProjectActionHandler {
 
     /** Project-relative path to the custom Docker-scripts folder. */
-    private static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy";
+    private static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy/scripts";
     private final ImageActionFactory         imageActionFactory;
     private final RunnerLocalizationConstant localizationConstants;
     private final ActionManager              actionManager;
@@ -75,9 +75,8 @@ public class ImageActionManager implements ProjectActionHandler {
         retrieveCustomScripts(event.getProject(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
-                int i = 1;
                 for (ItemReference item : result.asIterable()) {
-                    addImageAction(item, i++);
+                    addImageAction(item);
                 }
             }
 
@@ -93,7 +92,7 @@ public class ImageActionManager implements ProjectActionHandler {
         removeAllImageActions();
     }
 
-    private void retrieveCustomScripts(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
+    void retrieveCustomScripts(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(project.getPath() + SCRIPTS_FOLDER_REL_LOCATION,
                                          new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
@@ -109,22 +108,21 @@ public class ImageActionManager implements ProjectActionHandler {
                                          });
     }
 
-    private void addImageAction(ItemReference scriptFile, int imageNum) {
-        // register action
-        final RunImageAction runImageAction = imageActionFactory.createAction(localizationConstants.imageActionText(imageNum),
-                                                                              localizationConstants.imageActionDescription(imageNum),
-                                                                              scriptFile);
-        final String actionId = localizationConstants.imageActionId(imageNum);
-        actions.add(runImageAction);
-        actionManager.registerAction(actionId, runImageAction);
+    private void addImageAction(ItemReference scriptFile) {
+        final RunImageAction action = imageActionFactory.createAction(localizationConstants.imageActionText(scriptFile.getName()),
+                                                                      localizationConstants.imageActionDescription(scriptFile.getName()),
+                                                                      scriptFile);
+        actions.add(action);
+        final String actionId = localizationConstants.imageActionId(actions.size());
 
-        // add actions in 'Custom Images' menu group
+        actionManager.registerAction(actionId, action);
+
         DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(RunnerExtension.GROUP_CUSTOM_IMAGES);
-        customImagesGroup.add(runImageAction);
+        customImagesGroup.add(action);
 
         // bind hot-key only for the first 9 actions
-        if (imageNum <= 9) {
-            keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(imageNum + 48).build(), actionId);
+        if (actions.size() <= 9) {
+            keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().alt().charCode(actions.size() + 48).build(), actionId);
         }
     }
 
@@ -137,5 +135,6 @@ public class ImageActionManager implements ProjectActionHandler {
 
             // TODO: unbind hot-key
         }
+        actions.clear();
     }
 }

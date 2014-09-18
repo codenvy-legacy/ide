@@ -20,6 +20,8 @@ import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
 import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesView;
+import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesViewImpl;
 import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionFactory;
 import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionManager;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -45,5 +47,6 @@ public class RunnerGinModule extends AbstractGinModule {
 
         bind(ImageActionManager.class).asEagerSingleton();
         install(new GinFactoryModuleBuilder().build(ImageActionFactory.class));
+        bind(EditImagesView.class).to(EditImagesViewImpl.class).in(Singleton.class);
     }
 }

@@ -10,45 +10,34 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to open a dialog for editing custom Docker-images.
+ * 'Custom Images' menu group.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class EditImagesAction extends Action {
-
-    private final AppContext          appContext;
-    private final EditImagesPresenter editImagesPresenter;
+public class CustomImagesGroup extends DefaultActionGroup {
+    private final AppContext appContext;
 
     @Inject
-    public EditImagesAction(RunnerResources resources,
-                            RunnerLocalizationConstant constants,
-                            AppContext appContext,
-                            EditImagesPresenter editImagesPresenter) {
-        super(constants.editImagesActionText(), constants.editImagesActionDescription(), null, resources.editImages());
+    public CustomImagesGroup(RunnerLocalizationConstant localizationConstants, RunnerResources resources, ActionManager actionManager,
+                             AppContext appContext) {
+        super(localizationConstants.customImagesActionTitle(), true, actionManager);
         this.appContext = appContext;
-        this.editImagesPresenter = editImagesPresenter;
+        getTemplatePresentation().setSVGIcon(resources.customImages());
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        editImagesPresenter.showDialog();
-    }
-
-    /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
+        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
     }
 }
