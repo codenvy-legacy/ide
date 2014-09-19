@@ -119,7 +119,7 @@ public class CustomRunTest extends BaseTest {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
-        when(activeProject.getProjectDescription()).thenReturn(projectDescriptor);
+        when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(profileDescriptor.getPreferences()).thenReturn(null);
