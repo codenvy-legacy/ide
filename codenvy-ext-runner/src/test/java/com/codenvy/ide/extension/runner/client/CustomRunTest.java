@@ -104,7 +104,7 @@ public class CustomRunTest extends BaseTest {
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-        verify(appContext).getCurrentProject();
+        verify(appContext, times(2)).getCurrentProject();
         verify(view).setEnvironments((Array<RunnerEnvironment>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view, never()).setRunnerMemorySize(anyString());
