@@ -11,6 +11,7 @@
 package com.codenvy.ide.newresource;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -62,9 +63,9 @@ public class NewFolderAction extends DefaultNewResourceAction {
             @Override
             public void onOk(String value) {
                 final StorableNode parent = getParent();
-                projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<Void>() {
+                projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<ItemReference>() {
                     @Override
-                    protected void onSuccess(Void result) {
+                    protected void onSuccess(ItemReference result) {
                         eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
                     }
 
