@@ -22,6 +22,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
@@ -83,14 +84,14 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     }
 
     private void createScript(final String name) {
+        final Unmarshallable<ItemReference> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class);
         projectServiceClient.createFile(
                 appContext.getCurrentProject().getProjectDescription().getPath() +
                 SCRIPTS_FOLDER_REL_LOCATION, name, "", null,
-                new AsyncRequestCallback<Void>() {
+                new AsyncRequestCallback<ItemReference>(unmarshaller) {
                     @Override
-                    protected void onSuccess(Void result) {
-                        // TODO: rework it when create file request will return ItemReference
-//                        imageActionManager.addActionForScript(result);
+                    protected void onSuccess(ItemReference result) {
+                        imageActionManager.addActionForScript(result);
                         refreshImagesList();
                         updateView();
                     }
