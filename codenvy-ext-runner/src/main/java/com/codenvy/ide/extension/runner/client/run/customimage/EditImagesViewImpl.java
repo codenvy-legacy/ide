@@ -41,8 +41,9 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     @UiField
     ScrollPanel listPanel;
-    private Button                     btnEdit;
+    private Button                     btnAdd;
     private Button                     btnRemove;
+    private Button                     btnEdit;
     private ActionDelegate             delegate;
     private RunnerLocalizationConstant localizationConstants;
     private SimpleList<ItemReference>  list;
@@ -94,7 +95,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
     }
 
     private void createButtons() {
-        final Button btnAdd = createButton(localizationConstants.buttonAdd(), "editImages-add", new ClickHandler() {
+        btnAdd = createButton(localizationConstants.buttonAdd(), "editImages-add", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onAddClicked();
@@ -141,14 +142,20 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setEditButtonEnabled(boolean isEnabled) {
-        btnEdit.setEnabled(isEnabled);
+    public void setAddButtonEnabled(boolean isEnabled) {
+        btnAdd.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setRemoveButtonEnabled(boolean isEnabled) {
         btnRemove.setEnabled(isEnabled);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setEditButtonEnabled(boolean isEnabled) {
+        btnEdit.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */

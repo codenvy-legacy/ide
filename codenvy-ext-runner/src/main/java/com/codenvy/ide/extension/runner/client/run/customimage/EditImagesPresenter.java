@@ -18,6 +18,7 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -164,12 +165,16 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     }
 
     private void refreshImagesList() {
+        view.setImages(Collections.<ItemReference>createArray());
+        view.setAddButtonEnabled(false);
+
         imageActionManager.retrieveCustomImages(
                 appContext.getCurrentProject().getProjectDescription(),
                 new AsyncCallback<Array<ItemReference>>() {
                     @Override
                     public void onSuccess(Array<ItemReference> result) {
                         view.setImages(result);
+                        view.setAddButtonEnabled(true);
                     }
 
                     @Override
