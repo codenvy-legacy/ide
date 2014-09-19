@@ -11,6 +11,7 @@
 package com.codenvy.ide.core.editor;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.event.FileEvent;
@@ -100,9 +101,9 @@ public class ResourceDocumentProvider implements DocumentProvider {
         final FileNode file = input.getFile();
         final String path = file.getPath();
         final String parentPath = path.substring(0, path.length() - file.getName().length());
-        projectServiceClient.createFile(parentPath, file.getName(), document.get(), file.getData().getMediaType(), new AsyncRequestCallback<Void>() {
+        projectServiceClient.createFile(parentPath, file.getName(), document.get(), file.getData().getMediaType(), new AsyncRequestCallback<ItemReference>() {
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(ItemReference result) {
                 eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));
             }
 
