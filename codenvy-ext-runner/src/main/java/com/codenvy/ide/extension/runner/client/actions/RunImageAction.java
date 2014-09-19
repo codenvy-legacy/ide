@@ -20,6 +20,9 @@ import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Action for executing custom Docker-images on runner.
  * <p/>
@@ -49,7 +52,10 @@ public class RunImageAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-//        runOptions.setOptions();
+        Map<String, String> options = new HashMap<>();
+        options.put("runner.name", "docker");
+        options.put("script.name", scriptFile.getName());
+        runOptions.setOptions(options);
         runController.runActiveProject(runOptions, null, false);
     }
 
@@ -58,5 +64,10 @@ public class RunImageAction extends Action {
     public void update(ActionEvent e) {
         e.getPresentation().setVisible(true);
         e.getPresentation().setEnabled(!runController.isAnyAppRunning());
+    }
+
+    /** Returns the script file which this action executes. */
+    public ItemReference getScriptFile() {
+        return scriptFile;
     }
 }

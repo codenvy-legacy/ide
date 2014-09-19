@@ -56,12 +56,14 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
         this.setWidget(widget);
         createButtons();
 
-        final SimpleList.ListEventDelegate<ItemReference> listDelegate = new SimpleList.ListEventDelegate<ItemReference>() {
+        final SimpleList.ListEventDelegate<ItemReference> eventDelegate = new SimpleList.ListEventDelegate<ItemReference>() {
+            @Override
             public void onListItemClicked(Element itemElement, ItemReference itemData) {
                 list.getSelectionModel().setSelectedItem(itemData);
                 delegate.onImageSelected(itemData);
             }
 
+            @Override
             public void onListItemDoubleClicked(Element listItemBase, ItemReference itemData) {
                 list.getSelectionModel().setSelectedItem(itemData);
                 delegate.onImageSelected(itemData);
@@ -69,7 +71,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
             }
         };
 
-        final SimpleList.ListItemRenderer<ItemReference> listItemRenderer = new SimpleList.ListItemRenderer<ItemReference>() {
+        final SimpleList.ListItemRenderer<ItemReference> itemRenderer = new SimpleList.ListItemRenderer<ItemReference>() {
             @Override
             public void render(Element itemElement, ItemReference itemData) {
                 TableCellElement label = Elements.createTDElement();
@@ -87,7 +89,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
 
-        list = SimpleList.create((SimpleList.View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        list = SimpleList.create((SimpleList.View)tableElement, resources.defaultSimpleListCss(), itemRenderer, eventDelegate);
         listPanel.add(list);
     }
 

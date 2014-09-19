@@ -21,6 +21,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -32,21 +34,21 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.extension.runner.client.run.customimage.ImageActionManager.SCRIPTS_FOLDER_REL_LOCATION;
 
 /**
- * Drives of editing custom images.
+ * Drives the process of editing custom images.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class EditImagesPresenter implements EditImagesView.ActionDelegate {
-    private final NotificationManager        notificationManager;
-    private final RunnerLocalizationConstant localizationConstants;
-    private       ProjectServiceClient       projectServiceClient;
-    private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private       EventBus                   eventBus;
-    private       AppContext                 appContext;
-    private       ImageActionManager         imageActionManager;
-    private       EditImagesView             view;
-    private       ItemReference              selectedImage;
+    private NotificationManager        notificationManager;
+    private RunnerLocalizationConstant localizationConstants;
+    private ProjectServiceClient       projectServiceClient;
+    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private EventBus                   eventBus;
+    private AppContext                 appContext;
+    private ImageActionManager         imageActionManager;
+    private EditImagesView             view;
+    private ItemReference              selectedImage;
 
     /** Create presenter. */
     @Inject
@@ -66,43 +68,60 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
         updateView();
     }
 
-    private void updateView() {
-        view.setEditButtonEnabled(selectedImage != null);
-        view.setRemoveButtonEnabled(selectedImage != null);
-    }
-
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        new AskValueDialog("title", "message", new AskValueCallback() {
-            @Override
-            public void onOk(String value) {
-                projectServiceClient
-                        .createFile(appContext.getCurrentProject().getProjectDescription().getPath() + SCRIPTS_FOLDER_REL_LOCATION, value,
-                                    "", null, new AsyncRequestCallback<Void>() {
-                                    @Override
-                                    protected void onSuccess(Void result) {
-                                        refreshImagesList();
-                                        updateView();
-                                    }
+        new AskValueDialog(localizationConstants.editImagesViewAddNewScriptTitle(),
+                           localizationConstants.editImagesViewAddNewScriptMessage(),
+                           new AskValueCallback() {
+                               @Override
+                               public void onOk(final String value) {
+                                   createScript(value);
+                               }
+                           }).show();
+    }
 
-                                    @Override
-                                    protected void onFailure(Throwable exception) {
-                                        notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
-                                    }
-                                });
-            }
-        }).show();
+    private void createScript(final String name) {
+        projectServiceClient.createFile(
+                appContext.getCurrentProject().getProjectDescription().getPath() +
+                SCRIPTS_FOLDER_REL_LOCATION, name, "", null,
+                new AsyncRequestCallback<Void>() {
+                    @Override
+                    protected void onSuccess(Void result) {
+                        // TODO: rework it when create file request will return ItemReference
+//                        imageActionManager.addActionForScript(result);
+                        refreshImagesList();
+                        updateView();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        notificationManager.showNotification(new Notification(exception.getMessage(), ERROR));
+                    }
+                });
     }
 
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
+        new Ask(localizationConstants.editImagesViewRemoveScriptTitle(),
+                localizationConstants.editImagesViewRemoveScriptMessage(selectedImage.getName()),
+                new AskHandler() {
+                    @Override
+                    public void onOk() {
+                        removeSelectedScript();
+                    }
+                }).show();
+    }
+
+    private void removeSelectedScript() {
         projectServiceClient.delete(selectedImage.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                refreshImagesList();
+                imageActionManager.removeActionForScript(selectedImage);
+                selectedImage = null;
                 updateView();
+                refreshImagesList();
             }
 
             @Override
@@ -128,42 +147,36 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onImageSelected(ItemReference projectName) {
-        selectedImage = projectName;
+    public void onImageSelected(ItemReference image) {
+        selectedImage = image;
         updateView();
     }
 
     /** Show dialog. */
     public void showDialog() {
         view.showDialog();
-        imageActionManager.retrieveCustomImages(appContext.getCurrentProject().getProjectDescription(),
-                                                new AsyncCallback<Array<ItemReference>>() {
-                                                    @Override
-                                                    public void onSuccess(Array<ItemReference> result) {
-                                                        view.setImages(result);
-                                                    }
+        refreshImagesList();
+    }
 
-                                                    @Override
-                                                    public void onFailure(Throwable caught) {
-                                                        notificationManager.showNotification(
-                                                                new Notification(localizationConstants.retrievingImagesFailed(), ERROR));
-                                                    }
-                                                });
+    private void updateView() {
+        view.setEditButtonEnabled(selectedImage != null);
+        view.setRemoveButtonEnabled(selectedImage != null);
     }
 
     private void refreshImagesList() {
-        imageActionManager.retrieveCustomImages(appContext.getCurrentProject().getProjectDescription(),
-                                                new AsyncCallback<Array<ItemReference>>() {
-                                                    @Override
-                                                    public void onSuccess(Array<ItemReference> result) {
-                                                        view.setImages(result);
-                                                    }
+        imageActionManager.retrieveCustomImages(
+                appContext.getCurrentProject().getProjectDescription(),
+                new AsyncCallback<Array<ItemReference>>() {
+                    @Override
+                    public void onSuccess(Array<ItemReference> result) {
+                        view.setImages(result);
+                    }
 
-                                                    @Override
-                                                    public void onFailure(Throwable caught) {
-                                                        notificationManager.showNotification(
-                                                                new Notification(localizationConstants.retrievingImagesFailed(), ERROR));
-                                                    }
-                                                });
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        notificationManager.showNotification(
+                                new Notification(localizationConstants.retrievingImagesFailed(caught.getMessage()), ERROR));
+                    }
+                });
     }
 }

@@ -62,7 +62,6 @@ public class EditImagesPresenterTest extends BaseTest {
     public void setUp() {
         super.setUp();
 
-        when(appContext.getCurrentProject()).thenReturn(currentProject);
         when(currentProject.getProjectDescription()).thenReturn(currentProjectDescriptor);
         scriptsArray = Collections.createArray();
     }
@@ -83,9 +82,9 @@ public class EditImagesPresenterTest extends BaseTest {
 
         presenter.showDialog();
 
+        verify(view).showDialog();
         verify(imageActionManager).retrieveCustomImages(Matchers.<ProjectDescriptor>anyObject(),
                                                         Matchers.<AsyncCallback<Array<ItemReference>>>anyObject());
-        verify(view).showDialog();
     }
 
     @Test

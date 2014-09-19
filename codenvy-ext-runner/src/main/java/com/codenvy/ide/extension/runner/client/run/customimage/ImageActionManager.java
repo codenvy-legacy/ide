@@ -38,8 +38,7 @@ import static com.codenvy.ide.extension.runner.client.RunnerExtension.GROUP_CUST
 
 /**
  * Listens for opening/closing a project and adds/removes
- * an appropriate action for every custom Docker-script
- * to the 'Run' -> 'Custom Images' menu group.
+ * a corresponding action for executing every custom Docker-script.
  *
  * @author Artem Zatsarynnyy
  */
@@ -75,13 +74,14 @@ public class ImageActionManager implements ProjectActionHandler {
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectActionEvent event) {
         retrieveCustomImages(event.getProject(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {
-                    addAction(item);
+                    addActionForScript(item);
                 }
             }
 
@@ -92,11 +92,20 @@ public class ImageActionManager implements ProjectActionHandler {
         });
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onProjectClosed(ProjectActionEvent event) {
-        removeActions();
+        removeAllActions();
     }
 
+    /**
+     * Retrieve list of custom images.
+     *
+     * @param project
+     *         project for which need to get list of images
+     * @param callback
+     *         callback to return custom images
+     */
     void retrieveCustomImages(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(project.getPath() + SCRIPTS_FOLDER_REL_LOCATION,
@@ -113,7 +122,13 @@ public class ImageActionManager implements ProjectActionHandler {
                                          });
     }
 
-    private void addAction(ItemReference scriptFile) {
+    /**
+     * Add action to execute the specified script.
+     *
+     * @param scriptFile
+     *         script for which need to create action
+     */
+    public void addActionForScript(ItemReference scriptFile) {
         final int actionNum = actions2HotKeys.size() + 1;
         final RunImageAction action = imageActionFactory.createAction(localizationConstants.imageActionText(scriptFile.getName()),
                                                                       localizationConstants.imageActionDescription(scriptFile.getName()),
@@ -131,18 +146,40 @@ public class ImageActionManager implements ProjectActionHandler {
         actions2HotKeys.put(action, hotKey);
     }
 
-    private void removeActions() {
-        DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(GROUP_CUSTOM_IMAGES);
-        for (Map.Entry<RunImageAction, CharCodeWithModifiers> entry : actions2HotKeys.entrySet()) {
-            customImagesGroup.remove(entry.getKey());
-            final String actionId = actionManager.getId(entry.getKey());
-            actionManager.unregisterAction(actionId);
-
-            // unbind hot-key if action has it
-            if (entry.getValue() != null) {
-                keyBindingAgent.getGlobal().removeKey(entry.getValue(), actionId);
+    /**
+     * Remove action which corresponds to the specified script.
+     *
+     * @param scriptFile
+     *         script for which need to remove action
+     */
+    public void removeActionForScript(ItemReference scriptFile) {
+        for (RunImageAction action : actions2HotKeys.keySet()) {
+            if (scriptFile.equals(action.getScriptFile())) {
+                removeAction(action);
+                break;
             }
         }
-        actions2HotKeys.clear();
+    }
+
+    private void removeAction(RunImageAction action) {
+        DefaultActionGroup customImagesGroup = (DefaultActionGroup)actionManager.getAction(GROUP_CUSTOM_IMAGES);
+        customImagesGroup.remove(action);
+
+        final String actionId = actionManager.getId(action);
+        actionManager.unregisterAction(actionId);
+
+        // unbind hot-key if action has it
+        final CharCodeWithModifiers hotKey = actions2HotKeys.get(action);
+        if (hotKey != null) {
+            keyBindingAgent.getGlobal().removeKey(hotKey, actionId);
+        }
+
+        actions2HotKeys.remove(action);
+    }
+
+    private void removeAllActions() {
+        for (Map.Entry<RunImageAction, CharCodeWithModifiers> entry : actions2HotKeys.entrySet()) {
+            removeAction(entry.getKey());
+        }
     }
 }

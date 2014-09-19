@@ -200,7 +200,7 @@ public interface RunnerLocalizationConstant extends Messages {
     String runnerNotReady();
 
     @Key("retrievingImagesFailed")
-    String retrievingImagesFailed();
+    String retrievingImagesFailed(String message);
 
     /* Titles */
     @Key("titles.promptSaveFiles")
@@ -245,4 +245,16 @@ public interface RunnerLocalizationConstant extends Messages {
     /* EditImagesView */
     @Key("view.editImages.title")
     String editImagesViewTitle();
+
+    @Key("view.editImages.addNewScript.title")
+    String editImagesViewAddNewScriptTitle();
+
+    @Key("view.editImages.addNewScript.message")
+    String editImagesViewAddNewScriptMessage();
+
+    @Key("view.editImages.removeScript.title")
+    String editImagesViewRemoveScriptTitle();
+
+    @Key("view.editImages.removeScript.message")
+    String editImagesViewRemoveScriptMessage(String name);
 }
