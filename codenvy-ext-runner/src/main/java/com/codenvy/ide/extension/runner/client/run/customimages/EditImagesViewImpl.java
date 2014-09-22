@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimage;
+package com.codenvy.ide.extension.runner.client.run.customimages;
 
 import elemental.dom.Element;
 import elemental.html.TableCellElement;

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimage;
+package com.codenvy.ide.extension.runner.client.run.customimages;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
@@ -30,10 +30,10 @@ import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.extension.runner.client.run.customimage.ImageActionManager.SCRIPTS_FOLDER_REL_LOCATION;
 
 /**
  * Drives the process of editing custom images.
@@ -42,21 +42,24 @@ import static com.codenvy.ide.extension.runner.client.run.customimage.ImageActio
  */
 @Singleton
 public class EditImagesPresenter implements EditImagesView.ActionDelegate {
-    private NotificationManager        notificationManager;
-    private RunnerLocalizationConstant localizationConstants;
-    private ProjectServiceClient       projectServiceClient;
-    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private EventBus                   eventBus;
-    private AppContext                 appContext;
-    private ImageActionManager         imageActionManager;
-    private EditImagesView             view;
-    private ItemReference              selectedImage;
+    private final String                     recipesFolderPath;
+    private       NotificationManager        notificationManager;
+    private       RunnerLocalizationConstant localizationConstants;
+    private       ProjectServiceClient       projectServiceClient;
+    private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private       EventBus                   eventBus;
+    private       AppContext                 appContext;
+    private       ImageActionManager         imageActionManager;
+    private       EditImagesView             view;
+    private       ItemReference              selectedImage;
 
     /** Create presenter. */
     @Inject
-    protected EditImagesPresenter(EditImagesView view, EventBus eventBus, AppContext appContext, ImageActionManager imageActionManager,
-                                  ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                  NotificationManager notificationManager, RunnerLocalizationConstant localizationConstants) {
+    protected EditImagesPresenter(@Named("recipesFolderPath") String recipesFolderPath, EditImagesView view, EventBus eventBus,
+                                  AppContext appContext, ImageActionManager imageActionManager, ProjectServiceClient projectServiceClient,
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory, NotificationManager notificationManager,
+                                  RunnerLocalizationConstant localizationConstants) {
+        this.recipesFolderPath = recipesFolderPath;
         this.view = view;
         this.eventBus = eventBus;
         this.appContext = appContext;
@@ -86,8 +89,7 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     private void createScript(final String name) {
         final Unmarshallable<ItemReference> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class);
         projectServiceClient.createFile(
-                appContext.getCurrentProject().getProjectDescription().getPath() +
-                SCRIPTS_FOLDER_REL_LOCATION, name, "", null,
+                appContext.getCurrentProject().getProjectDescription().getPath() + '/' + recipesFolderPath, name, "", null,
                 new AsyncRequestCallback<ItemReference>(unmarshaller) {
                     @Override
                     protected void onSuccess(ItemReference result) {

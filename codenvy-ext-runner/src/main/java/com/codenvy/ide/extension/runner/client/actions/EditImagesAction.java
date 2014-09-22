@@ -15,7 +15,7 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesPresenter;
+import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

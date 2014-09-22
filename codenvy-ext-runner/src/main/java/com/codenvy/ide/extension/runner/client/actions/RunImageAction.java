@@ -19,32 +19,38 @@ import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.codenvy.ide.extension.runner.client.RunnerExtension.RUN_SCRIPT_OPTION_NAME;
+
 /**
  * Action for executing custom Docker-images on runner.
  * <p/>
- * Instantiates with {@link com.codenvy.ide.extension.runner.client.run.customimage.ImageActionFactory}.
+ * Instantiates with {@link com.codenvy.ide.extension.runner.client.run.customimages.ImageActionFactory}.
  *
  * @author Artem Zatsarynnyy
- * @see com.codenvy.ide.extension.runner.client.run.customimage.ImageActionFactory
+ * @see com.codenvy.ide.extension.runner.client.run.customimages.ImageActionFactory
  */
 public class RunImageAction extends Action {
 
     private final RunController runController;
     private final DtoFactory    dtoFactory;
+    private final String        recipesFolderPath;
     private final ItemReference scriptFile;
 
     @Inject
     public RunImageAction(RunnerResources resources, RunController runController, DtoFactory dtoFactory,
+                          @Named("recipesFolderPath") String recipesFolderPath,
                           @Assisted("title") String title,
                           @Assisted("description") String description,
                           @Assisted ItemReference scriptFile) {
         super(title, description, null, resources.customImage());
         this.runController = runController;
         this.dtoFactory = dtoFactory;
+        this.recipesFolderPath = recipesFolderPath;
         this.scriptFile = scriptFile;
     }
 
@@ -53,8 +59,7 @@ public class RunImageAction extends Action {
     public void actionPerformed(ActionEvent e) {
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
         Map<String, String> options = new HashMap<>();
-        options.put("runner.name", "docker");
-        options.put("script.name", scriptFile.getName());
+        options.put(RUN_SCRIPT_OPTION_NAME, recipesFolderPath + '/' + scriptFile.getName());
         runOptions.setOptions(options);
         runController.runActiveProject(runOptions, null, false);
     }

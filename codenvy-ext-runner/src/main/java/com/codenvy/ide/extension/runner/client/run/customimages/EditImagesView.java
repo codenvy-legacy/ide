@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimage;
+package com.codenvy.ide.extension.runner.client.run.customimages;
 
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.mvp.View;

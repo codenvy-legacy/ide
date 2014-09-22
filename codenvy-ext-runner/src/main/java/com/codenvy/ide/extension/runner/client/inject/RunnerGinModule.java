@@ -20,15 +20,17 @@ import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
 import com.codenvy.ide.extension.runner.client.run.CustomRunView;
 import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
-import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesView;
-import com.codenvy.ide.extension.runner.client.run.customimage.EditImagesViewImpl;
-import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionFactory;
-import com.codenvy.ide.extension.runner.client.run.customimage.ImageActionManager;
+import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesView;
+import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customimages.ImageActionFactory;
+import com.codenvy.ide.extension.runner.client.run.customimages.ImageActionManager;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /** @author Artem Zatsarynnyy */
 @ExtensionGinModule
@@ -48,5 +50,13 @@ public class RunnerGinModule extends AbstractGinModule {
         bind(ImageActionManager.class).asEagerSingleton();
         install(new GinFactoryModuleBuilder().build(ImageActionFactory.class));
         bind(EditImagesView.class).to(EditImagesViewImpl.class).in(Singleton.class);
+    }
+
+    /** Provides project-relative path of the folder for user-defined recipes for runner. */
+    @Provides
+    @Named("recipesFolderPath")
+    @Singleton
+    protected String provideRecipesFolderRelPath() {
+        return ".codenvy/recipes";
     }
 }

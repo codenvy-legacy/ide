@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimage;
+package com.codenvy.ide.extension.runner.client.run.customimages;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
@@ -29,6 +29,7 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.HashMap;
@@ -44,8 +45,7 @@ import static com.codenvy.ide.extension.runner.client.RunnerExtension.GROUP_CUST
  */
 public class ImageActionManager implements ProjectActionHandler {
 
-    /** Project-relative path to the custom Docker-scripts folder. */
-    static final String SCRIPTS_FOLDER_REL_LOCATION = "/.codenvy/scripts";
+    private final String                                     recipesFolderPath;
     private final Map<RunImageAction, CharCodeWithModifiers> actions2HotKeys;
     private final ImageActionFactory                         imageActionFactory;
     private final RunnerLocalizationConstant                 localizationConstants;
@@ -55,7 +55,8 @@ public class ImageActionManager implements ProjectActionHandler {
     private final DtoUnmarshallerFactory                     dtoUnmarshallerFactory;
 
     @Inject
-    public ImageActionManager(ImageActionFactory imageActionFactory,
+    public ImageActionManager(@Named("recipesFolderPath") String recipesFolderPath,
+                              ImageActionFactory imageActionFactory,
                               RunnerLocalizationConstant localizationConstants,
                               ActionManager actionManager,
                               KeyBindingAgent keyBindingAgent,
@@ -63,6 +64,7 @@ public class ImageActionManager implements ProjectActionHandler {
                               EventBus eventBus,
                               ProjectServiceClient projectServiceClient,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        this.recipesFolderPath = recipesFolderPath;
         this.imageActionFactory = imageActionFactory;
         this.localizationConstants = localizationConstants;
         this.actionManager = actionManager;
@@ -108,7 +110,7 @@ public class ImageActionManager implements ProjectActionHandler {
      */
     void retrieveCustomImages(ProjectDescriptor project, final AsyncCallback<Array<ItemReference>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
-        projectServiceClient.getChildren(project.getPath() + SCRIPTS_FOLDER_REL_LOCATION,
+        projectServiceClient.getChildren(project.getPath() + '/' + recipesFolderPath,
                                          new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
                                              @Override
                                              protected void onSuccess(Array<ItemReference> result) {
