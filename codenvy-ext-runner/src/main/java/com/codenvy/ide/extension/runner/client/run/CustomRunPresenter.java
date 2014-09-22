@@ -90,6 +90,11 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                         CurrentProject activeProject = appContext.getCurrentProject();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         setMemoryFields();
+
+                        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+                        if (projectDescriptor != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
+                            view.setSelectedEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+                        }
                     }
 
                     @Override
@@ -111,13 +116,13 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
 
-                String defaultRunnerEnvironment = appContext.getCurrentProject().getProjectDescription().getDefaultRunnerEnvironment();
-                if (defaultRunnerEnvironment != null) {
+                ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+                if (projectDescriptor != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
                     //trying to get the value of memory from runnerEnvironmentConfigurationDescriptor
                     Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
                             appContext.getCurrentProject().getProjectDescription().getRunnerEnvironmentConfigurations();
                     RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor =
-                            runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+                            runnerEnvironmentConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
 
                     if (runnerEnvironmentConfigurationDescriptor != null) {
                         defaultRunnerMemory = runnerEnvironmentConfigurationDescriptor.getDefaultMemorySize();
