@@ -59,8 +59,6 @@ public class RunnerExtension {
     public static final String GROUP_CUSTOM_IMAGES           = "CustomImagesGroup";
     /** Key for user preference which contains default RAM size. */
     public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
-    /** Runner's option name to provide user defined script (recipe). */
-    public static final String RUN_SCRIPT_OPTION_NAME        = "run_script";
 
     @Inject
     public RunnerExtension(RunnerResources runnerResources,

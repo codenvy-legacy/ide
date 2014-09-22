@@ -158,6 +158,8 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
 
     /** Show dialog. */
     public void showDialog() {
+        selectedImage = null;
+        updateView();
         view.showDialog();
         refreshImagesList();
     }
