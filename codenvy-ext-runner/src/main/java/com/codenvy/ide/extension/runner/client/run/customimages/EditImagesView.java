@@ -20,13 +20,6 @@ import com.codenvy.ide.collections.Array;
  * @author Artem Zatsarynnyy
  */
 public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
-    /**
-     * Set state of the 'Add' button.
-     *
-     * @param isEnabled
-     *         <code>true</code> to enable the button, <code>false</code> to disable it
-     */
-    void setAddButtonEnabled(boolean isEnabled);
 
     /**
      * Set state of the 'Remove' button.

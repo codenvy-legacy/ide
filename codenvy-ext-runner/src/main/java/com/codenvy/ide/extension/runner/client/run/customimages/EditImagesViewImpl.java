@@ -41,7 +41,6 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     @UiField
     ScrollPanel listPanel;
-    private Button                     btnAdd;
     private Button                     btnRemove;
     private Button                     btnEdit;
     private ActionDelegate             delegate;
@@ -95,7 +94,7 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
     }
 
     private void createButtons() {
-        btnAdd = createButton(localizationConstants.buttonAdd(), "editImages-add", new ClickHandler() {
+        Button btnAdd = createButton(localizationConstants.buttonAdd(), "editImages-add", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onAddClicked();
@@ -138,12 +137,6 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setAddButtonEnabled(boolean isEnabled) {
-        btnAdd.setEnabled(isEnabled);
     }
 
     /** {@inheritDoc} */

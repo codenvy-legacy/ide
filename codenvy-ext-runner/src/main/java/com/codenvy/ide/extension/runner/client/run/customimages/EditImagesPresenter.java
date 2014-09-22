@@ -27,6 +27,7 @@ import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -44,7 +45,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     private final String                     recipesFolderPath;
     private       NotificationManager        notificationManager;
-    private       RunnerLocalizationConstant localizationConstants;
+    private       RunnerLocalizationConstant constants;
     private       ProjectServiceClient       projectServiceClient;
     private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private       EventBus                   eventBus;
@@ -58,7 +59,7 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     protected EditImagesPresenter(@Named("recipesFolderPath") String recipesFolderPath, EditImagesView view, EventBus eventBus,
                                   AppContext appContext, ImageActionManager imageActionManager, ProjectServiceClient projectServiceClient,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory, NotificationManager notificationManager,
-                                  RunnerLocalizationConstant localizationConstants) {
+                                  RunnerLocalizationConstant constants) {
         this.recipesFolderPath = recipesFolderPath;
         this.view = view;
         this.eventBus = eventBus;
@@ -67,7 +68,7 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
-        this.localizationConstants = localizationConstants;
+        this.constants = constants;
         this.view.setDelegate(this);
 
         updateView();
@@ -76,12 +77,13 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        new AskValueDialog(localizationConstants.editImagesViewAddNewScriptTitle(),
-                           localizationConstants.editImagesViewAddNewScriptMessage(),
+        new AskValueDialog(constants.editImagesViewAddNewScriptTitle(),
+                           constants.editImagesViewAddNewScriptMessage(),
                            new AskValueCallback() {
                                @Override
                                public void onOk(final String value) {
-                                   createScript(value);
+                                   final String name = value.endsWith(".dc5y") ? value : value + ".dc5y";
+                                   createScript(name);
                                }
                            }).show();
     }
@@ -108,8 +110,8 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
-        new Ask(localizationConstants.editImagesViewRemoveScriptTitle(),
-                localizationConstants.editImagesViewRemoveScriptMessage(selectedImage.getName()),
+        new Ask(constants.editImagesViewRemoveScriptTitle(),
+                constants.editImagesViewRemoveScriptMessage(selectedImage.getName()),
                 new AskHandler() {
                     @Override
                     public void onOk() {
@@ -171,7 +173,6 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
 
     private void refreshImagesList() {
         view.setImages(Collections.<ItemReference>createArray());
-        view.setAddButtonEnabled(false);
 
         imageActionManager.retrieveCustomImages(
                 appContext.getCurrentProject().getProjectDescription(),
@@ -179,13 +180,31 @@ public class EditImagesPresenter implements EditImagesView.ActionDelegate {
                     @Override
                     public void onSuccess(Array<ItemReference> result) {
                         view.setImages(result);
-                        view.setAddButtonEnabled(true);
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        notificationManager.showNotification(
-                                new Notification(localizationConstants.retrievingImagesFailed(caught.getMessage()), ERROR));
+                        if (caught.getMessage().contains("doesn't exist")) {
+                            createRecipesFolder();
+                        } else {
+                            Notification notification = new Notification(constants.retrievingImagesFailed(caught.getMessage()), ERROR);
+                            notificationManager.showNotification(notification);
+                        }
+                    }
+                });
+    }
+
+    private void createRecipesFolder() {
+        projectServiceClient.createFolder(
+                appContext.getCurrentProject().getProjectDescription().getPath() + '/' + recipesFolderPath,
+                new AsyncRequestCallback<ItemReference>() {
+                    @Override
+                    protected void onSuccess(ItemReference result) {
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(EditImagesPresenter.class, exception.getMessage());
                     }
                 });
     }
