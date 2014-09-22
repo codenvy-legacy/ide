@@ -16,12 +16,11 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
-
 /**
- * Scheme is set of the key bindings
+ * Scheme is set of the key bindings.
  *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
+ * @author Artem Zatsarynnyy
  */
 public interface Scheme {
 
@@ -33,7 +32,7 @@ public interface Scheme {
     String getSchemeId();
 
     /**
-     * Get scheme description
+     * Get scheme description.
      *
      * @return the scheme description
      */
@@ -43,22 +42,32 @@ public interface Scheme {
      * Add key binding for action.
      *
      * @param key
-     *         the hot key which bind.
+     *         the hot key which bind
      * @param actionId
-     *         the action id which keys bind.
+     *         the action id which keys bind
      */
     void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId);
 
     /**
+     * Remove key binding for action.
+     *
+     * @param key
+     *         the hot key to remove
+     * @param actionId
+     *         the action's id for which key need to remove
+     */
+    void removeKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId);
+
+    /**
      * @return all actions that have the specified key. If there are no
-     *         such actions then the method returns an empty array.
+     * such actions then the method returns an empty array
      */
     @NotNull
     Array<String> getActionIds(int digest);
 
     /**
      * @return keyboard shortcut for the action with the specified <code>actionId</code>
-     *         or an null if the action doesn't have any keyboard shortcut.
+     * or an null if the action doesn't have any keyboard shortcut
      */
     @Nullable
     CharCodeWithModifiers getKeyBinding(@NotNull String actionId);

@@ -20,7 +20,9 @@ import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.extension.runner.client.actions.CustomImagesGroup;
 import com.codenvy.ide.extension.runner.client.actions.CustomRunAction;
+import com.codenvy.ide.extension.runner.client.actions.EditImagesAction;
 import com.codenvy.ide.extension.runner.client.actions.GetLogsAction;
 import com.codenvy.ide.extension.runner.client.actions.RunAction;
 import com.codenvy.ide.extension.runner.client.actions.StopAction;
@@ -54,6 +56,7 @@ import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_TOOLBAR;
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
     public static final String GROUP_RUNNER_CONSOLE_TOOLBAR  = "RunnerConsoleToolbar";
+    public static final String GROUP_CUSTOM_IMAGES           = "CustomImagesGroup";
     /** Key for user preference which contains default RAM size. */
     public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
 
@@ -71,9 +74,12 @@ public class RunnerExtension {
 
     @Inject
     private void prepareActions(RunnerLocalizationConstant localizationConstants,
+                                RunnerResources resources,
                                 ActionManager actionManager,
                                 RunAction runAction,
                                 CustomRunAction customRunAction,
+                                CustomImagesGroup customImagesGroup,
+                                EditImagesAction editImagesAction,
                                 GetLogsAction getLogsAction,
                                 StopAction stopAction,
                                 ClearConsoleAction clearConsoleAction,
@@ -81,9 +87,22 @@ public class RunnerExtension {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
+        actionManager.registerAction(localizationConstants.editImagesActionId(), editImagesAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.stopAppActionId(), stopAction);
         actionManager.registerAction(localizationConstants.viewRecipeActionId(), viewRecipeAction);
+        actionManager.registerAction(GROUP_CUSTOM_IMAGES, customImagesGroup);
+
+        // prepare 'Custom Images' group
+        customImagesGroup.add(editImagesAction);
+        customImagesGroup.addSeparator();
+
+        // add actions in context menu
+        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
+        DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
+        runContextGroup.addSeparator();
+        runContextGroup.add(runAction);
+        contextMenuGroup.add(runContextGroup);
 
         // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
@@ -92,21 +111,17 @@ public class RunnerExtension {
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(stopAction);
         runMenuActionGroup.add(clearConsoleAction);
+        runMenuActionGroup.addSeparator();
         runMenuActionGroup.add(viewRecipeAction);
+        runMenuActionGroup.add(customImagesGroup, new Constraints(Anchor.AFTER, localizationConstants.viewRecipeActionId()));
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
         DefaultActionGroup runToolbarGroup = new DefaultActionGroup(GROUP_RUN_TOOLBAR, false, actionManager);
         actionManager.registerAction(GROUP_RUN_TOOLBAR, runToolbarGroup);
         runToolbarGroup.add(runAction);
+        runToolbarGroup.add(customImagesGroup, Constraints.LAST);
         mainToolbarGroup.add(runToolbarGroup);
-
-        // add actions in context menu
-        DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_CONTEXT_MENU);
-        DefaultActionGroup runContextGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN_CONTEXT_MENU);
-        runContextGroup.addSeparator();
-        runContextGroup.add(runAction);
-        contextMenuGroup.add(runContextGroup);
     }
 
     @Inject

@@ -35,6 +35,15 @@ public interface RunnerResources extends ClientBundle {
     @Source("update.png")
     ImageResource updateApp();
 
+    @Source("custom-images.svg")
+    SVGResource customImages();
+
+    @Source("edit-images.svg")
+    SVGResource editImages();
+
+    @Source("custom-image.svg")
+    SVGResource customImage();
+
     @Source("clear-logs.svg")
     SVGResource clear();
 

@@ -26,6 +26,18 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("button.cancel")
     String buttonCancel();
 
+    @Key("button.add")
+    String buttonAdd();
+
+    @Key("button.remove")
+    String buttonRemove();
+
+    @Key("button.close")
+    String buttonClose();
+
+    @Key("button.edit")
+    String buttonEdit();
+
     /* Actions */
     @Key("control.runApp.id")
     String runAppActionId();
@@ -44,6 +56,15 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("control.customRunApp.description")
     String customRunAppActionDescription();
+
+    @Key("control.editImages.id")
+    String editImagesActionId();
+
+    @Key("control.editImages.text")
+    String editImagesActionText();
+
+    @Key("control.editImages.description")
+    String editImagesActionDescription();
 
     @Key("control.getAppLogs.id")
     String getAppLogsActionId();
@@ -80,6 +101,18 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("control.viewRecipe.description")
     String viewRecipeDescription();
+
+    @Key("control.customImages.title")
+    String customImagesActionTitle();
+
+    @Key("control.image.id")
+    String imageActionId(int id);
+
+    @Key("control.image.text")
+    String imageActionText(String id);
+
+    @Key("control.image.description")
+    String imageActionDescription(String id);
 
     /* Messages */
     @Key("another.project.running.now")
@@ -166,6 +199,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("runnerNotReady")
     String runnerNotReady();
 
+    @Key("retrievingImagesFailed")
+    String retrievingImagesFailed(String message);
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();
@@ -205,4 +241,20 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.customRun.rememberRunMemoryLabel")
     String customRunViewRememberRunMemoryLabel();
+
+    /* EditImagesView */
+    @Key("view.editImages.title")
+    String editImagesViewTitle();
+
+    @Key("view.editImages.addNewScript.title")
+    String editImagesViewAddNewScriptTitle();
+
+    @Key("view.editImages.addNewScript.message")
+    String editImagesViewAddNewScriptMessage();
+
+    @Key("view.editImages.removeScript.title")
+    String editImagesViewRemoveScriptTitle();
+
+    @Key("view.editImages.removeScript.message")
+    String editImagesViewRemoveScriptMessage(String name);
 }

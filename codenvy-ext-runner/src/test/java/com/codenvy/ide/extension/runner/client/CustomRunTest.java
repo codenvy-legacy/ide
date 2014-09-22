@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link CustomRunPresenter} functionality
+ * Testing {@link CustomRunPresenter} functionality.
  *
  * @author Artem Zatsarynnyy
  */
@@ -58,12 +58,13 @@ public class CustomRunTest extends BaseTest {
     @Mock
     private CustomRunView      view;
     @Mock
-    private DtoFactory dtoFactory;
+    private DtoFactory         dtoFactory;
     @InjectMocks
     private CustomRunPresenter presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
 
     @Before
+    @Override
     public void setUp() {
         super.setUp();
 
@@ -72,7 +73,7 @@ public class CustomRunTest extends BaseTest {
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
         runnerDescriptors.add(runnerDescriptor);
 
-        when(activeProject.getRunner()).thenReturn(RUNNER_NAME);
+        when(currentProject.getRunner()).thenReturn(RUNNER_NAME);
     }
 
     @Test
@@ -118,7 +119,7 @@ public class CustomRunTest extends BaseTest {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
-        when(activeProject.getProjectDescription()).thenReturn(projectDescriptor);
+        when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(profileDescriptor.getPreferences()).thenReturn(null);
