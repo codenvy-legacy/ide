@@ -8,54 +8,33 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.keymaps;
 
-import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapValuesHolder;
-import com.google.gwt.view.client.AbstractDataProvider;
 
-/**
- * View interface for the preference page for the editor implementation selection.
- * 
- * @author "Mickaël Leduque"
- */
-public interface EditorTypePreferenceView extends View<EditorTypePreferenceView.ActionDelegate> {
-
-    /**
-     * Builds the list of editor types.
-     */
-    void buildEditorTypesList();
+/** View interface for the preference page for the editor keymap selection. */
+public interface KeymapsPreferenceView extends View<KeymapsPreferenceView.ActionDelegate> {
 
     /**
      * Sets the holder for selected keymap values.
-     * 
+     *
      * @param valuesHolder holder for keymaps
      */
     void setKeymapValuesHolder(KeymapValuesHolder valuesHolders);
 
-    void setFileTypeDataProvider(AbstractDataProvider<FileType> dataProvider);
-
-    void setFileTypeEditorMapping(FileTypeEditorMapping fileTypeEditorMapping);
-
-    /**
-     * Action delegate for the EditorType preference view.
-     * 
-     * @author "Mickaël Leduque"
-     */
+    /** Action delegate for the keymap preference view. */
     public interface ActionDelegate {
 
         /**
          * Action triggered when an keymap is selected for an editor type.
-         * 
+         *
          * @param editorType the editor type
          * @param keymap the new keymap
          */
         void editorKeymapChanged(EditorType editorType, Keymap keymap);
-
-        void filetypeEditorChanged(FileType fileType, EditorType editorType);
     }
 
 }

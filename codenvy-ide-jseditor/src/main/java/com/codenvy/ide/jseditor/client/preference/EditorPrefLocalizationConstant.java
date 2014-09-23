@@ -37,5 +37,6 @@ public interface EditorPrefLocalizationConstant extends Messages {
     @DefaultMessage("Key Bindings")
     String keybindingsSectionLabel();
 
-
+    @DefaultMessage("Default Editor")
+    String defaultEditorLabel();
 }
