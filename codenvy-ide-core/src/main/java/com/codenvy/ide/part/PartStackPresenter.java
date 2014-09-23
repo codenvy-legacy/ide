@@ -174,6 +174,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         part.onOpen();
         // request focus
         onRequestFocus();
+
+        workBenchPartController.setSize(part.getSize());
     }
 
     /** {@inheritDoc} */
@@ -228,7 +230,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
         if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
-            workBenchPartController.setSize(partsSize);
+            //workBenchPartController.setSize(partsSize);
+            workBenchPartController.setSize(activePart.getSize());
         }
     }
 

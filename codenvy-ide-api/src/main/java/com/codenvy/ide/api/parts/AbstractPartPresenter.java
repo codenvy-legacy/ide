@@ -93,7 +93,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     /** {@inheritDoc} */
     @Override
     public int getSize() {
-        return 0;
+        return 200;
     }
 
     /** {@inheritDoc} */
