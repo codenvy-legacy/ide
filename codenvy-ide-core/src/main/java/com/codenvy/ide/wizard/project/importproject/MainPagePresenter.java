@@ -195,26 +195,33 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         container.setWidget(view);
         view.setInputsEnableState(true);
 
-        final Set<ProjectImporterDescriptor> importersSet = new HashSet<ProjectImporterDescriptor>();
+        final Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
         projectImportersService.getProjectImporters(new AsyncRequestCallback<Array<ProjectImporterDescriptor>>(
                                                                                                                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectImporterDescriptor.class)) {
             @Override
             protected void onSuccess(Array<ProjectImporterDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
+                    ProjectImporterDescriptor importer = result.get(i);
                     // do not show internal importers:
-                    if (!result.get(i).isInternal()) {
-                        importersSet.add(result.get(i));
+                    if (!importer.isInternal()) {
+                        if (importer.getCategory() == null){
+                            break;
+                        }
+                        if (importers.containsKey(importer.getCategory())){
+                           importers.get(importer.getCategory()).add(importer); 
+                        } else {
+                            Set<ProjectImporterDescriptor> importersSet = new HashSet<ProjectImporterDescriptor>();
+                            importersSet.add(importer);
+                            importers.put(importer.getCategory(), importersSet);
+                        }
                     }
                 }
-                final Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
-                importers.put("Importers", importersSet);
-
                 new Timer() {
                     @Override
                     public void run() {
                         view.setImporters(importers);
-                        if (importersSet.iterator().hasNext()) {
-                            view.selectImporter(importersSet.iterator().next());
+                        if (importers.keySet().iterator().hasNext()) {
+                            view.selectImporter(importers.get(importers.keySet().iterator().next()).iterator().next());
                         }
                         view.focusInUrlInput();
                     }
