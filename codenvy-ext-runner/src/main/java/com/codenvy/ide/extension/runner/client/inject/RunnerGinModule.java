@@ -18,12 +18,19 @@ import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagePresenter;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
-import com.codenvy.ide.extension.runner.client.run.CustomRunView;
-import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsView;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionFactory;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionsManager;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunView;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunViewImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 /** @author Artem Zatsarynnyy */
 @ExtensionGinModule
@@ -32,10 +39,24 @@ public class RunnerGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         bind(CustomRunView.class).to(CustomRunViewImpl.class).in(Singleton.class);
+
         bind(RunnerConsoleView.class).to(RunnerConsoleViewImpl.class).in(Singleton.class);
         bind(ToolbarPresenter.class).annotatedWith(RunnerConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
+
         bind(RamManagerView.class).to(RamManagerViewImpl.class).in(Singleton.class);
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(RamManagePresenter.class);
+
+        bind(EnvironmentActionsManager.class).asEagerSingleton();
+        install(new GinFactoryModuleBuilder().build(EnvironmentActionFactory.class));
+        bind(CustomEnvironmentsView.class).to(CustomEnvironmentsViewImpl.class).in(Singleton.class);
+    }
+
+    /** Provides project-relative path to the folder for custom environments for runner. */
+    @Provides
+    @Named("envFolderPath")
+    @Singleton
+    protected String provideEnvironmentsFolderRelPath() {
+        return ".codenvy/environments";
     }
 }

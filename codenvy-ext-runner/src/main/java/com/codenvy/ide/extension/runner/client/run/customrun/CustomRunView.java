@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.api.mvp.View;
@@ -37,6 +37,14 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
      * @return {@link RunnerEnvironment}
      */
     RunnerEnvironment getSelectedEnvironment();
+
+    /**
+     * Set selected environment.
+     *
+     * @param environmentName
+     *         runner environment
+     */
+    void setSelectedEnvironment(@NotNull String environmentName);
 
     /**
      * Set available environments.

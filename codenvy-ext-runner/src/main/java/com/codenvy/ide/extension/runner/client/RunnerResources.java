@@ -29,11 +29,20 @@ public interface RunnerResources extends ClientBundle {
     @Source("logs.svg")
     SVGResource getAppLogs();
 
-    @Source("stop.svg")
-    SVGResource stopApp();
+    @Source("shutdown.svg")
+    SVGResource shutdownApp();
 
     @Source("update.png")
     ImageResource updateApp();
+
+    @Source("run-with.svg")
+    SVGResource runWith();
+
+    @Source("edit-custom-environments.svg")
+    SVGResource editCustomEnvironments();
+
+    @Source("environment.svg")
+    SVGResource environment();
 
     @Source("clear-logs.svg")
     SVGResource clear();

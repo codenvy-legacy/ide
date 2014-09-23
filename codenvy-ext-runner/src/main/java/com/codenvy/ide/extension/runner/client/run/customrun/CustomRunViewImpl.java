@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.collections.Array;
@@ -146,17 +146,30 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
+    public void setSelectedEnvironment(@NotNull String environmentName) {
+        for (RunnerEnvironment environment : runnerEnvironments.asIterable()) {
+            if (environmentName.equals(environment.getDisplayName()) || environmentName.equals(environment.getId())) {
+                environmentField.setSelectedIndex(runnerEnvironments.indexOf(environment));
+                return;
+            }
+        }
+    }
+
+    @Override
     public void setEnvironments(@NotNull Array<RunnerEnvironment> environments) {
         runnerEnvironments.clear();
         runnerEnvironments.addAll(environments);
         environmentField.clear();
+        String environmentName;
         for (RunnerEnvironment environment : environments.asIterable()) {
-            environmentField.addItem(environment.getId());
+            environmentName = (environment.getDisplayName() != null) ? environment.getDisplayName() : environment.getId();
+            environmentField.addItem(environmentName);
         }
         if (environments.size() > 0) {
             descriptionField.setText(environments.get(0).getDescription());
         }
     }
+
 
     @UiHandler({"runnerMemory128", "runnerMemory256", "runnerMemory512", "runnerMemory1GB", "runnerMemory2GB"})
     void standardMemoryHandler(ValueChangeEvent<Boolean> event) {

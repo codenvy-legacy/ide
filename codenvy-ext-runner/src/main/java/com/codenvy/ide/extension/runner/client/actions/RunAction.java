@@ -29,7 +29,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunAction extends Action {
 
-
     private final RunController        runController;
     private final AnalyticsEventLogger eventLogger;
     private       AppContext           appContext;

@@ -11,11 +11,15 @@
 package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.ide.extension.runner.client.BaseTest;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
+import com.codenvy.ide.websocket.MessageBus;
+import com.googlecode.gwt.test.GwtModule;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,13 +37,18 @@ import static org.mockito.Mockito.verify;
  *
  * @author Artem Zatsarynnyy
  */
-public class LogMessagesHandlerTest extends BaseTest {
+@GwtModule("com.codenvy.ide.extension.runner.Runner")
+public class LogMessagesHandlerTest extends GwtTestWithMockito {
+    @Mock
+    protected RunnerConsolePresenter runnerConsolePresenter;
+    @Mock
+    protected MessageBus             messageBus;
+
     private LogMessagesHandler logMessagesHandler;
     private List<LogMessage> orderedMessages = new ArrayList<>(100);
 
     @Before
     public void setUp() {
-        super.setUp();
         logMessagesHandler = new LogMessagesHandler(mock(ApplicationProcessDescriptor.class), runnerConsolePresenter, messageBus);
 
         orderedMessages.clear();
@@ -83,5 +92,4 @@ public class LogMessagesHandlerTest extends BaseTest {
             }
         }
     }
-
 }

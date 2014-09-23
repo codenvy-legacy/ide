@@ -11,6 +11,7 @@
 package com.codenvy.ide.newresource;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
@@ -94,9 +95,9 @@ public class DefaultNewResourceAction extends Action {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
                 final StorableNode parent = getParent();
                 projectServiceClient.createFile(parent.getPath(), name, getDefaultContent(), getMimeType(),
-                                                new AsyncRequestCallback<Void>() {
+                                                new AsyncRequestCallback<ItemReference>() {
                                                     @Override
-                                                    protected void onSuccess(Void result) {
+                                                    protected void onSuccess(ItemReference result) {
                                                         eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent(
                                                                 (AbstractTreeNode<?>)parent));
                                                     }

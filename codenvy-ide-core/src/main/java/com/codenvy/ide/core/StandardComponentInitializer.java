@@ -47,6 +47,7 @@ import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.connection.WsConnectionListener;
 import com.codenvy.ide.imageviewer.ImageViewerProvider;
 import com.codenvy.ide.newresource.NewFileAction;
 import com.codenvy.ide.newresource.NewFolderAction;
@@ -219,6 +220,9 @@ public class StandardComponentInitializer {
     @Inject
     @Named("JPGFileType")
     private FileType jpgFile;
+
+    @Inject
+    private WsConnectionListener wsConnectionListener;
 
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject

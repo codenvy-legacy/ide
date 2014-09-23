@@ -20,10 +20,9 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
-
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
+ * @author Artem Zatsarynnyy
  */
 public class SchemeImpl implements Scheme {
 
@@ -34,7 +33,6 @@ public class SchemeImpl implements Scheme {
     private IntegerMap<Array<String>> handlers;
 
     private StringMap<CharCodeWithModifiers> actionId2CharCode;
-
 
     public SchemeImpl(String id, String description) {
         this.id = id;
@@ -58,12 +56,28 @@ public class SchemeImpl implements Scheme {
     /** {@inheritDoc} */
     @Override
     public void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
-        int digest = key.getKeyDigest();
+        final int digest = key.getKeyDigest();
         if (!handlers.hasKey(digest)) {
             handlers.put(digest, Collections.<String>createArray());
         }
         handlers.get(digest).add(actionId);
         actionId2CharCode.put(actionId, key);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
+        final int digest = key.getKeyDigest();
+
+        Array<String> array = handlers.get(digest);
+        if (array != null) {
+            array.remove(actionId);
+            if (array.isEmpty()) {
+                handlers.erase(digest);
+            }
+        }
+
+        actionId2CharCode.remove(actionId);
     }
 
     /** {@inheritDoc} */

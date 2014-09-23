@@ -21,8 +21,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
-import com.codenvy.ide.extension.runner.client.run.CustomRunView;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunPresenter;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunView;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link CustomRunPresenter} functionality
+ * Testing {@link CustomRunPresenter} functionality.
  *
  * @author Artem Zatsarynnyy
  */
@@ -58,12 +58,13 @@ public class CustomRunTest extends BaseTest {
     @Mock
     private CustomRunView      view;
     @Mock
-    private DtoFactory dtoFactory;
+    private DtoFactory         dtoFactory;
     @InjectMocks
     private CustomRunPresenter presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
 
     @Before
+    @Override
     public void setUp() {
         super.setUp();
 
@@ -72,7 +73,7 @@ public class CustomRunTest extends BaseTest {
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
         runnerDescriptors.add(runnerDescriptor);
 
-        when(activeProject.getRunner()).thenReturn(RUNNER_NAME);
+        when(currentProject.getRunner()).thenReturn(RUNNER_NAME);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class CustomRunTest extends BaseTest {
 
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-        verify(appContext).getCurrentProject();
+        verify(appContext, times(2)).getCurrentProject();
         verify(view).setEnvironments((Array<RunnerEnvironment>)anyObject());
         verify(notificationManager).showNotification((Notification)anyObject());
         verify(view, never()).setRunnerMemorySize(anyString());
@@ -118,7 +119,7 @@ public class CustomRunTest extends BaseTest {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
-        when(activeProject.getProjectDescription()).thenReturn(projectDescriptor);
+        when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(profileDescriptor.getPreferences()).thenReturn(null);

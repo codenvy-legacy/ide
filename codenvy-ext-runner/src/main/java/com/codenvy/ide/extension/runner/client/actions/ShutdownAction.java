@@ -27,19 +27,19 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class StopAction extends Action {
+public class ShutdownAction extends Action {
 
     private final AnalyticsEventLogger eventLogger;
     private       AppContext           appContext;
     private       RunController        runController;
 
     @Inject
-    public StopAction(RunnerResources resources,
-                      RunnerLocalizationConstant localizationConstants,
-                      AnalyticsEventLogger eventLogger,
-                      AppContext appContext,
-                      RunController runController) {
-        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
+    public ShutdownAction(RunnerResources resources,
+                          RunnerLocalizationConstant localizationConstants,
+                          AnalyticsEventLogger eventLogger,
+                          AppContext appContext,
+                          RunController runController) {
+        super(localizationConstants.shutdownActionText(), localizationConstants.shutdownActionDescription(), null, resources.shutdownApp());
         this.eventLogger = eventLogger;
         this.appContext = appContext;
         this.runController = runController;

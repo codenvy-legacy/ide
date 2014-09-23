@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -28,6 +28,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
@@ -90,6 +91,11 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                         CurrentProject activeProject = appContext.getCurrentProject();
                         view.setEnvironments(getEnvironmentsForProject(activeProject, result));
                         setMemoryFields();
+
+                        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+                        if (projectDescriptor != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
+                            view.setSelectedEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+                        }
                     }
 
                     @Override
@@ -111,13 +117,13 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
                 int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
 
-                String defaultRunnerEnvironment = appContext.getCurrentProject().getProjectDescription().getDefaultRunnerEnvironment();
-                if (defaultRunnerEnvironment != null) {
+                ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
+                if (projectDescriptor != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
                     //trying to get the value of memory from runnerEnvironmentConfigurationDescriptor
                     Map<String, RunnerEnvironmentConfigurationDescriptor> runnerEnvironmentConfigurations =
                             appContext.getCurrentProject().getProjectDescription().getRunnerEnvironmentConfigurations();
                     RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor =
-                            runnerEnvironmentConfigurations.get(defaultRunnerEnvironment);
+                            runnerEnvironmentConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
 
                     if (runnerEnvironmentConfigurationDescriptor != null) {
                         defaultRunnerMemory = runnerEnvironmentConfigurationDescriptor.getDefaultMemorySize();
