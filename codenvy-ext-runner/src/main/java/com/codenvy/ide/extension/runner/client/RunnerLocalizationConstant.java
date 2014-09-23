@@ -57,14 +57,14 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.customRunApp.description")
     String customRunAppActionDescription();
 
-    @Key("control.editImages.id")
-    String editImagesActionId();
+    @Key("control.editCustomEnvironments.id")
+    String editCustomEnvironmentsActionId();
 
-    @Key("control.editImages.text")
-    String editImagesActionText();
+    @Key("control.editCustomEnvironments.text")
+    String editCustomEnvironmentsActionText();
 
-    @Key("control.editImages.description")
-    String editImagesActionDescription();
+    @Key("control.editCustomEnvironments.description")
+    String editCustomEnvironmentsActionDescription();
 
     @Key("control.getAppLogs.id")
     String getAppLogsActionId();
@@ -75,14 +75,14 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.getAppLogs.description")
     String getAppLogsActionDescription();
 
-    @Key("control.stopApp.id")
-    String stopAppActionId();
+    @Key("control.shutdown.id")
+    String shutdownActionId();
 
-    @Key("control.stopApp.text")
-    String stopAppActionText();
+    @Key("control.shutdown.text")
+    String shutdownActionText();
 
-    @Key("control.stopApp.description")
-    String stopAppActionDescription();
+    @Key("control.shutdown.description")
+    String shutdownActionDescription();
 
     @Key("control.clearRunnerConsole.id")
     String clearConsoleControlId();
@@ -102,17 +102,17 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.viewRecipe.description")
     String viewRecipeDescription();
 
-    @Key("control.customImages.title")
-    String customImagesActionTitle();
+    @Key("control.runWith.title")
+    String runWithActionTitle();
 
-    @Key("control.image.id")
-    String imageActionId(int id);
+    @Key("control.environment.id")
+    String environmentActionId(String name);
 
-    @Key("control.image.text")
-    String imageActionText(String id);
+    @Key("control.environment.text")
+    String environmentActionText(String name);
 
-    @Key("control.image.description")
-    String imageActionDescription(String id);
+    @Key("control.environment.description")
+    String environmentActionDescription(String name);
 
     /* Messages */
     @Key("another.project.running.now")
@@ -242,19 +242,19 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.customRun.rememberRunMemoryLabel")
     String customRunViewRememberRunMemoryLabel();
 
-    /* EditImagesView */
-    @Key("view.editImages.title")
-    String editImagesViewTitle();
+    /* CustomEnvironmentsView */
+    @Key("view.customEnvironments.title")
+    String customEnvironmentsViewTitle();
 
-    @Key("view.editImages.addNewScript.title")
-    String editImagesViewAddNewScriptTitle();
+    @Key("view.customEnvironments.addNewEnv.title")
+    String customEnvironmentsViewAddNewEnvTitle();
 
-    @Key("view.editImages.addNewScript.message")
-    String editImagesViewAddNewScriptMessage();
+    @Key("view.customEnvironments.addNewEnv.message")
+    String customEnvironmentsViewAddNewEnvMessage();
 
-    @Key("view.editImages.removeScript.title")
-    String editImagesViewRemoveScriptTitle();
+    @Key("view.customEnvironments.removeEnv.title")
+    String customEnvironmentsViewRemoveEnvTitle();
 
-    @Key("view.editImages.removeScript.message")
-    String editImagesViewRemoveScriptMessage(String name);
+    @Key("view.customEnvironments.removeEnv.message")
+    String customEnvironmentsViewRemoveEnvMessage(String name);
 }

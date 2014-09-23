@@ -21,8 +21,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
-import com.codenvy.ide.extension.runner.client.run.CustomRunView;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunPresenter;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunView;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 

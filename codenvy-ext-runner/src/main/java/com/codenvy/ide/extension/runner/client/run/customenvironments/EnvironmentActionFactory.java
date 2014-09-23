@@ -8,30 +8,31 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimages;
+package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.ide.extension.runner.client.actions.RunImageAction;
+import com.codenvy.ide.extension.runner.client.actions.EnvironmentAction;
 import com.google.inject.assistedinject.Assisted;
 
 import javax.annotation.Nonnull;
 
 /**
- * Factory for creating {@link RunImageAction} instances.
+ * Factory for creating {@link EnvironmentAction} instances.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ImageActionFactory {
+public interface EnvironmentActionFactory {
     /**
-     * Create an instance of a {@link RunImageAction} with a given title and description.
+     * Create an instance of a {@link EnvironmentAction} with a given parameters.
      *
      * @param title
      *         action's title
      * @param description
      *         action's description
-     * @return new {@link com.codenvy.ide.extension.runner.client.actions.RunImageAction}
+     * @param customEnvironment
+     *         environment which action should run
+     * @return new {@link EnvironmentAction}
      */
     @Nonnull
-    RunImageAction createAction(@Nonnull @Assisted("title") String title, @Nonnull @Assisted("description") String description,
-                                ItemReference scriptFile);
+    EnvironmentAction createAction(@Nonnull @Assisted("title") String title, @Nonnull @Assisted("description") String description,
+                                   @Nonnull @Assisted CustomEnvironment customEnvironment);
 }
