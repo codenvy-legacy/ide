@@ -44,7 +44,7 @@ public interface UploadFileView extends IsWidget {
     void showDialog();
 
     /** Close dialog */
-    void close();
+    void closeDialog();
 
     /** Sets the delegate to receive events from this view. */
     void setDelegate(ActionDelegate delegate);

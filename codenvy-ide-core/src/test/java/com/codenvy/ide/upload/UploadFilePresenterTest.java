@@ -75,7 +75,7 @@ public class UploadFilePresenterTest {
     public void onCancelClickedShouldBeExecuted() {
         presenter.onCancelClicked();
 
-        verify(view).close();
+        verify(view).closeDialog();
     }
 
     @Test
@@ -106,7 +106,7 @@ public class UploadFilePresenterTest {
     public void onSubmitCompleteShouldBeExecuted() {
         presenter.onSubmitComplete("Result");
 
-        verify(view).close();
+        verify(view).closeDialog();
         verify(eventBus).fireEvent((RefreshProjectTreeEvent)anyObject());
     }
 }

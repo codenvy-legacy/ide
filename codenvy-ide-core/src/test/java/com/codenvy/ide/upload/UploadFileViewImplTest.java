@@ -114,7 +114,7 @@ public class UploadFileViewImplTest extends GwtTestWithMockito {
     public void closeShouldBeExecuted() {
         view.uploadForm = mock(FormPanel.class);
 
-        view.close();
+        view.closeDialog();
 
         verify(view.uploadForm).remove((FileUpload)anyObject());
     }
