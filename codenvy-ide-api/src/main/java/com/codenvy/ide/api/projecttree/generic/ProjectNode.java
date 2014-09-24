@@ -295,7 +295,8 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     @Override
     public void onProjectDescriptorChanged(ProjectDescriptorChangedEvent event) {
         String path = event.getProjectDescriptor().getPath();
-        if (getPath().equals(path))
+        if (getPath().equals(path)) {
             setData(event.getProjectDescriptor());
+        }
     }
 }

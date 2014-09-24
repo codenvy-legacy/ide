@@ -107,13 +107,12 @@ public class RunnerExtension {
         // add actions in main menu
         DefaultActionGroup runMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_RUN);
         runMenuActionGroup.add(runAction);
-        runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
+        runMenuActionGroup.add(runWithGroup, new Constraints(Anchor.AFTER, localizationConstants.runAppActionId()));
+        runMenuActionGroup.add(customRunAction, new Constraints(Anchor.AFTER, GROUP_RUN_WITH));
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(shutdownAction);
         runMenuActionGroup.add(clearConsoleAction);
-        runMenuActionGroup.addSeparator();
         runMenuActionGroup.add(viewRecipeAction);
-        runMenuActionGroup.add(runWithGroup, new Constraints(Anchor.AFTER, localizationConstants.viewRecipeActionId()));
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);

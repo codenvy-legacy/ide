@@ -51,7 +51,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private Comparator<RunnerDescriptor> comparator = new Comparator<RunnerDescriptor>() {
         @Override
         public int compare(RunnerDescriptor o1, RunnerDescriptor o2) {
-            return o1.getDescription().compareToIgnoreCase(o2.getDescription());
+            return o1.getName().compareToIgnoreCase(o2.getName());
         }
     };
 

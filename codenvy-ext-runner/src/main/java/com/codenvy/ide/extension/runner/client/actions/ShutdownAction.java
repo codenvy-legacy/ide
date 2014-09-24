@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to stop application server where app is launched.
+ * Action to stop launched app.
  *
  * @author Artem Zatsarynnyy
  */
@@ -57,9 +57,7 @@ public class ShutdownAction extends Action {
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
-            // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(currentProject.getRunner() != null
-                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setVisible(currentProject.getRunner() != null);
             e.getPresentation().setEnabled(runController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
