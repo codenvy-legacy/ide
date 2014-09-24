@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import javax.inject.Singleton;
 
 /**
- * Describe current state of application.
+ * Describes current state of application.
  * E.g. current project, current workspace and etc.
  *
  * @author Vitaly Parfonov
@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 public class AppContext {
     private WorkspaceDescriptor workspace;
 
-    private CurrentProject      currentProject;
+    private CurrentProject currentProject;
 
     private CurrentUser currentUser;
 
@@ -61,9 +61,9 @@ public class AppContext {
     }
 
     /**
-     * Return current user
+     * Returns current user.
      *
-     * @return
+     * @return current user
      */
     public CurrentUser getCurrentUser() {
         return currentUser;

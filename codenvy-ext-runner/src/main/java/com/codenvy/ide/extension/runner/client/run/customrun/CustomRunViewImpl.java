@@ -46,9 +46,10 @@ import javax.validation.constraints.NotNull;
  */
 @Singleton
 public class CustomRunViewImpl extends Window implements CustomRunView {
-    interface CustomRunViewImplUiBinder extends UiBinder<Widget, CustomRunViewImpl> {
-    }
-
+    @UiField(provided = true)
+    final RunnerResources            resources;
+    @UiField(provided = true)
+    final RunnerLocalizationConstant locale;
     @UiField
     ListBox         environmentField;
     @UiField
@@ -69,13 +70,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     HorizontalPanel memoryPanel1;
     @UiField
     HorizontalPanel memoryPanel2;
-    Button runButton;
-    Button cancelButton;
-    @UiField(provided = true)
-    final   RunnerResources            resources;
-    @UiField(provided = true)
-    final   RunnerLocalizationConstant locale;
-    private ActionDelegate             delegate;
+    private ActionDelegate delegate;
     private Array<RunnerEnvironment> runnerEnvironments = Collections.createArray();
     private Array<RadioButton>       radioButtons       = Collections.createArray();
 
@@ -103,14 +98,14 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     private void createButtons() {
-        runButton = createButton(locale.buttonRun(), "project-customRun-run", new ClickHandler() {
+        Button runButton = createButton(locale.buttonRun(), "project-customRun-run", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onRunClicked();
             }
         });
 
-        cancelButton = createButton(locale.buttonCancel(), "project-customRun-cancel", new ClickHandler() {
+        Button cancelButton = createButton(locale.buttonCancel(), "project-customRun-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelClicked();
@@ -170,7 +165,6 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         }
     }
 
-
     @UiHandler({"runnerMemory128", "runnerMemory256", "runnerMemory512", "runnerMemory1GB", "runnerMemory2GB"})
     void standardMemoryHandler(ValueChangeEvent<Boolean> event) {
         otherValueMemory.setText("");
@@ -180,6 +174,16 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     void otherMemoryHandler(KeyUpEvent event) {
         clearStandardMemoryFilds();
         radioButOther.setValue(true);
+    }
+
+    @Override
+    public String getRunnerMemorySize() {
+        for (RadioButton radioButton : radioButtons.asIterable()) {
+            if (radioButton.getValue()) {
+                return parseRadioButMemoryValue(radioButton.getText());
+            }
+        }
+        return "";
     }
 
     @Override
@@ -213,13 +217,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
-    public String getRunnerMemorySize() {
-        for (RadioButton radioButton : radioButtons.asIterable()) {
-            if (radioButton.getValue()) {
-                return parseRadioButMemoryValue(radioButton.getText());
-            }
-        }
-        return "";
+    public String getTotalMemorySize() {
+        return memoryTotal.getText();
     }
 
     @Override
@@ -228,18 +227,13 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
-    public String getTotalMemorySize() {
-        return memoryTotal.getText();
+    public String getAvailableMemorySize() {
+        return memoryAvailable.getText();
     }
 
     @Override
     public void setAvailableMemorySize(String memorySize) {
         this.memoryAvailable.setText(memorySize);
-    }
-
-    @Override
-    public String getAvailableMemorySize() {
-        return memoryAvailable.getText();
     }
 
     @Override
@@ -308,5 +302,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     public void showWarning(String warning) {
         Info warningWindow = new Info("Warning", warning);
         warningWindow.show();
+    }
+
+    interface CustomRunViewImplUiBinder extends UiBinder<Widget, CustomRunViewImpl> {
     }
 }
