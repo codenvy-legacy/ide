@@ -33,6 +33,8 @@ public interface MenuResources extends ClientBundle {
         String menuBarItemOver();
 
         String rightPanel();
+
+        String rightPanelSeparator();
     }
 
     @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})
