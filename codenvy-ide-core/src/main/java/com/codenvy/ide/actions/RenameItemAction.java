@@ -136,7 +136,13 @@ public class RenameItemAction extends Action {
     }
 
     private void askForRenamingNode(final StorableNode nodeToRename) {
-        new AskValueDialog(getDialogTitle(nodeToRename), localization.renameDialogNewNameLabel(), new AskValueCallback() {
+        new AskValueDialog(getDialogTitle(nodeToRename),
+                           localization.renameDialogNewNameLabel(),
+                           nodeToRename.getName(),
+                           0,
+                           nodeToRename.getName().indexOf('.') >= 0 ?
+                           nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(),
+                           new AskValueCallback() {
             @Override
             public void onOk(final String newName) {
                 ItemReference itemReferenceBeforeRenaming = null;
