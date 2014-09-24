@@ -112,7 +112,6 @@ public class RunnerExtension {
         runMenuActionGroup.add(getLogsAction);
         runMenuActionGroup.add(shutdownAction);
         runMenuActionGroup.add(clearConsoleAction);
-        runMenuActionGroup.addSeparator();
         runMenuActionGroup.add(viewRecipeAction);
 
         // add actions on main toolbar
