@@ -11,7 +11,7 @@
 package com.codenvy.ide.ext.ssh.client.manage;
 
 import com.codenvy.api.user.gwt.client.UserServiceClient;
-import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.api.user.shared.dto.UserDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
@@ -174,9 +174,9 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     @Override
     public void onGenerateGithubKeyClicked() {
         loader.show();
-        userService.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+        userService.getCurrentUser(new AsyncRequestCallback<UserDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(UserDescriptor.class)) {
             @Override
-            protected void onSuccess(User result) {
+            protected void onSuccess(UserDescriptor result) {
                 loader.hide();
                 if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
                     service.getSshKeyProviders().get(GITHUB_HOST)
