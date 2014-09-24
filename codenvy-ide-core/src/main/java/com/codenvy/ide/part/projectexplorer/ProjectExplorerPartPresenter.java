@@ -121,6 +121,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         return "This View helps you to do basic operation with your projects.";
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int getSize() {
+        return 230;
+    }
+
     /** Adds behavior to view's components. */
     protected void bind() {
         view.setDelegate(this);
