@@ -335,6 +335,15 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.appWillBeStopped")
     String appWillBeStopped(String appName);
 
+    @Key("messages.workspaceRamLessRequiredRam")
+    String messagesWorkspaceRamLessRequiredRam(int requiredMemorySize, int workspaceMemorySize);
+
+    @Key("messages.updateProjectWorkspaceRamLessRequired")
+    String messagesUpdateProjectWorkspaceRamLessRequired(int requiredMemorySize, int workspaceMemorySize);
+
+    @Key("messages.getResourcesFailed")
+    String messagesGetResourcesFailed();
+
     /* Buttons */
     @Key("ok")
     String ok();
