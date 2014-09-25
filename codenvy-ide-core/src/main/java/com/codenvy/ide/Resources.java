@@ -73,7 +73,7 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
 
         String line();
 
-        String editorFullScreenSvg();
+        String editorFullScreen();
 
         String editorFullScreenSvgDown();
     }

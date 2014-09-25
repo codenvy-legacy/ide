@@ -18,8 +18,14 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.CustomComponentAction;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.workspace.WorkBenchPresenter;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,37 +39,54 @@ import org.vectomatic.dom.svg.ui.SVGToggleButton;
 @Singleton
 public class ExpandEditorAction extends Action implements CustomComponentAction {
 
-    private Resources resources;
-    private WorkBenchPresenter workBenchPresenter;
+    private final Resources                resources;
+    private final WorkBenchPresenter       workBenchPresenter;
+    private final CoreLocalizationConstant constant;
 
     @Inject
     public ExpandEditorAction(Resources resources, CoreLocalizationConstant constant, WorkBenchPresenter workBenchPresenter) {
-        super(constant.actionExpandEditorTitle(), constant.actionExpandEditorTitle(), null, resources.fullscreen());
+        super(constant.actionExpandEditorTitle(), null, null, resources.fullscreen());
         this.resources = resources;
         this.workBenchPresenter = workBenchPresenter;
+        this.constant = constant;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override
     public Widget createCustomComponent(Presentation presentation) {
+        final Element tooltip = DOM.createSpan();
+        tooltip.setInnerHTML(constant.actionExpandEditorTitle());
+
         final SVGToggleButton svgToggleButton = new SVGToggleButton(presentation.getSVGIcon(), null);
-        svgToggleButton.setClassNameBaseVal(resources.coreCss().editorFullScreenSvg());
         svgToggleButton.addFace(SVGButtonBase.SVGFaceName.DOWN, new SVGButtonBase.SVGFace(new SVGButtonBase.SVGFaceChange[]{
                 new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
         svgToggleButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if(!svgToggleButton.isDown()){
+                if (!svgToggleButton.isDown()) {
                     workBenchPresenter.restoreEditorPart();
-                } else{
+                } else {
                     workBenchPresenter.expandEditorPart();
                 }
             }
         });
-        return svgToggleButton;
+
+        final FlowPanel flowPanel = new FlowPanel();
+        flowPanel.addStyleName(resources.coreCss().editorFullScreen());
+        flowPanel.add(svgToggleButton);
+        flowPanel.getElement().appendChild(tooltip);
+        flowPanel.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                final Element panel = event.getRelativeElement();
+                tooltip.getStyle().setProperty("top", (panel.getAbsoluteTop() + panel.getOffsetHeight() + 9) + "px");
+                tooltip.getStyle().setProperty("right", (Document.get().getClientWidth() - panel.getAbsoluteRight() - 2) + "px");
+            }
+        }, MouseOverEvent.getType());
+
+        return flowPanel;
     }
 }
