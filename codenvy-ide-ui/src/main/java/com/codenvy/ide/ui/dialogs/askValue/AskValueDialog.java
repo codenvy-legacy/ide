@@ -104,14 +104,14 @@ public class AskValueDialog extends Window {
         setTitle(title);
         this.message.setText(message);
         setWidget(widget);
-        Button ok = createButton(locale.ok(), "askValue-dialog-ok", new ClickHandler() {
+        Button ok = createButton(locale.ok(), title + "-askValue-dialog-ok", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 callback.onOk(value.getValue());
                 onClose();
             }
         });
-        Button cancel = createButton(locale.cancel(), "askValue-dialog-cancel", new ClickHandler() {
+        Button cancel = createButton(locale.cancel(), title + "-askValue-dialog-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 callback.onCancel();
@@ -131,6 +131,8 @@ public class AskValueDialog extends Window {
                 }
             });
         }
+        this.ensureDebugId(title + "-askValueDialog-window");
+        this.value.ensureDebugId(title + "-askValueDialog-textBox");
     }
     
     @UiHandler("value")
