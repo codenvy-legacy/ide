@@ -16,6 +16,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -33,6 +34,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -112,15 +115,16 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private void createScriptFilesForEnvironment(CustomEnvironment env) {
         final String path = appContext.getCurrentProject().getProjectDescription().getPath() + '/' + envFolderPath + '/';
         for (String scriptName : env.getScriptNames(true)) {
-            projectServiceClient.createFile(path, scriptName, "", null, new AsyncRequestCallback<ItemReference>() {
-                @Override
-                protected void onSuccess(ItemReference result) {
-                }
+            projectServiceClient.createFile(path, scriptName, scriptName.endsWith("Dockerfile") ? env.getDockerfileTemplate() : "", null,
+                                            new AsyncRequestCallback<ItemReference>() {
+                                                @Override
+                                                protected void onSuccess(ItemReference result) {
+                                                }
 
-                @Override
-                protected void onFailure(Throwable ignore) {
-                }
-            });
+                                                @Override
+                                                protected void onFailure(Throwable ignore) {
+                                                }
+                                            });
         }
     }
 
@@ -167,8 +171,10 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
+                result.reverse();
                 for (ItemReference item : result.asIterable()) {
-                    eventBus.fireEvent(new FileEvent(new FileNode(null, item, eventBus, projectServiceClient, dtoUnmarshallerFactory),
+                    eventBus.fireEvent(new FileEvent(new EnvironmentScript(null, item, eventBus, projectServiceClient,
+                                                                           dtoUnmarshallerFactory, selectedEnvironment.getName()),
                                                      FileEvent.FileOperation.OPEN));
                 }
             }
@@ -241,5 +247,21 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                         Log.error(CustomEnvironmentsPresenter.class, exception.getMessage());
                     }
                 });
+    }
+
+    private class EnvironmentScript extends FileNode {
+        private final String environmentName;
+
+        public EnvironmentScript(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+                                 DtoUnmarshallerFactory dtoUnmarshallerFactory, String environmentName) {
+            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+            this.environmentName = environmentName;
+        }
+
+        @Nonnull
+        @Override
+        public String getDisplayName() {
+            return '[' + environmentName + "] " + data.getName();
+        }
     }
 }

@@ -21,11 +21,33 @@ import java.util.List;
  * @author Artem Zatsarynnyy
  */
 public class CustomEnvironment {
+    private static final String DOCKERFILE_TEMPLATE = "# Base image\n" +
+                                                      "FROM <basic image>\n" +
+                                                      "\n" +
+                                                      "# Set this if you want that of port exposed in this Dockerfile or its parent\n" +
+                                                      "# should be treated as port where your application is running\n" +
+                                                      "# For example:\n" +
+                                                      "# ENV CODENVY_APP_PORT_8080_HTTP 8080\n" +
+                                                      "#\n" +
+                                                      "#ENV CODENVY_APP_PORT_<port>_HTTP <port>\n" +
+                                                      "\n" +
+                                                      "# Set this if you want that of port exposed in this Dockerfile or its parent\n" +
+                                                      "# should be treated as debug port of yours application\n" +
+                                                      "# For example:\n" +
+                                                      "# ENV CODENVY_APP_PORT_8000_DEBUG 8000\n" +
+                                                      "#\n" +
+                                                      "#ENV CODENVY_APP_PORT_<port>_DEBUG <port>" +
+                                                      "#\n";
     private String name;
 
     /** Create new environment with the specified {@code name}. */
     public CustomEnvironment(String name) {
         this.name = name;
+    }
+
+    /** Get environment's name. */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -45,9 +67,8 @@ public class CustomEnvironment {
         return list;
     }
 
-    /** Get environment's name. */
-    public String getName() {
-        return name;
+    public String getDockerfileTemplate() {
+        return DOCKERFILE_TEMPLATE;
     }
 
     @Override

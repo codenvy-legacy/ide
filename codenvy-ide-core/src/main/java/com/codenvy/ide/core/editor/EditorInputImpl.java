@@ -39,7 +39,7 @@ final class EditorInputImpl implements EditorInput {
 
     @Override
     public String getName() {
-        return file.getName();
+        return file.getDisplayName();
     }
 
     @Override
