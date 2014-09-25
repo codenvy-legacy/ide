@@ -38,7 +38,7 @@
 svg.partIcon {
     width: 14px;
     height: 14px;
-    float: right;
+    float: left;
     position: relative;
     top: 1px;
 }
