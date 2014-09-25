@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The view of {@link CustomRunPresenter}.
@@ -23,20 +23,13 @@ import javax.validation.constraints.NotNull;
  */
 public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
-    public interface ActionDelegate {
-        /** Performs any actions appropriate in response to the user having pressed the Run button. */
-        void onRunClicked();
-
-        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
-        void onCancelClicked();
-    }
-
     /**
      * Returns chosen environment.
      *
-     * @return {@link RunnerEnvironment}
+     * @return {@link Environment}
      */
-    RunnerEnvironment getSelectedEnvironment();
+    @Nullable
+    Environment getSelectedEnvironment();
 
     /**
      * Set selected environment.
@@ -44,27 +37,30 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
      * @param environmentName
      *         runner environment
      */
-    void setSelectedEnvironment(@NotNull String environmentName);
+    void setSelectedEnvironment(@Nonnull String environmentName);
 
     /**
-     * Set available environments.
+     * Add environments to the list.
      *
      * @param environments
      *         runner environments
      */
-    void setEnvironments(@NotNull Array<RunnerEnvironment> environments);
-
-    /** Set memory size for runner. */
-    void setRunnerMemorySize(String runnerRam);
+    void addEnvironments(@Nonnull Array<Environment> environments);
 
     /** Get memory size for runner. */
     String getRunnerMemorySize();
 
-    /** Set Total Workspace RAM. */
-    void setTotalMemorySize(String memorySize);
+    /** Set memory size for runner. */
+    void setRunnerMemorySize(String runnerRam);
 
     /** Get Total Workspace RAM. */
     String getTotalMemorySize();
+
+    /** Set Total Workspace RAM. */
+    void setTotalMemorySize(String memorySize);
+
+    /** Get Available memory size. */
+    String getAvailableMemorySize();
 
     /**
      * Set Available memory size.
@@ -72,10 +68,7 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
      */
     void setAvailableMemorySize(String memorySize);
 
-    /** Get Available memory size. */
-    String getAvailableMemorySize();
-
-    /** Set "enable" state of the radio buttons, the value memory of which is < than workspaceRam.*/
+    /** Set "enable" state of the radio buttons, the value memory of which is < than workspaceRam. */
     void setEnabledRadioButtons(int workspaceRam);
 
     /** Close dialog. */
@@ -93,4 +86,11 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
     /** Performs when user select 'Remember my options'. */
     boolean isRememberOptionsSelected();
 
+    public interface ActionDelegate {
+        /** Performs any actions appropriate in response to the user having pressed the Run button. */
+        void onRunClicked();
+
+        /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
+        void onCancelClicked();
+    }
 }

@@ -64,7 +64,7 @@ public class EnvironmentAction extends Action {
         }
 
         runOptions.setScriptFiles(scriptFiles);
-        runController.runActiveProject(runOptions, null, false);
+        runController.runActiveProject(runOptions, null, true);
     }
 
     /** {@inheritDoc} */

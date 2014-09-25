@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -37,7 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The implementation of {@link CustomRunView}.
@@ -71,8 +71,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @UiField
     HorizontalPanel memoryPanel2;
     private ActionDelegate delegate;
-    private Array<RunnerEnvironment> runnerEnvironments = Collections.createArray();
-    private Array<RadioButton>       radioButtons       = Collections.createArray();
+    private Array<Environment> environments = Collections.createArray();
+    private Array<RadioButton> radioButtons = Collections.createArray();
 
     /** Create view. */
     @Inject
@@ -86,7 +86,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         environmentField.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                RunnerEnvironment environment = runnerEnvironments.get(environmentField.getSelectedIndex());
+                Environment environment = environments.get(environmentField.getSelectedIndex());
                 descriptionField.setText(environment.getDescription());
             }
         });
@@ -130,38 +130,31 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         radioButOther.setEnabled(true);
     }
 
-    @NotNull
+    @Nullable
     @Override
-    public RunnerEnvironment getSelectedEnvironment() {
+    public Environment getSelectedEnvironment() {
         int selectedIndex = environmentField.getSelectedIndex();
         if (selectedIndex != -1) {
-            return runnerEnvironments.get(selectedIndex);
+            return environments.get(selectedIndex);
         }
         return null;
     }
 
     @Override
-    public void setSelectedEnvironment(@NotNull String environmentName) {
-        for (RunnerEnvironment environment : runnerEnvironments.asIterable()) {
-            if (environmentName.equals(environment.getDisplayName()) || environmentName.equals(environment.getId())) {
-                environmentField.setSelectedIndex(runnerEnvironments.indexOf(environment));
+    public void setSelectedEnvironment(@Nonnull String environmentName) {
+        for (Environment environment : environments.asIterable()) {
+            if (environmentName.equals(environment.getDisplayName())) {
+                environmentField.setSelectedIndex(environments.indexOf(environment));
                 return;
             }
         }
     }
 
     @Override
-    public void setEnvironments(@NotNull Array<RunnerEnvironment> environments) {
-        runnerEnvironments.clear();
-        runnerEnvironments.addAll(environments);
-        environmentField.clear();
-        String environmentName;
-        for (RunnerEnvironment environment : environments.asIterable()) {
-            environmentName = (environment.getDisplayName() != null) ? environment.getDisplayName() : environment.getId();
-            environmentField.addItem(environmentName);
-        }
-        if (environments.size() > 0) {
-            descriptionField.setText(environments.get(0).getDescription());
+    public void addEnvironments(@Nonnull Array<Environment> environments) {
+        this.environments.addAll(environments);
+        for (Environment environment : environments.asIterable()) {
+            environmentField.addItem(environment.getDisplayName());
         }
     }
 
@@ -244,6 +237,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void showDialog() {
+        this.environments.clear();
+        environmentField.clear();
         this.show();
     }
 

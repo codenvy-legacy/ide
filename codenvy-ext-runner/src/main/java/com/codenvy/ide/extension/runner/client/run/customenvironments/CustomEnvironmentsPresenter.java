@@ -208,7 +208,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private void refreshEnvironmentsList() {
         view.setEnvironments(Collections.<CustomEnvironment>createArray());
 
-        environmentActionsManager.retrieveCustomEnvironments(
+        environmentActionsManager.requestCustomEnvironmentsForProject(
                 appContext.getCurrentProject().getProjectDescription(),
                 new AsyncCallback<Array<CustomEnvironment>>() {
                     @Override
