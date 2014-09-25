@@ -150,7 +150,7 @@ public class ImportProjectPresenterTest {
                 .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
-        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(projectWizardPresenter).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
     }
 
@@ -346,7 +346,7 @@ public class ImportProjectPresenterTest {
                 .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(eq(PROJECT_NAME), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
-        verify(notificationManager).showNotification((Notification)anyObject());
+        verify(notificationManager, times(2)).showNotification((Notification)anyObject());
         verify(projectWizardPresenter).show((com.codenvy.ide.api.wizard.WizardContext)anyObject());
     }
 

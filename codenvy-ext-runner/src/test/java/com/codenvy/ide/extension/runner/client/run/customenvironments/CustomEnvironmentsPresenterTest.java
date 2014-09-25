@@ -81,13 +81,13 @@ public class CustomEnvironmentsPresenterTest extends BaseTest {
                 return callback;
             }
         }).when(environmentActionsManager)
-          .retrieveCustomEnvironments(eq(currentProjectDescriptor), Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
+          .requestCustomEnvironmentsForProject(eq(currentProjectDescriptor), Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
 
         presenter.showDialog();
 
         verify(view).showDialog();
-        verify(environmentActionsManager).retrieveCustomEnvironments(Matchers.<ProjectDescriptor>anyObject(),
-                                                                     Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
+        verify(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
+                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
     }
 
     @Test

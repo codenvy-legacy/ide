@@ -101,6 +101,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         builderEnvConf.setVisible(false);
         runnerEnvConfText.setVisible(false);
         runnerEnvConf.setVisible(false);
+        this.ensureDebugId("projectWizard-window");
     }
 
     @UiHandler("saveButton")

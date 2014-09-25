@@ -131,6 +131,8 @@ public class AskValueDialog extends Window {
                 }
             });
         }
+        this.ensureDebugId("askValueDialog-window");
+        this.value.ensureDebugId("askValueDialog-textBox");
     }
     
     @UiHandler("value")

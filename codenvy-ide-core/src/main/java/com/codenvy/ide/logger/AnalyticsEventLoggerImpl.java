@@ -12,7 +12,7 @@ package com.codenvy.ide.logger;
 
 import com.codenvy.api.analytics.shared.dto.EventParameters;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
-import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.api.user.shared.dto.UserDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.dto.DtoFactory;
@@ -174,9 +174,9 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
 
 
     private void saveCurrentUser() {
-        user.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+        user.getCurrentUser(new AsyncRequestCallback<UserDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(UserDescriptor.class)) {
             @Override
-            protected void onSuccess(User result) {
+            protected void onSuccess(UserDescriptor result) {
                 if (result != null) {
                     currentUser = result.getEmail();
                 } else {

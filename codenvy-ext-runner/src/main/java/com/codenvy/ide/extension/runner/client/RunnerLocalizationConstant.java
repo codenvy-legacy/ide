@@ -257,4 +257,13 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.customEnvironments.removeEnv.message")
     String customEnvironmentsViewRemoveEnvMessage(String name);
+
+    @Key("view.selectRunnerPage.memoryRecommendedLabel")
+    String selectRunnerPageViewMemoryRecommendedLabel();
+
+    @Key("view.selectRunnerPage.environmentTypeLabel")
+    String selectRunnerPageViewEnvironmentTypeLabel();
+
+    @Key("view.selectRunnerPage.environmentLabel")
+    String selectRunnerPageViewEnvironmentLabel();
 }

@@ -103,10 +103,10 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void close() {
+    public void closeDialog() {
         this.hide();
-        uploadForm.remove(file);
-        file = null;
+        this.onClose();
+
     }
 
     /** {@inheritDoc} */
@@ -151,6 +151,8 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     /** {@inheritDoc} */
     @Override
     protected void onClose() {
+        uploadForm.remove(file);
+        file = null;
     }
 
 }

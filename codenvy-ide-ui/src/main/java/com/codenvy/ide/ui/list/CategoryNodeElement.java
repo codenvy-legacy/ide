@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.HashMap;
 
@@ -75,6 +76,7 @@ public class CategoryNodeElement extends FlowPanel {
         label.appendChild(renderer.renderCategory(category));
 
         header.getElement().appendChild(label);
+        header.ensureDebugId("projectWizard-" + category.getTitle());
 
         expandControl = Document.get().createDivElement();
         expandControl.appendChild(resources.expansionImage().getSvg().getElement());
@@ -129,6 +131,7 @@ public class CategoryNodeElement extends FlowPanel {
             ListItem<?> element = ListItem.create(categoryRenderer, resources.defaultCategoriesListCss(), o);
             categoryRenderer.renderElement(element, o);
             elementsMap.put(o, element);
+            UIObject.ensureDebugId(element, "projectWizard-" + element.getInnerText());
             container.getElement().appendChild(element);
         }
     }

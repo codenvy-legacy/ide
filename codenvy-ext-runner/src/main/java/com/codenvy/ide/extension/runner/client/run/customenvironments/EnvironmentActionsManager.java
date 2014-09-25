@@ -80,7 +80,7 @@ public class EnvironmentActionsManager implements ProjectActionHandler {
     /** {@inheritDoc} */
     @Override
     public void onProjectOpened(ProjectActionEvent event) {
-        retrieveCustomEnvironments(event.getProject(), new AsyncCallback<Array<CustomEnvironment>>() {
+        requestCustomEnvironmentsForProject(event.getProject(), new AsyncCallback<Array<CustomEnvironment>>() {
             @Override
             public void onSuccess(Array<CustomEnvironment> result) {
                 for (CustomEnvironment env : result.asIterable()) {
@@ -102,14 +102,14 @@ public class EnvironmentActionsManager implements ProjectActionHandler {
     }
 
     /**
-     * Retrieve list of custom environments.
+     * Get list of custom environments for the specified project.
      *
      * @param project
      *         project for which need to get list of environments
      * @param callback
      *         callback to return custom environments
      */
-    void retrieveCustomEnvironments(ProjectDescriptor project, final AsyncCallback<Array<CustomEnvironment>> callback) {
+    public void requestCustomEnvironmentsForProject(ProjectDescriptor project, final AsyncCallback<Array<CustomEnvironment>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(project.getPath() + '/' + envFolderPath,
                                          new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {

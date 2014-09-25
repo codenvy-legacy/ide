@@ -69,8 +69,8 @@ public class BuilderExtension {
 
         // add actions in main menu
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
-        buildMenuActionGroup.add(buildAction);
-        buildMenuActionGroup.add(clearConsoleAction);
+        buildMenuActionGroup.add(buildAction, Constraints.FIRST);
+        buildMenuActionGroup.add(clearConsoleAction, Constraints.LAST);
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
