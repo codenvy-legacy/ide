@@ -59,8 +59,8 @@ public class EnvironmentAction extends Action {
         runOptions.setRunnerName("docker");
 
         List<String> scriptFiles = new ArrayList<>();
-        for (String scriptName : customEnvironment.getScriptNames()) {
-            scriptFiles.add(envFolderPath + '/' + customEnvironment.getName() + '/' + scriptName);
+        for (String scriptName : customEnvironment.getScriptNames(true)) {
+            scriptFiles.add(envFolderPath + '/' + scriptName);
         }
 
         runOptions.setScriptFiles(scriptFiles);

@@ -240,8 +240,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 } else if (selectedEnvironment instanceof CustomEnvironmentAdapter) {
                     final CustomEnvironment customEnvironment = ((CustomEnvironmentAdapter)selectedEnvironment).getCustomEnvironment();
                     List<String> scriptFiles = new ArrayList<>();
-                    for (String scriptName : customEnvironment.getScriptNames()) {
-                        scriptFiles.add(envFolderPath + '/' + customEnvironment.getName() + '/' + scriptName);
+                    for (String scriptName : customEnvironment.getScriptNames(true)) {
+                        scriptFiles.add(envFolderPath + '/' + scriptName);
                     }
                     runOptions.setRunnerName("docker");
                     runOptions.setScriptFiles(scriptFiles);

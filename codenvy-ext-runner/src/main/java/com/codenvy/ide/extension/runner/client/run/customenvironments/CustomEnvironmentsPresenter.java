@@ -110,8 +110,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     }
 
     private void createScriptFilesForEnvironment(CustomEnvironment env) {
-        final String path = appContext.getCurrentProject().getProjectDescription().getPath() + '/' + envFolderPath + '/' + env.getName();
-        for (String scriptName : env.getScriptNames()) {
+        final String path = appContext.getCurrentProject().getProjectDescription().getPath() + '/' + envFolderPath + '/';
+        for (String scriptName : env.getScriptNames(true)) {
             projectServiceClient.createFile(path, scriptName, "", null, new AsyncRequestCallback<ItemReference>() {
                 @Override
                 protected void onSuccess(ItemReference result) {
