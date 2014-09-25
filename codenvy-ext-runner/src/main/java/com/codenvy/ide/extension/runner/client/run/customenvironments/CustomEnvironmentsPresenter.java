@@ -171,7 +171,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
-                result.reverse();
+                result.reverse(); // small hack: reverse array to open Dockerfile as second (active) editor
                 for (ItemReference item : result.asIterable()) {
                     eventBus.fireEvent(new FileEvent(new EnvironmentScript(null, item, eventBus, projectServiceClient,
                                                                            dtoUnmarshallerFactory, selectedEnvironment.getName()),
