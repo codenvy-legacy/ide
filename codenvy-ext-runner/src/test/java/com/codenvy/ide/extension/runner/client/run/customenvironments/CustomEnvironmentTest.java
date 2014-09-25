@@ -30,9 +30,9 @@ public class CustomEnvironmentTest {
         final List<String> scriptNames = customEnvironment.getScriptNames(false);
 
         Assert.assertEquals("Custom environment should contain 2 scripts.", 2, scriptNames.size());
-        Assert.assertTrue("Custom environment should contain run.dc5y script",
-                          scriptNames.contains(ENV_NAME + '/' + ENV_NAME + ".run.dc5y"));
-        Assert.assertTrue("Custom environment should contain dockerenv.c5y.json file",
-                          scriptNames.contains(ENV_NAME + '/' + ENV_NAME + ".dockerenv.c5y.json"));
+        Assert.assertTrue("Custom environment should contain Dockerfile script",
+                          scriptNames.contains(ENV_NAME + "/Dockerfile"));
+        Assert.assertTrue("Custom environment should contain Mapper.json file",
+                          scriptNames.contains(ENV_NAME + "/Mapper.json"));
     }
 }

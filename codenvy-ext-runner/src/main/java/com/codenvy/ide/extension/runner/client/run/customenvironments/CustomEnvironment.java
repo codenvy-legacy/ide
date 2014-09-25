@@ -36,8 +36,8 @@ public class CustomEnvironment {
      * @see com.codenvy.ide.extension.runner.client.inject.RunnerGinModule#provideEnvironmentsFolderRelPath()
      */
     public List<String> getScriptNames(boolean encode) {
-        final String dockerScriptName = name + '/' + name + ".run.dc5y";
-        final String mapperFileName = name + '/' + name + ".dockerenv.c5y.json";
+        final String dockerScriptName = name + "/Dockerfile";
+        final String mapperFileName = name + "/Mapper.json";
 
         List<String> list = new ArrayList<>(2);
         list.add(encode ? URL.encodePathSegment(dockerScriptName) : dockerScriptName);
