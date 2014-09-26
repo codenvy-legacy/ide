@@ -105,6 +105,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("control.runWith.title")
     String runWithActionTitle();
 
+    @Key("control.runWith.description")
+    String runWithActionDescription();
+
     @Key("control.environment.id")
     String environmentActionId(String name);
 

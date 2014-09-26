@@ -33,6 +33,7 @@ public class RunWithGroup extends DefaultActionGroup {
                         AppContext appContext) {
         super(localizationConstants.runWithActionTitle(), true, actionManager);
         this.appContext = appContext;
+        getTemplatePresentation().setDescription(localizationConstants.runWithActionDescription());
         getTemplatePresentation().setSVGIcon(resources.runWith());
     }
 

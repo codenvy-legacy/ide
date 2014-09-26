@@ -73,6 +73,10 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         InlineLabel caret = new InlineLabel("");
         caret.setStyleName(css.caret());
         panel.add(caret);
+        final String description = presentationFactory.getPresentation(action).getDescription();
+        if (description != null) {
+            panel.getElement().setAttribute("title", description);
+        }
         this.ensureDebugId(place + "/" + action.getTemplatePresentation().getText());
     }
 
