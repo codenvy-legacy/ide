@@ -14,10 +14,10 @@ import javax.validation.constraints.NotNull;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.texteditor.outline.HasOutline;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 
-public interface EmbeddedTextEditor extends EditorPartPresenter {
+public interface EmbeddedTextEditor extends EditorPartPresenter, HasOutline {
 
     /**
      * Initializes this editor with the configuration and document provider/
@@ -56,12 +56,4 @@ public interface EmbeddedTextEditor extends EditorPartPresenter {
      * Abandons all modifications applied to this text editor's input element's textual presentation since the last save operation.
      */
     void doRevertToSaved();
-
-    /**
-     * Returns the outline presenter.<br>
-     * If editor doesn't support Outline, returns <code>null</code>
-     * 
-     * @return the outline presenter.
-     */
-    OutlinePresenter getOutline();
 }
