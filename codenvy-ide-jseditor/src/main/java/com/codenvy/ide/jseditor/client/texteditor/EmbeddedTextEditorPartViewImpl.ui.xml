@@ -49,7 +49,7 @@
     </ui:style>
 
     <g:HTMLPanel width="100%" height="100%" addStyleNames="{style.editorZone-layout}">
-        <g:SimpleLayoutPanel ui:field="editorPanel" addStyleNames="{style.editorZone-editor}" />
+        <g:SimplePanel ui:field="editorPanel" addStyleNames="{style.editorZone-editor}" />
         <my:InfoPanel ui:field="infoPanel" addStyleNames="{style.editorZone-infopanel}" />
     </g:HTMLPanel>
 
