@@ -119,7 +119,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                         String builderDisplayName = environment.getDisplayName();
                         if (builderDisplayName == null) builderDisplayName = environment.getId();
                         if (builderDisplayName != null) {
-                            builderDescriptionStr += ": " + builderDisplayName;
+                            builderDescriptionStr += builderDisplayName;
                         }
                     }
                     if (builderDescriptionStr.length() == 0) builderDescriptionStr = "undefined";
@@ -146,7 +146,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                         String runnerDisplayName = environment.getDisplayName();
                         if (runnerDisplayName == null) runnerDisplayName = environment.getId();
                         if (runnerDisplayName != null) {
-                            runnerDescriptionStr += ": " + runnerDisplayName;
+                            runnerDescriptionStr += runnerDisplayName;
                         }
                     }
                     if (runnerDescriptionStr.length() == 0) runnerDescriptionStr = "undefined";

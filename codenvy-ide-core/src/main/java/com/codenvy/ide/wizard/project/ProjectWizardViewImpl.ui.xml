@@ -110,6 +110,21 @@
             font-size: 11px;
         }
 
+        .labelPanelLeft {
+            float: left;
+            display: block;
+            font-size: 11px;
+            width:190px;
+            overflow: hidden;
+        }
+
+        .labelPanelRight {
+            float: left;
+            display: block;
+            font-size: 11px;
+            overflow: hidden;
+        }
+
         .labelPanel > div {
             margin-top: 4px;
         }
@@ -126,6 +141,16 @@
 
         .infoText a:hover {
             color: #7FFF00;
+        }
+
+        .infoTextLine1 {
+            line-height: 18px;
+            height: 18px;
+        }
+
+        .infoTextLine2 {
+            line-height: 10px;
+            height: 20px;
         }
 
         .infoValue {
@@ -149,14 +174,14 @@
         <g:FlowPanel width="774px" height="470px" addStyleNames="{style.centerPanel}">
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}">
-            <g:FlowPanel addStyleNames="{style.labelPanel}">
-                <g:Label ui:field="builderEnvConfText" text="Builder Environment Configuration" addStyleNames="{style.infoText}"/>
-                <g:Label ui:field="runnerEnvConfText" text="Runner Environment Configuration" addStyleNames="{style.infoText}"/>
+        <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}" height="40px" >
+            <g:FlowPanel addStyleNames="{style.labelPanelLeft}" height="40px" width="190px">
+                <g:Label ui:field="builderEnvConfText" text="Builder Environment Configuration :" addStyleNames="{style.infoText} {style.infoTextLine1}"/>
+                <g:Label ui:field="runnerEnvConfText" text="Runner Environment Configuration :" addStyleNames="{style.infoText} {style.infoTextLine2}"/>
             </g:FlowPanel>
-            <g:FlowPanel addStyleNames="{style.labelPanel}">
-                <g:Label ui:field="builderEnvConf"/>
-                <g:Label ui:field="runnerEnvConf"/>
+            <g:FlowPanel addStyleNames="{style.labelPanelRight}" height="40px" width="580px">
+                <g:Label ui:field="builderEnvConf" addStyleNames="{style.infoTextLine1}"/>
+                <g:Label ui:field="runnerEnvConf" addStyleNames="{style.infoTextLine2}"/>
             </g:FlowPanel>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{wizardResources.css.buttonPanel}">
