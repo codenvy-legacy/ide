@@ -28,7 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,23 +79,18 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     }
 
     @Override
-    public void log(Class<?> actionClass, String actionName, Map<String, String> additionalParams) {
-        doLog(IDE_EVENT, actionClass, actionName, additionalParams);
+    public void log(Object action) {
+        doLog(IDE_EVENT, action, null, null);
     }
 
     @Override
-    public void log(Class<?> actionClass, String actionName) {
-        doLog(IDE_EVENT, actionClass, actionName, Collections.<String, String>emptyMap());
+    public void log(Object action, String actionName) {
+        doLog(IDE_EVENT, action, actionName, null);
     }
 
     @Override
-    public void log(Class<?> actionClass) {
-        doLog(IDE_EVENT, actionClass, null, Collections.<String, String>emptyMap());
-    }
-
-    @Override
-    public void log(String action) {
-        // do nothing
+    public void log(Object action, String actionName, Map<String, String> additionalParams) {
+        doLog(IDE_EVENT, action, actionName, additionalParams);
     }
 
     @Override
@@ -104,13 +98,44 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         doLog(event, null, null, additionalParams);
     }
 
-    private void doLog(String event,
+    @Override
+    @Deprecated
+    public void log(String action) {
+        // do nothing
+    }
+
+    @Override
+    @Deprecated
+    public void log(Class<?> actionClass, String actionName) {
+        doLog(IDE_EVENT, actionClass, actionName, null);
+    }
+
+    @Override
+    @Deprecated
+    public void log(Class<?> actionClass, String actionName, Map<String, String> additionalParams) {
+        doLog(IDE_EVENT, actionClass, actionName, additionalParams);
+    }
+
+    private void doLog(@Nullable String event,
+                       @Nullable Object action,
+                       @Nullable String actionName,
+                       @Nullable Map<String, String> additionalParams) {
+        // we can put here additional params depending on action class
+        if (action != null) {
+            doLog(event, action.getClass(), actionName, additionalParams);
+        }
+    }
+
+    private void doLog(@Nullable String event,
                        @Nullable Class<?> actionClass,
                        @Nullable String actionName,
-                       Map<String, String> additionalParams) {
-        validate(additionalParams);
+                       @Nullable Map<String, String> additionalParams) {
+        if (event == null) {
+            return;
+        }
 
-        additionalParams = new HashMap<>(additionalParams);
+        additionalParams = additionalParams == null ? new HashMap<String, String>() : new HashMap<>(additionalParams);
+        validate(additionalParams);
 
         if (actionName != null) {
             validate(actionName, MAX_PARAM_VALUE_LENGTH);

@@ -67,7 +67,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(TestedAction.class);
+        eventLogger.log(new TestedAction(), null, null);
 
         verify(eventLogger).send(eventParam.capture(), paramsParam.capture());
 
@@ -87,7 +87,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(TestedAction.class, "IDE: Action");
+        eventLogger.log(new TestedAction(), "IDE: Action");
 
         verify(eventLogger).send(eventParam.capture(), paramsParam.capture());
 
@@ -108,7 +108,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(TestedAction.class, "IDE: Action",
+        eventLogger.log(new TestedAction(), "IDE: Action",
                         new HashMap<String, String>() {{
                             put("a", "b");
                         }});
@@ -133,7 +133,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(TestedAction.class, "IDE: Action",
+        eventLogger.log(new TestedAction(), "IDE: Action",
                         new HashMap<String, String>() {{
                             put("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "b");
                         }});
@@ -148,7 +148,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(TestedAction.class, "IDE: Action",
+        eventLogger.log(new TestedAction(), "IDE: Action",
                         new HashMap<String, String>() {{
                             put("a",
                                 "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +
