@@ -41,13 +41,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  */
 public class OutlineImpl implements OutlinePresenter {
 
-    private OutlineView view;
+    private final OutlineView view;
 
-    private EmbeddedTextEditorPartView editor;
+    private final EmbeddedTextEditorPartView editor;
 
     private final OutlineModel model;
-
-    private CodeBlockDataAdapter dataAdapter;
+    private final CodeBlockDataAdapter dataAdapter;
 
     private CodeBlock blockToSync;
 
@@ -61,7 +60,7 @@ public class OutlineImpl implements OutlinePresenter {
         this.model = model;
         this.editor = editor;
         dataAdapter = new CodeBlockDataAdapter();
-        view = new OutlineViewImpl(resources, dataAdapter, model.getRenderer());
+        view = new OutlineViewImpl(resources, dataAdapter, this.model.getRenderer());
         editorPresenter.addPropertyListener(new PropertyListener() {
 
             @Override
@@ -72,7 +71,7 @@ public class OutlineImpl implements OutlinePresenter {
                 }
             }
         });
-        model.setListener(new OutlineModel.OutlineModelListener() {
+        this.model.setListener(new OutlineModel.OutlineModelListener() {
 
             @Override
             public void rootUpdated() {
@@ -160,8 +159,9 @@ public class OutlineImpl implements OutlinePresenter {
                         public boolean shouldVisit(CodeBlock node) {
                             if (offset + 1 > node.getOffset() && offset - 1 < node.getOffset() + node.getLength()) {
                                 return true;
-                            } else
+                            } else {
                                 return false;
+                            }
                         }
 
                         @Override
