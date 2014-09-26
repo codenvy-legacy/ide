@@ -51,9 +51,6 @@
             flex-shrink: 0; /* don't allow to shrink if there is not enough space */
             -webkit-flex-shrink: 0;
         }
-        .infoPanel-item-right {
-            margin-left: 1em;
-        }
 
         /* specific styles */
         .editorInfo {
@@ -71,17 +68,33 @@
             background-color: editorInfoBackgroundColor;
         }
 
-        .leftPart {
-            margin-left: 5px;
-            min-width: 15em; /* to prevent position changes for the center element when line ou char gains one character */
+        .info-block {
+            flex-shrink: 0; /* don't allow to shrink if there is not enough space */
+            -webkit-flex-shrink: 0;
+
+            display: flex;
+            display: -webkit-flex;
+
+            flex-flow: row;
+            -webkit-flex-flow: row;
+            justify-content: flex-start;
+            -webkit-justify-content: flex-start;
+
+            align-items: stretch;
+            -webkit-align-items: stretch;
         }
-        .centrePart {
+        .info-block-end {
+            margin-right: 0.5em;
         }
-        .rightPart {
-            margin-right: 10px;
+        .info-block-middle {
+            margin-right: 0.5em;
         }
-        .separator {
-            margin-right: 2em;
+        .info-block-start {
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+        }
+        .info-label {
+            padding-right: 0.4em;
         }
     </ui:style>
 
@@ -90,23 +103,26 @@
         <div class="{style.topBorder}" />
         <!-- Actual content -->
         <div class="{style.infoPanel-horizlayout}">
-            <div class="{style.leftPart}">
-                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneLineLabel}" /></span>
+            <div class="{style.info-block} {style.info-block-start}">
+                <span class="{style.infoPanel-item} {style.info-label}"><ui:text from="{constants.infoPaneLineLabel}" /></span>
                 <g:InlineLabel ui:field="lineNumber" addStyleNames="{style.infoPanel-item}" />
-                <span ui:field="charPosLabel" class="{style.infoPanel-item}"><ui:text from="{constants.infoPanelCharacterLabel}" /></span>
+                <span ui:field="charPosLabel" class="{style.infoPanel-item} {style.info-label}"><ui:text from="{constants.infoPanelCharacterLabel}" /></span>
                 <g:InlineLabel ui:field="charPosition" addStyleNames="{style.infoPanel-item}"/>
             </div>
-            <div class="{style.centrePart}">
-                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneTabSizeLabel}" /></span>
+            <div class="{style.info-block} {style.info-block-middle}">
+                <span class="{style.infoPanel-item} {style.info-label}"><ui:text from="{constants.infoPaneTabSizeLabel}" /></span>
                 <g:InlineLabel ui:field="tabSize" addStyleNames="{style.infoPanel-item}" />
             </div>
-            <div class="{style.rightPart}">
-                <span class="{style.infoPanel-item}"><ui:text from="{constants.infoPaneEditorLabel}" /></span>
+            <div class="{style.info-block} {style.info-block-middle}">
+                <span class="{style.infoPanel-item} {style.info-label}"><ui:text from="{constants.infoPaneEditorLabel}" /></span>
                 <g:InlineLabel ui:field="editorTypeValue" addStyleNames="{style.infoPanel-item}" />
-                <span class="{style.infoPanel-item} {style.infoPanel-item-right}"><ui:text from="{constants.infoPaneKeybindingLabel}" /></span>
+            </div>
+            <div class="{style.info-block} {style.info-block-middle}">
+                <span class="{style.infoPanel-item} {style.info-label}"><ui:text from="{constants.infoPaneKeybindingLabel}" /></span>
                 <g:InlineLabel ui:field="keybindingsValue" addStyleNames="{style.infoPanel-item}" />
-                <span class="{style.separator}">&nbsp;</span>
-                <g:InlineLabel ui:field="fileType" addStyleNames="{style.infoPanel-item} {style.infoPanel-item-right}" />
+            </div>
+            <div class="{style.info-block} {style.info-block-end}">
+                <g:InlineLabel ui:field="fileType" addStyleNames="{style.infoPanel-item}" />
             </div>
         </div>
     </g:HTMLPanel>
