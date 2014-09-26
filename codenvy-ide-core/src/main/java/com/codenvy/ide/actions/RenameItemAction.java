@@ -92,7 +92,7 @@ public class RenameItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: File rename");
+        eventLogger.log(this);
 
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {

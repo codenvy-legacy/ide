@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.console;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -26,23 +27,27 @@ import com.google.inject.Singleton;
 @Singleton
 public class ClearConsoleAction extends Action {
 
-    private BuilderConsolePresenter presenter;
-    private AppContext              appContext;
+    private       BuilderConsolePresenter presenter;
+    private       AppContext              appContext;
+    private final AnalyticsEventLogger    eventLogger;
 
     @Inject
     public ClearConsoleAction(BuilderConsolePresenter presenter,
                               AppContext appContext,
                               BuilderResources resources,
-                              BuilderLocalizationConstant localizationConstant) {
+                              BuilderLocalizationConstant localizationConstant,
+                              AnalyticsEventLogger eventLogger) {
         super(localizationConstant.clearConsoleControlTitle(), localizationConstant.clearConsoleControlDescription(), null,
               resources.clear());
         this.presenter = presenter;
         this.appContext = appContext;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         presenter.clear();
     }
 

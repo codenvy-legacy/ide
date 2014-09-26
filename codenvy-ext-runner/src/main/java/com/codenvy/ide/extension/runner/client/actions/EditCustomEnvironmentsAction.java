@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
@@ -29,21 +30,25 @@ public class EditCustomEnvironmentsAction extends Action {
 
     private final AppContext                  appContext;
     private final CustomEnvironmentsPresenter customEnvironmentsPresenter;
+    private final AnalyticsEventLogger        eventLogger;
 
     @Inject
     public EditCustomEnvironmentsAction(RunnerResources resources,
                                         RunnerLocalizationConstant constants,
                                         AppContext appContext,
-                                        CustomEnvironmentsPresenter customEnvironmentsPresenter) {
+                                        CustomEnvironmentsPresenter customEnvironmentsPresenter,
+                                        AnalyticsEventLogger eventLogger) {
         super(constants.editCustomEnvironmentsActionText(), constants.editCustomEnvironmentsActionDescription(), null,
               resources.editCustomEnvironments());
         this.appContext = appContext;
         this.customEnvironmentsPresenter = customEnvironmentsPresenter;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         customEnvironmentsPresenter.showDialog();
     }
 

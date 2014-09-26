@@ -30,10 +30,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends Action {
 
-    private AppContext           appContext;
-    private RunController        runController;
-    private CustomRunPresenter   customRunPresenter;
-    private AnalyticsEventLogger eventLogger;
+    private       AppContext           appContext;
+    private       RunController        runController;
+    private       CustomRunPresenter   customRunPresenter;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public CustomRunAction(RunController runController,
@@ -54,7 +54,7 @@ public class CustomRunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Run application");
+        eventLogger.log(this);
         customRunPresenter.showDialog();
     }
 

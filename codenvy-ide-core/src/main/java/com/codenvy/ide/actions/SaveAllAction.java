@@ -40,7 +40,7 @@ public class SaveAllAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Save all");
+        eventLogger.log(this);
         StringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
         editors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
             @Override

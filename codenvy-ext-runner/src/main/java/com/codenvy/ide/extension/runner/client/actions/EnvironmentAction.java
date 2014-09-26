@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -34,27 +35,32 @@ import java.util.List;
  */
 public class EnvironmentAction extends Action {
 
-    private final RunController     runController;
-    private final DtoFactory        dtoFactory;
-    private final String            envFolderPath;
-    private final CustomEnvironment customEnvironment;
+    private final RunController        runController;
+    private final DtoFactory           dtoFactory;
+    private final String               envFolderPath;
+    private final CustomEnvironment    customEnvironment;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public EnvironmentAction(RunnerResources resources, RunController runController, DtoFactory dtoFactory,
                              @Named("envFolderPath") String envFolderPath,
                              @Assisted("title") String title,
                              @Assisted("description") String description,
-                             @Assisted CustomEnvironment customEnvironment) {
+                             @Assisted CustomEnvironment customEnvironment,
+                             AnalyticsEventLogger eventLogger) {
         super(title, description, null, resources.environment());
         this.runController = runController;
         this.dtoFactory = dtoFactory;
         this.envFolderPath = envFolderPath;
         this.customEnvironment = customEnvironment;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
+
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
         runOptions.setRunnerName("docker");
 

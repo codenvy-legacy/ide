@@ -49,7 +49,7 @@ public class BuildAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Build project");
+        eventLogger.log(this);
         buildController.buildActiveProject(true);
     }
 

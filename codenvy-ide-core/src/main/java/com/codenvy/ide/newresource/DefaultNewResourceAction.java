@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.action.Action;
@@ -47,6 +48,7 @@ public class DefaultNewResourceAction extends Action {
     protected EditorAgent          editorAgent;
     protected ProjectServiceClient projectServiceClient;
     protected EventBus             eventBus;
+    protected AnalyticsEventLogger eventLogger;
 
     /**
      * Creates new action.
@@ -87,8 +89,55 @@ public class DefaultNewResourceAction extends Action {
         this.eventBus = eventBus;
     }
 
+    /**
+     * Creates new action.
+     *
+     * @param title
+     *         action's title
+     * @param description
+     *         action's description
+     * @param icon
+     *         action's icon
+     * @param svgIcon
+     *         action's SVG icon
+     * @param appContext
+     *         {@link com.codenvy.ide.api.app.AppContext} instance
+     * @param selectionAgent
+     *         {@link com.codenvy.ide.api.selection.SelectionAgent} instance
+     * @param editorAgent
+     *         {@link com.codenvy.ide.api.editor.EditorAgent} instance. Need for opening created file in editor
+     * @param projectServiceClient
+     *         {@link com.codenvy.api.project.gwt.client.ProjectServiceClient} instance
+     * @param eventBus
+     * @param eventLogger
+     *         {@link com.codenvy.api.analytics.logger.AnalyticsEventLogger} instance
+     */
+    public DefaultNewResourceAction(String title,
+                                    String description,
+                                    @Nullable ImageResource icon,
+                                    @Nullable SVGResource svgIcon,
+                                    AppContext appContext,
+                                    SelectionAgent selectionAgent,
+                                    @Nullable EditorAgent editorAgent,
+                                    ProjectServiceClient projectServiceClient,
+                                    EventBus eventBus,
+                                    AnalyticsEventLogger eventLogger) {
+        super(title, description, icon, svgIcon);
+        this.title = title;
+        this.appContext = appContext;
+        this.selectionAgent = selectionAgent;
+        this.editorAgent = editorAgent;
+        this.projectServiceClient = projectServiceClient;
+        this.eventBus = eventBus;
+        this.eventLogger = eventLogger;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (eventLogger != null) {
+            eventLogger.log(this);
+        }
+
         new AskValueDialog("New " + title, "Name:", new AskValueCallback() {
             @Override
             public void onOk(String value) {

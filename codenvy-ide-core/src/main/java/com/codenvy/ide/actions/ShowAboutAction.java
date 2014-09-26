@@ -38,7 +38,7 @@ public class ShowAboutAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Show about application");
+        eventLogger.log(this);
         presenter.showAbout();
     }
 

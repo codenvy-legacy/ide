@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.xml;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
@@ -38,7 +39,8 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
                             EditorAgent editorAgent,
                             Resources resources,
                             ProjectServiceClient projectServiceClient,
-                            EventBus eventBus) {
+                            EventBus eventBus,
+                            AnalyticsEventLogger eventLogger) {
         super(localizationConstant.actionNewXmlFileTitle(),
               localizationConstant.actionNewXmlFileDescription(),
               null,
@@ -47,7 +49,8 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
     }
 
     @Override

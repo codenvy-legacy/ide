@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -37,7 +38,8 @@ public class NewLessFileAction extends DefaultNewResourceAction {
                              SelectionAgent selectionAgent,
                              EditorAgent editorAgent,
                              ProjectServiceClient projectServiceClient,
-                             EventBus eventBus) {
+                             EventBus eventBus,
+                             AnalyticsEventLogger eventLogger) {
         super(localizationConstant.newLessFileActionTitle(),
               localizationConstant.newLessFileActionDescription(),
               webExtensionResource.css(),
@@ -46,7 +48,8 @@ public class NewLessFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class ImportProjectFromLocationAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent event) {
-        eventLogger.log("IDE: Import project");
+        eventLogger.log(this);
         presenter.show();
     }
 }

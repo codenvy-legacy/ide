@@ -11,6 +11,7 @@
 
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
@@ -42,17 +43,21 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
     private final Resources                resources;
     private final WorkBenchPresenter       workBenchPresenter;
     private final CoreLocalizationConstant constant;
+    private final AnalyticsEventLogger     eventLogger;
 
     @Inject
-    public ExpandEditorAction(Resources resources, CoreLocalizationConstant constant, WorkBenchPresenter workBenchPresenter) {
+    public ExpandEditorAction(Resources resources, CoreLocalizationConstant constant, WorkBenchPresenter workBenchPresenter,
+                              AnalyticsEventLogger eventLogger) {
         super(constant.actionExpandEditorTitle(), null, null, resources.fullscreen());
         this.resources = resources;
         this.workBenchPresenter = workBenchPresenter;
         this.constant = constant;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
 
         final SVGToggleButton svgToggleButton = new SVGToggleButton(presentation.getSVGIcon(), null);
         svgToggleButton.addFace(SVGButtonBase.SVGFaceName.DOWN, new SVGButtonBase.SVGFace(new SVGButtonBase.SVGFaceChange[]{
-                new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
+            new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
         svgToggleButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
