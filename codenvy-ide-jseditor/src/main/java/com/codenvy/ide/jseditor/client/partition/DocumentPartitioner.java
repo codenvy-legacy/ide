@@ -23,6 +23,9 @@ import com.codenvy.ide.jseditor.client.events.DocumentChangeHandler;
  */
 public interface DocumentPartitioner extends DocumentChangeHandler, UseDocumentHandle {
 
+    /** The identifier of the default partition content type. */
+    public static final String DEFAULT_CONTENT_TYPE = "__dftl_partition_content_type";
+
     void initialize();
 
     void release();

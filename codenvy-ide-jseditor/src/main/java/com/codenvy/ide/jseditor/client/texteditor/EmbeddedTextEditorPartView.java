@@ -17,7 +17,7 @@ import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -29,8 +29,9 @@ import com.google.gwt.user.client.ui.RequiresResize;
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
-                                                    IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
+                                                    IsConfigurable<TextEditorConfiguration>, RequiresResize, IsWidget,
                                                     HasChangeHandlers, UndoableEditor {
+
 
     /**
      * Tells is the editor is dirty (if changes were made since opening or since last time {@link #markClean()} was called).
@@ -71,7 +72,7 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @param configuration the configuration object
      * @param file the file object
      */
-    void configure(EmbeddedTextEditorConfiguration configuration, FileNode file);
+    void configure(TextEditorConfiguration configuration, FileNode file);
 
     /**
      * Returns the instance of embedded document for this editor.

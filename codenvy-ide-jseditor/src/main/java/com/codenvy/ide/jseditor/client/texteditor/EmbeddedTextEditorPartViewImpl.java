@@ -20,7 +20,7 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
@@ -82,12 +82,12 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public void configure(final EmbeddedTextEditorConfiguration configuration) {
+    public void configure(final TextEditorConfiguration configuration) {
         configure(configuration, null);
     }
 
     @Override
-    public void configure(final EmbeddedTextEditorConfiguration configuration, final FileNode file) {
+    public void configure(final TextEditorConfiguration configuration, final FileNode file) {
         if (file != null) {
             final List<String> types = this.fileTypeIdentifier.identifyType(file);
             if (types != null && !types.isEmpty()) {

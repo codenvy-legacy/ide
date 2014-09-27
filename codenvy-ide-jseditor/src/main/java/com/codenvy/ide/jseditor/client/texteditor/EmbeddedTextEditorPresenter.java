@@ -26,7 +26,7 @@ import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -58,7 +58,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     private final DocumentStorage documentStorage;
 
-    private EmbeddedTextEditorConfiguration configuration;
+    private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
     private EmbeddedTextEditorPartView      editor;
     private OutlineImpl                     outline;
@@ -181,7 +181,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     }
 
     @Override
-    public void initialize(@Nonnull EmbeddedTextEditorConfiguration configuration,
+    public void initialize(@Nonnull TextEditorConfiguration configuration,
                            @Nonnull NotificationManager notificationManager) {
         this.configuration = configuration;
         this.notificationManager = notificationManager;
@@ -189,7 +189,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     }
 
     @Override
-    public EmbeddedTextEditorConfiguration getConfiguration() {
+    public TextEditorConfiguration getConfiguration() {
         return configuration;
     }
 
