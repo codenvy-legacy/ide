@@ -12,10 +12,11 @@ package com.codenvy.ide.jseditor.client.document;
 
 
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
- * An abstraction over the editor representatin of the document.
+ * An abstraction over the editor representation of the document.
  *
  * @author "Mickaël Leduque"
  */
@@ -67,32 +68,6 @@ public interface EmbeddedDocument {
      * @return the contents
      */
     String getContents();
-
-    /**
-     * A position in the text editor.
-     *
-     * @author "Mickaël Leduque"
-     */
-    public class TextPosition {
-        /** The line in the text. */
-        private final int line;
-
-        /** The character position on the line. */
-        private final int character;
-
-        public TextPosition(int line, int character) {
-            this.line = line;
-            this.character = character;
-        }
-
-        public int getLine() {
-            return line;
-        }
-
-        public int getCharacter() {
-            return character;
-        }
-    }
 
     /**
      * Returns the document handle.

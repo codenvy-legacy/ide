@@ -20,7 +20,7 @@ import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.texteditor.outline.CodeBlock;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.outline.CodeBlockDataAdapter;
 import com.codenvy.ide.outline.OutlineImpl.OutlineView;
 import com.codenvy.ide.outline.OutlineViewImpl;

@@ -11,7 +11,6 @@
 package com.codenvy.ide.jseditor.client.infopanel;
 
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.events.CursorActivityEvent;
@@ -19,6 +18,7 @@ import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeHandler;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.shared.GWT;
