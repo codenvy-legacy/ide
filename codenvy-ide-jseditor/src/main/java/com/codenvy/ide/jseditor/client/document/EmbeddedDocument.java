@@ -70,6 +70,13 @@ public interface EmbeddedDocument {
     String getContents();
 
     /**
+     * Returns the document text size.
+     * @return the document size
+     */
+    int getContentsCharCount();
+
+
+    /**
      * Returns the document handle.
      * @return the document handle
      */
