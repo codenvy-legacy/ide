@@ -12,8 +12,11 @@
 -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
-    <ui:style>
+	<ui:with field='locale'
+		type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant' />
+	<ui:with field='resources'
+		type='com.codenvy.ide.extension.runner.client.RunnerResources' />
+	<ui:style>
         @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
         .field {
             background-color: InputBackgroundColor;
@@ -22,76 +25,100 @@
             border-radius: 1px;
             box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
             font-size: 12px;
-            padding-left: 8px;
-            height: 20px;
-        }
-        .spaceRight {
-            margin-right: 8px;
-            margin-top: 1px;
+            padding-left: 5px;
         }
 
         .mainDoc {
             margin: 15px;
+			min-height: 420px;
+			max-height: 450px;
         }
 
-        .labelPosition {
-            position: relative;
-            line-height: 29px;
-            margin-left: 20px;
+		.margin20 {
+			margin-left: 20px;
+		}
 
-        }
-        .gwt-TextBox {
-            background-color: InputBackgroundColor;
-            color: #dbdbdb;
-            border: 1px solid #191c1e;
-            border-radius: 1px;
-            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
-            font-size: 12px;
-            padding-left: 8px;
-            height: 20px;
-            text-align: center;
-        }
+		.marginTop10 {
+			margin-top: 10px;
+		}
+
+		.margin10 {
+			margin-left: 10px;
+			margin-top: 10px;
+		}
     </ui:style>
-    <g:DockLayoutPanel unit="PX" debugId="mavenPageView-mainPanel" addStyleNames="{style.mainDoc}">
-        <g:north size="50">
-            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                <g:west size="180">
-                    <g:FlowPanel>
-                        <g:Label text="{locale.selectRunnerPageViewEnvironmentTypeLabel}"
-                                 addStyleNames="{style.labelPosition}"/>
-                    </g:FlowPanel>
-                </g:west>
-                <g:center>
-                    <g:SimplePanel addStyleNames="{style.spaceRight}">
-                        <g:SimplePanel>
-                            <g:ListBox ui:field="runnerBox" width="396px" height="29px" addStyleNames="{style.field}"/>
-                        </g:SimplePanel>
-                    </g:SimplePanel>
-                </g:center>
-            </g:DockLayoutPanel>
-        </g:north><g:north size="40">
-            <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                <g:west size="180">
-                    <g:FlowPanel>
-                        <g:Label text="{locale.selectRunnerPageViewEnvironmentLabel}"
-                                 addStyleNames="{style.labelPosition}"/>
-                    </g:FlowPanel>
-                </g:west>
-                <g:center>
-                    <g:SimplePanel addStyleNames="{style.spaceRight}">
-                        <g:SimplePanel>
-                            <g:ListBox ui:field="environmentBox" width="396px" height="29px" addStyleNames="{style.field}"/>
-                        </g:SimplePanel>
-                    </g:SimplePanel>
-                </g:center>
-            </g:DockLayoutPanel>
-        </g:north>
-        <g:north size="30">
-            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
-                <g:Label text="{locale.selectRunnerPageViewMemoryRecommendedLabel}" width="504px" addStyleNames="{style.labelPosition}"/>
-                <g:TextBox readOnly="false" ui:field="recommendedMemory" height="12px" width="40px" maxLength="4" addStyleNames="{style.gwt-TextBox}"
+	<g:DockLayoutPanel unit="PX" debugId="mavenPageView-mainPanel"
+		addStyleNames="{style.mainDoc}">
+		<g:center>
+			<g:DockLayoutPanel unit="PX" width="100%" height="100%">
+				<g:north size="34">
+					<g:Label text="{locale.selectRunnerPageEnvironmentTypeTitle}"
+						styleName="{resources.runner.titleBox}"></g:Label>
+				</g:north>
+				<g:north size="30">
+					<g:Label text="{locale.selectRunnerPageEnvironmentTypeDescription}"
+						addStyleNames="{style.margin10} {resources.runner.descriptionBox}"></g:Label>
+				</g:north>
+				<g:north size="30">
+					<g:Label text="{locale.selectRunnerPageEnvironmentTypeField}"
+						addStyleNames="{style.margin10} {resources.runner.fieldTitle}"></g:Label>
+				</g:north>
+				<g:north size="34">
+					<g:ListBox ui:field="technologyBox" width="400px" height="24px"
+						addStyleNames="{style.field} {style.margin20}" />
+				</g:north>
+				<g:north size="30">
+					<g:Label text="{locale.selectRunnerPageEnvironmentTargetField}"
+						addStyleNames="{style.margin10} {resources.runner.fieldTitle}" ui:field="targetLabel"></g:Label>
+				</g:north>
+				<g:north size="30">
+					<g:FlowPanel height="30px">
+						<g:RadioButton name="runnerEnvironmentTarget"
+							text="{locale.selectRunnerPageWebappTargetField}" addStyleNames="{resources.runner.radioButton}"
+							ui:field="webAppTarget" debugId="project-selectRunnerPage-webAppTarget" />
+						<g:RadioButton name="runnerEnvironmentTarget"
+							text="{locale.selectRunnerPageStandaloneTargetField}" addStyleNames="{resources.runner.radioButton}"
+							ui:field="standaloneTarget" debugId="project-selectRunnerPage-standaloneTarget" />
+						<g:RadioButton name="runnerEnvironmentTarget"
+							text="{locale.selectRunnerPageConsoleTargetField}" addStyleNames="{resources.runner.radioButton}"
+							ui:field="consoleTarget" debugId="project-selectRunnerPage-consoleTarget" />
+						<g:RadioButton name="runnerEnvironmentTarget"
+							text="{locale.selectRunnerPageMobileTargetField}" addStyleNames="{resources.runner.radioButton}"
+							ui:field="mobileTarget" debugId="project-selectRunnerPage-mobileTarget" />
+					</g:FlowPanel>
+				</g:north>
+				<g:north size="30">
+					<g:Label text="{locale.selectRunnerPageEnvironmentSubTechnologyField}"
+						addStyleNames="{style.margin10} {resources.runner.fieldTitle}" ui:field="subTechLabel"></g:Label>
+				</g:north>
+				<g:center>
+					<g:FlowPanel width="100%" height="100%" ui:field="subTechPlaceHolder">
+					</g:FlowPanel>
+				</g:center>
+			</g:DockLayoutPanel>
+		</g:center>
+		<g:south size="40">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE" addStyleNames="{style.margin10}">
+                <g:Label text="{locale.selectRunnerPageViewMemoryRecommendedLabel}" width="165px" addStyleNames="{resources.runner.fieldTitle}"/>
+                <g:TextBox readOnly="false" ui:field="recommendedMemory" height="18px" width="40px" maxLength="4" addStyleNames="{style.field}"
                            debugId="project-selectRunnerPage-recommendedMemory"/>
             </g:HorizontalPanel>
-        </g:north>
-    </g:DockLayoutPanel>
+        </g:south>
+		<g:south size="110">
+			<g:DockLayoutPanel unit="PX" styleName="{style.marginTop10}">
+				<g:north size="34">
+					<g:Label text="{locale.selectRunnerPageEnvironmentTitle}"
+						styleName="{resources.runner.titleBox}"></g:Label>
+				</g:north>
+				<g:north size="30">
+					<g:Label text="{locale.selectRunnerPageEnvironmentField}"
+						addStyleNames="{style.margin10} {resources.runner.fieldTitle}"></g:Label>
+				</g:north>
+				<g:center>
+					<g:ListBox ui:field="environmentBox" width="400px"
+						height="24px" addStyleNames="{style.field} {style.margin20}" />
+				</g:center>
+			</g:DockLayoutPanel>
+		</g:south>
+	</g:DockLayoutPanel>
 </ui:UiBinder>
