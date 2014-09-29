@@ -10,8 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+
+import java.util.List;
+
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
@@ -155,4 +160,17 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      */
     PositionConverter getPositionConverter();
 
+    /**
+     * Display the completion proposals.
+     * 
+     * @param proposals the proposals
+     */
+    void showCompletionsProposals(List<CompletionProposal> proposals);
+
+    /**
+     * Display the completion proposals.
+     * 
+     * @param completionsSource the completion source
+     */
+    void showCompletionProposals(CompletionsSource completionsSource);
 }
