@@ -28,6 +28,9 @@ import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
+import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
+import com.codenvy.ide.jseditor.client.reconciler.ReconcilerFactory;
+import com.codenvy.ide.jseditor.client.reconciler.ReconcilerImpl;
 import com.codenvy.ide.jseditor.client.requirejs.ModuleHolder;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartViewImpl;
@@ -83,6 +86,11 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the document position model
         bind(DocumentPositionMap.class).to(DocumentPositionMapImpl.class);
+
+        // bind the reconciler
+        install(new GinFactoryModuleBuilder()
+                                             .implement(Reconciler.class, ReconcilerImpl.class)
+                                             .build(ReconcilerFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation
