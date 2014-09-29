@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions.find;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.google.inject.Inject;
@@ -22,16 +23,19 @@ import com.google.inject.Singleton;
 @Singleton
 public class FindActionAction extends Action {
 
-    private FindActionPresenter presenter;
+    private       FindActionPresenter  presenter;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public FindActionAction(FindActionPresenter presenter) {
-        super("Find Action","Find Action by name");
+    public FindActionAction(FindActionPresenter presenter, AnalyticsEventLogger eventLogger) {
+        super("Find Action", "Find Action by name");
         this.presenter = presenter;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         presenter.show();
     }
 }

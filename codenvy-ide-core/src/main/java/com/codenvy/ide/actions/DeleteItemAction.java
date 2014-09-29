@@ -29,9 +29,9 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class DeleteItemAction extends Action {
-    private AnalyticsEventLogger eventLogger;
-    private SelectionAgent       selectionAgent;
-    private DeleteNodeHandler    deleteNodeHandler;
+    private final AnalyticsEventLogger eventLogger;
+    private       SelectionAgent       selectionAgent;
+    private       DeleteNodeHandler    deleteNodeHandler;
 
     @Inject
     public DeleteItemAction(Resources resources,
@@ -47,7 +47,7 @@ public class DeleteItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Delete file");
+        eventLogger.log(this);
 
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {

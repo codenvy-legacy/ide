@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.app.AppContext;
@@ -38,7 +39,8 @@ public class NewCssFileAction extends DefaultNewResourceAction {
                             SelectionAgent selectionAgent,
                             EditorAgent editorAgent,
                             ProjectServiceClient projectServiceClient,
-                            EventBus eventBus) {
+                            EventBus eventBus,
+                            AnalyticsEventLogger eventLogger) {
         super(localizationConstant.newCssFileActionTitle(),
               localizationConstant.newCssFileActionDescription(),
               webExtensionResource.css(),
@@ -47,7 +49,8 @@ public class NewCssFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
     }
 
     @Override

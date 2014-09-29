@@ -45,7 +45,7 @@ public class NavigateToFileAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Navigate to file");
+        eventLogger.log(this);
         presenter.showDialog();
     }
 

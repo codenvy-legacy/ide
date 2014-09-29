@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -27,14 +28,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class ChangeProjectTypeAction extends Action {
 
-    private AppContext                appContext;
-    private NewProjectWizardPresenter wizardPresenter;
+    private       AppContext                appContext;
+    private       NewProjectWizardPresenter wizardPresenter;
+    private final AnalyticsEventLogger      eventLogger;
 
     @Inject
-    public ChangeProjectTypeAction(AppContext appContext, NewProjectWizardPresenter wizardPresenter) {
+    public ChangeProjectTypeAction(AppContext appContext, NewProjectWizardPresenter wizardPresenter, AnalyticsEventLogger eventLogger) {
         super("Project Configuration...", "Change project type", null, null);
         this.appContext = appContext;
         this.wizardPresenter = wizardPresenter;
+        this.eventLogger = eventLogger;
     }
 
     @Override
@@ -44,6 +47,7 @@ public class ChangeProjectTypeAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         WizardContext context = new WizardContext();
         context.putData(ProjectWizard.PROJECT, appContext.getCurrentProject().getProjectDescription());
         wizardPresenter.show(context);

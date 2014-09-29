@@ -64,7 +64,7 @@ public class CloseProjectAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Close project");
+        eventLogger.log(this);
 
         if (appContext.getCurrentProject() != null) {
             final ApplicationProcessDescriptor processDescriptor = appContext.getCurrentProject().getProcessDescriptor();

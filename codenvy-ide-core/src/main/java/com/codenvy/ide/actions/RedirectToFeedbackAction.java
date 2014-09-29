@@ -40,7 +40,7 @@ public class RedirectToFeedbackAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Open Feedback window");
+        eventLogger.log(this);
         Window.open(locale.actionRedirectToFeedbackUrl(), "_blank", "");
     }
 

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -36,7 +37,8 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
                                    SelectionAgent selectionAgent,
                                    EditorAgent editorAgent,
                                    ProjectServiceClient projectServiceClient,
-                                   EventBus eventBus) {
+                                   EventBus eventBus,
+                                   AnalyticsEventLogger eventLogger) {
         super(localizationConstant.newJavaScriptFileActionTitle(),
               localizationConstant.newJavaScriptFileActionDescription(),
               webExtensionResource.js(),
@@ -45,7 +47,8 @@ public class NewJavaScriptFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class RedirectToHelpAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Open Help window");
+        eventLogger.log(this);
         Window.open(locale.actionRedirectToHelpUrl(), "_blank", "");
     }
 

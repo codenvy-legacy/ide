@@ -37,7 +37,7 @@ public class NewProjectWizardAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: New project from wizard");
+        eventLogger.log(this);
         wizard.show();
     }
 }

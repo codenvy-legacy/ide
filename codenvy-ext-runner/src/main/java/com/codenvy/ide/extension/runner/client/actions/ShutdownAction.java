@@ -48,7 +48,7 @@ public class ShutdownAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Stop application");
+        eventLogger.log(this);
         runController.stopActiveProject(true);
     }
 
