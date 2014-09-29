@@ -46,6 +46,9 @@ import javax.inject.Singleton;
 @ExtensionGinModule
 public class JsEditorGinModule extends AbstractGinModule {
 
+    /** The default text file type: text/plain. */
+    private static final String CONTENT_TYPE_TEXT_PLAIN = "text/plain";
+
     @Override
     protected void configure() {
         bind(ModuleHolder.class).in(Singleton.class);
@@ -92,7 +95,7 @@ public class JsEditorGinModule extends AbstractGinModule {
     protected FileType textPlainFileType(final JsEditorConstants constants) {
         return new FileType(constants.defaultEditorDescription(),
                             (SVGResource)null,
-                            EditorTypeMapping.CONTENT_TYPE_TEXT_PLAIN,
+                            CONTENT_TYPE_TEXT_PLAIN,
                             (String)null);
     }
 }
