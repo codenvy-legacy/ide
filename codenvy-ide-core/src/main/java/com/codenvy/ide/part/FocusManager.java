@@ -82,6 +82,9 @@ public class FocusManager {
     protected void setActivePartStack(PartStack partStack) {
         // nothing to do
         if (activePartStack == partStack || partStack == null) {
+            if (activePartStack != null) {
+                activePartChanged(activePartStack.getActivePart());
+            }
             return;
         }
         // drop focus from partStacks
