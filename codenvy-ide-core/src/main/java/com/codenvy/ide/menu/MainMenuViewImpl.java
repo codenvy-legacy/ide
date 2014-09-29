@@ -312,8 +312,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         }
     }
 
-    private class SeparatorItem extends Composite {
-        private SeparatorItem() {
+    private static class SeparatorItem extends Composite {
+        public SeparatorItem() {
             final FlowPanel widget = new FlowPanel();
             widget.addStyleName(resources.menuCss().rightPanelSeparator());
 
