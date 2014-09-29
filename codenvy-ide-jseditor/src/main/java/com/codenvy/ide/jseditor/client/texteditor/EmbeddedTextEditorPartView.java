@@ -32,19 +32,52 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
                                                     IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
                                                     HasChangeHandlers, UndoableEditor {
 
+    /**
+     * Tells is the editor is dirty (if changes were made since opening or since last time {@link #markClean()} was called).
+     *
+     * @return the dirty state
+     */
     boolean isDirty();
 
+    /**
+     * Marks the editor as clean (not dirty).
+     */
     void markClean();
 
+    /**
+     * Returns the whole editor contents as string.
+     *
+     * @return the contents
+     */
     String getContents();
 
+    /**
+     * Sets the editor contents.
+     *
+     * @param contents the new contents
+     */
     void setContents(String contents);
 
-
+    /**
+     * Returns an object that describes the current selection (primary selection if the editor implementation supports multiple selection).
+     *
+     * @return the selection
+     */
     Region getSelectedRegion();
 
+    /**
+     * Configures the editor.
+     *
+     * @param configuration the configuration object
+     * @param file the file object
+     */
     void configure(EmbeddedTextEditorConfiguration configuration, FileNode file);
 
+    /**
+     * Returns the instance of embedded document for this editor.
+     *
+     * @return the document
+     */
     EmbeddedDocument getEmbeddedDocument();
 
     /** Gives the focus to the editor. */
