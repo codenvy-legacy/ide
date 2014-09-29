@@ -16,6 +16,7 @@ import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
+import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
@@ -149,5 +150,12 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      * @param range the range to show
      */
     void setDisplayRange(Region range);
+
+    /**
+     * Returns a position converter relative to this editor (pixel coordinates <-> line char positions).
+     * 
+     * @return a position converter
+     */
+    PositionConverter getPositionConverter();
 
 }
