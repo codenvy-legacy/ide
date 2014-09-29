@@ -11,12 +11,10 @@
 package com.codenvy.ide.part.editor;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,7 +28,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -39,10 +37,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.google.gwt.dom.client.Element;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 
@@ -76,7 +72,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     FlowPanel tabsPanel;
 
     @UiField
-    DeckPanel contentPanel;
+    DeckLayoutPanel contentPanel;
 
     private ListButton listTabsButton;
 
