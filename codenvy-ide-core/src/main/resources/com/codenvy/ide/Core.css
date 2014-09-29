@@ -462,7 +462,7 @@ class for the document-level scrollbars. */
     color: #e7e7e7;
     background: #202020;
     padding: 10px 20px;
-    font-size: 7pt;
+    font-size: 8pt;
     position: fixed;
     z-index: 7;
     cursor: default;
