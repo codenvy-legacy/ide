@@ -22,24 +22,24 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to stop application server where app is launched.
+ * Action to stop launched app.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class StopAction extends Action {
+public class ShutdownAction extends Action {
 
     private final AnalyticsEventLogger eventLogger;
     private       AppContext           appContext;
     private       RunController        runController;
 
     @Inject
-    public StopAction(RunnerResources resources,
-                      RunnerLocalizationConstant localizationConstants,
-                      AnalyticsEventLogger eventLogger,
-                      AppContext appContext,
-                      RunController runController) {
-        super(localizationConstants.stopAppActionText(), localizationConstants.stopAppActionDescription(), null, resources.stopApp());
+    public ShutdownAction(RunnerResources resources,
+                          RunnerLocalizationConstant localizationConstants,
+                          AnalyticsEventLogger eventLogger,
+                          AppContext appContext,
+                          RunController runController) {
+        super(localizationConstants.shutdownActionText(), localizationConstants.shutdownActionDescription(), null, resources.shutdownApp());
         this.eventLogger = eventLogger;
         this.appContext = appContext;
         this.runController = runController;
@@ -48,7 +48,7 @@ public class StopAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Stop application");
+        eventLogger.log(this);
         runController.stopActiveProject(true);
     }
 
@@ -57,9 +57,7 @@ public class StopAction extends Action {
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
-            // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(currentProject.getRunner() != null
-                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setVisible(currentProject.getRunner() != null);
             e.getPresentation().setEnabled(runController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);

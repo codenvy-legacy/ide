@@ -15,6 +15,7 @@ import elemental.events.KeyboardEvent.KeyCode;
 import com.codenvy.ide.ui.Locale;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -51,7 +52,7 @@ public class AskValueDialog extends Window {
     private Locale locale = GWT.create(Locale.class);
 
     /**
-     * Create new dialog.
+     * Creates and displays new AskValueDialog.
      *
      * @param title
      *         the title for popup window
@@ -61,6 +62,43 @@ public class AskValueDialog extends Window {
      *         the callback that call after user interact
      */
     public AskValueDialog(String title, String message, final AskValueCallback callback) {
+        this(title, message, null, callback);
+    }
+
+    /**
+     * Creates and displays new AskValueDialog.
+     *
+     * @param title
+     *         the title for popup window
+     * @param message
+     *         the message for input field
+     * @param defaultValue
+     *         default value for input field
+     * @param callback
+     *         the callback that call after user interact
+     */
+    public AskValueDialog(final String title, final String message, final String defaultValue, final AskValueCallback callback) {
+        this(title, message, defaultValue, 0, 0, callback);
+    }
+
+    /**
+     * Creates and displays new AskValueDialog.
+     *
+     * @param title
+     *         the title for popup window
+     * @param message
+     *         the message for input field
+     * @param defaultValue
+     *         default value for input field
+     * @param selectionStartIndex
+     *         indicates the start position of selection
+     * @param selectionLength
+     *         indicates length of selection
+     * @param callback
+     *         the callback that call after user interact
+     */
+    public AskValueDialog(final String title, final String message, final String defaultValue,
+                          final int selectionStartIndex, final int selectionLength, final AskValueCallback callback) {
         this.callback = callback;
         Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
@@ -82,6 +120,19 @@ public class AskValueDialog extends Window {
         });
         getFooter().add(cancel);
         getFooter().add(ok);
+
+        if (defaultValue != null && !defaultValue.isEmpty()) {
+            value.setText(defaultValue);
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    //value.setSelectionRange(0, defaultValue.lastIndexOf('.'));
+                    value.setSelectionRange(selectionStartIndex, selectionLength);
+                }
+            });
+        }
+        this.ensureDebugId("askValueDialog-window");
+        this.value.ensureDebugId("askValueDialog-textBox");
     }
     
     @UiHandler("value")

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -27,17 +28,22 @@ import com.google.inject.Inject;
 
 public class RedoAction extends Action {
 
-    private EditorAgent editorAgent;
+    private       EditorAgent          editorAgent;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public RedoAction(EditorAgent editorAgent,
-                      CoreLocalizationConstant localization) {
+                      CoreLocalizationConstant localization,
+                      AnalyticsEventLogger eventLogger) {
         super(localization.redoName(), localization.redoDescription(), null);
         this.editorAgent = editorAgent;
+        this.eventLogger = eventLogger;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
+
         EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
 
         if (activeEditor != null && activeEditor instanceof UndoableEditor) {

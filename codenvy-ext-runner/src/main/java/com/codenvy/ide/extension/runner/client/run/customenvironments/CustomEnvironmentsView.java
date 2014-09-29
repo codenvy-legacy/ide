@@ -8,18 +8,17 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimages;
+package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 
 /**
- * The view of {@link EditImagesPresenter}.
+ * The view of {@link CustomEnvironmentsPresenter}.
  *
  * @author Artem Zatsarynnyy
  */
-public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
+public interface CustomEnvironmentsView extends View<CustomEnvironmentsView.ActionDelegate> {
 
     /**
      * Set state of the 'Remove' button.
@@ -38,12 +37,12 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
     void setEditButtonEnabled(boolean isEnabled);
 
     /**
-     * Set existing images.
+     * Set existing environment.
      *
-     * @param images
-     *         images array
+     * @param environments
+     *         environments array
      */
-    void setImages(Array<ItemReference> images);
+    void setEnvironments(Array<CustomEnvironment> environments);
 
     /** Close the dialog. */
     void closeDialog();
@@ -51,7 +50,7 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
     /** Show the dialog. */
     void showDialog();
 
-    /** Needs for delegate some function into ChangePerspective view. */
+    /** Needs for delegate some function into view. */
     public interface ActionDelegate {
         /** Called when 'Add' button clicked. */
         void onAddClicked();
@@ -65,7 +64,7 @@ public interface EditImagesView extends View<EditImagesView.ActionDelegate> {
         /** Called when 'Close' button clicked. */
         void onCloseClicked();
 
-        /** Called when image selected. */
-        void onImageSelected(ItemReference projectName);
+        /** Called when environment selected. */
+        void onEnvironmentSelected(CustomEnvironment projectName);
     }
 }

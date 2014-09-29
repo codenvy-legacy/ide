@@ -20,20 +20,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * 'Custom Images' menu group.
+ * 'Run With...' menu group.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class CustomImagesGroup extends DefaultActionGroup {
+public class RunWithGroup extends DefaultActionGroup {
     private final AppContext appContext;
 
     @Inject
-    public CustomImagesGroup(RunnerLocalizationConstant localizationConstants, RunnerResources resources, ActionManager actionManager,
-                             AppContext appContext) {
-        super(localizationConstants.customImagesActionTitle(), true, actionManager);
+    public RunWithGroup(RunnerLocalizationConstant localizationConstants, RunnerResources resources, ActionManager actionManager,
+                        AppContext appContext) {
+        super(localizationConstants.runWithActionTitle(), true, actionManager);
         this.appContext = appContext;
-        getTemplatePresentation().setSVGIcon(resources.customImages());
+        getTemplatePresentation().setDescription(localizationConstants.runWithActionDescription());
+        getTemplatePresentation().setSVGIcon(resources.runWith());
     }
 
     @Override

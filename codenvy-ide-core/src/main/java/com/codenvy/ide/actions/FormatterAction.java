@@ -46,7 +46,7 @@ public class FormatterAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Format file");
+        eventLogger.log(this);
         final EditorPartPresenter editor = editorAgent.getActiveEditor();
         if (editor instanceof HasHandlesOperationsView) {
             final HandlesTextOperations handlesOperationsView = ((HasHandlesOperationsView)editor).getView();

@@ -18,6 +18,7 @@ import com.codenvy.ide.api.action.ActionPlaces;
 import com.codenvy.ide.api.action.CustomComponentAction;
 import com.codenvy.ide.api.action.IdeActions;
 import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.action.Separator;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.CloseMenuHandler;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -158,8 +158,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
 
     private void add2Right(String place, Action action, PresentationFactory presentationFactory) {
         Presentation presentation = presentationFactory.getPresentation(action);
-        // todo find way to render non custom actions
-        if(action instanceof CustomComponentAction){
+
+        if (action instanceof Separator) {
+            rightPanel.add(new SeparatorItem());
+
+            // todo find way to render non custom actions
+        } else if (action instanceof CustomComponentAction) {
             CustomComponentAction customComponentAction = (CustomComponentAction)action;
             Widget component = customComponentAction.createCustomComponent(presentation);
             component.getElement().getStyle().setFloat(Style.Float.RIGHT);
@@ -308,4 +312,16 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         }
     }
 
+    private class SeparatorItem extends Composite {
+        private SeparatorItem() {
+            final FlowPanel widget = new FlowPanel();
+            widget.addStyleName(resources.menuCss().rightPanelSeparator());
+
+            for (int i = 0; i < 6; i++) {
+                widget.add(new FlowPanel());
+            }
+
+            initWidget(widget);
+        }
+    }
 }

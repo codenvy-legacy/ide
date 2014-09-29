@@ -208,7 +208,9 @@ public class PopupMenu extends Composite {
                 Presentation presentation = presentationFactory.getPresentation(menuItem);
 
                 if (presentation.getSVGIcon() != null) {
-                    table.setWidget(i, 0, new SVGImage(presentation.getSVGIcon()));
+                    SVGImage image = new SVGImage(presentation.getSVGIcon());
+                    image.getElement().getStyle().setMarginTop(2, Unit.PX);
+                    table.setWidget(i, 0, image);
                 } else {
                     Image image = null;
                     if (presentation.getIcon() != null) {

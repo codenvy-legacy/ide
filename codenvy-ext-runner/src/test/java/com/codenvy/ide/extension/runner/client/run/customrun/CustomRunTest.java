@@ -8,22 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.runner.client.run.CustomRunPresenter;
-import com.codenvy.ide.extension.runner.client.run.CustomRunView;
+import com.codenvy.ide.extension.runner.client.BaseTest;
+import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironment;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionsManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
@@ -56,11 +58,13 @@ import static org.mockito.Mockito.when;
 public class CustomRunTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
-    private CustomRunView      view;
+    private CustomRunView             view;
     @Mock
-    private DtoFactory         dtoFactory;
+    private DtoFactory                dtoFactory;
+    @Mock
+    private EnvironmentActionsManager environmentActionsManager;
     @InjectMocks
-    private CustomRunPresenter presenter;
+    private CustomRunPresenter        presenter;
     private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
 
     @Before
@@ -77,44 +81,6 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
-    public void shouldNotShowDialogWhenGetResourcesFailed() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Array<RunnerDescriptor>> callback = (AsyncRequestCallback<Array<RunnerDescriptor>>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, runnerDescriptors);
-                return callback;
-            }
-        }).when(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<ResourcesDescriptor> callback = (AsyncRequestCallback<ResourcesDescriptor>)arguments[0];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-
-
-        presenter.showDialog();
-
-        verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
-        verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-        verify(appContext, times(2)).getCurrentProject();
-        verify(view).setEnvironments((Array<RunnerEnvironment>)anyObject());
-        verify(notificationManager).showNotification((Notification)anyObject());
-        verify(view, never()).setRunnerMemorySize(anyString());
-        verify(view, never()).setTotalMemorySize(anyString());
-        verify(view, never()).setAvailableMemorySize(anyString());
-        verify(view, never()).showDialog();
-    }
-
-    @Test
     public void shouldShowDialog() throws Exception {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
@@ -125,6 +91,21 @@ public class CustomRunTest extends BaseTest {
         when(profileDescriptor.getPreferences()).thenReturn(null);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");
+
+        final Array<CustomEnvironment> customEnvironments = Collections.createArray();
+        customEnvironments.add(new CustomEnvironment("env_1"));
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] arguments = invocation.getArguments();
+                AsyncCallback<Array<CustomEnvironment>> callback = (AsyncCallback<Array<CustomEnvironment>>)arguments[1];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback, customEnvironments);
+                return callback;
+            }
+        }).when(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
+                                                                               Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
 
         doAnswer(new Answer() {
             @Override
@@ -150,9 +131,11 @@ public class CustomRunTest extends BaseTest {
 
         presenter.showDialog();
 
+        verify(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
+                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
         verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
         verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-        verify(view).setEnvironments(Matchers.<Array<RunnerEnvironment>>anyObject());
+        verify(view, times(2)).addEnvironments(Matchers.<Array<Environment>>anyObject());
         verify(view).setRunnerMemorySize(anyString());
         verify(view).setTotalMemorySize(anyString());
         verify(view).setAvailableMemorySize(anyString());
@@ -161,28 +144,9 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
-    public void shouldNotShowDialogWhenGetRunnersFailed() throws Exception {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Object[] arguments = invocation.getArguments();
-                AsyncRequestCallback<Array<RunnerDescriptor>> callback = (AsyncRequestCallback<Array<RunnerDescriptor>>)arguments[0];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
-                return callback;
-            }
-        }).when(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
-
-        presenter.showDialog();
-
-        verify(service).getRunners(Matchers.<AsyncRequestCallback<Array<RunnerDescriptor>>>anyObject());
-        verify(view, times(0)).showDialog();
-        verify(notificationManager).showNotification((Notification)anyObject());
-    }
-
-    @Test
     public void onRunClickedAndRunnerMemoryCorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
+        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
         when(view.getRunnerMemorySize()).thenReturn("128");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
@@ -192,7 +156,7 @@ public class CustomRunTest extends BaseTest {
 
         verify(view).close();
         verify(dtoFactory).createDto(eq(RunOptions.class));
-        verify(view).getSelectedEnvironment();
+        verify(view, times(2)).getSelectedEnvironment();
         verify(view, times(2)).getRunnerMemorySize();
         verify(view).getTotalMemorySize();
         verify(view).getAvailableMemorySize();
@@ -201,11 +165,12 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
-    public void onRunClickedAndTotalLessCustomRunMemory() throws Exception {
+    public void onRunClickedAndTotalLessThanCustomRunMemory() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("1024");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
+        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
         presenter.onRunClicked();
 
@@ -223,6 +188,7 @@ public class CustomRunTest extends BaseTest {
     public void onRunClickedAndCustomRunMemoryIncorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("not int");
+        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
         presenter.onRunClicked();
 
@@ -238,6 +204,7 @@ public class CustomRunTest extends BaseTest {
     public void onRunClickedAndCustomRunMemoryNotMultipleOf128() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("255");
+        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
         presenter.onRunClicked();
 
@@ -250,11 +217,12 @@ public class CustomRunTest extends BaseTest {
     }
 
     @Test
-    public void onRunClickedAndAvailableLessCustomRunMemory() throws Exception {
+    public void onRunClickedAndAvailableLessThanCustomRunMemory() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("512");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
+        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
         presenter.onRunClicked();
 

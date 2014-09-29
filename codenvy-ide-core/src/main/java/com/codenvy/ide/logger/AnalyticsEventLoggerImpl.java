@@ -12,12 +12,10 @@ package com.codenvy.ide.logger;
 
 import com.codenvy.api.analytics.shared.dto.EventParameters;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
-import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.api.user.shared.dto.UserDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.ExtensionDescription;
-import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.Config;
@@ -30,13 +28,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
 import static com.google.gwt.http.client.RequestBuilder.POST;
+import static java.lang.Math.max;
 
 /**
  * API to track Analytics events.
@@ -48,12 +46,12 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private static final String IDE_EVENT          = "ide-usage";
     private static final String API_ANALYTICS_PATH = "/analytics/log/";
 
-    private static final String WS_PARAM           = "WS";
-    private static final String USER_PARAM         = "USER";
-    private static final String SOURCE_PARAM       = "SOURCE";
-    private static final String ACTION_PARAM       = "ACTION";
-    private static final String PROJECT_NAME_PARAM = "PROJECT";
-    private static final String PROJECT_TYPE_PARAM = "TYPE";
+    protected static final String WS_PARAM           = "WS";
+    protected static final String USER_PARAM         = "USER";
+    protected static final String SOURCE_PARAM       = "SOURCE";
+    protected static final String ACTION_PARAM       = "ACTION";
+    protected static final String PROJECT_NAME_PARAM = "PROJECT";
+    protected static final String PROJECT_TYPE_PARAM = "TYPE";
 
     private static final String EMPTY_PARAM_VALUE = "";
 
@@ -61,14 +59,12 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private final UserServiceClient      user;
     private final AppContext             appContext;
     private final MessageBus             messageBus;
-    private final ExtensionRegistry      extensionRegistry;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
     private String currentUser;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
-                                    ExtensionRegistry extensionRegistry,
                                     UserServiceClient user,
                                     AppContext appContext,
                                     MessageBus messageBus,
@@ -77,25 +73,24 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         this.user = user;
         this.appContext = appContext;
         this.messageBus = messageBus;
-        this.extensionRegistry = extensionRegistry;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         saveCurrentUser();
     }
 
     @Override
-    public void log(Class<?> extensionClass, String action, Map<String, String> additionalParams) {
-        doLog(IDE_EVENT, action, getSource(extensionClass), additionalParams);
+    public void log(Object action) {
+        doLog(IDE_EVENT, action, null, null);
     }
 
     @Override
-    public void log(Class<?> extensionClass, String action) {
-        doLog(IDE_EVENT, action, getSource(extensionClass), Collections.<String, String>emptyMap());
+    public void log(Object action, String actionName) {
+        doLog(IDE_EVENT, action, actionName, null);
     }
 
     @Override
-    public void log(String action) {
-        doLog(IDE_EVENT, action, null, Collections.<String, String>emptyMap());
+    public void log(Object action, String actionName, Map<String, String> additionalParams) {
+        doLog(IDE_EVENT, action, actionName, additionalParams);
     }
 
     @Override
@@ -103,22 +98,62 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         doLog(event, null, null, additionalParams);
     }
 
-    private void doLog(String event,
-                       @Nullable String action,
-                       @Nullable String source,
-                       Map<String, String> additionalParams) {
-
-        validate(action, additionalParams);
-
-        additionalParams = new HashMap<>(additionalParams);
-        putReservedParameters(action, source, additionalParams);
-
-        send(event, additionalParams);
+    @Override
+    @Deprecated
+    public void log(String action) {
+        // do nothing
     }
 
-    private void putReservedParameters(@Nullable String action,
-                                       @Nullable String source,
-                                       Map<String, String> additionalParams) {
+    @Override
+    @Deprecated
+    public void log(Class<?> actionClass, String actionName) {
+        doLog(IDE_EVENT, actionClass, actionName, null);
+    }
+
+    @Override
+    @Deprecated
+    public void log(Class<?> actionClass, String actionName, Map<String, String> additionalParams) {
+        doLog(IDE_EVENT, actionClass, actionName, additionalParams);
+    }
+
+    private void doLog(@Nullable String event,
+                       @Nullable Object action,
+                       @Nullable String actionName,
+                       @Nullable Map<String, String> additionalParams) {
+        // we can put here additional params depending on action class
+        if (action != null) {
+            doLog(event, action.getClass(), actionName, additionalParams);
+        }
+    }
+
+    private void doLog(@Nullable String event,
+                       @Nullable Class<?> actionClass,
+                       @Nullable String actionName,
+                       @Nullable Map<String, String> additionalParams) {
+        if (event == null) {
+            return;
+        }
+
+        additionalParams = additionalParams == null ? new HashMap<String, String>() : new HashMap<>(additionalParams);
+        validate(additionalParams);
+
+        if (actionName != null) {
+            validate(actionName, MAX_PARAM_VALUE_LENGTH);
+            additionalParams.put(ACTION_PARAM, actionName);
+        }
+
+        if (actionClass != null) {
+            String actionClassName = actionClass.getName();
+            actionClassName = actionClassName.substring(max(0, actionClassName.length() - MAX_PARAM_VALUE_LENGTH));
+            additionalParams.put(SOURCE_PARAM, actionClassName);
+        }
+
+        putReservedParameters(additionalParams);
+        send(event, additionalParams);
+
+    }
+
+    private void putReservedParameters(Map<String, String> additionalParams) {
         CurrentProject project = appContext.getCurrentProject();
         if (project != null) {
             putIfNotNull(PROJECT_NAME_PARAM, project.getRootProject().getName(), additionalParams);
@@ -126,9 +161,11 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         }
 
         putIfNotNull(USER_PARAM, currentUser, additionalParams);
-        putIfNotNull(WS_PARAM, Config.getWorkspaceName(), additionalParams);
-        putIfNotNull(ACTION_PARAM, action, additionalParams);
-        putIfNotNull(SOURCE_PARAM, source, additionalParams);
+        putIfNotNull(WS_PARAM, getWorkspace(), additionalParams);
+    }
+
+    protected String getWorkspace() {
+        return Config.getWorkspaceName();
     }
 
     private void putIfNotNull(String key,
@@ -139,7 +176,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         }
     }
 
-    private void validate(@Nullable String action, Map<String, String> additionalParams) throws IllegalArgumentException {
+    private void validate(Map<String, String> additionalParams) throws IllegalArgumentException {
         if (additionalParams.size() > MAX_PARAMS_NUMBER) {
             throw new IllegalArgumentException("The number of parameters exceeded the limit in " + MAX_PARAMS_NUMBER);
         }
@@ -148,35 +185,22 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
             String param = entry.getKey();
             String value = entry.getValue();
 
-            if (param.length() > MAX_PARAM_NAME_LENGTH) {
-                throw new IllegalArgumentException(
-                        "The length of parameter name " + param + " exceeded the length in "
-                        + MAX_PARAM_NAME_LENGTH + " characters");
-
-            } else if (value.length() > MAX_PARAM_VALUE_LENGTH) {
-                throw new IllegalArgumentException(
-                        "The length of parameter value " + value + " exceeded the length in "
-                        + MAX_PARAM_VALUE_LENGTH + " characters");
-            }
-        }
-
-        if (action != null && action.length() > MAX_PARAM_VALUE_LENGTH) {
-            throw new IllegalArgumentException("The length of action name exceeded the length in "
-                                               + MAX_PARAM_VALUE_LENGTH + " characters");
-
+            validate(param, MAX_PARAM_NAME_LENGTH);
+            validate(value, MAX_PARAM_VALUE_LENGTH);
         }
     }
 
-    private String getSource(Class<?> extensionClass) {
-        ExtensionDescription description = extensionRegistry.getExtensionDescriptions().get(extensionClass.getName());
-        return description != null ? description.getTitle() : EMPTY_PARAM_VALUE;
+    private void validate(String s, int maxLength) {
+        if (s.length() > maxLength) {
+            throw new IllegalArgumentException(
+                    "The length of '" + s.substring(0, maxLength) + "...' exceeded the maximum in " + maxLength + " characters");
+        }
     }
-
 
     private void saveCurrentUser() {
-        user.getCurrentUser(new AsyncRequestCallback<User>(dtoUnmarshallerFactory.newUnmarshaller(User.class)) {
+        user.getCurrentUser(new AsyncRequestCallback<UserDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(UserDescriptor.class)) {
             @Override
-            protected void onSuccess(User result) {
+            protected void onSuccess(UserDescriptor result) {
                 if (result != null) {
                     currentUser = result.getEmail();
                 } else {
@@ -191,7 +215,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         });
     }
 
-    private void send(String event, Map<String, String> parameters) {
+    protected void send(String event, Map<String, String> parameters) {
         EventParameters additionalParams = dtoFactory.createDto(EventParameters.class).withParams(parameters);
         final String json = dtoFactory.toJson(additionalParams);
 

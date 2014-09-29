@@ -40,7 +40,7 @@ public class SaveAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Save file");
+        eventLogger.log(this);
         editorAgent.getActiveEditor().doSave();
     }
 

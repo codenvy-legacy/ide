@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -43,7 +44,8 @@ public class NewFolderAction extends DefaultNewResourceAction {
                            SelectionAgent selectionAgent,
                            Resources resources,
                            ProjectServiceClient projectServiceClient,
-                           EventBus eventBus) {
+                           EventBus eventBus,
+                           AnalyticsEventLogger eventLogger) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
@@ -52,12 +54,15 @@ public class NewFolderAction extends DefaultNewResourceAction {
               selectionAgent,
               null,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
         this.localizationConstant = localizationConstant;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
+
         new AskValueDialog(localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
                            localizationConstant.newResourceLabel(), new AskValueCallback() {
             @Override

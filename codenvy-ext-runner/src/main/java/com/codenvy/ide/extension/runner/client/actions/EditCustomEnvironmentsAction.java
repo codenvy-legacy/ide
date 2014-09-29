@@ -10,40 +10,46 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesPresenter;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Action to open a dialog for editing custom Docker-images.
+ * Action to open a dialog for editing custom environments.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class EditImagesAction extends Action {
+public class EditCustomEnvironmentsAction extends Action {
 
-    private final AppContext          appContext;
-    private final EditImagesPresenter editImagesPresenter;
+    private final AppContext                  appContext;
+    private final CustomEnvironmentsPresenter customEnvironmentsPresenter;
+    private final AnalyticsEventLogger        eventLogger;
 
     @Inject
-    public EditImagesAction(RunnerResources resources,
-                            RunnerLocalizationConstant constants,
-                            AppContext appContext,
-                            EditImagesPresenter editImagesPresenter) {
-        super(constants.editImagesActionText(), constants.editImagesActionDescription(), null, resources.editImages());
+    public EditCustomEnvironmentsAction(RunnerResources resources,
+                                        RunnerLocalizationConstant constants,
+                                        AppContext appContext,
+                                        CustomEnvironmentsPresenter customEnvironmentsPresenter,
+                                        AnalyticsEventLogger eventLogger) {
+        super(constants.editCustomEnvironmentsActionText(), constants.editCustomEnvironmentsActionDescription(), null,
+              resources.editCustomEnvironments());
         this.appContext = appContext;
-        this.editImagesPresenter = editImagesPresenter;
+        this.customEnvironmentsPresenter = customEnvironmentsPresenter;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        editImagesPresenter.showDialog();
+        eventLogger.log(this);
+        customEnvironmentsPresenter.showDialog();
     }
 
     /** {@inheritDoc} */

@@ -18,12 +18,12 @@ import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagePresenter;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
 import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
-import com.codenvy.ide.extension.runner.client.run.CustomRunView;
-import com.codenvy.ide.extension.runner.client.run.CustomRunViewImpl;
-import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesView;
-import com.codenvy.ide.extension.runner.client.run.customimages.EditImagesViewImpl;
-import com.codenvy.ide.extension.runner.client.run.customimages.ImageActionFactory;
-import com.codenvy.ide.extension.runner.client.run.customimages.ImageActionManager;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsView;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsViewImpl;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionFactory;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionsManager;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunView;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunViewImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
@@ -47,16 +47,16 @@ public class RunnerGinModule extends AbstractGinModule {
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(RamManagePresenter.class);
 
-        bind(ImageActionManager.class).asEagerSingleton();
-        install(new GinFactoryModuleBuilder().build(ImageActionFactory.class));
-        bind(EditImagesView.class).to(EditImagesViewImpl.class).in(Singleton.class);
+        bind(EnvironmentActionsManager.class).asEagerSingleton();
+        install(new GinFactoryModuleBuilder().build(EnvironmentActionFactory.class));
+        bind(CustomEnvironmentsView.class).to(CustomEnvironmentsViewImpl.class).in(Singleton.class);
     }
 
-    /** Provides project-relative path of the folder for user-defined recipes for runner. */
+    /** Provides project-relative path to the folder for custom environments for runner. */
     @Provides
-    @Named("recipesFolderPath")
+    @Named("envFolderPath")
     @Singleton
-    protected String provideRecipesFolderRelPath() {
-        return ".codenvy/recipes";
+    protected String provideEnvironmentsFolderRelPath() {
+        return ".codenvy/environments";
     }
 }

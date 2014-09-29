@@ -13,7 +13,7 @@ package com.codenvy.ide.api.app;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 
 /**
- * Describe current state of project.
+ * Describes current state of user.
  *
  * @author Vitaly Parfonov
  */

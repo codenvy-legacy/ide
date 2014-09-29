@@ -13,13 +13,17 @@ package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import java.util.ArrayList;
@@ -38,9 +42,12 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     ListBox runnerBox;
     @UiField
     ListBox environmentBox;
+    @UiField
+    TextBox recommendedMemory;
     private ActionDelegate delegate;
     private Map<String, RunnerDescriptor> runnerDescriptorMap = new HashMap<>();
     private List<String>                  runnerNames         = new ArrayList<>();
+    private Array<RunnerEnvironment>      runnerEnvironments  = Collections.createArray();
 
     public SelectRunnerPageViewImpl() {
         rootElement = ourUiBinder.createAndBindUi(this);
@@ -50,7 +57,8 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     void runnerChanged(ChangeEvent event) {
         String value = runnerBox.getValue(runnerBox.getSelectedIndex());
         environmentBox.clear();
-        if(value == null){
+        runnerEnvironments.clear();
+        if (value == null) {
             delegate.runnerSelected(null);
             delegate.runnerEnvironmentSelected(null);
             environmentBox.addItem("---", (String)null);
@@ -62,10 +70,9 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
             if (environments != null && !environments.isEmpty()) {
                 for (String key : environments.keySet()) {
                     RunnerEnvironment environment = environments.get(key);
-                    environmentBox.addItem(environment.getDescription(), environment.getId());
+                    runnerEnvironments.add(environment);
+                    environmentBox.addItem(environment.getDisplayName(), environment.getId());
                 }
-
-                delegate.runnerEnvironmentSelected(environmentBox.getValue(environmentBox.getSelectedIndex()));
             } else {
                 environmentBox.addItem("---", (String)null);
             }
@@ -77,6 +84,11 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     @UiHandler("environmentBox")
     void environmentChanged(ChangeEvent event) {
         delegate.runnerEnvironmentSelected(environmentBox.getValue(environmentBox.getSelectedIndex()));
+    }
+
+    @UiHandler("recommendedMemory")
+    void recommendedMemoryChanged(KeyUpEvent event) {
+        delegate.recommendedMemoryChanged();
     }
 
     @Override
@@ -110,6 +122,32 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     public void selectRunner(String runnerName) {
         runnerBox.setSelectedIndex(runnerNames.indexOf(runnerName));
         runnerChanged(null);
+    }
+
+    @Override
+    public void setSelectedEnvironment(String environmentName) {
+        if (environmentName == null) {
+            //defaultRunnerEnvironment == null => return selected environment
+            delegate.runnerEnvironmentSelected(environmentBox.getValue(environmentBox.getSelectedIndex()));
+        }
+        for (RunnerEnvironment environment : runnerEnvironments.asIterable()) {
+            if (environmentName.equals(environment.getDisplayName()) || environmentName.equals(environment.getId())) {
+                environmentBox.setSelectedIndex(runnerEnvironments.indexOf(environment));
+                delegate.runnerEnvironmentSelected(environmentName);
+                return;
+            }
+        }
+        delegate.runnerEnvironmentSelected(environmentBox.getValue(environmentBox.getSelectedIndex()));
+    }
+
+    @Override
+    public void setRecommendedMemorySize(String recommendedRam) {
+        recommendedMemory.setText(recommendedRam);
+    }
+
+    @Override
+    public String getRecommendedMemorySize() {
+        return recommendedMemory.getText();
     }
 
     interface SelectRunnerViewImplUiBinder

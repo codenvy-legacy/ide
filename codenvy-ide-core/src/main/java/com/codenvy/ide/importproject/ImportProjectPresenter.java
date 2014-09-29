@@ -16,6 +16,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.notification.Notification;
@@ -29,6 +32,8 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
@@ -60,6 +65,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
     private static final RegExp SSH_URL_Pattern   = RegExp.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)[^\\\\/@:]+)(:|/)|" +
                                                                    "([^\\\\/@:]+@[^\\\\/@:]+):)[^\\\\@:]+");
     private ProjectServiceClient                   projectServiceClient;
+    private RunnerServiceClient                    runnerServiceClient;
     private NotificationManager                    notificationManager;
     private CoreLocalizationConstant               locale;
     private DtoFactory                             dtoFactory;
@@ -74,6 +80,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
     @Inject
     public ImportProjectPresenter(ProjectServiceClient projectServiceClient,
+                                  RunnerServiceClient runnerServiceClient,
                                   NotificationManager notificationManager,
                                   CoreLocalizationConstant locale,
                                   DtoFactory dtoFactory,
@@ -85,6 +92,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                                   @Named("workspaceId") String workspaceId,
                                   MessageBus messageBus) {
         this.projectServiceClient = projectServiceClient;
+        this.runnerServiceClient = runnerServiceClient;
         this.notificationManager = notificationManager;
         this.locale = locale;
         this.dtoFactory = dtoFactory;
@@ -166,8 +174,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
     private void importProject(String url, final String projectName) {
 
-        final String wsChannel = "importProject:output:" + workspaceId + ":"
-                                 + projectName;
+        final String wsChannel = "importProject:output:" + workspaceId + ":" + projectName;
         final Notification notification = new Notification(locale.importingProject(), Notification.Status.PROGRESS);
 
         final SubscriptionHandler<String> importProjectOutputWShandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
@@ -198,8 +205,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
 
         String importer = view.getImporter();
-        ImportSourceDescriptor importSourceDescriptor =
-                dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
+        ImportSourceDescriptor importSourceDescriptor = dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
 
         notificationManager.showNotification(notification);
@@ -207,23 +213,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
         projectServiceClient.importProject(projectName, false, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                try {
-                    messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
-                } catch (WebSocketException e) {
-                    Log.error(getClass(), e);
-                }
-                notification.setStatus(Notification.Status.FINISHED);
-                notification.setMessage(locale.importProjectMessageSuccess());
-
-                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
-
-                if (result.getProjectTypeId() == null ||
-                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(result.getProjectTypeId())) {
-
-                    WizardContext context = new WizardContext();
-                    context.putData(ProjectWizard.PROJECT, result);
-                    wizardPresenter.show(context);
-                }
+                checkRam(result, importProjectOutputWShandler);
             }
 
             @Override
@@ -252,6 +242,73 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                 deleteFolder(projectName);
             }
         });
+    }
+    private void checkRam (final ProjectDescriptor projectDescriptor, final SubscriptionHandler<String> importProjectOutputWShandler) {
+        int requiredMemorySize = 0;
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+        String defaultRunnerEnvironment = projectDescriptor.getDefaultRunnerEnvironment();
+
+        if (runEnvConfigurations != null && defaultRunnerEnvironment != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
+            RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+            requiredMemorySize = runEnvConfDescriptor.getRequiredMemorySize();
+        }
+
+        if (requiredMemorySize > 0) {
+            final int finalRequiredMemorySize = requiredMemorySize;
+            runnerServiceClient.getResources(
+                    new AsyncRequestCallback<ResourcesDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+                        @Override
+                        protected void onSuccess(ResourcesDescriptor result) {
+                            int workspaceMemory = Integer.valueOf(result.getTotalMemory());
+                            if (workspaceMemory < finalRequiredMemorySize) {
+                                final Info warningWindow = new Info(locale.createProjectWarningTitle(),
+                                                                    locale.messagesWorkspaceRamLessRequiredRam(finalRequiredMemorySize,
+                                                                                                               workspaceMemory),
+                                                                    new InfoHandler() {
+                                                                        @Override
+                                                                        public void onOk() {
+                                                                            importSuccessful(projectDescriptor, importProjectOutputWShandler);
+                                                                        }
+                                                                    }
+                                );
+                                warningWindow.show();
+                            }
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            importSuccessful(projectDescriptor, importProjectOutputWShandler);
+
+                            Info infoWindow = new Info(locale.createProjectWarningTitle(), locale.messagesGetResourcesFailed());
+                            infoWindow.show();
+                            Log.error(getClass(), exception.getMessage());
+                        }
+                    });
+            return;
+        }
+        importSuccessful(projectDescriptor, importProjectOutputWShandler);
+    }
+
+    private void importSuccessful(ProjectDescriptor projectDescriptor, SubscriptionHandler<String> importProjectOutputWShandler) {
+        final String wsChannel = "importProject:output:" + workspaceId + ":" + projectDescriptor.getName();
+        try {
+            messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
+        } catch (WebSocketException e) {
+            Log.error(getClass(), e);
+        }
+
+        final Notification notification = new Notification(locale.importProjectMessageSuccess(), Notification.Status.FINISHED);
+        notificationManager.showNotification(notification);
+
+        eventBus.fireEvent(new OpenProjectEvent(projectDescriptor.getName()));
+
+        if (projectDescriptor.getProjectTypeId() == null ||
+            com.codenvy.api.project.shared.Constants.BLANK_ID.equals(projectDescriptor.getProjectTypeId())) {
+
+            WizardContext context = new WizardContext();
+            context.putData(ProjectWizard.PROJECT, projectDescriptor);
+            wizardPresenter.show(context);
+        }
     }
 
     static class LineUnmarshaller implements com.codenvy.ide.websocket.rest.Unmarshallable<String> {

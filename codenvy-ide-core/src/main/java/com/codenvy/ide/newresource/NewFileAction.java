@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.MimeType;
@@ -35,7 +36,8 @@ public class NewFileAction extends DefaultNewResourceAction {
                          EditorAgent editorAgent,
                          Resources resources,
                          ProjectServiceClient projectServiceClient,
-                         EventBus eventBus) {
+                         EventBus eventBus,
+                         AnalyticsEventLogger eventLogger) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
               null,
@@ -44,6 +46,7 @@ public class NewFileAction extends DefaultNewResourceAction {
               selectionAgent,
               editorAgent,
               projectServiceClient,
-              eventBus);
+              eventBus,
+              eventLogger);
     }
 }

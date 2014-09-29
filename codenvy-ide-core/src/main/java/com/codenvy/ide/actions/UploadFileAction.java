@@ -52,7 +52,7 @@ public class UploadFileAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Upload file");
+        eventLogger.log(this);
         presenter.showDialog();
     }
 

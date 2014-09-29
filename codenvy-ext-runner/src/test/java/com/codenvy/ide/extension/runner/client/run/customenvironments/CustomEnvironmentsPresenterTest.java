@@ -8,12 +8,11 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimages;
+package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.BaseTest;
@@ -23,7 +22,6 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -38,24 +36,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link EditImagesPresenter} functionality.
+ * Testing {@link CustomEnvironmentsPresenter} functionality.
  *
  * @author Artem Zatsarynnyy
  */
-public class EditImagesPresenterTest extends BaseTest {
+public class CustomEnvironmentsPresenterTest extends BaseTest {
+    private static final String PROJECT_PATH    = "/project";
+    private static final String ENV_FOLDER_PATH = ".codenvy/environments";
     @Mock
-    private EditImagesView       view;
+    private CustomEnvironmentsView      view;
     @Mock
-    private EventBus             eventBus;
+    private EventBus                    eventBus;
     @Mock
-    private ImageActionManager   imageActionManager;
+    private EnvironmentActionsManager   environmentActionsManager;
     @Mock
-    private ProjectServiceClient projectServiceClient;
+    private ProjectServiceClient        projectServiceClient;
     @Mock
-    private ProjectDescriptor    currentProjectDescriptor;
-    @InjectMocks
-    private EditImagesPresenter  presenter;
-    private Array<ItemReference> scriptsArray;
+    private ProjectDescriptor           currentProjectDescriptor;
+    private Array<ItemReference>        scriptsArray;
+    private CustomEnvironmentsPresenter presenter;
 
     @Before
     @Override
@@ -63,7 +62,11 @@ public class EditImagesPresenterTest extends BaseTest {
         super.setUp();
 
         when(currentProject.getProjectDescription()).thenReturn(currentProjectDescriptor);
+        when(currentProjectDescriptor.getPath()).thenReturn(PROJECT_PATH);
         scriptsArray = Collections.createArray();
+
+        presenter = new CustomEnvironmentsPresenter(ENV_FOLDER_PATH, view, eventBus, appContext, environmentActionsManager,
+                                                    projectServiceClient, dtoUnmarshallerFactory, notificationManager, constant);
     }
 
     @Test
@@ -72,19 +75,19 @@ public class EditImagesPresenterTest extends BaseTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<Array<ItemReference>> callback = (AsyncCallback<Array<ItemReference>>)arguments[1];
+                AsyncCallback<Array<CustomEnvironment>> callback = (AsyncCallback<Array<CustomEnvironment>>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, scriptsArray);
                 return callback;
             }
-        }).when(imageActionManager)
-          .retrieveCustomImages(eq(currentProjectDescriptor), Matchers.<AsyncCallback<Array<ItemReference>>>anyObject());
+        }).when(environmentActionsManager)
+          .requestCustomEnvironmentsForProject(eq(currentProjectDescriptor), Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
 
         presenter.showDialog();
 
         verify(view).showDialog();
-        verify(imageActionManager).retrieveCustomImages(Matchers.<ProjectDescriptor>anyObject(),
-                                                        Matchers.<AsyncCallback<Array<ItemReference>>>anyObject());
+        verify(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
+                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
     }
 
     @Test
@@ -96,17 +99,17 @@ public class EditImagesPresenterTest extends BaseTest {
 
     @Test
     public void shouldEnableEditAndRemoveButtonsOnSelectingImage() throws Exception {
-        presenter.onImageSelected(mock(ItemReference.class));
+        presenter.onEnvironmentSelected(mock(CustomEnvironment.class));
 
         verify(view).setEditButtonEnabled(eq(true));
         verify(view).setRemoveButtonEnabled(eq(true));
     }
 
     @Test
-    public void shouldFireEventAndCloseDialogOnEditClicked() throws Exception {
+    public void shouldCloseDialogOnEditClicked() throws Exception {
+        presenter.onEnvironmentSelected(mock(CustomEnvironment.class));
         presenter.onEditClicked();
 
-        verify(eventBus).fireEvent(Matchers.<FileEvent>anyObject());
         verify(view).closeDialog();
     }
 }

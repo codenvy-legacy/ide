@@ -13,6 +13,7 @@ package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.event.OpenProjectEvent;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Evgen Vidolob
@@ -51,7 +53,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private Comparator<RunnerDescriptor> comparator = new Comparator<RunnerDescriptor>() {
         @Override
         public int compare(RunnerDescriptor o1, RunnerDescriptor o2) {
-            return o1.getDescription().compareToIgnoreCase(o2.getDescription());
+            return o1.getName().compareToIgnoreCase(o2.getName());
         }
     };
 
@@ -83,7 +85,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     @Override
     public boolean isCompleted() {
-        return true;
+        return isRecommendedMemoryCorrect();
     }
 
     @Override
@@ -94,6 +96,13 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     @Override
     public void removeOptions() {
 
+    }
+
+    @Override
+    public void storeOptions() {
+        String recommendedMemorySize = view.getRecommendedMemorySize();
+        int recommendedRam = (!recommendedMemorySize.isEmpty() && isRecommendedMemoryCorrect()) ? (Integer.valueOf(recommendedMemorySize)) : 0;
+        wizardContext.putData(ProjectWizard.RECOMMENDED_RAM, recommendedRam);
     }
 
     @Override
@@ -112,10 +121,27 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             callback.onSuccess();
             return;
         }
-        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        storeOptions();
 
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         project.setRunner(runner.getName());
-        project.setDefaultRunnerEnvironment(environmentId);
+
+        //Save recommended Ram and defaultRunnerEnvironment in projectDescriptor
+        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = project.getRunnerEnvironmentConfigurations();
+        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
+        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
+            project.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
+            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+
+            if (runnerEnvironmentConfigurationDescriptor == null) {
+                runnerEnvironmentConfigurationDescriptor = factory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+            }
+            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
+            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
+            project.setRunnerEnvironmentConfigurations(runEnvConfigurations);
+        }
+
         projectServiceClient.updateProject(project.getPath(), project, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
@@ -169,13 +195,61 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     public void runnerSelected(RunnerDescriptor runner) {
         this.runner = runner;
         delegate.updateControls();
-        Log.info(SelectRunnerPagePresenter.class, "runner selected" + runner.getName());
         wizardContext.putData(ProjectWizard.RUNNER_NAME, runner.getName());
+        selectEnvironment();
+    }
+
+    private void selectEnvironment() {
+        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
+        view.setSelectedEnvironment(defaultRunnerEnvironment);
     }
 
     @Override
     public void runnerEnvironmentSelected(String environmentId) {
         wizardContext.putData(ProjectWizard.RUNNER_ENV_ID, environmentId);
         this.environmentId = environmentId;
+        setRecommendedMemorySize();
+    }
+
+    private void setRecommendedMemorySize() {
+        int recommendedMemorySize = 0;
+        ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
+        String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
+
+        if (projectDescriptor != null && runnerName.equals(projectDescriptor.getRunner())) {
+            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+            if (environmentId != null && configurations != null && configurations.containsKey(environmentId)) {
+                RunnerEnvironmentConfigurationDescriptor runEnvConfigDescriptor = configurations.get(environmentId);
+                if (runEnvConfigDescriptor != null) {
+                    recommendedMemorySize = runEnvConfigDescriptor.getRecommendedMemorySize();
+                }
+            }
+        }
+
+        if (recommendedMemorySize > 0) {
+            view.setRecommendedMemorySize(String.valueOf(recommendedMemorySize));
+        } else view.setRecommendedMemorySize("");
+    }
+
+    @Override
+    public void recommendedMemoryChanged() {
+        delegate.updateControls();
+    }
+
+    private boolean isRecommendedMemoryCorrect() {
+        int recommendedMemory;
+
+        if (view.getRecommendedMemorySize().isEmpty()) {
+            return true;
+        }
+        try {
+            recommendedMemory = Integer.parseInt(view.getRecommendedMemorySize());
+            if (recommendedMemory < 0) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }

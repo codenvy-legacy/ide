@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -26,22 +27,26 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ViewRecipeAction extends Action {
-    private final RunController controller;
-    private       AppContext    appContext;
+    private final RunController        controller;
+    private       AppContext           appContext;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public ViewRecipeAction(RunController runController,
                             RunnerResources resources,
                             RunnerLocalizationConstant localizationConstants,
-                            AppContext appContext) {
+                            AppContext appContext,
+                            AnalyticsEventLogger eventLogger) {
         super(localizationConstants.viewRecipeText(), localizationConstants.viewRecipeDescription(), null, resources.viewRecipe());
         this.controller = runController;
         this.appContext = appContext;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         controller.showRecipe();
     }
 

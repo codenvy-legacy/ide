@@ -40,7 +40,7 @@ public class RedirectToForumsAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Open Forums window");
+        eventLogger.log(this);
         Window.open(locale.actionRedirectToForumsUrl(), "_blank", "");
     }
 

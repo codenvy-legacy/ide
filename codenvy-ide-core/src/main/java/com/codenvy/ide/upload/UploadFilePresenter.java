@@ -63,13 +63,13 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        view.close();
+        view.closeDialog();
     }
 
     /** {@inheritDoc} */
     @Override
     public void onSubmitComplete(@NotNull String result) {
-        view.close();
+        view.closeDialog();
         eventBus.fireEvent(new RefreshProjectTreeEvent(getParent()));
     }
 
@@ -77,7 +77,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onUploadClicked() {
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/project/" + workspaceId + "/uploadFile" + getParent().getPath());
+        view.setAction(restContext + "/project/" + workspaceId + "/uploadfile" + getParent().getPath());
         view.submit();
     }
 

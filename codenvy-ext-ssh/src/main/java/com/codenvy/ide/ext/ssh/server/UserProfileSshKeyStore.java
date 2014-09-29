@@ -15,7 +15,7 @@ import com.codenvy.api.core.ServerException;
 import com.codenvy.api.user.server.dao.Profile;
 import com.codenvy.api.user.server.dao.UserDao;
 import com.codenvy.api.user.server.dao.UserProfileDao;
-import com.codenvy.api.user.shared.dto.User;
+import com.codenvy.api.user.server.dao.User;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -31,13 +31,13 @@ import java.util.Set;
 
 /** @author andrew00x */
 public class UserProfileSshKeyStore implements SshKeyStore {
-    private static final int     PRIVATE                      = 0;
-    private static final int     PUBLIC                       = 1;
-    private static final String  KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
+    private static final int    PRIVATE                      = 0;
+    private static final int    PUBLIC                       = 1;
+    private static final String KEY_ATTRIBUTE_PREFIX         = "ssh.key.";
     /** Prefix for attribute of user profile that store private SSH key. */
-    private static final String  PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
+    private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
     /** Prefix for attribute of user profile that store public SSH key. */
-    private static final String  PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
+    private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
 
     private final JSch           genJsch;
     private final UserProfileDao profileDao;
@@ -94,7 +94,7 @@ public class UserProfileSshKeyStore implements SshKeyStore {
             // Try to find key for parent domain. This is required for openshift integration but may be useful for others also.
             final String attributePrefix = i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX;
             for (Iterator<Map.Entry<String, String>> iterator = profile.getPreferences().entrySet().iterator(); iterator.hasNext()
-                                                                                                                && keyAsString == null;) {
+                                                                                                                && keyAsString == null; ) {
                 Map.Entry<String, String> entry = iterator.next();
                 String attributeName = entry.getKey();
                 if (attributeName.startsWith(attributePrefix)) {
@@ -206,9 +206,11 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
     /**
      * Name of attribute of user profile to store SSH key.
-     * 
-     * @param host host name
-     * @param i <code>0</code> if key is private and <code>1</code> if key is public
+     *
+     * @param host
+     *         host name
+     * @param i
+     *         <code>0</code> if key is private and <code>1</code> if key is public
      * @return user's profile attribute name
      */
     private String sshKeyAttributeName(String host, int i) {

@@ -37,7 +37,7 @@ public class OpenProjectAction extends Action {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Open project");
+        eventLogger.log(this);
         presenter.showDialog();
     }
 

@@ -15,6 +15,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.notification.Notification;
@@ -32,6 +35,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.inject.Inject;
@@ -39,6 +43,8 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.validation.constraints.NotNull;
+
+import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
@@ -49,33 +55,34 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
  */
 public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate, ImportProjectWizardView.EnterPressedDelegate {
     private final ProjectServiceClient        projectService;
+    private       RunnerServiceClient         runnerService;
     private final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
     private final CoreLocalizationConstant    locale;
     private final DtoFactory                  dtoFactory;
-    private WizardPage                        currentPage;
-    private ImportProjectWizardView           view;
+    private       WizardPage                  currentPage;
+    private       ImportProjectWizardView     view;
     private final ImportProjectWizardRegistry wizardRegistry;
     private final WizardContext               wizardContext;
-    private ImportProjectWizard               wizard;
-    private NewProjectWizardPresenter         newProjectWizardPresenter;
-    private MainPagePresenter                 mainPage;
+    private       ImportProjectWizard         wizard;
+    private       NewProjectWizardPresenter   newProjectWizardPresenter;
+    private       MainPagePresenter           mainPage;
     private final EventBus                    eventBus;
     private final NotificationManager         notificationManager;
-    private Provider<WizardPage>              mainPageProvider = new Provider<WizardPage>() {
-                                                                   @Override
-                                                                   public WizardPage get() {
-                                                                       return mainPage;
-                                                                   }
-                                                               };
-    private ProjectDescriptor                 importedProject;
-    private boolean                           canImport = false;
-    private boolean                           canGoNext = false;
-    
-                                                               
+    private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
+        @Override
+        public WizardPage get() {
+            return mainPage;
+        }
+    };
+    private ProjectDescriptor importedProject;
+    private boolean canImport = false;
+    private boolean canGoNext = false;
+
     @Inject
     public ImportProjectWizardPresenter(ImportProjectWizardView view,
                                         MainPagePresenter mainPage,
                                         ProjectServiceClient projectService,
+                                        RunnerServiceClient runnerService,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                         CoreLocalizationConstant locale,
                                         ImportProjectWizardRegistry wizardRegistry,
@@ -89,6 +96,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         this.notificationManager = notificationManager;
         this.newProjectWizardPresenter = newProjectWizardPresenter;
         this.projectService = projectService;
+        this.runnerService = runnerService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.locale = locale;
         this.dtoFactory = factory;
@@ -192,7 +200,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             }
         };
 
-
         // check whether project with the same name already exists
         projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override
@@ -235,7 +242,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         ImportSourceDescriptor importSourceDescriptor =
                                                         dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
                                                                   .withLocation(url);
-        
+
         showProcessing(true);
         projectService.importProject(projectName,
                                      false,
@@ -246,17 +253,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                          protected void onSuccess(ProjectDescriptor result) {
                                              importedProject = result;
                                              showProcessing(false);
-
-                                             String projectDescription = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
-                                             final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-
-                                             if (projectDescription != null && !projectDescription.isEmpty()) {
-                                                 updateProject(result, callback);
-                                             } else if (result.getVisibility().equals(visibility)) {
-                                                 getProject(result.getName(), callback);
-                                             } else {
-                                                 switchVisibility(callback, result);
-                                             }
+                                             checkRam(result, callback);
                                          }
 
                                          @Override
@@ -278,6 +275,66 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                              deleteFolder(projectName);
                                          }
                                      });
+    }
+
+    private void checkRam(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
+        int requiredMemorySize = 0;
+        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+        String defaultRunnerEnvironment = projectDescriptor.getDefaultRunnerEnvironment();
+
+        if (runEnvConfigurations != null && defaultRunnerEnvironment != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
+            RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+            requiredMemorySize = runEnvConfDescriptor.getRequiredMemorySize();
+        }
+
+        if (requiredMemorySize > 0) {
+            final int finalRequiredMemorySize = requiredMemorySize;
+            runnerService.getResources(
+                    new AsyncRequestCallback<ResourcesDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
+                        @Override
+                        protected void onSuccess(ResourcesDescriptor result) {
+                            int workspaceMemory = Integer.valueOf(result.getTotalMemory());
+                            if (workspaceMemory < finalRequiredMemorySize) {
+                                final Info warningWindow = new Info(locale.createProjectWarningTitle(),
+                                                                    locale.messagesWorkspaceRamLessRequiredRam(finalRequiredMemorySize,
+                                                                                                               workspaceMemory),
+                                                                    new InfoHandler() {
+                                                                        @Override
+                                                                        public void onOk() {
+                                                                            importProjectSuccessful(projectDescriptor, callback);
+                                                                        }
+                                                                    }
+                                );
+                                warningWindow.show();
+                            }
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            importProjectSuccessful(projectDescriptor, callback);
+
+                            Info infoWindow = new Info(locale.createProjectWarningTitle(), locale.messagesGetResourcesFailed());
+                            infoWindow.show();
+                            Log.error(getClass(), exception.getMessage());
+                        }
+                    }
+                                      );
+            return;
+        }
+        importProjectSuccessful(projectDescriptor, callback);
+    }
+
+    private void importProjectSuccessful(ProjectDescriptor projectDescriptor, WizardPage.CommitCallback callback) {
+        String projectDescription = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
+        final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+
+        if (projectDescription != null && !projectDescription.isEmpty()) {
+            updateProject(projectDescriptor, callback);
+        } else if (projectDescriptor.getVisibility().equals(visibility)) {
+            getProject(projectDescriptor.getName(), callback);
+        } else {
+            switchVisibility(callback, projectDescriptor);
+        }
     }
 
     /**

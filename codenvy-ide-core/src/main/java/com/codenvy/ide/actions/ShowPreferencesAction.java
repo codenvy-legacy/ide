@@ -40,7 +40,7 @@ public class ShowPreferencesAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Show preferences");
+        eventLogger.log(this);
         presenter.showPreferences();
     }
 }

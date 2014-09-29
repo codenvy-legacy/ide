@@ -8,13 +8,12 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run.customimages;
+package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
 import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.ui.list.SimpleList;
@@ -32,52 +31,52 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link EditImagesView}.
+ * The implementation of {@link CustomEnvironmentsView}.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class EditImagesViewImpl extends Window implements EditImagesView {
+public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironmentsView {
 
     @UiField
     ScrollPanel listPanel;
-    private Button                     btnRemove;
-    private Button                     btnEdit;
-    private ActionDelegate             delegate;
-    private RunnerLocalizationConstant localizationConstants;
-    private SimpleList<ItemReference>  list;
+    private Button                        btnRemove;
+    private Button                        btnEdit;
+    private ActionDelegate                delegate;
+    private RunnerLocalizationConstant    localizationConstants;
+    private SimpleList<CustomEnvironment> list;
 
     @Inject
-    protected EditImagesViewImpl(com.codenvy.ide.Resources resources, RunnerLocalizationConstant localizationConstants,
-                                 EditImagesViewImplUiBinder uiBinder) {
+    protected CustomEnvironmentsViewImpl(com.codenvy.ide.Resources resources, RunnerLocalizationConstant localizationConstants,
+                                         EditImagesViewImplUiBinder uiBinder) {
         this.localizationConstants = localizationConstants;
-        this.setTitle(localizationConstants.editImagesViewTitle());
+        this.setTitle(localizationConstants.customEnvironmentsViewTitle());
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
         createButtons();
 
-        final SimpleList.ListEventDelegate<ItemReference> eventDelegate = new SimpleList.ListEventDelegate<ItemReference>() {
+        final SimpleList.ListEventDelegate<CustomEnvironment> eventDelegate = new SimpleList.ListEventDelegate<CustomEnvironment>() {
             @Override
-            public void onListItemClicked(Element itemElement, ItemReference itemData) {
+            public void onListItemClicked(Element itemElement, CustomEnvironment itemData) {
                 list.getSelectionModel().setSelectedItem(itemData);
-                delegate.onImageSelected(itemData);
+                delegate.onEnvironmentSelected(itemData);
             }
 
             @Override
-            public void onListItemDoubleClicked(Element listItemBase, ItemReference itemData) {
+            public void onListItemDoubleClicked(Element listItemBase, CustomEnvironment itemData) {
                 list.getSelectionModel().setSelectedItem(itemData);
-                delegate.onImageSelected(itemData);
+                delegate.onEnvironmentSelected(itemData);
                 delegate.onEditClicked();
             }
         };
 
-        final SimpleList.ListItemRenderer<ItemReference> itemRenderer = new SimpleList.ListItemRenderer<ItemReference>() {
+        final SimpleList.ListItemRenderer<CustomEnvironment> itemRenderer = new SimpleList.ListItemRenderer<CustomEnvironment>() {
             @Override
-            public void render(Element itemElement, ItemReference itemData) {
+            public void render(Element itemElement, CustomEnvironment itemData) {
                 TableCellElement label = Elements.createTDElement();
                 label.setInnerHTML(itemData.getName());
                 itemElement.appendChild(label);
-                UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "editImages-openFile-" + itemData);
+                UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "customEnvironments-openFile-" + itemData);
             }
 
             @Override
@@ -94,28 +93,28 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
     }
 
     private void createButtons() {
-        Button btnAdd = createButton(localizationConstants.buttonAdd(), "editImages-add", new ClickHandler() {
+        Button btnAdd = createButton(localizationConstants.buttonAdd(), "customEnvironments-add", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onAddClicked();
             }
         });
 
-        btnRemove = createButton(localizationConstants.buttonRemove(), "editImages-remove", new ClickHandler() {
+        btnRemove = createButton(localizationConstants.buttonRemove(), "customEnvironments-remove", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onRemoveClicked();
             }
         });
 
-        btnEdit = createButton(localizationConstants.buttonEdit(), "editImages-edit", new ClickHandler() {
+        btnEdit = createButton(localizationConstants.buttonEdit(), "customEnvironments-edit", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onEditClicked();
             }
         });
 
-        final Button btnClose = createButton(localizationConstants.buttonClose(), "editImages-close", new ClickHandler() {
+        final Button btnClose = createButton(localizationConstants.buttonClose(), "customEnvironments-close", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCloseClicked();
@@ -153,8 +152,8 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setImages(Array<ItemReference> images) {
-        list.render(images);
+    public void setEnvironments(Array<CustomEnvironment> environments) {
+        list.render(environments);
     }
 
     /** {@inheritDoc} */
@@ -169,6 +168,6 @@ public class EditImagesViewImpl extends Window implements EditImagesView {
         this.show();
     }
 
-    interface EditImagesViewImplUiBinder extends UiBinder<Widget, EditImagesViewImpl> {
+    interface EditImagesViewImplUiBinder extends UiBinder<Widget, CustomEnvironmentsViewImpl> {
     }
 }

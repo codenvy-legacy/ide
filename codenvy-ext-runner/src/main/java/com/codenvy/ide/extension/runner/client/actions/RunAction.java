@@ -51,7 +51,7 @@ public class RunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
-        eventLogger.log("IDE: Run application");
+        eventLogger.log(this);
         runController.runActiveProject(null, null, true);
     }
 
@@ -60,13 +60,10 @@ public class RunAction extends Action {
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
-            // If project has defined a runner, let see the action
-            e.getPresentation().setVisible(currentProject.getRunner() != null
-                                           || currentProject.getAttributeValue("runner.user_defined_launcher") != null);
+            e.getPresentation().setVisible(currentProject.getRunner() != null);
             e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !runController.isAnyAppRunning());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }
     }
-
 }

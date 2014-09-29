@@ -12,6 +12,7 @@
 -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
     <ui:style>
         @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
         .field {
@@ -39,13 +40,24 @@
             margin-left: 20px;
 
         }
+        .gwt-TextBox {
+            background-color: InputBackgroundColor;
+            color: #dbdbdb;
+            border: 1px solid #191c1e;
+            border-radius: 1px;
+            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
+            font-size: 12px;
+            padding-left: 8px;
+            height: 20px;
+            text-align: center;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" debugId="mavenPageView-mainPanel" addStyleNames="{style.mainDoc}">
         <g:north size="50">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                <g:west size="138">
+                <g:west size="180">
                     <g:FlowPanel>
-                        <g:Label text="Select runner:"
+                        <g:Label text="{locale.selectRunnerPageViewEnvironmentTypeLabel}"
                                  addStyleNames="{style.labelPosition}"/>
                     </g:FlowPanel>
                 </g:west>
@@ -57,11 +69,11 @@
                     </g:SimplePanel>
                 </g:center>
             </g:DockLayoutPanel>
-        </g:north><g:north size="50">
+        </g:north><g:north size="40">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
-                <g:west size="138">
+                <g:west size="180">
                     <g:FlowPanel>
-                        <g:Label text="Select Environment:"
+                        <g:Label text="{locale.selectRunnerPageViewEnvironmentLabel}"
                                  addStyleNames="{style.labelPosition}"/>
                     </g:FlowPanel>
                 </g:west>
@@ -73,6 +85,13 @@
                     </g:SimplePanel>
                 </g:center>
             </g:DockLayoutPanel>
+        </g:north>
+        <g:north size="30">
+            <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
+                <g:Label text="{locale.selectRunnerPageViewMemoryRecommendedLabel}" width="504px" addStyleNames="{style.labelPosition}"/>
+                <g:TextBox readOnly="false" ui:field="recommendedMemory" height="12px" width="40px" maxLength="4" addStyleNames="{style.gwt-TextBox}"
+                           debugId="project-selectRunnerPage-recommendedMemory"/>
+            </g:HorizontalPanel>
         </g:north>
     </g:DockLayoutPanel>
 </ui:UiBinder>

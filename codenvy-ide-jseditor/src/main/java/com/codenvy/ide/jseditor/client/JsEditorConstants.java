@@ -14,7 +14,7 @@ import com.google.gwt.i18n.client.Constants;
 
 /**
  * I18n Constants for the JsEditor module.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface JsEditorConstants extends Constants {
@@ -25,7 +25,7 @@ public interface JsEditorConstants extends Constants {
     @DefaultStringValue("Classic")
     String classicEditorDisplayName();
 
-    @DefaultStringValue("Unidentified file")
+    @DefaultStringValue("Unidentified File")
     String infoPanelUnknownFileType();
 
     // space is meaningful
@@ -43,7 +43,7 @@ public interface JsEditorConstants extends Constants {
     @DefaultStringValue("Editor: ")
     String infoPaneEditorLabel();
 
-    @DefaultStringValue("Key bindings: ")
+    @DefaultStringValue("Key Bindings: ")
     String infoPaneKeybindingLabel();
 
     @DefaultStringValue("Unknown")

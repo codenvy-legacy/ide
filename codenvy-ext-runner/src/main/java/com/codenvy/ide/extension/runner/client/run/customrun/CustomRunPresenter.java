@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.run;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -28,12 +28,20 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.run.RunController;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironment;
+import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionsManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -45,16 +53,18 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
-    private RunController              runController;
-    private RunnerServiceClient        runnerServiceClient;
-    private ProjectServiceClient       projectService;
-    private CustomRunView              view;
-    private DtoFactory                 dtoFactory;
-    private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
-    private NotificationManager        notificationManager;
-    private AppContext                 appContext;
-    private RunnerLocalizationConstant constant;
-    private EventBus                   eventBus;
+    private final String                     envFolderPath;
+    private       RunController              runController;
+    private       RunnerServiceClient        runnerServiceClient;
+    private       ProjectServiceClient       projectService;
+    private       CustomRunView              view;
+    private       DtoFactory                 dtoFactory;
+    private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
+    private       NotificationManager        notificationManager;
+    private       AppContext                 appContext;
+    private       RunnerLocalizationConstant constant;
+    private       EventBus                   eventBus;
+    private       EnvironmentActionsManager  environmentActionsManager;
 
     /** Create presenter. */
     @Inject
@@ -67,7 +77,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  NotificationManager notificationManager,
                                  AppContext appContext,
                                  RunnerLocalizationConstant constant,
-                                 EventBus eventBus) {
+                                 EventBus eventBus,
+                                 EnvironmentActionsManager environmentActionsManager,
+                                 @Named("envFolderPath") String envFolderPath) {
         this.runController = runController;
         this.runnerServiceClient = runnerServiceClient;
         this.projectService = projectService;
@@ -78,22 +90,47 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.appContext = appContext;
         this.constant = constant;
         this.eventBus = eventBus;
+        this.environmentActionsManager = environmentActionsManager;
+        this.envFolderPath = envFolderPath;
         this.view.setDelegate(this);
     }
 
     /** Show dialog. */
     public void showDialog() {
-        runnerServiceClient.getRunners(
-                new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
+        view.showDialog();
+
+        environmentActionsManager.requestCustomEnvironmentsForProject(
+                appContext.getCurrentProject().getProjectDescription(), new AsyncCallback<Array<CustomEnvironment>>() {
                     @Override
-                    protected void onSuccess(Array<RunnerDescriptor> result) {
-                        CurrentProject activeProject = appContext.getCurrentProject();
-                        view.setEnvironments(getEnvironmentsForProject(activeProject, result));
+                    public void onSuccess(Array<CustomEnvironment> result) {
+                        Array<Environment> environments = Collections.createArray();
+                        for (CustomEnvironment customEnvironment : result.asIterable()) {
+                            environments.add(new CustomEnvironmentAdapter(customEnvironment));
+                        }
+                        view.addEnvironments(environments);
+                        requestRunnerEnvironments();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable exception) {
+                        requestRunnerEnvironments();
+                    }
+                });
+    }
+
+    private void requestRunnerEnvironments() {
+        final Unmarshallable<Array<RunnerDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class);
+        runnerServiceClient.getRunners(
+                new AsyncRequestCallback<Array<RunnerDescriptor>>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(Array<RunnerDescriptor> availableRunners) {
+                        final CurrentProject activeProject = appContext.getCurrentProject();
+                        view.addEnvironments(getRunnerEnvironmentsForProject(activeProject, availableRunners));
                         setMemoryFields();
 
-                        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
-                        if (projectDescriptor != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
-                            view.setSelectedEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+                        final String defaultRunnerEnvironment = activeProject.getProjectDescription().getDefaultRunnerEnvironment();
+                        if (defaultRunnerEnvironment != null) {
+                            view.setSelectedEnvironment(defaultRunnerEnvironment);
                         }
                     }
 
@@ -103,6 +140,19 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                     }
                 }
                                       );
+    }
+
+    private Array<Environment> getRunnerEnvironmentsForProject(CurrentProject project, Array<RunnerDescriptor> allRunners) {
+        Array<Environment> environments = Collections.createArray();
+        for (RunnerDescriptor runner : allRunners.asIterable()) {
+            if (project.getRunner().equals(runner.getName())) {
+                for (RunnerEnvironment environment : runner.getEnvironments().values()) {
+                    environments.add(new RunnerEnvironmentAdapter(environment));
+                }
+                break;
+            }
+        }
+        return environments;
     }
 
     private void setMemoryFields() {
@@ -161,7 +211,6 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 view.setRunnerMemorySize(String.valueOf(defaultRunnerMemory));
                 view.setTotalMemorySize(String.valueOf(totalMemory));
                 view.setAvailableMemorySize(String.valueOf(totalMemory - usedMemory));
-                view.showDialog();
             }
 
             @Override
@@ -171,70 +220,79 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         });
     }
 
-    private Array<RunnerEnvironment> getEnvironmentsForProject(CurrentProject project, Array<RunnerDescriptor> runners) {
-        Array<RunnerEnvironment> environments = Collections.createArray();
-        final String runnerName = project.getRunner();
-        for (RunnerDescriptor runnerDescriptor : runners.asIterable()) {
-            if (runnerName.equals(runnerDescriptor.getName())) {
-                for (RunnerEnvironment environment : runnerDescriptor.getEnvironments().values()) {
-                    environments.add(environment);
-                }
-                break;
-            }
-        }
-        return environments;
-    }
-
     @Override
     public void onRunClicked() {
+        if (view.getSelectedEnvironment() == null) {
+            return;
+        }
         if (view.isRememberOptionsSelected()) {
-            updateProject();
+            saveOptions();
         }
         if (isRunnerMemoryCorrect()) {
             RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
             runOptions.setMemorySize(Integer.valueOf(view.getRunnerMemorySize()));
             runOptions.setSkipBuild(view.isSkipBuildSelected());
 
-            if (view.getSelectedEnvironment() != null) {
-                runOptions.setEnvironmentId(view.getSelectedEnvironment().getId());
+            final Environment selectedEnvironment = view.getSelectedEnvironment();
+            if (selectedEnvironment != null) {
+                if (selectedEnvironment instanceof RunnerEnvironmentAdapter) {
+                    runOptions.setEnvironmentId(((RunnerEnvironmentAdapter)selectedEnvironment).getRunnerEnvironment().getId());
+                } else if (selectedEnvironment instanceof CustomEnvironmentAdapter) {
+                    final CustomEnvironment customEnvironment = ((CustomEnvironmentAdapter)selectedEnvironment).getCustomEnvironment();
+                    List<String> scriptFiles = new ArrayList<>();
+                    for (String scriptName : customEnvironment.getScriptNames(true)) {
+                        scriptFiles.add(envFolderPath + '/' + scriptName);
+                    }
+                    runOptions.setRunnerName("docker");
+                    runOptions.setScriptFiles(scriptFiles);
+                }
             }
+
             view.close();
             runController.runActiveProject(runOptions, null, true);
         }
     }
 
-    private void updateProject() {
-        String defaultRunnerEnvironment = view.getSelectedEnvironment().getId();
-        int defaultMemorySize = Integer.valueOf(view.getRunnerMemorySize());
-
-        ProjectDescriptor projectDescriptor = appContext.getCurrentProject().getProjectDescription();
-        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
-        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
-
-        if (defaultRunnerEnvironment != null && runEnvConfigurations != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
-            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+    private void saveOptions() {
+        final String selectedEnvironmentId = view.getSelectedEnvironment().getId();
+        // TODO: temporary check while we're working on environment identifying scheme
+        // For now, custom environments have an empty ID and we do not save options for it.
+        if (selectedEnvironmentId.isEmpty()) {
+            return;
         }
 
-        if (runnerEnvironmentConfigurationDescriptor == null) {
-            runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+        final int selectedMemorySize = Integer.valueOf(view.getRunnerMemorySize());
+        final ProjectDescriptor currentProjectDescriptor = appContext.getCurrentProject().getProjectDescription();
+
+        Map<String, RunnerEnvironmentConfigurationDescriptor> environmentConfigurations =
+                currentProjectDescriptor.getRunnerEnvironmentConfigurations();
+
+        RunnerEnvironmentConfigurationDescriptor existedEnvironmentConfiguration = null;
+        if (environmentConfigurations != null) {
+            existedEnvironmentConfiguration = environmentConfigurations.get(selectedEnvironmentId);
         }
-        runnerEnvironmentConfigurationDescriptor.setDefaultMemorySize(defaultMemorySize);
-        runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
+        if (existedEnvironmentConfiguration == null) {
+            existedEnvironmentConfiguration = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+        }
 
-        projectDescriptor.setDefaultRunnerEnvironment(view.getSelectedEnvironment().getId());
+        existedEnvironmentConfiguration.setDefaultMemorySize(selectedMemorySize);
+        environmentConfigurations.put(selectedEnvironmentId, existedEnvironmentConfiguration);
 
-        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(new ProjectDescriptorChangedEvent(result));
-            }
+        currentProjectDescriptor.setDefaultRunnerEnvironment(view.getSelectedEnvironment().getId());
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                view.showWarning(constant.messagesFailedRememberOptions());
-            }
-        });
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectService.updateProject(currentProjectDescriptor.getPath(), currentProjectDescriptor,
+                                     new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                                         @Override
+                                         protected void onSuccess(ProjectDescriptor result) {
+                                             eventBus.fireEvent(new ProjectDescriptorChangedEvent(result));
+                                         }
+
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             view.showWarning(constant.messagesFailedRememberOptions());
+                                         }
+                                     });
     }
 
     @Override

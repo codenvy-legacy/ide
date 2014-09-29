@@ -59,6 +59,7 @@ public class ImportProjectWizardViewImpl extends Window implements ImportProject
     @Inject
     public ImportProjectWizardViewImpl(com.codenvy.ide.Resources resources, ProjectWizardResources wizardResources, CoreLocalizationConstant locale) {
         super(false);
+        this.ensureDebugId("importProjectWizard-window");
         this.wizardResources = wizardResources;
         this.locale = locale;
         wizardResources.css().ensureInjected();
