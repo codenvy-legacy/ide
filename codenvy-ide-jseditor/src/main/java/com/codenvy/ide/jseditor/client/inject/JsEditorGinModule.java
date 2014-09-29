@@ -18,12 +18,13 @@ import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistryImpl;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.filetype.MultipleMethodFileIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
+import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
+import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
@@ -79,6 +80,9 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the info panel factory
         install(new GinFactoryModuleBuilder().build(InfoPanelFactory.class));
+
+        // bind the document position model
+        bind(DocumentPositionMap.class).to(DocumentPositionMapImpl.class);
     }
 
     // no real need to make it a singleton, it's a simple instantiation
