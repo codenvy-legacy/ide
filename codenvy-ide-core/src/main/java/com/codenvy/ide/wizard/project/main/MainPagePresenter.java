@@ -15,18 +15,17 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
-import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.util.NameUtils;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,8 +57,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void projectNameChanged(String name) {
-        RegExp regExp = RegExp.compile("^[A-Za-z0-9_-]+$");
-        if (regExp.test(name)) {
+        if (NameUtils.checkProjectName(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
             view.removeNameError();
         } else {

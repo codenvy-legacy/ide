@@ -8,18 +8,17 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
+
 package com.codenvy.ide.ui;
 
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.CssResource;
 
 /**
- * @author Vitaly Parfonov
+ * @author Evgen Vidolob
  */
-public interface Resources extends com.google.gwt.resources.client.ClientBundle {
+@CssResource.Shared
+public interface Styles extends CssResource{
+    String inputError();
 
-    @Source("dialogs/ask_64.png")
-    ImageResource ask64();
-
-    @Source({"Styles.css", "com/codenvy/ide/api/ui/style.css"})
-    Styles styles();
+    String inputField();
 }
