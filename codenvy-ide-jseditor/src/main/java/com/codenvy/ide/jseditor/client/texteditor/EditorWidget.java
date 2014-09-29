@@ -127,4 +127,27 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
 
     /** Give the focus to the editor. */
     void setFocus();
+
+    /**
+     * Show a message to the user.
+     * 
+     * @param message the message
+     */
+    void showMessage(String message);
+
+    /**
+     * Selects the given range in the editor.
+     * 
+     * @param selection the new selection
+     * @param show whether the editor should be scrolled to show the range
+     */
+    void setSelectedRange(Region selection, boolean show);
+
+    /**
+     * Scroll the editor to show the given range.
+     * 
+     * @param range the range to show
+     */
+    void setDisplayRange(Region range);
+
 }
