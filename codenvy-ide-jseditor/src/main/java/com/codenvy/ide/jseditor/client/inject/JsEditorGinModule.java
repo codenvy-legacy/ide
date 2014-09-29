@@ -15,6 +15,9 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantImpl;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
@@ -89,8 +92,13 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the reconciler
         install(new GinFactoryModuleBuilder()
-                                             .implement(Reconciler.class, ReconcilerImpl.class)
-                                             .build(ReconcilerFactory.class));
+                    .implement(Reconciler.class, ReconcilerImpl.class)
+                    .build(ReconcilerFactory.class));
+
+        // bind the code assistant
+        install(new GinFactoryModuleBuilder()
+                    .implement(CodeAssistant.class, CodeAssistantImpl.class)
+                    .build(CodeAssistantFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation
