@@ -124,6 +124,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegion.java</exclude>
+                        <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegionQueue.java</exclude>
                         <exclude>**/com/codenvy/ide/jseditor/client/annotation/AnnotationModelEvent.java</exclude>
                     </excludes>
                 </configuration>
