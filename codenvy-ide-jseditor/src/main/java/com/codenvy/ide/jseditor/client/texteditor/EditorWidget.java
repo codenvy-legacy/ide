@@ -25,12 +25,9 @@ import com.google.gwt.user.client.ui.RequiresResize;
 
 import javax.annotation.Nonnull;
 
-/**
- * An interface for editor widget implementations.
- *
- * @author "Mickaël Leduque"
- */
-public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers, HasCursorActivityHandlers,
+/** An interface for editor widget implementations. */
+public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
+                                      HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
                                       RequiresResize, UndoableEditor {
 
     /**
