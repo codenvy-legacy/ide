@@ -61,3 +61,33 @@ svg.partIcon {
 .timeout {
     fill: #ffba00;
 }
+
+.titleBox {
+	background-color: partBackground;
+	height: 34px;
+	line-height: 34px;
+	vertical-align: middle;
+	color: mainFontColor;
+	font-size: largeLabel;
+	font-family: mainFontFamily;
+	padding: 0 10px;
+}
+
+.descriptionBox {
+	color: mainFontColor;
+	font-size: secondaryTextFontSize;
+	font-family: mainFontFamily;
+}
+
+.fieldTitle {
+	color: mainFontColor;
+	font-size: boxFontSize;
+	font-family: mainFontFamily;
+}
+
+.radioButton {
+            position: relative;
+            float: left;
+            margin-left: 20px;
+			margin-top: 10px;
+}

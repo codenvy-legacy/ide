@@ -21,7 +21,10 @@ import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.extension.runner.client.wizard.SelectRunnerPageView.Target;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -31,31 +34,35 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Evgen Vidolob
  */
 public class SelectRunnerPagePresenter extends AbstractWizardPage implements SelectRunnerPageView.ActionDelegate {
 
-    private SelectRunnerPageView   view;
-    private RunnerServiceClient    runnerServiceClient;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private ProjectServiceClient   projectServiceClient;
-    private EventBus               eventBus;
-    private DtoFactory             factory;
-    private RunnerDescriptor       runner;
-    private String                 environmentId;
-    private Comparator<RunnerDescriptor> comparator = new Comparator<RunnerDescriptor>() {
-        @Override
-        public int compare(RunnerDescriptor o1, RunnerDescriptor o2) {
-            return o1.getName().compareToIgnoreCase(o2.getName());
-        }
-    };
+    private final static String                   RUNNER_NAME_SPLITTER = "-";
+    private SelectRunnerPageView                  view;
+    private RunnerServiceClient                   runnerServiceClient;
+    private DtoUnmarshallerFactory                dtoUnmarshallerFactory;
+    private ProjectServiceClient                  projectServiceClient;
+    private EventBus                              eventBus;
+    private DtoFactory                            factory;
+    private RunnerDescriptor                      runner;
+    private String                                environmentId;
+
+    /**
+     * The structure of runners parts. Environment Technology - Target Environment - Specific Sub-Technology Example : java-webapp-default.
+     * Map<Technology, Map<Target, Set<Sub-Technology>>.
+     */
+    private Map<String, Map<String, Set<String>>> runnersStructure;
+    private StringMap<RunnerDescriptor>           runnersMap;
+
 
     /**
      * Create wizard page
@@ -101,7 +108,9 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     @Override
     public void storeOptions() {
         String recommendedMemorySize = view.getRecommendedMemorySize();
-        int recommendedRam = (!recommendedMemorySize.isEmpty() && isRecommendedMemoryCorrect()) ? (Integer.valueOf(recommendedMemorySize)) : 0;
+        int recommendedRam =
+                             (!recommendedMemorySize.isEmpty() && isRecommendedMemoryCorrect()) ? (Integer.valueOf(recommendedMemorySize))
+                                 : 0;
         wizardContext.putData(ProjectWizard.RECOMMENDED_RAM, recommendedRam);
     }
 
@@ -126,7 +135,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         project.setRunner(runner.getName());
 
-        //Save recommended Ram and defaultRunnerEnvironment in projectDescriptor
+        // Save recommended Ram and defaultRunnerEnvironment in projectDescriptor
         String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
         Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = project.getRunnerEnvironmentConfigurations();
         RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
@@ -142,60 +151,108 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             project.setRunnerEnvironmentConfigurations(runEnvConfigurations);
         }
 
-        projectServiceClient.updateProject(project.getPath(), project, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
-                callback.onSuccess();
-            }
+        projectServiceClient.updateProject(project.getPath(),
+                                           project,
+                                           new AsyncRequestCallback<ProjectDescriptor>(
+                                                                                       dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                               @Override
+                                               protected void onSuccess(ProjectDescriptor result) {
+                                                   eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                                                   callback.onSuccess();
+                                               }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
+                                               @Override
+                                               protected void onFailure(Throwable exception) {
+                                                   callback.onFailure(exception);
+                                               }
+                                           });
     }
 
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+        view.hideTargets();
+        view.hideSubTechnologies();
+        view.setEnvironmentsEnableState(false);
         requestRunners();
     }
 
     private void requestRunners() {
         runnerServiceClient.getRunners(
-                new AsyncRequestCallback<Array<RunnerDescriptor>>(dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
-                    @Override
-                    protected void onSuccess(Array<RunnerDescriptor> result) {
-                        List<RunnerDescriptor> list = new ArrayList<>(result.size());
-                        for (RunnerDescriptor runnerDescriptor : result.asIterable()) {
-                            list.add(runnerDescriptor);
-                        }
-                        Collections.sort(list, comparator);
-                        view.showRunners(list);
-                        selectRunner();
-                    }
+                           new AsyncRequestCallback<Array<RunnerDescriptor>>(
+                                                                             dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
+                               @Override
+                               protected void onSuccess(Array<RunnerDescriptor> result) {
+                                   parseRunners(result);
+                                   Array<String> technologies = Collections.createArray(runnersStructure.keySet());
+                                   technologies.sort(new Comparator<String>() {
+                                       @Override
+                                       public int compare(String o1, String o2) {
+                                           return o1.compareTo(o2);
+                                       }
+                                   });
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
-                    }
-                });
+                                   view.showTechnologies(technologies);
+                                   if (technologies.size() > 0) {
+                                       view.selectTechnology(technologies.get(0));
+                                   }
+                               }
+
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
+                               }
+                           });
     }
 
-    private void selectRunner() {
-        String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
-        if (runnerName != null) {
-            view.selectRunner(runnerName);
+    /**
+     * Parsers the runner's name into a structure: Technology-Target-Sub-Technology. The result is the following map - Map<Technology,
+     * Map<Target, Set<Sub-Technology>>. Sample technologies - Java, Python, PHP... Sample targets : Console, WebApp, Standalone, Mobile.
+     * Sample sub technologies : play, android, default ...
+     * 
+     * @param runners
+     */
+    private void parseRunners(Array<RunnerDescriptor> runners) {
+        runnersStructure = new HashMap<String, Map<String, Set<String>>>();
+        runnersMap = Collections.createStringMap();
+        for (RunnerDescriptor runner : runners.asIterable()) {
+            runnersMap.put(runner.getName(), runner);
+
+            String[] parts = runner.getName().split(RUNNER_NAME_SPLITTER);
+            String tech = (parts.length > 3) ? runner.getName() : parts[0];
+            String target = (parts.length > 1 && parts.length <= 3) ? parts[1] : null;
+            String subtech = (parts.length == 3) ? parts[2] : null;
+
+            Map<String, Set<String>> targetMap = runnersStructure.get(tech);
+            if (targetMap == null) {
+                targetMap = new HashMap<String, Set<String>>();
+                runnersStructure.put(tech, targetMap);
+            }
+
+            if (target != null) {
+                Set<String> subtechs = targetMap.get(target);
+                if (subtechs == null) {
+                    subtechs = new HashSet<String>();
+                    targetMap.put(target, subtechs);
+                }
+
+                if (subtech != null) {
+                    subtechs.add(subtech);
+                }
+            }
         }
     }
 
-    @Override
+    /**
+     * Perform action on runner selected.
+     * 
+     * @param runner selected runner
+     */
     public void runnerSelected(RunnerDescriptor runner) {
         this.runner = runner;
-        delegate.updateControls();
         wizardContext.putData(ProjectWizard.RUNNER_NAME, runner.getName());
+        delegate.updateControls();
+        view.showEnvironments(runner.getEnvironments());
         selectEnvironment();
     }
 
@@ -228,7 +285,8 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
         if (recommendedMemorySize > 0) {
             view.setRecommendedMemorySize(String.valueOf(recommendedMemorySize));
-        } else view.setRecommendedMemorySize("");
+        } else
+            view.setRecommendedMemorySize("");
     }
 
     @Override
@@ -251,5 +309,67 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             return false;
         }
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void targetSelected(Target target) {
+        String technology = view.getSelectedTechnology();
+        if (runnersStructure.containsKey(technology)) {
+            Map<String, Set<String>> targets = runnersStructure.get(technology);
+            if (targets.containsKey(target.getId())) {
+                Set<String> subTechnologies = targets.get(target.getId());
+                // No sub technologies of the pair technology+target - consider the runner is selected:
+                if (subTechnologies == null || subTechnologies.isEmpty()) {
+                    String runnerName = view.getSelectedTechnology() + RUNNER_NAME_SPLITTER + target.getId();
+                    if (runnersMap.containsKey(runnerName)) {
+                        runnerSelected(runnersMap.get(runnerName));
+                    }
+                } else {
+                    view.showSubTechnologies(subTechnologies);
+                }
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void technologySelected(String technology) {
+        view.hideTargets();
+        view.hideSubTechnologies();
+        view.setEnvironmentsEnableState(false);
+
+        if (runnersStructure.containsKey(technology)) {
+            Map<String, Set<String>> targets = runnersStructure.get(technology);
+            Array<Target> targetsToDisplay = Collections.createArray();
+
+            if (!targets.keySet().isEmpty()) {
+                for (String target : targets.keySet()) {
+                    Target t = Target.fromString(target);
+                    targetsToDisplay.add(t);
+                }
+            } else {
+                // No target - consider the runner is selected:
+                if (runnersMap.containsKey(technology)) {
+                    runnerSelected(runnersMap.get(technology));
+                }
+            }
+            view.displayTargets(targetsToDisplay);
+
+            if (targetsToDisplay.size() == 1) {
+                view.selectTarget(targetsToDisplay.get(0));
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void subTechnologySelected(String subTechnology) {
+        String runnerName =
+                            view.getSelectedTechnology() + RUNNER_NAME_SPLITTER + view.getSelectedTarget().getId() + RUNNER_NAME_SPLITTER
+                                + subTechnology;
+        if (runnersMap.containsKey(runnerName)) {
+            runnerSelected(runnersMap.get(runnerName));
+        }
     }
 }

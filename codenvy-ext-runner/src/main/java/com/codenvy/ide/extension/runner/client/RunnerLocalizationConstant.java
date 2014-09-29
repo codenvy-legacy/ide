@@ -264,9 +264,36 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.selectRunnerPage.memoryRecommendedLabel")
     String selectRunnerPageViewMemoryRecommendedLabel();
 
-    @Key("view.selectRunnerPage.environmentTypeLabel")
-    String selectRunnerPageViewEnvironmentTypeLabel();
+    @Key("view.selectRunnerPage.environmentType.title")
+    String selectRunnerPageEnvironmentTypeTitle();
+    
+    @Key("view.selectRunnerPage.environmentType.description")
+    String selectRunnerPageEnvironmentTypeDescription();
+    
+    @Key("view.selectRunnerPage.environmentType.field")
+    String selectRunnerPageEnvironmentTypeField();
+    
+    @Key("view.selectRunnerPage.environmentTarget.field")
+    String selectRunnerPageEnvironmentTargetField();
+    
+    @Key("view.selectRunnerPage.environmentSubTechnology.field")
+    String selectRunnerPageEnvironmentSubTechnologyField();
+    
+    @Key("view.selectRunnerPage.environment.title")
+    String selectRunnerPageEnvironmentTitle();
+    
+    @Key("view.selectRunnerPage.environment.field")
+    String selectRunnerPageEnvironmentField();
 
-    @Key("view.selectRunnerPage.environmentLabel")
-    String selectRunnerPageViewEnvironmentLabel();
+    @Key("view.selectRunnerPage.consoleTarget.field")
+    String selectRunnerPageConsoleTargetField();
+    
+    @Key("view.selectRunnerPage.webappTarget.field")
+    String selectRunnerPageWebappTargetField();
+    
+    @Key("view.selectRunnerPage.mobileTarget.field")
+    String selectRunnerPageMobileTargetField();
+    
+    @Key("view.selectRunnerPage.standaloneTarget.field")
+    String selectRunnerPageStandaloneTargetField();
 }
