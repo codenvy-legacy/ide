@@ -21,13 +21,15 @@ import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.RequiresResize;
 
 /**
  * An interface for editor widget implementations.
  *
  * @author "Mickaël Leduque"
  */
-public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers, HasCursorActivityHandlers {
+public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers, HasCursorActivityHandlers,
+                                      RequiresResize {
 
     /**
      * Returns the contents of the editor.

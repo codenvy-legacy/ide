@@ -11,9 +11,6 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
-import java.util.Collections;
-import java.util.List;
-
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
@@ -29,7 +26,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
@@ -38,25 +38,25 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Composite implements EmbeddedTextEditorPartView {
 
-    private final static EditorViewUiBinder uibinder    = GWT.create(EditorViewUiBinder.class);
+    private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
 
-    private final EditorWidgetFactory<T>    editorWidgetFactory;
-    private final FileTypeIdentifier        fileTypeIdentifier;
+    private final EditorWidgetFactory<T> editorWidgetFactory;
+    private final FileTypeIdentifier     fileTypeIdentifier;
 
     @UiField(provided = true)
-    InfoPanel                               infoPanel;
+    InfoPanel infoPanel;
 
     @UiField
-    SimplePanel                             editorPanel;
+    SimpleLayoutPanel editorPanel;
 
-    private T                               editor;
-    private CursorModelWithHandler          cursorModel;
-    private EmbeddedDocument                embeddedDocument;
+    private T                      editor;
+    private CursorModelWithHandler cursorModel;
+    private EmbeddedDocument       embeddedDocument;
 
-    private List<String>                    editorModes = null;
+    private List<String> editorModes = null;
 
-    private int                             tabSize     = 3;
-    private boolean                         delayedFocus = false;
+    private int     tabSize      = 3;
+    private boolean delayedFocus = false;
 
     public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
                                           final FileTypeIdentifier fileTypeIdentifier,
@@ -157,11 +157,6 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         return this.cursorModel;
     }
 
-    @Override
-    public void onResize() {
-        // TODO
-    }
-
     public HandlerRegistration addChangeHandler(final ChangeHandler handler) {
         return this.editor.addChangeHandler(handler);
     }
@@ -188,6 +183,11 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         } else {
             this.delayedFocus = true;
         }
+    }
+
+    @Override
+    public void onResize() {
+        editorPanel.onResize();
     }
 
     /**
