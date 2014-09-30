@@ -80,13 +80,13 @@ public class TestFocusManager {
 //        verify(partStack2).setFocus(eq(true));
 //    }
 
-    @Test
-    public void shouldSetActivePartonStackAndSetFocus() {
-        PartStackPresenter partStack = mock(PartStackPresenter.class);
-        agent.setActivePartStack(partStack);
-
-        verify(partStack).setFocus(eq(true));
-    }
+//    @Test
+//    public void shouldSetActivePartonStackAndSetFocus() {
+//        PartStackPresenter partStack = mock(PartStackPresenter.class);
+//        agent.setActivePartStack(partStack);
+//
+//        verify(partStack).setFocus(eq(true));
+//    }
 
     @Test
     public void shoudFireEventOnChangePart() {
@@ -99,15 +99,15 @@ public class TestFocusManager {
         verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
     }
 
-    @Test
-    public void shoudFireEventOnChangePartStack() {
-        // create Part Agent
-        agent = new FocusManager(eventBus);
-
-        PartStack partStack = mock(PartStackPresenter.class);
-        agent.setActivePartStack(partStack); // focus requested
-
-        // verify New Event generated
-        verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
-    }
+//    @Test
+//    public void shoudFireEventOnChangePartStack() {
+//        // create Part Agent
+//        agent = new FocusManager(eventBus);
+//
+//        PartStack partStack = mock(PartStackPresenter.class);
+//        agent.setActivePartStack(partStack); // focus requested
+//
+//        // verify New Event generated
+//        verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
+//    }
 }
