@@ -15,19 +15,21 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * Implementation of WorkBenchPartController, used with SplitLayoutPanel as container
- * 
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  */
 public class WorkBenchPartControllerImpl implements WorkBenchPartController {
+    public static final int DURATION = 200;
 
-    public static final int  DURATION = 200;
-    private SplitLayoutPanel splitLayoutPanel;
+    private final SplitLayoutPanel   splitLayoutPanel;
+    private final SimplePanel        widget;
+    private final HideWidgetCallback hideWidgetCallback;
 
-    private SimplePanel      widget;
-
-    public WorkBenchPartControllerImpl(SplitLayoutPanel splitLayoutPanel, SimplePanel widget) {
+    public WorkBenchPartControllerImpl(SplitLayoutPanel splitLayoutPanel, SimplePanel widget, HideWidgetCallback hideWidgetCallback) {
         this.splitLayoutPanel = splitLayoutPanel;
         this.widget = widget;
+        this.hideWidgetCallback = hideWidgetCallback;
+
         splitLayoutPanel.setWidgetHidden(widget, true);
         splitLayoutPanel.forceLayout();
     }
@@ -49,9 +51,12 @@ public class WorkBenchPartControllerImpl implements WorkBenchPartController {
     @Override
     public void setHidden(boolean hidden) {
         if (!hidden) {
-            splitLayoutPanel.setWidgetHidden(widget, hidden);
+            splitLayoutPanel.setWidgetHidden(widget, false);
+        } else {
+            hideWidgetCallback.addWidgetToHide(widget);
         }
         splitLayoutPanel.setWidgetSize(widget, hidden ? 0 : getSize());
-        splitLayoutPanel.animate(DURATION);
+        splitLayoutPanel.animate(DURATION, hideWidgetCallback);
     }
+
 }
