@@ -63,6 +63,17 @@
             padding-left: 8px;
         }
 
+        .labelErrorPosition {
+            margin-right: 9px;
+            margin-left: 90px;
+            position: relative;
+            font-weight: lighter;
+            font-size: 12px;
+            text-align: center;
+            color: firebrick;
+            display: block;
+        }
+
         .labelPosition {
             position: relative;
             line-height: 29px;
@@ -134,7 +145,10 @@
                              <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
                                        debugId="file-importProject-projectUrl"/>
                         </g:FlowPanel>
-                        
+                        <g:SimplePanel width="100%" addStyleNames="{style.namePanel}">
+                            <g:Label ui:field="labelUrlError" width="290px" wordWrap="true" addStyleNames="{style.labelErrorPosition}"/>
+                        </g:SimplePanel>
+
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateName}"
                                      addStyleNames="{style.labelPosition}"/>

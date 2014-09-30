@@ -220,6 +220,18 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.messageFailure")
     String importProjectMessageFailure();
 
+    @Key("importProject.messageNameRepoIncorrect")
+    String importProjectMessageNameRepoIncorrect();
+
+    @Key("importProject.messageHostIncorrect")
+    String importProjectMessageHostIncorrect();
+
+    @Key("importProject.messageProtocolIncorrect")
+    String importProjectMessageProtocolIncorrect();
+
+    @Key("importProject.messageStartWithWhiteSpace")
+    String importProjectMessageStartWithWhiteSpace();
+
     @Key("importProject.name")
     String importProjectName();
 

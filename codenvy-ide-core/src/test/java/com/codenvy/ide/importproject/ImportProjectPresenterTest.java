@@ -202,7 +202,7 @@ public class ImportProjectPresenterTest {
 
     @Test
     public void testSshUriWithHostBetweenAtAndSlash() {
-        //Check for type uri with host between a and /
+        //Check for type uri with host between @ and /
         when(view.getUri()).thenReturn("ssh://user@host.com/some/path");
         baseTestForImportProjectIsSuccessful();
     }

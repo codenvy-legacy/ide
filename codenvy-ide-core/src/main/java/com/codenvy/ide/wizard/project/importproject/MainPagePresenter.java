@@ -45,18 +45,14 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private static final RegExp                 HTTPS_URL_PATTERN =
-                                                                    RegExp.compile("((https|http)://)((([^\\\\\\\\@:;, (//)])+/){2,})[^\\\\\\\\@:; ,]+");
-    private static final RegExp                 SSH_URL_PATTERN   = RegExp.compile("((((git|ssh)://)(([^\\\\/@:]+@)??)[^\\\\/@:]+)(:|/)|" +
-                                                                                   "([^\\\\/@:]+@[^\\\\/@:]+):)[^\\\\@:]+");
-    private static final RegExp                 NAME_PATTERN      = RegExp.compile("^[A-Za-z0-9_-]*$");
+    private static final RegExp NAME_PATTERN    = RegExp.compile("^[A-Za-z0-9_-]*$");
     private final MainPageView                  view;
     private final ProjectImportersServiceClient projectImportersService;
     private final NotificationManager           notificationManager;
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private final CoreLocalizationConstant      locale;
-    private ProjectImporterDescriptor           projectImporter;
-    private EnterPressedDelegate                enterPressedDelegate;
+    private       ProjectImporterDescriptor     projectImporter;
+    private       EnterPressedDelegate          enterPressedDelegate;
 
     @Inject
     public MainPagePresenter(ProjectImportersServiceClient projectImportersService,
@@ -71,11 +67,11 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.locale = locale;
     }
-    
+
     public void setEnterPressedDelegate(EnterPressedDelegate enterPressedDelegate) {
         this.enterPressedDelegate = enterPressedDelegate;
     }
-    
+
     /**
      * Disable all page inputs.
      */
@@ -94,8 +90,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     public void projectNameChanged(String name) {
         if (name == null || name.isEmpty()) {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-        }
-        else if (NAME_PATTERN.test(name)) {
+        } else if (NAME_PATTERN.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
             view.hideNameError();
         } else {
@@ -134,9 +129,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     /** {@inheritDoc} */
     @Override
     public void projectUrlChanged(String url) {
-        if (!(SSH_URL_PATTERN.test(url) || HTTPS_URL_PATTERN.test(url))) {
+        if (!isGitUrlCorrect(url)) {
             wizardContext.removeData(ImportProjectWizard.PROJECT_URL);
-            view.showUrlError();
         } else {
             wizardContext.putData(ImportProjectWizard.PROJECT_URL, url);
             view.hideUrlError();
@@ -245,5 +239,52 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         if (enterPressedDelegate != null) {
             enterPressedDelegate.onEnterKeyPressed();
         }
+    }
+
+    private boolean isGitUrlCorrect(String url) {
+        // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
+        RegExp scpLikeSyntax = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
+
+        // the transport protocol
+        RegExp protocol = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
+
+        // the address of the remote server between // and /
+        RegExp host1 = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
+
+        // the address of the remote server between @ and : or /
+        RegExp host2 = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
+
+        // the repository name
+        RegExp repoName = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
+
+        // start with white space
+        RegExp whiteSpace = RegExp.compile("^\\s");
+
+        if (whiteSpace.test(url)) {
+            view.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
+            return false;
+        }
+
+        if (scpLikeSyntax.test(url) && repoName.test(url)) {
+            return true;
+        } else if (scpLikeSyntax.test(url) && !repoName.test(url)) {
+            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
+            return false;
+        }
+
+        if (!protocol.test(url)) {
+            view.showUrlError(locale.importProjectMessageProtocolIncorrect());
+            return false;
+        }
+        if (!(host1.test(url) || host2.test(url))) {
+            view.showUrlError(locale.importProjectMessageHostIncorrect());
+            return false;
+        }
+        if (!(repoName.test(url))) {
+            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
+            return false;
+        }
+        view.hideUrlError();
+        return true;
     }
 }

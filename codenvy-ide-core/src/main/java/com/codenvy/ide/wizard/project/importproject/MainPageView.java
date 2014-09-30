@@ -51,7 +51,7 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
     /**
      * Show URL error.
      */
-    void showUrlError();
+    void showUrlError(String message);
     
     /**
      * Hide URL error.

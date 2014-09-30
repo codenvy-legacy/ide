@@ -14,7 +14,6 @@ import elemental.events.KeyboardEvent.KeyCode;
 
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
@@ -33,6 +32,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -89,6 +89,8 @@ public class MainPageViewImpl implements MainPageView {
 
     @UiField
     Style                                                                   style;
+    @UiField
+    Label                                                                   labelUrlError;
     @UiField
     SimplePanel                                                             categoriesPanel;
     @UiField
@@ -249,14 +251,16 @@ public class MainPageViewImpl implements MainPageView {
 
     /** {@inheritDoc} */
     @Override
-    public void showUrlError() {
+    public void showUrlError(String message) {
         projectUrl.addStyleName(wizardResources.css().inputError());
+        labelUrlError.setText(message);
     }
 
     /** {@inheritDoc} */
     @Override
     public void hideUrlError() {
         projectUrl.removeStyleName(wizardResources.css().inputError());
+        labelUrlError.setText("");
     }
 
     /** {@inheritDoc} */
