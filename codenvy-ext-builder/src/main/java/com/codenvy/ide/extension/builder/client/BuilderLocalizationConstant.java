@@ -65,4 +65,7 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("build.artifact.not-ready")
     String atifactNotReady();
 
+    /* BuilderConsoleView */
+    @Key("view.builderConsole.title")
+    String builderConsoleViewTitle();
 }
