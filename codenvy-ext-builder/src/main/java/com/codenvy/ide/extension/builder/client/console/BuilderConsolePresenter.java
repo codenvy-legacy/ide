@@ -14,6 +14,7 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
 import com.codenvy.ide.extension.builder.client.build.BuilderStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -33,20 +34,21 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
-    private static final String TITLE = "Builder";
-    private final BuilderConsoleView view;
-    private final ToolbarPresenter   consoleToolbar;
-    private final BuilderResources   builderResources;
-    private boolean       isUnread            = false;
+    private final BuilderLocalizationConstant builderLocalizationConstant;
+    private final BuilderConsoleView          view;
+    private final ToolbarPresenter            consoleToolbar;
+    private final BuilderResources            builderResources;
+    private boolean       isUnread             = false;
     private BuilderStatus currentBuilderStatus = BuilderStatus.IDLE;
 
     @Inject
     public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
-                                   BuilderResources builderResources) {
+                                   BuilderLocalizationConstant builderLocalizationConstant, BuilderResources builderResources) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
+        this.builderLocalizationConstant = builderLocalizationConstant;
         this.builderResources = builderResources;
-        this.view.setTitle(TITLE);
+        this.view.setTitle(builderLocalizationConstant.builderConsoleViewTitle());
         this.view.setDelegate(this);
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
@@ -68,7 +70,7 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return TITLE + (isUnread ? " *" : "");
+        return builderLocalizationConstant.builderConsoleViewTitle() + (isUnread ? " *" : "");
     }
 
     /** {@inheritDoc} */
@@ -135,6 +137,7 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
 
     public void setCurrentBuilderStatus(BuilderStatus currentBuilderStatus) {
         this.currentBuilderStatus = currentBuilderStatus;
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /** {@inheritDoc} */
