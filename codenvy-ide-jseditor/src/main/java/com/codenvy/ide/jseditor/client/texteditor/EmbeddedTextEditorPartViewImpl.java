@@ -240,6 +240,21 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         this.editorWidgetFactory = editorWidgetFactory;
     }
 
+    @Override
+    public HasGutter getHasGutter() {
+        return this.editor;
+    }
+
+    @Override
+    public HasTextMarkers getHasTextMarkers() {
+        return this.editor;
+    }
+
+    @Override
+    public HasKeybindings getHasKeybindings() {
+        return this.editor;
+    }
+
     /**
      * UI binder interface for this component.
      * 

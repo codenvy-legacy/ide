@@ -126,4 +126,23 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @param factory the new factory
      */
     public void setEditorWidgetFactory(EditorWidgetFactory<?> factory);
+
+    /**
+     * Returns a component handling the gutter.
+     * @return the {@link HasGutter}
+     */
+    HasGutter getHasGutter();
+
+    /**
+     * Returns a component handling the text markers.
+     * @return the {@link HasTextMarkers}
+     */
+    HasTextMarkers getHasTextMarkers();
+
+    /**
+     * Returns a component handling the key bindings.
+     * @return the {@link HasKeybindings}
+     */
+    HasKeybindings getHasKeybindings();
+
 }
