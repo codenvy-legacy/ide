@@ -229,9 +229,12 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         firePropertyChange(ERROR_STATE);
     }
 
-    /** {@inheritDoc} */
-    @Override
     public UndoManager getUndoManager() {
+        return this.getView().getUndoManager();
+    }
+
+    @Override
+    public UndoManager getUndoRedo() {
         return this.getView().getUndoManager();
     }
 }

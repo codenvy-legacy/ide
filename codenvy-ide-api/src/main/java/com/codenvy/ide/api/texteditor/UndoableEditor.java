@@ -15,7 +15,7 @@ package com.codenvy.ide.api.texteditor;
  */
 public interface UndoableEditor {
 
-    /** Returns the undo manager. */
-    UndoManager getUndoManager();
+    /** Returns the component that handles undo and redo. */
+    HandlesUndoRedo getUndoRedo();
 
 }
