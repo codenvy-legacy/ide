@@ -12,13 +12,12 @@ package com.codenvy.ide.jseditor.client.preference.keymaps;
 
 import java.util.Map.Entry;
 
-import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
-import com.codenvy.ide.jseditor.client.keymap.KeymapPrefReader;
 import com.codenvy.ide.jseditor.client.keymap.KeymapValuesHolder;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceSection;
+import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -29,7 +28,7 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
 
     private final KeymapsPreferenceView view;
 
-    private final PreferencesManager       preferencesManager;
+    private final KeymapPrefReader       keymapPrefReader;
     private final EventBus eventBus;
 
     private final KeymapValuesHolder keymapValuesHolder;
@@ -43,11 +42,11 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
 
     @Inject
     public KeyMapsPreferencePresenter(final KeymapsPreferenceView view,
-                                      final PreferencesManager preferencesManager,
+                                      final KeymapPrefReader keymapPrefReader,
                                       final EventBus eventBus) {
         this.view = view;
         this.eventBus = eventBus;
-        this.preferencesManager = preferencesManager;
+        this.keymapPrefReader = keymapPrefReader;
         this.view.setDelegate(this);
 
         this.keymapValuesHolder = new KeymapValuesHolder();
@@ -61,7 +60,7 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
     public void doApply() {
         if (this.keymapsDirty) {
             Log.debug(KeyMapsPreferencePresenter.class, "Applying changes - keymaps ");
-            KeymapPrefReader.storePrefs(this.preferencesManager, this.keymapValuesHolder);
+            this.keymapPrefReader.storePrefs(this.keymapValuesHolder);
             for (final Entry<EditorType, Keymap> entry : this.keymapValuesHolder) {
                 this.eventBus.fireEvent(new KeymapChangeEvent(entry.getKey().getEditorTypeKey(),
                                                               entry.getValue().getKey()));
@@ -79,12 +78,12 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
     @Override
     public void go(final AcceptsOneWidget container) {
         container.setWidget(null);
-        KeymapPrefReader.readPref(preferencesManager, prefKeymaps);
         initKeymapValues();
         container.setWidget(view);
     }
 
     private void initKeymapValues() {
+        this.keymapPrefReader.readPref(prefKeymaps);
         for (final Entry<EditorType, Keymap> entry : this.prefKeymaps) {
             Log.debug(KeyMapsPreferencePresenter.class,
                       "Found one keymap pref: editorType=" + entry.getKey() + " keymap=" + entry.getValue());
