@@ -8,18 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui;
 
-import com.google.gwt.resources.client.ImageResource;
-
-/**
- * @author Vitaly Parfonov
- */
-public interface Resources extends com.google.gwt.resources.client.ClientBundle {
-
-    @Source("dialogs/ask_64.png")
-    ImageResource ask64();
-
-    @Source({"Styles.css", "com/codenvy/ide/api/ui/style.css"})
-    Styles styles();
+input.inputError {
+    border-color: #ffe400;
+    box-shadow: 0 0 5px #ffe400;
+}
+.inputField {
+    background-color: inputBackground;
+    color: #dbdbdb;
+    border: 1px solid #191c1e;
+    border-radius: 1px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
+    font-size: 12px;
+    padding-left: 8px;
+    height: 20px;
 }

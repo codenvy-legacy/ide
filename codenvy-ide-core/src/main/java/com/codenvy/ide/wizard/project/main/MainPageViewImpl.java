@@ -16,23 +16,25 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ui.Styles;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
+import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -94,7 +96,7 @@ public class MainPageViewImpl implements MainPageView {
             };
     private final IconRegistry iconRegistry;
 
-    @UiField
+    @UiField(provided = true)
     Style       style;
     @UiField
     SimplePanel categoriesPanel;
@@ -123,8 +125,10 @@ public class MainPageViewImpl implements MainPageView {
     private Array<ProjectTypeDescriptor>                availableProjectTypes;
 
     @Inject
-    public MainPageViewImpl(Resources resources, IconRegistry iconRegistry) {
+    public MainPageViewImpl(Resources resources, IconRegistry iconRegistry, ProjectWizardResources wizardResources) {
         this.resources = resources;
+        style = wizardResources.mainPageStyle();
+        style.ensureInjected();
         this.iconRegistry = iconRegistry;
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
@@ -382,7 +386,7 @@ public class MainPageViewImpl implements MainPageView {
             extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
     }
 
-    interface Style extends CssResource {
+   public interface Style extends Styles {
         String mainPanel();
 
         String leftPart();
@@ -390,10 +394,6 @@ public class MainPageViewImpl implements MainPageView {
         String rightPart();
 
         String namePanel();
-
-        String projectName();
-
-        String projectDescription();
 
         String labelPosition();
 
@@ -407,8 +407,8 @@ public class MainPageViewImpl implements MainPageView {
 
         String label();
 
-        String inputError();
-
         String horizontalLine();
-    }
+
+        String labelTitle();
+   }
 }

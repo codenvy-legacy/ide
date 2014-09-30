@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.ide.wizard.project.main.MainPageViewImpl;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
@@ -31,6 +32,9 @@ public interface ProjectWizardResources extends ClientBundle {
 
     @Source({"com/codenvy/ide/wizard/newproject/Wizard.css", "com/codenvy/ide/api/ui/style.css"})
     Css css();
+
+    @Source({"main/MainPage.css", "com/codenvy/ide/api/ui/style.css","com/codenvy/ide/ui/Styles.css"})
+    MainPageViewImpl.Style mainPageStyle();
 }
 
 

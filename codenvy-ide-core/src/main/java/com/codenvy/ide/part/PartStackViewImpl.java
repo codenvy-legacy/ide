@@ -23,17 +23,17 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.codenvy.ide.api.parts.PartStackView.TabPosition.BELOW;
 import static com.codenvy.ide.api.parts.PartStackView.TabPosition.LEFT;
@@ -45,7 +45,7 @@ import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
  *
  * @author Nikolay Zamosenchuk
  */
-public class PartStackViewImpl extends Composite implements PartStackView {
+public class PartStackViewImpl extends ResizeComposite implements PartStackView {
     private final PartStackUIResources resources;
     // DOM Handler
     private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
@@ -53,7 +53,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     private final Array<TabButton>       tabButtons          = Collections.createArray();
     final         int                    margin              = 8;//tabButtons text margin
     private InsertPanel         tabsPanel;
-    private DeckPanel           contentPanel;
+    private DeckLayoutPanel     contentPanel;
     private ActionDelegate      delegate;
     private TabButton           activeTabButton;
     private boolean             focused;
@@ -73,8 +73,7 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         resources = partStackResources;
         this.tabPosition = tabPosition;
         this.tabsPanel = tabsPanel;
-        contentPanel = new DeckPanel();
-        contentPanel.setAnimationEnabled(true);
+        contentPanel = new DeckLayoutPanel();
 
         if (tabPosition == LEFT) {
             top += 3;

@@ -13,117 +13,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
-    <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.main.MainPageViewImpl.Style">
-        @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
-        @eval borderColor com.codenvy.ide.api.theme.Style.getTabBorderColor();
-
-        .mainPanel {
-            margin: 0px;
-            border: none !important;
-            height: 100%;
-        }
-
-        .leftPart {
-            margin-left: 12px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            font-size: 12px;
-        }
-
-        .rightPart {
-            border-left: 1px solid #505050;
-            margin-left: 1px;
-        }
-
-        .rightPart > div {
-            margin-left: 12px;
-            margin-right: 12px;
-        }
-
-        .namePanel {
-            margin-top: 5px;
-            overflow: hidden;
-            display: block;
-        }
-
-        .projectName, .projectDescription {
-            margin-top: 4px;
-            float: right;
-            background-color: InputBackgroundColor;
-            color: #dbdbdb;
-            border: 1px solid #191c1e;
-            border-radius: 1px;
-            box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.19) inset, 0px 1px 0px 0px rgba(223, 223, 223, 0.4);
-            font-size: 12px;
-            padding-left: 8px;
-        }
-
-        .labelPosition {
-            position: relative;
-            line-height: 29px;
-            margin-right: 9px;
-            font-weight: bold;
-            float: left;
-            font-size: 12px;
-        }
-
-        .labelTitle {
-            position: relative;
-            line-height: 35px;
-            margin-bottom: 9px;
-            font-weight: bold;
-            float: left;
-            font-size: 15px;
-        }
-
-        .radioButtonPosition {
-            position: relative;
-            float: right;
-            padding-left: 5px;
-            top: 8px;
-            right: 65px;
-        }
-
-        .categories {
-            margin: 0px 25px 1px 0px;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
-            border-right: 1px solid #000000;
-            box-shadow: 0px 1px 0px borderColor;
-            background-color: #313131;
-        }
-
-        .description {
-            font-size: 11px;
-        }
-
-        .configuration {
-            margin-right: 10px;
-            font-size: 11px;
-        }
-
-        .configuration > p {
-            margin: 0px 0px 2px 10px;
-        }
-
-        .label {
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .inputError {
-            border-color: #ffe400;
-            box-shadow: 0 0 5px #ffe400;
-        }
-
-        .horizontalLine {
-            width: 255px;
-            margin-top: 7px;
-            float: right;
-            border-bottom: 1px solid #505050;
-        }
-
-    </ui:style>
+    <ui:with field="style" type="com.codenvy.ide.wizard.project.main.MainPageViewImpl.Style"/>
     <g:DockLayoutPanel unit="PX" addStyleNames="{style.mainPanel}">
         <g:center>
             <g:DockLayoutPanel unit="PCT">
@@ -136,13 +26,13 @@
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateName}"
                                      addStyleNames="{style.labelPosition}"/>
-                            <g:TextBox width="290px" height="14px" ui:field="projectName" addStyleNames="{style.projectName}" tabIndex="1"
+                            <g:TextBox width="290px" height="14px" ui:field="projectName" addStyleNames="{style.inputField}" tabIndex="1"
                                        debugId="file-newProject-projectName"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="60px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateDescription}"
                                      addStyleNames="{style.labelPosition}"/>
-                            <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.projectDescription}"
+                            <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.inputField}"
                                         debugId="file-newProject-projectDescription" tabIndex="2"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="80px" addStyleNames="{style.namePanel}">
