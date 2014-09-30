@@ -52,6 +52,9 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
                                                                                     UndoableEditor {
 
+    /** File type used when we have no idea of the actual content type. */
+    public final static String DEFAULT_CONTENT_TYPE = "text/plain";
+
     private final Resources                     resources;
     private final WorkspaceAgent                workspaceAgent;
     private final EmbeddedTextEditorViewFactory textEditorViewFactory;

@@ -107,7 +107,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
         // ultimate fallback - can't make more generic for text
         if (this.editorModes == null) {
-            this.editorModes = Collections.singletonList("text/plain");
+            this.editorModes = Collections.singletonList(EmbeddedTextEditorPresenter.DEFAULT_CONTENT_TYPE);
         }
 
         this.tabSize = configuration.getTabWidth();
