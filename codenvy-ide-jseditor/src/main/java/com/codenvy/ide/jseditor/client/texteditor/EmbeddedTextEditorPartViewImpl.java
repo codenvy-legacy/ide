@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
@@ -42,7 +43,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author "Mickaël Leduque"
  */
-public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
+public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView,
+                                                                         EditorWithErrors {
 
     private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
     private final EventBus generalEventBus;
@@ -281,6 +283,16 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     protected Delegate getDelegate() {
         return this.delegate;
+    }
+
+    @Override
+    public EditorState getErrorState() {
+        return this.delegate.getErrorState();
+    }
+
+    @Override
+    public void setErrorState(final EditorState errorState) {
+        this.delegate.setErrorState(errorState);
     }
 
     /**
