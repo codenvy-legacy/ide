@@ -269,4 +269,8 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.selectRunnerPage.environmentLabel")
     String selectRunnerPageViewEnvironmentLabel();
+
+    /* RunnerConsoleView */
+    @Key("view.runnerConsole.title")
+    String runnerConsoleViewTitle();
 }

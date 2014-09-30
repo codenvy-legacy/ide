@@ -17,6 +17,7 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -37,16 +38,16 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
-    private static final String TITLE = "Runner";
-    private       RunnerConsoleView view;
+    private final RunnerConsoleView view;
     private final ToolbarPresenter  consoleToolbar;
-    private       RunnerResources   runnerResources;
+    private final RunnerResources   runnerResources;
+    private final RunnerLocalizationConstant runnerLocalizationConstant;
     private       String            appURL;
     private       String            shellURL;
-    private boolean isUnread = false;
+    private boolean isUnread;
     private boolean isTerminalFrameAlreadyLoaded;
     private boolean isAppPreviewFrameAlreadyLoaded;
-    private RunnerStatus currentRunnerStatus = RunnerStatus.IDLE;
+    private RunnerStatus currentRunnerStatus;
 
     private enum Tab {
         CONSOLE, TERMINAL, APP
@@ -56,12 +57,15 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
-                                  RunnerResources runnerResources) {
+                                  RunnerResources runnerResources, RunnerLocalizationConstant runnerLocalizationConstant) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
         this.runnerResources = runnerResources;
-        this.view.setTitle(TITLE);
+        this.view.setTitle(runnerLocalizationConstant.runnerConsoleViewTitle());
         this.view.setDelegate(this);
+        this.isUnread = false;
+        this.currentRunnerStatus = RunnerStatus.IDLE;
+        this.runnerLocalizationConstant = runnerLocalizationConstant;
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
             @Override
@@ -81,7 +85,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return TITLE + (isUnread ? " *" : "");
+        return runnerLocalizationConstant.runnerConsoleViewTitle() + (isUnread ? " *" : "");
     }
 
     /** {@inheritDoc} */
