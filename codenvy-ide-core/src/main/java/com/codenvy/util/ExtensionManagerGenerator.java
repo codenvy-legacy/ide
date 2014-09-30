@@ -14,6 +14,7 @@ import com.codenvy.ide.api.extension.Extension;
 
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.io.File;
@@ -186,7 +187,7 @@ public class ExtensionManagerGenerator {
      */
     @SuppressWarnings("unchecked")
     public static void findExtensions() throws IOException {
-        Reflections reflection = new Reflections(new TypeAnnotationsScanner());
+        Reflections reflection = new Reflections(new SubTypesScanner(), new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(Extension.class);
         for (Class clazz : classes) {
             EXTENSIONS_FQN.put(clazz.getCanonicalName(), clazz.getSimpleName());

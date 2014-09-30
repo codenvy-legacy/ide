@@ -14,6 +14,7 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.io.File;
@@ -150,7 +151,7 @@ public class IDEInjectorGenerator {
      */
     @SuppressWarnings("unchecked")
     public static void findGinModules(File rootFolder) throws IOException {
-        Reflections reflection = new Reflections(new TypeAnnotationsScanner());
+        Reflections reflection = new Reflections(new SubTypesScanner(), new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(ExtensionGinModule.class);
         for (Class clazz : classes) {
             EXTENSIONS_FQN.add(clazz.getCanonicalName());

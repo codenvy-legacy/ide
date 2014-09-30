@@ -14,6 +14,7 @@ import com.codenvy.ide.dto.ClientDtoFactoryVisitor;
 
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.io.File;
@@ -81,7 +82,7 @@ public class DtoFactoryVisitorRegistryGenerator {
      */
     @SuppressWarnings("unchecked")
     private static void findDtoFactoryVisitors() throws IOException {
-        Reflections reflection = new Reflections(new TypeAnnotationsScanner());
+        Reflections reflection = new Reflections(new SubTypesScanner(), new TypeAnnotationsScanner());
         Set<Class<?>> classes = reflection.getTypesAnnotatedWith(ClientDtoFactoryVisitor.class);
         int i = 0;
         for (Class clazz : classes) {
