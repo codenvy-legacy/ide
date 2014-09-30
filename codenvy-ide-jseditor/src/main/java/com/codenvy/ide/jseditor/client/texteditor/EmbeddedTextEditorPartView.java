@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
@@ -153,5 +154,13 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      */
     void showCompletionProposals(CompletionsSource completionsSource);
 
+    /**
+     * Sets the view delegate.
+     * @param delegate the delegate
+     */
+    void setDelegate(Delegate delegate);
 
+    /** Delegate interface for theis view. */
+    public interface Delegate extends EditorWithErrors {
+    }
 }

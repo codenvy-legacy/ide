@@ -57,6 +57,9 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private CursorModelWithHandler cursorModel;
     private EmbeddedDocument embeddedDocument;
 
+    /** The view delegate. */
+    private Delegate delegate;
+
     private List<String> editorModes = null;
 
     private int tabSize = 3;
@@ -259,6 +262,16 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void showCompletionProposals(final CompletionsSource source) {
         this.editor.showCompletionProposals(source);
+    }
+
+
+    @Override
+    public void setDelegate(final Delegate delegate) {
+        this.delegate = delegate;
+    }
+
+    protected Delegate getDelegate() {
+        return this.delegate;
     }
 
     /**
