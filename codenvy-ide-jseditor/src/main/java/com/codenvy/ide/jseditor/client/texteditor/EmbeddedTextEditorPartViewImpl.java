@@ -22,6 +22,7 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
@@ -34,6 +35,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
@@ -43,6 +45,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
 
     private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
+    private final EventBus generalEventBus;
 
     private final FileTypeIdentifier fileTypeIdentifier;
 
@@ -75,14 +78,15 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Inject
     public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
-                                          final InfoPanelFactory infoPanelFactory) {
-        infoPanel = infoPanelFactory.create(this);
+                                          final InfoPanelFactory infoPanelFactory,
+                                          final EventBus generalEventBus) {
+        this.infoPanel = infoPanelFactory.create(this);
 
         final HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
 
         this.fileTypeIdentifier = fileTypeIdentifier;
-
+        this.generalEventBus = generalEventBus;
     }
 
     @Override
@@ -115,6 +119,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
         this.embeddedDocument = this.editor.getDocument();
         this.cursorModel = new EmbeddedEditorCursorModel(this.embeddedDocument);
+
+        // Inform of the document availability
+        // Send *before* setting the content or the listeners will not be ready to listen
+        // to document change events
+        this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.embeddedDocument));
 
         this.editor.setValue(contents);
         this.editor.setTabSize(this.tabSize);
