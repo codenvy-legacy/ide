@@ -120,4 +120,9 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      */
     String getContentType();
 
+    /**
+     * Defines the {@link EditorWidgetFactory}.
+     * @param factory the new factory
+     */
+    public void setEditorWidgetFactory(EditorWidgetFactory<?> factory);
 }

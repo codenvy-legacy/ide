@@ -37,11 +37,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
  *
  * @author "Mickaël Leduque"
  */
-public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Composite implements EmbeddedTextEditorPartView {
+public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
 
     private final static EditorViewUiBinder uibinder    = GWT.create(EditorViewUiBinder.class);
 
-    private final EditorWidgetFactory<T>    editorWidgetFactory;
     private final FileTypeIdentifier        fileTypeIdentifier;
 
     @UiField(provided = true)
@@ -50,7 +49,8 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     @UiField
     SimplePanel                             editorPanel;
 
-    private T                               editor;
+    private EditorWidgetFactory<?>          editorWidgetFactory;
+    private EditorWidget                    editor;
     private CursorModelWithHandler          cursorModel;
     private EmbeddedDocument                embeddedDocument;
 
@@ -67,15 +67,13 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         }
     };
 
-    public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
-                                          final FileTypeIdentifier fileTypeIdentifier,
+    public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
                                           final InfoPanelFactory infoPanelFactory) {
         infoPanel = infoPanelFactory.create(this);
 
         final HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
 
-        this.editorWidgetFactory = editorWidgetFactory;
         this.fileTypeIdentifier = fileTypeIdentifier;
 
     }
@@ -233,12 +231,18 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         return this.editor.getUndoRedo();
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void setEditorWidgetFactory(final EditorWidgetFactory editorWidgetFactory) {
+        this.editorWidgetFactory = editorWidgetFactory;
+    }
+
     /**
      * UI binder interface for this component.
      *
      * @author "Mickaël Leduque"
      */
-    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl<?>> {
+    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl> {
     }
 
     @Override
