@@ -35,10 +35,10 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
     private final BuilderLocalizationConstant builderLocalizationConstant;
-    private final BuilderConsoleView view;
-    private final ToolbarPresenter   consoleToolbar;
-    private final BuilderResources   builderResources;
-    private boolean       isUnread            = false;
+    private final BuilderConsoleView          view;
+    private final ToolbarPresenter            consoleToolbar;
+    private final BuilderResources            builderResources;
+    private boolean       isUnread             = false;
     private BuilderStatus currentBuilderStatus = BuilderStatus.IDLE;
 
     @Inject

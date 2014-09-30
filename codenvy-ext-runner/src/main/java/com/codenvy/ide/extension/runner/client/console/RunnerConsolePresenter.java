@@ -38,16 +38,16 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
-    private final RunnerConsoleView view;
-    private final ToolbarPresenter  consoleToolbar;
-    private final RunnerResources   runnerResources;
+    private final RunnerConsoleView          view;
+    private final ToolbarPresenter           consoleToolbar;
+    private final RunnerResources            runnerResources;
     private final RunnerLocalizationConstant runnerLocalizationConstant;
-    private       String            appURL;
-    private       String            shellURL;
-    private boolean isUnread;
-    private boolean isTerminalFrameAlreadyLoaded;
-    private boolean isAppPreviewFrameAlreadyLoaded;
-    private RunnerStatus currentRunnerStatus;
+    private       String                     appURL;
+    private       String                     shellURL;
+    private       boolean                    isUnread;
+    private       boolean                    isTerminalFrameAlreadyLoaded;
+    private       boolean                    isAppPreviewFrameAlreadyLoaded;
+    private       RunnerStatus               currentRunnerStatus;
 
     private enum Tab {
         CONSOLE, TERMINAL, APP
@@ -217,7 +217,9 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     /** Should be called when current app is stopped. */
     public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
-        appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL).getHref() : null;
+        appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor,
+                                                                                                                  Constants.LINK_REL_WEB_URL)
+                                                                                                         .getHref() : null;
         if (appURL != null && activeTab == Tab.APP)
             view.reloadAppPreviewFrame(appURL);
     }
@@ -225,7 +227,9 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     /** Should be called when current app is stopped. */
     public void onShellStarted(ApplicationProcessDescriptor processDescriptor) {
-        shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL).getHref() : null;
+        shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor,
+                                                                                                                      Constants.LINK_REL_SHELL_URL)
+                                                                                                             .getHref() : null;
         if (shellURL != null && activeTab == Tab.TERMINAL)
             view.reloadTerminalFrame(shellURL);
     }
