@@ -12,9 +12,11 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
+import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -44,11 +46,23 @@ public class TextEditorInit {
         final DocReadyInit<TextEditorInit> init = new DocReadyInit<TextEditorInit>() {
 
             @Override
-            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {
-
+            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {	
+                configurePartitioner(documentHandle);
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
     }
 
+    /**
+     * Configures the editor's DocumentPartitioner.
+     * @param documentHandle the handle to the document
+     */
+    private void configurePartitioner(final DocumentHandle documentHandle) {
+        final DocumentPartitioner partitioner = configuration.getPartitioner();
+        if (partitioner != null) {
+            partitioner.setDocumentHandle(documentHandle);
+            documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, partitioner);
+            partitioner.initialize();
+        }
+    }
 }
