@@ -17,6 +17,7 @@ import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
+import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -48,6 +49,7 @@ public class TextEditorInit {
             @Override
             public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {	
                 configurePartitioner(documentHandle);
+                configureReconciler(documentHandle);
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -63,6 +65,19 @@ public class TextEditorInit {
             partitioner.setDocumentHandle(documentHandle);
             documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, partitioner);
             partitioner.initialize();
+        }
+    }
+
+    /**
+     * Configures the editor's Reconciler.
+     * @param documentHandle the handle to the document
+     */
+    private void configureReconciler(final DocumentHandle documentHandle) {
+        final Reconciler reconciler = configuration.getReconciler();
+        if (reconciler != null) {
+            reconciler.setDocumentHandle(documentHandle);
+            documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, reconciler);
+            reconciler.install();
         }
     }
 }
