@@ -60,6 +60,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final EmbeddedTextEditorViewFactory textEditorViewFactory;
 
     private final DocumentStorage documentStorage;
+    private final EventBus                      generalEventBus;
 
     private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
@@ -77,12 +78,14 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
 
+        this.generalEventBus = eventBus;
         eventBus.addHandler(FileEvent.TYPE, this);
     }
 
     @Override
     protected void initializeEditor() {
         editor.configure(getConfiguration(), getEditorInput().getFile());
+        new TextEditorInit(configuration, generalEventBus, this.editor.getEditorHandle()).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
