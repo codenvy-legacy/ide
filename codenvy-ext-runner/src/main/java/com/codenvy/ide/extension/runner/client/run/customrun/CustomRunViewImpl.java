@@ -141,9 +141,9 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     @Override
-    public void setSelectedEnvironment(@Nonnull String environmentName) {
+    public void setSelectedEnvironment(@Nonnull String environmentId) {
         for (Environment environment : environments.asIterable()) {
-            if (environmentName.equals(environment.getDisplayName())) {
+            if (environmentId.equals(environment.getId())) {
                 environmentField.setSelectedIndex(environments.indexOf(environment));
                 return;
             }
@@ -154,7 +154,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     public void addEnvironments(@Nonnull Array<Environment> environments) {
         this.environments.addAll(environments);
         for (Environment environment : environments.asIterable()) {
-            environmentField.addItem(environment.getDisplayName());
+            environmentField.addItem(environment.getDisplayName(), environment.getId());
         }
     }
 

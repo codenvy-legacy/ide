@@ -34,10 +34,10 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
     /**
      * Set selected environment.
      *
-     * @param environmentName
+     * @param environmentId
      *         runner environment
      */
-    void setSelectedEnvironment(@Nonnull String environmentName);
+    void setSelectedEnvironment(@Nonnull String environmentId);
 
     /**
      * Add environments to the list.

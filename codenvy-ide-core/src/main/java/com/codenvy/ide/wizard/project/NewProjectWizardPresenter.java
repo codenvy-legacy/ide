@@ -665,21 +665,20 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private String getAvailableRam(String usedMemory) {
-        String availableMemorySize = "undefined";
         if (workspaceMemory > 0 ) {
-            Integer memorySize = workspaceMemory;
+            Integer availableRam = workspaceMemory;
 
             if (usedMemory != null) {
-                memorySize -= Integer.valueOf(usedMemory);
+                availableRam -= Integer.valueOf(usedMemory);
             }
-            if (memorySize > 1000) {
-                String fractionalPart = (memorySize % 1000 < 100) ? (".0" + memorySize % 1000 + "GB") : ("." + memorySize % 1000 + "GB");
-                return availableMemorySize = memorySize / 1000 + fractionalPart;
+            if (availableRam > 1000) {
+                String fractionalPart = (availableRam % 1000 < 100) ? (".0" + availableRam % 1000 + "GB") : ("." + availableRam % 1000 + "GB");
+                return availableRam / 1000 + fractionalPart;
             }
-            if (memorySize > 0 && memorySize < 1000) {
-                return availableMemorySize = memorySize + "MB";
+            if (availableRam > 0 && availableRam < 1000) {
+                return availableRam + "MB";
             }
         }
-        return availableMemorySize;
+        return "undefined";
     }
 }
