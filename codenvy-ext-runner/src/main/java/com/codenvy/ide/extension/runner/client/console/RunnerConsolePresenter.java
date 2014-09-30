@@ -168,6 +168,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
 
     public void setCurrentRunnerStatus(RunnerStatus currentRunnerStatus) {
         this.currentRunnerStatus = currentRunnerStatus;
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /**

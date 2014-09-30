@@ -192,6 +192,7 @@ public class RunController implements Notification.OpenNotificationHandler {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 console.clear();
+                console.setCurrentRunnerStatus(RunnerStatus.IDLE);
             }
         });
 
