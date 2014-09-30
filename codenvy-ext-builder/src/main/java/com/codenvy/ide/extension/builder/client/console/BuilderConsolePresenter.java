@@ -137,6 +137,7 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
 
     public void setCurrentBuilderStatus(BuilderStatus currentBuilderStatus) {
         this.currentBuilderStatus = currentBuilderStatus;
+        firePropertyChange(TITLE_PROPERTY);
     }
 
     /** {@inheritDoc} */
