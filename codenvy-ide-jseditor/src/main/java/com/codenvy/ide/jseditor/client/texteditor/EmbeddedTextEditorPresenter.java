@@ -28,6 +28,7 @@ import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -47,11 +48,10 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter part for the embedded variety of editor implementations.
- *
- * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
-                                                                                    UndoableEditor {
+                                                                                    UndoableEditor,
+                                                                                    Delegate {
 
     /** File type used when we have no idea of the actual content type. */
     public final static String DEFAULT_CONTENT_TYPE = "text/plain";
@@ -63,11 +63,14 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final DocumentStorage documentStorage;
     private final EventBus                      generalEventBus;
     private final CodeAssistantFactory          codeAssistantFactory;
-
+    
     private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
     private EmbeddedTextEditorPartView      editor;
     private OutlineImpl                     outline;
+
+    /** The editor's error state. */
+    private EditorState errorState;
 
     @AssistedInject
     public EmbeddedTextEditorPresenter(final Resources resources,
@@ -197,6 +200,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         this.configuration = configuration;
         this.notificationManager = notificationManager;
         this.editor = this.textEditorViewFactory.createTextEditorPartView();
+        this.editor.setDelegate(this);
     }
 
     @Override
@@ -279,5 +283,16 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         } else {
             return null;
         }
+    }
+
+    @Override
+    public EditorState getErrorState() {
+        return this.errorState;
+    }
+
+    @Override
+    public void setErrorState(final EditorState errorState) {
+        this.errorState = errorState;
+        firePropertyChange(ERROR_STATE);
     }
 }
