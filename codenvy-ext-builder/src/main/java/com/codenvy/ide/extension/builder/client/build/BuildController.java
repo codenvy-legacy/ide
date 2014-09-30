@@ -121,6 +121,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
                 console.clear();
+                console.setCurrentBuilderStatus(BuilderStatus.IDLE);
                 activeProject = null;
                 lastBuildTaskDescriptor = null;
             }
