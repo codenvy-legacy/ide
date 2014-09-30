@@ -187,16 +187,16 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
             return;
         }
 
-        FileNode eventFile = event.getFile();
-        FileNode file = input.getFile();
+        final FileNode eventFile = event.getFile();
+        final FileNode file = input.getFile();
         if (file.equals(eventFile)) {
             workspaceAgent.removePart(this);
         }
     }
 
     @Override
-    public void initialize(@Nonnull TextEditorConfiguration configuration,
-                           @Nonnull NotificationManager notificationManager) {
+    public void initialize(@Nonnull final TextEditorConfiguration configuration,
+                           @Nonnull final NotificationManager notificationManager) {
         this.configuration = configuration;
         this.notificationManager = notificationManager;
         this.editor = this.textEditorViewFactory.createTextEditorPartView();
