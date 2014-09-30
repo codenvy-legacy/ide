@@ -15,6 +15,7 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
@@ -144,5 +145,13 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @return the {@link HasKeybindings}
      */
     HasKeybindings getHasKeybindings();
+
+    /**
+     * Invoke the code complete dialog.
+     *
+     * @param completionsSource the completion source
+     */
+    void showCompletionProposals(CompletionsSource completionsSource);
+
 
 }

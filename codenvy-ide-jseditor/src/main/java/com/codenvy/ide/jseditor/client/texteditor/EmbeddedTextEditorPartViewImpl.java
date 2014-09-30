@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
@@ -255,6 +256,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         return this.editor;
     }
 
+    @Override
+    public void showCompletionProposals(final CompletionsSource source) {
+        this.editor.showCompletionProposals(source);
+    }
+
     /**
      * UI binder interface for this component.
      * 
@@ -267,5 +273,4 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     public void markClean() {
         this.editor.markClean();
     }
-
 }
