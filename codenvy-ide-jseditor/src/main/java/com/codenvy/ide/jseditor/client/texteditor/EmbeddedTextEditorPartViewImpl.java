@@ -14,6 +14,8 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
@@ -34,30 +36,30 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
- *
+ * 
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
 
-    private final static EditorViewUiBinder uibinder    = GWT.create(EditorViewUiBinder.class);
+    private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
 
-    private final FileTypeIdentifier        fileTypeIdentifier;
+    private final FileTypeIdentifier fileTypeIdentifier;
 
     @UiField(provided = true)
-    InfoPanel                               infoPanel;
+    InfoPanel infoPanel;
 
     @UiField
-    SimplePanel                             editorPanel;
+    SimplePanel editorPanel;
 
-    private EditorWidgetFactory<?>          editorWidgetFactory;
-    private EditorWidget                    editor;
-    private CursorModelWithHandler          cursorModel;
-    private EmbeddedDocument                embeddedDocument;
+    private EditorWidgetFactory< ? > editorWidgetFactory;
+    private EditorWidget editor;
+    private CursorModelWithHandler cursorModel;
+    private EmbeddedDocument embeddedDocument;
 
-    private List<String>                    editorModes = null;
+    private List<String> editorModes = null;
 
-    private int                             tabSize     = 3;
-    private boolean                         delayedFocus = false;
+    private int tabSize = 3;
+    private boolean delayedFocus = false;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -67,6 +69,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         }
     };
 
+    @Inject
     public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
                                           final InfoPanelFactory infoPanelFactory) {
         infoPanel = infoPanelFactory.create(this);
@@ -239,7 +242,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     /**
      * UI binder interface for this component.
-     *
+     * 
      * @author "Mickaël Leduque"
      */
     interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl> {
