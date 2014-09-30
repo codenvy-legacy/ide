@@ -23,6 +23,7 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
@@ -61,6 +62,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     private final DocumentStorage documentStorage;
     private final EventBus                      generalEventBus;
+    private final CodeAssistantFactory          codeAssistantFactory;
 
     private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
@@ -72,11 +74,13 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                                        final WorkspaceAgent workspaceAgent,
                                        final EventBus eventBus,
                                        final DocumentStorage documentStorage,
+                                       final CodeAssistantFactory codeAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory) {
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
+        this.codeAssistantFactory = codeAssistantFactory;
 
         this.generalEventBus = eventBus;
         eventBus.addHandler(FileEvent.TYPE, this);
@@ -85,7 +89,8 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     protected void initializeEditor() {
         editor.configure(getConfiguration(), getEditorInput().getFile());
-        new TextEditorInit(configuration, generalEventBus, this.editor.getEditorHandle()).init();
+        new TextEditorInit(configuration, generalEventBus,
+                           this.editor.getEditorHandle(), this.codeAssistantFactory).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.

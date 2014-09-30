@@ -19,10 +19,12 @@ import javax.inject.Inject;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
@@ -69,6 +71,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     private int tabSize = 3;
     private boolean delayedFocus = false;
+	private boolean codeAssistEnabled = false;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -164,17 +167,24 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public boolean canDoOperation(int operation) {
+    public boolean canDoOperation(final int operation) {
+        if (TextEditorOperations.CODEASSIST_PROPOSALS == operation && this.codeAssistEnabled) {
+            return true;
+        }
         return false;
     }
 
     @Override
-    public void doOperation(int operation) {
+    public void doOperation(final int operation) {
         switch (operation) {
+            case TextEditorOperations.CODEASSIST_PROPOSALS:
+                if (this.embeddedDocument != null) {
+                    this.embeddedDocument.getDocumentHandle().getDocEventBus().fireEvent(new CompletionRequestEvent());
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }
-
     }
 
     @Override
@@ -293,6 +303,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void setErrorState(final EditorState errorState) {
         this.delegate.setErrorState(errorState);
+    }
+
+    @Override
+    public void setCodeAssistEnabled(boolean codeAssistEnabled) {
+        this.codeAssistEnabled = true;
     }
 
     /**

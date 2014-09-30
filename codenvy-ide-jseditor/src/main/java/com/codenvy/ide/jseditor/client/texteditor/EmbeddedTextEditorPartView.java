@@ -155,6 +155,12 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     void showCompletionProposals(CompletionsSource completionsSource);
 
     /**
+     * Mark the editor view as allowing code assist.
+     * @param codeAssistEnabled true to enable code assist
+     */
+    void setCodeAssistEnabled(boolean codeAssistEnabled);
+
+    /**
      * Sets the view delegate.
      * @param delegate the delegate
      */
