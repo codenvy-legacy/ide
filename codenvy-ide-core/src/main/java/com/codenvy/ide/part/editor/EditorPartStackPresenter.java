@@ -26,6 +26,8 @@ import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -138,8 +140,17 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         part.go(partViewContainer);
 
         setActivePart(part);
-        // request focus
-        onRequestFocus();
+
+//        // request focus
+//        onRequestFocus();
+
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                partStackHandler.onActivePartChanged(activePart);
+            }
+        });
+
     }
 
     /** {@inheritDoc} */
@@ -160,8 +171,9 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         }
         // request part stack to get the focus
         onRequestFocus();
-        // notify handler, that part changed
-        partStackHandler.onActivePartChanged(activePart);
+
+//        // notify handler, that part changed
+//        partStackHandler.onActivePartChanged(activePart);
     }
 
     /** {@inheritDoc} */

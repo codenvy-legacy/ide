@@ -14,6 +14,7 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
+import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -83,10 +84,17 @@ public class FocusManager {
         // nothing to do
         if (activePartStack == partStack || partStack == null) {
             if (activePartStack != null) {
-                activePartChanged(activePartStack.getActivePart());
+                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        activePartChanged(activePartStack.getActivePart());
+                    }
+                });
+//                activePartChanged(activePartStack.getActivePart());
             }
             return;
         }
+
         // drop focus from partStacks
         if (activePartStack != null) {
             activePartStack.setFocus(false);
@@ -95,7 +103,14 @@ public class FocusManager {
         activePartStack = partStack;
         activePartStack.setFocus(true);
 
-        activePartChanged(activePartStack.getActivePart());
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                activePartChanged(activePartStack.getActivePart());
+            }
+        });
+
+//        activePartChanged(activePartStack.getActivePart());
     }
 
 }
