@@ -47,7 +47,7 @@ svg.partIcon {
     fill: mainFontColor;
 }
 .inProgress {
-    fill: #56e33b;
+    fill: mainFontColor;
 }
 .running {
     fill: #52ade1;
