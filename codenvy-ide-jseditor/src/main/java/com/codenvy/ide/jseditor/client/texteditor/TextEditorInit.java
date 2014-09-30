@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
+import com.codenvy.ide.jseditor.client.annotation.AnnotationModelEvent;
+import com.codenvy.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
+import com.codenvy.ide.jseditor.client.annotation.GutterAnnotationRenderer;
+import com.codenvy.ide.jseditor.client.annotation.InlineAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
@@ -50,6 +55,7 @@ public class TextEditorInit {
             public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {	
                 configurePartitioner(documentHandle);
                 configureReconciler(documentHandle);
+                configureAnnotationModel(documentHandle);
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -79,5 +85,33 @@ public class TextEditorInit {
             documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, reconciler);
             reconciler.install();
         }
+    }
+
+    /**
+     * Configures the editor's annotation model.
+     * @param documentHandle the handle on the editor
+     */
+    private void configureAnnotationModel(final DocumentHandle documentHandle) {
+        final AnnotationModel annotationModel = configuration.getAnnotationModel();
+        if (annotationModel == null) {
+            return;
+        }
+        // add the renderers (event handler) before the model (event source)
+
+        // gutter renderer
+        final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
+        annotationRenderer.setDocumentHandle(documentHandle);
+        annotationRenderer.setHasGutter(this.editorHandle.getEditor().getHasGutter());
+        documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, annotationRenderer);
+        documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, annotationRenderer);
+
+        // inline renderer
+        final InlineAnnotationRenderer inlineAnnotationRenderer = new InlineAnnotationRenderer();
+        inlineAnnotationRenderer.setDocumentHandle(documentHandle);
+        inlineAnnotationRenderer.setHasTextMarkers(this.editorHandle.getEditor().getHasTextMarkers());
+        documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, inlineAnnotationRenderer);
+
+        annotationModel.setDocumentHandle(documentHandle);
+        documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, annotationModel);
     }
 }
