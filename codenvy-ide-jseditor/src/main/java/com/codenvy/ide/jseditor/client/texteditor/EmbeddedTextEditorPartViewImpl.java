@@ -200,6 +200,16 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     }
 
     @Override
+    public void setSelectedRegion(final Region region) {
+        this.setSelectedRegion(region, true);
+    }
+
+    @Override
+    public void setSelectedRegion(final Region region, final boolean show) {
+        this.editor.setSelectedRange(region, show);
+    }
+
+    @Override
     public void onResize() {
         this.editor.onResize();
     }

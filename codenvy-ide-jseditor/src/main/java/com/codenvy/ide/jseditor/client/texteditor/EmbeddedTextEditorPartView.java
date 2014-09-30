@@ -90,4 +90,19 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      */
     EditorHandle getEditorHandle();
 
+    /**
+     * Replaces the selection by the given range.
+     *
+     * @param region the new selection
+     */
+    void setSelectedRegion(Region region);
+
+    /**
+     * Replaces the selection by the given range and optionally scrolls the editor to show the range.
+     *
+     * @param region the new selection
+     * @param show scroll to show iff value is true
+     */
+    void setSelectedRegion(Region region, boolean show);
+
 }
