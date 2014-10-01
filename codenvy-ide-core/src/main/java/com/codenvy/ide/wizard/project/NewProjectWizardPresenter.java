@@ -552,25 +552,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         wizardContext.clear();
         view.setSaveActionTitle(false);
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
-
-        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
-            @Override
-            protected void onSuccess(ResourcesDescriptor result) {
-                workspaceMemory = Integer.valueOf(result.getTotalMemory());
-                String usedMemory = result.getUsedMemory();
-
-                view.setRAMAvailable(getAvailableRam(usedMemory));
-                showFirstPage();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                Info infoWindow = new Info(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed());
-                infoWindow.show();
-                Log.error(getClass(), exception.getMessage());
-            }
-        });
+        setAvailableRam();
     }
 
     private void showFirstPage() {
@@ -591,7 +573,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         workspaceMemory = 0;
         fillWizardContext(context.getData(ProjectWizard.PROJECT));
         view.setSaveActionTitle(wizardContext.getData(ProjectWizard.PROJECT) != null);
+        setAvailableRam();
+    }
 
+    private void setAvailableRam() {
         runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
@@ -629,12 +614,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * Save recommended Ram in projectDescriptor from wizardContext.
      *
      * @param projectDescriptor
-     *         data transfer object (DTO) for com.codenvy.api.project.shared.ProjectDescription.
+     *         data transfer object (DTO) for {@link com.codenvy.api.project.shared.ProjectDescription}.
      */
     private void saveRecommendedRamInProjectDescriptor(ProjectDescriptor projectDescriptor) {
         String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
         Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
-        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
+        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
         if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
             projectDescriptor.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
             runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
@@ -652,7 +637,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * Fill the wizardContext with data from projectDescriptor.
      *
      * @param projectDescriptor
-     *         data transfer object (DTO) for com.codenvy.api.project.shared.ProjectDescription.
+     *         data transfer object (DTO) for {@link com.codenvy.api.project.shared.ProjectDescription}.
      */
     private void fillWizardContext(ProjectDescriptor projectDescriptor) {
         wizardContext.putData(ProjectWizard.PROJECT, projectDescriptor);
