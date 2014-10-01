@@ -16,7 +16,7 @@
     <g:DockLayoutPanel unit="PX" width="100%" height="100%"
                        ui:field="parent">
         <g:north size="26.0">
-            <g:FlowPanel ui:field="tabsPanel"/>
+            <g:FlowPanel ui:field="tabsPanel" debugId="editorPartStack-tabsPanel"/>
         </g:north>
         <g:center>
             <g:DeckLayoutPanel ui:field="contentPanel" debugId="editorPartStack-contentPanel"/>
