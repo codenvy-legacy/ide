@@ -12,11 +12,11 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.google.inject.Inject;
 
@@ -47,8 +47,10 @@ public class RedoAction extends Action {
         EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
 
         if (activeEditor != null && activeEditor instanceof UndoableEditor) {
-            UndoManager undoManager = ((UndoableEditor)activeEditor).getUndoManager();
-            undoManager.redo();
+            final HandlesUndoRedo undoRedo = ((UndoableEditor)activeEditor).getUndoRedo();
+            if (undoRedo != null) {
+                undoRedo.redo();
+            }
         }
     }
 
@@ -56,11 +58,13 @@ public class RedoAction extends Action {
     public void update(ActionEvent e) {
         EditorPartPresenter activeEditor = editorAgent.getActiveEditor();
 
+        boolean mustEnable = false;
         if (activeEditor != null && activeEditor instanceof UndoableEditor) {
-            UndoManager undoManager = ((UndoableEditor)activeEditor).getUndoManager();
-            e.getPresentation().setEnabled(undoManager.redoable());
-        } else {
-            e.getPresentation().setEnabled(false);
+            final HandlesUndoRedo undoRedo = ((UndoableEditor)activeEditor).getUndoRedo();
+            if (undoRedo != null) {
+                mustEnable = undoRedo.redoable();
+            }
         }
+        e.getPresentation().setEnabled(mustEnable);
     }
 }

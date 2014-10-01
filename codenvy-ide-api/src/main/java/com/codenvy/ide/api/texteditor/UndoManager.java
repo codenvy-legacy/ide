@@ -15,7 +15,7 @@ package com.codenvy.ide.api.texteditor;
  *
  * @author Roman Nikitenko
  */
-public interface UndoManager {
+public interface UndoManager extends HandlesUndoRedo {
 
     /**
      * Signals the undo manager that all subsequent changes until
@@ -57,25 +57,4 @@ public interface UndoManager {
      * there aren't any undo-able or redo-able text changes.
      */
     void reset();
-
-    /**
-     * Returns whether at least one text change can be repeated. A text change
-     * can be repeated only if it was executed and rolled back.
-     *
-     * @return <code>true</code> if at least on text change can be repeated
-     */
-    boolean redoable();
-
-    /**
-     * Returns whether at least one text change can be rolled back.
-     *
-     * @return <code>true</code> if at least one text change can be rolled back
-     */
-    boolean undoable();
-
-    /** Repeats the most recently rolled back text change. */
-    void redo();
-
-    /** Rolls back the most recently executed text change. */
-    void undo();
 }

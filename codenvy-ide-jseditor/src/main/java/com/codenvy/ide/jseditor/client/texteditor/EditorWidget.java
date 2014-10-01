@@ -13,6 +13,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import javax.validation.constraints.NotNull;
 
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
@@ -29,7 +30,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
  * @author "Mickaël Leduque"
  */
 public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers, HasCursorActivityHandlers,
-                                      RequiresResize {
+                                      RequiresResize, UndoableEditor {
 
     /**
      * Returns the contents of the editor.

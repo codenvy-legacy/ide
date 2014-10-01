@@ -15,6 +15,7 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
+import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
@@ -28,7 +29,8 @@ import com.google.gwt.user.client.ui.RequiresResize;
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
-                                           IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget, HasChangeHandlers {
+                                           IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
+                                           HasChangeHandlers, UndoableEditor {
 
     boolean isDirty();
 

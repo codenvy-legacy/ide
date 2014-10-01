@@ -79,6 +79,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -693,7 +694,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+        console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
         startCheckingAppStatus(applicationProcessDescriptor);

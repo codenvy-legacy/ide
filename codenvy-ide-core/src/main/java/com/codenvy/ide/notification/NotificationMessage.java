@@ -105,17 +105,9 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         iconPanel.setStyleName(resources.notificationCss().notificationMessage());
         mainPanel.addWest(iconPanel, 25);
 
-        if (!notification.isFinished()) {
-            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
-        } else if (notification.isWarning()) {
-            changeImage(resources.warning());
-            mainPanel.addStyleName(resources.notificationCss().warning());
-        } else if (notification.isError()) {
-            changeImage(resources.error());
-            mainPanel.addStyleName(resources.notificationCss().error());
-        } else {
-            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
-        }
+        changeProgress();
+
+        changeType();
 
         SVGImage closeIcon = new SVGImage(resources.closePopup());
         closeIcon.getElement().setAttribute("class", resources.notificationCss().closePopupIcon());
@@ -127,8 +119,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         });
         mainPanel.addEast(closeIcon, 38);
 
-        //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
+        changeMessage();
         title.setStyleName(resources.notificationCss().center());
         mainPanel.add(title);
         setWidget(mainPanel);
@@ -182,28 +173,44 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     @Override
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
-            if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setHTML("<p>" + notification.getMessage() + "</p>");
+            changeMessage();
+
+            changeProgress();
+
+            if (notification.isImportant()) {
+                show();
             }
 
-            if (!notification.isFinished()) {
-                changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
-            } else if (!prevState.getType().equals(notification.getType())) {
-                changeType();
-            } else {
-                changeType();
-            }
+            changeType();
+
 
             prevState = notification.clone();
         }
     }
 
-    /** Change item's content in response to change notification type */
+    /** Change message. */
+    private void changeMessage() {
+        //If notification message is formated HTML - need to display only plain text from it.
+        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
+    }
+
+    /** Change progress feedback when needed. */
+    private void changeProgress() {
+        if (!notification.isFinished()) {
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
+        } else {
+            hideTimer.schedule(DEFAULT_TIME);
+        }
+    }
+
+    /** Change item's content in response to change notification type. */
     private void changeType() {
-        if (prevState.isError()) {
-            mainPanel.removeStyleName(resources.notificationCss().error());
-        } else if (prevState.isWarning()) {
-            mainPanel.removeStyleName(resources.notificationCss().warning());
+        if (prevState != null) {
+            if (prevState.isError()) {
+                mainPanel.removeStyleName(resources.notificationCss().error());
+            } else if (prevState.isWarning()) {
+                mainPanel.removeStyleName(resources.notificationCss().warning());
+            }
         }
 
         if (notification.isWarning()) {
@@ -218,6 +225,20 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * <p>It also deal with important flag (disabling automatic hiding).</p>
+     */
+    @Override
+    public void show() {
+        super.show();
+
+        if (!prevState.isImportant()) {
+            hideTimer.schedule(DEFAULT_TIME);
+        }
+    }
+
+    /**
      * Show message in specified position.
      *
      * @param left
@@ -228,10 +249,6 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     public void show(int left, int top) {
         setPopupPosition(left, top);
         show();
-
-        if (!prevState.isImportant()) {
-            hideTimer.schedule(DEFAULT_TIME);
-        }
     }
 
     /** {@inheritDoc} */

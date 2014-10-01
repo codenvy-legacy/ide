@@ -13,6 +13,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
@@ -190,6 +191,11 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         editorPanel.onResize();
     }
 
+    @Override
+    public HandlesUndoRedo getUndoRedo() {
+        return this.editor.getUndoRedo();
+    }
+
     /**
      * UI binder interface for this component.
      * 
@@ -202,4 +208,5 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     public void markClean() {
         this.editor.markClean();
     }
+
 }
