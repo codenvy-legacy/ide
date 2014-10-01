@@ -18,6 +18,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 
@@ -31,13 +32,16 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     private static OutlinePartViewImplUiBinder ourUiBinder = GWT.create(OutlinePartViewImplUiBinder.class);
 
     @UiField
-    Style                                      style;
+    Style style;
 
     @UiField
-    SimplePanel                                container;
+    SimplePanel container;
 
     @UiField
-    DockLayoutPanel                            noOutline;
+    DockLayoutPanel noOutline;
+
+    @UiField
+    Label noOutlineCause;
 
     @Inject
     public OutlinePartViewImpl(PartStackUIResources resources) {
@@ -49,8 +53,9 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
 
     /** {@inheritDoc} */
     @Override
-    public void showNoOutline() {
+    public void showNoOutline(String cause) {
         clear();
+        noOutlineCause.setText(cause);
         container.add(noOutline);
     }
 
@@ -66,7 +71,9 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
         return container;
     }
 
-    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {}
+    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {
+    }
 
-    interface Style extends CssResource {}
+    interface Style extends CssResource {
+    }
 }
