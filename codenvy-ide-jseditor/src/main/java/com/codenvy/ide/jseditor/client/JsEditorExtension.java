@@ -16,7 +16,7 @@ import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.google.inject.Inject;
 
-@Extension(title = "Common editor components.", version = "3.0.0")
+@Extension(title = "Common editor components.", version = "3.1.0")
 public class JsEditorExtension {
 
     /** The default editor injection name. */
