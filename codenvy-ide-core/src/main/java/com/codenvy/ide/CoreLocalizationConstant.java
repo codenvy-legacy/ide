@@ -403,4 +403,10 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("outline.titleBar.text")
     String outlineTitleBarText();
+
+    @Key("outline.notAvailable.message")
+    String outlineNotAvailableMessage();
+
+    @Key("outline.noFileOpened.message")
+    String outlineNoFileOpenedMessage();
 }

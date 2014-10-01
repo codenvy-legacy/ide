@@ -15,29 +15,28 @@
 	xmlns:svgui='urn:import:org.vectomatic.dom.svg.ui'>
 	<ui:with field='res' type='com.codenvy.ide.Resources' />
 	<ui:style type="com.codenvy.ide.outline.OutlinePartViewImpl.Style">
-        .container-style{
-            	border: none !important;
+        .container-style {
+            border: none !important;
         }
 
         .icon-style > svg {
-		display: block;		
-		margin-left: auto;
-    		margin-right: auto;
-		width: 140px;
-		height: 140px;
-    		fill: #707070;
-    		background-color: #5d5d5d;
-    		border: 1px solid #505050;
-	}
-        
-        .label-style{
-		margin-top: 22px;
-            	margin-left: auto;
-    		margin-right: auto;
-    		text-align: center;
-    		font-size: smaller;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 140px;
+            height: 140px;
+            fill: #707070;
+            background-color: #5d5d5d;
+            border: 1px solid #505050;
         }
-        
+
+        .label-style {
+            margin-top: 22px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-size: smaller;
+        }
     </ui:style>
 	<g:SimplePanel ui:field="container" addStyleNames="{style.container-style}"
 		debugId="outline-container">
@@ -51,9 +50,7 @@
 				</g:HTMLPanel>
 			</g:north>
 			<g:center>
-				<g:Label text="Outline View is not available for the file opened"
-					addStyleNames="{style.label-style}" debugId="outline-no-file-label"
-					height="100%" width="70%" />
+				<g:Label ui:field="noOutlineCause" addStyleNames="{style.label-style}" debugId="outline-no-file-label" height="100%" width="70%" />
 			</g:center>
 		</g:DockLayoutPanel>
 	</g:SimplePanel>
