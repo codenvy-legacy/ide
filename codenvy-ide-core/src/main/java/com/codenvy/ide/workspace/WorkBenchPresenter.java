@@ -64,7 +64,8 @@ public class WorkBenchPresenter implements Presenter {
                               PartStackViewFactory partViewFactory,
                               OutlinePart outlinePart,
                               ProjectExplorerPart projectExplorerPart,
-                              NotificationManager notificationManager) {
+                              NotificationManager notificationManager,
+                              HideWidgetCallback hideWidgetCallback) {
         this.view = view;
 
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
@@ -73,17 +74,20 @@ public class WorkBenchPresenter implements Presenter {
         PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT, view.leftPanel);
 
         PartStack navigationPartStack =
-                stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel));
+                stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel,
+                                                                                             hideWidgetCallback));
         partStacks.put(PartStackType.NAVIGATION.toString(), navigationPartStack);
 
         PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.bottomPanel);
         PartStack informationStack =
-                stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel));
+                stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel,
+                                                                                              hideWidgetCallback));
         partStacks.put(PartStackType.INFORMATION.toString(), informationStack);
 
         PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.rightPanel);
         PartStack toolingPartStack =
-                stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel));
+                stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel,
+                                                                                          hideWidgetCallback));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
         openPart(outlinePart, PartStackType.TOOLING);
