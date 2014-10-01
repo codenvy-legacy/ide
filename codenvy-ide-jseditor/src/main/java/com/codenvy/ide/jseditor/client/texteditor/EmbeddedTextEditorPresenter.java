@@ -19,6 +19,8 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
@@ -47,7 +49,8 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * 
  * @author "Mickaël Leduque"
  */
-public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler {
+public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
+                                                                                    UndoableEditor {
 
     private final Resources                     resources;
     private final WorkspaceAgent                workspaceAgent;
@@ -247,5 +250,14 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     public void doSaveAs() {
         // TODO not implemented
+    }
+
+    @Override
+    public HandlesUndoRedo getUndoRedo() {
+        if(this.editor != null) {
+            return this.editor.getUndoRedo();
+        } else {
+            return null;
+        }
     }
 }
