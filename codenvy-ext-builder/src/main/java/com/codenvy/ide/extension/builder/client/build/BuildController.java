@@ -330,7 +330,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 stopCheckingOutput();
 
                 notification.setStatus(FINISHED);
-                notification.setType(WARNING);
+                notification.setType(ERROR);
                 notification.setMessage(constant.buildCanceled(activeProject.getName()));
 
                 console.setCurrentBuilderStatus(BuilderStatus.FAILED);

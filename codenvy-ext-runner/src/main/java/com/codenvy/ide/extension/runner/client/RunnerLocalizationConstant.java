@@ -124,11 +124,17 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("project.running.now")
     String projectRunningNow(String project);
 
+    @Key("launchingRunner")
+    String launchingRunner(String name);
+
     @Key("appStarting")
     String applicationStarting(String name);
 
     @Key("appStarted")
     String applicationStarted(String name);
+
+    @Key("environmentCooking")
+    String environmentCooking(String name);
 
     @Key("startAppFailed")
     String startApplicationFailed(String name);
