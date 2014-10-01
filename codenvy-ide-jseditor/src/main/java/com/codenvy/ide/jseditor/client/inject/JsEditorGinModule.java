@@ -61,10 +61,6 @@ public class JsEditorGinModule extends AbstractGinModule {
         // Bind the file type identifier
         bind(FileTypeIdentifier.class).to(MultipleMethodFileIdentifier.class);
 
-        // bind the default editor type key
-        bindConstant().annotatedWith(Names.named(JsEditorExtension.CLASSIC_EDITOR_TYPE_INJECT_NAME))
-                      .to(JsEditorExtension.CLASSIC_EDITOR_KEY);
-
         // editor registration and selection
         bind(EditorTypeMapping.class).to(EditorTypeMappingImpl.class).in(Singleton.class);
         bind(EditorTypeRegistry.class).to(EditorTypeRegistryImpl.class).in(Singleton.class);

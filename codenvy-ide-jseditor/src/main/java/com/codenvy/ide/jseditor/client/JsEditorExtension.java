@@ -10,29 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client;
 
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
-import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
-import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 @Extension(title = "Common editor components.", version = "3.0.0")
 public class JsEditorExtension {
-
-    /** The classic editor type key. */
-    public static final String CLASSIC_EDITOR_KEY              = "classic";
-
-    /** The default editor injection name. */
-    public static final String CLASSIC_EDITOR_TYPE_INJECT_NAME = "ClassicEditorType";
 
     /** The default editor injection name. */
     public static final String DEFAULT_EDITOR_TYPE_INJECT_NAME = "DefaultEditorType";
@@ -42,26 +27,8 @@ public class JsEditorExtension {
 
 
     @Inject
-    public JsEditorExtension(final EditorTypeRegistry editorTypeRegistry,
-                             final Provider<CodenvyTextEditor> editorProvider,
-                             final DocumentProvider documentProvider,
-                             final NotificationManager notificationManager,
-                             final FileTypeRegistry fileTypeRegistry,
-                             final @PlainTextFileType FileType plainText,
-                             final JsEditorConstants constants) {
-
-        // Register classic editor
-        final EditorType classicEditorType = EditorType.fromKey(CLASSIC_EDITOR_KEY);
-        final String classicEditorName = constants.classicEditorDisplayName();
-        editorTypeRegistry.registerEditorType(classicEditorType, classicEditorName, new EditorBuilder() {
-
-            @Override
-            public EditorPartPresenter buildEditor() {
-                final CodenvyTextEditor editor = editorProvider.get();
-                editor.initialize(new TextEditorConfiguration(), documentProvider, notificationManager);
-                return editor;
-            }
-        });
+    public JsEditorExtension(final FileTypeRegistry fileTypeRegistry,
+                             final @PlainTextFileType FileType plainText) {
 
         // register text/plain file type
         fileTypeRegistry.registerFileType(plainText);
