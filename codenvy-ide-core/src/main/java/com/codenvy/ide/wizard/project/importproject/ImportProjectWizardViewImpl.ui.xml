@@ -12,7 +12,7 @@
 -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
+    <ui:with field='resources' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:style>
 
@@ -39,13 +39,13 @@
         <g:FlowPanel width="774px" height="470px" addStyleNames="{style.centerPanel}">
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames="{wizardResources.css.buttonPanel}">
-            <g:Button ui:field="importButton" text="{locale.importProjectButton}" addStyleNames="{wizardResources.css.blueButton}"
+        <g:FlowPanel addStyleNames="{resources.wizardCss.buttonPanel}">
+            <g:Button ui:field="importButton" text="{locale.importProjectButton}" addStyleNames="{resources.wizardCss.blueButton}"
                       tabIndex="5"
                       debugId="importProjectWizard-importButton"/>
-            <g:Button ui:field="nextStepButton" text="{locale.next}" addStyleNames="{wizardResources.css.button}" tabIndex="6"
+            <g:Button ui:field="nextStepButton" text="{locale.next}" addStyleNames="{resources.wizardCss.button}" tabIndex="6"
                       debugId="importProjectWizard-nextStepButton"/>
-            <g:Button ui:field="previousStepButton" text="{locale.back}" addStyleNames="{wizardResources.css.button}" tabIndex="7"
+            <g:Button ui:field="previousStepButton" text="{locale.back}" addStyleNames="{resources.wizardCss.button}" tabIndex="7"
                       debugId="importProjectWizard-previousStepButton"/>
         </g:FlowPanel>
     </g:FlowPanel>

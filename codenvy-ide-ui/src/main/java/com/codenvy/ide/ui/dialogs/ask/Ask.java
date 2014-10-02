@@ -37,7 +37,7 @@ public class Ask extends Window {
     private static AskUiBinder uiBinder = GWT.create(AskUiBinder.class);
 
     private Locale locale = GWT.create(Locale.class);
-
+    
     /**
      * Initialization constructor
      *
@@ -51,6 +51,7 @@ public class Ask extends Window {
     public Ask(String title, String question, final AskHandler handler) {
         Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
+        message.addStyleName(resources.centerPanelCss().label());
         this.message.getElement().setInnerHTML(question);
         setWidget(widget);
         Button ok = createButton(locale.ok(), "ask-dialog-ok", new ClickHandler() {
@@ -61,6 +62,9 @@ public class Ask extends Window {
                 onClose();
             }
         });
+        ok.addStyleName(resources.centerPanelCss().blueButton());
+        ok.setTabIndex(0);
+        
         Button cancel = createButton(locale.cancel(), "ask-dialog-cancel", new ClickHandler() {
 
             @Override
@@ -69,13 +73,17 @@ public class Ask extends Window {
                 onClose();
             }
         });
-        getFooter().add(cancel);
+        cancel.setTabIndex(1);
+        
         getFooter().add(ok);
-
+        getFooter().add(cancel);
+        
+        ok.setFocus(true);
     }
 
     @Override
     protected void onClose() {
         hide();
     }
+    
 }

@@ -13,7 +13,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
-    <ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
+	<ui:with field='resources' type='com.codenvy.ide.Resources'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.importproject.MainPageViewImpl.Style">
         @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
         @eval borderColor com.codenvy.ide.api.theme.Style.getTabBorderColor();

@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.ui;
 
-import com.google.gwt.resources.client.ImageResource;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * @author Vitaly Parfonov
  */
 public interface Resources extends com.google.gwt.resources.client.ClientBundle {
 
-    @Source("dialogs/ask_64.png")
-    ImageResource ask64();
+    @Source("dialogs/question.svg")
+    SVGResource question();
 
     @Source({"Styles.css", "com/codenvy/ide/api/ui/style.css"})
     Styles styles();

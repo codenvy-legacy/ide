@@ -31,7 +31,7 @@ public interface ProjectWizardResources extends ClientBundle {
     }
 
     @Source({"com/codenvy/ide/wizard/newproject/Wizard.css", "com/codenvy/ide/api/ui/style.css"})
-    Css css();
+    Css wizardCss();
 
     @Source({"main/MainPage.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
     MainPageViewImpl.Style mainPageStyle();

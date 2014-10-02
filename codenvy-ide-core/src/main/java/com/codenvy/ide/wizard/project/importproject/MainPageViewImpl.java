@@ -18,7 +18,6 @@ import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
-import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -88,38 +87,34 @@ public class MainPageViewImpl implements MainPageView {
     private final IconRegistry iconRegistry;
 
     @UiField
-    Style                  style;
+    Style                                                                   style;
     @UiField
-    Label                  labelUrlError;
+    Label                                                                   labelUrlError;
     @UiField
-    SimplePanel            categoriesPanel;
+    SimplePanel                                                             categoriesPanel;
     @UiField
-    HTMLPanel              descriptionArea;
+    HTMLPanel                                                               descriptionArea;
     @UiField
-    TextBox                projectName;
+    TextBox                                                                 projectName;
     @UiField
-    TextArea               projectDescription;
+    TextArea                                                                projectDescription;
     @UiField
-    RadioButton            projectPrivate;
+    RadioButton                                                             projectPrivate;
     @UiField
-    RadioButton            projectPublic;
+    RadioButton                                                             projectPublic;
     @UiField
-    TextBox                projectUrl;
+    TextBox                                                                 projectUrl;
     @UiField(provided = true)
-    ProjectWizardResources wizardResources;
-
-    private ActionDelegate                              delegate;
-    private Map<String, Set<ProjectImporterDescriptor>> categories;
-    private Resources                                   resources;
-    private CategoriesList                              list;
+    com.codenvy.ide.Resources                                               resources;
+    private ActionDelegate                                                  delegate;
+    private Map<String, Set<ProjectImporterDescriptor>>                     categories;
+    private CategoriesList                                                  list;
 
     @Inject
     public MainPageViewImpl(Resources resources,
-                            ProjectWizardResources wizardResources,
                             IconRegistry iconRegistry) {
         this.resources = resources;
         this.iconRegistry = iconRegistry;
-        this.wizardResources = wizardResources;
         rootElement = uiBinder.createAndBindUi(this);
         projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("maxlength", "256");
@@ -234,13 +229,13 @@ public class MainPageViewImpl implements MainPageView {
     /** {@inheritDoc} */
     @Override
     public void showNameError() {
-        projectName.addStyleName(wizardResources.css().inputError());
+        projectName.addStyleName(resources.wizardCss().inputError());
     }
 
     /** {@inheritDoc} */
     @Override
     public void hideNameError() {
-        projectName.removeStyleName(wizardResources.css().inputError());
+        projectName.removeStyleName(resources.wizardCss().inputError());
     }
 
     /** {@inheritDoc} */
@@ -252,14 +247,14 @@ public class MainPageViewImpl implements MainPageView {
     /** {@inheritDoc} */
     @Override
     public void showUrlError(String message) {
-        projectUrl.addStyleName(wizardResources.css().inputError());
+        projectUrl.addStyleName(resources.wizardCss().inputError());
         labelUrlError.setText(message);
     }
 
     /** {@inheritDoc} */
     @Override
     public void hideUrlError() {
-        projectUrl.removeStyleName(wizardResources.css().inputError());
+        projectUrl.removeStyleName(resources.wizardCss().inputError());
         labelUrlError.setText("");
     }
 

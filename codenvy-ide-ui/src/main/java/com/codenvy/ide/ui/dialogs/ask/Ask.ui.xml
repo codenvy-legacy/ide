@@ -12,42 +12,30 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+    		 xmlns:svg='urn:import:org.vectomatic.dom.svg.ui'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='resources' type='com.codenvy.ide.ui.Resources'/>
     <ui:style>
-        .spacingTop {
-            margin-top: 20px;
-        }
-
+		@eval mainFontColor com.codenvy.ide.api.theme.Style.getMainFontColor();
+		
         .emptyBorder {
             margin: 6px;
         }
 
-        .noborder {
-            border: 0;
-        }
+		.image {
+			fill: mainFontColor;
+		}
 
-        .noResize {
-            resize: none;
-        }
-
-        .ovwer {
-            float: left;
-        }
-
-        .textArea {
-            float: right;
-            background-color: #1F1F1F;
-            border: medium ridge #6f7277;
-        }
+		.label {
+			margin-bottom: 10px
+		}
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="100px" addStyleNames="{style.emptyBorder}">
-        <g:center>
-            <g:FlowPanel>
-                <g:Image resource="{resources.ask64}" addStyleNames="{style.ovwer} {style.spacingTop}"/>
-                <g:SimplePanel ui:field="message" width="280px" height="100%"
-                               addStyleNames="{style.noResize} {style.noborder} {style.textArea}"/>
-            </g:FlowPanel>
-        </g:center>
-    </g:DockLayoutPanel>
+    <g:HorizontalPanel width="350px" height="100px" addStyleNames="{style.emptyBorder}">
+        <g:cell verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER" width="80px">
+            <svg:SVGImage resource="{resources.question}" classNameBaseVal="{style.image}" width="56px" height="56px"/>
+        </g:cell>
+        <g:cell verticalAlignment="ALIGN_MIDDLE">
+            <g:SimplePanel ui:field="message" addStyleNames="{style.label}" width="270px"/>
+        </g:cell>
+    </g:HorizontalPanel>
 </ui:UiBinder>
