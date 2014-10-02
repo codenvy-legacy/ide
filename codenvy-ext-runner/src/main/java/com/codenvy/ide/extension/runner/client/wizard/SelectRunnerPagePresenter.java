@@ -98,58 +98,12 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     }
 
-//    @Override
-//    public void storeOptions() {
-//        String recommendedMemorySize = view.getRecommendedMemorySize();
-//        int recommendedRam =
-//                (!recommendedMemorySize.isEmpty() && isRecommendedMemoryCorrect()) ? (Integer.valueOf(recommendedMemorySize)) : 0;
-//        wizardContext.putData(ProjectWizard.RECOMMENDED_RAM, recommendedRam);
-//    }
 
     @Override
-    public void setUpdateDelegate(@NotNull Wizard.UpdateDelegate delegate) {
+    public void setUpdateDelegate(@Nonnull Wizard.UpdateDelegate delegate) {
         super.setUpdateDelegate(delegate);
     }
 
-//    @Override
-//    public void commit(@NotNull final CommitCallback callback) {
-//        if (runner == null) {
-//            callback.onSuccess();
-//            return;
-//        }
-//        storeOptions();
-//
-//        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-//        ProjectDescriptor project4Update = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
-//        project.setRunner(runner.getName());
-//
-//        //Save recommended Ram and defaultRunnerEnvironment in projectDescriptor
-//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = null;
-//        if (project != null) {
-//            runEnvConfigurations = project.getRunnerEnvironmentConfigurations();
-//        }
-//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-//            if (projectUpdate != null) {
-//                projectUpdate.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            } else {
-//                newProject.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            }
-//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-//
-//            if (runnerEnvironmentConfigurationDescriptor == null) {
-//                runnerEnvironmentConfigurationDescriptor = factory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-//            }
-//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-//            if (projectUpdate != null) {
-//                projectUpdate.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//            } else {
-//                newProject.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//            }
-//        }
-//    }
 
     @Override
     public void go(AcceptsOneWidget container) {
