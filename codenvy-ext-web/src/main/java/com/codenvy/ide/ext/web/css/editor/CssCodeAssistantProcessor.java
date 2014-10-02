@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Position;
@@ -19,6 +17,8 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.CodeAssistCallback;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.util.AbstractTrie;
 import com.codenvy.ide.util.loging.Log;
 
@@ -179,8 +179,8 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor {
         switch (completionQuery.getCompletionType()) {
             case PROPERTY:
                 Array<CssCompletionProposal> autocompletions = CssTrie.findAndFilterAutocompletions(cssTrie,
-                                                                                                        triggeringString, completionQuery
-                        .getCompletedProperties());
+                                                                                                    triggeringString, completionQuery
+                                .getCompletedProperties());
                 callback.proposalComputed(jsToArray(autocompletions, context));
                 return;
 

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.texteditor;
 
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
@@ -18,9 +17,10 @@ import com.codenvy.ide.api.texteditor.parser.CmParser;
 import com.codenvy.ide.api.texteditor.parser.Parser;
 import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.api.texteditor.reconciler.Reconciler;
+import com.codenvy.ide.collections.StringMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * This class bundles the configuration space of a editor view. Instances of this class are passed to the <code>configure</code> method of
@@ -51,7 +51,7 @@ public class TextEditorConfiguration {
      *         the view to be configured by this configuration
      * @return the tab width
      */
-    public int getTabWidth(@NotNull TextEditorPartView view) {
+    public int getTabWidth(@Nonnull TextEditorPartView view) {
         return 3;
     }
 
@@ -64,7 +64,7 @@ public class TextEditorConfiguration {
      * @return an undo manager or <code>null</code> if no undo/redo should not be supported
      */
     @Nullable
-    public UndoManager getUndoManager(@NotNull TextEditorPartView view) {
+    public UndoManager getUndoManager(@Nonnull TextEditorPartView view) {
         return new UndoManagerImpl(25);
     }
 
@@ -77,7 +77,7 @@ public class TextEditorConfiguration {
      * @return a content formatter or <code>null</code> if formatting should not be supported
      */
     @Nullable
-    public ContentFormatter getContentFormatter(@NotNull TextEditorPartView view) {
+    public ContentFormatter getContentFormatter(@Nonnull TextEditorPartView view) {
         return null;
     }
 
@@ -90,7 +90,7 @@ public class TextEditorConfiguration {
      * @return a content assistant or <code>null</code> if content assist should not be supported
      */
     @Nullable
-    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@Nonnull TextEditorPartView view) {
         return null;
     }
 
@@ -103,7 +103,7 @@ public class TextEditorConfiguration {
      * @return a quick assist assistant or <code>null</code> if quick assist should not be supported
      */
     @Nullable
-    public QuickAssistProcessor getQuickAssistAssistant(@NotNull TextEditorPartView view) {
+    public QuickAssistProcessor getQuickAssistAssistant(@Nonnull TextEditorPartView view) {
         return null;
     }
 
@@ -117,7 +117,7 @@ public class TextEditorConfiguration {
      * @return the auto edit strategies or <code>null</code> if automatic editing is not to be enabled
      */
     @Nullable
-    public AutoEditStrategy[] getAutoEditStrategies(@NotNull TextEditorPartView view, @NotNull String contentType) {
+    public AutoEditStrategy[] getAutoEditStrategies(@Nonnull TextEditorPartView view, @Nonnull String contentType) {
         return new AutoEditStrategy[]{new DefaultIndentLineAutoEditStrategy()};
     }
 
@@ -130,8 +130,8 @@ public class TextEditorConfiguration {
      *         the source viewer to be configured by this configuration
      * @return the configured content types for the given viewer
      */
-    @NotNull
-    public String[] getConfiguredContentTypes(@NotNull TextEditorPartView view) {
+    @Nonnull
+    public String[] getConfiguredContentTypes(@Nonnull TextEditorPartView view) {
         return new String[]{Document.DEFAULT_CONTENT_TYPE};
     }
 
@@ -144,8 +144,8 @@ public class TextEditorConfiguration {
      * @return the configured partitioning
      * @see #getConfiguredContentTypes(TextEditorPartView)
      */
-    @NotNull
-    public String getConfiguredDocumentPartitioning(@NotNull TextEditorPartView view) {
+    @Nonnull
+    public String getConfiguredDocumentPartitioning(@Nonnull TextEditorPartView view) {
         return Document.DEFAULT_PARTITIONING;
     }
 
@@ -158,7 +158,7 @@ public class TextEditorConfiguration {
      * @return the Parser
      */
     @Nullable
-    public Parser getParser(@NotNull TextEditorPartView view) {
+    public Parser getParser(@Nonnull TextEditorPartView view) {
         return null;
     }
 
@@ -171,7 +171,7 @@ public class TextEditorConfiguration {
      * @return a reconciler or <code>null</code> if reconciling should not be supported
      */
     @Nullable
-    public Reconciler getReconciler(@NotNull TextEditorPartView view) {
+    public Reconciler getReconciler(@Nonnull TextEditorPartView view) {
         return null;
     }
 
@@ -184,7 +184,7 @@ public class TextEditorConfiguration {
      * @return a model that used to build outline tree.
      */
     @Nullable
-    public OutlineModel getOutline(@NotNull TextEditorPartView view) {
+    public OutlineModel getOutline(@Nonnull TextEditorPartView view) {
         return null;
     }
 }

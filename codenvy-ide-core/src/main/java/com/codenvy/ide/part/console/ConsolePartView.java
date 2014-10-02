@@ -52,7 +52,7 @@ public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
 
     /** Clear console. Remove all messages. */
     void clear();
-    
+
     /**
      * Scroll to bottom of the view.
      */

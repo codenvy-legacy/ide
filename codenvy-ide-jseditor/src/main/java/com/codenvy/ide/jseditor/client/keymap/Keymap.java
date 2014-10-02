@@ -10,27 +10,27 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.keymap;
 
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.util.loging.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.util.loging.Log;
-
 
 /**
  * Value object for keymaps.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class Keymap {
 
     /** The editor type key. */
-    private final String                     keymapKey;
+    private final String     keymapKey;
     /** The name displayed to a user. */
-    private final String                     displayString;
-    private final EditorType                 editorType;
+    private final String     displayString;
+    private final EditorType editorType;
 
 
     /** The already built instances. */
@@ -44,7 +44,7 @@ public class Keymap {
 
     /**
      * Returns the key for this keymap (among other keymaps for the same editor implementation).
-     * 
+     *
      * @return the key
      */
     public String getKey() {
@@ -53,7 +53,7 @@ public class Keymap {
 
     /**
      * Returns the value displayed to a user.
-     * 
+     *
      * @return the display value
      */
     public String getDisplay() {
@@ -62,7 +62,7 @@ public class Keymap {
 
     /**
      * Returns the editor type wjich the keymap is associated with.
-     * 
+     *
      * @return the editor type
      */
     public EditorType getEditorType() {
@@ -71,8 +71,9 @@ public class Keymap {
 
     /**
      * Retrieve an keymap instance by its key.
-     * 
-     * @param key the keymap key
+     *
+     * @param key
+     *         the keymap key
      * @return the {@link Keymap} instance
      */
     public static Keymap fromKey(final String key) {
@@ -85,10 +86,13 @@ public class Keymap {
 
     /**
      * Creates a new keymap instance.
-     * 
-     * @param key the key (must not already exist)
-     * @param displayString the name displayed to a user
-     * @param editorType the editor type this keymap is linked to
+     *
+     * @param key
+     *         the key (must not already exist)
+     * @param displayString
+     *         the name displayed to a user
+     * @param editorType
+     *         the editor type this keymap is linked to
      * @return a new keymap instance
      */
     public static Keymap newKeymap(final String key, final String displayString, final EditorType editorType) {
@@ -113,7 +117,7 @@ public class Keymap {
 
     /**
      * Return all existing instances of {@link Keymap}.
-     * 
+     *
      * @return all instances
      */
     public static List<Keymap> getInstances() {
@@ -122,8 +126,9 @@ public class Keymap {
 
     /**
      * Return all instances of {@link Keymap} assicoated with the given editor type.
-     * 
-     * @param editorType the editor type
+     *
+     * @param editorType
+     *         the editor type
      * @return keymaps for this editor type
      */
     public static List<Keymap> getInstances(final EditorType editorType) {

@@ -14,14 +14,15 @@ public interface HasReadOnlyProperty {
 
     /**
      * Sets the editable state.
-     * 
-     * @param isReadOnly the read only state
+     *
+     * @param isReadOnly
+     *         the read only state
      */
     void setReadOnly(final boolean isReadOnly);
 
     /**
      * Returns whether the shown text can be manipulated.
-     * 
+     *
      * @return the viewer's readOnly state
      */
     boolean isReadOnly();

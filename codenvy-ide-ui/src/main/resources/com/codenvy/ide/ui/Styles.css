@@ -13,6 +13,7 @@ input.inputError {
     border-color: #ffe400;
     box-shadow: 0 0 5px #ffe400;
 }
+
 .inputField {
     background-color: inputBackground;
     color: #dbdbdb;

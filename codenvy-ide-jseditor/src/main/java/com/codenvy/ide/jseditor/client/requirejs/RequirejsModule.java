@@ -15,7 +15,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * A JS overlay over requirejs modules instances.<br>
  * As this really is any object created by the modules, it's only here to provide semantic : "this is a module loaded by requirejs".
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class RequirejsModule extends JavaScriptObject {

@@ -17,6 +17,7 @@ import java.util.Set;
 
 /**
  * Guice Provider for HTML Editor configuration.
+ *
  * @author Florent Benoit
  */
 
@@ -34,6 +35,7 @@ public class HTMLEditorConfigurationProvider implements Provider<HtmlEditorConfi
 
     /**
      * Build a new instance of HtmlEditor Configuration
+     *
      * @return
      */
     @Override

@@ -12,26 +12,30 @@ package com.codenvy.ide.api.theme;
 
 import com.codenvy.ide.collections.Array;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Manages UI Themes
+ *
  * @author Evgen Vidolob
  */
 public interface ThemeAgent {
 
     /**
      * Add new Theme
-     * @param theme the theme
+     *
+     * @param theme
+     *         the theme
      */
-    void addTheme(@NotNull Theme theme);
+    void addTheme(@Nonnull Theme theme);
 
     /**
-     * @param themeId the id of the theme
+     * @param themeId
+     *         the id of the theme
      * @return theme with theme id or default theme if theme not found
      */
-    @NotNull
-    Theme getTheme(@NotNull String themeId);
+    @Nonnull
+    Theme getTheme(@Nonnull String themeId);
 
     /**
      * @return default theme
@@ -49,7 +53,6 @@ public interface ThemeAgent {
     String getCurrentThemeId();
 
     /**
-     *
      * @param id
      */
     void setCurrentThemeId(String id);

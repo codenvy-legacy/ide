@@ -31,14 +31,14 @@
             background-color: tabsPanelBackground;
             border-bottom: 1px solid tabBorder;
             border-left: 1px solid tabBorder;
-			-moz-box-sizing: border-box;
+            -moz-box-sizing: border-box;
         }
-		
-		.shadow {
-			box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
-		}	
-        
-		.tabButtonLabel {
+
+        .shadow {
+            box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+        }
+
+        .tabButtonLabel {
             padding-top: 2px;
         }
 
@@ -111,21 +111,21 @@
         <g:north size="18">
             <g:DockLayoutPanel height="18px" ui:field="topPanel" width="100%" addStyleNames="{style.shadow}">
                 <g:west size="174">
-	                <g:FlowPanel addStyleNames="{style.flex}" ui:field="tabsPanel">
-	                    <g:SimplePanel ui:field="consoleButton" addStyleNames="{style.tabButtonPanel}">
-	                        <g:Label text="Console" addStyleNames="{style.tabButtonLabel}"/>
-	                    </g:SimplePanel>
-	                    <g:SimplePanel ui:field="terminalButton" addStyleNames="{style.tabButtonPanel}">
-	                        <g:Label text="Terminal" addStyleNames="{style.tabButtonLabel}"/>
-	                    </g:SimplePanel>
-	                    <g:SimplePanel ui:field="appPreviewButton" addStyleNames="{style.tabButtonPanel}">
-	                        <g:Label text="App" addStyleNames="{style.tabButtonLabel}"/>
-	                    </g:SimplePanel>
-	                </g:FlowPanel>
-	             </g:west>   
+                    <g:FlowPanel addStyleNames="{style.flex}" ui:field="tabsPanel">
+                        <g:SimplePanel ui:field="consoleButton" addStyleNames="{style.tabButtonPanel}">
+                            <g:Label text="Console" addStyleNames="{style.tabButtonLabel}"/>
+                        </g:SimplePanel>
+                        <g:SimplePanel ui:field="terminalButton" addStyleNames="{style.tabButtonPanel}">
+                            <g:Label text="Terminal" addStyleNames="{style.tabButtonLabel}"/>
+                        </g:SimplePanel>
+                        <g:SimplePanel ui:field="appPreviewButton" addStyleNames="{style.tabButtonPanel}">
+                            <g:Label text="App" addStyleNames="{style.tabButtonLabel}"/>
+                        </g:SimplePanel>
+                    </g:FlowPanel>
+                </g:west>
                 <g:center>
-                	<g:SimplePanel height="18px" width="100%" ui:field="toolbarPanel" addStyleNames="{style.inline}"/>
-            	</g:center>
+                    <g:SimplePanel height="18px" width="100%" ui:field="toolbarPanel" addStyleNames="{style.inline}"/>
+                </g:center>
             </g:DockLayoutPanel>
         </g:north>
         <g:center>

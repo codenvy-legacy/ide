@@ -12,7 +12,7 @@ package com.codenvy.ide.contexmenu;
 
 import com.codenvy.ide.api.mvp.View;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link ContextMenuPresenter}.
@@ -30,7 +30,7 @@ public interface ContextMenuView extends View<ContextMenuView.ActionDelegate> {
      * @param place
      *         place name
      */
-    void setPlace(@NotNull String place);
+    void setPlace(@Nonnull String place);
 
     /**
      * Show menu in specified position.

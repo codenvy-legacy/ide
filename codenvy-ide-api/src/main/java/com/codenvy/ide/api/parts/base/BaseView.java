@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Label;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Base view for part that must contains toolbar, this class provide one default button: "minimize" or hide part view and
@@ -47,8 +47,8 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
 
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
-        
-        
+
+
         DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         titleLabel = new Label();
         titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
@@ -78,7 +78,7 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
      *
      * @param title
      */
-    public void setTitle(@NotNull String title) {
+    public void setTitle(@Nonnull String title) {
         titleLabel.setText(title);
     }
 

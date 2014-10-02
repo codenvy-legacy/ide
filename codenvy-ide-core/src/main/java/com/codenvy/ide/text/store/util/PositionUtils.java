@@ -94,29 +94,6 @@ public final class PositionUtils {
                                                                                                                      position
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                                                                              .getLineNumber(),
                                                                                                                      position.getColumn(),
                                                                                                                      relativeOffset);

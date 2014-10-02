@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text.undo;
 
-import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.runtime.IStatus;
-import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.DocumentEvent;
@@ -29,6 +26,9 @@ import com.codenvy.ide.api.texteditor.historymanager.IUndoableOperation;
 import com.codenvy.ide.api.texteditor.historymanager.ObjectUndoContext;
 import com.codenvy.ide.api.texteditor.historymanager.OperationHistoryEvent;
 import com.codenvy.ide.api.texteditor.historymanager.OperationHistoryFactory;
+import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.runtime.IStatus;
+import com.codenvy.ide.runtime.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -339,7 +339,7 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
          * created as a result of the commit.
          *
          * @return <code>true</code> if the change was committed and created
-         *         a new <code>fCurrent</code>, <code>false</code> if not
+         * a new <code>fCurrent</code>, <code>false</code> if not
          */
         protected boolean attemptCommit() {
             pretendCommit();
@@ -942,7 +942,7 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
      * @param text
      *         the text to check
      * @return <code>true</code> if the text is a line delimiter followed by
-     *         whitespace, <code>false</code> otherwise
+     * whitespace, <code>false</code> otherwise
      */
     private boolean isWhitespaceText(String text) {
 
@@ -1174,7 +1174,7 @@ public class DocumentUndoManagerImpl implements DocumentUndoManager {
      * Return whether or not any clients are connected to the receiver.
      *
      * @return <code>true</code> if the receiver is connected to
-     *         clients, <code>false</code> if it is not
+     * clients, <code>false</code> if it is not
      */
     boolean isConnected() {
         if (fConnected == null)

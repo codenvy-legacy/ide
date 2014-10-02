@@ -14,12 +14,12 @@
 
 package com.codenvy.ide.text.store;
 
+import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
-import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;

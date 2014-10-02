@@ -15,14 +15,18 @@ import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
 /**
  * Allows to define a new AutoEditStrategy based on text editor and content type.
+ *
  * @author Florent Benoit
  */
 public interface AutoEditStrategyFactory {
 
     /**
      * Build a new instance
-     * @param textEditorPartView editor view
-     * @param contentType content type
+     *
+     * @param textEditorPartView
+     *         editor view
+     * @param contentType
+     *         content type
      * @return a new strategy
      */
     AutoEditStrategy build(TextEditorPartView textEditorPartView, String contentType);

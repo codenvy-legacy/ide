@@ -10,7 +10,7 @@
  *******************************************************************************/
 @def selectionBorderWidth 2px;
 .cellTableWidget {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 .cellTableFirstColumn {
@@ -23,24 +23,24 @@
 }
 
 .cellTableCell {
-  padding: 2px 15px;
-  text-align: left;
-  overflow: hidden;
-  font-family: mainFontFamily;
-  font-size: secondaryTextFontSize;
-  text-shadow: 0px 1px 0px rgba(46, 46, 46, 0.5);
-  border-width: 1px;
-  border-style: solid;
-  border-color: #2f2f2f;
-  background-color: cellEvenRow;
-  font-weight: normal;
-  color: mainFontColor;
+    padding: 2px 15px;
+    text-align: left;
+    overflow: hidden;
+    font-family: mainFontFamily;
+    font-size: secondaryTextFontSize;
+    text-shadow: 0px 1px 0px rgba(46, 46, 46, 0.5);
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2f2f2f;
+    background-color: cellEvenRow;
+    font-weight: normal;
+    color: mainFontColor;
 }
 
-.cellTableHeader,.cellTableCell {
-  max-width: 190px;
-  word-wrap: normal;
-  white-space: nowrap;
+.cellTableHeader, .cellTableCell {
+    max-width: 190px;
+    word-wrap: normal;
+    white-space: nowrap;
 }
 
 .cellTableFirstColumnFooter {
@@ -56,12 +56,12 @@
 }
 
 .cellTableSortableHeader {
-  cursor: pointer;
-  cursor: hand;
+    cursor: pointer;
+    cursor: hand;
 }
 
 .cellTableSortableHeader:hover {
-  color: cellHoveredRow;
+    color: cellHoveredRow;
 }
 
 .cellTableSortedHeaderAscending {
@@ -106,10 +106,10 @@
  * The keyboard selected cell is visible over selection.
  */
 .cellTableKeyboardSelectedCell {
-  background-color: cellKeyboardSelectedRow;
+    background-color: cellKeyboardSelectedRow;
 }
 
 .cellTableLoading {
-  margin: 30px;
+    margin: 30px;
 }
 

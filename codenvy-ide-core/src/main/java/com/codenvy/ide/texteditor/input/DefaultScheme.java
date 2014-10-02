@@ -41,7 +41,7 @@ import com.codenvy.ide.util.input.SignalEvent;
  * delete one character to the right of the cursor.
  * <li>CUT (ACTION+X)/COPY (ACTION+C)/PASTE (ACTION+V) - same as native
  * cut/copy/paste functionality.
-  * <li>Cursor movement (ARROW_*, PAGE_*) - change the position of the cursor
+ * <li>Cursor movement (ARROW_*, PAGE_*) - change the position of the cursor
  * based upon the directional key pressed and the unit of movement associated
  * with that key. For arrow keys this is one character in the direction of the
  * arrow, for page up/down this is an entire page.

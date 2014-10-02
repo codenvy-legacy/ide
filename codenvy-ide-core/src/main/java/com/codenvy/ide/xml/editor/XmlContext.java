@@ -17,14 +17,13 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Object that represents xml-state context.
- *
  */
 public class XmlContext extends JavaScriptObject {
 
-  protected XmlContext() {
-  }
+    protected XmlContext() {
+    }
 
-  public final native String getTagName() /*-{
-    return this.tagName;
-  }-*/;
+    public final native String getTagName() /*-{
+        return this.tagName;
+    }-*/;
 }

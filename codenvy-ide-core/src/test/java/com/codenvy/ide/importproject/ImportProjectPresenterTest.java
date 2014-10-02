@@ -42,12 +42,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing {@link com.codenvy.ide.importproject.ImportProjectPresenter} functionality.
@@ -147,7 +142,8 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
+                               (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(anyString(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager, times(2)).showNotification((Notification)anyObject());
@@ -263,7 +259,8 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), eq(false),  (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
+                               (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectWizardPresenter, never()).show((WizardContext)anyObject());
         verify(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
         verify(view).showWarning(anyString());
@@ -322,7 +319,7 @@ public class ImportProjectPresenterTest {
                 onSuccess.invoke(callback, projectDescriptor);
                 return callback;
             }
-        }).when(projectServiceClient).importProject(anyString(),  eq(false), (ImportSourceDescriptor)anyObject(),
+        }).when(projectServiceClient).importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
                                                     (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         view.showDialog();
 
@@ -343,7 +340,8 @@ public class ImportProjectPresenterTest {
         verify(importSourceDescriptor).withType(anyString());
         verify(importSourceDescriptor).withLocation(anyString());
         verify(projectServiceClient)
-                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
+                .importProject(anyString(), eq(false), (ImportSourceDescriptor)anyObject(),
+                               (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(projectServiceClient).getProject(eq(PROJECT_NAME), (AsyncRequestCallback<ProjectDescriptor>)anyObject());
         verify(locale).importProjectMessageSuccess();
         verify(notificationManager, times(2)).showNotification((Notification)anyObject());

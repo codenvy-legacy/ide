@@ -40,7 +40,7 @@ public interface SelectRunnerPageView extends View<SelectRunnerPageView.ActionDe
     /** Get recommended memory size for runner. */
     String getRecommendedMemorySize();
 
-    public interface ActionDelegate{
+    public interface ActionDelegate {
         void runnerSelected(RunnerDescriptor runner);
 
         void runnerEnvironmentSelected(String environmentId);

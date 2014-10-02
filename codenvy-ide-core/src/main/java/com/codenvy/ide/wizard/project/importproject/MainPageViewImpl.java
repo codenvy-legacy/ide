@@ -47,71 +47,71 @@ import java.util.Set;
 
 /**
  * UI implementation for {@link MainPageView}.
- * 
+ *
  * @author Ann Shumilova
  */
 public class MainPageViewImpl implements MainPageView {
 
-    private static MainPageViewImplUiBinder                                 uiBinder                =
-                                                                                                      GWT.create(MainPageViewImplUiBinder.class);
-    private final DockLayoutPanel                                           rootElement;
+    private static MainPageViewImplUiBinder uiBinder =
+            GWT.create(MainPageViewImplUiBinder.class);
+    private final DockLayoutPanel rootElement;
     private final Category.CategoryEventDelegate<ProjectImporterDescriptor> projectImporterDelegate =
-                                                                                                      new Category.CategoryEventDelegate<ProjectImporterDescriptor>() {
-                                                                                                          @Override
-                                                                                                          public void onListItemClicked(Element listItemBase,
-                                                                                                                                        ProjectImporterDescriptor itemData) {
-                                                                                                              delegate.projectImporterSelected(itemData);
-                                                                                                          }
-                                                                                                      };
+            new Category.CategoryEventDelegate<ProjectImporterDescriptor>() {
+                @Override
+                public void onListItemClicked(Element listItemBase,
+                                              ProjectImporterDescriptor itemData) {
+                    delegate.projectImporterSelected(itemData);
+                }
+            };
 
-    private final CategoryRenderer<ProjectImporterDescriptor>               projectImporterRenderer =
-                                                                                                      new CategoryRenderer<ProjectImporterDescriptor>() {
-                                                                                                          @Override
-                                                                                                          public void renderElement(com.google.gwt.dom.client.Element element,
-                                                                                                                                    ProjectImporterDescriptor data) {
-                                                                                                              String str = data.getId();
-                                                                                                              str =
-                                                                                                                    str.length() > 1
-                                                                                                                        ? Character.toUpperCase(str.charAt(0))
-                                                                                                                          +
-                                                                                                                          str.substring(1)
-                                                                                                                        : str.toUpperCase();
-                                                                                                              element.setInnerText(str);
-                                                                                                          }
+    private final CategoryRenderer<ProjectImporterDescriptor> projectImporterRenderer =
+            new CategoryRenderer<ProjectImporterDescriptor>() {
+                @Override
+                public void renderElement(com.google.gwt.dom.client.Element element,
+                                          ProjectImporterDescriptor data) {
+                    String str = data.getId();
+                    str =
+                            str.length() > 1
+                            ? Character.toUpperCase(str.charAt(0))
+                              +
+                              str.substring(1)
+                            : str.toUpperCase();
+                    element.setInnerText(str);
+                }
 
-                                                                                                          @Override
-                                                                                                          public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectImporterDescriptor> category) {
-                                                                                                              return renderCategoryWithIcon(category.getTitle());
-                                                                                                          }
-                                                                                                      };
+                @Override
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectImporterDescriptor> category) {
+                    return renderCategoryWithIcon(category.getTitle());
+                }
+            };
 
-    private final IconRegistry                                              iconRegistry;
+    private final IconRegistry iconRegistry;
 
     @UiField
-    Style                                                                   style;
+    Style                  style;
     @UiField
-    Label                                                                   labelUrlError;
+    Label                  labelUrlError;
     @UiField
-    SimplePanel                                                             categoriesPanel;
+    SimplePanel            categoriesPanel;
     @UiField
-    HTMLPanel                                                               descriptionArea;
+    HTMLPanel              descriptionArea;
     @UiField
-    TextBox                                                                 projectName;
+    TextBox                projectName;
     @UiField
-    TextArea                                                                projectDescription;
+    TextArea               projectDescription;
     @UiField
-    RadioButton                                                             projectPrivate;
+    RadioButton            projectPrivate;
     @UiField
-    RadioButton                                                             projectPublic;
+    RadioButton            projectPublic;
     @UiField
-    TextBox                                                                 projectUrl;
+    TextBox                projectUrl;
     @UiField(provided = true)
-    ProjectWizardResources                                                  wizardResources;
+    ProjectWizardResources wizardResources;
 
-    private ActionDelegate                                                  delegate;
-    private Map<String, Set<ProjectImporterDescriptor>>                     categories;
-    private Resources                                                       resources;
-    private CategoriesList                                                  list;
+    private ActionDelegate                              delegate;
+    private Map<String, Set<ProjectImporterDescriptor>> categories;
+    private Resources                                   resources;
+    private CategoriesList                              list;
 
     @Inject
     public MainPageViewImpl(Resources resources,
@@ -129,7 +129,7 @@ public class MainPageViewImpl implements MainPageView {
     void onProjectNameChanged(KeyUpEvent event) {
         delegate.projectNameChanged(projectName.getValue());
     }
-    
+
     @UiHandler("projectUrl")
     void onProjectUrlChanged(KeyUpEvent event) {
         delegate.projectUrlChanged(projectUrl.getValue());
@@ -139,7 +139,7 @@ public class MainPageViewImpl implements MainPageView {
     void onProjectDescriptionChanged(KeyUpEvent event) {
         delegate.projectDescriptionChanged(projectDescription.getValue());
     }
-    
+
     @UiHandler({"projectDescription", "projectUrl", "projectName"})
     void onEnterClicked(KeyPressEvent event) {
         if (event.getNativeEvent().getKeyCode() == KeyCode.ENTER) {
@@ -184,7 +184,7 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     interface MainPageViewImplUiBinder
-                                      extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
+            extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
     }
 
     interface Style extends CssResource {
@@ -220,12 +220,12 @@ public class MainPageViewImpl implements MainPageView {
     public void setImporters(Map<String, Set<ProjectImporterDescriptor>> categories) {
         this.categories = categories;
 
-        List<Category< ? >> categoriesList = new ArrayList<>();
+        List<Category<?>> categoriesList = new ArrayList<>();
         for (String s : categories.keySet()) {
             Category<ProjectImporterDescriptor> category =
-                                                           new Category<ProjectImporterDescriptor>(s, projectImporterRenderer,
-                                                                                                   categories.get(s),
-                                                                                                   projectImporterDelegate);
+                    new Category<ProjectImporterDescriptor>(s, projectImporterRenderer,
+                                                            categories.get(s),
+                                                            projectImporterDelegate);
             categoriesList.add(category);
         }
         list.render(categoriesList);
@@ -266,7 +266,7 @@ public class MainPageViewImpl implements MainPageView {
     /** {@inheritDoc} */
     @Override
     public void selectImporter(ProjectImporterDescriptor importer) {
-       list.selectElement(importer); 
+        list.selectElement(importer);
     }
 
     /** {@inheritDoc} */

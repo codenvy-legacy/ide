@@ -13,8 +13,8 @@
 // limitations under the License.
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.api.texteditor.parser.CmState;
+import com.codenvy.ide.collections.Array;
 
 
 /** Object that represents css-parser state. */

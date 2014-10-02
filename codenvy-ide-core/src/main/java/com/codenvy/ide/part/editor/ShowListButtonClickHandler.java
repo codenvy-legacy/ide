@@ -14,15 +14,18 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Click handler of the show tabs list button.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface ShowListButtonClickHandler {
-    
+
     /**
-     * @param x x coordinate of the right bottom corner of the list button
-     * @param y y coordinate of the right bottom corner of the list button 
-     * @param callback callback is called when list is closed
+     * @param x
+     *         x coordinate of the right bottom corner of the list button
+     * @param y
+     *         y coordinate of the right bottom corner of the list button
+     * @param callback
+     *         callback is called when list is closed
      */
     void onShowListClicked(int x, int y, AsyncCallback<Void> callback);
 }

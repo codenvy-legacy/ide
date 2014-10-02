@@ -10,14 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editortype;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -31,26 +23,33 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * Implementation for {@link EditorTypeMapping}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class EditorTypeMappingImpl implements EditorTypeMapping {
 
     /** The name of the property for the mappings in user preferences. */
-    private static final String             PREFERENCE_PROPERTY_NAME = "editorTypes";
+    private static final String PREFERENCE_PROPERTY_NAME = "editorTypes";
 
     /** The known mappings. */
-    private final Map<FileType, EditorType> contentTypeMapping       = new HashMap<>();
+    private final Map<FileType, EditorType> contentTypeMapping = new HashMap<>();
 
-    private final PreferencesManager        preferencesManager;
+    private final PreferencesManager preferencesManager;
 
-    private final FileTypeRegistry          fileTypeRegistry;
-    private final FileType                  unknownFileType;
-    private final FileType                  plainTextFileType;
+    private final FileTypeRegistry fileTypeRegistry;
+    private final FileType         unknownFileType;
+    private final FileType         plainTextFileType;
 
-    private boolean                         loaded                   = false;
+    private boolean loaded = false;
 
 
     @Inject

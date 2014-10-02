@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import javax.validation.constraints.NotNull;
-
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
@@ -23,6 +21,8 @@ import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
+
+import javax.annotation.Nonnull;
 
 /**
  * An interface for editor widget implementations.
@@ -42,21 +42,24 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     /**
      * Sets the content of the editor.
      *
-     * @param newValue the new contents
+     * @param newValue
+     *         the new contents
      */
     void setValue(String newValue);
 
     /**
      * Sets the language mode for highlighting.
      *
-     * @param modeName the new mode
+     * @param modeName
+     *         the new mode
      */
     void setMode(String modeName);
 
     /**
      * Change readonly state of the editor.
      *
-     * @param isReadOnly true to set the editor in readonly mode, false to allow edit
+     * @param isReadOnly
+     *         true to set the editor in readonly mode, false to allow edit
      */
     void setReadOnly(boolean isReadOnly);
 
@@ -87,7 +90,8 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     /**
      * Sets the tab size.
      *
-     * @param tabSize the new value
+     * @param tabSize
+     *         the new value
      */
     void setTabSize(int tabSize);
 
@@ -115,9 +119,10 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
 
     /**
      * Returns the current keymap in the editor.
+     *
      * @return the current keymap
      */
-    @NotNull
+    @Nonnull
     Keymap getKeymap();
 
     /** Give the focus to the editor. */

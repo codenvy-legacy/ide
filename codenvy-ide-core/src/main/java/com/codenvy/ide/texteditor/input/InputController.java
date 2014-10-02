@@ -15,12 +15,14 @@
 package com.codenvy.ide.texteditor.input;
 
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.TextEvent;
-import elemental.dom.Element;
 import elemental.html.TextAreaElement;
 
+import com.codenvy.ide.api.texteditor.KeyListener;
+import com.codenvy.ide.api.texteditor.NativeKeyUpListener;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
@@ -29,8 +31,6 @@ import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.ReadOnlyListener;
 import com.codenvy.ide.texteditor.ViewportModel;
-import com.codenvy.ide.api.texteditor.KeyListener;
-import com.codenvy.ide.api.texteditor.NativeKeyUpListener;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;

@@ -14,7 +14,7 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.StringUtils;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Container for the information necessary to execute or update an {@link Action}.
@@ -36,8 +36,8 @@ public class ActionEvent {
      *         if <code>dataContext</code> is <code>null</code> or
      *         <code>place</code> is <code>null</code> or <code>presentation</code> is <code>null</code>
      */
-    public ActionEvent(@NotNull String place,
-                       @NotNull Presentation presentation,
+    public ActionEvent(@Nonnull String place,
+                       @Nonnull Presentation presentation,
                        ActionManager actionManager,
                        int modifiers) {
         myActionManager = actionManager;

@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.preference.dataprovider;
 
-import java.util.List;
-
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
+
+import java.util.List;
 
 public class RefreshableListDataProvider<T> extends ListDataProvider<T> implements RefreshableDataProvider {
 

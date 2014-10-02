@@ -11,10 +11,10 @@
 
 -->
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	xmlns:svgui='urn:import:org.vectomatic.dom.svg.ui'>
-	<ui:with field='res' type='com.codenvy.ide.Resources' />
-	<ui:style type="com.codenvy.ide.outline.OutlinePartViewImpl.Style">
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:svgui='urn:import:org.vectomatic.dom.svg.ui'>
+    <ui:with field='res' type='com.codenvy.ide.Resources'/>
+    <ui:style type="com.codenvy.ide.outline.OutlinePartViewImpl.Style">
         .container-style {
             border: none !important;
         }
@@ -38,20 +38,21 @@
             font-size: smaller;
         }
     </ui:style>
-	<g:SimplePanel ui:field="container" addStyleNames="{style.container-style}"
-		debugId="outline-container">
-		<g:DockLayoutPanel ui:field="noOutline" unit="PX" height="100%" >
-			<g:north size="120.0">
-				<g:SimplePanel />
-			</g:north>
-			<g:north size="140.0">
-				<g:HTMLPanel addStyleNames="{style.icon-style}" height="100%" width="100%">
-					<svgui:SVGImage resource='{res.noOutline}' />
-				</g:HTMLPanel>
-			</g:north>
-			<g:center>
-				<g:Label ui:field="noOutlineCause" addStyleNames="{style.label-style}" debugId="outline-no-file-label" height="100%" width="70%" />
-			</g:center>
-		</g:DockLayoutPanel>
-	</g:SimplePanel>
+    <g:SimplePanel ui:field="container" addStyleNames="{style.container-style}"
+                   debugId="outline-container">
+        <g:DockLayoutPanel ui:field="noOutline" unit="PX" height="100%">
+            <g:north size="120.0">
+                <g:SimplePanel/>
+            </g:north>
+            <g:north size="140.0">
+                <g:HTMLPanel addStyleNames="{style.icon-style}" height="100%" width="100%">
+                    <svgui:SVGImage resource='{res.noOutline}'/>
+                </g:HTMLPanel>
+            </g:north>
+            <g:center>
+                <g:Label ui:field="noOutlineCause" addStyleNames="{style.label-style}" debugId="outline-no-file-label" height="100%"
+                         width="70%"/>
+            </g:center>
+        </g:DockLayoutPanel>
+    </g:SimplePanel>
 </ui:UiBinder>

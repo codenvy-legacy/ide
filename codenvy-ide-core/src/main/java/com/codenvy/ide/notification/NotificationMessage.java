@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
@@ -43,13 +43,13 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenMessageClicked(@NotNull Notification notification);
+        void onOpenMessageClicked(@Nonnull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseMessageClicked(@NotNull Notification notification);
+        void onCloseMessageClicked(@Nonnull Notification notification);
 
         /** Performs some actions in response to a notification is closing */
-        void onClosingDialog(@NotNull NotificationMessage message);
+        void onClosingDialog(@Nonnull NotificationMessage message);
     }
 
     public static final int DEFAULT_TIME = 5000;
@@ -62,12 +62,12 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     private Notification    prevState;
     private ActionDelegate  delegate;
     private Resources       resources;
-    private Timer           hideTimer        = new Timer() {
-                                             @Override
-                                             public void run() {
-                                                 hide();
-                                             }
-                                         };
+    private Timer hideTimer = new Timer() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
 
     /**
      * Create notitfication message.
@@ -76,7 +76,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param notification
      * @param delegate
      */
-    public NotificationMessage(@NotNull Resources resources, @NotNull Notification notification, @NotNull ActionDelegate delegate) {
+    public NotificationMessage(@Nonnull Resources resources, @Nonnull Notification notification, @Nonnull ActionDelegate delegate) {
         super(false, false);
 
         this.notification = notification;
@@ -97,7 +97,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
                 NotificationMessage.this.delegate.onOpenMessageClicked(NotificationMessage.this.notification);
             }
         };
-        
+
         mainPanel.addDomHandler(handler, DoubleClickEvent.getType());
         addMouseHandlers();
 
@@ -137,18 +137,18 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
         });
     }
-    
-    private void addMouseHandlers(){
+
+    private void addMouseHandlers() {
         mainPanel.addDomHandler(new MouseOverHandler() {
-            
+
             @Override
             public void onMouseOver(MouseOverEvent event) {
                 hideTimer.cancel();
             }
         }, MouseOverEvent.getType());
-        
+
         mainPanel.addDomHandler(new MouseOutHandler() {
-            
+
             @Override
             public void onMouseOut(MouseOutEvent event) {
                 hideTimer.schedule(DEFAULT_TIME);
@@ -162,7 +162,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param icon
      *         icon that need to set
      */
-    private SVGImage changeImage(@NotNull SVGResource icon) {
+    private SVGImage changeImage(@Nonnull SVGResource icon) {
         SVGImage messageIcon = new SVGImage(icon);
         iconPanel.setWidget(messageIcon);
         return messageIcon;
@@ -222,7 +222,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>It also deal with important flag (disabling automatic hiding).</p>
      */
     @Override

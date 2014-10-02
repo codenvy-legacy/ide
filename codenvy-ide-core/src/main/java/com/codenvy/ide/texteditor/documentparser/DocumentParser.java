@@ -14,6 +14,8 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
+import com.codenvy.ide.api.texteditor.parser.Parser;
+import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
@@ -24,8 +26,6 @@ import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.api.texteditor.parser.Parser;
-import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
@@ -176,7 +176,7 @@ public class DocumentParser {
      * <p>This will NOT schedule parsing of subsequent lines.
      *
      * @return the parsed tokens, or {@code null} if there isn't a snapshot
-     *         and it's not the first line
+     * and it's not the first line
      */
     public Array<Token> parseLineSync(Line line) {
         return worker.parseLine(line);

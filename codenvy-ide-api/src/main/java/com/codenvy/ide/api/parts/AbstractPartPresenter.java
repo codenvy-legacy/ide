@@ -14,11 +14,12 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.ui.IsWidget;
+
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 
 /**
@@ -48,13 +49,13 @@ public abstract class AbstractPartPresenter implements PartPresenter {
 
     /** {@inheritDoc} */
     @Override
-    public void addPropertyListener(@NotNull PropertyListener listener) {
+    public void addPropertyListener(@Nonnull PropertyListener listener) {
         manager.add(listener);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void removePropertyListener(@NotNull PropertyListener listener) {
+    public void removePropertyListener(@Nonnull PropertyListener listener) {
         manager.remove(listener);
     }
 
@@ -85,7 +86,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
      * @param selection
      *         instance of Selection
      */
-    public void setSelection(@NotNull Selection<?> selection) {
+    public void setSelection(@Nonnull Selection<?> selection) {
         this.selection = selection;
         firePropertyChange(SELECTION_PROPERTY);
     }

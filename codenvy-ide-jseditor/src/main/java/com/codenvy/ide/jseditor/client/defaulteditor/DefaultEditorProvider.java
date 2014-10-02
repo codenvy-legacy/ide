@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.defaulteditor;
 
-import javax.inject.Named;
-
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
@@ -20,6 +18,8 @@ import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
+
+import javax.inject.Named;
 
 
 public class DefaultEditorProvider implements EditorProvider {

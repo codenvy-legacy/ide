@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.wizard;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The factory for creating a wizard dialog.
@@ -25,6 +25,6 @@ public interface WizardDialogFactory {
      *         wizard that must be used for creating wizard dialog.
      * @return wizard dialog
      */
-    @NotNull
-    WizardDialog create(@NotNull Wizard wizard);
+    @Nonnull
+    WizardDialog create(@Nonnull Wizard wizard);
 }

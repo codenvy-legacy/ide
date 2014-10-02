@@ -13,16 +13,15 @@ package com.codenvy.ide.ext.ssh.server;
 import com.codenvy.api.core.NotFoundException;
 import com.codenvy.api.core.ServerException;
 import com.codenvy.api.user.server.dao.Profile;
+import com.codenvy.api.user.server.dao.User;
 import com.codenvy.api.user.server.dao.UserDao;
 import com.codenvy.api.user.server.dao.UserProfileDao;
-import com.codenvy.api.user.server.dao.User;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 
 import javax.inject.Inject;
-
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;

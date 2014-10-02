@@ -13,7 +13,7 @@ package com.codenvy.ide.api.parts.base;
 import com.codenvy.ide.api.parts.AbstractPartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Base presenter for parts that support minimizing by part toolbar button.
@@ -39,7 +39,7 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
      *
      * @param partStack
      */
-    public void setPartStack(@NotNull PartStack partStack) {
+    public void setPartStack(@Nonnull PartStack partStack) {
         this.partStack = partStack;
     }
 }

@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,12 +39,12 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter of the import project wizard's main page.
- * 
+ *
  * @author Ann Shumilova
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private static final RegExp NAME_PATTERN    = RegExp.compile("^[A-Za-z0-9_-]*$");
+    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_-]*$");
     private final MainPageView                  view;
     private final ProjectImportersServiceClient projectImportersService;
     private final NotificationManager           notificationManager;
@@ -191,18 +190,18 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
         final Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
         projectImportersService.getProjectImporters(new AsyncRequestCallback<Array<ProjectImporterDescriptor>>(
-                                                                                                               dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectImporterDescriptor.class)) {
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectImporterDescriptor.class)) {
             @Override
             protected void onSuccess(Array<ProjectImporterDescriptor> result) {
                 for (int i = 0; i < result.size(); i++) {
                     ProjectImporterDescriptor importer = result.get(i);
                     // do not show internal importers:
                     if (!importer.isInternal()) {
-                        if (importer.getCategory() == null){
+                        if (importer.getCategory() == null) {
                             break;
                         }
-                        if (importers.containsKey(importer.getCategory())){
-                           importers.get(importer.getCategory()).add(importer); 
+                        if (importers.containsKey(importer.getCategory())) {
+                            importers.get(importer.getCategory()).add(importer);
                         } else {
                             Set<ProjectImporterDescriptor> importersSet = new HashSet<ProjectImporterDescriptor>();
                             importersSet.add(importer);

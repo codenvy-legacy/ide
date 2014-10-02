@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -99,13 +99,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** {@inheritDoc} */
     @Override
-    public void onViewClicked(@NotNull KeyItem key) {
+    public void onViewClicked(@Nonnull KeyItem key) {
         sshKeyPresenter.showDialog(key);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onDeleteClicked(@NotNull final KeyItem key) {
+    public void onDeleteClicked(@Nonnull final KeyItem key) {
         Ask ask = new Ask(constant.deleteSshKeyTitle(), constant.deleteSshKeyQuestion(key.getHost()), new AskHandler() {
             @Override
             public void onOk() {
@@ -238,7 +238,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
      * @param key
      *         failed key
      */
-    private void removeFailedKey(@NotNull final KeyItem key) {
+    private void removeFailedKey(@Nonnull final KeyItem key) {
         service.deleteKey(key, new AsyncRequestCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {

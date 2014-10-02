@@ -16,7 +16,7 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Interface of project tree view.
@@ -31,7 +31,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param rootNodes
      *         root nodes to set
      */
-    void setRootNodes(@NotNull Array<TreeNode<?>> rootNodes);
+    void setRootNodes(@Nonnull Array<TreeNode<?>> rootNodes);
 
     /**
      * Updates the specified node.
@@ -39,7 +39,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param oldNode
      * @param newNode
      */
-    void updateNode(@NotNull TreeNode<?> oldNode, @NotNull TreeNode<?> newNode);
+    void updateNode(@Nonnull TreeNode<?> oldNode, @Nonnull TreeNode<?> newNode);
 
     /**
      * Select the specified node in the view.
@@ -47,7 +47,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param node
      *         node to select
      */
-    void selectNode(@NotNull TreeNode<?> node);
+    void selectNode(@Nonnull TreeNode<?> node);
 
     /**
      * Sets title of part.
@@ -55,14 +55,14 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * @param title
      *         title of part
      */
-    void setTitle(@NotNull String title);
+    void setTitle(@Nonnull String title);
 
     /**
      * Sets project's name and visibility icon.
      *
      * @param project
      */
-    void setProjectHeader(@NotNull ProjectDescriptor project);
+    void setProjectHeader(@Nonnull ProjectDescriptor project);
 
     /**
      * Hide the project's header panel.
@@ -77,7 +77,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         selected node
          */
-        void onNodeSelected(@NotNull TreeNode<?> node);
+        void onNodeSelected(@Nonnull TreeNode<?> node);
 
         /**
          * Performs any actions in response to node expanded (opened) action.
@@ -85,7 +85,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         expanded node
          */
-        void onNodeExpanded(@NotNull TreeNode<?> node);
+        void onNodeExpanded(@Nonnull TreeNode<?> node);
 
         /**
          * Performs any actions in response to some node action.
@@ -93,7 +93,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         node
          */
-        void onNodeAction(@NotNull TreeNode<?> node);
+        void onNodeAction(@Nonnull TreeNode<?> node);
 
         /**
          * Performs any actions appropriate in response to the user having clicked right button on mouse.

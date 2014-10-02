@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.wizard;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The factory for creating an instance of default wizard.
@@ -25,6 +25,6 @@ public interface DefaultWizardFactory {
      *         wizard title
      * @return {@link DefaultWizard}
      */
-    @NotNull
-    DefaultWizard create(@NotNull String title);
+    @Nonnull
+    DefaultWizard create(@Nonnull String title);
 }

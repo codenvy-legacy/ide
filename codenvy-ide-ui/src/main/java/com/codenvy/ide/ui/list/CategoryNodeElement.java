@@ -44,14 +44,14 @@ import java.util.HashMap;
  * @author Evgen Vidolob
  */
 public class CategoryNodeElement extends FlowPanel {
-    private final Category                  category;
-    private CategoriesList.SelectionManager selectionManager;
-    private final FlowPanel                 container;
-    private final AnimationController       animator;
-    private CategoriesList.Resources        resources;
-    private boolean                         expanded;
-    private final DivElement                expandControl;
-    private HashMap<Object, Element>        elementsMap;
+    private final Category                        category;
+    private       CategoriesList.SelectionManager selectionManager;
+    private final FlowPanel                       container;
+    private final AnimationController             animator;
+    private       CategoriesList.Resources        resources;
+    private       boolean                         expanded;
+    private final DivElement                      expandControl;
+    private       HashMap<Object, Element>        elementsMap;
 
     @SuppressWarnings("unchecked")
     CategoryNodeElement(Category category,
@@ -135,35 +135,36 @@ public class CategoryNodeElement extends FlowPanel {
             container.getElement().appendChild(element);
         }
     }
-    
+
     /**
      * Checks whether the category contains the pointed item.
-     * 
-     * @param item item to find
+     *
+     * @param item
+     *         item to find
      * @return boolean <code>true</code> if contains
      */
-    public boolean containsItem(Object item){
-        if (elementsMap == null || elementsMap.isEmpty()){
+    public boolean containsItem(Object item) {
+        if (elementsMap == null || elementsMap.isEmpty()) {
             return false;
         }
         return elementsMap.containsKey(item);
     }
-    
+
     /**
      * Selects the item in the category list.
-     * 
+     *
      * @param item
      */
-    public void selectItem(Object item){
-        if (elementsMap == null || elementsMap.isEmpty()){
+    public void selectItem(Object item) {
+        if (elementsMap == null || elementsMap.isEmpty()) {
             return;
         }
-        
-        if (elementsMap.containsKey(item)){
+
+        if (elementsMap.containsKey(item)) {
             selectElement(elementsMap.get(item));
         }
     }
-    
+
     /**
      * A javascript overlay object which ties a list item's DOM element to its
      * associated data.

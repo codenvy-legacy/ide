@@ -13,9 +13,9 @@ package com.codenvy.ide.api.texteditor;
 import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 
 /**
-* @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
-* @version $Id:
-*/
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
+ */
 public interface CodeAssistCallback {
-   void proposalComputed(CompletionProposal[] proposals);
+    void proposalComputed(CompletionProposal[] proposals);
 }

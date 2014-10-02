@@ -143,29 +143,29 @@ public class RenameItemAction extends Action {
                            nodeToRename.getName().indexOf('.') >= 0 ?
                            nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(),
                            new AskValueCallback() {
-            @Override
-            public void onOk(final String newName) {
-                ItemReference itemReferenceBeforeRenaming = null;
-                if (nodeToRename instanceof ItemNode) {
-                    itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
-                }
+                               @Override
+                               public void onOk(final String newName) {
+                                   ItemReference itemReferenceBeforeRenaming = null;
+                                   if (nodeToRename instanceof ItemNode) {
+                                       itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
+                                   }
 
-                final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
-                nodeToRename.rename(newName, new RenameCallback() {
-                    @Override
-                    public void onRenamed() {
-                        if (finalItemReferenceBeforeRenaming != null) {
-                            checkOpenedFiles(finalItemReferenceBeforeRenaming, newName);
-                        }
-                    }
+                                   final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
+                                   nodeToRename.rename(newName, new RenameCallback() {
+                                       @Override
+                                       public void onRenamed() {
+                                           if (finalItemReferenceBeforeRenaming != null) {
+                                               checkOpenedFiles(finalItemReferenceBeforeRenaming, newName);
+                                           }
+                                       }
 
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
-                    }
-                });
-            }
-        }).show();
+                                       @Override
+                                       public void onFailure(Throwable caught) {
+                                           notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+                                       }
+                                   });
+                               }
+                           }).show();
     }
 
     /**

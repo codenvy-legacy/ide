@@ -12,19 +12,19 @@ package com.codenvy.ide.api.notification;
 
 import com.codenvy.ide.api.parts.PartPresenter;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The manager for notifications. Used to show notifications and change their states.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface NotificationManager  extends PartPresenter{
+public interface NotificationManager extends PartPresenter {
     /**
      * Show notification.
      *
      * @param notification
      *         notification that need to show
      */
-    void showNotification(@NotNull Notification notification);
+    void showNotification(@Nonnull Notification notification);
 }

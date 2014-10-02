@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * {@link FileTypeIdentifier} that tries to recognize file by looking at the first line content.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class FirstLineFileTypeIdentifier implements FileTypeIdentifier {

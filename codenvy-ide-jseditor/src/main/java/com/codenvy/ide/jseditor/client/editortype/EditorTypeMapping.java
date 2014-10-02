@@ -10,15 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editortype;
 
-import java.util.Map.Entry;
+import com.codenvy.ide.api.filetypes.FileType;
 
 import javax.inject.Singleton;
-
-import com.codenvy.ide.api.filetypes.FileType;
+import java.util.Map.Entry;
 
 /**
  * An interface for content type to editor type mappings.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 @Singleton
@@ -28,16 +27,19 @@ public interface EditorTypeMapping extends Iterable<Entry<FileType, EditorType>>
 
     /**
      * Sets a mapping for a content type.
-     * 
-     * @param contentType the content type
-     * @param editorType the associated editor type
+     *
+     * @param contentType
+     *         the content type
+     * @param editorType
+     *         the associated editor type
      */
     void setEditorType(final FileType contentType, EditorType editorType);
 
     /**
      * Searches an editor type for a content type.
-     * 
-     * @param contentType the content type
+     *
+     * @param contentType
+     *         the content type
      * @return an editor type (never null)
      */
     EditorType getEditorType(final FileType contentType);

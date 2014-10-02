@@ -16,14 +16,14 @@ import com.codenvy.ide.api.wizard.WizardContext;
 
 /**
  * Wizard for importing projects.
- * 
+ *
  * @author Ann Shumilova
  */
 public class ImportProjectWizard extends ProjectWizard {
     /**
      * Project's location, from which to import.
      */
-    public static final WizardContext.Key<String> PROJECT_URL = new WizardContext.Key<>("Project URL");
+    public static final WizardContext.Key<String>                    PROJECT_URL      = new WizardContext.Key<>("Project URL");
     /**
      * Project's importer.
      */

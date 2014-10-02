@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -38,7 +38,7 @@ public class PreferencesAgentImpl implements PreferencesAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page) {
+    public void addPage(@Nonnull Provider<? extends PreferencesPagePresenter> page) {
         preferences.add(page);
     }
 

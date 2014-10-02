@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * PopUp Dialog window with title, message and buttons "Ok" and "Cancel"/
  *
- *
  * @author Vitaly Parfonov
  */
 public class Ask extends Window {
@@ -41,9 +40,13 @@ public class Ask extends Window {
 
     /**
      * Initialization constructor
-     * @param title the title for popup window
-     * @param question the question that user must interact
-     * @param handler the handler that call after user interact
+     *
+     * @param title
+     *         the title for popup window
+     * @param question
+     *         the question that user must interact
+     * @param handler
+     *         the handler that call after user interact
      */
     public Ask(String title, String question, final AskHandler handler) {
         Widget widget = uiBinder.createAndBindUi(this);

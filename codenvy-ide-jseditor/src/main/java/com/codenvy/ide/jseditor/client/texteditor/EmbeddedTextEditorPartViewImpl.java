@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Composite implements EmbeddedTextEditorPartView {
@@ -211,10 +211,10 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
 
     /**
      * UI binder interface for this component.
-     * 
+     *
      * @author "Mickaël Leduque"
      */
-    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl< ? >> {
+    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl<?>> {
     }
 
     @Override

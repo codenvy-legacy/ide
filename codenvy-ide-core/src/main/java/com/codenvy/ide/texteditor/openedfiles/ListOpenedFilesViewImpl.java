@@ -32,23 +32,23 @@ import com.google.inject.Singleton;
 
 /**
  * The implementation of {@link ListOpenedFilesView} view.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
 public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFilesView {
 
-    private ActionDelegate       delegate;
+    private ActionDelegate delegate;
 
     private PartStackUIResources partStackResources;
 
-    private VerticalPanel        container;
+    private VerticalPanel container;
 
     private class FileItem extends Composite implements HasClickHandlers, HasCloseHandlers<FileItem> {
 
         private Image closeButton;
 
-        private FileNode  file;
+        private FileNode file;
 
         public FileItem(FileNode file) {
             this.file = file;

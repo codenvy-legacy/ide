@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.ssh.client.upload;
 
 import com.codenvy.ide.api.mvp.View;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link UploadSshKeyPresenter}.
@@ -34,14 +34,14 @@ public interface UploadSshKeyView extends View<UploadSshKeyView.ActionDelegate> 
          * @param result
          *         result of submit operation
          */
-        void onSubmitComplete(@NotNull String result);
+        void onSubmitComplete(@Nonnull String result);
 
         /** Performs any actions appropriate in response to the user having changed file name field. */
         void onFileNameChanged();
     }
 
     /** @return host */
-    @NotNull
+    @Nonnull
     String getHost();
 
     /**
@@ -49,10 +49,10 @@ public interface UploadSshKeyView extends View<UploadSshKeyView.ActionDelegate> 
      *
      * @param host
      */
-    void setHost(@NotNull String host);
+    void setHost(@Nonnull String host);
 
     /** @return file name */
-    @NotNull
+    @Nonnull
     String getFileName();
 
     /**
@@ -69,7 +69,7 @@ public interface UploadSshKeyView extends View<UploadSshKeyView.ActionDelegate> 
      * @param message
      *         the message
      */
-    void setMessage(@NotNull String message);
+    void setMessage(@Nonnull String message);
 
     /**
      * Sets the encoding used for submitting this form.
@@ -77,7 +77,7 @@ public interface UploadSshKeyView extends View<UploadSshKeyView.ActionDelegate> 
      * @param encodingType
      *         the form's encoding
      */
-    void setEncoding(@NotNull String encodingType);
+    void setEncoding(@Nonnull String encodingType);
 
     /**
      * Sets the 'action' associated with this form. This is the URL to which it will be submitted.
@@ -85,7 +85,7 @@ public interface UploadSshKeyView extends View<UploadSshKeyView.ActionDelegate> 
      * @param url
      *         the form's action
      */
-    void setAction(@NotNull String url);
+    void setAction(@Nonnull String url);
 
     /** Submits the form. */
     void submit();

@@ -15,8 +15,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Editor Agent manages Editors, it allows to open a new editor with given file,
@@ -30,7 +30,7 @@ public interface EditorAgent {
      *
      * @param file
      */
-    void openEditor(@NotNull final FileNode file);
+    void openEditor(@Nonnull final FileNode file);
 
     /**
      * Returns array of EditorPartPresenters whose content have changed since the last save operation.
@@ -44,7 +44,7 @@ public interface EditorAgent {
      *
      * @return map with all opened editors
      */
-    @NotNull
+    @Nonnull
     StringMap<EditorPartPresenter> getOpenedEditors();
 
     /**

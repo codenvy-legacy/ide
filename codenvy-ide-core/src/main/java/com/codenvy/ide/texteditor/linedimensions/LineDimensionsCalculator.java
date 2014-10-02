@@ -569,7 +569,7 @@ public class LineDimensionsCalculator {
      *         The string of text to
      *         measure including the character of interest.
      * @return The width of the string which is baseXOffset +
-     *         characterOfInterestWidth
+     * characterOfInterestWidth
      */
     private double getStringWidth(char characterOfInterest, double baseXOffset,
                                   String textToMeasureIncludingCharacterOfInterest) {

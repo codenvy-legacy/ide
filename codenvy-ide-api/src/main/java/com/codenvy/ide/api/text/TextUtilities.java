@@ -62,7 +62,7 @@ public class TextUtilities {
      * @param offset
      *         the offset at which to start the search
      * @return an <code>int[]</code> with two elements where the first is the starting offset, the second the index of the found
-     *         search string in the given <code>searchStrings</code> array, returns <code>[-1, -1]</code> if no match exists
+     * search string in the given <code>searchStrings</code> array, returns <code>[-1, -1]</code> if no match exists
      */
     public static int[] indexOf(String[] searchStrings, String text, int offset) {
 

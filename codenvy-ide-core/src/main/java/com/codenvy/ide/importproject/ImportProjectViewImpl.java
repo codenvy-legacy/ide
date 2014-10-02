@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 
@@ -38,7 +37,7 @@ import java.util.List;
  *
  * @author Roman Nikitenko
  */
-public class ImportProjectViewImpl extends Window implements ImportProjectView{
+public class ImportProjectViewImpl extends Window implements ImportProjectView {
 
     public interface ImportProjectViewBinder extends UiBinder<Widget, ImportProjectViewImpl> {
     }

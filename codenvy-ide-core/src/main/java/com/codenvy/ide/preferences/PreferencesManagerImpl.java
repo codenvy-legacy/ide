@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
+import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -75,7 +75,7 @@ public class PreferencesManagerImpl implements PreferencesManager {
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
-       userProfileService.updatePreferences(attributes, new AsyncRequestCallback<ProfileDescriptor>() {
+        userProfileService.updatePreferences(attributes, new AsyncRequestCallback<ProfileDescriptor>() {
             @Override
             protected void onSuccess(ProfileDescriptor result) {
                 persistedPreferences.putAll(changedPreferences);

@@ -17,11 +17,11 @@ import com.codenvy.ide.collections.Array;
 /**
  * @author Evgen Vidolob
  */
-public interface AppearanceView extends View<AppearanceView.ActionDelegate>{
+public interface AppearanceView extends View<AppearanceView.ActionDelegate> {
 
     void setThemes(Array<Theme> themes, String currentThemeId);
 
-    public interface ActionDelegate{
+    public interface ActionDelegate {
 
         void themeSelected(String themeId);
     }

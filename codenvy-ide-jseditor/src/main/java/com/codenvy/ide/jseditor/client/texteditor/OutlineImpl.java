@@ -10,19 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
- import elemental.events.KeyboardEvent;
+import elemental.events.KeyboardEvent;
+import elemental.events.MouseEvent;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.texteditor.outline.CodeBlock;
+import com.codenvy.ide.api.texteditor.outline.OutlineModel;
+import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
 import com.codenvy.ide.outline.CodeBlockDataAdapter;
 import com.codenvy.ide.outline.OutlineImpl.OutlineView;
 import com.codenvy.ide.outline.OutlineViewImpl;
-import com.codenvy.ide.api.texteditor.outline.CodeBlock;
-import com.codenvy.ide.api.texteditor.outline.OutlineModel;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler.CursorHandler;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.Tree.Listener;
@@ -31,28 +32,26 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-import elemental.events.MouseEvent;
-
 
 /**
  * Implementation of {@link OutlinePresenter} for the embedded editors.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class OutlineImpl implements OutlinePresenter {
 
-    private OutlineView                view;
+    private OutlineView view;
 
     private EmbeddedTextEditorPartView editor;
 
-    private final OutlineModel         model;
+    private final OutlineModel model;
 
-    private CodeBlockDataAdapter       dataAdapter;
+    private CodeBlockDataAdapter dataAdapter;
 
-    private CodeBlock                  blockToSync;
+    private CodeBlock blockToSync;
 
-    private boolean                    thisCursorMove;
+    private boolean thisCursorMove;
 
     /**
      *

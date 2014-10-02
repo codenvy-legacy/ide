@@ -12,8 +12,8 @@ package com.codenvy.ide.api.wizard;
 
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +38,12 @@ public class WizardContext {
          * @param name
          *         key name
          */
-        public Key(@NotNull String name) {
+        public Key(@Nonnull String name) {
             this.name = name;
         }
 
         /** @return key name */
-        @NotNull
+        @Nonnull
         public String getName() {
             return name;
         }
@@ -83,7 +83,7 @@ public class WizardContext {
      * @param <T>
      *         type of value
      */
-    public <T> void putData(@NotNull Key<T> key, @NotNull T value) {
+    public <T> void putData(@Nonnull Key<T> key, @Nonnull T value) {
         dates.put((Key<Object>)key, value);
     }
 
@@ -97,7 +97,7 @@ public class WizardContext {
      * @return value that is mapped to this key or <code>null</code> if no value is not mapped
      */
     @Nullable
-    public <T> T getData(@NotNull Key<T> key) {
+    public <T> T getData(@Nonnull Key<T> key) {
         return (T)dates.get(key);
     }
 
@@ -109,7 +109,7 @@ public class WizardContext {
      * @param <T>
      *         type of value
      */
-    public <T> void removeData(@NotNull Key<T> key) {
+    public <T> void removeData(@Nonnull Key<T> key) {
         dates.remove(key);
     }
 

@@ -26,9 +26,9 @@ public interface GenKeyRequest {
      * @return host name
      */
     String getHost();
-    
+
     void setHost(String host);
-    
+
     GenKeyRequest withHost(String host);
 
     /**
@@ -37,19 +37,19 @@ public interface GenKeyRequest {
      * @return comment
      */
     String getComment();
-    
+
     void setComment(String comment);
 
     GenKeyRequest withComment(String comment);
-    
+
     /**
      * Returns passphrase for private key.
      *
      * @return passphrase
      */
     String getPassphrase();
-    
+
     void setPassphrase(String passphrase);
-    
+
     GenKeyRequest withPassphrase(String passPhrase);
 }

@@ -13,14 +13,14 @@ package com.codenvy.ide.texteditor;
 import elemental.events.Event;
 import elemental.events.EventListener;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.annotation.Annotation;
 import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.codenvy.ide.api.text.annotation.AnnotationModelEvent;
 import com.codenvy.ide.api.text.annotation.AnnotationModelListener;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.ui.Tooltip;
 import com.codenvy.ide.ui.menu.PositionController;

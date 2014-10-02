@@ -83,7 +83,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
     /** {@inheritDoc} */
     @Override
-    public void openPart(PartPresenter part, PartStackType type, Constraints constraint){
+    public void openPart(PartPresenter part, PartStackType type, Constraints constraint) {
         workBenchPresenter.openPart(part, type, constraint);
     }
 

@@ -14,10 +14,11 @@
 
 package com.codenvy.ide.texteditor.selection;
 
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.TextUtilities;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
@@ -33,7 +34,6 @@ import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.PositionUtils;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.ViewportModel;
-import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;

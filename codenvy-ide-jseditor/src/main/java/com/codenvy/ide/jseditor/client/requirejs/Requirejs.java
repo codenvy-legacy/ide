@@ -16,7 +16,7 @@ import com.google.gwt.core.client.JsArrayString;
 
 /**
  * JSO over requirejs function.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class Requirejs extends JavaScriptObject {
@@ -30,7 +30,7 @@ public class Requirejs extends JavaScriptObject {
 
     public static final native Requirejs config(RequirejsConfig config) /*-{
         var localRequire = $wnd.require.config(config);
-        localRequire.require = function(deps, callback, errback) {
+        localRequire.require = function (deps, callback, errback) {
             return localRequire(deps, callback, errback);
         }
         return localRequire;
@@ -41,17 +41,18 @@ public class Requirejs extends JavaScriptObject {
     }
 
     public final native void require(JsArrayString deps, RequirejsCallback callback, RequirejsErrorHandler errorHandler) /*-{
-        var realCallback = function() {
+        var realCallback = function () {
             var param = [];
             var args = Array.prototype.slice.call(arguments);
-            args.forEach(function(module) {
+            args.forEach(function (module) {
                 param.push(module);
             });
             callback.@com.codenvy.ide.jseditor.client.requirejs.RequirejsCallback::onReady(Lcom/google/gwt/core/client/JsArray;)(param);
         };
-        var realErrHandler = function(err) {
+        var realErrHandler = function (err) {
             if (errorHandler) {
-                errorHandler.@com.codenvy.ide.jseditor.client.requirejs.RequirejsErrorHandler::onError(Lcom/codenvy/ide/jseditor/client/requirejs/RequirejsErrorHandler$RequireError;)(err);
+                errorHandler.@com.codenvy.ide.jseditor.client.requirejs.RequirejsErrorHandler::onError
+                (Lcom/codenvy/ide/jseditor/client/requirejs/RequirejsErrorHandler$RequireError;)(err);
             } else {
                 $wnd.require.onError(err);
             }
@@ -85,8 +86,9 @@ public class Requirejs extends JavaScriptObject {
     }-*/;
 
     public final native void setOnError(RequirejsErrorHandler handler) /*-{
-        this.onError = function(err) {
-            handler.@com.codenvy.ide.jseditor.client.requirejs.RequirejsErrorHandler::onError(Lcom/codenvy/ide/jseditor/client/requirejs/RequirejsErrorHandler$RequireError;)(err);
+        this.onError = function (err) {
+            handler.@com.codenvy.ide.jseditor.client.requirejs.RequirejsErrorHandler::onError
+            (Lcom/codenvy/ide/jseditor/client/requirejs/RequirejsErrorHandler$RequireError;)(err);
         };
     }-*/;
 }

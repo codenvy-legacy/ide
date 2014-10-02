@@ -21,7 +21,7 @@ import com.google.gwt.resources.client.ImageResource;
 public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter {
     protected DirtyStateListener delegate;
 
-    private static String  defaultCategory = "IDE Settings";
+    private static String defaultCategory = "IDE Settings";
 
     private String title;
 

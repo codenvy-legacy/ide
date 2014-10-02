@@ -242,7 +242,7 @@ public abstract class TextEdit {
      * @param other
      *         the other edit
      * @return <code>true<code> if the edit covers the other edit;
-     *         otherwise <code>false</code> is returned.
+     * otherwise <code>false</code> is returned.
      */
     public boolean covers(TextEdit other) {
         if (getLength() == 0 && !canZeroLengthCover())

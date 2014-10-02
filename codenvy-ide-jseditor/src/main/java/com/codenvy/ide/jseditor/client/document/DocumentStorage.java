@@ -15,20 +15,20 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 @ImplementedBy(DocumentStorageImpl.class)
 public interface DocumentStorage {
-    void getDocument(@NotNull FileNode file,
-                     @NotNull final EmbeddedDocumentCallback callback);
+    void getDocument(@Nonnull FileNode file,
+                     @Nonnull final EmbeddedDocumentCallback callback);
 
     void saveDocument(@Nullable final EditorInput editorInput,
-                      @NotNull EmbeddedDocument document,
+                      @Nonnull EmbeddedDocument document,
                       boolean overwrite,
-                      @NotNull final AsyncCallback<EditorInput> callback);
+                      @Nonnull final AsyncCallback<EditorInput> callback);
 
-    public void documentClosed(@NotNull EmbeddedDocument document);
+    public void documentClosed(@Nonnull EmbeddedDocument document);
 
     public interface EmbeddedDocumentCallback {
         void onDocumentReceived(String content);

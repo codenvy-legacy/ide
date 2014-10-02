@@ -45,7 +45,8 @@
         <g:center>
             <g:FlowPanel>
                 <g:Image resource="{resources.ask64}" addStyleNames="{style.ovwer} {style.spacingTop}"/>
-                <g:SimplePanel ui:field="message" width="280px" height="100%" addStyleNames="{style.noResize} {style.noborder} {style.textArea}"/>
+                <g:SimplePanel ui:field="message" width="280px" height="100%"
+                               addStyleNames="{style.noResize} {style.noborder} {style.textArea}"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>

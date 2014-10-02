@@ -74,7 +74,7 @@ public class SetupPomAndGWTModule {
         // validate args
         if (args.length != 4) {
             System.out
-                  .println("Ooops, wrong usage. This tool requires 5 arguments to be able to register an extension properly.");
+                    .println("Ooops, wrong usage. This tool requires 5 arguments to be able to register an extension properly.");
             System.out.println("- Maven Group ID of the extension (i.e. 'com.codenvy.ide')");
             System.out.println("- Maven Artifact ID of the extension (i.e. 'ide-ext-tasks')");
             System.out.println("- Maven Module Version of the extension (i.e. '3.0')");

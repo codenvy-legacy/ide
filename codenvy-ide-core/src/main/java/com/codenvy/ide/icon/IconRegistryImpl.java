@@ -12,7 +12,6 @@ package com.codenvy.ide.icon;
 
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.google.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;

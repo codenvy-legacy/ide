@@ -13,19 +13,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <ui:with field="css" type="com.codenvy.ide.ui.window.Window.Css" />
-  <g:FlowPanel ui:field="popup" styleName="{css.popup}">
-    <g:FlowPanel ui:field="glass" styleName="{css.glass}"></g:FlowPanel>
-    <g:FocusPanel styleName="{css.positioner}" ui:field="focusPanel">
-      <g:FlowPanel ui:field="contentContainer" styleName="{css.content}">
-          <g:FlowPanel ui:field="header" styleName="{css.header}">
-              <g:FlowPanel styleName="{css.headerTitleWrapper}">
-                  <g:Label ui:field="headerLabel" addStyleNames="{css.headerTitleLabel}"></g:Label>
-              </g:FlowPanel>
-              <g:FlowPanel ui:field="crossButton" styleName="{css.crossButton}"></g:FlowPanel>
-          </g:FlowPanel>
-          <g:FlowPanel ui:field="content"></g:FlowPanel>
-      </g:FlowPanel>
-    </g:FocusPanel>
-  </g:FlowPanel>
+    <ui:with field="css" type="com.codenvy.ide.ui.window.Window.Css"/>
+    <g:FlowPanel ui:field="popup" styleName="{css.popup}">
+        <g:FlowPanel ui:field="glass" styleName="{css.glass}"></g:FlowPanel>
+        <g:FocusPanel styleName="{css.positioner}" ui:field="focusPanel">
+            <g:FlowPanel ui:field="contentContainer" styleName="{css.content}">
+                <g:FlowPanel ui:field="header" styleName="{css.header}">
+                    <g:FlowPanel styleName="{css.headerTitleWrapper}">
+                        <g:Label ui:field="headerLabel" addStyleNames="{css.headerTitleLabel}"></g:Label>
+                    </g:FlowPanel>
+                    <g:FlowPanel ui:field="crossButton" styleName="{css.crossButton}"></g:FlowPanel>
+                </g:FlowPanel>
+                <g:FlowPanel ui:field="content"></g:FlowPanel>
+            </g:FlowPanel>
+        </g:FocusPanel>
+    </g:FlowPanel>
 </ui:UiBinder>

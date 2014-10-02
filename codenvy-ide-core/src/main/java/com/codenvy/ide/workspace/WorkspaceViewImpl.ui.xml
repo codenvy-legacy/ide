@@ -54,7 +54,8 @@
             overflow: visible !important;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.dockLayoutPanel}" debugId="ideMainDockPanel" ui:field="ideMainDockPanel">
+    <g:DockLayoutPanel unit="PX" width="100%" height="100%" addStyleNames="{style.dockLayoutPanel}" debugId="ideMainDockPanel"
+                       ui:field="ideMainDockPanel">
 
         <g:north size="21">
             <g:DockLayoutPanel ui:field="topMenuLayoutPanel">
@@ -65,7 +66,7 @@
                 </g:east>
 
                 <g:center>
-                    <g:SimplePanel width="100%" ui:field="menuPanel" debugId="mainMenuPanel" />
+                    <g:SimplePanel width="100%" ui:field="menuPanel" debugId="mainMenuPanel"/>
                 </g:center>
             </g:DockLayoutPanel>
         </g:north>

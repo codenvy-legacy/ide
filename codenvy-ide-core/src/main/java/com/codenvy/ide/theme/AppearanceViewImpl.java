@@ -61,7 +61,7 @@ public class AppearanceViewImpl implements AppearanceView {
     }
 
     @UiHandler("themeBox")
-    void handleSelectionChanged(ChangeEvent event){
+    void handleSelectionChanged(ChangeEvent event) {
         themeBox.getSelectedIndex();
         delegate.themeSelected(themeBox.getValue(themeBox.getSelectedIndex()));
     }

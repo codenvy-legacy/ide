@@ -59,12 +59,14 @@ public class Icon {
         this.svgResource = svgResource;
         this.imageResource = null;
     }
-    
+
     /**
      * Create a new icon based on the specified {@link ImageResource}.
-     * 
-     * @param id icon's id
-     * @param imageResource resource that contains image
+     *
+     * @param id
+     *         icon's id
+     * @param imageResource
+     *         resource that contains image
      */
     public Icon(String id, ImageResource imageResource) {
         this.id = id;

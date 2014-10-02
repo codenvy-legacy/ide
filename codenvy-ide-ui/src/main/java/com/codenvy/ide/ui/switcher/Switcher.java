@@ -26,16 +26,16 @@ import com.google.gwt.user.client.ui.SimpleCheckBox;
 /**
  * UI element with two states boolean states: "ON" - true, "OFF" - false.
  * User switches the state by click.
- * 
+ *
  * @author Ann Shumilova
  */
 public class Switcher extends Composite implements HasValue<Boolean> {
-    private static final Resources  resources = GWT.create(Resources.class);
+    private static final Resources resources = GWT.create(Resources.class);
 
     static {
         resources.switcherCSS().ensureInjected();
     }
-   
+
     SimpleCheckBox checkbox;
 
     public interface Resources extends ClientBundle {
@@ -78,7 +78,7 @@ public class Switcher extends Composite implements HasValue<Boolean> {
         Element sw = DOM.createDiv();
         sw.setClassName(resources.switcherCSS().onoffswitchSwitch());
         label.appendChild(sw);
-        
+
         mainPanel.getElement().appendChild(label);
 
         initWidget(mainPanel);

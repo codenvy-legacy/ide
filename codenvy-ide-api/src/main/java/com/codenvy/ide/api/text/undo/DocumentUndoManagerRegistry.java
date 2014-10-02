@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text.undo;
 
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.runtime.Assert;
 
 import java.util.HashMap;
 import java.util.Map;

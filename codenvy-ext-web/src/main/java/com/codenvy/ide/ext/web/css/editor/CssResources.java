@@ -22,7 +22,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public interface CssResources extends ClientBundle {
     @Source("com/codenvy/ide/ext/web/css-property-gray.png")
     ImageResource property();
-    
+
     @Source("com/codenvy/ide/ext/web/css.svg")
     SVGResource propertyCss();
 }

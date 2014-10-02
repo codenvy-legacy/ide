@@ -41,7 +41,7 @@ public class AskValueDialog extends Window {
 
     @UiField
     TextBox value;
-    
+
     private AskValueCallback callback;
 
     interface AskUiBinder extends UiBinder<Widget, AskValueDialog> {
@@ -134,7 +134,7 @@ public class AskValueDialog extends Window {
         this.ensureDebugId("askValueDialog-window");
         this.value.ensureDebugId("askValueDialog-textBox");
     }
-    
+
     @UiHandler("value")
     void onKeyPress(KeyPressEvent event) {
         if (event.getNativeEvent().getKeyCode() == KeyCode.ENTER && callback != null) {
@@ -142,7 +142,7 @@ public class AskValueDialog extends Window {
             onClose();
         }
     }
-    
+
     @Override
     public void show() {
         new Timer() {

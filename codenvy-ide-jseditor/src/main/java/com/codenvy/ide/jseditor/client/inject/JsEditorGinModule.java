@@ -10,12 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.inject;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
@@ -39,6 +33,12 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 @ExtensionGinModule
 public class JsEditorGinModule extends AbstractGinModule {

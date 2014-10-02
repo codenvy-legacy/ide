@@ -17,7 +17,7 @@ import com.codenvy.ide.collections.StringMap;
 
 /**
  * Implementation for {@link ImportProjectWizardRegistry}.
- * 
+ *
  * @author Ann Shumilova
  */
 public class ImportProjectWizardRegistryImpl implements ImportProjectWizardRegistry {

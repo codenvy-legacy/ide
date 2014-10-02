@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Presenter for listing opened files of the editor.
@@ -51,7 +51,7 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
      *         y coordinate of the right top corner of the list view
      * @param callback
      */
-    public void showDialog(@NotNull Array<FileNode> files, int x, int y, @NotNull AsyncCallback<Void> callback) {
+    public void showDialog(@Nonnull Array<FileNode> files, int x, int y, @Nonnull AsyncCallback<Void> callback) {
         this.callback = callback;
         view.setOpenedFiles(files);
         view.showDialog(x, y);

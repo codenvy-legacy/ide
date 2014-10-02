@@ -31,13 +31,7 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static com.codenvy.ide.api.action.IdeActions.GROUP_BUILD;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_BUILD_CONTEXT_MENU;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_BUILD_TOOLBAR;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_MAIN_CONTEXT_MENU;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_MAIN_TOOLBAR;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_CONTEXT_MENU;
-import static com.codenvy.ide.api.action.IdeActions.GROUP_RUN_TOOLBAR;
+import static com.codenvy.ide.api.action.IdeActions.*;
 
 /**
  * Builder extension entry point.

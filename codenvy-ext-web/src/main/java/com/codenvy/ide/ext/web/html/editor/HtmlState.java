@@ -13,28 +13,27 @@
 // limitations under the License.
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.ext.web.css.editor.CssState;
 import com.codenvy.ide.api.texteditor.parser.CmState;
+import com.codenvy.ide.ext.web.css.editor.CssState;
 import com.codenvy.ide.xml.editor.XmlState;
 
 /**
  * Object that represents html-parser state.
- *
  */
 public class HtmlState extends CmState {
 
-  protected HtmlState() {
-  }
-
-  public final native XmlState getXmlState() /*-{
-    return this.htmlState;
-  }-*/;
-
-  final native CssState getCssState() /*-{
-    if (this.mode == "css") {
-      return this.localState;
-    } else {
-      return null;
+    protected HtmlState() {
     }
-  }-*/;
+
+    public final native XmlState getXmlState() /*-{
+        return this.htmlState;
+    }-*/;
+
+    final native CssState getCssState() /*-{
+        if (this.mode == "css") {
+            return this.localState;
+        } else {
+            return null;
+        }
+    }-*/;
 }

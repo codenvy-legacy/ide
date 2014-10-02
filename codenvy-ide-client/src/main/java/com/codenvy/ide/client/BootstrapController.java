@@ -74,11 +74,11 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt analyticsEventLoggerExt;
-    private final DtoFactory              dtoFactory;
-    private       AppContext              appContext;
-    private final ProjectTypeServiceClient projectTypeDescriptionServiceClient;
+    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
+    private final DtoFactory                    dtoFactory;
+    private       AppContext                    appContext;
+    private final ProjectTypeServiceClient      projectTypeDescriptionServiceClient;
     private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private final IconRegistry                  iconRegistry;
     private final ThemeAgent                    themeAgent;
@@ -409,8 +409,8 @@ public class BootstrapController {
 
     private static class AnalyticsSessions {
         private String id;
-        private long startTime;
-        private long lastRequestTime;
+        private long   startTime;
+        private long   lastRequestTime;
 
         private AnalyticsSessions() {
             makeNew();

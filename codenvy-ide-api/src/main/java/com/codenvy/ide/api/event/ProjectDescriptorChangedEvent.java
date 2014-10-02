@@ -21,8 +21,6 @@ public class ProjectDescriptorChangedEvent extends GwtEvent<ProjectDescriptorCha
     private ProjectDescriptor projectDescriptor;
 
 
-
-
     public static Type<ProjectDescriptorChangedHandler> TYPE = new Type<>();
 
     public ProjectDescriptorChangedEvent(ProjectDescriptor projectDescriptor) {

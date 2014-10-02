@@ -15,7 +15,7 @@ import com.google.gwt.i18n.client.Constants;
 
 /**
  * Represents application's build information.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface BuildInfo extends Constants {

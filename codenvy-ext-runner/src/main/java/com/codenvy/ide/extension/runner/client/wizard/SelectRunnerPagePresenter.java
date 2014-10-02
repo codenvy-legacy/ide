@@ -11,10 +11,12 @@
 
 package com.codenvy.ide.extension.runner.client.wizard;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -25,9 +27,10 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +45,8 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private SelectRunnerPageView   view;
     private RunnerServiceClient    runnerServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private ProjectServiceClient   projectServiceClient;
+    private EventBus               eventBus;
     private DtoFactory             factory;
     private RunnerDescriptor       runner;
     private String                 environmentId;
@@ -59,11 +64,15 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     public SelectRunnerPagePresenter(SelectRunnerPageView view,
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                     ProjectServiceClient projectServiceClient,
+                                     EventBus eventBus,
                                      DtoFactory factory) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.projectServiceClient = projectServiceClient;
+        this.eventBus = eventBus;
         this.factory = factory;
         view.setDelegate(this);
     }

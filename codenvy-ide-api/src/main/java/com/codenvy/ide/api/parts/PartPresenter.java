@@ -18,8 +18,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Part is a main UI block of the IDE.
@@ -34,7 +34,7 @@ public interface PartPresenter extends Presenter {
     int SELECTION_PROPERTY = 0x002;
 
     /** @return Title of the Part */
-    @NotNull
+    @Nonnull
     String getTitle();
 
     /**
@@ -62,7 +62,9 @@ public interface PartPresenter extends Presenter {
     /**
      * Decorate the title SVG image of this part. A convenient method to be able to size, color or perform any CSS related styling
      * operation.
-     * @param svgImage the title SVG image
+     *
+     * @param svgImage
+     *         the title SVG image
      * @return the image decorated, could be or not the same reference, no matter.
      */
     @Nullable
@@ -120,10 +122,10 @@ public interface PartPresenter extends Presenter {
      * @param listener
      *         a property listener
      */
-    void addPropertyListener(@NotNull PropertyListener listener);
+    void addPropertyListener(@Nonnull PropertyListener listener);
 
     /** @return The {@link Selection} of this Part. */
-    @NotNull
+    @Nonnull
     Selection<?> getSelection();
 
     /**
@@ -132,5 +134,5 @@ public interface PartPresenter extends Presenter {
      * @param listener
      *         a property listener
      */
-    void removePropertyListener(@NotNull PropertyListener listener);
+    void removePropertyListener(@Nonnull PropertyListener listener);
 }

@@ -193,7 +193,7 @@ public class Anchor implements ReadOnlyAnchor {
     /**
      * @param <T>
      * @return the value stored in this anchor. Note that type safety is the
-     *         responsibility of the caller.
+     * responsibility of the caller.
      */
     @Override
     @SuppressWarnings("unchecked")

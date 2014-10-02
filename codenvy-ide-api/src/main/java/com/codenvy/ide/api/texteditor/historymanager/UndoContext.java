@@ -45,8 +45,8 @@ public class UndoContext implements IUndoContext {
      * @param context
      *         the context to be checked against the receiving context.
      * @return <code>true</code> if the receiving context can be considered a
-     *         match for the specified context, and <code>false</code> if it
-     *         cannot.
+     * match for the specified context, and <code>false</code> if it
+     * cannot.
      */
     public boolean matches(IUndoContext context) {
         return context == this;

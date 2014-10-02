@@ -17,14 +17,13 @@ import com.codenvy.ide.api.texteditor.parser.CmState;
 
 /**
  * Object that represents xml-parser state.
- *
  */
 public class XmlState extends CmState {
 
-  protected XmlState() {
-  }
+    protected XmlState() {
+    }
 
-  public final native XmlContext getContext() /*-{
-    return this.context;
-  }-*/;
+    public final native XmlContext getContext() /*-{
+        return this.context;
+    }-*/;
 }

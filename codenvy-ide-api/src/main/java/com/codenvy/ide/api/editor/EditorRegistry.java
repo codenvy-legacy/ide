@@ -12,7 +12,7 @@ package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.api.filetypes.FileType;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -29,15 +29,17 @@ public interface EditorRegistry {
      * @param fileType
      * @param provider
      */
-    void register(@NotNull FileType fileType, @NotNull EditorProvider provider);
+    void register(@Nonnull FileType fileType, @Nonnull EditorProvider provider);
 
     /**
      * Register default editor.
      *
-     * @param fileType the file type
-     * @param provider the provider
+     * @param fileType
+     *         the file type
+     * @param provider
+     *         the provider
      */
-    void registerDefaultEditor(@NotNull FileType fileType, @NotNull EditorProvider provider);
+    void registerDefaultEditor(@Nonnull FileType fileType, @Nonnull EditorProvider provider);
 
     /**
      * Get editor provide assigned for file type;
@@ -46,16 +48,17 @@ public interface EditorRegistry {
      *         resource file type
      * @return editor provider
      */
-    @NotNull
-    EditorProvider getEditor(@NotNull FileType fileType);
+    @Nonnull
+    EditorProvider getEditor(@Nonnull FileType fileType);
 
 
     /**
      * Gets all editors for file type.
      *
-     * @param fileType the file type
+     * @param fileType
+     *         the file type
      * @return the all editors for file type
      */
-    @NotNull
-    List<EditorProvider> getAllEditorsForFileType(@NotNull FileType fileType);
+    @Nonnull
+    List<EditorProvider> getAllEditorsForFileType(@Nonnull FileType fileType);
 }

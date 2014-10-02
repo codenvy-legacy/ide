@@ -25,6 +25,7 @@
             padding-left: 8px;
             height: 20px;
         }
+
         .spaceRight {
             margin-right: 8px;
             margin-top: 1px;
@@ -40,6 +41,7 @@
             margin-left: 20px;
 
         }
+
         .gwt-TextBox {
             background-color: InputBackgroundColor;
             color: #dbdbdb;
@@ -69,7 +71,8 @@
                     </g:SimplePanel>
                 </g:center>
             </g:DockLayoutPanel>
-        </g:north><g:north size="40">
+        </g:north>
+        <g:north size="40">
             <g:DockLayoutPanel unit="PX" width="100%" height="100%">
                 <g:west size="180">
                     <g:FlowPanel>
@@ -89,7 +92,8 @@
         <g:north size="30">
             <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
                 <g:Label text="{locale.selectRunnerPageViewMemoryRecommendedLabel}" width="504px" addStyleNames="{style.labelPosition}"/>
-                <g:TextBox readOnly="false" ui:field="recommendedMemory" height="12px" width="40px" maxLength="4" addStyleNames="{style.gwt-TextBox}"
+                <g:TextBox readOnly="false" ui:field="recommendedMemory" height="12px" width="40px" maxLength="4"
+                           addStyleNames="{style.gwt-TextBox}"
                            debugId="project-selectRunnerPage-recommendedMemory"/>
             </g:HorizontalPanel>
         </g:north>

@@ -233,7 +233,7 @@ public final class DocOpUtils {
             case RETAIN:
                 DocOpComponent.Retain retain = (DocOpComponent.Retain)component;
                 return "R(" + (retain.isTrailingNewline() ? (retain.getCount() - 1) + "\\n" : ""
-                                                                                               + retain.getCount()) + ")";
+                                                                                              + retain.getCount()) + ")";
 
             case RETAIN_LINE:
                 return "RL(" + ((DocOpComponent.RetainLine)component).getLineCount() + ")";

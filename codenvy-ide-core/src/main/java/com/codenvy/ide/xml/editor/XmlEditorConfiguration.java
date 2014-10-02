@@ -17,7 +17,7 @@ import com.codenvy.ide.api.texteditor.parser.BasicTokenFactory;
 import com.codenvy.ide.api.texteditor.parser.CmParser;
 import com.codenvy.ide.api.texteditor.parser.Parser;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The XML file type editor configuration.
@@ -28,7 +28,7 @@ public class XmlEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public Parser getParser(@NotNull TextEditorPartView view) {
+    public Parser getParser(@Nonnull TextEditorPartView view) {
         CmParser parser = getParserForMime(MimeType.APPLICATION_XML);
         parser.setNameAndFactory("xml", new BasicTokenFactory());
         return parser;

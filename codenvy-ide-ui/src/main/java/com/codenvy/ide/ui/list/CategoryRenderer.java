@@ -18,6 +18,7 @@ import com.google.gwt.user.client.DOM;
 /**
  * Called each time we render an item in the list. Provides an opportunity for
  * implementors/clients to customize the DOM structure of each list item.
+ *
  * @author Evgen Vidolob
  */
 public abstract class CategoryRenderer<T> {

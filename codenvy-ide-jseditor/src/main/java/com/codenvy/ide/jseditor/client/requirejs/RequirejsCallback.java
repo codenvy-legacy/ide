@@ -14,15 +14,16 @@ import com.google.gwt.core.client.JsArray;
 
 /**
  * Interface for requirejs completion callbacks.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface RequirejsCallback {
 
     /**
      * Executed when the required modules are loaded
-     * 
-     * @param modules the module instances
+     *
+     * @param modules
+     *         the module instances
      */
     void onReady(JsArray<RequirejsModule> modules);
 }

@@ -14,7 +14,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Events for clicks on the gutter element of the editor.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class GutterClickEvent extends GwtEvent<GutterClickHandler> {

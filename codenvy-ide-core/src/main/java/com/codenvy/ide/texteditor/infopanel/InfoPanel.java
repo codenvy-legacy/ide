@@ -13,11 +13,11 @@ package com.codenvy.ide.texteditor.infopanel;
 import elemental.dom.Element;
 
 import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.dom.Elements;

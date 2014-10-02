@@ -14,7 +14,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Events triggered just before the selection changes (allows to modify selection on the fly).
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class BeforeSelectionChangeEvent extends GwtEvent<BeforeSelectionChangeHandler> {

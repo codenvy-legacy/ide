@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.keybinding;
 
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
 
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
@@ -28,8 +28,8 @@ import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventUtils;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Implementation of the {@link KeyBindingAgent}.
@@ -122,7 +122,7 @@ public class KeyBindingManager implements KeyBindingAgent {
     /** {@inheritDoc} */
     @Nullable
     @Override
-    public CharCodeWithModifiers getKeyBinding(@NotNull String actionId) {
+    public CharCodeWithModifiers getKeyBinding(@Nonnull String actionId) {
         CharCodeWithModifiers keyBinding = activeScheme.getKeyBinding(actionId);
         if (keyBinding != null)
             return keyBinding;

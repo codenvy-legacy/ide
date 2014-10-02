@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
 import com.codenvy.ide.jseditor.client.events.CursorActivityEvent;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
-import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
@@ -22,12 +22,12 @@ import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 /**
  * {@link CursorModelWithHandler} implementation for the embedded editors.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 class EmbeddedEditorCursorModel implements CursorModelWithHandler, CursorActivityHandler {
 
-    private final EmbeddedDocument               document;
+    private final EmbeddedDocument document;
     private final ListenerManager<CursorHandler> cursorHandlerManager = ListenerManager.create();
 
     public EmbeddedEditorCursorModel(final EmbeddedDocument document) {

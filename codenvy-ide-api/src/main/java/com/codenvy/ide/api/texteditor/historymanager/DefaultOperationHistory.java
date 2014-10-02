@@ -12,11 +12,11 @@
  *******************************************************************************/
 package com.codenvy.ide.api.texteditor.historymanager;
 
+import com.codenvy.ide.api.text.ListenerList;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.OperationCanceledException;
 import com.codenvy.ide.runtime.Status;
-import com.codenvy.ide.api.text.ListenerList;
 
 import java.util.ArrayList;
 import java.util.HashMap;

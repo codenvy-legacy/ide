@@ -13,14 +13,14 @@ package com.codenvy.ide.api.editor;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * An editor is a visual component.
  * It is typically used to edit or browse a document or input object. The input
  * is identified using an <code>EditorInput</code>.  Modifications made
  * in an editor part follow an open-save-close lifecycle model
- * <p>
+ * <p/>
  * An editor is document or input-centric.  Each editor has an input, and only
  * one editor can exist for each editor input within a page.
  *
@@ -53,7 +53,7 @@ public interface EditorPartPresenter extends PartPresenter {
      * @throws EditorInitException
      *         if this editor was not initialized successfully
      */
-    void init(@NotNull EditorInput input) throws EditorInitException;
+    void init(@Nonnull EditorInput input) throws EditorInitException;
 
     /**
      * Returns the input for this editor.  If this value changes the part must
@@ -61,7 +61,7 @@ public interface EditorPartPresenter extends PartPresenter {
      *
      * @return the editor input
      */
-    @NotNull
+    @Nonnull
     EditorInput getEditorInput();
 
     /** Saves the contents of this editor. */
@@ -73,11 +73,11 @@ public interface EditorPartPresenter extends PartPresenter {
      * @param callback
      *         the callback for save operation
      */
-    void doSave(@NotNull AsyncCallback<EditorInput> callback);
+    void doSave(@Nonnull AsyncCallback<EditorInput> callback);
 
     /** Saves the contents of this part to another object. */
     void doSaveAs();
-    
+
     /** Perform action on file changed (e.g. renamed). */
     void onFileChanged();
 
@@ -86,8 +86,8 @@ public interface EditorPartPresenter extends PartPresenter {
      * operation.
      *
      * @return <code>true</code> if the contents have been modified and need
-     *         saving, and <code>false</code> if they have not changed since the last
-     *         save
+     * saving, and <code>false</code> if they have not changed since the last
+     * save
      */
     boolean isDirty();
 
@@ -97,7 +97,7 @@ public interface EditorPartPresenter extends PartPresenter {
      * @param closeHandler
      *         the instance of CloseHandler
      */
-    void addCloseHandler(@NotNull EditorPartCloseHandler closeHandler);
+    void addCloseHandler(@Nonnull EditorPartCloseHandler closeHandler);
 
     /** Call this method then editor became visible */
     void activate();

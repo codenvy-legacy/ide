@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * {@link FileTypeIdentifier} that tries to recognize special filenames.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class FileNameFileTypeIdentifier implements FileTypeIdentifier {

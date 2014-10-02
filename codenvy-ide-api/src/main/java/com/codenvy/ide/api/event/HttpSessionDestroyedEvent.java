@@ -15,6 +15,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Fired when websocket closed with message from server that current http session was destroyed.
+ *
  * @author Evgen Vidolob
  */
 public class HttpSessionDestroyedEvent extends GwtEvent<HttpSessionDestroyedHandler> {

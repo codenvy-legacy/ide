@@ -18,6 +18,7 @@ import com.google.inject.Singleton;
 
 /**
  * Action fo find action action
+ *
  * @author Evgen Vidolob
  */
 @Singleton

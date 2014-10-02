@@ -43,7 +43,7 @@ public class ShimItem extends JavaScriptObject {
     }-*/;
 
     public final native void setInit(InitFunction init) /*-{
-        this.init = function(param) {
+        this.init = function (param) {
             init.@com.codenvy.ide.jseditor.client.requirejs.config.ShimItem.InitFunction::init()(param);
         };
     }-*/;

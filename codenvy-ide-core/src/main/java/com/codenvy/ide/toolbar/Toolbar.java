@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Toolbar is visual component, represents IDE toolbar.
@@ -38,7 +38,7 @@ public class Toolbar extends Composite {
         setStyleName(RESOURCES.toolbar().toolbarPanel());
     }
 
-    public void add(@NotNull Widget widget) {
+    public void add(@Nonnull Widget widget) {
         panel.add(widget);
     }
 

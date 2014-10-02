@@ -155,10 +155,10 @@ public class CssTrie {
      *         the properties that are already in the document
      *         for the given property
      * @return an array of autocompletions, or an empty array if there are no
-     *         autocompletion proposals
+     * autocompletion proposals
      */
     public static Array<CssCompletionProposal> findAndFilterAutocompletions(AbstractTrie<CssCompletionProposal> trie,
-                                                                                String prefix, Array<String> completedProperties) {
+                                                                            String prefix, Array<String> completedProperties) {
         prefix = prefix.toLowerCase();
         Array<CssCompletionProposal> allProposals = trie.search(prefix);
         Array<CssCompletionProposal> result = Collections.createArray();

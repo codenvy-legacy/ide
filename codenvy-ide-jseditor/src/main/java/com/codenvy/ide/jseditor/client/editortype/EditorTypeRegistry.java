@@ -10,15 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editortype;
 
-import java.util.List;
+import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
 
 import javax.inject.Singleton;
-
-import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
+import java.util.List;
 
 /**
  * Manages all registered editor types.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 @Singleton
@@ -26,24 +25,28 @@ public interface EditorTypeRegistry {
 
     /**
      * Registers an editor type.
-     * 
-     * @param editorType the editor type instance
-     * @param name the (user-visible) name of the editor type
-     * @param editorBuilder a provider for the editor type
+     *
+     * @param editorType
+     *         the editor type instance
+     * @param name
+     *         the (user-visible) name of the editor type
+     * @param editorBuilder
+     *         a provider for the editor type
      */
     void registerEditorType(EditorType editorType, String name, EditorBuilder editorBuilder);
 
     /**
      * Returns the editor provider for a registered editor type.
-     * 
-     * @param editorType the editor type
+     *
+     * @param editorType
+     *         the editor type
      * @return the provider
      */
     EditorBuilder getRegisteredBuilder(EditorType editorType);
 
     /**
      * Returns the user-visible name for the registered editor type.
-     * 
+     *
      * @param editorType
      * @return
      */
@@ -51,7 +54,7 @@ public interface EditorTypeRegistry {
 
     /**
      * Returns a list of all registered editor types.
-     * 
+     *
      * @return the editor types
      */
     List<EditorType> getEditorTypes();

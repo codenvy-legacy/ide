@@ -16,7 +16,7 @@ import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 /**
  * Interface for a {@link CursorModel} that also have {@link CursorHandler}s.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface CursorModelWithHandler extends CursorModel {

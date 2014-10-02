@@ -14,6 +14,7 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.DocumentModel;
@@ -28,7 +29,6 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.Spacer;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.ViewportModel.Edge;
-import com.codenvy.ide.api.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.ScheduledCommandExecutor;

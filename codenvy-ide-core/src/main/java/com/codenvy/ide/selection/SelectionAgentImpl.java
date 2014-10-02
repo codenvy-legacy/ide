@@ -18,7 +18,6 @@ import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -28,8 +27,8 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class SelectionAgentImpl implements ActivePartChangedHandler, PropertyListener, SelectionAgent {
 
-    private PartPresenter activePart;
-    private final EventBus eventBus;
+    private       PartPresenter activePart;
+    private final EventBus      eventBus;
 
     @Inject
     public SelectionAgentImpl(EventBus eventBus) {

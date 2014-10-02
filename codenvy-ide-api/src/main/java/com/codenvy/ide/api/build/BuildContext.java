@@ -13,19 +13,23 @@ package com.codenvy.ide.api.build;
 /**
  * Context interface, used for communication between different action that used builder to avoid
  * running several builder tasks in one time.
+ *
  * @author Evgen Vidolob
  */
 public interface BuildContext {
 
     /**
      * return true if build started
+     *
      * @return the boolean
      */
     boolean isBuilding();
 
     /**
      * Change building state(started of finished)
-     * @param building the building
+     *
+     * @param building
+     *         the building
      */
     void setBuilding(boolean building);
 }

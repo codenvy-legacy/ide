@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.action.ActionGroup;
+import com.codenvy.ide.api.mvp.View;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -26,9 +26,9 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate> {
     public interface ActionDelegate {
     }
 
-    void setPlace(@NotNull String place);
+    void setPlace(@Nonnull String place);
 
-    void setActionGroup(@NotNull ActionGroup actionGroup);
+    void setActionGroup(@Nonnull ActionGroup actionGroup);
 
     void setAddSeparatorFirst(boolean addSeparatorFirst);
 }

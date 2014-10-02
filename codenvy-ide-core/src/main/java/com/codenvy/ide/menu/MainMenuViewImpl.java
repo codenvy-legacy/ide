@@ -196,7 +196,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             if (presentation.isVisible()) { // add only visible items
                 newVisibleActions.add(action);
             }
-            if(action2barItem.containsKey(action)){
+            if (action2barItem.containsKey(action)) {
                 action2barItem.get(action).update();
             }
         }
@@ -207,7 +207,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
      */
     private void add(String place, Action action, MenuItemPresentationFactory presentationFactory) {
         Presentation presentation = presentationFactory.getPresentation(action);
-        if(action instanceof ActionGroup) {
+        if (action instanceof ActionGroup) {
             ActionGroup group = (ActionGroup)action;
             table.setText(0, menuBarItems.size(), presentation.getText());
             Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
@@ -219,7 +219,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             action2barItem.put(group, item);
         } else if (action instanceof CustomComponentAction) {
             Widget widget = ((CustomComponentAction)action).createCustomComponent(presentation);
-            table.setWidget(0,menuBarItems.size(), widget);
+            table.setWidget(0, menuBarItems.size(), widget);
             Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
             menuBarItems.put(element, null);
         }

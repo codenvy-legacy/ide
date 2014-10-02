@@ -14,15 +14,15 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event for change of viewport (visible section) changes.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class ViewPortChangeEvent extends GwtEvent<ViewPortChangeHandler> {
     /** The type instance for this event. */
     public static final Type<ViewPortChangeHandler> TYPE = new Type<>();
 
-    private final int                               viewPortStart;
-    private final int                               viewPortEnd;
+    private final int viewPortStart;
+    private final int viewPortEnd;
 
     public ViewPortChangeEvent(int from, int to) {
         this.viewPortStart = from;

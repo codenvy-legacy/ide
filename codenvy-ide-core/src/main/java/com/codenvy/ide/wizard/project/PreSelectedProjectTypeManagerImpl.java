@@ -16,7 +16,7 @@ public class PreSelectedProjectTypeManagerImpl implements PreSelectedProjectType
 
 
     protected String projectTypeId = "";
-    private int      priority      = 0;
+    private   int    priority      = 0;
 
 
     @Override

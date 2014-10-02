@@ -15,33 +15,33 @@
 package com.codenvy.ide.ext.web.html.editor;
 
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.ext.web.css.editor.CssState;
-import com.codenvy.ide.ext.web.css.editor.CssTokenFactory;
 import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.api.texteditor.parser.TokenFactory;
 import com.codenvy.ide.api.texteditor.parser.TokenType;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.ext.web.css.editor.CssState;
+import com.codenvy.ide.ext.web.css.editor.CssTokenFactory;
 
 /**
  * Token factory for HTML. Depending on the mode it creates either {@link Token}
  * or {@link CssToken}.
- *
+ * <p/>
  * <p>By creating {@link CssToken} we capture the context which is part of the
  * {@link CssState}.
  */
 class HtmlTokenFactory implements TokenFactory<HtmlState> {
 
-  @Override
-  public void push(String stylePrefix, HtmlState htmlState, String tokenType, String tokenValue,
-      Array<Token> tokens) {
-    Token token;
-    if ("css".equals(stylePrefix)) {
-      CssState cssState = htmlState.getCssState();
-      token = CssTokenFactory.createToken(stylePrefix, cssState, tokenType, tokenValue);
-    } else {
-      token =
-          new Token(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue);
+    @Override
+    public void push(String stylePrefix, HtmlState htmlState, String tokenType, String tokenValue,
+                     Array<Token> tokens) {
+        Token token;
+        if ("css".equals(stylePrefix)) {
+            CssState cssState = htmlState.getCssState();
+            token = CssTokenFactory.createToken(stylePrefix, cssState, tokenType, tokenValue);
+        } else {
+            token =
+                    new Token(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue);
+        }
+        tokens.add(token);
     }
-    tokens.add(token);
-  }
 }

@@ -46,7 +46,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private PreSelectedProjectTypeManager preSelectedProjectTypeManager;
 
     @Inject
-    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry, PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
+    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry,
+                             PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
         super("Choose Project", null);
         this.view = view;
         this.registry = registry;
@@ -149,8 +150,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.setName(project.getName());
             view.setDescription(project.getDescription());
             view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
-        }
-        else if (defaultProjectTypeDescriptor != null) {
+        } else if (defaultProjectTypeDescriptor != null) {
             // if no project type, pre select maven
             view.selectProjectType(defaultProjectTypeDescriptor.getProjectTypeId());
             view.focusOnName();

@@ -192,7 +192,7 @@ public class CssPartialParser {
      *         can be called with a specialValueType value that is not one of those
      *         special values, in which case the method returns an empty array.
      * @return an array of strings corresponding to the proposals that should be
-     *         shown for the special value type
+     * shown for the special value type
      */
     public JsArrayString checkIfSpecialValueAndGetSpecialValueProposals(String maybeSpecialValue, String specialValueType) {
 

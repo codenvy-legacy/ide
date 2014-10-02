@@ -8,81 +8,80 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-    /**********************************************************************************************
-       MENU BAR
-     ***********************************************************************************************/
+/**********************************************************************************************
+   MENU BAR
+ ***********************************************************************************************/
 
-    .menuBarTable {
-        float: left;
-    }
+.menuBarTable {
+    float: left;
+}
 
-    .menuBar,
-    .menuBarItem,
-    .menuBarItemOver,
-    .menuBarItemSelected,
-    .menuBarItemDisabled {
-        height: 21px;
-    }
+.menuBar,
+.menuBarItem,
+.menuBarItemOver,
+.menuBarItemSelected,
+.menuBarItemDisabled {
+    height: 21px;
+}
 
-    .menuBarItem,
-    .menuBarItemOver,
-    .menuBarItemSelected,
-    .menuBarItemDisabled {
-        padding-top: 1px;
-        padding-left: 12px;
-        padding-right: 12px;
-        cursor: default;
-        font-family: mainFontFamily;
-        font-size: fontMenuSize;
-        font-weight: normal;
-        font-style: normal;
-        vertical-align: middle;
-        text-shadow: 0 1px 0px rgba(0, 0, 0, 1);
-    }
+.menuBarItem,
+.menuBarItemOver,
+.menuBarItemSelected,
+.menuBarItemDisabled {
+    padding-top: 1px;
+    padding-left: 12px;
+    padding-right: 12px;
+    cursor: default;
+    font-family: mainFontFamily;
+    font-size: fontMenuSize;
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle;
+    text-shadow: 0 1px 0px rgba(0, 0, 0, 1);
+}
 
-    .menuBar {
-        width: 100%;
-        background-color: mainMenuBkgColor;
-        color: mainMenuFontColor;
-    }
+.menuBar {
+    width: 100%;
+    background-color: mainMenuBkgColor;
+    color: mainMenuFontColor;
+}
 
-    .menuBarItem {
-    }
+.menuBarItem {
+}
 
-    .menuBarItem:HOVER,
-    .menuBarItemOver:HOVER {
-        box-shadow: inset 0px -3px 0px -1px #49a2e6;
-        background-color: #525252;
-    }
+.menuBarItem:HOVER,
+.menuBarItemOver:HOVER {
+    box-shadow: inset 0px -3px 0px -1px #49a2e6;
+    background-color: #525252;
+}
 
-    .menuBarItemSelected {
-        background-color: #545454;
-        box-shadow:
-            inset -2px 0px 0px -1px #242424,
-            inset 2px 0px 0px -1px #242424,
-            inset 0px 2px 0px -1px #242424,
-            inset 0px -3px 0px -1px #49a2e6;
-    }
+.menuBarItemSelected {
+    background-color: #545454;
+    box-shadow: inset -2px 0px 0px -1px #242424,
+    inset 2px 0px 0px -1px #242424,
+    inset 0px 2px 0px -1px #242424,
+    inset 0px -3px 0px -1px #49a2e6;
+}
 
-    .menuBarItemDisabled {
-        color: disabledMenuItemColor;
-    }
+.menuBarItemDisabled {
+    color: disabledMenuItemColor;
+}
 
-    .rightPanel {
-        float: right;
-    }
+.rightPanel {
+    float: right;
+}
 
-    .rightPanelSeparator {
-        width: 4px;
-        height: 17px;
-        margin: 2px;
-        float: right;
-    }
+.rightPanelSeparator {
+    width: 4px;
+    height: 17px;
+    margin: 2px;
+    float: right;
+}
 
-    .rightPanelSeparator div {
-        height: 0;
-        width: 4px;
-        border-bottom: 1px solid #000000;
-        margin-bottom: 2px;
-        box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.23);
-    }
+.rightPanelSeparator div {
+    height: 0;
+    width: 4px;
+    border-bottom: 1px solid #000000;
+    margin-bottom: 2px;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.23);
+}

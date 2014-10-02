@@ -13,7 +13,7 @@ package com.codenvy.ide.api.preferences;
 import com.codenvy.ide.api.extension.SDK;
 import com.google.inject.Provider;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -29,5 +29,5 @@ public interface PreferencesAgent {
      * @param page
      *         page that need to be added
      */
-    void addPage(@NotNull Provider<? extends PreferencesPagePresenter> page);
+    void addPage(@Nonnull Provider<? extends PreferencesPagePresenter> page);
 }

@@ -10,22 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editorconfig;
 
-import javax.annotation.Nullable;
-
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
+
+import javax.annotation.Nullable;
 
 public interface EmbeddedTextEditorConfiguration {
 
     /**
      * Returns the visual width of the tab character. This implementation always returns 3.
-     * 
+     *
      * @return the tab width
      */
     public int getTabWidth();
 
     /**
      * Return the outline model. This implementation always returns <code>null</code>.
-     * 
+     *
      * @return a model that used to build outline tree.
      */
     @Nullable

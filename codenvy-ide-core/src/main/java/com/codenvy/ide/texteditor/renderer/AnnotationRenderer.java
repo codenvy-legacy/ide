@@ -10,18 +10,18 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.dto.client.ClientDocOpFactory;
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.api.text.annotation.Annotation;
 import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.codenvy.ide.api.text.annotation.AnnotationModelEvent;
 import com.codenvy.ide.api.text.annotation.AnnotationModelListener;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.dto.client.ClientDocOpFactory;
+import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;

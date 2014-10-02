@@ -15,14 +15,15 @@ import com.google.gwt.event.shared.HasHandlers;
 
 /**
  * Interface for components that handle {@link CursorActivityEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasCursorActivityHandlers extends HasHandlers {
     /**
      * Add a {@link CursorActivityHandler}.
-     * 
-     * @param handler the handler to add
+     *
+     * @param handler
+     *         the handler to add
      * @return a handler used to remove the handler
      */
     HandlerRegistration addCursorActivityHandler(CursorActivityHandler handler);

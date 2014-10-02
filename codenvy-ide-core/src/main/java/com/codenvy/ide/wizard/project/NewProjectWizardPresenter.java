@@ -47,7 +47,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -202,7 +202,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             }
 
             @Override
-            public void onFailure(@NotNull Throwable exception) {
+            public void onFailure(@Nonnull Throwable exception) {
                 Info info = new Info(exception.getMessage());
                 info.show();
             }
@@ -570,7 +570,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param wizardPage
      *         new current page
      */
-    private void setPage(@NotNull WizardPage wizardPage) {
+    private void setPage(@Nonnull WizardPage wizardPage) {
         currentPage = wizardPage;
         currentPage.setContext(wizardContext);
         updateControls();

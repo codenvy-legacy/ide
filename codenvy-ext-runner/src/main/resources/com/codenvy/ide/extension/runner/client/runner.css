@@ -24,9 +24,9 @@
 }
 
 .main-style {
-	font-size: fontSize;
-	font-family: mainFontFamily;
-	color: mainFontColor;
+    font-size: fontSize;
+    font-family: mainFontFamily;
+    color: mainFontColor;
 }
 
 .tab-selected {
@@ -46,18 +46,23 @@ svg.partIcon {
 .inQueue {
     fill: mainFontColor;
 }
+
 .inProgress {
     fill: mainFontColor;
 }
+
 .running {
     fill: #52ade1;
 }
+
 .done {
     fill: #56e33b;
 }
+
 .failed {
     fill: #ff3333;
 }
+
 .timeout {
     fill: #ffba00;
 }

@@ -205,50 +205,55 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
 
 
         String importer = view.getImporter();
-        ImportSourceDescriptor importSourceDescriptor = dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
+        ImportSourceDescriptor importSourceDescriptor =
+                dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer).withLocation(url);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
 
         notificationManager.showNotification(notification);
 
-        projectServiceClient.importProject(projectName, false, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                checkRam(result, importProjectOutputWShandler);
-            }
+        projectServiceClient
+                .importProject(projectName, false, importSourceDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(ProjectDescriptor result) {
+                        checkRam(result, importProjectOutputWShandler);
+                    }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                String errorMessage;
-                if (exception instanceof UnauthorizedException) {
-                    ServiceError serverError =
-                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse().getText(), ServiceError.class);
-                    errorMessage = serverError.getMessage();
-                } else {
-                    Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
-                    errorMessage = exception.getMessage();
-                }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        String errorMessage;
+                        if (exception instanceof UnauthorizedException) {
+                            ServiceError serverError =
+                                    dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse().getText(),
+                                                                 ServiceError.class);
+                            errorMessage = serverError.getMessage();
+                        } else {
+                            Log.error(ImportProjectPresenter.class, "can not import project: " + exception);
+                            errorMessage = exception.getMessage();
+                        }
 
-                try {
-                    messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
-                } catch (WebSocketException e) {
-                    Log.error(getClass(), e);
-                }
-                notification.setStatus(Notification.Status.FINISHED);
-                notification.setType(Notification.Type.ERROR);
-                notification.setImportant(true);
-                notification.setMessage(locale.importProjectMessageFailure() + " " + exception.getMessage());
+                        try {
+                            messageBus.unsubscribe(wsChannel, importProjectOutputWShandler);
+                        } catch (WebSocketException e) {
+                            Log.error(getClass(), e);
+                        }
+                        notification.setStatus(Notification.Status.FINISHED);
+                        notification.setType(Notification.Type.ERROR);
+                        notification.setImportant(true);
+                        notification.setMessage(locale.importProjectMessageFailure() + " " + exception.getMessage());
 
-                view.showWarning(errorMessage);
-                deleteFolder(projectName);
-            }
-        });
+                        view.showWarning(errorMessage);
+                        deleteFolder(projectName);
+                    }
+                });
     }
-    private void checkRam (final ProjectDescriptor projectDescriptor, final SubscriptionHandler<String> importProjectOutputWShandler) {
+
+    private void checkRam(final ProjectDescriptor projectDescriptor, final SubscriptionHandler<String> importProjectOutputWShandler) {
         int requiredMemorySize = 0;
         Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
         String defaultRunnerEnvironment = projectDescriptor.getDefaultRunnerEnvironment();
 
-        if (runEnvConfigurations != null && defaultRunnerEnvironment != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
+        if (runEnvConfigurations != null && defaultRunnerEnvironment != null &&
+            runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
             RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
             requiredMemorySize = runEnvConfDescriptor.getRequiredMemorySize();
         }
@@ -267,7 +272,8 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
                                                                     new InfoHandler() {
                                                                         @Override
                                                                         public void onOk() {
-                                                                            importSuccessful(projectDescriptor, importProjectOutputWShandler);
+                                                                            importSuccessful(projectDescriptor,
+                                                                                             importProjectOutputWShandler);
                                                                         }
                                                                     }
                                 );

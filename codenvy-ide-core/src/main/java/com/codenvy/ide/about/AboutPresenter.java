@@ -16,20 +16,20 @@ import com.google.inject.Singleton;
 
 /**
  * Presenter for displaying About Codenvy information.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
 public class AboutPresenter implements AboutView.ActionDelegate {
-    private AboutView view;
-    private BuildInfo buildInfo;
+    private AboutView                 view;
+    private BuildInfo                 buildInfo;
     private AboutLocalizationConstant locale;
 
     @Inject
     public AboutPresenter(AboutView view, BuildInfo buildInfo, AboutLocalizationConstant locale) {
         this.view = view;
         view.setDelegate(this);
-        
+
         this.buildInfo = buildInfo;
         this.locale = locale;
     }
@@ -43,7 +43,7 @@ public class AboutPresenter implements AboutView.ActionDelegate {
         view.setVersion(buildInfo.version());
         view.setTime(buildInfo.buildTime());
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onOkClicked() {

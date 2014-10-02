@@ -15,15 +15,16 @@ import com.google.gwt.core.client.JsArrayString;
 
 /**
  * Interface for requirejs error callbacks.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface RequirejsErrorHandler {
 
     /**
      * Called when a requirejs operation fails.
-     * 
-     * @param error the error object
+     *
+     * @param error
+     *         the error object
      */
     void onError(RequireError error);
 

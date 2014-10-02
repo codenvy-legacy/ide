@@ -14,15 +14,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link KeymapChangeEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface KeymapChangeHandler extends EventHandler {
 
     /**
      * Action triggered by the event.
-     * 
-     * @param event the event
+     *
+     * @param event
+     *         the event
      */
     void onKeymapChanged(KeymapChangeEvent event);
 }

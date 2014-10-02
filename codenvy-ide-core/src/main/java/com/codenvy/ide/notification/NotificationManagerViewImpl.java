@@ -39,7 +39,7 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     @UiField
     FlowPanel mainPanel;
     //    @UiField
-    Label     count       = new Label();
+    Label count = new Label();
     @UiField
     ScrollPanel scrollPanel;
 

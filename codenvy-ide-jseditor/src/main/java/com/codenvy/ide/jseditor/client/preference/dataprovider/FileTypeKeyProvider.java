@@ -15,7 +15,7 @@ import com.google.gwt.view.client.ProvidesKey;
 
 /**
  * {@link ProvidesKey} for FileType.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class FileTypeKeyProvider implements ProvidesKey<FileType> {

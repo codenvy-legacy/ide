@@ -39,6 +39,7 @@ public interface TextEditorPartPresenter extends EditorPartPresenter, HasOutline
     /**
      * Return this text editor document.
      * Note than method return null until <code>PROP_INPUT</code>  property changed.
+     *
      * @return the document of this editor or null if editor input not set.
      */
     Document getDocument();

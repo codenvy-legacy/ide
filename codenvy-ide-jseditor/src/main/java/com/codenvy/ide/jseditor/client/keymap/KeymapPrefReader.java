@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.keymap;
 
-import java.util.Map.Entry;
-
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.util.loging.Log;
@@ -20,9 +18,11 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
+import java.util.Map.Entry;
+
 /**
  * Utility class to read and store keymap preferences.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class KeymapPrefReader {
@@ -31,9 +31,11 @@ public class KeymapPrefReader {
 
     /**
      * Reads the keymap preference for the given editor.
-     * 
-     * @param preferencesManager the preferences manager
-     * @param editorKey the editor key
+     *
+     * @param preferencesManager
+     *         the preferences manager
+     * @param editorKey
+     *         the editor key
      * @return the keymap in preference or null if none is set
      */
     public static String readPref(final PreferencesManager preferencesManager, final String editorKey) {
@@ -64,9 +66,11 @@ public class KeymapPrefReader {
 
     /**
      * Reads the keymap preferences and fills the {@link KeymapValuesHolder} instance.
-     * 
-     * @param preferencesManager the preferences manager
-     * @param valuesHolder the object that keeps the values
+     *
+     * @param preferencesManager
+     *         the preferences manager
+     * @param valuesHolder
+     *         the object that keeps the values
      */
     public static void readPref(final PreferencesManager preferencesManager, final KeymapValuesHolder valuesHolder) {
         final String keymapPrefAsJson = preferencesManager.getValue(KEYMAP_PREF_KEY);
@@ -112,9 +116,11 @@ public class KeymapPrefReader {
 
     /**
      * Updates the keymap in preferences.
-     * 
-     * @param preferencesManager the preferences manager
-     * @param valuesHolder the object that contains the values to store
+     *
+     * @param preferencesManager
+     *         the preferences manager
+     * @param valuesHolder
+     *         the object that contains the values to store
      */
     public static void storePrefs(final PreferencesManager preferencesManager, final KeymapValuesHolder valuesHolder) {
         final String keymapPrefAsJson = preferencesManager.getValue(KEYMAP_PREF_KEY);

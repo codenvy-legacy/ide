@@ -30,7 +30,7 @@ public final class OperationHistoryFactory {
      * Return the operation history to be used for managing undoable operations.
      *
      * @return the operation history to be used for executing, undoing, and
-     *         redoing operations.
+     * redoing operations.
      */
     public static IOperationHistory getOperationHistory() {
         if (operationHistory == null) {

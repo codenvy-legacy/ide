@@ -26,7 +26,7 @@ public class CurrentProject {
     private ProjectDescriptor projectDescription;
     private boolean isRunningEnabled = true;
     private ApplicationProcessDescriptor processDescriptor;
-    private ProjectDescriptor rootProject;
+    private ProjectDescriptor            rootProject;
 
     /**
      * By default:

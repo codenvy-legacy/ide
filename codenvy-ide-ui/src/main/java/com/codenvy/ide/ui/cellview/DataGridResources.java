@@ -17,7 +17,9 @@ import com.google.gwt.user.cellview.client.DataGrid;
  */
 public interface DataGridResources extends DataGrid.Resources {
 
-    public interface DataGridStyle extends DataGrid.Style{}
+    public interface DataGridStyle extends DataGrid.Style {
+    }
+
     @Override
     @Source({"dataGrid.css", "com/codenvy/ide/api/ui/style.css"})
     DataGridStyle dataGridStyle();

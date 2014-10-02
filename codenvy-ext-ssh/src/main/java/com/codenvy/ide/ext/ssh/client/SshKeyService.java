@@ -12,12 +12,11 @@ package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.ext.ssh.dto.GenKeyRequest;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The client service for working with ssh key.
@@ -41,14 +40,14 @@ public interface SshKeyService {
      * @param sshKeyProvider
      *         keys provider
      */
-    void registerSshKeyProvider(@NotNull String host, @NotNull SshKeyProvider sshKeyProvider);
+    void registerSshKeyProvider(@Nonnull String host, @Nonnull SshKeyProvider sshKeyProvider);
 
     /**
      * Receive all ssh key, stored on server
      *
      * @param callback
      */
-    void getAllKeys(@NotNull AsyncRequestCallback<Array<KeyItem>> callback);
+    void getAllKeys(@Nonnull AsyncRequestCallback<Array<KeyItem>> callback);
 
     /**
      * Generate new ssh key pare
@@ -57,7 +56,7 @@ public interface SshKeyService {
      *         for ssh key
      * @param callback
      */
-    void generateKey(@NotNull String host, @NotNull AsyncRequestCallback<Void> callback);
+    void generateKey(@Nonnull String host, @Nonnull AsyncRequestCallback<Void> callback);
 
     /**
      * Get public ssh key
@@ -66,7 +65,7 @@ public interface SshKeyService {
      *         to get public key
      * @param callback
      */
-    void getPublicKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<PublicKey> callback);
+    void getPublicKey(@Nonnull KeyItem keyItem, @Nonnull AsyncRequestCallback<PublicKey> callback);
 
     /**
      * Delete ssh key
@@ -75,5 +74,5 @@ public interface SshKeyService {
      *         to delete
      * @param callback
      */
-    void deleteKey(@NotNull KeyItem keyItem, @NotNull AsyncRequestCallback<Void> callback);
+    void deleteKey(@Nonnull KeyItem keyItem, @Nonnull AsyncRequestCallback<Void> callback);
 }

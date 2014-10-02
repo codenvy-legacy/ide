@@ -40,13 +40,13 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter part for the embedded variety of editor implementations.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
@@ -56,12 +56,12 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final WorkspaceAgent                workspaceAgent;
     private final EmbeddedTextEditorViewFactory textEditorViewFactory;
 
-    private final DocumentStorage               documentStorage;
+    private final DocumentStorage documentStorage;
 
-    private EmbeddedTextEditorConfiguration     configuration;
-    private NotificationManager                 notificationManager;
-    private EmbeddedTextEditorPartView          editor;
-    private OutlineImpl                         outline;
+    private EmbeddedTextEditorConfiguration configuration;
+    private NotificationManager             notificationManager;
+    private EmbeddedTextEditorPartView      editor;
+    private OutlineImpl                     outline;
 
     @AssistedInject
     public EmbeddedTextEditorPresenter(final Resources resources,
@@ -142,7 +142,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         }
     }
 
-    @NotNull
+    @Nonnull
     protected Widget getWidget() {
         return editor.asWidget();
     }
@@ -181,8 +181,8 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     }
 
     @Override
-    public void initialize(@NotNull EmbeddedTextEditorConfiguration configuration,
-                           @NotNull NotificationManager notificationManager) {
+    public void initialize(@Nonnull EmbeddedTextEditorConfiguration configuration,
+                           @Nonnull NotificationManager notificationManager) {
         this.configuration = configuration;
         this.notificationManager = notificationManager;
         this.editor = this.textEditorViewFactory.createTextEditorPartView();
@@ -254,7 +254,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public HandlesUndoRedo getUndoRedo() {
-        if(this.editor != null) {
+        if (this.editor != null) {
             return this.editor.getUndoRedo();
         } else {
             return null;

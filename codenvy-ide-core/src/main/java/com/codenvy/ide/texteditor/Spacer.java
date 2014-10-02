@@ -15,9 +15,9 @@
 package com.codenvy.ide.texteditor;
 
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
 
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;

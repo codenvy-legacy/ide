@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
 
 /**
  * UI for {@link AboutView}.
- * 
+ *
  * @author Ann Shumilova
  */
 @Singleton
@@ -32,28 +32,29 @@ public class AboutViewImpl extends Window implements AboutView {
     interface AboutViewImplUiBinder extends UiBinder<Widget, AboutViewImpl> {
     }
 
-    Button                 btnOk;
+    Button btnOk;
     @UiField
-    Label                  version;
+    Label                     version;
     @UiField
-    Label                  revision;
+    Label                     revision;
     @UiField
-    Label                  buildTime;
+    Label                     buildTime;
     @UiField(provided = true)
-    AboutLocalizationConstant   locale;
-    
+    AboutLocalizationConstant locale;
+
     private ActionDelegate delegate;
-    
+
 
     @Inject
-    public AboutViewImpl(com.codenvy.ide.Resources resources, AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale, CoreLocalizationConstant coreLocale) {
+    public AboutViewImpl(com.codenvy.ide.Resources resources, AboutViewImplUiBinder uiBinder, AboutLocalizationConstant locale,
+                         CoreLocalizationConstant coreLocale) {
         this.locale = locale;
         this.setTitle(locale.aboutViewTitle());
         this.setWidget(uiBinder.createAndBindUi(this));
         this.ensureDebugId("aboutView-window");
-       
+
         btnOk = createButton(coreLocale.ok(), "help-about-ok", new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOkClicked();

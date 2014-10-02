@@ -10,29 +10,29 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editortype;
 
+import com.codenvy.ide.util.loging.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.codenvy.ide.util.loging.Log;
-
 /**
  * Value object for editor types.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public final class EditorType {
 
     /** The key for the default "classic" editor. */
-    public static final String             DEFAULT_EDITOR_KEY = "codemirror";
+    public static final String DEFAULT_EDITOR_KEY = "codemirror";
 
     /** The editor type key. */
-    private final String                   editorTypeKey;
+    private final String editorTypeKey;
 
 
     /** The already built instances. */
-    private static Map<String, EditorType> instances          = new HashMap<>();
+    private static Map<String, EditorType> instances = new HashMap<>();
 
     private EditorType(final String key) {
         editorTypeKey = key;
@@ -40,8 +40,9 @@ public final class EditorType {
 
     /**
      * Retrieve an editor type instance by its key.
-     * 
-     * @param key the editor type key
+     *
+     * @param key
+     *         the editor type key
      * @return the {@link EditorType} instance
      */
     public static EditorType fromKey(final String key) {
@@ -61,7 +62,7 @@ public final class EditorType {
 
     /**
      * Returns the editor type key.
-     * 
+     *
      * @return the editor type key.
      */
     public String getEditorTypeKey() {
@@ -70,7 +71,7 @@ public final class EditorType {
 
     /**
      * Returns the default editor type.
-     * 
+     *
      * @return the default editor type.
      */
     public static EditorType getDefaultEditorType() {
@@ -80,7 +81,7 @@ public final class EditorType {
     /**
      * Return all created instances.<br>
      * The list is a copy of the real one, modifying it does nothing.
-     * 
+     *
      * @return the instances
      */
     public static List<EditorType> getInstances() {
@@ -89,7 +90,7 @@ public final class EditorType {
 
     /**
      * Return the instance with the given key.
-     * 
+     *
      * @return the instance with that key or null if there isn't one
      */
     public static EditorType getInstance(final String key) {

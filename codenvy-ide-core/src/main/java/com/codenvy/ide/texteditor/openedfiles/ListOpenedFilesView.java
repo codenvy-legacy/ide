@@ -14,7 +14,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * View for displaying all opened files of the editor.
@@ -27,7 +27,7 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
      *
      * @param files
      */
-    void setOpenedFiles(@NotNull Array<FileNode> files);
+    void setOpenedFiles(@Nonnull Array<FileNode> files);
 
     /** Close dialog. */
     void close();

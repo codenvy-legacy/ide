@@ -12,10 +12,10 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

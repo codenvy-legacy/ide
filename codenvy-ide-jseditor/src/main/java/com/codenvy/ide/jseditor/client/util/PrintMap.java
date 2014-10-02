@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 
 /**
  * Utility to pretty-print maps.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public final class PrintMap {
@@ -25,8 +25,9 @@ public final class PrintMap {
 
     /**
      * Pretty prints a map, using toString() on both the keys and values.
-     * 
-     * @param map the map to pretty print
+     *
+     * @param map
+     *         the map to pretty print
      * @return the display of the map
      */
     public static <U, V> String printMap(final Map<U, V> map) {
@@ -37,9 +38,11 @@ public final class PrintMap {
 
     /**
      * Pretty prints a map, using toString() on both the values and the provided converter for the keys.
-     * 
-     * @param map the map to pretty print
-     * @param keyConverter the converter for the keys
+     *
+     * @param map
+     *         the map to pretty print
+     * @param keyConverter
+     *         the converter for the keys
      * @return the display of the map
      */
     public static <U, V> String printMap(final Map<U, V> map, final Converter<U> keyConverter) {
@@ -49,10 +52,13 @@ public final class PrintMap {
 
     /**
      * Pretty prints a map, using the provided converters for the keys and values.
-     * 
-     * @param map the map to pretty print
-     * @param keyConverter the converter for the keys
-     * @param valueConverter the converter for the values
+     *
+     * @param map
+     *         the map to pretty print
+     * @param keyConverter
+     *         the converter for the keys
+     * @param valueConverter
+     *         the converter for the values
      * @return the display of the map
      */
     public static <U, V> String printMap(final Map<U, V> map, final Converter<U> keyConverter, final Converter<V> valueConverter) {
@@ -71,9 +77,10 @@ public final class PrintMap {
 
     /**
      * Interface for the object to string converters used to pretty print the maps.
-     * 
+     *
+     * @param <U>
+     *         the type of the objects to convert to String
      * @author "Mickaël Leduque"
-     * @param <U> the type of the objects to convert to String
      */
     public interface Converter<U> {
         String convert(U item);
@@ -81,9 +88,9 @@ public final class PrintMap {
 
     /**
      * {@link Converter} that just uses {@link #toString()}.
-     * 
-     * @author "Mickaël Leduque"
+     *
      * @param <U>
+     * @author "Mickaël Leduque"
      */
     public static class ToStringConverter<U> implements Converter<U> {
 

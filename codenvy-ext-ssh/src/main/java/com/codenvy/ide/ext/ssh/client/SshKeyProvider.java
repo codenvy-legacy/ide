@@ -15,17 +15,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * Provides SSH keys. Must be registered in {@link SshKeyService}:
  * <code>
- *   sshKeyService.registerSshKeyProvider(GITHUB_HOST, gitHubSshKeyProvider);
+ * sshKeyService.registerSshKeyProvider(GITHUB_HOST, gitHubSshKeyProvider);
  * </code>
- * 
- * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
  *
+ * @author <a href="mailto:ashumilova@codenvy.com">Ann Shumilova</a>
  */
 public interface SshKeyProvider {
     /**
-     * 
-     * @param userId user's id, for whom to generate key
-     * @param callback calback
+     * @param userId
+     *         user's id, for whom to generate key
+     * @param callback
+     *         calback
      */
     void generateKey(String userId, AsyncCallback<Void> callback);
 }

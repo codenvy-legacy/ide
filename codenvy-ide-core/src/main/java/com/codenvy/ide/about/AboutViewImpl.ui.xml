@@ -15,41 +15,41 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.about.AboutLocalizationConstant'/>
-    
+
     <ui:image field="logo" src="logo.png"/>
     <ui:style>
         .emptyBorder {
             margin: 6px;
         }
 
-		.image {
+        .image {
             margin-top: 12px;
-			margin-left: 10px;
+            margin-left: 10px;
         }
 
         .label {
             margin: 6px 5px 0 15px;
-			margin-right: 5px;
-			font-size : 11px;
-			font-weight: bold;
-			float: left;
-			clear: left;
+            margin-right: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            float: left;
+            clear: left;
         }
-	
-		.spacing {
+
+        .spacing {
             margin-top: 10px;
         }
 
-		.value {
-			font-size : 11px;
-			float: left;
-          	margin-top: 6px;
+        .value {
+            font-size: 11px;
+            float: left;
+            margin-top: 6px;
         }
 
-		@sprite .bg {
+        @sprite .bg {
             gwt-image: "logo";
-			background-position: center;
-			background-size: 175px;
+            background-position: center;
+            background-size: 175px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="290px" height="165px" addStyleNames="{style.emptyBorder}">
@@ -64,8 +64,8 @@
                 <g:Label addStyleNames="{style.label}" text="{locale.aboutRevision}"/>
                 <g:Label ui:field="revision" addStyleNames="{style.value}"/>
                 <g:Label addStyleNames="{style.label}" text="{locale.aboutBuildTime}"/>
-            	<g:Label ui:field="buildTime" addStyleNames="{style.value}"/>
-            </g:FlowPanel>    
+                <g:Label ui:field="buildTime" addStyleNames="{style.value}"/>
+            </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder> 

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.texteditor.AutoEditStrategy;
 import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
@@ -19,8 +17,10 @@ import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.api.texteditor.parser.CmParser;
 import com.codenvy.ide.api.texteditor.parser.Parser;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -54,7 +54,7 @@ public class HtmlEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public Parser getParser(@NotNull TextEditorPartView view) {
+    public Parser getParser(@Nonnull TextEditorPartView view) {
         CmParser parser = getParserForMime("text/html");
         parser.setNameAndFactory("html", new HtmlTokenFactory());
         return parser;
@@ -62,7 +62,7 @@ public class HtmlEditorConfiguration extends TextEditorConfiguration {
 
 
     @Override
-    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@Nonnull TextEditorPartView view) {
         if (defaultProcessor.getProcessors() == null || defaultProcessor.getProcessors().size() == 0) {
             return null;
         }

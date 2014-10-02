@@ -8,84 +8,84 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-    /* CSS for AutocompleteComponent.java */
+/* CSS for AutocompleteComponent.java */
 
-    @def maxHeight 300px;
+@def maxHeight 300px;
 
-    .container {
-        box-sizing: border-box;
-        border: 1px solid completionPopupBorderColor;
-        background-color: completionPopupBackgroundColor;
-        -webkit-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
-        -moz-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
-        box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
-        padding: 5px 0 5px 10px;
-        min-width: 150px;
-        max-width: 450px;
-        overflow-x: auto !important;
-    }
+.container {
+    box-sizing: border-box;
+    border: 1px solid completionPopupBorderColor;
+    background-color: completionPopupBackgroundColor;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+    box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75);
+    padding: 5px 0 5px 10px;
+    min-width: 150px;
+    max-width: 450px;
+    overflow-x: auto !important;
+}
 
-    .items {
-        border-width: 0;
-        border-spacing: 0;
-        width: 100%;
-    }
+.items {
+    border-width: 0;
+    border-spacing: 0;
+    width: 100%;
+}
 
-    .hint {
-        overflow-x: hidden;
-        font-size: 11px;
-        font-family: arial, sans-serif;
-        color: #666;
-        background-color: #F7F7F7;
+.hint {
+    overflow-x: hidden;
+    font-size: 11px;
+    font-family: arial, sans-serif;
+    color: #666;
+    background-color: #F7F7F7;
 
-        border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
 
-        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-        text-align: center;
-        line-height: 16px;
-        padding: 0 3px;
-    }
+    text-align: center;
+    line-height: 16px;
+    padding: 0 3px;
+}
 
-    .proposalIcon {
-        max-width: 16px;
-    }
-    
-    .proposalIcon img {
-        vertical-align: middle;
-    }
-    
-    .proposalIcon svg {
-        vertical-align: middle;
-        width: 16px;
-        height: 16px;
-    }
+.proposalIcon {
+    max-width: 16px;
+}
 
-    .proposalLabel {
-        text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
-        color: mainFontColor;
-        font-size: boxFontSize;
-        font-family: mainFontFamily;
-    }
-	
-	.infoPopup {
-		-moz-border-radius: 1px !important;
-    	border-radius: 1px !important;
-    	 -webkit-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75)!important;
-        -moz-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75)!important;
-        box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75)!important;
-    	font-family: mainFontFamily;
-	}
+.proposalIcon img {
+    vertical-align: middle;
+}
 
-    .cappedProposalLabel {
-        color: #999;
-    }
+.proposalIcon svg {
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
 
-    .proposalGroup {
-        padding-left: 5px;
-        color: grey;
-        text-align: right;
-        max-width: 250px;
-    }
+.proposalLabel {
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+    color: mainFontColor;
+    font-size: boxFontSize;
+    font-family: mainFontFamily;
+}
+
+.infoPopup {
+    -moz-border-radius: 1px !important;
+    border-radius: 1px !important;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75) !important;
+    -moz-box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75) !important;
+    box-shadow: 0 2px 5px 0 rgba(50, 50, 50, 0.75) !important;
+    font-family: mainFontFamily;
+}
+
+.cappedProposalLabel {
+    color: #999;
+}
+
+.proposalGroup {
+    padding-left: 5px;
+    color: grey;
+    text-align: right;
+    max-width: 250px;
+}

@@ -67,7 +67,7 @@ public abstract class Window implements IsWidget {
 
     /**
      * ensureDebugId on the current window container. ensureDebugId id + "-headerLabel" on the window control bar title
-     * 
+     *
      * @see UIObject#ensureDebugId(String)
      */
     public void ensureDebugId(String id) {

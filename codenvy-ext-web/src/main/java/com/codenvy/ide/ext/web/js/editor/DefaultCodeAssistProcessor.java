@@ -19,6 +19,7 @@ import java.util.Set;
 /**
  * Allows to chain code assist processor for a given content type.
  * It will delegate to sub processors.
+ *
  * @author Florent Benoit
  */
 @Singleton

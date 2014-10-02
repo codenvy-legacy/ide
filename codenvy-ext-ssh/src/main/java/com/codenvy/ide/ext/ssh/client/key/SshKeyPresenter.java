@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -70,7 +70,7 @@ public class SshKeyPresenter implements SshKeyView.ActionDelegate {
     }
 
     /** Show dialog. */
-    public void showDialog(@NotNull final KeyItem keyItem) {
+    public void showDialog(@Nonnull final KeyItem keyItem) {
         view.addHostToTitle(keyItem.getHost());
 
         service.getPublicKey(keyItem, new AsyncRequestCallback<PublicKey>(dtoUnmarshallerFactory.newUnmarshaller(PublicKey.class)) {

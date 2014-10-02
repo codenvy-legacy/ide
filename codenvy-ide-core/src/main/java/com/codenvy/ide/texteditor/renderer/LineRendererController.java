@@ -245,7 +245,7 @@ class LineRendererController {
      * line renderers that will participate in rendering this line.
      *
      * @return true if there is at least one line renderer participating for the
-     *         given @{link Line} line.
+     * given @{link Line} line.
      */
     private boolean resetLineRenderers(Line line, int lineNumber) {
         boolean hasAtLeastOneParticipatingLineRenderer = false;

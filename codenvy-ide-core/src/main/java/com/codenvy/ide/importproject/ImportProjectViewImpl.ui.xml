@@ -36,7 +36,8 @@
             <g:FlowPanel>
                 <g:Label width="220px" height="22px" text="{locale.importProjectImporterFieldTitle}" addStyleNames="{style.alignLeft}"/>
                 <g:ListBox width="100px" ui:field="importersList" addStyleNames="{style.alignLeft}" debugId="file-importProject-importer"/>
-                <g:Label width="220px" ui:field="description" debugId="file-importProject-description" height="22px"  addStyleNames="{style.alignLeft}"/>
+                <g:Label width="220px" ui:field="description" debugId="file-importProject-description" height="22px"
+                         addStyleNames="{style.alignLeft}"/>
             </g:FlowPanel>
         </g:north>
         <g:north size="50.0">

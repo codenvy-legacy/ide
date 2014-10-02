@@ -30,8 +30,8 @@ public interface KeyListener {
      *         value of this method is a better channel for indicating the
      *         default behavior should be prevented.
      * @return true if the event was handled (the default behavior will not run
-     *         in this case), false to proceed with the default behavior. Even
-     *         if true is returned, other listeners will still get the callback
+     * in this case), false to proceed with the default behavior. Even
+     * if true is returned, other listeners will still get the callback
      */
     boolean onKeyPress(SignalEvent event);
 }

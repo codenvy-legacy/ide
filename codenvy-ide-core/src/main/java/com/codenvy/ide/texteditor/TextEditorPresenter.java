@@ -41,11 +41,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /** @author Evgen Vidolob */
-public class TextEditorPresenter extends AbstractTextEditorPresenter implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
+public class TextEditorPresenter extends AbstractTextEditorPresenter
+        implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
 
     protected TextEditorViewImpl      editor;
     private   Resources               resources;
@@ -160,7 +161,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
         }
     }
 
-    @NotNull
+    @Nonnull
     protected Widget getWidget() {
         return new TextEditorViewResizable(editor);
     }
@@ -179,9 +180,9 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter implements 
 
     /** {@inheritDoc} */
     @Override
-    public void initialize(@NotNull TextEditorConfiguration configuration,
-                           @NotNull DocumentProvider documentProvider,
-                           @NotNull NotificationManager notificationManager) {
+    public void initialize(@Nonnull TextEditorConfiguration configuration,
+                           @Nonnull DocumentProvider documentProvider,
+                           @Nonnull NotificationManager notificationManager) {
         super.initialize(configuration, documentProvider, notificationManager);
         editor = new TextEditorViewImpl(resources, userActivityManager, breakpointGutterManager, dtoFactory);
 //        editor.getTextListenerRegistrar().add(textListener);

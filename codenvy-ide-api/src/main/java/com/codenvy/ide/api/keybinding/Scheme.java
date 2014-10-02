@@ -13,8 +13,8 @@ package com.codenvy.ide.api.keybinding;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Scheme is set of the key bindings.
@@ -46,7 +46,7 @@ public interface Scheme {
      * @param actionId
      *         the action id which keys bind
      */
-    void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId);
+    void addKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId);
 
     /**
      * Remove key binding for action.
@@ -56,13 +56,13 @@ public interface Scheme {
      * @param actionId
      *         the action's id for which key need to remove
      */
-    void removeKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId);
+    void removeKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId);
 
     /**
      * @return all actions that have the specified key. If there are no
      * such actions then the method returns an empty array
      */
-    @NotNull
+    @Nonnull
     Array<String> getActionIds(int digest);
 
     /**
@@ -70,5 +70,5 @@ public interface Scheme {
      * or an null if the action doesn't have any keyboard shortcut
      */
     @Nullable
-    CharCodeWithModifiers getKeyBinding(@NotNull String actionId);
+    CharCodeWithModifiers getKeyBinding(@Nonnull String actionId);
 }

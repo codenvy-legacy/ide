@@ -13,8 +13,6 @@ package com.codenvy.ide.extension.runner.client.manage.ram;
 
 import com.codenvy.ide.api.mvp.View;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Vitaly Parfonov
  */
@@ -27,6 +25,7 @@ public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
         void validateRamSize(String value);
 
     }
+
     String getRam();
 
     void showRam(String ram);

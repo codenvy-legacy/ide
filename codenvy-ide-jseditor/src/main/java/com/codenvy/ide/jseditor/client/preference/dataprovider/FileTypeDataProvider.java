@@ -10,21 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.preference.dataprovider;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.view.client.AbstractDataProvider;
 import com.google.gwt.view.client.HasData;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * An {@link AbstractDataProvider} implementation for {@link FileType} based on the {@link FileTypeRegistry}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class FileTypeDataProvider extends AbstractDataProvider<FileType> implements RefreshableDataProvider {

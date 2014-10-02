@@ -97,7 +97,7 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
     public AcceptsOneWidget getToolPanel() {
         return toolPanel;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onResize() {

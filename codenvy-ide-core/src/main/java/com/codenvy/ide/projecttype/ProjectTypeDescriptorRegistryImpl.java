@@ -11,10 +11,10 @@
 package com.codenvy.ide.projecttype;
 
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.google.inject.Singleton;
 
 /**

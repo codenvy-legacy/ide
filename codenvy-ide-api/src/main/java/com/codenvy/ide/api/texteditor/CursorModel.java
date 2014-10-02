@@ -16,15 +16,16 @@ public interface CursorModel {
 
     /**
      * Move cursor to offset.
-     * 
-     * @param offset the offset
+     *
+     * @param offset
+     *         the offset
      */
     void setCursorPosition(int offset);
 
 
     /**
      * Get cursor position
-     * 
+     *
      * @return the position of cursor.
      */
     Position getCursorPosition();

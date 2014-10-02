@@ -11,7 +11,6 @@
 package com.codenvy.ide.api.text.rules;
 
 
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.BadPositionCategoryException;
 import com.codenvy.ide.api.text.DefaultPositionUpdater;
@@ -25,6 +24,7 @@ import com.codenvy.ide.api.text.TextUtilities;
 import com.codenvy.ide.api.text.TypedPosition;
 import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
+import com.codenvy.ide.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -759,10 +759,12 @@ public class FastPartitioner implements DocumentPartitioner {
                             " in cache: " + toString(fCachedPositions[i])); //NOSONAR $NON-NLS-1$ //$NON-NLS-2$
             }
             for (int i = len; i < positions.length; i++)
-                System.err.println("FastPartitioner.getPositions(): new position in document: " + toString(positions[i])); //NOSONAR $NON-NLS-1$
+                System.err.println(
+                        "FastPartitioner.getPositions(): new position in document: " + toString(positions[i])); //NOSONAR $NON-NLS-1$
             for (int i = len; i < fCachedPositions.length; i++)
                 System.err
-                      .println("FastPartitioner.getPositions(): stale position in cache: " + toString(fCachedPositions[i])); //NOSONAR $NON-NLS-1$
+                        .println("FastPartitioner.getPositions(): stale position in cache: " +
+                                 toString(fCachedPositions[i])); //NOSONAR $NON-NLS-1$
         }
         return fCachedPositions;
     }

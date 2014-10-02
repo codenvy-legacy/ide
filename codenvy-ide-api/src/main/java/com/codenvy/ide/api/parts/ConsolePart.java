@@ -12,7 +12,7 @@ package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.extension.SDK;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -29,7 +29,7 @@ public interface ConsolePart extends PartPresenter {
      * @param text
      *         text that need to be shown
      */
-    void print(@NotNull String text);
+    void print(@Nonnull String text);
 
     /**
      * Display an exception.

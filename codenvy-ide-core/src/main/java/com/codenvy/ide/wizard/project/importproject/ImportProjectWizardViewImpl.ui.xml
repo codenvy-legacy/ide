@@ -40,7 +40,8 @@
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{wizardResources.css.buttonPanel}">
-            <g:Button ui:field="importButton" text="{locale.importProjectButton}" addStyleNames="{wizardResources.css.blueButton}" tabIndex="5"
+            <g:Button ui:field="importButton" text="{locale.importProjectButton}" addStyleNames="{wizardResources.css.blueButton}"
+                      tabIndex="5"
                       debugId="importProjectWizard-importButton"/>
             <g:Button ui:field="nextStepButton" text="{locale.next}" addStyleNames="{wizardResources.css.button}" tabIndex="6"
                       debugId="importProjectWizard-nextStepButton"/>

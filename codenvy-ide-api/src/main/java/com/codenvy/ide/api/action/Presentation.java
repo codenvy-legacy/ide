@@ -18,8 +18,8 @@ import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * The presentation of an action in a specific place in the user interface.
@@ -247,7 +247,7 @@ public final class Presentation {
         setEnabled(presentation.isEnabled());
     }
 
-    public void putClientProperty(@NotNull String key, @Nullable Object value) {
+    public void putClientProperty(@Nonnull String key, @Nullable Object value) {
         if (userMap == null) {
             userMap = Collections.createStringMap();
         }
