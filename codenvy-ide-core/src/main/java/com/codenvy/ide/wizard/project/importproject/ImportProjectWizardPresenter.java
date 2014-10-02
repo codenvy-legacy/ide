@@ -188,7 +188,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                     com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getProjectTypeId()))) {
 
                     WizardContext context = new WizardContext();
-                    context.putData(ProjectWizard.PROJECT, importedProject);
+                    context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
                     newProjectWizardPresenter.show(context);
                 }
             }

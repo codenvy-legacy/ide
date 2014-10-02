@@ -49,7 +49,7 @@ public class ChangeProjectTypeAction extends Action {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
         WizardContext context = new WizardContext();
-        context.putData(ProjectWizard.PROJECT, appContext.getCurrentProject().getProjectDescription());
+        context.putData(ProjectWizard.PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
         wizardPresenter.show(context);
     }
 }

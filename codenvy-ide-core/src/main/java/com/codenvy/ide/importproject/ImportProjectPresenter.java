@@ -306,7 +306,7 @@ public class ImportProjectPresenter implements ImportProjectView.ActionDelegate 
             com.codenvy.api.project.shared.Constants.BLANK_ID.equals(projectDescriptor.getProjectTypeId())) {
 
             WizardContext context = new WizardContext();
-            context.putData(ProjectWizard.PROJECT, projectDescriptor);
+            context.putData(ProjectWizard.PROJECT_FOR_UPDATE, projectDescriptor);
             wizardPresenter.show(context);
         }
     }

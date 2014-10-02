@@ -35,12 +35,19 @@ public class ProjectWizard extends DefaultWizard {
     public static final WizardContext.Key<String>                    PROJECT_NAME        = new WizardContext.Key<>("Project name");
     public static final WizardContext.Key<String>                    PROJECT_DESCRIPTION = new WizardContext.Key<>("Project description");
 
+    /**
+     * Value of this key is project description that will used for create or update project.
+     * So if you wont to change some project attributes or settings (like type or builder/runner) apply your changes to this key value
+     */
     public static final WizardContext.Key<ProjectDescriptor> PROJECT            = new WizardContext.Key<>("Project");
+
+    /**
+     * Value of this key is original {@code ProjectDescriptor}, appears only when project wizard used for update project.
+     * All attributes and other properties will be copied to {@link ProjectWizard#PROJECT} value, you don't need to change this key value.
+     */
+    public static final WizardContext.Key<ProjectDescriptor> PROJECT_FOR_UPDATE = new WizardContext.Key<>("Project for update");
+
     public static final WizardContext.Key<Boolean>           PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");
-    public static final WizardContext.Key<String>            RUNNER_NAME        = new WizardContext.Key<>("Runner name");
-    public static final WizardContext.Key<String>            RUNNER_ENV_ID      = new WizardContext.Key<>("Runner Environment ID");
-    public static final WizardContext.Key<Integer>           RECOMMENDED_RAM    = new WizardContext.Key<>("Recommended RAM");
-    public static final WizardContext.Key<String>            BUILDER_NAME       = new WizardContext.Key<>("Builder name");
 
     /**
      * Create default wizard.

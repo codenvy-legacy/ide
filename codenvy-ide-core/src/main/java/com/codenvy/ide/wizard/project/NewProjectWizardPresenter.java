@@ -12,17 +12,18 @@ package com.codenvy.ide.wizard.project;
 
 import com.codenvy.api.builder.dto.BuilderDescriptor;
 import com.codenvy.api.builder.dto.BuilderEnvironment;
+import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -37,6 +38,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.info.InfoHandler;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
@@ -67,14 +69,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       WizardPage                currentPage;
     private       ProjectWizardView         view;
     private       MainPagePresenter         mainPage;
-    private Map<String, String>  runnersDescriptionMap = new HashMap<>();
-    private Map<String, String>  builderDescriptionMap = new HashMap<>();
     private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
             return mainPage;
         }
     };
+    private Map<String, String>  runnersDescriptionMap = new HashMap<>();
+    private Map<String, String>  builderDescriptionMap = new HashMap<>();
     private WizardContext wizardContext;
     private ProjectWizard wizard;
     private int           workspaceMemory;
@@ -207,7 +209,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         };
 
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
 
         if (project != null && projectName.equals(project.getName())) {
             checkRamAndUpdateProject(project, callback);
@@ -232,20 +234,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void checkRamAndCreateProject(final WizardPage.CommitCallback callback) {
-        int requiredMemorySize = 0;
-
-        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
-        if (templateDescriptor != null) {
-            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
-            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
-
-            if (defaultEnvironment != null && configurations != null && configurations.containsKey(defaultEnvironment)) {
-                RunnerEnvironmentConfigurationDescriptor runEnvConfigDescriptor = configurations.get(defaultEnvironment);
-                if (runEnvConfigDescriptor != null) {
-                    requiredMemorySize = runEnvConfigDescriptor.getRequiredMemorySize();
-                }
-            }
-        }
+        int requiredMemorySize = getRequiredMemorySize();
 
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
             final Info warningWindow =
@@ -254,7 +243,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                              new InfoHandler() {
                                  @Override
                                  public void onOk() {
-                                    createProject(callback);
+                                     createProject(callback);
                                  }
                              }
                     );
@@ -264,39 +253,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         createProject(callback);
     }
 
-    private void createProject(final WizardPage.CommitCallback callback) {
-        ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
-        String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-
-        if (wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null && wizardContext.getData(ProjectWizard.PROJECT) == null &&
-            com.codenvy.api.project.shared.Constants.BLANK_ID
-                    .equals(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId())) {
-            createBlankProject(callback);
-            return;
-        }
-        if (templateDescriptor == null && wizard != null) {
-            wizard.onFinish();
-            view.close();
-            return;
-        }
-        importProject(callback, templateDescriptor, projectName);
-    }
-
     private void checkRamAndUpdateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-        int requiredMemorySize = 0;
-
-        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
-        if (templateDescriptor != null) {
-            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
-            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
-
-            if (defaultEnvironment != null && configurations != null && configurations.containsKey(defaultEnvironment)) {
-                RunnerEnvironmentConfigurationDescriptor runEnvConfigDescriptor = configurations.get(defaultEnvironment);
-                if (runEnvConfigDescriptor != null) {
-                    requiredMemorySize = runEnvConfigDescriptor.getRequiredMemorySize();
-                }
-            }
-        }
+        int requiredMemorySize = getRequiredMemorySize();
 
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
             final Info warningWindow =
@@ -315,6 +273,37 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         updateProject(project, callback);
     }
 
+    private int getRequiredMemorySize() {
+        int requiredMemorySize = 0;
+
+        final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+        if (templateDescriptor != null) {
+            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
+            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
+
+            if (defaultEnvironment != null && configurations != null && configurations.containsKey(defaultEnvironment)) {
+                RunnerEnvironmentConfigurationDescriptor runEnvConfigDescriptor = configurations.get(defaultEnvironment);
+                if (runEnvConfigDescriptor != null) {
+                    requiredMemorySize = runEnvConfigDescriptor.getRequiredMemorySize();
+                }
+            }
+        }
+        return requiredMemorySize;
+    }
+
+    private void createProject(final WizardPage.CommitCallback callback) {
+        ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
+        String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+
+        if (templateDescriptor == null && wizard != null) {
+            wizard.onFinish();
+            doCreateProject(callback);
+            view.close();
+            return;
+        }
+        importProject(callback, templateDescriptor, projectName);
+    }
+
     /**
      * This method called during changing project type
      *
@@ -322,21 +311,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-        final ProjectDescriptor projectDescriptor;
-        projectDescriptor = (project != null) ? project : dtoFactory.createDto(ProjectDescriptor.class);
-        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility ? "public" : "private");
-        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
-        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
-        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
 
-        //Setting recommendedMemorySize from wizardContext
-        saveRecommendedRamInProjectDescriptor(projectDescriptor);
+        ProjectDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT);
+        ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
+        fillProjectUpdate(descriptor, projectUpdate);
 
         view.setLoaderVisibled(true);
 
-        projectService.updateProject(project.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+        projectService.updateProject(project.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
@@ -364,18 +347,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param callback
      */
     private void updateProjectAfterImport(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
-        String description = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
+        String description = wizardContext.getData(ProjectWizard.PROJECT).getDescription();
+        ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
+        fillProjectUpdate(projectDescriptor, projectUpdate);
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
 
         if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
-            projectDescriptor.setDescription(templateDescriptor.getDescription());
-        } else projectDescriptor.setDescription(description);
-
-        //Setting recommendedMemorySize from wizardContext
-        saveRecommendedRamInProjectDescriptor(projectDescriptor);
+            projectUpdate.setDescription(templateDescriptor.getDescription());
+        } else {
+            projectUpdate.setDescription(description);
+        }
 
         view.setLoaderVisibled(true);
-        projectService.updateProject(projectDescriptor.getPath(), projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(
+        projectService.updateProject(projectDescriptor.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
@@ -395,23 +379,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
-    private void createBlankProject(final WizardPage.CommitCallback callback) {
-        final ProjectDescriptor projectDescriptor = dtoFactory.createDto(ProjectDescriptor.class);
-        projectDescriptor.withProjectTypeId(wizardContext.getData(ProjectWizard.PROJECT_TYPE).getProjectTypeId());
-        boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
-        projectDescriptor.setVisibility(visibility ? "public" : "private");
-        projectDescriptor.setDescription(wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION));
-        projectDescriptor.setRunner(wizardContext.getData(ProjectWizard.RUNNER_NAME));
-        projectDescriptor.setDefaultRunnerEnvironment(wizardContext.getData(ProjectWizard.RUNNER_ENV_ID));
-        projectDescriptor.setBuilder(wizardContext.getData(ProjectWizard.BUILDER_NAME));
-
-        //Setting recommendedMemorySize from wizardContext
-        saveRecommendedRamInProjectDescriptor(projectDescriptor);
+    private void doCreateProject(final WizardPage.CommitCallback callback) {
+        NewProject newProject = dtoFactory.createDto(NewProject.class);
+        ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
+        fillNewProject(projectDescriptor, newProject);
 
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         view.setLoaderVisibled(true);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectService.createProject(name, projectDescriptor, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+        projectService.createProject(name, newProject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 eventBus.fireEvent(new OpenProjectEvent(result.getName()));
@@ -542,38 +518,25 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void show() {
         workspaceMemory = 0;
         wizardContext.clear();
         view.setSaveActionTitle(false);
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
-        setAvailableRam();
-    }
-
-    private void showFirstPage() {
-        wizard = null;
-        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        if (project != null) {
-            boolean aPublic = project.getVisibility().equals("public") ? true : false;
-            wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
-            wizardContext.putData(ProjectWizard.PROJECT_NAME, project.getName());
-            wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, project.getDescription());
-        }
-        setPage(mainPage);
-        view.showDialog();
-        view.setEnabledAnimation(false);
+        wizardContext.putData(ProjectWizard.PROJECT, dtoFactory.createDto(ProjectDescriptor.class));
+        getResources();
     }
 
     public void show(WizardContext context) {
         workspaceMemory = 0;
-        fillWizardContext(context.getData(ProjectWizard.PROJECT));
-        view.setSaveActionTitle(wizardContext.getData(ProjectWizard.PROJECT) != null);
-        setAvailableRam();
+        wizardContext = context;
+        fillWizardContext(wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE));
+        view.setSaveActionTitle(wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE) != null);
+        getResources();
     }
 
-    private void setAvailableRam() {
+    private void getResources() {
         runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
             @Override
@@ -594,6 +557,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
+    private void showFirstPage() {
+        wizard = null;
+        setPage(mainPage);
+        view.showDialog();
+        view.setEnabledAnimation(false);
+    }
+
     /**
      * Change current page and responds other operation which needed for changing page.
      *
@@ -607,27 +577,75 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.showPage(currentPage);
     }
 
-    /**
-     * Save recommended Ram in projectDescriptor from wizardContext.
-     *
-     * @param projectDescriptor
-     *         data transfer object (DTO) for {@link com.codenvy.api.project.shared.ProjectDescription}.
-     */
-    private void saveRecommendedRamInProjectDescriptor(ProjectDescriptor projectDescriptor) {
-        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
-        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-            projectDescriptor.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+    //    /**
+//     * Save recommended Ram in projectUpdate from wizardContext.
+//     *
+//     * @param projectUpdate
+//     */
+//    private void saveRecommendedRamInProjectDescriptor(ProjectUpdate projectUpdate) {
+//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
+//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectUpdate.getRunnerEnvironmentConfigurations();
+//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
+//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
+//            projectUpdate.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
+//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+//
+//            if (runnerEnvironmentConfigurationDescriptor == null) {
+//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+//            }
+//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
+//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
+//            projectUpdate.setRunnerEnvironmentConfigurations(runEnvConfigurations);
+//        }
+//    }
+//
+//    /**
+//     * Save recommended Ram in projectUpdate from wizardContext.
+//     *
+//     * @param newProject
+//     */
+//    private void saveRecommendedRamInNewProject(NewProject newProject) {
+//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
+//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = newProject.getRunnerEnvironmentConfigurations();
+//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
+//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
+//            newProject.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
+//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
+//
+//            if (runnerEnvironmentConfigurationDescriptor == null) {
+//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+//            }
+//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
+//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
+//            newProject.setRunnerEnvironmentConfigurations(runEnvConfigurations);
+//        }
+//    }
+    private void fillProjectUpdate(ProjectDescriptor projectDescriptor, ProjectUpdate projectUpdate) {
+        projectUpdate.setProjectTypeId(projectDescriptor.getProjectTypeId());
+        projectUpdate.setDescription(projectDescriptor.getDescription());
+        projectUpdate.setAttributes(projectDescriptor.getAttributes());
 
-            if (runnerEnvironmentConfigurationDescriptor == null) {
-                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-            }
-            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-            projectDescriptor.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-        }
+        projectUpdate.setRunner(projectDescriptor.getRunner());
+        projectUpdate.setRunnerEnvironmentConfigurations(projectDescriptor.getRunnerEnvironmentConfigurations());
+        projectUpdate.setDefaultRunnerEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+
+        projectUpdate.setBuilderEnvironmentConfigurations(projectDescriptor.getBuilderEnvironmentConfigurations());
+        projectUpdate.setBuilder(projectDescriptor.getBuilder());
+        projectUpdate.setDefaultBuilderEnvironment(projectDescriptor.getDefaultBuilderEnvironment());
+    }
+
+    private void fillNewProject(ProjectDescriptor projectDescriptor, NewProject newproject) {
+        newproject.setProjectTypeId(projectDescriptor.getProjectTypeId());
+        newproject.setDescription(projectDescriptor.getDescription());
+        newproject.setAttributes(projectDescriptor.getAttributes());
+
+        newproject.setRunner(projectDescriptor.getRunner());
+        newproject.setRunnerEnvironmentConfigurations(projectDescriptor.getRunnerEnvironmentConfigurations());
+        newproject.setDefaultRunnerEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+
+        newproject.setBuilder(projectDescriptor.getBuilder());
+        newproject.setBuilderEnvironmentConfigurations(projectDescriptor.getBuilderEnvironmentConfigurations());
+        newproject.setDefaultBuilderEnvironment(projectDescriptor.getDefaultBuilderEnvironment());
     }
 
     /**
@@ -637,24 +655,25 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      *         data transfer object (DTO) for {@link com.codenvy.api.project.shared.ProjectDescription}.
      */
     private void fillWizardContext(ProjectDescriptor projectDescriptor) {
-        wizardContext.putData(ProjectWizard.PROJECT, projectDescriptor);
-        wizardContext.putData(ProjectWizard.PROJECT_NAME, projectDescriptor.getName());
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptor.getDescription());
-        wizardContext.putData(ProjectWizard.BUILDER_NAME, projectDescriptor.getBuilder());
-        wizardContext.putData(ProjectWizard.RUNNER_NAME, projectDescriptor.getRunner());
-        wizardContext.putData(ProjectWizard.RUNNER_ENV_ID, projectDescriptor.getDefaultRunnerEnvironment());
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility()));
+        wizardContext.putData(ProjectWizard.PROJECT, copyProjectDescriptor(projectDescriptor));
     }
 
+    private ProjectDescriptor copyProjectDescriptor(ProjectDescriptor oldProject) {
+        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
+    }
+
+
     private String getAvailableRam(String usedMemory) {
-        if (workspaceMemory > 0 ) {
+        if (workspaceMemory > 0) {
             Integer availableRam = workspaceMemory;
 
             if (usedMemory != null) {
                 availableRam -= Integer.valueOf(usedMemory);
             }
             if (availableRam > 1000) {
-                String fractionalPart = (availableRam % 1000 < 100) ? (".0" + availableRam % 1000 + "GB") : ("." + availableRam % 1000 + "GB");
+                String fractionalPart =
+                        (availableRam % 1000 < 100) ? (".0" + availableRam % 1000 + "GB") : ("." + availableRam % 1000 + "GB");
                 return availableRam / 1000 + fractionalPart;
             }
             if (availableRam > 0 && availableRam < 1000) {
