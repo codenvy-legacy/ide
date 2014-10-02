@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.editorselection;
 
 import java.util.HashMap;
 import java.util.Iterator;

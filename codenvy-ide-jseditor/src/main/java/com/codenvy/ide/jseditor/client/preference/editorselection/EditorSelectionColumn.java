@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.editorselection;
 
 import java.util.List;
 
@@ -20,23 +20,23 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.Column;
 
-public class EditorTypeSelectionColumn extends Column<FileType, EditorType> {
+public class EditorSelectionColumn extends Column<FileType, EditorType> {
     private final FileTypeEditorMapping valuesHolder;
 
-    public EditorTypeSelectionColumn(final List<EditorType> editorTypes,
+    public EditorSelectionColumn(final List<EditorType> editorTypes,
                                      final FileTypeEditorMapping filetypeEditorMapping,
                                      final FieldUpdater<FileType, EditorType> fieldUpdater,
                                      final EditorTypeRegistry editorTypeRegistry,
                                      final EditorType defaultEditor) {
-        super(new EditorTypeSelectionCell(editorTypes, "gwt-ListBox", 12d, Unit.EM, editorTypeRegistry, defaultEditor));
+        super(new EditorSelectionCell(editorTypes, "gwt-ListBox", 12d, Unit.EM, editorTypeRegistry, defaultEditor));
         this.valuesHolder = filetypeEditorMapping;
 
         setFieldUpdater(new FieldUpdater<FileType, EditorType>() {
 
             @Override
             public void update(final int index, final FileType fileType, final EditorType editorType) {
-                Log.debug(EditorTypeSelectionColumn.class, "Value update for filetype " + fileType + " editor=" + editorType);
-                EditorTypeSelectionColumn.this.valuesHolder.setEditor(fileType, editorType);
+                Log.debug(EditorSelectionColumn.class, "Value update for filetype " + fileType + " editor=" + editorType);
+                EditorSelectionColumn.this.valuesHolder.setEditor(fileType, editorType);
                 fieldUpdater.update(index, fileType, editorType);
             }
         });
@@ -52,7 +52,7 @@ public class EditorTypeSelectionColumn extends Column<FileType, EditorType> {
     }
 
     public void setSelection(final FileType key, final EditorType value) {
-        final EditorTypeSelectionCell cell = (EditorTypeSelectionCell)getCell();
+        final EditorSelectionCell cell = (EditorSelectionCell)getCell();
         cell.setViewData(key, value.getEditorTypeKey());
     }
 }
