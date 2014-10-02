@@ -15,6 +15,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -427,6 +428,65 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                     break;
                 }
             }
+        }
+
+        updateTabsAttributes();
+    }
+
+    /**
+     * A special method, is needed for issue "IDEUI-40 Create rounded tabs for file in order to be conform to initial designs".
+     * Method appends special attributes to editor tabs to be able to restyle these tabs in future.
+     * Using these attributes we can access these tabs through CSS attribute selectors.
+     */
+    private void updateTabsAttributes() {
+        try {
+            TabButton left = null;
+            TabButton right = null;
+
+            int width = listTabsButton.isVisible() ? listTabsButton.getOffsetWidth() : COUNTING_ERROR;
+
+            for (int i = 0; i < tabsPanel.getWidgetCount(); i++) {
+                if (!(tabsPanel.getWidget(i) instanceof TabButton)) {
+                    continue;
+                }
+
+                TabButton tab = (TabButton)tabsPanel.getWidget(i);
+                width += tab.getOffsetWidth();
+
+                if (width > tabsPanel.getOffsetWidth()) {
+                    tab.getElement().removeAttribute("visible");
+                    tab.getElement().removeAttribute("left");
+                    tab.getElement().removeAttribute("right");
+                    tab.getElement().removeAttribute("active");
+                    continue;
+                }
+
+                tab.getElement().setAttribute("visible", "");
+
+                if (left == null) {
+                    left = tab;
+                    tab.getElement().setAttribute("left", "");
+                } else {
+                    tab.getElement().removeAttribute("left");
+                }
+
+                if (right == null) {
+                    right = tab;
+                    tab.getElement().setAttribute("right", "");
+                } else {
+                    right.getElement().removeAttribute("right");
+                    right = tab;
+                    tab.getElement().setAttribute("right", "");
+                }
+
+                if (tab == activeTab) {
+                    tab.getElement().setAttribute("active", "");
+                } else {
+                    tab.getElement().removeAttribute("active");
+                }
+            }
+        } catch (Exception e) {
+            Log.error(getClass(), "Error occurs while updating tab attributes. " + e.getMessage());
         }
     }
 

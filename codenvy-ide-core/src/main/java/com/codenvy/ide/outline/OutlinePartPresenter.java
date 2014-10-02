@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.outline;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
@@ -33,13 +34,17 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 @Singleton
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
-    private final OutlinePartView         view;
-    private       TextEditorPartPresenter activePart;
+    private final OutlinePartView          view;
+    private final CoreLocalizationConstant coreLocalizationConstant;
+    private       TextEditorPartPresenter  activePart;
 
     @Inject
-    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus) {
+    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus, CoreLocalizationConstant coreLocalizationConstant) {
         this.view = view;
-        view.setTitle("Outline");
+        this.coreLocalizationConstant = coreLocalizationConstant;
+
+        view.setTitle(coreLocalizationConstant.outlineTitleBarText());
+        view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
         view.setDelegate(this);
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
@@ -59,7 +64,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Outline";
+        return coreLocalizationConstant.outlineButtonTitle();
     }
 
     /** {@inheritDoc} */
@@ -92,7 +97,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
         if (event.getActivePart() == null) {
-            view.showNoOutline();
+            view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
         }
         if (event.getActivePart() instanceof TextEditorPartPresenter) {
             if (activePart != event.getActivePart()) {
@@ -100,7 +105,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
                 if (activePart.getOutline() != null) {
                     activePart.getOutline().go(view.getContainer());
                 } else {
-                    view.showNoOutline();
+                    view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
                 }
             }
         }

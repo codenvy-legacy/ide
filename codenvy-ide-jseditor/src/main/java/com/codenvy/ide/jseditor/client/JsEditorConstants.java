@@ -22,9 +22,6 @@ public interface JsEditorConstants extends Constants {
     @DefaultStringValue("Default Editor")
     String defaultEditorDescription();
 
-    @DefaultStringValue("Classic")
-    String classicEditorDisplayName();
-
     @DefaultStringValue("Unidentified File")
     String infoPanelUnknownFileType();
 

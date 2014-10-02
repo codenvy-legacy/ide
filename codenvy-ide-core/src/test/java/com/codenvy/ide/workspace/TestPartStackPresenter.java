@@ -34,6 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 /**
  * Testing {@link PartStackPresenter} functionality.
@@ -86,7 +87,8 @@ public class TestPartStackPresenter {
         stack.addPart(part);
         stack.setActivePart(part);
 
-        verify(handler).onActivePartChanged(eq(part));
+        verify(handler, times(2)).onRequestFocus(eq(stack));
+        assertEquals("should activate part", part, stack.getActivePart());
     }
 
     @Test
@@ -149,17 +151,17 @@ public class TestPartStackPresenter {
         reset(handler);
         stack.addPart(part);
         stack.setActivePart(part);
-        verify(handler).onActivePartChanged(eq(part));
+        assertEquals("should activate part", part, stack.getActivePart());
 
         reset(handler);
         // check another activated
         stack.addPart(part2);
         stack.setActivePart(part2);
-        verify(handler).onActivePartChanged(eq(part2));
+        assertEquals("should activate part 2", part2, stack.getActivePart());
 
         reset(handler);
         // check first activated
         stack.setActivePart(part);
-        verify(handler).onActivePartChanged(eq(part));
+        assertEquals("should activate part", part, stack.getActivePart());
     }
 }

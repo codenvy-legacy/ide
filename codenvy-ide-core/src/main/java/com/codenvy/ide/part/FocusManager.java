@@ -87,7 +87,7 @@ public class FocusManager {
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                     @Override
                     public void execute() {
-                        activePartChanged(activePartStack.getActivePart());
+                        partStackHandler.onActivePartChanged(activePartStack.getActivePart());
                     }
                 });
 //                activePartChanged(activePartStack.getActivePart());
@@ -106,7 +106,7 @@ public class FocusManager {
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-                activePartChanged(activePartStack.getActivePart());
+                partStackHandler.onActivePartChanged(activePartStack.getActivePart());
             }
         });
 

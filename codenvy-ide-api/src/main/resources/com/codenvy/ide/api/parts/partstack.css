@@ -21,11 +21,8 @@
 }
 
 .ide-PartStack .ide-PartStack-Editor-Content {
-    /*border: 3px solid activeTabBackground;*/
     border-left: 3px solid activeTabBackground;
     border-top: 3px solid activeTabBackground;
-    /*width: calc(100% - 3px);*/
-    /*height: calc(100% - 3px);*/
     background-color: activeTabBackground;
 }
 
@@ -59,9 +56,7 @@
 
 .ide-PartStack .ide-PartStack-Tab img,
 .ide-PartStack .ide-PartStack-Tab svg {
-    /*vertical-align: bottom;*/
     vertical-align: middle;
-
 }
 
 .ide-PartStack-Tab-Icon {
@@ -409,3 +404,52 @@
 }
 
 
+/***********************************************************************************************************************
+ *
+ * Below styles are needed for IDEUI-40 [UI] Create rounded tabs for file in order to be conform to initial designs.
+ * The main idea is restyling the tabs using CSS attribute selectors.
+ *
+ **********************************************************************************************************************/
+
+/*
+.ide-PartStack .ide-PartStack-Tab[visible][left] {
+    border-left: greenyellow 2px solid;
+}
+.ide-PartStack .ide-PartStack-Tab[visible][right] {
+    border-right: greenyellow 2px solid;
+}
+.ide-PartStack .ide-PartStack-Tab[visible] {
+    background-color: #082f8e;
+    color: #f4ffdb;
+}
+.ide-PartStack .ide-PartStack-Tab[visible]:HOVER {
+    text-decoration: underline;
+    color: red;
+}
+.ide-PartStack .ide-PartStack-Tab[visible][active] {
+    background-color: #08c7f8;
+    color: #593e59;
+}
+.ide-PartStack .ide-PartStack-Tab[visible][active]:HOVER {
+    color: #ffd600;
+}
+*/
+
+/*
+div[id="gwt-debug-editorPartStack-tabsPanel"] > div[visible] {
+    background-color: #6d9caa;
+    color: #F9FBA7;
+}
+div[id="gwt-debug-editorPartStack-tabsPanel"] > div[visible]:HOVER {
+    text-decoration: underline;
+    color: #593E59;
+    cursor: pointer;
+}
+div[id="gwt-debug-editorPartStack-tabsPanel"] > div[visible][active] {
+    background-color: #b6f1ff;
+    color: #D82D2D;
+}
+div[id="gwt-debug-editorPartStack-tabsPanel"] > div[visible][active]:HOVER {
+    color: #973E62;
+}
+*/
