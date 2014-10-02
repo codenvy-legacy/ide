@@ -225,9 +225,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // request part stack to get the focus
         onRequestFocus();
 
-        // notify handler, that part changed
-        partStackHandler.onActivePartChanged(activePart);
-
         if (activePart != null && workBenchPartController != null) {
             workBenchPartController.setHidden(false);
             if (partSizes.containsKey(activePart)) {
