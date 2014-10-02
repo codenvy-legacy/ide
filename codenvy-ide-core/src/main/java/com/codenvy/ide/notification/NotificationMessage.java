@@ -105,9 +105,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         iconPanel.setStyleName(resources.notificationCss().notificationMessage());
         mainPanel.addWest(iconPanel, 25);
 
-        changeProgress();
-
-        changeType();
+        changeIcon();
 
         SVGImage closeIcon = new SVGImage(resources.closePopup());
         closeIcon.getElement().setAttribute("class", resources.notificationCss().closePopupIcon());
@@ -119,6 +117,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         });
         mainPanel.addEast(closeIcon, 38);
 
+        title = new HTML();
         changeMessage();
         title.setStyleName(resources.notificationCss().center());
         mainPanel.add(title);
@@ -175,14 +174,11 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         if (!prevState.equals(notification)) {
             changeMessage();
 
-            changeProgress();
+            changeIcon();
 
             if (notification.isImportant()) {
                 show();
             }
-
-            changeType();
-
 
             prevState = notification.clone();
         }
@@ -191,20 +187,14 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Change message. */
     private void changeMessage() {
         //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
+        title.setHTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
     }
 
-    /** Change progress feedback when needed. */
-    private void changeProgress() {
-        if (!notification.isFinished()) {
-            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
-        } else {
-            hideTimer.schedule(DEFAULT_TIME);
-        }
-    }
-
-    /** Change item's content in response to change notification type. */
-    private void changeType() {
+    /**
+     * Change icon when needed (between progress one and warning/success/error ones). Also trigger timer if needed to auto-hide notification
+     * when it is finished.
+     */
+    private void changeIcon() {
         if (prevState != null) {
             if (prevState.isError()) {
                 mainPanel.removeStyleName(resources.notificationCss().error());
@@ -213,14 +203,20 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
         }
 
-        if (notification.isWarning()) {
-            changeImage(resources.warning());
-            mainPanel.addStyleName(resources.notificationCss().warning());
-        } else if (notification.isError()) {
-            changeImage(resources.error());
-            mainPanel.addStyleName(resources.notificationCss().error());
+        if (!notification.isFinished()) {
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
         } else {
-            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
+            if (notification.isWarning()) {
+                changeImage(resources.warning());
+                mainPanel.addStyleName(resources.notificationCss().warning());
+            } else if (notification.isError()) {
+                changeImage(resources.error());
+                mainPanel.addStyleName(resources.notificationCss().error());
+            } else {
+                changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
+            }
+
+            hideTimer.schedule(DEFAULT_TIME);
         }
     }
 
