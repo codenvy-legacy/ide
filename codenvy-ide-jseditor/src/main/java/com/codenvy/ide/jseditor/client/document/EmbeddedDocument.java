@@ -95,6 +95,12 @@ public interface EmbeddedDocument {
     }
 
     /**
+     * Returns the document handle.
+     * @return the document handle
+     */
+    DocumentHandle getDocumentHandle();
+
+    /**
      * Adds a cursor handler.
      *
      * @param handler
