@@ -239,4 +239,15 @@ public class Annotation {
     public int getLayer() {
         return layer;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Annotation [type=").append(type)
+               .append(", text=").append(text)
+               .append(", layer=").append(layer)
+               .append("]");
+        return builder.toString();
+    }
+
 }

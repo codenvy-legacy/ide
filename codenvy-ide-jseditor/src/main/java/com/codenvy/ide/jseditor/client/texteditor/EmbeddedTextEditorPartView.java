@@ -50,4 +50,11 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     /** Gives the focus to the editor. */
     void setFocus();
 
+
+    /**
+     * Returns a handle for this editor view.
+     * @return an editor handle
+     */
+    EditorHandle getEditorHandle();
+
 }

@@ -11,7 +11,7 @@
 package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.api.texteditor.outline.HasOutline;
 
 
 /**
@@ -28,7 +28,7 @@ import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface TextEditorPartPresenter extends EditorPartPresenter {
+public interface TextEditorPartPresenter extends EditorPartPresenter, HasOutline {
     /**
      * Returns this text editor's document provider.
      *
@@ -72,12 +72,4 @@ public interface TextEditorPartPresenter extends EditorPartPresenter {
      * @return the selection provider
      */
     SelectionProvider getSelectionProvider();
-
-    /**
-     * Return Outline presenter.
-     * If editor not support Outline return <code>null</code>
-     *
-     * @return the outline presenter.
-     */
-    OutlinePresenter getOutline();
 }
