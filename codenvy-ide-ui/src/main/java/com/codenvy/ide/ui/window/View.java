@@ -129,6 +129,10 @@ public class View extends Composite {
                     if (delegate != null) {
                         delegate.onEscapeKey();
                     }
+                } else if (KeyboardEvent.KeyCode.ENTER == event.getNativeEvent().getKeyCode()) {
+                    if (delegate != null) {
+                        delegate.onEnterKey();
+                    }
                 }
             }
         };
