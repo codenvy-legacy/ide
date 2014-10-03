@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.document;
 
+import javax.inject.Inject;
+
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
@@ -17,8 +19,9 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.inject.Inject;
-
+/**
+ * Implementation of {@link DocumentStorage}.
+ */
 public class DocumentStorageImpl implements DocumentStorage {
 
     private final EventBus eventBus;
@@ -34,7 +37,11 @@ public class DocumentStorageImpl implements DocumentStorage {
             @Override
             public void onSuccess(String result) {
                 Log.debug(DocumentStorageImpl.class, "Document retrieved (" + file.getPath() + ").");
-                callback.onDocumentReceived(result);
+                try {
+                    callback.onDocumentReceived(result);
+                } catch (final Exception e) {
+                    Log.warn(DocumentStorageImpl.class, "Exception during doc retrieve success callback: ", e);
+                }
             }
 
             @Override
@@ -53,13 +60,21 @@ public class DocumentStorageImpl implements DocumentStorage {
             public void onSuccess(Void result) {
                 Log.debug(DocumentStorageImpl.class, "Document saved (" + file.getPath() + ").");
                 DocumentStorageImpl.this.eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.SAVE));
-                callback.onSuccess(editorInput);
+                try {
+                    callback.onSuccess(editorInput);
+                } catch (final Exception e) {
+                    Log.warn(DocumentStorageImpl.class, "Exception during save success callback: ", e);
+                }
             }
 
             @Override
             public void onFailure(Throwable caught) {
                 Log.error(DocumentStorageImpl.class, "Document save failed (" + file.getPath() + ").", caught);
-                callback.onFailure(caught);
+                try {
+                    callback.onFailure(caught);
+                } catch (final Exception e) {
+                    Log.warn(DocumentStorageImpl.class, "Exception during save failure callback: ", e);
+                }
             }
         });
     }
