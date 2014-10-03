@@ -134,6 +134,9 @@ public abstract class Window implements IsWidget {
         button.addClickHandler(clickHandler);
         return button;
     }
+    
+    protected void onEnterClicked() {
+    }
 
     /**
      * See {@link #show(com.google.gwt.dom.client.InputElement)}.
@@ -195,6 +198,11 @@ public abstract class Window implements IsWidget {
             public void onClose() {
                 hide();
                 Window.this.onClose();
+            }
+
+            @Override
+            public void onEnterKey() {
+                onEnterClicked();
             }
         });
     }
@@ -287,6 +295,8 @@ public abstract class Window implements IsWidget {
         void onEscapeKey();
 
         void onClose();
+        
+        void onEnterKey();
     }
 
 }
