@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.document;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
