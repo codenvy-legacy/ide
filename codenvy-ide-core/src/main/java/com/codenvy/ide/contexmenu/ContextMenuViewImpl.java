@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link ToolbarView}
@@ -75,7 +75,7 @@ public class ContextMenuViewImpl extends Composite implements ContextMenuView, C
 
     /** {@inheritDoc} */
     @Override
-    public void setPlace(@NotNull String place) {
+    public void setPlace(@Nonnull String place) {
         this.place = place;
     }
 

@@ -17,11 +17,11 @@ import com.google.inject.Provider;
 
 /**
  * Provider for image editor(only displaying images).
- * 
+ *
  * @author Ann Shumilova
  */
 public class ImageViewerProvider implements EditorProvider {
-    private Provider<ImageViewer>     editorProvider;
+    private Provider<ImageViewer> editorProvider;
 
     @Inject
     public ImageViewerProvider(Provider<ImageViewer> editorProvider) {

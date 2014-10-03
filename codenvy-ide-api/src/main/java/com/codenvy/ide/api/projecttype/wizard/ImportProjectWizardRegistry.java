@@ -10,30 +10,33 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Registry that stores wizards for importing new projects.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface ImportProjectWizardRegistry {
 
     /**
      * Add wizard for importing project.
-     * 
-     * @param importerId the importer's id
-     * @param wizard the wizard
+     *
+     * @param importerId
+     *         the importer's id
+     * @param wizard
+     *         the wizard
      */
-    void addWizard(@NotNull String importerId, @NotNull ImportProjectWizard wizard);
+    void addWizard(@Nonnull String importerId, @Nonnull ImportProjectWizard wizard);
 
     /**
      * Gets wizard for project importing.
-     * 
-     * @param importerId the importer's id
+     *
+     * @param importerId
+     *         the importer's id
      * @return the wizard
      */
     @Nullable
-    ImportProjectWizard getWizard(@NotNull String importerId);
+    ImportProjectWizard getWizard(@Nonnull String importerId);
 }

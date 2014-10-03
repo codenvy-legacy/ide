@@ -23,6 +23,7 @@
     -moz-box-sizing: border-box; /* Firefox */
     -webkit-box-sizing: border-box;
 }
+
 .ide-work-bench-tool-panel-left:before {
     /* panel where tab-buttons created*/
     position: absolute;
@@ -39,6 +40,7 @@
     border-left: 1px solid tabBorder;
     z-index: 5;
 }
+
 .ide-work-bench-tool-panel-right:before {
     /* panel where tab-buttons created*/
     border-left: 1px solid tabBorderShadow;
@@ -54,6 +56,7 @@
     border-top: 1px solid tabBorder;
     z-index: 4;
 }
+
 .ide-work-bench-tool-panel-bottom:before {
     /* panel where tab-buttons created*/
     border-top: 1px solid tabBorderShadow;

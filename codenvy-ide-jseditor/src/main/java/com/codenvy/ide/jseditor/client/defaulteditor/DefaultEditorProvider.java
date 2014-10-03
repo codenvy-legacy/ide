@@ -10,34 +10,29 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.defaulteditor;
 
-import javax.inject.Named;
-
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
-import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
+import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
+
+import javax.inject.Named;
 
 
 public class DefaultEditorProvider implements EditorProvider {
 
-    private final EditorTypeMapping  editorTypeMapping;
+    private final DefaultEditorTypePrefReader  defaultEditorTypePrefReader;
     private final EditorTypeRegistry editorTypeRegistry;
-    private final FileType           plainTextFileType;
     private final EditorType         defaultEditorType;
 
     @Inject
-    public DefaultEditorProvider(final EditorTypeMapping editorTypeMapping,
+    public DefaultEditorProvider(final DefaultEditorTypePrefReader defaultEditorTypePrefReader,
                                  final EditorTypeRegistry editorTypeRegistry,
-                                 final @PlainTextFileType FileType plainTextFileType,
                                  final @Named(JsEditorExtension.DEFAULT_EDITOR_TYPE_INSTANCE) EditorType defaultEditorType) {
-        this.editorTypeMapping = editorTypeMapping;
-        this.plainTextFileType = plainTextFileType;
+        this.defaultEditorTypePrefReader = defaultEditorTypePrefReader;
         this.editorTypeRegistry = editorTypeRegistry;
         this.defaultEditorType = defaultEditorType;
     }
@@ -54,7 +49,7 @@ public class DefaultEditorProvider implements EditorProvider {
 
     @Override
     public EditorPartPresenter getEditor() {
-        final EditorType editorType = this.editorTypeMapping.getEditorType(this.plainTextFileType);
+        final EditorType editorType = this.defaultEditorTypePrefReader.readPref();
         Log.debug(DefaultEditorProvider.class, "Editor type used: " + editorType);
         EditorBuilder provider = this.editorTypeRegistry.getRegisteredBuilder(editorType);
         if (provider == null) {

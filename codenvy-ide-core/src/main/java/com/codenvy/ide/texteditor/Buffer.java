@@ -16,13 +16,13 @@ package com.codenvy.ide.texteditor;
 
 import elemental.client.Browser;
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.common.Constants;
@@ -230,8 +230,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
             columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
             textLayerElement = Elements.createDivElement(css.textLayer());
             UIObject.ensureDebugId((com.google.gwt.dom.client.Element)textLayerElement, "textBlock");
-            
-            
+
 
             scrollableElement = createScrollableElement();
 //         if (false)
@@ -281,7 +280,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
         private Element createScrollableElement() {
             final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
 
-            
+
             scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
                 @Override
                 public void handleEvent(Event evt) {
@@ -367,7 +366,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
                 }
             }, false);
 
-            
+
             return scrollableElement;
         }
 
@@ -693,7 +692,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
                 // TODO: Look into why this is necessary.
                 updateTextWidth();
                 updateBufferHeight();
-                
+
 
                 resizeListenerManager.dispatch(new Dispatcher<ResizeListener>() {
                     @Override

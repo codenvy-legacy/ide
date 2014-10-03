@@ -44,7 +44,7 @@ public interface CodeAssistProcessor {
      * automatically trigger the presentation of possible completions.
      *
      * @return the auto activation characters for completion proposal or <code>null</code>
-     *         if no auto activation is desired
+     * if no auto activation is desired
      */
     char[] getCompletionProposalAutoActivationCharacters();
 

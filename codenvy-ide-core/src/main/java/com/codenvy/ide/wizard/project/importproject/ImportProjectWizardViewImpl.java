@@ -31,11 +31,11 @@ import java.util.Map;
 
 /**
  * UI implementation for {@link ImportProjectWizardView}.
- * 
+ *
  * @author Ann Shumilova
  */
 public class ImportProjectWizardViewImpl extends Window implements ImportProjectWizardView {
-    private static ImportProjectWizardViewImplUiBinder uiBinder  = GWT.create(ImportProjectWizardViewImplUiBinder.class);
+    private static ImportProjectWizardViewImplUiBinder uiBinder = GWT.create(ImportProjectWizardViewImplUiBinder.class);
 
 
     @UiField
@@ -47,22 +47,22 @@ public class ImportProjectWizardViewImpl extends Window implements ImportProject
     @UiField
     Button                                             importButton;
     @UiField(provided = true)
-    final ProjectWizardResources                       wizardResources;
+    final com.codenvy.ide.Resources                    resources;
     @UiField(provided = true)
     final CoreLocalizationConstant                     locale;
 
 
-    private ActionDelegate                             delegate;
-    private Map<Presenter, Widget>                     pageCache = new HashMap<>();
+    private ActionDelegate delegate;
+    private Map<Presenter, Widget> pageCache = new HashMap<>();
 
 
     @Inject
-    public ImportProjectWizardViewImpl(com.codenvy.ide.Resources resources, ProjectWizardResources wizardResources, CoreLocalizationConstant locale) {
+    public ImportProjectWizardViewImpl(com.codenvy.ide.Resources resources, CoreLocalizationConstant locale) {
         super(false);
         this.ensureDebugId("importProjectWizard-window");
-        this.wizardResources = wizardResources;
+        this.resources = resources;
         this.locale = locale;
-        wizardResources.css().ensureInjected();
+        resources.wizardCss().ensureInjected();
         setTitle(locale.importProjectViewTitle());
         setWidget(uiBinder.createAndBindUi(this));
         importButton.addStyleName(resources.Css().buttonLoader());
@@ -74,12 +74,12 @@ public class ImportProjectWizardViewImpl extends Window implements ImportProject
     void saveClick(ClickEvent event) {
         delegate.onImportClicked();
     }
-    
+
     @UiHandler("nextStepButton")
     void nextStepClick(ClickEvent event) {
         delegate.onNextClicked();
     }
-    
+
     @UiHandler("previousStepButton")
     void previousStepClick(ClickEvent event) {
         delegate.onBackClicked();
@@ -139,7 +139,7 @@ public class ImportProjectWizardViewImpl extends Window implements ImportProject
     }
 
     interface ImportProjectWizardViewImplUiBinder
-                                                 extends UiBinder<FlowPanel, ImportProjectWizardViewImpl> {
+            extends UiBinder<FlowPanel, ImportProjectWizardViewImpl> {
     }
 
     /** {@inheritDoc} */

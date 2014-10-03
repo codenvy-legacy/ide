@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.actions.find;
 
-import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.action.Action;
+import com.codenvy.ide.api.mvp.View;
 
 import java.util.Map;
 

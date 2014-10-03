@@ -200,7 +200,7 @@ public interface IOperationHistory {
      * @param context
      *         the context to be checked
      * @return <code>true</code> if there is a redoable operation,
-     *         <code>false</code> otherwise.
+     * <code>false</code> otherwise.
      */
 
     boolean canRedo(IUndoContext context);
@@ -214,7 +214,7 @@ public interface IOperationHistory {
      * @param context
      *         the context to be checked
      * @return <code>true</code> if there is an undoable operation,
-     *         <code>false</code> otherwise.
+     * <code>false</code> otherwise.
      */
     boolean canUndo(IUndoContext context);
 
@@ -260,27 +260,27 @@ public interface IOperationHistory {
      * @param operation
      *         the operation to be executed and then added to the history
      * @return the IStatus indicating whether the execution succeeded.
-     *         <p/>
-     *         <p>
-     *         The severity code in the returned status describes whether the operation
-     *         succeeded and whether it was added to the history. <code>OK</code>
-     *         severity indicates that the execute operation was successful and that the
-     *         operation has been added to the history. Listeners will receive
-     *         notifications about the operation's success (<code>DONE</code>) and
-     *         about the operation being added to the history (<code>OPERATION_ADDED</code>).
-     *         </p>
-     *         <p>
-     *         <code>CANCEL</code> severity indicates that the user cancelled the
-     *         operation and that the operation was not added to the history.
-     *         <code>ERROR</code> severity indicates that the operation did not
-     *         successfully execute and that it was not added to the history. Any other
-     *         severity code is not specifically interpreted by the history, and the
-     *         operation will not be added to the history. For all severities other than
-     *         <code>OK</code>, listeners will receive the
-     *         <code>OPERATION_NOT_OK</code> notification instead of the
-     *         <code>DONE</code> notification if the execution was approved and
-     *         attempted.
-     *         </p>
+     * <p/>
+     * <p>
+     * The severity code in the returned status describes whether the operation
+     * succeeded and whether it was added to the history. <code>OK</code>
+     * severity indicates that the execute operation was successful and that the
+     * operation has been added to the history. Listeners will receive
+     * notifications about the operation's success (<code>DONE</code>) and
+     * about the operation being added to the history (<code>OPERATION_ADDED</code>).
+     * </p>
+     * <p>
+     * <code>CANCEL</code> severity indicates that the user cancelled the
+     * operation and that the operation was not added to the history.
+     * <code>ERROR</code> severity indicates that the operation did not
+     * successfully execute and that it was not added to the history. Any other
+     * severity code is not specifically interpreted by the history, and the
+     * operation will not be added to the history. For all severities other than
+     * <code>OK</code>, listeners will receive the
+     * <code>OPERATION_NOT_OK</code> notification instead of the
+     * <code>DONE</code> notification if the execution was approved and
+     * attempted.
+     * </p>
      * @throws ExecutionException
      *         if an exception occurred during execution.
      */
@@ -321,8 +321,8 @@ public interface IOperationHistory {
      * @param context
      *         the context for the redo
      * @return the operation to be redone or <code>null</code> if there is no
-     *         operation available. There is no guarantee that the returned
-     *         operation is valid for redo.
+     * operation available. There is no guarantee that the returned
+     * operation is valid for redo.
      */
     IUndoableOperation getRedoOperation(IUndoContext context);
 
@@ -406,8 +406,8 @@ public interface IOperationHistory {
      * @param context
      *         the context for the undo
      * @return the operation to be undone or <code>null</code> if there is no
-     *         operation available. There is no guarantee that the available
-     *         operation is valid for the undo.
+     * operation available. There is no guarantee that the available
+     * operation is valid for the undo.
      */
     IUndoableOperation getUndoOperation(IUndoContext context);
 
@@ -421,27 +421,27 @@ public interface IOperationHistory {
      * @param context
      *         the context to be redone
      * @return the IStatus indicating whether the redo succeeded.
-     *         <p/>
-     *         <p>
-     *         The severity code in the returned status describes whether the operation
-     *         succeeded and whether it remains in the history. <code>OK</code>
-     *         severity indicates that the redo operation was successful and (since
-     *         release 3.2), that the operation will be placed in the undo history.
-     *         (Prior to 3.2, a successfully redone operation would not be placed on the
-     *         undo history if it could not be undone. Since 3.2, this is relaxed, and
-     *         all successfully redone operations are placed in the undo history.)
-     *         Listeners will receive the <code>REDONE</code> notification.
-     *         </p>
-     *         <p>
-     *         Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
-     *         <code>INFO</code>, etc.) are not specifically interpreted by the
-     *         history. The operation will remain in the history and the returned status
-     *         is simply passed back to the caller. For all severities other than
-     *         <code>OK</code>, listeners will receive the
-     *         <code>OPERATION_NOT_OK</code> notification instead of the
-     *         <code>REDONE</code> notification if the redo was approved and
-     *         attempted.
-     *         </p>
+     * <p/>
+     * <p>
+     * The severity code in the returned status describes whether the operation
+     * succeeded and whether it remains in the history. <code>OK</code>
+     * severity indicates that the redo operation was successful and (since
+     * release 3.2), that the operation will be placed in the undo history.
+     * (Prior to 3.2, a successfully redone operation would not be placed on the
+     * undo history if it could not be undone. Since 3.2, this is relaxed, and
+     * all successfully redone operations are placed in the undo history.)
+     * Listeners will receive the <code>REDONE</code> notification.
+     * </p>
+     * <p>
+     * Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
+     * <code>INFO</code>, etc.) are not specifically interpreted by the
+     * history. The operation will remain in the history and the returned status
+     * is simply passed back to the caller. For all severities other than
+     * <code>OK</code>, listeners will receive the
+     * <code>OPERATION_NOT_OK</code> notification instead of the
+     * <code>REDONE</code> notification if the redo was approved and
+     * attempted.
+     * </p>
      * @throws ExecutionException
      *         if an exception occurred during redo.
      */
@@ -457,26 +457,26 @@ public interface IOperationHistory {
      * @param operation
      *         the operation to be redone
      * @return the IStatus indicating whether the redo succeeded.
-     *         <p/>
-     *         <p>
-     *         The severity code in the returned status describes whether the operation
-     *         succeeded and whether it remains in the history. <code>OK</code>
-     *         severity indicates that the redo operation was successful, and (since
-     *         release 3.2), that the operation will be placed in the undo history.
-     *         (Prior to 3.2, a successfully redone operation would not be placed on the
-     *         undo history if it could not be undone. Since 3.2, this is relaxed, and
-     *         all successfully redone operations are placed in the undo history.)
-     *         Listeners will receive the <code>REDONE</code> notification.
-     *         </p>
-     *         <p>
-     *         Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
-     *         <code>INFO</code>, etc.) are not specifically interpreted by the
-     *         history. The operation will remain in the history and the returned status
-     *         is simply passed back to the caller. For all severities other than <code>OK</code>,
-     *         listeners will receive the <code>OPERATION_NOT_OK</code> notification
-     *         instead of the <code>REDONE</code> notification if the redo was
-     *         approved and attempted.
-     *         </p>
+     * <p/>
+     * <p>
+     * The severity code in the returned status describes whether the operation
+     * succeeded and whether it remains in the history. <code>OK</code>
+     * severity indicates that the redo operation was successful, and (since
+     * release 3.2), that the operation will be placed in the undo history.
+     * (Prior to 3.2, a successfully redone operation would not be placed on the
+     * undo history if it could not be undone. Since 3.2, this is relaxed, and
+     * all successfully redone operations are placed in the undo history.)
+     * Listeners will receive the <code>REDONE</code> notification.
+     * </p>
+     * <p>
+     * Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
+     * <code>INFO</code>, etc.) are not specifically interpreted by the
+     * history. The operation will remain in the history and the returned status
+     * is simply passed back to the caller. For all severities other than <code>OK</code>,
+     * listeners will receive the <code>OPERATION_NOT_OK</code> notification
+     * instead of the <code>REDONE</code> notification if the redo was
+     * approved and attempted.
+     * </p>
      * @throws ExecutionException
      *         if an exception occurred during redo.
      */
@@ -551,27 +551,27 @@ public interface IOperationHistory {
      * @param context
      *         the context to be undone
      * @return the IStatus indicating whether the undo succeeded.
-     *         <p/>
-     *         <p>
-     *         The severity code in the returned status describes whether the operation
-     *         succeeded and whether it remains in the history. <code>OK</code>
-     *         severity indicates that the undo operation was successful, and (since
-     *         release 3.2), that the operation will be placed on the redo history.
-     *         (Prior to 3.2, a successfully undone operation would not be placed on the
-     *         redo history if it could not be redone. Since 3.2, this is relaxed, and
-     *         all successfully undone operations are placed in the redo history.)
-     *         Listeners will receive the <code>UNDONE</code> notification.
-     *         </p>
-     *         <p>
-     *         Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
-     *         <code>INFO</code>, etc.) are not specifically interpreted by the
-     *         history. The operation will remain in the history and the returned status
-     *         is simply passed back to the caller. For all severities other than
-     *         <code>OK</code>, listeners will receive the
-     *         <code>OPERATION_NOT_OK</code> notification instead of the
-     *         <code>UNDONE</code> notification if the undo was approved and
-     *         attempted.
-     *         </p>
+     * <p/>
+     * <p>
+     * The severity code in the returned status describes whether the operation
+     * succeeded and whether it remains in the history. <code>OK</code>
+     * severity indicates that the undo operation was successful, and (since
+     * release 3.2), that the operation will be placed on the redo history.
+     * (Prior to 3.2, a successfully undone operation would not be placed on the
+     * redo history if it could not be redone. Since 3.2, this is relaxed, and
+     * all successfully undone operations are placed in the redo history.)
+     * Listeners will receive the <code>UNDONE</code> notification.
+     * </p>
+     * <p>
+     * Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
+     * <code>INFO</code>, etc.) are not specifically interpreted by the
+     * history. The operation will remain in the history and the returned status
+     * is simply passed back to the caller. For all severities other than
+     * <code>OK</code>, listeners will receive the
+     * <code>OPERATION_NOT_OK</code> notification instead of the
+     * <code>UNDONE</code> notification if the undo was approved and
+     * attempted.
+     * </p>
      * @throws ExecutionException
      *         if an exception occurred during undo.
      */
@@ -588,27 +588,27 @@ public interface IOperationHistory {
      * @param operation
      *         the operation to be undone
      * @return the IStatus indicating whether the undo succeeded.
-     *         <p/>
-     *         <p>
-     *         The severity code in the returned status describes whether the operation
-     *         succeeded and whether it remains in the history. <code>OK</code>
-     *         severity indicates that the undo operation was successful, and (since
-     *         release 3.2), that the operation will be placed on the redo history.
-     *         (Prior to 3.2, a successfully undone operation would not be placed on the
-     *         redo history if it could not be redone. Since 3.2, this is relaxed, and
-     *         all successfully undone operations are placed in the redo history.)
-     *         Listeners will receive the <code>UNDONE</code> notification.
-     *         </p>
-     *         <p>
-     *         Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
-     *         <code>INFO</code>, etc.) are not specifically interpreted by the
-     *         history. The operation will remain in the history and the returned status
-     *         is simply passed back to the caller. For all severities other than
-     *         <code>OK</code>, listeners will receive the
-     *         <code>OPERATION_NOT_OK</code> notification instead of the
-     *         <code>UNDONE</code> notification if the undo was approved and
-     *         attempted.
-     *         </p>
+     * <p/>
+     * <p>
+     * The severity code in the returned status describes whether the operation
+     * succeeded and whether it remains in the history. <code>OK</code>
+     * severity indicates that the undo operation was successful, and (since
+     * release 3.2), that the operation will be placed on the redo history.
+     * (Prior to 3.2, a successfully undone operation would not be placed on the
+     * redo history if it could not be redone. Since 3.2, this is relaxed, and
+     * all successfully undone operations are placed in the redo history.)
+     * Listeners will receive the <code>UNDONE</code> notification.
+     * </p>
+     * <p>
+     * Other severity codes (<code>CANCEL</code>, <code>ERROR</code>,
+     * <code>INFO</code>, etc.) are not specifically interpreted by the
+     * history. The operation will remain in the history and the returned status
+     * is simply passed back to the caller. For all severities other than
+     * <code>OK</code>, listeners will receive the
+     * <code>OPERATION_NOT_OK</code> notification instead of the
+     * <code>UNDONE</code> notification if the undo was approved and
+     * attempted.
+     * </p>
      * @throws ExecutionException
      *         if an exception occurred during undo.
      */

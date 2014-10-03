@@ -12,14 +12,14 @@ package com.codenvy.ide.texteditor.selection;
 
 /**
  * Interface for objects which owns a {@link CursorModelWithHandler}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasCursorModelWithHandler {
 
     /**
      * Returns the cursor model with handler.
-     * 
+     *
      * @return the cursor model
      */
     CursorModelWithHandler getCursorModel();

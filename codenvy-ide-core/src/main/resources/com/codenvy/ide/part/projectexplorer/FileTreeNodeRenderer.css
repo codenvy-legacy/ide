@@ -38,12 +38,12 @@
     vertical-align: middle;
     line-height: 16px;
     vertical-align: middle;
-    height:16px;
+    height: 16px;
 }
 
 .icon {
-    width:16px;
-    height:16px;
+    width: 16px;
+    height: 16px;
     overflow: hidden;
     display: inline-block;
     vertical-align: middle;
@@ -86,5 +86,5 @@
 
 @external .treeFileIcon;
 .treeFileIcon {
-	fill: treeIconFileColor;
+    fill: treeIconFileColor;
 }

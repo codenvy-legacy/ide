@@ -15,7 +15,7 @@ import com.google.gwt.event.shared.HasHandlers;
 
 /**
  * Interface for components which handle {@link BeforeSelectionChangeEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasBeforeSelectionChangeHandlers extends HasHandlers {

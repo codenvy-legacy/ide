@@ -50,35 +50,35 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private RunnerResources runnerResources;
 
     @UiField
-    DockLayoutPanel             topPanel;
+    DockLayoutPanel topPanel;
     @UiField
-    DeckPanel                   tabPanel;
+    DeckPanel       tabPanel;
     @UiField
-    FlowPanel                   tabsPanel;
+    FlowPanel       tabsPanel;
     @UiField
-    SimplePanel                 toolbarPanel;
+    SimplePanel     toolbarPanel;
 
     @UiField
-    SimplePanel                 consoleButton;
+    SimplePanel consoleButton;
     @UiField
-    SimplePanel                 terminalButton;
+    SimplePanel terminalButton;
     @UiField
-    SimplePanel                 appPreviewButton;
+    SimplePanel appPreviewButton;
 
     @UiField
-    ScrollPanel                 scrollPanel;
+    ScrollPanel scrollPanel;
     @UiField
-    FlowPanel                   consoleArea;
+    FlowPanel   consoleArea;
 
     @UiField
-    DeckPanel                   terminalPanel;
+    DeckPanel terminalPanel;
     @UiField
-    Frame                       terminalFrame;
+    Frame     terminalFrame;
 
     @UiField
-    DeckPanel                   appPreviewPanel;
+    DeckPanel appPreviewPanel;
     @UiField
-    Frame                       appPreviewFrame;
+    Frame     appPreviewFrame;
 
     private SimplePanel activeTabButton;
 
@@ -99,7 +99,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         topPanel.getElement().getParentElement().getStyle().setZIndex(1);
         tabsPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
-        
+
         setActiveTab(0); // show Console panel
         hideTerminal();
         hideAppPreview();

@@ -55,7 +55,7 @@ public interface CompletionProposal {
      * Returns the characters which trigger the application of this completion proposal.
      *
      * @return the completion characters for this completion proposal or <code>null</code> if no completion other than the new line
-     *         character is possible
+     * character is possible
      */
     char[] getTriggerCharacters();
 
@@ -71,7 +71,7 @@ public interface CompletionProposal {
 
     void getCompletion(CompletionCallback callback);
 
-    public interface CompletionCallback{
+    public interface CompletionCallback {
         void onCompletion(Completion completion);
     }
 }

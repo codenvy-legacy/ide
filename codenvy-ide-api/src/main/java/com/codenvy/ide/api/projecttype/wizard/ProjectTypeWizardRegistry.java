@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Registry that store wizards for creating new projects
@@ -30,7 +28,7 @@ public interface ProjectTypeWizardRegistry {
      * @param wizard
      *         the wizard
      */
-    void addWizard(@NotNull String projectTypeId, @NotNull ProjectWizard wizard);
+    void addWizard(@Nonnull String projectTypeId, @Nonnull ProjectWizard wizard);
 
     /**
      * Gets wizard wizard for project type.
@@ -40,5 +38,5 @@ public interface ProjectTypeWizardRegistry {
      * @return the wizard
      */
     @Nullable
-    ProjectWizard getWizard(@NotNull String projectTypeId);
+    ProjectWizard getWizard(@Nonnull String projectTypeId);
 }

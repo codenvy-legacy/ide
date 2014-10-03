@@ -34,14 +34,16 @@ public interface UndoManager extends HandlesUndoRedo {
      * The given parameter determines the maximal length of the history
      * remembered by the undo manager.
      *
-     * @param undoLevel the length of this undo manager's history
+     * @param undoLevel
+     *         the length of this undo manager's history
      */
     void setMaximalUndoLevel(int undoLevel);
 
     /**
      * Connects this undo manager to the given text viewer.
      *
-     * @param textViewer the viewer the undo manager is connected to
+     * @param textViewer
+     *         the viewer the undo manager is connected to
      */
     void connect(TextEditorPartView textViewer);
 

@@ -402,7 +402,7 @@ public class ViewportRenderer {
 
         if (!buffer.hasLineElement(element)) {
             element.getStyle().setTop(top + createOffset, CSSStyleDeclaration.Unit.PX);
-            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)element, "line" + (lineNumber+1));
+            UIObject.ensureDebugId((com.google.gwt.dom.client.Element)element, "line" + (lineNumber + 1));
             buffer.addLineElement(element);
             if (createOffset != 0) {
             /*

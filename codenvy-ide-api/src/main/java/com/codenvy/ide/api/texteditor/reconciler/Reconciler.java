@@ -49,7 +49,7 @@ public interface Reconciler {
      * @param contentType
      *         the content type for which to determine the reconciling strategy
      * @return the reconciling strategy registered for the given content type, or
-     *         <code>null</code> if there is no such strategy
+     * <code>null</code> if there is no such strategy
      */
     ReconcilingStrategy getReconcilingStrategy(String contentType);
 

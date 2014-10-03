@@ -15,8 +15,8 @@
 package com.codenvy.ide.texteditor.gutter;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.events.MouseEvent;
 import elemental.dom.Element;
+import elemental.events.MouseEvent;
 
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.texteditor.Buffer;

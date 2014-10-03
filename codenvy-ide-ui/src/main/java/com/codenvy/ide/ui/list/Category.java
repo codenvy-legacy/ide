@@ -21,9 +21,9 @@ import java.util.Collection;
  */
 public class Category<T> {
 
-    private String              title;
-    private CategoryRenderer<T> renderer;
-    private Collection<T>       data;
+    private String                   title;
+    private CategoryRenderer<T>      renderer;
+    private Collection<T>            data;
     private CategoryEventDelegate<T> eventDelegate;
 
     public Category(String title, CategoryRenderer<T> renderer, Collection<T> data, CategoryEventDelegate<T> eventDelegate) {

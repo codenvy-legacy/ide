@@ -16,7 +16,7 @@ import com.google.gwt.core.client.JsArrayString;
 
 /**
  * JSO over requirejs function.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class Requirejs extends JavaScriptObject {

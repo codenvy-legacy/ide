@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.action.ActionGroup;
 import com.codenvy.ide.api.action.ActionPlaces;
+import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 

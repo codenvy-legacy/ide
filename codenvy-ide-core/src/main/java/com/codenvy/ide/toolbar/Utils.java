@@ -19,7 +19,7 @@ import com.codenvy.ide.api.action.Separator;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.loging.Log;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -33,10 +33,10 @@ public class Utils {
      * @param actionManager
      *         manager
      */
-    public static void expandActionGroup(@NotNull ActionGroup group,
+    public static void expandActionGroup(@Nonnull ActionGroup group,
                                          Array<Action> list,
                                          PresentationFactory presentationFactory,
-                                         @NotNull String place,
+                                         @Nonnull String place,
                                          ActionManager actionManager,
                                          boolean transparentOnly) {
         Presentation presentation = presentationFactory.getPresentation(group);
@@ -103,7 +103,7 @@ public class Utils {
      * @param actionManager
      *         manager
      */
-    public static void expandActionGroup(@NotNull ActionGroup group,
+    public static void expandActionGroup(@Nonnull ActionGroup group,
                                          Array<Action> list,
                                          PresentationFactory presentationFactory,
                                          String place,

@@ -113,7 +113,7 @@ public class FileType {
         this.mimeTypes = mimeTypes;
         this.extension = extension;
         this.namePattern = namePattern;
-        id = contentDescription + (mimeTypes == null ? "noMimeType" :mimeTypes.join(",")) + namePattern;
+        id = contentDescription + (mimeTypes == null ? "noMimeType" : mimeTypes.join(",")) + namePattern;
     }
 
 

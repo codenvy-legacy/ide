@@ -13,7 +13,7 @@ package com.codenvy.ide.toolbar;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.Presentation;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 /** @author Evgen Vidolob */
@@ -24,7 +24,7 @@ public class PresentationFactory {
         myAction2Presentation = new HashMap<>();
     }
 
-    public final Presentation getPresentation(@NotNull Action action) {
+    public final Presentation getPresentation(@Nonnull Action action) {
         Presentation presentation = myAction2Presentation.get(action);
         if (presentation == null) {
             presentation = action.getTemplatePresentation().clone();

@@ -46,7 +46,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private PreSelectedProjectTypeManager preSelectedProjectTypeManager;
 
     @Inject
-    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry, PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
+    public MainPagePresenter(MainPageView view, ProjectTypeDescriptorRegistry registry, ProjectTypeWizardRegistry wizardRegistry,
+                             PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
         super("Choose Project", null);
         this.view = view;
         this.registry = registry;
@@ -59,9 +60,11 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     public void projectNameChanged(String name) {
         if (NameUtils.checkProjectName(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+            wizardContext.getData(ProjectWizard.PROJECT).setName(name);
             view.removeNameError();
         } else {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+            wizardContext.getData(ProjectWizard.PROJECT).setName(null);
             view.showNameError();
         }
         delegate.updateControls();
@@ -69,7 +72,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public void projectDescriptionChanged(String projectDescriptionValue) {
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
+        wizardContext.getData(ProjectWizard.PROJECT).setDescription(projectDescriptionValue);
     }
 
     @Override
@@ -112,7 +115,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
         Array<ProjectTypeDescriptor> descriptors = registry.getDescriptors();
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
-        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
             if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
                 if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
@@ -147,8 +150,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.setName(project.getName());
             view.setDescription(project.getDescription());
             view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
-        }
-        else if (defaultProjectTypeDescriptor != null) {
+        } else if (defaultProjectTypeDescriptor != null) {
             // if no project type, pre select maven
             view.selectProjectType(defaultProjectTypeDescriptor.getProjectTypeId());
             view.focusOnName();
@@ -160,6 +162,10 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.typeDescriptor = typeDescriptor;
         template = null;
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        project.setProjectTypeId(typeDescriptor.getProjectTypeId());
+        project.setProjectTypeName(typeDescriptor.getProjectTypeName());
+
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
         view.enableInput();

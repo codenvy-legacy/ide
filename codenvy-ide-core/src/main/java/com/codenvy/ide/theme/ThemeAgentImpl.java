@@ -18,18 +18,18 @@ import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.storage.client.Storage;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
-
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
  * Implementation of ThemeAgent
+ *
  * @author Evgen Vidolob
  */
-public class ThemeAgentImpl  implements ThemeAgent{
-    
+public class ThemeAgentImpl implements ThemeAgent {
+
     public static final String THEME_STORAGE = "codenvy-theme";
-    
+
     private StringMap<Theme> themes = Collections.createStringMap();
 
     private final Theme defaultTheme;
@@ -45,15 +45,15 @@ public class ThemeAgentImpl  implements ThemeAgent{
     }
 
     @Override
-    public void addTheme(@NotNull Theme theme) {
+    public void addTheme(@Nonnull Theme theme) {
         themes.put(theme.getId(), theme);
     }
 
     @Override
-    public Theme getTheme(@NotNull String themeId) {
+    public Theme getTheme(@Nonnull String themeId) {
         if (themes.containsKey(themeId))
             return themes.get(themeId);
-        
+
         return defaultTheme;
     }
 
@@ -79,19 +79,19 @@ public class ThemeAgentImpl  implements ThemeAgent{
     /**
      * Sharing theme ID through "IDE3" object makes it readable from native JavaScript.
      * It's needed to display additional menu items in the same style as IDE
-     *    (style of menu additions must depend on style of IDE).
+     * (style of menu additions must depend on style of IDE).
      */
     @Override
     public native void setCurrentThemeId(String id) /*-{
         this.@com.codenvy.ide.theme.ThemeAgentImpl::currentThemeId = id;
-        
-        if(typeof(Storage)!=="undefined") {
+
+        if (typeof(Storage) !== "undefined") {
             localStorage.setItem(@com.codenvy.ide.theme.ThemeAgentImpl::THEME_STORAGE, id);
         }
-         
+
         if ($wnd["IDE3"]) {
             $wnd["IDE3"].theme = id;
         }
     }-*/;
-    
+
 }

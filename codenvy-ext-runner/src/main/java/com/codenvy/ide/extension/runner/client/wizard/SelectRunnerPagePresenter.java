@@ -29,8 +29,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,64 +98,12 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     }
 
-    @Override
-    public void storeOptions() {
-        String recommendedMemorySize = view.getRecommendedMemorySize();
-        int recommendedRam = (!recommendedMemorySize.isEmpty() && isRecommendedMemoryCorrect()) ? (Integer.valueOf(recommendedMemorySize)) : 0;
-        wizardContext.putData(ProjectWizard.RECOMMENDED_RAM, recommendedRam);
-    }
 
     @Override
-    public void setUpdateDelegate(@NotNull Wizard.UpdateDelegate delegate) {
+    public void setUpdateDelegate(@Nonnull Wizard.UpdateDelegate delegate) {
         super.setUpdateDelegate(delegate);
     }
 
-    @Override
-    public void commit(@NotNull final CommitCallback callback) {
-        if (wizardContext.getData(ProjectWizard.PROJECT) == null) {
-            callback.onFailure(new IllegalStateException("Can't find project to set runner"));
-            return;
-        }
-
-        if (runner == null) {
-            callback.onSuccess();
-            return;
-        }
-        storeOptions();
-
-        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        project.setRunner(runner.getName());
-
-        //Save recommended Ram and defaultRunnerEnvironment in projectDescriptor
-        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = project.getRunnerEnvironmentConfigurations();
-        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor = null;
-        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-            project.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-
-            if (runnerEnvironmentConfigurationDescriptor == null) {
-                runnerEnvironmentConfigurationDescriptor = factory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-            }
-            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-            project.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-        }
-
-        projectServiceClient.updateProject(project.getPath(), project, new AsyncRequestCallback<ProjectDescriptor>(
-                dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-            @Override
-            protected void onSuccess(ProjectDescriptor result) {
-                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
-                callback.onSuccess();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
-    }
 
     @Override
     public void go(AcceptsOneWidget container) {
@@ -185,7 +133,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     }
 
     private void selectRunner() {
-        String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
+        String runnerName = wizardContext.getData(ProjectWizard.PROJECT).getRunner();
         if (runnerName != null) {
             view.selectRunner(runnerName);
         }
@@ -195,18 +143,18 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     public void runnerSelected(RunnerDescriptor runner) {
         this.runner = runner;
         delegate.updateControls();
-        wizardContext.putData(ProjectWizard.RUNNER_NAME, runner.getName());
+        wizardContext.getData(ProjectWizard.PROJECT).setRunner(runner.getName());
         selectEnvironment();
     }
 
     private void selectEnvironment() {
-        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
+        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.PROJECT).getDefaultRunnerEnvironment();
         view.setSelectedEnvironment(defaultRunnerEnvironment);
     }
 
     @Override
     public void runnerEnvironmentSelected(String environmentId) {
-        wizardContext.putData(ProjectWizard.RUNNER_ENV_ID, environmentId);
+        wizardContext.getData(ProjectWizard.PROJECT).setDefaultRunnerEnvironment(environmentId);
         this.environmentId = environmentId;
         setRecommendedMemorySize();
     }
@@ -214,7 +162,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private void setRecommendedMemorySize() {
         int recommendedMemorySize = 0;
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
-        String runnerName = wizardContext.getData(ProjectWizard.RUNNER_NAME);
+        String runnerName = runner.getName();
 
         if (projectDescriptor != null && runnerName.equals(projectDescriptor.getRunner())) {
             Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = projectDescriptor.getRunnerEnvironmentConfigurations();
@@ -228,13 +176,30 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
         if (recommendedMemorySize > 0) {
             view.setRecommendedMemorySize(String.valueOf(recommendedMemorySize));
-        } else view.setRecommendedMemorySize("");
+
+            Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
+
+            RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
+            if (environmentId != null && runEnvConfigurations != null) {
+                projectDescriptor.setDefaultRunnerEnvironment(environmentId);
+                runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(environmentId);
+
+                if (runnerEnvironmentConfigurationDescriptor == null) {
+                    runnerEnvironmentConfigurationDescriptor = factory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
+                }
+                runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(recommendedMemorySize);
+                runEnvConfigurations.put(environmentId, runnerEnvironmentConfigurationDescriptor);
+                projectDescriptor.setRunnerEnvironmentConfigurations(runEnvConfigurations);
+            } else {
+                view.setRecommendedMemorySize("");
+            }
+        }
     }
 
-    @Override
-    public void recommendedMemoryChanged() {
-        delegate.updateControls();
-    }
+        @Override
+        public void recommendedMemoryChanged () {
+            delegate.updateControls();
+        }
 
     private boolean isRecommendedMemoryCorrect() {
         int recommendedMemory;

@@ -33,7 +33,7 @@ public interface TextStoreMutator {
      * @param deleteCount
      *         the number of characters (including newlines) to delete
      * @return the change that led to the deletion of the text, or {@code null}
-     *         if no changes applied
+     * if no changes applied
      */
     TextChange deleteText(Line line, int column, int deleteCount);
 
@@ -72,10 +72,10 @@ public interface TextStoreMutator {
      *         guarantee the mutator will choose to replace the selection; passing
      *         false guarantees the mutator will never replace the selection
      * @return the change that led to the insertion of text; if the selection was
-     *         replaced, this will only be the insertion text change, not the
-     *         deletion text change; if selection was deleted, but nothing was
-     *         inserted, then deletion text change is returned;
-     *         {@code null} if no changes applied
+     * replaced, this will only be the insertion text change, not the
+     * deletion text change; if selection was deleted, but nothing was
+     * inserted, then deletion text change is returned;
+     * {@code null} if no changes applied
      */
     TextChange insertText(Line line, int lineNumber, int column, String text, boolean canReplaceSelection);
 

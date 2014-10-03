@@ -33,63 +33,63 @@ public class FileTypeModule extends AbstractGinModule {
     @Provides
     @Singleton
     @Named("XMLFileType")
-    protected FileType provideXMLFile(Resources resources){
+    protected FileType provideXMLFile(Resources resources) {
         return new FileType("XML file", resources.xmlFile(), MimeType.TEXT_XML, "xml");
     }
 
     @Provides
     @Singleton
     @Named("PNGFileType")
-    protected FileType providePNGFile(Resources resources){
+    protected FileType providePNGFile(Resources resources) {
         return new FileType("PNG Image", resources.defaultImage(), MimeType.IMAGE_PNG, "png");
     }
 
     @Provides
     @Singleton
     @Named("BMPFileType")
-    protected FileType provideBMPFile(Resources resources){
+    protected FileType provideBMPFile(Resources resources) {
         return new FileType("Bitmap Image", resources.defaultImage(), MimeType.IMAGE_BMP, "bmp");
     }
 
     @Provides
     @Singleton
     @Named("GIFFileType")
-    protected FileType provideGIFFile(Resources resources){
+    protected FileType provideGIFFile(Resources resources) {
         return new FileType("GIF Image", resources.defaultImage(), MimeType.IMAGE_GIF, "gif");
     }
 
     @Provides
     @Singleton
     @Named("ICOFileType")
-    protected FileType provideICOFile(Resources resources){
+    protected FileType provideICOFile(Resources resources) {
         return new FileType("ICO Image", resources.defaultImage(), MimeType.IMAGE_X_ICON, "ico");
     }
 
     @Provides
     @Singleton
     @Named("SVGFileType")
-    protected FileType provideSVGFile(Resources resources){
+    protected FileType provideSVGFile(Resources resources) {
         return new FileType("SVG Image", resources.defaultImage(), MimeType.IMAGE_SVG_XML, "svg");
     }
 
     @Provides
     @Singleton
     @Named("JPEFileType")
-    protected FileType provideJPEFile(Resources resources){
+    protected FileType provideJPEFile(Resources resources) {
         return new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpe");
     }
 
     @Provides
     @Singleton
     @Named("JPEGFileType")
-    protected FileType provideJPEGFile(Resources resources){
+    protected FileType provideJPEGFile(Resources resources) {
         return new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpeg");
     }
 
     @Provides
     @Singleton
     @Named("JPGFileType")
-    protected FileType provideJPGFile(Resources resources){
+    protected FileType provideJPGFile(Resources resources) {
         return new FileType("JPEG Image", resources.defaultImage(), MimeType.IMAGE_JPEG, "jpg");
     }
 }

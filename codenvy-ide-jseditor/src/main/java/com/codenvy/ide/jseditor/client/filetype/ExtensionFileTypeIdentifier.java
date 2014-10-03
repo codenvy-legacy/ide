@@ -155,8 +155,9 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
 
     /**
      * Builds a list from the parameters.
-     * 
-     * @param strings the elements of the list
+     *
+     * @param strings
+     *         the elements of the list
      * @return the list
      */
     private List<String> makeList(final String... strings) {
@@ -169,8 +170,9 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
 
     /**
      * Format a list of String for logging.
-     * 
-     * @param strings le list to display
+     *
+     * @param strings
+     *         le list to display
      * @return a representation of the list
      */
     private String printList(final List<String> strings) {

@@ -15,7 +15,7 @@ import com.google.gwt.core.client.JsArrayString;
 
 /**
  * A bundle configuration object for requirejs.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public final class BundlesConfigProperty extends JavaScriptObject {

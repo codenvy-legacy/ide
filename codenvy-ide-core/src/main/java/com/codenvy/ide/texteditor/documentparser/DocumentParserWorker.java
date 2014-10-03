@@ -14,6 +14,11 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
+import com.codenvy.ide.api.texteditor.parser.Parser;
+import com.codenvy.ide.api.texteditor.parser.State;
+import com.codenvy.ide.api.texteditor.parser.Stream;
+import com.codenvy.ide.api.texteditor.parser.Token;
+import com.codenvy.ide.api.texteditor.parser.TokenType;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.text.store.Line;
@@ -21,11 +26,6 @@ import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TaggableLine;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
-import com.codenvy.ide.api.texteditor.parser.Parser;
-import com.codenvy.ide.api.texteditor.parser.State;
-import com.codenvy.ide.api.texteditor.parser.Stream;
-import com.codenvy.ide.api.texteditor.parser.Token;
-import com.codenvy.ide.api.texteditor.parser.TokenType;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 
@@ -145,7 +145,7 @@ class DocumentParserWorker {
 
     /**
      * @return the parsed tokens, or {@code null} if the line could not be parsed
-     *         because there isn't a snapshot and it's not the first line
+     * because there isn't a snapshot and it's not the first line
      */
     Array<Token> parseLine(Line line) {
         class TokensRecipient implements ParsedTokensRecipient {
@@ -182,7 +182,7 @@ class DocumentParserWorker {
      * <p>We always return a copy to avoid changes to persisted state.
      *
      * @return copy of corresponding parser state, or {@code null} if the state
-     *         if not known yet (previous line wasn't parsed).
+     * if not known yet (previous line wasn't parsed).
      */
     private <T extends State> T loadParserStateForBeginningOfLine(TaggableLine line) {
         State state;

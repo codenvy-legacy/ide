@@ -51,17 +51,17 @@ public class View extends Composite {
     @UiField
     FocusPanel focusPanel;
     @UiField
-    FlowPanel contentContainer;
+    FlowPanel  contentContainer;
     @UiField
-    FlowPanel glass;
+    FlowPanel  glass;
     @UiField
-    FlowPanel popup;
+    FlowPanel  popup;
     @UiField
-    FlowPanel header;
+    FlowPanel  header;
     @UiField
-    FlowPanel content;
+    FlowPanel  content;
     @UiField
-    Label     headerLabel;
+    Label      headerLabel;
 
     HTMLPanel footer;
     @UiField

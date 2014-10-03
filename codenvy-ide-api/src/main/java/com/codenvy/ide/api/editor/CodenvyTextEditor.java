@@ -14,7 +14,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * CodenvyTextEditor is an embedded default fully featured Text Editor
@@ -32,8 +32,8 @@ public interface CodenvyTextEditor extends TextEditorPartPresenter {
      * @param notificationManager
      *         the manager that provides showing notifications
      */
-    void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
-                    @NotNull NotificationManager notificationManager);
+    void initialize(@Nonnull TextEditorConfiguration configuration, @Nonnull DocumentProvider documentProvider,
+                    @Nonnull NotificationManager notificationManager);
 
     /**
      * @return the text editor view implementation

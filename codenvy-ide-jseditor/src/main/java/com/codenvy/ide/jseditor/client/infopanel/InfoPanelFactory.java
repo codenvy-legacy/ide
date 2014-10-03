@@ -14,15 +14,16 @@ import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 
 /**
  * Factory for {@link InfoPanel} instances.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface InfoPanelFactory {
 
     /**
      * Creates an {@link InfoPanel}
-     * 
-     * @param editor the associated editor
+     *
+     * @param editor
+     *         the associated editor
      * @return a new {@link InfoPanel} instance
      */
     InfoPanel create(EmbeddedTextEditorPartView editor);

@@ -10,36 +10,41 @@
  *******************************************************************************/
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
+import com.codenvy.ide.api.texteditor.outline.HasOutline;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 
 /**
  * Part presenter for Outline.
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
-    private final OutlinePartView         view;
-    private       TextEditorPartPresenter activePart;
+    private final OutlinePartView view;
+    private final CoreLocalizationConstant coreLocalizationConstant;
+    private HasOutline activePart;
 
     @Inject
-    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus) {
+    public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus, CoreLocalizationConstant coreLocalizationConstant) {
         this.view = view;
-        view.setTitle("Outline");
+        this.coreLocalizationConstant = coreLocalizationConstant;
+
+        view.setTitle(coreLocalizationConstant.outlineTitleBarText());
+        view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
         view.setDelegate(this);
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
@@ -59,7 +64,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public String getTitle() {
-        return "Outline";
+        return coreLocalizationConstant.outlineButtonTitle();
     }
 
     /** {@inheritDoc} */
@@ -92,15 +97,15 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
         if (event.getActivePart() == null) {
-            view.showNoOutline();
+            view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
         }
-        if (event.getActivePart() instanceof TextEditorPartPresenter) {
+        if (event.getActivePart() instanceof HasOutline) {
             if (activePart != event.getActivePart()) {
-                activePart = (TextEditorPartPresenter)event.getActivePart();
+                activePart = (HasOutline)event.getActivePart();
                 if (activePart.getOutline() != null) {
                     activePart.getOutline().go(view.getContainer());
                 } else {
-                    view.showNoOutline();
+                    view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
                 }
             }
         }

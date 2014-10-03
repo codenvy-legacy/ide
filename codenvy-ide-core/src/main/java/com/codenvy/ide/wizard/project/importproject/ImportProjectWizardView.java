@@ -16,7 +16,7 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Import project wizard dialog's view.
- * 
+ *
  * @author Ann Shumilova
  */
 @ImplementedBy(ImportProjectWizardViewImpl.class)
@@ -26,10 +26,10 @@ public interface ImportProjectWizardView extends View<ImportProjectWizardView.Ac
         /** Performs some actions in response to a user's pressed Enter key. */
         void onEnterKeyPressed();
     }
-    
+
     /**
      * Show wizard page.
-     * 
+     *
      * @param presenter
      */
     void showPage(Presenter presenter);
@@ -46,29 +46,33 @@ public interface ImportProjectWizardView extends View<ImportProjectWizardView.Ac
 
     /**
      * Set the enabled state of the next button.
-     * 
-     * @param enabled <code>true</code> if enabled.
+     *
+     * @param enabled
+     *         <code>true</code> if enabled.
      */
     void setNextButtonEnabled(boolean enabled);
-    
+
     /**
      * Set the enabled state of the import button.
-     * 
-     * @param enabled <code>true</code> if enabled.
+     *
+     * @param enabled
+     *         <code>true</code> if enabled.
      */
     void setImportButtonEnabled(boolean enabled);
-    
+
     /**
      * Set the enabled state of the back button.
-     * 
-     * @param enabled <code>true</code> if enabled.
+     *
+     * @param enabled
+     *         <code>true</code> if enabled.
      */
     void setBackButtonEnabled(boolean enabled);
-    
+
     /**
      * Set the visibility state of the loader.
-     * 
-     * @param isVisible <code>true</code> if visible.
+     *
+     * @param isVisible
+     *         <code>true</code> if visible.
      */
     void setLoaderVisibility(boolean isVisible);
 

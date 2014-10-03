@@ -49,31 +49,31 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
     private static final InfoPanelUiBinder UIBINDER = GWT.create(InfoPanelUiBinder.class);
 
 
-    private final EditorTypeRegistry       editorTypeRegistry;
+    private final EditorTypeRegistry editorTypeRegistry;
 
     /** The related editor view. */
-    private EmbeddedTextEditorPartView     editor;
+    private EmbeddedTextEditorPartView editor;
     /** The i18n constants. */
 
     @UiField(provided = true)
-    JsEditorConstants                      constants;
+    JsEditorConstants constants;
 
     @UiField
-    SpanElement                            charPosLabel;
+    SpanElement charPosLabel;
     @UiField
-    Label                                  charPosition;
+    Label charPosition;
     @UiField
-    Label                                  lineNumber;
+    Label lineNumber;
     @UiField
-    Label                                  fileType;
+    Label fileType;
     @UiField
-    Label                                  editorTypeValue;
+    Label editorTypeValue;
     @UiField
-    Label                                  keybindingsValue;
+    Label keybindingsValue;
     @UiField
-    Label                                  tabSize;
+    Label tabSize;
 
-    private EditorType                     editorType;
+    private EditorType editorType;
 
     @AssistedInject
     public InfoPanel(@Assisted final EmbeddedTextEditorPartView editor,
@@ -245,7 +245,7 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
         if (editorTypeKey == null || editorTypeKey.isEmpty()) {
             return;
         }
-        final EditorType editorType = EditorType.fromKey(editorTypeKey);
+        final EditorType editorType = EditorType.getInstance(editorTypeKey);
         if (editorType == null) {
             return;
         }

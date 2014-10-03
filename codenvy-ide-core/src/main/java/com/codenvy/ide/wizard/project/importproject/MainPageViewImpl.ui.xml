@@ -13,7 +13,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
-	<ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
+	<ui:with field='resources' type='com.codenvy.ide.Resources'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.importproject.MainPageViewImpl.Style">
         @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
         @eval borderColor com.codenvy.ide.api.theme.Style.getTabBorderColor();
@@ -46,10 +46,10 @@
             overflow: hidden;
             display: block;
         }
-		
-		.marginTop {
-			margin-top: 5px;		
-		}
+
+        .marginTop {
+            margin-top: 5px;
+        }
 
         .projectName, .projectDescription {
             margin-top: 4px;
@@ -131,7 +131,7 @@
             <g:DockLayoutPanel unit="PCT">
                 <g:east size="53">
                     <g:FlowPanel addStyleNames="{style.rightPart}">
-                         <g:FlowPanel height="20px" addStyleNames="{style.namePanel} {style.marginTop}">
+                        <g:FlowPanel height="20px" addStyleNames="{style.namePanel} {style.marginTop}">
                             <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>
                             <g:Label text="{locale.importProjectImporterInfo}" addStyleNames="{style.label}"/>
                         </g:FlowPanel>
@@ -142,7 +142,7 @@
                         <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.importProjectUriFieldTitle}"
                                      addStyleNames="{style.labelPosition}"/>
-                             <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
+                            <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
                                        debugId="file-importProject-projectUrl"/>
                         </g:FlowPanel>
                         <g:SimplePanel width="100%" addStyleNames="{style.namePanel}">
@@ -159,7 +159,8 @@
                             <g:Label text="{locale.createProjectFromTemplateDescription}"
                                      addStyleNames="{style.labelPosition}"/>
                             <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.projectDescription}"
-                                        debugId="file-importProject-projectDescription" title="{locale.importProjectDescriptionPrompt}" tabIndex="2"/>
+                                        debugId="file-importProject-projectDescription" title="{locale.importProjectDescriptionPrompt}"
+                                        tabIndex="2"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="80px" addStyleNames="{style.namePanel}">
                             <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}" addStyleNames="{style.labelPosition}"/>

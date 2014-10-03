@@ -13,13 +13,13 @@ package com.codenvy.ide.workspace;
 import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.OutlinePart;
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.EditorPartStack;
+import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.PartStackView;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -43,7 +43,7 @@ import java.util.List;
 public class WorkBenchPresenter implements Presenter {
 
     protected final StringMap<PartStack> partStacks = Collections.createStringMap();
-    private WorkBenchViewImpl view;
+    private WorkBenchViewImpl   view;
     private List<PartPresenter> activeParts;
 
     /**
@@ -113,10 +113,10 @@ public class WorkBenchPresenter implements Presenter {
 
     public void expandEditorPart() {
         activeParts = new ArrayList<>();
-        for(PartStack value : partStacks.getValues().asIterable()){
+        for (PartStack value : partStacks.getValues().asIterable()) {
             if (!(value instanceof EditorPartStack)) {
                 PartPresenter part = value.getActivePart();
-                if(part != null) {
+                if (part != null) {
                     activeParts.add(part);
                     value.hidePart(part);
                 }
@@ -173,7 +173,7 @@ public class WorkBenchPresenter implements Presenter {
      * @param type
      */
     public void openPart(PartPresenter part, PartStackType type) {
-        openPart( part, type, null);
+        openPart(part, type, null);
     }
 
     /**
@@ -187,6 +187,7 @@ public class WorkBenchPresenter implements Presenter {
         PartStack destPartStack = partStacks.get(type.toString());
         destPartStack.addPart(part, constraint);
     }
+
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {

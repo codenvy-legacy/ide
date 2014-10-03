@@ -45,17 +45,18 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
     /**
      * Set title of event log part.
      *
-     * @param title title that need to be set
+     * @param title
+     *         title that need to be set
      */
     void setTitle(String title);
-    
+
     /**
      * Returns the label which displays the count of unread messages.
-     * 
+     *
      * @return {@link IsWidget} label
      */
     IsWidget getCountLabel();
-    
+
     /**
      * Scrolls the view to the botttom.
      */

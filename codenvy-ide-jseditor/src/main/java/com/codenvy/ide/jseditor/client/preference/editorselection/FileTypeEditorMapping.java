@@ -8,19 +8,19 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.editorselection;
+
+import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.jseditor.client.editortype.EditorType;
-
 /**
  * A store for editor to filetype to editor mappings.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class FileTypeEditorMapping implements Iterable<Entry<FileType, EditorType>> {
@@ -30,9 +30,11 @@ public class FileTypeEditorMapping implements Iterable<Entry<FileType, EditorTyp
 
     /**
      * Sets-up an editor association for the file type.
-     * 
-     * @param fileType the file type
-     * @param editorType the editor type
+     *
+     * @param fileType
+     *         the file type
+     * @param editorType
+     *         the editor type
      */
     public void setEditor(final FileType filetype, final EditorType editorType) {
         this.values.put(filetype, editorType);
@@ -40,8 +42,9 @@ public class FileTypeEditorMapping implements Iterable<Entry<FileType, EditorTyp
 
     /**
      * Returns the editor association for the file type.
-     * 
-     * @param fileType the file type
+     *
+     * @param fileType
+     *         the file type
      * @return the associated editor or null
      */
     public EditorType getEditor(final FileType fileType) {

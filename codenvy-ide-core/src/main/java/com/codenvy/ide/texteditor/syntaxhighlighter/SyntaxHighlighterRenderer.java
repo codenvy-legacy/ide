@@ -15,12 +15,12 @@
 package com.codenvy.ide.texteditor.syntaxhighlighter;
 
 import com.codenvy.ide.api.texteditor.SelectionModel;
+import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
-import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.texteditor.renderer.LineRenderer;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;

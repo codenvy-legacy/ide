@@ -12,7 +12,7 @@ package com.codenvy.ide.ext.ssh.client.key;
 
 import com.codenvy.ide.api.mvp.View;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link SshKeyPresenter}.
@@ -32,7 +32,7 @@ public interface SshKeyView extends View<SshKeyView.ActionDelegate> {
      * @param value
      *         value of ssh key
      */
-    void setKey(@NotNull String value);
+    void setKey(@Nonnull String value);
 
     /**
      * Add host to title of dialog.
@@ -40,7 +40,7 @@ public interface SshKeyView extends View<SshKeyView.ActionDelegate> {
      * @param host
      *         host what need to add
      */
-    void addHostToTitle(@NotNull String host);
+    void addHostToTitle(@Nonnull String host);
 
     /** Close dialog. */
     void close();

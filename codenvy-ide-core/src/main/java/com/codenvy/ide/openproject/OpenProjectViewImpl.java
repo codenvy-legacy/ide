@@ -43,14 +43,14 @@ import com.google.inject.Singleton;
 public class OpenProjectViewImpl extends Window implements OpenProjectView {
     private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
-    Button                    btnCancel;
-    Button                    btnOpen;
+    Button btnCancel;
+    Button btnOpen;
     @UiField
     ScrollPanel               listPanel;
     @UiField(provided = true)
     com.codenvy.ide.Resources res;
-    private CoreLocalizationConstant localization;
-    private ActionDelegate     delegate;
+    private CoreLocalizationConstant     localization;
+    private ActionDelegate               delegate;
     private SimpleList<ProjectReference> list;
     private SimpleList.ListItemRenderer<ProjectReference>  listItemRenderer = new SimpleList.ListItemRenderer<ProjectReference>() {
         @Override
@@ -97,28 +97,28 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
         this.setWidget(widget);
         createButtons();
     }
-    
+
     private void createButtons() {
         btnOpen = createButton(localization.open(), "file-openProject-open", new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onOpenClicked();
             }
         });
-        
+
         btnCancel = createButton(localization.cancel(), "file-openProject-cancel", new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onCancelClicked();
             }
         });
-        
+
         getFooter().add(btnCancel);
         getFooter().add(btnOpen);
     }
-    
+
     @Override
     protected void onClose() {
         delegate.onCancelClicked();

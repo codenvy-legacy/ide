@@ -17,8 +17,8 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunPresenter;
 import com.codenvy.ide.extension.runner.client.run.RunController;
+import com.codenvy.ide.extension.runner.client.run.customrun.CustomRunPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

@@ -14,8 +14,8 @@ import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 
 /**
@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
 public interface DocumentProvider {
     /** Callback for document */
     public interface DocumentCallback {
-        void onDocument(@NotNull Document document);
+        void onDocument(@Nonnull Document document);
     }
 
     /**
@@ -55,7 +55,7 @@ public interface DocumentProvider {
      * @param callback
      *         the document callback
      */
-    void getDocument(@Nullable EditorInput input, @NotNull DocumentCallback callback);
+    void getDocument(@Nullable EditorInput input, @Nonnull DocumentCallback callback);
 
     /**
      * Saves the given document provided for the given input.
@@ -70,8 +70,8 @@ public interface DocumentProvider {
      * @param callback
      *         the callback for save operation
      */
-    void saveDocument(@Nullable EditorInput input, @NotNull Document document, boolean overwrite,
-                      @NotNull AsyncCallback<EditorInput> callback);
+    void saveDocument(@Nullable EditorInput input, @Nonnull Document document, boolean overwrite,
+                      @Nonnull AsyncCallback<EditorInput> callback);
 
     /**
      * Saves the given document as new resource, provided for the given input.
@@ -84,14 +84,15 @@ public interface DocumentProvider {
      *         indicates whether overwrite should be performed
      *         while saving the given element if necessary
      */
-    void saveDocumentAs(@Nullable EditorInput input, @NotNull Document document, boolean overwrite);
+    void saveDocumentAs(@Nullable EditorInput input, @Nonnull Document document, boolean overwrite);
 
     /**
      * Tels provider that Document not used.
      * Editor's must call this method when they closing.
+     *
      * @param document
      */
-    void documentClosed(@NotNull Document document);
+    void documentClosed(@Nonnull Document document);
 
     /**
      * Returns the annotation model for the given input.

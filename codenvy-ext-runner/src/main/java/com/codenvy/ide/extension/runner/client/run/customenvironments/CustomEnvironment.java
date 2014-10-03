@@ -12,7 +12,7 @@ package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
 import com.google.gwt.http.client.URL;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,23 +21,68 @@ import java.util.List;
  * @author Artem Zatsarynnyy
  */
 public class CustomEnvironment {
-    private static final String DOCKERFILE_TEMPLATE = "# Base image\n" +
-                                                      "FROM <basic image>\n" +
+    private static final String DOCKERFILE_TEMPLATE = "# Base image.  You can pull from Docker Hub.  Codenvy\n" +
+                                                      "# provides a series of tested base images that include \n" +
+                                                      "# Web Shell, installed utilities, and language support.\n" +
+                                                      "# You can browse our images in Docker Hub or at\n" +
+                                                      "# github.com/codenvy/dockerfiles. The shellinabox image\n" +
+                                                      "# provides core Linux utilities and terminal access to runner.\n" +
+                                                      "FROM codenvy/shellinabox\n" +
                                                       "\n" +
-                                                      "# Set this if you want that of port exposed in this Dockerfile or its parent\n" +
-                                                      "# should be treated as port where your application is running\n" +
+                                                      "# Codenvy uses this port to map IDE clients to the output of\n" +
+                                                      "# your application executing within the Runner. Set these\n" +
+                                                      "# values to the port of your application and Codenvy will\n" +
+                                                      "# map this port to the output within the browser, CLI, and API.\n" +
+                                                      "# You can set this value multiple times.\n" +
                                                       "# For example:\n" +
                                                       "# ENV CODENVY_APP_PORT_8080_HTTP 8080\n" +
                                                       "#\n" +
-                                                      "#ENV CODENVY_APP_PORT_<port>_HTTP <port>\n" +
+                                                      "# ENV CODENVY_APP_PORT_<port>_HTTP <port>\n" +
                                                       "\n" +
-                                                      "# Set this if you want that of port exposed in this Dockerfile or its parent\n" +
-                                                      "# should be treated as debug port of yours application\n" +
+                                                      "# Codenvy uses this port to map IDE clients to the debugger\n" +
+                                                      "# of your application within the Runner. Set these\n" +
+                                                      "# values to the port of your debugger and Codenvy will\n" +
+                                                      "# map this port to the debugger console in the browser.\n" +
+                                                      "# You can set this value multiple times.\n" +
                                                       "# For example:\n" +
                                                       "# ENV CODENVY_APP_PORT_8000_DEBUG 8000\n" +
                                                       "#\n" +
-                                                      "#ENV CODENVY_APP_PORT_<port>_DEBUG <port>" +
-                                                      "#\n";
+                                                      "# ENV CODENVY_APP_PORT_<port>_DEBUG <port>\n" +
+                                                      "\n" +
+                                                      "# Set this value to the port of any terminals operating\n" +
+                                                      "# within your runner.  If you inherit a base image from\n" +
+                                                      "# codenvy/shellinabox (or any of our images that inherit\n" +
+                                                      "# from it, you do not need to set this value.  We already \n" +
+                                                      "# set it for you.\n" +
+                                                      "# ENV CODENVY_WEB_SHELL_PORT <port>\n" +
+                                                      "\n" +
+                                                      "# Execute your custom commands here.  You can add\n" +
+                                                      "# as many RUN commands as you want.  Combining\n" +
+                                                      "# RUN commands into a single entry will cause your \n" +
+                                                      "# environment to load faster.  Also, building your image\n" +
+                                                      "# with docker offline and uploading it to Docker Hub\n" +
+                                                      "# as a pre-built base image will also cause it to load\n" +
+                                                      "# Faster.  This example installs python, curl, and the\n" +
+                                                      "# Google SDK as an example.\n" +
+                                                      "# RUN sudo apt-get update -y && \\\n" +
+                                                      "#     sudo apt-get install --no-install-recommends -y -q curl build-essential python3 python3-dev python-pip git python3-pip && \\\n" +
+                                                      "#     sudo pip3 install -U pip && \\\n" +
+                                                      "#     sudo pip3 install virtualenv && \\\n" +
+                                                      "#     sudo mkdir /opt/googlesdk && \\\n" +
+                                                      "#     wget -qO- \"https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz\" | sudo tar -zx -C /opt/googlesdk && \\\n" +
+                                                      "#     sudo /bin/sh -c \"/opt/googlesdk/google-cloud-sdk/install.sh\" && \\\n" +
+                                                      "#     sudo chmod +x /opt/googlesdk/google-cloud-sdk/bin/gcloud\n" +
+                                                      "\n" +
+                                                      "\n" +
+                                                      "# Include this as the CMD instruction in your Dockerfile if\n" +
+                                                      "# you'd like the runner to stay alive after your commands\n" +
+                                                      "# have finished executing. Keeping the runner alive is\n" +
+                                                      "# necessary if you'd like to terminal into the image.  If \n" +
+                                                      "# your Dockerfile launches a server or daemon, like Tomcat,\n" +
+                                                      "# you do not need to set this value as Docker will not\n" +
+                                                      "# terminate until that process has finished.\n" +
+                                                      "CMD while true;do true; done" +
+                                                      "\n";
     private String name;
 
     /** Create new environment with the specified {@code name}. */
@@ -59,11 +104,11 @@ public class CustomEnvironment {
      */
     public List<String> getScriptNames(boolean encode) {
         final String dockerScriptName = "/Dockerfile";
-        final String mapperFileName = "/Mapper.json";
+        //final String mapperFileName = "/Mapper.json";
 
-        List<String> list = new ArrayList<>(2);
+        List<String> list = new LinkedList<>();
         list.add((encode ? URL.encodePathSegment(name) : name) + dockerScriptName);
-        list.add((encode ? URL.encodePathSegment(name) : name) + mapperFileName);
+        //list.add((encode ? URL.encodePathSegment(name) : name) + mapperFileName);
         return list;
     }
 

@@ -167,9 +167,9 @@ class ColumnOffsetCache {
      * @param x
      *         The x pixel value
      * @return This function will return the offset which corresponds either to
-     *         the base character, or to the last zero-width mark following a base
-     *         character. It will also return the width of the current column
-     *         character so fractional columns can be determined.
+     * the base character, or to the last zero-width mark following a base
+     * character. It will also return the width of the current column
+     * character so fractional columns can be determined.
      */
     public Pair<ColumnOffset, Double> getColumnOffsetForX(double x, double defaultCharacterWidth) {
         assert !isXMeasurementNeeded(x) : "Measurement of X was needed";
@@ -214,8 +214,8 @@ class ColumnOffsetCache {
      * #getColumnOffset(com.google.collide.shared.util.SortedList.OneWayComparator)}
      *
      * @return {@link #ZERO_OFFSET} if there are no items in the cache, otherwise
-     *         either the matched {@link ColumnOffset} or one with less than the
-     *         requested value.
+     * either the matched {@link ColumnOffset} or one with less than the
+     * requested value.
      */
     private ColumnOffset getColumnOffset(SortedList.OneWayComparator<ColumnOffset> comparator) {
         int index = getColumnOffsetIndex(comparator, false);

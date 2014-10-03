@@ -42,7 +42,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
@@ -211,7 +211,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeSelected(@NotNull TreeNode<?> node) {
+    public void onNodeSelected(@Nonnull TreeNode<?> node) {
         selectedNode = node;
         setSelection(new Selection<>(node));
 
@@ -232,7 +232,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                 @Override
                 public void onSuccess(TreeNode<?> result) {
-                    if(node instanceof Openable){
+                    if (node instanceof Openable) {
                         ((Openable)node).open();
                     }
                     if (!result.getChildren().isEmpty()) {
@@ -250,7 +250,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeAction(@NotNull TreeNode<?> node) {
+    public void onNodeAction(@Nonnull TreeNode<?> node) {
         node.processNodeAction();
     }
 
@@ -260,7 +260,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         contextMenuPresenter.show(mouseX, mouseY);
     }
 
-    private void setTree(@NotNull final AbstractTreeStructure treeStructure) {
+    private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
         treeStructure.getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
             @Override

@@ -30,10 +30,10 @@
     background-color: tabsPanelBackground;
     border-top: 1px solid tabBorderShadow;
     border-bottom: 1px solid tabBorder;
-	box-shadow: 3 2px 5px 0 rgba(50, 50, 50, 0.75);
-	display: flex;
-	display: -webkit-flex;
-	display: -moz-box; 
+    box-shadow: 3 2px 5px 0 rgba(50, 50, 50, 0.75);
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
 }
 
 .toolbarPanel div {

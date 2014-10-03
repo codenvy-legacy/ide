@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text.undo;
 
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.runtime.Assert;
 
 
 /**
@@ -156,7 +156,7 @@ public class DocumentUndoEvent {
     /**
      * Returns whether the change was a compound change or not.
      *
-     * @return    <code>true</code> if the undo or redo change is a
+     * @return <code>true</code> if the undo or redo change is a
      * compound change, <code>false</code> if it is not
      */
     public boolean isCompound() {

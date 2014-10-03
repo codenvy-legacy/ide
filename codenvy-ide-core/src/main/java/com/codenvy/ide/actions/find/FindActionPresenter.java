@@ -11,13 +11,13 @@
 package com.codenvy.ide.actions.find;
 
 import com.codenvy.ide.actions.ActionManagerImpl;
-import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionGroup;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.IdeActions;
 import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.UnicodeUtils;
@@ -42,7 +42,7 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
     private       FindActionView      view;
     private       ActionManager       actionManager;
     private final Map<Action, String> actionsMap;
-    private final Comparator<Action>  actionComparator = new Comparator<Action>() {
+    private final Comparator<Action> actionComparator = new Comparator<Action>() {
         @Override
         public int compare(Action o1, Action o2) {
             int compare = compare(o1.getTemplatePresentation().getText(), o2.getTemplatePresentation().getText());
@@ -97,8 +97,7 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
                     final String groupName = group.getTemplatePresentation().getText();
                     if (result.containsKey(action)) {
                         result.put(action, null);
-                    }
-                    else {
+                    } else {
                         result.put(action, StringUtils.isNullOrEmpty(groupName) ? containingGroupName : groupName);
                     }
                 }
@@ -124,13 +123,13 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
 
     @Override
     public void nameChanged(String name, boolean checkBoxState) {
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             view.hideActions();
             return;
         }
         String pattern = convertPattern(name.trim());
         RegExp regExp = RegExp.compile(pattern);
-        Map<Action,String> actions = new TreeMap<>(actionComparator);
+        Map<Action, String> actions = new TreeMap<>(actionComparator);
         if (checkBoxState) {
             Set<String> ids = ((ActionManagerImpl)actionManager).getActionIds();
             for (Action action : actionsMap.keySet()) {
@@ -155,15 +154,15 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
                 actions.put(action, actionsMap.get(action));
             } else {
                 String groupName = actionsMap.get(action);
-                if(groupName != null && text != null && regExp.test(groupName + " " + text)){
+                if (groupName != null && text != null && regExp.test(groupName + " " + text)) {
                     actions.put(action, groupName);
                 }
             }
 
         }
-        if(!actions.isEmpty()) {
+        if (!actions.isEmpty()) {
             view.showActions(actions);
-        }else{
+        } else {
             view.hideActions();
         }
     }
@@ -221,33 +220,27 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
                         buffer.append(Character.toLowerCase(c));
                     }
                     buffer.append("]");
-                }
-                else if (Character.isLowerCase(c)) {
+                } else if (Character.isLowerCase(c)) {
                     buffer.append('[');
                     buffer.append(c);
                     buffer.append('|');
                     buffer.append(Character.toUpperCase(c));
                     buffer.append(']');
-                }
-                else {
+                } else {
                     buffer.append(c);
                 }
 
                 firstIdentifierLetter = false;
-            }
-            else if (c == '*') {
+            } else if (c == '*') {
                 buffer.append(".*");
                 firstIdentifierLetter = true;
-            }
-            else if (c == '.') {
+            } else if (c == '.') {
                 buffer.append("\\.");
                 firstIdentifierLetter = true;
-            }
-            else if (c == ' ') {
+            } else if (c == ' ') {
                 buffer.append("[^A-Z]*\\ ");
                 firstIdentifierLetter = true;
-            }
-            else {
+            } else {
                 firstIdentifierLetter = true;
                 // for standard RegExp engine
                 buffer.append("\\u");

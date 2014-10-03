@@ -14,7 +14,6 @@ import com.codenvy.ide.ext.web.DefaultChainedCodeAssistProcessor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.annotation.PostConstruct;
 import java.util.Set;
 
 /**

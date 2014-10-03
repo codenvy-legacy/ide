@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link UploadFileView}.
@@ -52,7 +52,7 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
         this.setTitle(locale.uploadFileTitle());
         setWidget(uploadFileViewBinder.createAndBindUi(this));
         bind();
-        
+
         btnCancel = createButton(locale.cancel(), "file-uploadFile-cancel", new ClickHandler() {
 
             @Override
@@ -123,13 +123,13 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
 
     /** {@inheritDoc} */
     @Override
-    public void setEncoding(@NotNull String encodingType) {
+    public void setEncoding(@Nonnull String encodingType) {
         uploadForm.setEncoding(encodingType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setAction(@NotNull String url) {
+    public void setAction(@Nonnull String url) {
         uploadForm.setAction(url);
         uploadForm.setMethod(FormPanel.METHOD_POST);
     }

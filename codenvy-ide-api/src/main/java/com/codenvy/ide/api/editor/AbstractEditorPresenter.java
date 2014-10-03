@@ -15,7 +15,7 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.user.client.Window;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Abstract implementation of {@link EditorPartPresenter} that is intended
@@ -30,7 +30,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
 
     /** {@inheritDoc} */
     @Override
-    public void init(@NotNull EditorInput input) throws EditorInitException {
+    public void init(@Nonnull EditorInput input) throws EditorInitException {
         this.input = input;
         initializeEditor();
     }
@@ -57,7 +57,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
 
     /** {@inheritDoc} */
     @Override
-    public void addCloseHandler(@NotNull EditorPartCloseHandler closeHandler) {
+    public void addCloseHandler(@Nonnull EditorPartCloseHandler closeHandler) {
         if (!closeHandlers.contains(closeHandler)) {
             closeHandlers.add(closeHandler);
         }
@@ -87,7 +87,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
             handler.onClose(this);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onFileChanged() {

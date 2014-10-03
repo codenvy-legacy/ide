@@ -38,14 +38,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
-
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The implementation of {@link SshKeyManagerView}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -56,22 +55,22 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     private static SshKeyManagerViewImplUiBinder ourUiBinder = GWT.create(SshKeyManagerViewImplUiBinder.class);
 
     @UiField
-    Button                                       btnGenerate;
+    Button             btnGenerate;
     @UiField
-    Button                                       btnUpload;
+    Button             btnUpload;
     @UiField
-    SimplePanel                                btnGenerateGithubKey;
+    SimplePanel        btnGenerateGithubKey;
     @UiField(provided = true)
-    CellTable<KeyItem>                           keys;
+    CellTable<KeyItem> keys;
     @UiField(provided = true)
-    final SshResources                           res;
+    final   SshResources            res;
     @UiField(provided = true)
-    final SshLocalizationConstant                locale;
-    private ActionDelegate                       delegate;
+    final   SshLocalizationConstant locale;
+    private ActionDelegate          delegate;
 
     /**
      * Create view.
-     * 
+     *
      * @param resources
      * @param locale
      */
@@ -79,16 +78,16 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
     protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale, Resources res) {
         this.res = resources;
         this.locale = locale;
-        
+
         initSshKeyTable(res);
         initWidget(ourUiBinder.createAndBindUi(this));
         btnGenerateGithubKey.sinkEvents(Event.ONCLICK);
         btnGenerateGithubKey.addHandler(new ClickHandler() {
-            
+
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onGenerateGithubKeyClicked();
-                
+
             }
         }, ClickEvent.getType());
     }
@@ -149,7 +148,8 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
                 if (object != null && object.getPublicKeyUrl() != null) {
                     sb.appendHtmlConstant(
-                      "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() + "\">");
+                            "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() +
+                            "\">");
                     super.render(context, object, sb);
                 }
             }
@@ -175,7 +175,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
     /** {@inheritDoc} */
     @Override
-    public void setKeys(@NotNull Array<KeyItem> keys) {
+    public void setKeys(@Nonnull Array<KeyItem> keys) {
         // Wraps Array in java.util.List
         List<KeyItem> appList = new ArrayList<KeyItem>();
         for (int i = 0; i < keys.size(); i++) {

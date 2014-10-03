@@ -28,10 +28,13 @@ public abstract class ToggleAction extends Action implements Toggleable {
         super(text);
     }
 
-    public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final ImageResource icon, @Nullable final SVGResource svgIcon) {
+    public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final ImageResource icon,
+                        @Nullable final SVGResource svgIcon) {
         super(text, description, icon, svgIcon);
 
-    } public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final SVGResource svgIcon) {
+    }
+
+    public ToggleAction(@Nullable final String text, @Nullable final String description, @Nullable final SVGResource svgIcon) {
         super(text, description, null, svgIcon);
     }
 

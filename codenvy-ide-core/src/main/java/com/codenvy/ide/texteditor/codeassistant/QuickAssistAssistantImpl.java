@@ -14,8 +14,8 @@ import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.texteditor.CodeAssistCallback;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
 import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
+import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
 
 /**
  * Default implementation of {@link QuickAssistAssistant}

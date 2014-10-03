@@ -14,10 +14,10 @@
 
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.api.texteditor.parser.Token;
 import com.codenvy.ide.api.texteditor.parser.TokenFactory;
 import com.codenvy.ide.api.texteditor.parser.TokenType;
+import com.codenvy.ide.collections.Array;
 
 
 /** Token factory for CSS; uses information from {@link CssState}. */

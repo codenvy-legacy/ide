@@ -52,7 +52,7 @@ public class OAuthAuthenticationService {
     private static final Logger LOG = LoggerFactory.getLogger(OAuthAuthenticationService.class);
     @Inject
     @Named("auth.oauth.access_denied_error_page")
-    protected String             errorPage;
+    protected String errorPage;
 
 
     private final Map<String, OAuthAuthenticator> authenticators;
@@ -60,7 +60,6 @@ public class OAuthAuthenticationService {
 
     @Inject
     protected OAuthTokenProvider tokenProvider;
-
 
 
     /**

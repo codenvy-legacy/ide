@@ -154,7 +154,7 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
         includeNonMenu.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
             @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
-                 delegate.nameChanged(nameField.getText(), event.getValue());
+                delegate.nameChanged(nameField.getText(), event.getValue());
             }
         });
     }

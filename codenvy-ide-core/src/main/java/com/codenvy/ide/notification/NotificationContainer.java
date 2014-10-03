@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,14 +58,13 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
     }
 
 
-
     /**
      * Show notification in container.
      *
      * @param notification
      *         notification that need to show
      */
-    public void addNotification(@NotNull Notification notification) {
+    public void addNotification(@Nonnull Notification notification) {
         NotificationItem item = new NotificationItem(resources, notification, delegate);
         panel.add(item);
         notificationWidget.put(notification, item);
@@ -77,7 +76,7 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
      * @param notification
      *         notification that need to disable
      */
-    public void removeNotification(@NotNull Notification notification) {
+    public void removeNotification(@Nonnull Notification notification) {
         NotificationItem item = notificationWidget.get(notification);
         panel.remove(item);
     }

@@ -30,7 +30,7 @@ public class LocalOAuthTokenProvider implements OAuthTokenProvider {
 
     @Inject
     public LocalOAuthTokenProvider(Set<OAuthAuthenticatorProvider> providers) {
-        for(OAuthAuthenticatorProvider authenticatorProvider : providers) {
+        for (OAuthAuthenticatorProvider authenticatorProvider : providers) {
             this.authenticators.put(authenticatorProvider.getId(), authenticatorProvider.getAuthenticator());
         }
     }

@@ -56,7 +56,7 @@ public interface IUndoableOperation {
      * </p>
      *
      * @return <code>true</code> if the operation can be executed;
-     *         <code>false</code> otherwise.
+     * <code>false</code> otherwise.
      */
     boolean canExecute();
 
@@ -75,7 +75,7 @@ public interface IUndoableOperation {
      * </p>
      *
      * @return <code>true</code> if the operation can be redone;
-     *         <code>false</code> otherwise.
+     * <code>false</code> otherwise.
      */
     boolean canRedo();
 
@@ -94,7 +94,7 @@ public interface IUndoableOperation {
      * </p>
      *
      * @return <code>true</code> if the operation can be undone;
-     *         <code>false</code> otherwise.
+     * <code>false</code> otherwise.
      */
     boolean canUndo();
 
@@ -110,9 +110,9 @@ public interface IUndoableOperation {
      * that an operation is executed.
      *
      * @return the IStatus of the execution. The status severity should be set
-     *         to <code>OK</code> if the operation was successful, and
-     *         <code>ERROR</code> if it was not. Any other status is assumed
-     *         to represent an incompletion of the execution.
+     * to <code>OK</code> if the operation was successful, and
+     * <code>ERROR</code> if it was not. Any other status is assumed
+     * to represent an incompletion of the execution.
      * @throws ExecutionException
      *         if an exception occurred during execution.
      */
@@ -157,7 +157,7 @@ public interface IUndoableOperation {
      * @param context
      *         the context in question
      * @return <code>true</code> if the context is present, <code>false</code>
-     *         if it is not.
+     * if it is not.
      * @see IUndoContext#matches(IUndoContext)
      */
     boolean hasContext(IUndoContext context);
@@ -167,9 +167,9 @@ public interface IUndoableOperation {
      * has been undone.
      *
      * @return the IStatus of the redo. The status severity should be set to
-     *         <code>OK</code> if the redo was successful, and
-     *         <code>ERROR</code> if it was not. Any other status is assumed
-     *         to represent an incompletion of the redo.
+     * <code>OK</code> if the redo was successful, and
+     * <code>ERROR</code> if it was not. Any other status is assumed
+     * to represent an incompletion of the redo.
      * @throws ExecutionException
      *         if an exception occurred during redo.
      */
@@ -193,9 +193,9 @@ public interface IUndoableOperation {
      * has been executed.
      *
      * @return the IStatus of the undo. The status severity should be set to
-     *         <code>OK</code> if the redo was successful, and
-     *         <code>ERROR</code> if it was not. Any other status is assumed
-     *         to represent an incompletion of the undo.
+     * <code>OK</code> if the redo was successful, and
+     * <code>ERROR</code> if it was not. Any other status is assumed
+     * to represent an incompletion of the undo.
      * @throws ExecutionException
      *         if an exception occurred during undo.
      */

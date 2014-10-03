@@ -34,7 +34,7 @@ public class WsConnectionListener implements ConnectionClosedHandler {
 
     @Override
     public void onClose(WebSocketClosedEvent event) {
-        if(event.getCode() == WebSocketClosedEvent.CLOSE_NORMAL && "Http session destroyed".equals(event.getReason())){
+        if (event.getCode() == WebSocketClosedEvent.CLOSE_NORMAL && "Http session destroyed".equals(event.getReason())) {
             eventBus.fireEvent(new HttpSessionDestroyedEvent());
         }
     }

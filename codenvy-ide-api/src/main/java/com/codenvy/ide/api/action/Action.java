@@ -88,7 +88,7 @@ public abstract class Action {
     public Action(String text, String description, ImageResource icon) {
         this(text, description, icon, null);
     }
-    
+
     /**
      * Constructs a new action with the specified text, description and icon.
      *
@@ -101,7 +101,7 @@ public abstract class Action {
      * @param icon
      *         Action's icon
      * @param svgIcon
-     *         Action's SVG icon        
+     *         Action's SVG icon
      */
     public Action(String text, String description, ImageResource icon, SVGResource svgIcon) {
         myEnabledInModalContext = false;
@@ -111,7 +111,7 @@ public abstract class Action {
         presentation.setIcon(icon);
         presentation.setSVGIcon(svgIcon);
     }
-    
+
     /**
      * Copies template presentation and shortcuts set from <code>sourceAction</code>.
      *

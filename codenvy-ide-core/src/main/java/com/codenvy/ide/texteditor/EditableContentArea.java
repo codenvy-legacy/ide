@@ -14,8 +14,8 @@
 
 package com.codenvy.ide.texteditor;
 
-import elemental.html.DivElement;
 import elemental.dom.Element;
+import elemental.html.DivElement;
 
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
@@ -38,7 +38,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
 
         /**
          * @return The {@link Element} that we set as the contents of the content
-         *         area.
+         * area.
          */
         Element getContentElement();
 

@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * View of the import project wizard's main page.
- * 
+ *
  * @author Ann Shumilova
  */
 @ImplementedBy(MainPageViewImpl.class)
@@ -28,91 +28,100 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     /**
      * Set project's importers.
-     * 
+     *
      * @param categories
      */
     void setImporters(Map<String, Set<ProjectImporterDescriptor>> categories);
-    
+
     /**
      * REset the page.
      */
     void reset();
-    
+
     /**
      * Show the name error.
      */
     void showNameError();
-    
+
     /**
      * Hide the name error.
      */
     void hideNameError();
-    
+
     /**
      * Show URL error.
      */
     void showUrlError(String message);
-    
+
     /**
      * Hide URL error.
      */
     void hideUrlError();
-    
+
     /**
      * Display importer's description.
-     * 
-     * @param text description
+     *
+     * @param text
+     *         description
      */
     void setImporterDescription(String text);
-    
+
     /**
      * Select importer in the list.
-     * 
-     * @param importer importer to select
+     *
+     * @param importer
+     *         importer to select
      */
     void selectImporter(ProjectImporterDescriptor importer);
-    
+
     /**
      * Get the project's name value.
-     * 
+     *
      * @return {@link String} project's name
      */
     String getProjectName();
-    
+
     /**
      * Set the project's name value.
-     * 
-     * @param projectName project's name to set
+     *
+     * @param projectName
+     *         project's name to set
      */
     void setProjectName(String projectName);
-    
+
     /**
      * Give focus to project's URL input.
      */
     void focusInUrlInput();
-    
+
     /**
      * Set the enable state of the inputs.
-     * 
-     * @param isEnabled <code>true</code> if enabled, <code>false</code> if disabled
+     *
+     * @param isEnabled
+     *         <code>true</code> if enabled, <code>false</code> if disabled
      */
     void setInputsEnableState(boolean isEnabled);
-    
+
     public interface ActionDelegate {
-        
+
         /** Performs any actions appropriate in response to the user having changed the project's name. */
         void projectNameChanged(String name);
+
         /** Performs any actions appropriate in response to the user having changed the project's URL. */
         void projectUrlChanged(String url);
+
         /** Performs any actions appropriate in response to the user having changed the project's description. */
         void projectDescriptionChanged(String projectDescriptionValue);
+
         /** Performs any actions appropriate in response to the user having changed the project's visibility. */
         void projectVisibilityChanged(Boolean aPublic);
 
         ProjectWizardView.ActionDelegate getProjectWizardDelegate();
+
         /** Performs any actions appropriate in response to the user having selected the importer. */
         void projectImporterSelected(ProjectImporterDescriptor importer);
-        /** Performs any actions appropriate in response to the user having clicked the Enter key.*/
+
+        /** Performs any actions appropriate in response to the user having clicked the Enter key. */
         void onEnterClicked();
     }
 }

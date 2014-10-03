@@ -15,14 +15,12 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.parts.base.ToolButton;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -44,10 +42,10 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
 
     @UiField
-    FlowPanel                                  consoleArea;
+    FlowPanel consoleArea;
 
     @UiField
-    ScrollPanel                                scrollPanel;
+    ScrollPanel scrollPanel;
 
     @Inject
     public ConsolePartViewImpl(PartStackUIResources resources, Resources coreResources) {
@@ -72,9 +70,9 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         this.delegate = delegate;
     }
 
-    private static final String INFO_COLOR = "lightgreen";
+    private static final String INFO_COLOR    = "lightgreen";
     private static final String WARNING_COLOR = "cyan";
-    private static final String ERROR_COLOR = "#F62217";
+    private static final String ERROR_COLOR   = "#F62217";
 
     /** {@inheritDoc} */
     @Override
@@ -85,13 +83,16 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
 
         String TEXT = text.toUpperCase();
         if (TEXT.startsWith("[INFO]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
+            html.setHTML(
+                    "<pre" + preStyle + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " + text.substring(6) + "</pre>");
 
         } else if (TEXT.startsWith("[ERROR]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
+            html.setHTML(
+                    "<pre" + preStyle + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " + text.substring(7) + "</pre>");
 
         } else if (TEXT.startsWith("[WARNING]")) {
-            html.setHTML("<pre" + preStyle + ">[<span style='color:" + WARNING_COLOR + ";'><b>WARNING</b></span>] " + text.substring(9) + "</pre>");
+            html.setHTML("<pre" + preStyle + ">[<span style='color:" + WARNING_COLOR + ";'><b>WARNING</b></span>] " + text.substring(9) +
+                         "</pre>");
 
         } else {
             html.setHTML("<pre" + preStyle + ">" + text + "</pre>");

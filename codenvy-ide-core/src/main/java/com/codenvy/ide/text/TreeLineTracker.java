@@ -975,7 +975,7 @@ abstract class TreeLineTracker implements LineTracker {
      * @param node
      *         the node to re-balance
      * @return <code>true</code> if the re-balancement leaves the height at <code>node.parent</code> constant, <code>false</code>
-     *         if the height changed
+     * if the height changed
      */
     private boolean rebalanceAfterDeletionLeft(Node node) {
         Node parent = node.parent;
@@ -1003,7 +1003,7 @@ abstract class TreeLineTracker implements LineTracker {
      * @param node
      *         the node to re-balance
      * @return <code>true</code> if the re-balancement leaves the height at <code>node.parent</code> constant, <code>false</code>
-     *         if the height changed
+     * if the height changed
      */
     private boolean rebalanceAfterDeletionRight(Node node) {
         Node parent = node.parent;
@@ -1045,7 +1045,7 @@ abstract class TreeLineTracker implements LineTracker {
      * @param node
      *         a node
      * @return the first node in <code>node</code>'s parent chain that is reached from its left subtree, <code>null</code> if there
-     *         is none
+     * is none
      */
     private Node successorUp(final Node node) {
         Node child = node;
@@ -1372,7 +1372,7 @@ abstract class TreeLineTracker implements LineTracker {
      * @param last
      *         the last <code>Node</code> to check, may be <code>null</code>
      * @return an <code>int[]</code> of length 2, with the first element being the character length of <code>node</code>'s subtree,
-     *         and the second element the number of lines in <code>node</code>'s subtree
+     * and the second element the number of lines in <code>node</code>'s subtree
      */
     private int[] checkTreeOffsets(Node node, int[] offLen, Node last) {
         if (node == last)

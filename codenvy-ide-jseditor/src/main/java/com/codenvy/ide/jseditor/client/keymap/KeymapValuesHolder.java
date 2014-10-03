@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.keymap;
 
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.codenvy.ide.jseditor.client.editortype.EditorType;
-
 /**
  * A store for editor to keymap mappings.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class KeymapValuesHolder implements Iterable<Entry<EditorType, Keymap>> {
@@ -29,9 +29,11 @@ public class KeymapValuesHolder implements Iterable<Entry<EditorType, Keymap>> {
 
     /**
      * Sets-up a keymap association for the editor type.
-     * 
-     * @param editorType the editor type
-     * @param newValue the new keymap
+     *
+     * @param editorType
+     *         the editor type
+     * @param newValue
+     *         the new keymap
      */
     public void setKeymap(final EditorType editorType, final Keymap newValue) {
         this.values.put(editorType, newValue);
@@ -39,8 +41,9 @@ public class KeymapValuesHolder implements Iterable<Entry<EditorType, Keymap>> {
 
     /**
      * Returns the keymap association for the editor type.
-     * 
-     * @param editorType the editor type
+     *
+     * @param editorType
+     *         the editor type
      * @return the associated keymap or null
      */
     public Keymap getKeymap(final EditorType editorType) {

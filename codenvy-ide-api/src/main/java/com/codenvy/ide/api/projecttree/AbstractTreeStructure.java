@@ -13,7 +13,7 @@ package com.codenvy.ide.api.projecttree;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Defines project's tree structure to display its in 'Project Explorer'.
@@ -29,7 +29,7 @@ public abstract class AbstractTreeStructure {
      * @param settings
      *         {@link TreeSettings} instance
      */
-    public AbstractTreeStructure(@NotNull TreeSettings settings) {
+    public AbstractTreeStructure(@Nonnull TreeSettings settings) {
         this.settings = settings;
     }
 

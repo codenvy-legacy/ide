@@ -11,7 +11,8 @@
       Codenvy, S.A. - initial API and implementation
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
@@ -37,10 +38,57 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-user</artifactId>
+            <version>${codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-gwt-client-commons</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${com.google.gwt.gin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${com.google.gwt.gin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${com.google.code.guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>${com.google.code.guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>${com.google.gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${com.google.gwt.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.vectomatic</groupId>
+            <artifactId>lib-gwt-svg</artifactId>
+            <version>${org.vectomatic.lib-gwt-svg.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
@@ -69,7 +117,9 @@
                         <configuration>
                             <url>${requirejs.upstream.url}</url>
                             <fromFile>require.js</fromFile>
-                            <toFile>${project.build.directory}/requirejs-${requirejs.upstream.version}/com/codenvy/ide/jseditor/public/require.js</toFile>
+                            <toFile>
+                                ${project.build.directory}/requirejs-${requirejs.upstream.version}/com/codenvy/ide/jseditor/public/require.js
+                            </toFile>
                         </configuration>
                     </execution>
                 </executions>

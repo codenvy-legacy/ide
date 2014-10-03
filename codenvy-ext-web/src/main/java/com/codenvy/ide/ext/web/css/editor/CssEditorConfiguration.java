@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css.editor;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.api.texteditor.parser.CmParser;
 import com.codenvy.ide.api.texteditor.parser.Parser;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The css css type editor configuration.
@@ -37,7 +37,7 @@ public class CssEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public Parser getParser(@NotNull TextEditorPartView view) {
+    public Parser getParser(@Nonnull TextEditorPartView view) {
         CmParser parser = getParserForMime("text/css");
         parser.setNameAndFactory("css", new CssTokenFactory());
         return parser;
@@ -45,7 +45,7 @@ public class CssEditorConfiguration extends TextEditorConfiguration {
 
     /** {@inheritDoc} */
     @Override
-    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@NotNull TextEditorPartView view) {
+    public StringMap<CodeAssistProcessor> getContentAssistantProcessors(@Nonnull TextEditorPartView view) {
         StringMap<CodeAssistProcessor> map = Collections.createStringMap();
         map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resources));
         return map;

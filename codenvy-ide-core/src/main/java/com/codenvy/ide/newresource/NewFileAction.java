@@ -13,7 +13,6 @@ package com.codenvy.ide.newresource;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.MimeType;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;

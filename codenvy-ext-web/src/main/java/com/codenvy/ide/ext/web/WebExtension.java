@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web;
 
+import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.codenvy.ide.api.action.ActionManager;
-import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
 import com.codenvy.ide.ext.web.css.NewLessFileAction;
 import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
@@ -94,7 +94,7 @@ public class WebExtension {
                         @Named("HTMLFileType") FileType htmlFile,
                         @Named("PHPFileType") FileType phpFile) {
         // register new Icon for javascript projecttype
-        iconRegistry.registerIcon(new Icon("javascript.samples.category.icon",  resources.samplesCategoryJs()));
+        iconRegistry.registerIcon(new Icon("javascript.samples.category.icon", resources.samplesCategoryJs()));
 
         // Register and add actions
         actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);

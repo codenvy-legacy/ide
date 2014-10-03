@@ -13,15 +13,16 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 /**
  * Interface for {@link EditorWidget} factories.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface EditorWidgetFactory<T extends EditorWidget> {
 
     /**
      * Create an editor instance.
-     * 
-     * @param editorMode the editor mode
+     *
+     * @param editorMode
+     *         the editor mode
      * @return an editor instance
      */
     T createEditorWidget(final String editorMode);

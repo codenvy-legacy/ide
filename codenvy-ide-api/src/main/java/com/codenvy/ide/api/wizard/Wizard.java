@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.wizard;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * The wizard contains wizard pages. It has info on the next or previous page. The wizard can disable a page if it is possible. It can
@@ -32,10 +32,10 @@ public interface Wizard {
      *
      * @param delegate
      */
-    void setUpdateDelegate(@NotNull UpdateDelegate delegate);
+    void setUpdateDelegate(@Nonnull UpdateDelegate delegate);
 
     /** @return wizard title */
-    @NotNull
+    @Nonnull
     String getTitle();
 
     /**
@@ -43,7 +43,7 @@ public interface Wizard {
      *
      * @return first page
      */
-    @NotNull
+    @Nonnull
     WizardPage flipToFirst();
 
     /**

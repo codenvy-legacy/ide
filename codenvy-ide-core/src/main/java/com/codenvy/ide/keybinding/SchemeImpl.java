@@ -17,8 +17,8 @@ import com.codenvy.ide.collections.IntegerMap;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author Evgen Vidolob
@@ -55,7 +55,7 @@ public class SchemeImpl implements Scheme {
 
     /** {@inheritDoc} */
     @Override
-    public void addKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
+    public void addKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId) {
         final int digest = key.getKeyDigest();
         if (!handlers.hasKey(digest)) {
             handlers.put(digest, Collections.<String>createArray());
@@ -66,7 +66,7 @@ public class SchemeImpl implements Scheme {
 
     /** {@inheritDoc} */
     @Override
-    public void removeKey(@NotNull CharCodeWithModifiers key, @NotNull String actionId) {
+    public void removeKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId) {
         final int digest = key.getKeyDigest();
 
         Array<String> array = handlers.get(digest);
@@ -81,7 +81,7 @@ public class SchemeImpl implements Scheme {
     }
 
     /** {@inheritDoc} */
-    @NotNull
+    @Nonnull
     @Override
     public Array<String> getActionIds(int digest) {
         if (handlers.hasKey(digest)) {
@@ -93,7 +93,7 @@ public class SchemeImpl implements Scheme {
     /** {@inheritDoc} */
     @Nullable
     @Override
-    public CharCodeWithModifiers getKeyBinding(@NotNull String actionId) {
+    public CharCodeWithModifiers getKeyBinding(@Nonnull String actionId) {
         return actionId2CharCode.get(actionId);
     }
 }

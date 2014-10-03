@@ -12,9 +12,9 @@
 package com.codenvy.ide.api.text.rules;
 
 
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.runtime.Assert;
 
 /**
  * A buffered rule based scanner. The buffer always contains a section

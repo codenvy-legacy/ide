@@ -29,7 +29,8 @@ public class ShowAboutAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale, AnalyticsEventLogger eventLogger, Resources resources) {
+    public ShowAboutAction(AboutPresenter presenter, AboutLocalizationConstant locale, AnalyticsEventLogger eventLogger,
+                           Resources resources) {
         super(locale.aboutControlTitle(), "Show about application", null, resources.about());
         this.presenter = presenter;
         this.eventLogger = eventLogger;

@@ -82,7 +82,7 @@ public class PropertyChangeEvent {
      * Gets the programmatic name of the property that was changed.
      *
      * @return The programmatic name of the property that was changed.
-     *         May be null if multiple properties have changed.
+     * May be null if multiple properties have changed.
      */
     public String getPropertyName() {
         return propertyName;
@@ -92,7 +92,7 @@ public class PropertyChangeEvent {
      * Gets the new value for the property, expressed as an Object.
      *
      * @return The new value for the property, expressed as an Object.
-     *         May be null if multiple properties have changed.
+     * May be null if multiple properties have changed.
      */
     public Object getNewValue() {
         return newValue;
@@ -102,7 +102,7 @@ public class PropertyChangeEvent {
      * Gets the old value for the property, expressed as an Object.
      *
      * @return The old value for the property, expressed as an Object.
-     *         May be null if multiple properties have changed.
+     * May be null if multiple properties have changed.
      */
     public Object getOldValue() {
         return oldValue;

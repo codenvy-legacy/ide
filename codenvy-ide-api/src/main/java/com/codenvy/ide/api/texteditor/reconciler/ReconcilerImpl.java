@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.texteditor.reconciler;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.DocumentEvent;
@@ -24,6 +21,9 @@ import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.TextInputListener;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.google.gwt.user.client.Timer;
 

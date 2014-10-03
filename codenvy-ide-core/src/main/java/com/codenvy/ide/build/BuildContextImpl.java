@@ -14,6 +14,7 @@ import com.codenvy.ide.api.build.BuildContext;
 
 /**
  * Implementation of BuildContext
+ *
  * @author Evgen Vidolob
  */
 public class BuildContextImpl implements BuildContext {

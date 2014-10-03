@@ -56,7 +56,7 @@ public class Selection<T> {
 
     /**
      * @return The first element in MultiSelection, the only element in SingleSelection
-     *         and null otherwise.
+     * and null otherwise.
      */
     public T getFirstElement() {
         return elements.isEmpty() ? null : elements.get(0);

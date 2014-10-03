@@ -61,8 +61,6 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     SimplePanel               contentPanel;
     @UiField(provided = true)
     com.codenvy.ide.Resources res;
-    @UiField(provided = true)
-    final ProjectWizardResources wizardResources;
 
     private CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
@@ -100,10 +98,9 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
      */
     @Inject
     protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder,
-                                  CoreLocalizationConstant locale, ProjectWizardResources wizardResources) {
+                                  CoreLocalizationConstant locale) {
         this.res = resources;
         this.locale = locale;
-        this.wizardResources = wizardResources;
 
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -126,7 +123,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onCloseClicked();
             }
         });
-        btnClose.addStyleName(wizardResources.css().button());
+        btnClose.addStyleName(res.wizardCss().button());
         getFooter().add(btnClose);
 
         btnOk = createButton(locale.ok(), "window-preferences-ok", new ClickHandler() {
@@ -136,7 +133,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onOkClicked();
             }
         });
-        btnOk.addStyleName(wizardResources.css().button());
+        btnOk.addStyleName(res.wizardCss().button());
         getFooter().add(btnOk);
 
         btnApply = createButton(locale.apply(), "window-preferences-apply", new ClickHandler() {
@@ -146,7 +143,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 delegate.onApplyClicked();
             }
         });
-        btnApply.addStyleName(wizardResources.css().button());
+        btnApply.addStyleName(res.wizardCss().button());
         getFooter().add(btnApply);
     }
 

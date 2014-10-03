@@ -87,7 +87,8 @@ public class CustomEnvironmentsPresenterTest extends BaseTest {
 
         verify(view).showDialog();
         verify(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
-                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
+                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject
+                                                                                      ());
     }
 
     @Test

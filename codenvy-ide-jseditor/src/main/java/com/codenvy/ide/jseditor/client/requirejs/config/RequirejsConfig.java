@@ -15,7 +15,7 @@ import com.google.gwt.core.client.JsArrayString;
 
 /**
  * Configuration object JS overlay for requirejs.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class RequirejsConfig extends JavaScriptObject {
@@ -25,7 +25,7 @@ public class RequirejsConfig extends JavaScriptObject {
 
     /**
      * Create a new configuration object.
-     * 
+     *
      * @return a configuration object
      */
     public static final native RequirejsConfig create() /*-{
@@ -91,7 +91,7 @@ public class RequirejsConfig extends JavaScriptObject {
     /**
      * Returns the number of seconds to wait for a module load.<br>
      * Default to 7s.
-     * 
+     *
      * @return module load timeout
      */
     public final native int getWaitSeconds() /*-{

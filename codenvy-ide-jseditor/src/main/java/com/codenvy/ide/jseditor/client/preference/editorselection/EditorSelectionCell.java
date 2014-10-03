@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.editorselection;
 
 import java.util.List;
 
@@ -29,34 +29,25 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
-/**
- * {@link Cell} for a select that contains all editor types.
- * 
- * @author "Mickaël Leduque"
- */
-public class EditorTypeSelectionCell extends AbstractInputCell<EditorType, String> {
+/** {@link Cell} for a select that contains all editor types. */
+public class EditorSelectionCell extends AbstractInputCell<EditorType, String> {
 
-    /**
-     * The safe html template for the cell contents.
-     * 
-     * @author "Mickaël Leduque"
-     */
+    /** The safe html template for the cell contents. */
     interface Template extends SafeHtmlTemplates {
 
         /** The options element for unselected items. */
-        @Template("<option value=\"{0}\">{1}</option>")
+        @SafeHtmlTemplates.Template("<option value=\"{0}\">{1}</option>")
         SafeHtml deselected(String key, String display);
 
         /** The options element for selected items. */
-        @Template("<option value=\"{0}\" selected=\"selected\">{1}</option>")
+        @SafeHtmlTemplates.Template("<option value=\"{0}\" selected=\"selected\">{1}</option>")
         SafeHtml selected(String key, String display);
 
         /** The select element. */
-        @Template("<select class=\"{0}\" style=\"{1}\">")
+        @SafeHtmlTemplates.Template("<select class=\"{0}\" style=\"{1}\">")
         SafeHtml select(String classname, SafeStyles selectWidthStyle);
     }
 
@@ -74,11 +65,11 @@ public class EditorTypeSelectionCell extends AbstractInputCell<EditorType, Strin
 
     /**
      * Construct a new {@link SelectionCell} with the specified options.
-     * 
+     *
      * @param defaultEditor
      * @param options the options in the cell
      */
-    public EditorTypeSelectionCell(final List<EditorType> editorTypes, final String stylename,
+    public EditorSelectionCell(final List<EditorType> editorTypes, final String stylename,
                                    final Double selectWidthValue, final Unit selectWidthUnit,
                                    final EditorTypeRegistry editorTypeRegistry, final EditorType defaultEditor) {
         super(BrowserEvents.CHANGE);
@@ -97,7 +88,7 @@ public class EditorTypeSelectionCell extends AbstractInputCell<EditorType, Strin
     public void onBrowserEvent(final Context context, final Element parent, final EditorType value,
                                final NativeEvent event, final ValueUpdater<EditorType> valueUpdater) {
         super.onBrowserEvent(context, parent, value, event, valueUpdater);
-        String type = event.getType();
+        final String type = event.getType();
         if (BrowserEvents.CHANGE.equals(type)) {
             final FileType key = (FileType)context.getKey();
             final SelectElement select = parent.getFirstChild().cast();
@@ -122,13 +113,13 @@ public class EditorTypeSelectionCell extends AbstractInputCell<EditorType, Strin
         }
 
         int selectedIndex = getIndex(this.editorTypes, viewData, editorType);
-        Log.debug(EditorTypeSelectionCell.class, "File type " + filetype + " - found selection " + selectedIndex);
+        Log.debug(EditorSelectionCell.class, "File type " + filetype + " - found selection " + selectedIndex);
         if (selectedIndex == -1) {
             selectedIndex = getDefaultIndex(this.editorTypes);
-            Log.debug(EditorTypeSelectionCell.class, "... using default value " + selectedIndex + " instead.");
+            Log.debug(EditorSelectionCell.class, "... using default value " + selectedIndex + " instead.");
         }
 
-        SafeStyles widthStyle = SafeStylesUtils.forWidth(this.selectWidthValue, this.selectWidthUnit);
+        final SafeStyles widthStyle = SafeStylesUtils.forWidth(this.selectWidthValue, this.selectWidthUnit);
         sb.append(template.select(this.stylename, widthStyle));
         int index = 0;
         for (final EditorType option : this.editorTypes) {

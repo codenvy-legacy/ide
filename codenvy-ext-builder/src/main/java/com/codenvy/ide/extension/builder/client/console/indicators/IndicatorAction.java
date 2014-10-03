@@ -23,10 +23,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Artem Zatsarynnyy
  */
 public class IndicatorAction extends Action implements CustomComponentAction {
-    private String  caption;
-    private boolean isURL;
+    private String           caption;
+    private boolean          isURL;
     private BuilderResources resources;
-    private int width;
+    private int              width;
 
     public IndicatorAction(String caption, boolean isURL, int width, BuilderResources resources) {
         super();

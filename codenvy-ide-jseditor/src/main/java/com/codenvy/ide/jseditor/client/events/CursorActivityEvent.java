@@ -14,7 +14,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event type for cursor activity.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class CursorActivityEvent extends GwtEvent<CursorActivityHandler> {

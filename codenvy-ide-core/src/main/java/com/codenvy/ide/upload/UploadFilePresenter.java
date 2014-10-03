@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The purpose of this class is upload file
@@ -68,7 +68,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onSubmitComplete(@NotNull String result) {
+    public void onSubmitComplete(@Nonnull String result) {
         view.closeDialog();
         eventBus.fireEvent(new RefreshProjectTreeEvent(getParent()));
     }

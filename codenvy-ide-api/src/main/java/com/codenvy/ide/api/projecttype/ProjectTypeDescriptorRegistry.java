@@ -28,7 +28,8 @@ public interface ProjectTypeDescriptorRegistry {
      * @param id
      *         project type descriptor id
      * @return project type descriptor with the specified ID, or null if no {@link ProjectTypeDescriptor} registered with the specified id
-     * @deprecated use {@link com.codenvy.api.project.gwt.client.ProjectTypeServiceClient#getProjectTypes(com.codenvy.ide.rest.AsyncRequestCallback<Array<ProjectTypeDescriptor>>)}
+     * @deprecated use {@link com.codenvy.api.project.gwt.client.ProjectTypeServiceClient#getProjectTypes(com.codenvy.ide.rest
+     * .AsyncRequestCallback<Array<ProjectTypeDescriptor>>)}
      * instead.
      */
     @Deprecated
@@ -38,7 +39,8 @@ public interface ProjectTypeDescriptorRegistry {
      * Returns all registered project types.
      *
      * @return all registered project types
-     * @deprecated use {@link com.codenvy.api.project.gwt.client.ProjectTypeServiceClient#getProjectTypes(com.codenvy.ide.rest.AsyncRequestCallback<Array<ProjectTypeDescriptor>>)}
+     * @deprecated use {@link com.codenvy.api.project.gwt.client.ProjectTypeServiceClient#getProjectTypes(com.codenvy.ide.rest
+     * .AsyncRequestCallback<Array<ProjectTypeDescriptor>>)}
      * instead.
      */
     @Deprecated

@@ -21,19 +21,19 @@ public interface ProjectWizardResources extends ClientBundle {
 
     public interface Css extends CssResource {
         String buttonPanel();
-        
+
         String button();
-        
+
         String blueButton();
-        
+
         String inputError();
-       
+
     }
 
     @Source({"com/codenvy/ide/wizard/newproject/Wizard.css", "com/codenvy/ide/api/ui/style.css"})
-    Css css();
+    Css wizardCss();
 
-    @Source({"main/MainPage.css", "com/codenvy/ide/api/ui/style.css","com/codenvy/ide/ui/Styles.css"})
+    @Source({"main/MainPage.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
     MainPageViewImpl.Style mainPageStyle();
 }
 

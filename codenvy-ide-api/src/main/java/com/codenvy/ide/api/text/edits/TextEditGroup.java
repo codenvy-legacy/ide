@@ -138,7 +138,7 @@ public class TextEditGroup {
      * </code> is returned.
      *
      * @return the text region covered by this edit group or <code>
-     *         null</code> if no edits are managed
+     * null</code> if no edits are managed
      */
     public Region getRegion() {
         int size = fEdits.size();

@@ -14,7 +14,7 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link SshKeyManagerPresenter}.
@@ -30,7 +30,7 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
          * @param key
          *         key what need to show
          */
-        void onViewClicked(@NotNull KeyItem key);
+        void onViewClicked(@Nonnull KeyItem key);
 
         /**
          * Performs any actions appropriate in response to the user having pressed the Delete button.
@@ -38,7 +38,7 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
          * @param key
          *         key what need to delete
          */
-        void onDeleteClicked(@NotNull KeyItem key);
+        void onDeleteClicked(@Nonnull KeyItem key);
 
         /** Performs any actions appropriate in response to the user having pressed the Generate button. */
         void onGenerateClicked();
@@ -56,5 +56,5 @@ public interface SshKeyManagerView extends View<SshKeyManagerView.ActionDelegate
      * @param keys
      *         available keys
      */
-    void setKeys(@NotNull Array<KeyItem> keys);
+    void setKeys(@Nonnull Array<KeyItem> keys);
 }

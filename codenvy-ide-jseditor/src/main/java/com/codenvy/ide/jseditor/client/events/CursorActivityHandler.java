@@ -14,15 +14,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CursorActivityEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface CursorActivityHandler extends EventHandler {
 
     /**
      * Action triggered by the event.
-     * 
-     * @param event the event
+     *
+     * @param event
+     *         the event
      */
     void onCursorActivity(CursorActivityEvent event);
 }

@@ -10,24 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TextUtilities;
-import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.Buffer.ScrollListener;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.api.texteditor.CodeAssistCallback;
 import com.codenvy.ide.api.texteditor.KeyListener;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
 import com.codenvy.ide.api.texteditor.codeassistant.Completion;
 import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.StringMap.IterationCallback;
+import com.codenvy.ide.texteditor.Buffer;
+import com.codenvy.ide.texteditor.Buffer.ScrollListener;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteBox.Events;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
@@ -185,7 +185,7 @@ public class CodeAssistantImpl implements CodeAssistant {
     }
 
     private void scheduleRequestCodeassistant() {
-        if(!box.isShowing()){
+        if (!box.isShowing()) {
             box.showLoader();
         }
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -240,7 +240,7 @@ public class CodeAssistantImpl implements CodeAssistant {
         if (p != null) {
             p.computeCompletionProposals(view, offset, callback);
             lastErrorMessage = p.getErrorMessage();
-            if(lastErrorMessage != null){
+            if (lastErrorMessage != null) {
                 box.showError(lastErrorMessage);
             }
         }

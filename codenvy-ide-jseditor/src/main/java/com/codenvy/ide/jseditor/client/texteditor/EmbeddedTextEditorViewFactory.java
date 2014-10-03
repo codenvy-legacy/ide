@@ -13,16 +13,18 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 /**
  * Interface for {@link EmbeddedTextEditorPartView} factories.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedTextEditorViewFactory {
 
     /**
      * Creates an instance of {@link EmbeddedTextEditorPartView}.
-     * 
-     * @param resources the resources
-     * @param dtoFactory the dto factory
+     *
+     * @param resources
+     *         the resources
+     * @param dtoFactory
+     *         the dto factory
      * @return a text editor view instance (embedded version)
      */
     EmbeddedTextEditorPartView createTextEditorPartView();

@@ -15,7 +15,7 @@ import com.google.gwt.event.shared.HasHandlers;
 
 /**
  * Interface for components which handle {@link GutterClickEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasGutterClickHandlers extends HasHandlers {

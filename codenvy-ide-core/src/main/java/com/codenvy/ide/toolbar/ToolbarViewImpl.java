@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 
 /**
@@ -75,12 +75,12 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     }
 
     @Override
-    public void setPlace(@NotNull String place) {
+    public void setPlace(@Nonnull String place) {
         this.place = place;
     }
 
     @Override
-    public void setActionGroup(@NotNull ActionGroup actionGroup) {
+    public void setActionGroup(@Nonnull ActionGroup actionGroup) {
         this.actionGroup = actionGroup;
         updateActions();
         timer.schedule(DELAY_MILLIS);

@@ -15,7 +15,7 @@ import com.google.gwt.event.shared.HasHandlers;
 
 /**
  * Interface for components which handle {@link ViewPortChangeEvent}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasViewPortChangeHandlers extends HasHandlers {

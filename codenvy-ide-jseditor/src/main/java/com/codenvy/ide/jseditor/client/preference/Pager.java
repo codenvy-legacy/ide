@@ -17,7 +17,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 
 /**
  * {@link SimplePager} implementation with customized buttons.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class Pager extends SimplePager {
@@ -25,7 +25,7 @@ public class Pager extends SimplePager {
     private static final int          DEFAULT_FAST_FORWARD_ROWS = 1000;
     private static final TextLocation DEFAULT_TEXT_LOCATION     = TextLocation.CENTER;
 
-    private static Resources          DEFAULT_RESOURCES;
+    private static Resources DEFAULT_RESOURCES;
 
     public Pager() {
         super(DEFAULT_TEXT_LOCATION);
@@ -38,7 +38,7 @@ public class Pager extends SimplePager {
     public Pager(final TextLocation location, final Resources resources, final boolean showFastForwardButton,
                  final int fastForwardRows, final boolean showLastPageButton) {
         this(location, resources, showFastForwardButton, fastForwardRows, showLastPageButton,
-             GWT.<ImageButtonsConstants> create(ImageButtonsConstants.class));
+             GWT.<ImageButtonsConstants>create(ImageButtonsConstants.class));
     }
 
     public Pager(final TextLocation location, final Resources resources, final boolean showFastForwardButton,
@@ -74,7 +74,7 @@ public class Pager extends SimplePager {
 
     /**
      * Creates an instance of the resources.
-     * 
+     *
      * @return the resources instance for this pager
      */
     private static Resources getDefaultResources() {

@@ -11,7 +11,6 @@
 package com.codenvy.ide.outline;
 
 import elemental.events.KeyboardEvent;
-
 import elemental.events.MouseEvent;
 
 import com.codenvy.ide.Resources;
@@ -20,12 +19,12 @@ import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.text.TextUtilities;
-import com.codenvy.ide.text.store.LineInfo;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.api.texteditor.TextEditorPartView;
 import com.codenvy.ide.api.texteditor.outline.CodeBlock;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.text.store.LineInfo;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.Tree.Listener;
@@ -142,10 +141,10 @@ public class OutlineImpl implements OutlinePresenter {
             @Override
             public void onRootDragDrop(MouseEvent event) {
             }
-            
+
             @Override
             public void onKeyboard(KeyboardEvent event) {
-                
+
             }
         });
 

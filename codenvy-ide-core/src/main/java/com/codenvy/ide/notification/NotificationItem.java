@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
@@ -40,10 +40,10 @@ public class NotificationItem extends Composite implements Notification.Notifica
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenItemClicked(@NotNull Notification notification);
+        void onOpenItemClicked(@Nonnull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseItemClicked(@NotNull Notification notification);
+        void onCloseItemClicked(@Nonnull Notification notification);
     }
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("hh:mm:ss");
@@ -63,7 +63,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param notification
      * @param delegate
      */
-    public NotificationItem(@NotNull Resources resources, @NotNull Notification notification, @NotNull final ActionDelegate delegate) {
+    public NotificationItem(@Nonnull Resources resources, @Nonnull Notification notification, @Nonnull final ActionDelegate delegate) {
         this.resources = resources;
         this.notification = notification;
         this.prevState = notification.clone();
@@ -113,7 +113,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         time.getElement().getStyle().setLineHeight(20, PX);
         mainPanel.addWest(time, 55);
-      //If notification message is formated HTML - need to display only plain text from it.
+        //If notification message is formated HTML - need to display only plain text from it.
         title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
         title.addStyleName(resources.notificationCss().center());
         title.setHeight("20px");
@@ -128,7 +128,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param icon
      *         icon that need to set
      */
-    private SVGImage changeImage(@NotNull SVGResource icon) {
+    private SVGImage changeImage(@Nonnull SVGResource icon) {
         SVGImage messageIcon = new SVGImage(icon);
         iconPanel.setWidget(messageIcon);
         return messageIcon;

@@ -32,7 +32,6 @@ import com.google.inject.Singleton;
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 
 /**
  * Project Explorer view.
@@ -193,7 +192,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectHeader(@NotNull ProjectDescriptor project) {
+    public void setProjectHeader(@Nonnull ProjectDescriptor project) {
         if (toolBar.getWidgetIndex(projectHeader) < 0) {
             toolBar.addSouth(projectHeader, 28);
             container.setWidgetSize(toolBar, 50);

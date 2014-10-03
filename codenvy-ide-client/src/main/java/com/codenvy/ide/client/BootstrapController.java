@@ -417,8 +417,8 @@ public class BootstrapController {
 
     private static class AnalyticsSessions {
         private String id;
-        private long   startTime;
-        private long   lastRequestTime;
+        private long startTime;
+        private long lastRequestTime;
 
         private AnalyticsSessions() {
             makeNew();

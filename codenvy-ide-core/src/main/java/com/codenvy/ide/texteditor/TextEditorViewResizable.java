@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
 
 /**
  * Widget for {@link TextEditorViewImpl} element to catch {@link RequiresResize#onResize()} event.
- * 
+ *
  * @author Ann Shumilova
  */
 public class TextEditorViewResizable extends HTML implements RequiresResize, ProvidesResize {

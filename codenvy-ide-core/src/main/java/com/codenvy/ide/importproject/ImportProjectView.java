@@ -100,7 +100,8 @@ public interface ImportProjectView extends IsWidget {
     /**
      * Sets importer description
      *
-     * @param description  description
+     * @param description
+     *         description
      */
     void setDescription(@Nonnull String description);
 

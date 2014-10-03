@@ -12,7 +12,7 @@ package com.codenvy.ide.upload;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The view of {@link UploadFilePresenter}.
@@ -31,7 +31,7 @@ public interface UploadFileView extends IsWidget {
          * @param result
          *         result of submit operation
          */
-        void onSubmitComplete(@NotNull String result);
+        void onSubmitComplete(@Nonnull String result);
 
         /** Performs any actions appropriate in response to the user having pressed the Upload button. */
         void onUploadClicked();
@@ -63,7 +63,7 @@ public interface UploadFileView extends IsWidget {
      * @param encodingType
      *         the form's encoding
      */
-    void setEncoding(@NotNull String encodingType);
+    void setEncoding(@Nonnull String encodingType);
 
     /**
      * Sets the 'action' associated with form. This is the URL to which it will be submitted.
@@ -71,12 +71,12 @@ public interface UploadFileView extends IsWidget {
      * @param url
      *         the form's action
      */
-    void setAction(@NotNull String url);
+    void setAction(@Nonnull String url);
 
     /** Submits the form. */
     void submit();
 
     /** @return file name */
-    @NotNull
+    @Nonnull
     String getFileName();
 }

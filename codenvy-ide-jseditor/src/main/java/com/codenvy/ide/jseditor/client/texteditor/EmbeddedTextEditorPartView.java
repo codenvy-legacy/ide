@@ -25,12 +25,12 @@ import com.google.gwt.user.client.ui.RequiresResize;
 
 /**
  * View interface for the embedded editors components.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
-                                           IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
-                                           HasChangeHandlers, UndoableEditor {
+                                                    IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
+                                                    HasChangeHandlers, UndoableEditor {
 
     boolean isDirty();
 
@@ -49,5 +49,12 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
 
     /** Gives the focus to the editor. */
     void setFocus();
+
+
+    /**
+     * Returns a handle for this editor view.
+     * @return an editor handle
+     */
+    EditorHandle getEditorHandle();
 
 }

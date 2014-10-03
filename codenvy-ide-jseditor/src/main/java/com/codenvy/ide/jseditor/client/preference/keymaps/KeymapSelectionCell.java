@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.preference;
+package com.codenvy.ide.jseditor.client.preference.keymaps;
 
 import java.util.List;
 
@@ -22,9 +22,6 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.safecss.shared.SafeStyles;
-import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -39,30 +36,27 @@ public class KeymapSelectionCell extends AbstractInputCell<Keymap, String> {
         @Template("<option value=\"{0}\" selected=\"selected\">{1}</option>")
         SafeHtml selected(String key, String display);
 
-        @Template("<select class=\"{0}\" style=\"{1}\">")
-        SafeHtml select(String classname, SafeStyles selectWidthStyle);
+        @Template("<select class=\"{0} {1}\">")
+        SafeHtml select(String classname, String selectWidthStyle);
     }
 
     private static Template template;
 
-    private final String    stylename;
-
-    private final Double    selectWidthValue;
-    private final Unit      selectWidthUnit;
+    private final String stylename;
+    private final String widthStylename;
 
     /**
      * Construct a new {@link SelectionCell} with the specified options.
      * 
      * @param options the options in the cell
      */
-    public KeymapSelectionCell(final String stylename, final Double selectWidthValue, final Unit selectWidthUnit) {
+    public KeymapSelectionCell(final String stylename, final String widthStylename) {
         super(BrowserEvents.CHANGE);
 
         initTemplate();
 
         this.stylename = stylename;
-        this.selectWidthValue = selectWidthValue;
-        this.selectWidthUnit = selectWidthUnit;
+        this.widthStylename = widthStylename;
     }
 
     @Override
@@ -100,8 +94,7 @@ public class KeymapSelectionCell extends AbstractInputCell<Keymap, String> {
         if (keymapsForRow == null || keymapsForRow.isEmpty()) {
             return;
         }
-        SafeStyles widthStyle = SafeStylesUtils.forWidth(this.selectWidthValue, this.selectWidthUnit);
-        sb.append(template.select(this.stylename, widthStyle));
+        sb.append(template.select(this.stylename, this.widthStylename));
         int index = 0;
         for (final Keymap option : keymapsForRow) {
             if (index++ == selectedIndex) {

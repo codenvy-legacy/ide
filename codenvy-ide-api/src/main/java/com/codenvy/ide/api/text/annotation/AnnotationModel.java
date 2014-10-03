@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text.annotation;
 
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 import java.util.Iterator;
@@ -131,7 +131,7 @@ public interface AnnotationModel {
      * @param annotation
      *         the annotation whose position should be returned
      * @return the position of the given annotation or <code>null</code> if no
-     *         associated annotation exists
+     * associated annotation exists
      */
     Position getPosition(Annotation annotation);
 

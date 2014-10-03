@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.icon;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Client-side singleton component that provides possibility to define icons for UI in extensions.
@@ -41,7 +41,7 @@ public interface IconRegistry {
      *         icon id
      * @return registered icon or the same named "default" icon or "generic" icon
      */
-    @NotNull
+    @Nonnull
     Icon getIcon(String id);
 
     /**

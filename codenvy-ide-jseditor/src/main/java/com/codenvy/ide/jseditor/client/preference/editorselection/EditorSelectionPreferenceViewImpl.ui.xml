@@ -16,13 +16,13 @@
              xmlns:my='urn:import:com.codenvy.ide.jseditor.client.preference'>
 
     <ui:with type="com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant" field="constants" />
+    <ui:with type="com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource.CellStyle" field="cellStyle" />
+    <ui:with type="com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource.CellTableStyle" field="tableStyle" />
+
     <ui:style src="com/codenvy/ide/api/ui/style.css">
-        .main{
-            margin: 5px;
-        }
         .section {
             margin-top: 1em;
-            margin-botttom: 0.2em;
+            margin-bottom: 0.2em;
             font-size: titleFontSize;
         }
         .tables {
@@ -30,18 +30,18 @@
             min-width: -webkit-fill-available; 
         }
     </ui:style>
-    <ui:style field="cellStyle" type="com.codenvy.ide.jseditor.client.preference.EditorTypePreferenceViewImpl.CellStyle">
-        /* style for CellTable cells. */
-        .prefCell {
-            height: 2em;
-        }
-    </ui:style>
 
-    <g:HTMLPanel styleName="{style.main}">
+    <g:HTMLPanel>
         <g:Label addStyleNames="{style.section}" text="{constants.editorsMappingSectionLabel}" />
-        <c:CellTable ui:field="editorsSelection" addStyleNames="{style.tables}" />
-        <my:Pager ui:field="editorsPager" />
-        <g:Label addStyleNames="{style.section}" text="{constants.keybindingsSectionLabel}" />
-        <c:CellTable ui:field="keyBindingSelection" addStyleNames="{style.tables}" />
+        <table class="{style.tables}">
+            <tr>
+                <td class="{cellStyle.prefCell} {cellStyle.firstColumn} {tableStyle.cellTableCell}">
+                    <ui:text from="{constants.defaultEditorLabel}" />
+                </td>
+                <td class="{cellStyle.prefCell} {tableStyle.cellTableCell}">
+                    <g:ValueListBox ui:field="defaultEditorSelection" addStyleNames="{cellStyle.selectWidth}" />
+                </td>
+            </tr>
+        </table>
     </g:HTMLPanel>
 </ui:UiBinder>

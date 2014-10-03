@@ -184,7 +184,7 @@ public class MainPageViewImpl implements MainPageView {
 
     private void changeEnabledState(boolean enabled) {
         projectName.setEnabled(enabled);
-        if(enabled){
+        if (enabled) {
             projectName.setFocus(true);
         }
         changeEnabledStateAll(enabled);
@@ -386,7 +386,7 @@ public class MainPageViewImpl implements MainPageView {
             extends UiBinder<DockLayoutPanel, MainPageViewImpl> {
     }
 
-   public interface Style extends Styles {
+    public interface Style extends Styles {
         String mainPanel();
 
         String leftPart();
@@ -410,5 +410,5 @@ public class MainPageViewImpl implements MainPageView {
         String horizontalLine();
 
         String labelTitle();
-   }
+    }
 }

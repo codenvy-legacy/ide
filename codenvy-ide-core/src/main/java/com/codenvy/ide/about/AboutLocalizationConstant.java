@@ -15,7 +15,7 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization for About Codenvy dialog.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface AboutLocalizationConstant extends Messages {

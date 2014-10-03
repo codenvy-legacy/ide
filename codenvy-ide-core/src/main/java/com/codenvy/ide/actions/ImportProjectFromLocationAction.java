@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
 public class ImportProjectFromLocationAction extends Action {
 
     private final ImportProjectWizardPresenter presenter;
-    private final AnalyticsEventLogger   eventLogger;
+    private final AnalyticsEventLogger         eventLogger;
 
     @Inject
     public ImportProjectFromLocationAction(ImportProjectWizardPresenter presenter,

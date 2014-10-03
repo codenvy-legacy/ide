@@ -14,7 +14,7 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * View for displaying About Codenvy information.
- * 
+ *
  * @author Ann Shumilova
  */
 public interface AboutView extends View<AboutView.ActionDelegate> {
@@ -26,30 +26,30 @@ public interface AboutView extends View<AboutView.ActionDelegate> {
          */
         void onOkClicked();
     }
-    
+
     /** Close view. */
     void close();
 
     /** Show About dialog. */
     void showDialog();
-    
+
     /**
      * Set application's version value.
-     * 
+     *
      * @param version
      */
     void setVersion(String version);
-    
+
     /**
      * Set application's revision value.
-     * 
+     *
      * @param revision
      */
     void setRevision(String revision);
-    
+
     /**
      * Set application's build time value.
-     * 
+     *
      * @param time
      */
     void setTime(String time);

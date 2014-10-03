@@ -12,15 +12,16 @@ package com.codenvy.ide.api.texteditor;
 
 /**
  * Interface for text editor view that handles text operations.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HandlesTextOperations {
 
     /**
      * Returns whether the operation specified by the given operation code can be performed.
-     * 
-     * @param operation the operation code
+     *
+     * @param operation
+     *         the operation code
      * @return <code>true</code> if the specified operation can be performed
      */
     boolean canDoOperation(int operation);
@@ -28,8 +29,9 @@ public interface HandlesTextOperations {
     /**
      * Performs the operation specified by the operation code on the target. <code>doOperation</code> must only be called if
      * <code>canDoOperation</code> returns <code>true</code>.
-     * 
-     * @param operation the operation code
+     *
+     * @param operation
+     *         the operation code
      */
     void doOperation(int operation);
 }

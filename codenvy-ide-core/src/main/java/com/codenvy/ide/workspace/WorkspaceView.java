@@ -39,7 +39,7 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
      * Shows or hides toolbar.
      *
      * @param visible
-     *              set <b>true</b> to show the toolbar or <b>false</b> to hide it
+     *         set <b>true</b> to show the toolbar or <b>false</b> to hide it
      */
     void setToolbarVisible(boolean visible);
 

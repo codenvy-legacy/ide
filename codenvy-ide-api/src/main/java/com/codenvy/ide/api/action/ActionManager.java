@@ -28,7 +28,7 @@ public interface ActionManager {
      * @param actionId
      *         Id of the registered action
      * @return Action associated with the specified actionId, <code>null</code> if
-     *         there is no actions associated with the specified actionId
+     * there is no actions associated with the specified actionId
      * @throws java.lang.IllegalArgumentException
      *         if <code>actionId</code> is <code>null</code>
      */
@@ -38,7 +38,7 @@ public interface ActionManager {
      * Returns actionId associated with the specified action.
      *
      * @return id associated with the specified action, <code>null</code> if action
-     *         is not registered
+     * is not registered
      * @throws java.lang.IllegalArgumentException
      *         if <code>action</code> is <code>null</code>
      */

@@ -12,8 +12,8 @@ package com.codenvy.ide.theme;
 
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
 import com.codenvy.ide.ui.dialogs.ask.AskHandler;

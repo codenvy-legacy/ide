@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * Provider interface for creating new instance of {@link EditorPartPresenter}.
@@ -27,11 +27,12 @@ public interface EditorProvider {
      * @return the description of this editor
      */
     String getDescription();
+
     /**
      * Every call this method should return new instance.
      *
      * @return new instance of {@link EditorPartPresenter}
      */
-    @NotNull
+    @Nonnull
     EditorPartPresenter getEditor();
 }

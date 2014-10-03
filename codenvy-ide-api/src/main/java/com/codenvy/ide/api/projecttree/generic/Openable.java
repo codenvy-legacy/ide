@@ -29,6 +29,7 @@ public interface Openable {
 
     /**
      * Returns whether this openable is open. This is a handle-only method.
+     *
      * @return true if this openable is open, false otherwise
      */
     boolean isOpened();

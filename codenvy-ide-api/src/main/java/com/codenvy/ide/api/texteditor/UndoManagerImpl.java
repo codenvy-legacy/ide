@@ -247,9 +247,9 @@ public class UndoManagerImpl implements UndoManager {
     }
 
     /**
-	 * Returns this undo manager's undo context.
-	 *
-	 * @return the undo context or <code>null</code> if the undo manager is not connected
+     * Returns this undo manager's undo context.
+     *
+     * @return the undo context or <code>null</code> if the undo manager is not connected
      */
     public IUndoContext getUndoContext() {
         if (isConnected()) {

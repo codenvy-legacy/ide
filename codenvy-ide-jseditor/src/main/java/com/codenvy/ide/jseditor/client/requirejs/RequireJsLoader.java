@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.requirejs;
 
-import javax.inject.Inject;
-
 import com.codenvy.ide.jseditor.client.requirejs.config.RequirejsConfig;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
@@ -22,9 +20,11 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.ScriptInjector;
 
+import javax.inject.Inject;
+
 /**
  * Loads javascript modules with requirejs.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class RequireJsLoader {
@@ -32,7 +32,7 @@ public class RequireJsLoader {
     private static boolean requirejsLoaded     = false;
     private static boolean requirejsLoadFailed = false;
 
-    private ModuleHolder   moduleHolder;
+    private ModuleHolder moduleHolder;
 
     @Inject
     public RequireJsLoader(final ModuleHolder moduleHolder) {

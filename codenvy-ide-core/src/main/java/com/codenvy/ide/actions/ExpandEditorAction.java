@@ -67,7 +67,7 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
 
         final SVGToggleButton svgToggleButton = new SVGToggleButton(presentation.getSVGIcon(), null);
         svgToggleButton.addFace(SVGButtonBase.SVGFaceName.DOWN, new SVGButtonBase.SVGFace(new SVGButtonBase.SVGFaceChange[]{
-            new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
+                new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
         svgToggleButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

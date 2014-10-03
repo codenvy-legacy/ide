@@ -19,7 +19,7 @@ public interface NativeKeyUpListener {
      * @param event
      *         the event for the key up
      * @return true if the event was handled, false to proceed with default
-     *         behavior
+     * behavior
      */
     boolean onNativeKeyUp(Event event);
 }

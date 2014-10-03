@@ -23,7 +23,7 @@
         }
 
         .textArea {
-            margin:auto;
+            margin: auto;
             background-color: #1F1F1F;
             border: medium ridge #6f7277;
             word-wrap: break-word;

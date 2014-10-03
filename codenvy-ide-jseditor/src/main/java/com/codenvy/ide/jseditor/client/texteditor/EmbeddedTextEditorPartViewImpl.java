@@ -11,6 +11,9 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
+import java.util.Collections;
+import java.util.List;
+
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
@@ -27,44 +30,49 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
-
-import java.util.Collections;
-import java.util.List;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Composite implements EmbeddedTextEditorPartView {
 
-    private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
+    private final static EditorViewUiBinder uibinder    = GWT.create(EditorViewUiBinder.class);
 
-    private final EditorWidgetFactory<T> editorWidgetFactory;
-    private final FileTypeIdentifier     fileTypeIdentifier;
+    private final EditorWidgetFactory<T>    editorWidgetFactory;
+    private final FileTypeIdentifier        fileTypeIdentifier;
 
     @UiField(provided = true)
-    InfoPanel infoPanel;
+    InfoPanel                               infoPanel;
 
     @UiField
-    SimpleLayoutPanel editorPanel;
+    SimplePanel                             editorPanel;
 
-    private T                      editor;
-    private CursorModelWithHandler cursorModel;
-    private EmbeddedDocument       embeddedDocument;
+    private T                               editor;
+    private CursorModelWithHandler          cursorModel;
+    private EmbeddedDocument                embeddedDocument;
 
-    private List<String> editorModes = null;
+    private List<String>                    editorModes = null;
 
-    private int     tabSize      = 3;
-    private boolean delayedFocus = false;
+    private int                             tabSize     = 3;
+    private boolean                         delayedFocus = false;
+
+    /** The editor handle for this editor view. */
+    private final EditorHandle handle = new EditorHandle() {
+        @Override
+        public EmbeddedTextEditorPartView getEditor() {
+            return EmbeddedTextEditorPartViewImpl.this;
+        }
+    };
 
     public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
                                           final FileTypeIdentifier fileTypeIdentifier,
                                           final InfoPanelFactory infoPanelFactory) {
         infoPanel = infoPanelFactory.create(this);
 
-        HTMLPanel panel = uibinder.createAndBindUi(this);
+        final HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
 
         this.editorWidgetFactory = editorWidgetFactory;
@@ -80,7 +88,7 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     @Override
     public void configure(final EmbeddedTextEditorConfiguration configuration, final FileNode file) {
         if (file != null) {
-            List<String> types = this.fileTypeIdentifier.identifyType(file);
+            final List<String> types = this.fileTypeIdentifier.identifyType(file);
             if (types != null && !types.isEmpty()) {
                 this.editorModes = types;
             }
@@ -187,8 +195,13 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     }
 
     @Override
+    public EditorHandle getEditorHandle() {
+        return handle;
+    }
+
+    @Override
     public void onResize() {
-        editorPanel.onResize();
+        this.editor.onResize();
     }
 
     @Override
@@ -198,10 +211,10 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
 
     /**
      * UI binder interface for this component.
-     * 
+     *
      * @author "Mickaël Leduque"
      */
-    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl< ? >> {
+    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl<?>> {
     }
 
     @Override

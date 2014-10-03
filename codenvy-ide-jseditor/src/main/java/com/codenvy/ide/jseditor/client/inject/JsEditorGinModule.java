@@ -10,38 +10,35 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.inject;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
-import com.codenvy.ide.jseditor.client.editortype.EditorTypeMappingImpl;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistryImpl;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.filetype.MultipleMethodFileIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
-import com.codenvy.ide.jseditor.client.preference.EditorTypePreferencePresenter;
-import com.codenvy.ide.jseditor.client.preference.EditorTypePreferenceView;
-import com.codenvy.ide.jseditor.client.preference.EditorTypePreferenceViewImpl;
+import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
+import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
+import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
 import com.codenvy.ide.jseditor.client.requirejs.ModuleHolder;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenterFactory;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
-import com.google.gwt.inject.client.multibindings.GinMultibinder;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 @ExtensionGinModule
 public class JsEditorGinModule extends AbstractGinModule {
@@ -50,24 +47,19 @@ public class JsEditorGinModule extends AbstractGinModule {
     protected void configure() {
         bind(ModuleHolder.class).in(Singleton.class);
 
-        // Bind the editor preference panel
-        GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
-        prefBinder.addBinding().to(EditorTypePreferencePresenter.class);
-        bind(EditorTypePreferenceView.class).to(EditorTypePreferenceViewImpl.class);
-
         // Bind the embedded text editor presenter factory
         install(new GinFactoryModuleBuilder().build(EmbeddedTextEditorPresenterFactory.class));
 
         // Bind the file type identifier
         bind(FileTypeIdentifier.class).to(MultipleMethodFileIdentifier.class);
 
-        // bind the default editor type key
-        bindConstant().annotatedWith(Names.named(JsEditorExtension.CLASSIC_EDITOR_TYPE_INJECT_NAME))
-                      .to(JsEditorExtension.CLASSIC_EDITOR_KEY);
-
-        // editor registration and selection
-        bind(EditorTypeMapping.class).to(EditorTypeMappingImpl.class).in(Singleton.class);
+        // editor registration
         bind(EditorTypeRegistry.class).to(EditorTypeRegistryImpl.class).in(Singleton.class);
+
+        // bind the components that read/write editor preferences
+        bind(EditorPreferenceReader.class);
+        bind(DefaultEditorTypePrefReader.class);
+        bind(KeymapPrefReader.class);
 
         // bind the document storage
         bind(DocumentStorage.class);

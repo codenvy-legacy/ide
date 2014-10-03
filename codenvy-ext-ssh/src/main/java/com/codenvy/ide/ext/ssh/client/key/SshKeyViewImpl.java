@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * The implementation of {@link SshKeyView}.
@@ -60,13 +60,13 @@ public class SshKeyViewImpl implements SshKeyView {
 
     /** {@inheritDoc} */
     @Override
-    public void setKey(@NotNull String value) {
+    public void setKey(@Nonnull String value) {
         keyWindow.setMessage(value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void addHostToTitle(@NotNull String host) {
+    public void addHostToTitle(@Nonnull String host) {
         keyWindow.setTitle(title + host);
     }
 

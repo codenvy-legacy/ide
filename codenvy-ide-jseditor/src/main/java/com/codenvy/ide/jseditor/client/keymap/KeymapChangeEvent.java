@@ -14,7 +14,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event type for change in keymap preference.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class KeymapChangeEvent extends GwtEvent<KeymapChangeHandler> {
@@ -22,15 +22,17 @@ public class KeymapChangeEvent extends GwtEvent<KeymapChangeHandler> {
     public static final Type<KeymapChangeHandler> TYPE = new Type<>();
 
     /** The key of the editor type. */
-    private final String                          editorTypeKey;
+    private final String editorTypeKey;
     /** The key of the new keymap. */
-    private final String                          keymapKey;
+    private final String keymapKey;
 
     /**
      * Creates a new keymap change event
-     * 
-     * @param editorTypeKey the editor type which had a keymap change
-     * @param keymapKey the new keymap
+     *
+     * @param editorTypeKey
+     *         the editor type which had a keymap change
+     * @param keymapKey
+     *         the new keymap
      */
     public KeymapChangeEvent(final String editorTypeKey, final String keymapKey) {
         this.editorTypeKey = editorTypeKey;
@@ -49,7 +51,7 @@ public class KeymapChangeEvent extends GwtEvent<KeymapChangeHandler> {
 
     /**
      * Returns the editor type.
-     * 
+     *
      * @return the editor type
      */
     public String getEditorTypeKey() {
@@ -58,7 +60,7 @@ public class KeymapChangeEvent extends GwtEvent<KeymapChangeHandler> {
 
     /**
      * Returns the keymap key.
-     * 
+     *
      * @return the keymap key
      */
     public String getKeymapKey() {

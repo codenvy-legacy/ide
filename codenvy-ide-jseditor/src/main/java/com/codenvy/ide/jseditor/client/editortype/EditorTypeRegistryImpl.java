@@ -10,18 +10,18 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editortype;
 
+import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
+import com.codenvy.ide.jseditor.client.util.PrintMap;
+import com.codenvy.ide.util.loging.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.codenvy.ide.jseditor.client.defaulteditor.EditorBuilder;
-import com.codenvy.ide.jseditor.client.util.PrintMap;
-import com.codenvy.ide.util.loging.Log;
-
 /**
  * Implementation for {@link EditorTypeRegistry}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class EditorTypeRegistryImpl implements EditorTypeRegistry {
@@ -65,7 +65,7 @@ public class EditorTypeRegistryImpl implements EditorTypeRegistry {
         } else {
             Log.warn(EditorTypeRegistryImpl.class,
                      "Editor type not found: " + editorType
-                         + " - available ones are " + PrintMap.printMap(this.editorTypes));
+                     + " - available ones are " + PrintMap.printMap(this.editorTypes));
             return null;
         }
     }

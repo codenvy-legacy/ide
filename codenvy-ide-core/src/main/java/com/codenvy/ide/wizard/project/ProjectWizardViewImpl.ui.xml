@@ -14,7 +14,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
-    <ui:with field='wizardResources' type='com.codenvy.ide.wizard.project.ProjectWizardResources'/>
+    <ui:with field='resources' type='com.codenvy.ide.Resources'/>
     <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.ProjectWizardViewImpl.Style">
         @eval bgTopPanel com.codenvy.ide.api.theme.Style.getConsolePanelColor();
         .project {
@@ -114,7 +114,7 @@
             float: left;
             display: block;
             font-size: 11px;
-            width:190px;
+            width: 190px;
             overflow: hidden;
         }
 
@@ -174,21 +174,24 @@
         <g:FlowPanel width="774px" height="470px" addStyleNames="{style.centerPanel}">
             <g:SimplePanel ui:field="wizardPanel" addStyleNames="{style.tab}"/>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}" height="40px" >
+        <g:FlowPanel addStyleNames="{style.topPanel} {style.grayColor}" height="40px">
             <g:FlowPanel addStyleNames="{style.labelPanelLeft}" height="40px" width="190px">
-                <g:Label ui:field="builderEnvConfText" text="Builder Environment Configuration :" addStyleNames="{style.infoText} {style.infoTextLine1}"/>
-                <g:Label ui:field="runnerEnvConfText" text="Runner Environment Configuration :" addStyleNames="{style.infoText} {style.infoTextLine2}"/>
+                <g:Label ui:field="builderEnvConfText" text="Builder Environment Configuration :"
+                         addStyleNames="{style.infoText} {style.infoTextLine1}"/>
+                <g:Label ui:field="runnerEnvConfText" text="Runner Environment Configuration :"
+                         addStyleNames="{style.infoText} {style.infoTextLine2}"/>
             </g:FlowPanel>
             <g:FlowPanel addStyleNames="{style.labelPanelRight}" height="40px" width="580px">
                 <g:Label ui:field="builderEnvConf" addStyleNames="{style.infoTextLine1}"/>
                 <g:Label ui:field="runnerEnvConf" addStyleNames="{style.infoTextLine2}"/>
             </g:FlowPanel>
         </g:FlowPanel>
-        <g:FlowPanel addStyleNames="{wizardResources.css.buttonPanel}">
-            <g:Button ui:field="saveButton" addStyleNames="{wizardResources.css.blueButton}" tabIndex="5" debugId="projectWizard-saveButton"/>
-            <g:Button ui:field="nextStepButton" text="Next" addStyleNames="{wizardResources.css.button}" tabIndex="6"
+        <g:FlowPanel addStyleNames="{resources.wizardCss.buttonPanel}">
+            <g:Button ui:field="saveButton" addStyleNames="{resources.wizardCss.blueButton}" tabIndex="5"
+                      debugId="projectWizard-saveButton"/>
+            <g:Button ui:field="nextStepButton" text="Next" addStyleNames="{resources.wizardCss.button}" tabIndex="6"
                       debugId="projectWizard-nextStepButton"/>
-            <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{wizardResources.css.button}" tabIndex="7"
+            <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{resources.wizardCss.button}" tabIndex="7"
                       debugId="projectWizard-previousStepButton"/>
             <g:FlowPanel ui:field="infoRAMPanel" addStyleNames="{style.hidden}">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">

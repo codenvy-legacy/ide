@@ -17,7 +17,7 @@ import com.google.gwt.resources.client.CssResource;
  * @author Evgen Vidolob
  */
 @CssResource.Shared
-public interface Styles extends CssResource{
+public interface Styles extends CssResource {
     String inputError();
 
     String inputField();

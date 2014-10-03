@@ -17,7 +17,6 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
 
 import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 

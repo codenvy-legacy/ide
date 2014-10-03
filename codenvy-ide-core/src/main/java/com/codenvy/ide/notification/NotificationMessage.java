@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.google.gwt.dom.client.Style.Unit.PX;
 
@@ -43,13 +43,13 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Required for delegating open and close functions in view. */
     public interface ActionDelegate {
         /** Performs some actions in response to a user's opening a notification */
-        void onOpenMessageClicked(@NotNull Notification notification);
+        void onOpenMessageClicked(@Nonnull Notification notification);
 
         /** Performs some actions in response to a user's closing a notification */
-        void onCloseMessageClicked(@NotNull Notification notification);
+        void onCloseMessageClicked(@Nonnull Notification notification);
 
         /** Performs some actions in response to a notification is closing */
-        void onClosingDialog(@NotNull NotificationMessage message);
+        void onClosingDialog(@Nonnull NotificationMessage message);
     }
 
     public static final int DEFAULT_TIME = 5000;
@@ -62,12 +62,12 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     private Notification    prevState;
     private ActionDelegate  delegate;
     private Resources       resources;
-    private Timer           hideTimer        = new Timer() {
-                                             @Override
-                                             public void run() {
-                                                 hide();
-                                             }
-                                         };
+    private Timer hideTimer = new Timer() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
 
     /**
      * Create notitfication message.
@@ -76,7 +76,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param notification
      * @param delegate
      */
-    public NotificationMessage(@NotNull Resources resources, @NotNull Notification notification, @NotNull ActionDelegate delegate) {
+    public NotificationMessage(@Nonnull Resources resources, @Nonnull Notification notification, @Nonnull ActionDelegate delegate) {
         super(false, false);
 
         this.notification = notification;
@@ -97,7 +97,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
                 NotificationMessage.this.delegate.onOpenMessageClicked(NotificationMessage.this.notification);
             }
         };
-        
+
         mainPanel.addDomHandler(handler, DoubleClickEvent.getType());
         addMouseHandlers();
 
@@ -105,9 +105,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         iconPanel.setStyleName(resources.notificationCss().notificationMessage());
         mainPanel.addWest(iconPanel, 25);
 
-        changeProgress();
-
-        changeType();
+        changeIcon();
 
         SVGImage closeIcon = new SVGImage(resources.closePopup());
         closeIcon.getElement().setAttribute("class", resources.notificationCss().closePopupIcon());
@@ -119,6 +117,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         });
         mainPanel.addEast(closeIcon, 38);
 
+        title = new HTML();
         changeMessage();
         title.setStyleName(resources.notificationCss().center());
         mainPanel.add(title);
@@ -138,18 +137,18 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
         });
     }
-    
-    private void addMouseHandlers(){
+
+    private void addMouseHandlers() {
         mainPanel.addDomHandler(new MouseOverHandler() {
-            
+
             @Override
             public void onMouseOver(MouseOverEvent event) {
                 hideTimer.cancel();
             }
         }, MouseOverEvent.getType());
-        
+
         mainPanel.addDomHandler(new MouseOutHandler() {
-            
+
             @Override
             public void onMouseOut(MouseOutEvent event) {
                 hideTimer.schedule(DEFAULT_TIME);
@@ -163,7 +162,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
      * @param icon
      *         icon that need to set
      */
-    private SVGImage changeImage(@NotNull SVGResource icon) {
+    private SVGImage changeImage(@Nonnull SVGResource icon) {
         SVGImage messageIcon = new SVGImage(icon);
         iconPanel.setWidget(messageIcon);
         return messageIcon;
@@ -175,14 +174,11 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
         if (!prevState.equals(notification)) {
             changeMessage();
 
-            changeProgress();
+            changeIcon();
 
             if (notification.isImportant()) {
                 show();
             }
-
-            changeType();
-
 
             prevState = notification.clone();
         }
@@ -191,20 +187,14 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Change message. */
     private void changeMessage() {
         //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
+        title.setHTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
     }
 
-    /** Change progress feedback when needed. */
-    private void changeProgress() {
-        if (!notification.isFinished()) {
-            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
-        } else {
-            hideTimer.schedule(DEFAULT_TIME);
-        }
-    }
-
-    /** Change item's content in response to change notification type. */
-    private void changeType() {
+    /**
+     * Change icon when needed (between progress one and warning/success/error ones). Also trigger timer if needed to auto-hide notification
+     * when it is finished.
+     */
+    private void changeIcon() {
         if (prevState != null) {
             if (prevState.isError()) {
                 mainPanel.removeStyleName(resources.notificationCss().error());
@@ -213,20 +203,26 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
             }
         }
 
-        if (notification.isWarning()) {
-            changeImage(resources.warning());
-            mainPanel.addStyleName(resources.notificationCss().warning());
-        } else if (notification.isError()) {
-            changeImage(resources.error());
-            mainPanel.addStyleName(resources.notificationCss().error());
+        if (!notification.isFinished()) {
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
         } else {
-            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
+            if (notification.isWarning()) {
+                changeImage(resources.warning());
+                mainPanel.addStyleName(resources.notificationCss().warning());
+            } else if (notification.isError()) {
+                changeImage(resources.error());
+                mainPanel.addStyleName(resources.notificationCss().error());
+            } else {
+                changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
+            }
+
+            hideTimer.schedule(DEFAULT_TIME);
         }
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p/>
      * <p>It also deal with important flag (disabling automatic hiding).</p>
      */
     @Override

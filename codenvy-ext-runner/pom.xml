@@ -11,7 +11,8 @@
       Codenvy, S.A. - initial API and implementation
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
@@ -33,6 +34,16 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api</groupId>
+            <artifactId>codenvy-api-core</artifactId>
+            <version>${codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.codenvy.platform-api</groupId>
             <artifactId>codenvy-api-project</artifactId>
             <version>${codenvy.platform-api.version}</version>
@@ -44,8 +55,18 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api</groupId>
-            <artifactId>codenvy-api-vfs</artifactId>
+            <artifactId>codenvy-api-user</artifactId>
             <version>${codenvy.platform-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-analytics-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-project-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
@@ -54,23 +75,34 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-runner-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-user-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax.validation.version}</version>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>${com.google.code.guice.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>${maven-model.version}</version>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>${com.google.gwt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -79,10 +111,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
-            <scope>test</scope>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${com.google.gwt.gin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${com.google.code.guice.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.vectomatic</groupId>
+            <artifactId>lib-gwt-svg</artifactId>
+            <version>${org.vectomatic.lib-gwt-svg.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
@@ -91,22 +135,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>${javax.validation.version}</version>
-            <classifier>sources</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>${org.javassist.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -28,7 +28,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.project.exists")
     String createProjectFromTemplateProjectExists(String projectName);
-    
+
     @Key("chooseTechnology")
     String chooseTechnology();
 
@@ -258,19 +258,19 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.warningTitle")
     String importProjectWarningTitle();
-    
+
     @Key("importProject.importer.info")
     String importProjectImporterInfo();
-    
+
     @Key("importProject.name.prompt")
     String importProjectNamePrompt();
-    
+
     @Key("importProject.description.prompt")
     String importProjectDescriptionPrompt();
-    
+
     @Key("import.project.error")
     String importProjectError();
-    
+
     /* Actions */
     @Key("action.newFolder.title")
     String actionNewFolderTitle();
@@ -396,4 +396,17 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("closeProject.askWindow.title")
     String closeProjectAskTitle();
+
+    /* Outline */
+    @Key("outline.button.title")
+    String outlineButtonTitle();
+
+    @Key("outline.titleBar.text")
+    String outlineTitleBarText();
+
+    @Key("outline.notAvailable.message")
+    String outlineNotAvailableMessage();
+
+    @Key("outline.noFileOpened.message")
+    String outlineNoFileOpenedMessage();
 }

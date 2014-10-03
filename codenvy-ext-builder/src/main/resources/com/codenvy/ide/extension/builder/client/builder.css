@@ -34,15 +34,19 @@ svg.partIcon {
 .inQueue {
     fill: mainFontColor;
 }
+
 .inProgress {
     fill: mainFontColor;
 }
+
 .done {
     fill: #56e33b;
 }
+
 .failed {
     fill: #ff3333;
 }
+
 .timeout {
     fill: #ffba00;
 }

@@ -12,8 +12,8 @@ package com.codenvy.ide.api.wizard;
 
 import com.google.gwt.resources.client.ImageResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.wizard.Wizard.UpdateDelegate;
 
@@ -55,13 +55,13 @@ public abstract class AbstractWizardPage implements WizardPage {
 
     /** {@inheritDoc} */
     @Override
-    public void setUpdateDelegate(@NotNull UpdateDelegate delegate) {
+    public void setUpdateDelegate(@Nonnull UpdateDelegate delegate) {
         this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setContext(@NotNull WizardContext wizardContext) {
+    public void setContext(@Nonnull WizardContext wizardContext) {
         this.wizardContext = wizardContext;
     }
 
@@ -85,7 +85,7 @@ public abstract class AbstractWizardPage implements WizardPage {
 
     /** {@inheritDoc} */
     @Override
-    public void commit(@NotNull CommitCallback callback) {
+    public void commit(@Nonnull CommitCallback callback) {
         callback.onSuccess();
     }
 }

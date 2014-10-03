@@ -8,584 +8,584 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-     /** All .xxx-error styles will programmatically get the squiggley style.
-     * However, we leave the stable class names here for unofficial third-party use.
-     */
-
-        /*
-         * c-like languages (C, CPP, Java) token types.
-         */
-    @external clike-keyword, clike-atom, clike-number, clike-def, clike-variable, clike-variable-2;
-    @external clike-property, clike-operator, clike-comment, clike-string, clike-meta, clike-error;
-    @external clike-builtin, clike-tag, clike-attribute;
-
-    .clike-keyword {
-        color: keyword;
-    }
-
-    .clike-atom {
-        color: atom;
-    }
-
-    .clike-number {
-        color: number;
-    }
-
-    .clike-def {
-        color: deff;
-    }
-
-    .clike-variable {
-        color: variable;
-    }
-
-    .clike-variable-2 {
-        color: variable2;
-    }
-
-    .clike-property {
-        color: property;
-    }
-
-    .clike-operator {
-        color: operator;
-    }
-
-    .clike-comment {
-        color: comment;
-    }
-
-    .clike-string {
-        color: string;
-    }
-
-    .clike-meta {
-        color: smeta;
-    }
-
-    .clike-error {
-        color: error;
-    }
-
-    .clike-builtin {
-        color: builtin;
-    }
-
-    .clike-tag {
-        color: tag;
-    }
-
-    .clike-attribute {
-        color: attribute;
-    }
-
-        /*
-         * CSS token types.
-         */
-    @external css-keyword, css-atom, css-number, css-def, css-variable, css-variable-2;
-    @external css-property, css-operator, css-comment, css-string, css-meta, css-error;
-    @external css-builtin, css-tag, css-attribute, css-string-2;
-
-    .css-keyword {
-        color: keyword;
-    }
-
-    .css-atom {
-        color: atom;
-    }
-
-    .css-number {
-        color: number;
-    }
-
-    .css-def {
-        color: deff;
-    }
-
-    .css-variable {
-        color: variable;
-    }
-
-    .css-variable-2 {
-        color: variable2;
-    }
-
-    .css-property {
-        color: property;
-    }
-
-    .css-operator {
-        color: operator;
-    }
-
-    .css-comment {
-        color: comment;
-    }
-
-    .css-string {
-        color: string;
-    }
-
-    .css-meta {
-        color: smeta;
-    }
-
-    .css-error {
-        color: error;
-    }
-
-    .css-builtin {
-        color: builtin;
-    }
-
-    .css-tag {
-        color: tag;
-    }
-
-    .css-attribute {
-        color: attribute;
-    }
-
-    .css-string-2{
-        color: string2;
-    }
-
-        /*
-         * Dart token types.
-         */
-    @external dart-keyword, dart-atom, dart-number, dart-def, dart-variable, dart-variable-2;
-    @external dart-property, dart-operator, dart-comment, dart-string, dart-meta, dart-error;
-    @external dart-builtin, dart-tag, dart-attribute;
-
-    .dart-keyword {
-        color: keyword;
-    }
-
-    .dart-atom {
-        color: atom;
-    }
-
-    .dart-number {
-        color: number;
-    }
-
-    .dart-def {
-        color: deff;
-    }
-
-    .dart-variable {
-        color: variable;
-    }
-
-    .dart-variable-2 {
-        color: variable2;
-    }
-
-    .dart-property {
-        color: property;
-    }
-
-    .dart-operator {
-        color: operator;
-    }
-
-    .dart-comment {
-        color: comment;
-    }
-
-    .dart-string {
-        color: string;
-    }
-
-    .dart-meta {
-        color: smeta;
-    }
-
-    .dart-error {
-    }
-
-    .dart-builtin {
-        color: builtin;
-    }
-
-    .dart-tag {
-        color: tag;
-    }
-
-    .dart-attribute {
-        color: attribute;
-    }
-
-        /*
-         * Go token types.
-         */
-    @external go-keyword, go-atom, go-number, go-def, go-variable, go-variable-2;
-    @external go-property, go-operator, go-comment, go-string, go-meta, go-error;
-    @external go-builtin, go-tag, go-attribute;
-
-    .go-keyword {
-        color: keyword;
-    }
-
-    .go-atom {
-        color: atom;
-    }
-
-    .go-number {
-        color: number;
-    }
-
-    .go-def {
-        color: deff;
-    }
-
-    .go-variable {
-        color: variable;
-    }
-
-    .go-variable-2 {
-        color: variable2;
-    }
-
-    .go-property {
-        color: property;
-    }
-
-    .go-operator {
-        color: operator;
-    }
-
-    .go-comment {
-        color: comment;
-    }
-
-    .go-string {
-        color: string;
-    }
-
-    .go-meta {
-        color: smeta;
-    }
-
-    .go-error {
-        color: error;
-    }
-
-    .go-builtin {
-        color: builtin;
-    }
-
-    .go-tag {
-        color: tag;
-    }
-
-    .go-attribute {
-        color: attribute;
-    }
-
-        /*
-         * HTML (= XML) token types.
-         */
-    @external html-atom, html-comment, html-string, html-meta, html-error, html-tag, html-attribute;
-
-    .html-atom {
-        color: atom;
-    }
-
-    .html-comment {
-        color: comment;
-    }
-
-    .html-string {
-        color: string;
-    }
-
-    .html-meta {
-        color: smeta;
-    }
-
-    .html-error {
-    }
-
-    .html-tag {
-        color: tag;
-    }
-
-    .html-attribute {
-        color: attribute;
-    }
-
-        /*
-         * JS token types.
-         */
-    @external javascript-keyword, javascript-atom, javascript-number, javascript-def;
-    @external javascript-variable, javascript-variable-2, javascript-property;
-    @external javascript-operator, javascript-comment, javascript-string, javascript-string-2;
-    @external javascript-meta, javascript-error, javascript-builtin;
-    @external javascript-tag, javascript-attribute;
-
-    .javascript-keyword {
-        color: keyword;
-    }
-
-    .javascript-atom {
-        color: atom;
-    }
-
-    .javascript-number {
-        color: number;
-    }
-
-    .javascript-def {
-        color: deff;
-    }
-
-    .javascript-variable {
-        color: variable;
-    }
-
-    .javascript-variable-2 {
-        color: variable2;
-    }
-
-    .javascript-property {
-        color: property;
-    }
-
-    .javascript-operator {
-        color: operator;
-    }
-
-    .javascript-comment {
-        color: comment;
-    }
-
-    .javascript-string {
-        color: string;
-    }
-
-    .javascript-string-2 {
-        color: string2;
-    }
-
-    .javascript-meta {
-        color: smeta;
-    }
-
-    .javascript-error {
-    }
-
-    .javascript-builtin {
-        color: builtin;
-    }
-
-    .javascript-tag {
-        color: tag;
-    }
-
-    .javascript-attribute {
-        color: attribute;
-    }
-
-        /*
-         * PHP token types.
-         */
-    @external php-keyword, php-atom, php-number, php-def, php-variable, php-variable-2;
-    @external php-property, php-operator, php-comment, php-string, php-meta, php-error;
-    @external php-builtin, php-tag, php-attribute;
-
-    .php-keyword {
-        color:keyword;
-    }
-
-    .php-atom {
-        color: atom;
-    }
-
-    .php-number {
-        color: number;
-    }
-
-    .php-def {
-        color: deff;
-    }
-
-    .php-variable {
-        color: variable;
-    }
-
-    .php-variable-2 {
-        color: variable2;
-    }
-
-    .php-property {
-        color: property;
-    }
-
-    .php-operator {
-        color: operator;
-    }
-
-    .php-comment {
-        color: comment;
-    }
-
-    .php-string {
-        color: string;
-    }
-
-    .php-meta {
-        color: smeta;
-    }
-
-    .php-error {
-        color: error;
-    }
-
-    .php-builtin {
-        color: builtin;
-    }
-
-    .php-tag {
-        color: tag;
-    }
-
-    .php-attribute {
-        color: attribute;
-    }
-
-        /*
-         * PY token types.
-         */
-    @external python-keyword, python-atom, python-number, python-def, python-variable;
-    @external python-property, python-operator, python-comment;
-    @external python-string, python-meta, python-error;
-    @external python-builtin, python-tag, python-attribute;
-
-    .python-keyword {
-        color: keyword;
-    }
-
-    .python-atom {
-        color: atom;
-    }
-
-    .python-number {
-        color: number;
-    }
-
-    .python-def {
-        color: deff;
-    }
-
-    .python-variable {
-        color: variable;
-    }
-
-    .python-property {
-        color: property;
-    }
-
-    .python-operator {
-        color: operator;
-    }
-
-    .python-comment {
-        color: comment;
-    }
-
-    .python-string {
-        color: string;
-    }
-
-    .python-meta {
-        color: smeta;
-    }
-
-    .python-error {
-    }
-
-    .python-builtin {
-        color: builtin;
-    }
-
-    .python-tag {
-        color: tag;
-    }
-
-    .python-attribute {
-        color: attribute;
-    }
-
-        /*
-         * YAML token types.
-         */
-    @external yaml-keyword, yaml-atom, yaml-number, yaml-def, yaml-variable-2, yaml-comment;
-    @external yaml-string, yaml-meta, yaml-error;
-
-    .yaml-keyword {
-        color: keyword;
-    }
-
-    .yaml-atom {
-        color: atom;
-    }
-
-    .yaml-number {
-        color: number;
-    }
-
-    .yaml-def {
-        color: deff;
-    }
-
-    .yaml-variable-2 {
-        color: variable2;
-    }
-
-    .yaml-comment {
-        color: comment;
-    }
-
-    .yaml-string {
-        color: string;
-    }
-
-    .yaml-meta {
-        color: smeta;
-    }
-
-    .yaml-error {
-    }
-
-        /*
-         * XML token types.
-         */
-    @external xml-atom, xml-comment, xml-meta, xml-error, xml-tag, xml-string, xml-attribute;
-
-    .xml-atom {
-        color: atom;
-    }
-
-    .xml-comment {
-        color: comment;
-    }
-
-    .xml-string {
-        color: string;
-    }
-
-    .xml-meta {
-        color: smeta;
-    }
-
-    .xml-error {
-    }
-
-    .xml-tag {
-        color: tag;
-    }
-
-    .xml-attribute {
-        color: attribute;
-    }
+/** All .xxx-error styles will programmatically get the squiggley style.
+* However, we leave the stable class names here for unofficial third-party use.
+*/
+
+/*
+ * c-like languages (C, CPP, Java) token types.
+ */
+@external clike-keyword, clike-atom, clike-number, clike-def, clike-variable, clike-variable-2;
+@external clike-property, clike-operator, clike-comment, clike-string, clike-meta, clike-error;
+@external clike-builtin, clike-tag, clike-attribute;
+
+.clike-keyword {
+    color: keyword;
+}
+
+.clike-atom {
+    color: atom;
+}
+
+.clike-number {
+    color: number;
+}
+
+.clike-def {
+    color: deff;
+}
+
+.clike-variable {
+    color: variable;
+}
+
+.clike-variable-2 {
+    color: variable2;
+}
+
+.clike-property {
+    color: property;
+}
+
+.clike-operator {
+    color: operator;
+}
+
+.clike-comment {
+    color: comment;
+}
+
+.clike-string {
+    color: string;
+}
+
+.clike-meta {
+    color: smeta;
+}
+
+.clike-error {
+    color: error;
+}
+
+.clike-builtin {
+    color: builtin;
+}
+
+.clike-tag {
+    color: tag;
+}
+
+.clike-attribute {
+    color: attribute;
+}
+
+/*
+ * CSS token types.
+ */
+@external css-keyword, css-atom, css-number, css-def, css-variable, css-variable-2;
+@external css-property, css-operator, css-comment, css-string, css-meta, css-error;
+@external css-builtin, css-tag, css-attribute, css-string-2;
+
+.css-keyword {
+    color: keyword;
+}
+
+.css-atom {
+    color: atom;
+}
+
+.css-number {
+    color: number;
+}
+
+.css-def {
+    color: deff;
+}
+
+.css-variable {
+    color: variable;
+}
+
+.css-variable-2 {
+    color: variable2;
+}
+
+.css-property {
+    color: property;
+}
+
+.css-operator {
+    color: operator;
+}
+
+.css-comment {
+    color: comment;
+}
+
+.css-string {
+    color: string;
+}
+
+.css-meta {
+    color: smeta;
+}
+
+.css-error {
+    color: error;
+}
+
+.css-builtin {
+    color: builtin;
+}
+
+.css-tag {
+    color: tag;
+}
+
+.css-attribute {
+    color: attribute;
+}
+
+.css-string-2 {
+    color: string2;
+}
+
+/*
+ * Dart token types.
+ */
+@external dart-keyword, dart-atom, dart-number, dart-def, dart-variable, dart-variable-2;
+@external dart-property, dart-operator, dart-comment, dart-string, dart-meta, dart-error;
+@external dart-builtin, dart-tag, dart-attribute;
+
+.dart-keyword {
+    color: keyword;
+}
+
+.dart-atom {
+    color: atom;
+}
+
+.dart-number {
+    color: number;
+}
+
+.dart-def {
+    color: deff;
+}
+
+.dart-variable {
+    color: variable;
+}
+
+.dart-variable-2 {
+    color: variable2;
+}
+
+.dart-property {
+    color: property;
+}
+
+.dart-operator {
+    color: operator;
+}
+
+.dart-comment {
+    color: comment;
+}
+
+.dart-string {
+    color: string;
+}
+
+.dart-meta {
+    color: smeta;
+}
+
+.dart-error {
+}
+
+.dart-builtin {
+    color: builtin;
+}
+
+.dart-tag {
+    color: tag;
+}
+
+.dart-attribute {
+    color: attribute;
+}
+
+/*
+ * Go token types.
+ */
+@external go-keyword, go-atom, go-number, go-def, go-variable, go-variable-2;
+@external go-property, go-operator, go-comment, go-string, go-meta, go-error;
+@external go-builtin, go-tag, go-attribute;
+
+.go-keyword {
+    color: keyword;
+}
+
+.go-atom {
+    color: atom;
+}
+
+.go-number {
+    color: number;
+}
+
+.go-def {
+    color: deff;
+}
+
+.go-variable {
+    color: variable;
+}
+
+.go-variable-2 {
+    color: variable2;
+}
+
+.go-property {
+    color: property;
+}
+
+.go-operator {
+    color: operator;
+}
+
+.go-comment {
+    color: comment;
+}
+
+.go-string {
+    color: string;
+}
+
+.go-meta {
+    color: smeta;
+}
+
+.go-error {
+    color: error;
+}
+
+.go-builtin {
+    color: builtin;
+}
+
+.go-tag {
+    color: tag;
+}
+
+.go-attribute {
+    color: attribute;
+}
+
+/*
+ * HTML (= XML) token types.
+ */
+@external html-atom, html-comment, html-string, html-meta, html-error, html-tag, html-attribute;
+
+.html-atom {
+    color: atom;
+}
+
+.html-comment {
+    color: comment;
+}
+
+.html-string {
+    color: string;
+}
+
+.html-meta {
+    color: smeta;
+}
+
+.html-error {
+}
+
+.html-tag {
+    color: tag;
+}
+
+.html-attribute {
+    color: attribute;
+}
+
+/*
+ * JS token types.
+ */
+@external javascript-keyword, javascript-atom, javascript-number, javascript-def;
+@external javascript-variable, javascript-variable-2, javascript-property;
+@external javascript-operator, javascript-comment, javascript-string, javascript-string-2;
+@external javascript-meta, javascript-error, javascript-builtin;
+@external javascript-tag, javascript-attribute;
+
+.javascript-keyword {
+    color: keyword;
+}
+
+.javascript-atom {
+    color: atom;
+}
+
+.javascript-number {
+    color: number;
+}
+
+.javascript-def {
+    color: deff;
+}
+
+.javascript-variable {
+    color: variable;
+}
+
+.javascript-variable-2 {
+    color: variable2;
+}
+
+.javascript-property {
+    color: property;
+}
+
+.javascript-operator {
+    color: operator;
+}
+
+.javascript-comment {
+    color: comment;
+}
+
+.javascript-string {
+    color: string;
+}
+
+.javascript-string-2 {
+    color: string2;
+}
+
+.javascript-meta {
+    color: smeta;
+}
+
+.javascript-error {
+}
+
+.javascript-builtin {
+    color: builtin;
+}
+
+.javascript-tag {
+    color: tag;
+}
+
+.javascript-attribute {
+    color: attribute;
+}
+
+/*
+ * PHP token types.
+ */
+@external php-keyword, php-atom, php-number, php-def, php-variable, php-variable-2;
+@external php-property, php-operator, php-comment, php-string, php-meta, php-error;
+@external php-builtin, php-tag, php-attribute;
+
+.php-keyword {
+    color: keyword;
+}
+
+.php-atom {
+    color: atom;
+}
+
+.php-number {
+    color: number;
+}
+
+.php-def {
+    color: deff;
+}
+
+.php-variable {
+    color: variable;
+}
+
+.php-variable-2 {
+    color: variable2;
+}
+
+.php-property {
+    color: property;
+}
+
+.php-operator {
+    color: operator;
+}
+
+.php-comment {
+    color: comment;
+}
+
+.php-string {
+    color: string;
+}
+
+.php-meta {
+    color: smeta;
+}
+
+.php-error {
+    color: error;
+}
+
+.php-builtin {
+    color: builtin;
+}
+
+.php-tag {
+    color: tag;
+}
+
+.php-attribute {
+    color: attribute;
+}
+
+/*
+ * PY token types.
+ */
+@external python-keyword, python-atom, python-number, python-def, python-variable;
+@external python-property, python-operator, python-comment;
+@external python-string, python-meta, python-error;
+@external python-builtin, python-tag, python-attribute;
+
+.python-keyword {
+    color: keyword;
+}
+
+.python-atom {
+    color: atom;
+}
+
+.python-number {
+    color: number;
+}
+
+.python-def {
+    color: deff;
+}
+
+.python-variable {
+    color: variable;
+}
+
+.python-property {
+    color: property;
+}
+
+.python-operator {
+    color: operator;
+}
+
+.python-comment {
+    color: comment;
+}
+
+.python-string {
+    color: string;
+}
+
+.python-meta {
+    color: smeta;
+}
+
+.python-error {
+}
+
+.python-builtin {
+    color: builtin;
+}
+
+.python-tag {
+    color: tag;
+}
+
+.python-attribute {
+    color: attribute;
+}
+
+/*
+ * YAML token types.
+ */
+@external yaml-keyword, yaml-atom, yaml-number, yaml-def, yaml-variable-2, yaml-comment;
+@external yaml-string, yaml-meta, yaml-error;
+
+.yaml-keyword {
+    color: keyword;
+}
+
+.yaml-atom {
+    color: atom;
+}
+
+.yaml-number {
+    color: number;
+}
+
+.yaml-def {
+    color: deff;
+}
+
+.yaml-variable-2 {
+    color: variable2;
+}
+
+.yaml-comment {
+    color: comment;
+}
+
+.yaml-string {
+    color: string;
+}
+
+.yaml-meta {
+    color: smeta;
+}
+
+.yaml-error {
+}
+
+/*
+ * XML token types.
+ */
+@external xml-atom, xml-comment, xml-meta, xml-error, xml-tag, xml-string, xml-attribute;
+
+.xml-atom {
+    color: atom;
+}
+
+.xml-comment {
+    color: comment;
+}
+
+.xml-string {
+    color: string;
+}
+
+.xml-meta {
+    color: smeta;
+}
+
+.xml-error {
+}
+
+.xml-tag {
+    color: tag;
+}
+
+.xml-attribute {
+    color: attribute;
+}

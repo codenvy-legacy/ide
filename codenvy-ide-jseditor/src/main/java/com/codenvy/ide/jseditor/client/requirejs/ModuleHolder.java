@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.requirejs;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 /**
  * A store of reference to javascript objects.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class ModuleHolder {

@@ -20,7 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -37,8 +37,8 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
 
     /** {@inheritDoc} */
     @Override
-    public void initialize(@NotNull TextEditorConfiguration configuration, @NotNull DocumentProvider documentProvider,
-                           @NotNull NotificationManager notificationManager) {
+    public void initialize(@Nonnull TextEditorConfiguration configuration, @Nonnull DocumentProvider documentProvider,
+                           @Nonnull NotificationManager notificationManager) {
         this.configuration = configuration;
         this.documentProvider = documentProvider;
         this.notificationManager = notificationManager;

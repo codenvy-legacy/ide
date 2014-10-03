@@ -14,8 +14,8 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.resources.client.ImageResource;
@@ -28,8 +28,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
 
@@ -108,7 +108,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
 
     /** {@inheritDoc} */
     @Override
-    public void showNotification(@NotNull Notification notification) {
+    public void showNotification(@Nonnull Notification notification) {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
             partStack.setActivePart(this);
@@ -128,7 +128,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
      * @param notification
      *         notification that need to remove
      */
-    public void removeNotification(@NotNull Notification notification) {
+    public void removeNotification(@Nonnull Notification notification) {
         notification.removeObserver(this);
         notifications.remove(notification);
         notificationContainer.removeNotification(notification);
@@ -138,13 +138,13 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenMessageClicked(@NotNull Notification notification) {
+    public void onOpenMessageClicked(@Nonnull Notification notification) {
         onOpenClicked(notification);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenItemClicked(@NotNull Notification notification) {
+    public void onOpenItemClicked(@Nonnull Notification notification) {
         onOpenClicked(notification);
     }
 
@@ -154,7 +154,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
      * @param notification
      *         notification that is opening
      */
-    private void onOpenClicked(@NotNull Notification notification) {
+    private void onOpenClicked(@Nonnull Notification notification) {
         notification.setState(READ);
 
         Notification.OpenNotificationHandler openHandler = notification.getOpenHandler();
@@ -167,14 +167,14 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseMessageClicked(@NotNull Notification notification) {
+    public void onCloseMessageClicked(@Nonnull Notification notification) {
         notification.setState(READ);
         onCloseClicked(notification);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseItemClicked(@NotNull Notification notification) {
+    public void onCloseItemClicked(@Nonnull Notification notification) {
         removeNotification(notification);
         onCloseClicked(notification);
     }
@@ -185,7 +185,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
      * @param notification
      *         notification that is closing
      */
-    private void onCloseClicked(@NotNull Notification notification) {
+    private void onCloseClicked(@Nonnull Notification notification) {
         Notification.CloseNotificationHandler closeHandler = notification.getCloseHandler();
         if (closeHandler != null) {
             closeHandler.onCloseClicked();

@@ -13,8 +13,8 @@ package com.codenvy.ide.api.wizard;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.resources.client.ImageResource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.wizard.Wizard.UpdateDelegate;
 
@@ -35,7 +35,7 @@ public interface WizardPage extends Presenter {
          * @param exception
          *         exception that happened
          */
-        void onFailure(@NotNull Throwable exception);
+        void onFailure(@Nonnull Throwable exception);
     }
 
     /**
@@ -43,7 +43,7 @@ public interface WizardPage extends Presenter {
      *
      * @param delegate
      */
-    void setUpdateDelegate(@NotNull UpdateDelegate delegate);
+    void setUpdateDelegate(@Nonnull UpdateDelegate delegate);
 
     /** @return wizard page caption */
     @Nullable
@@ -96,7 +96,7 @@ public interface WizardPage extends Presenter {
      *
      * @param callback
      */
-    void commit(@NotNull CommitCallback callback);
+    void commit(@Nonnull CommitCallback callback);
 
     /** Store options which can add the page. */
     void storeOptions();
@@ -109,5 +109,5 @@ public interface WizardPage extends Presenter {
      *
      * @param wizardContext
      */
-    void setContext(@NotNull WizardContext wizardContext);
+    void setContext(@Nonnull WizardContext wizardContext);
 }

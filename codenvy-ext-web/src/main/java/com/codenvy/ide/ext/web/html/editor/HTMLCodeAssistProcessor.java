@@ -14,6 +14,7 @@ import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
 
 /**
  * Marker interface for HTML.
+ *
  * @author Florent Benoit
  */
 public interface HTMLCodeAssistProcessor extends CodeAssistProcessor {

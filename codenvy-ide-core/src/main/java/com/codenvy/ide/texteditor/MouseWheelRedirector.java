@@ -14,10 +14,10 @@
 
 package com.codenvy.ide.texteditor;
 
+import elemental.dom.Element;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
-import elemental.dom.Element;
 
 import com.codenvy.ide.collections.Jso;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;

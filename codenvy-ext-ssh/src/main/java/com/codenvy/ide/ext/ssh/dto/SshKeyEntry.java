@@ -19,7 +19,7 @@ import com.codenvy.dto.shared.DTO;
  */
 @DTO
 public interface SshKeyEntry {
-        /**
+    /**
      * Identifier of SSH key, e.g. path to file where key stored, etc.
      *
      * @return identifier of key file

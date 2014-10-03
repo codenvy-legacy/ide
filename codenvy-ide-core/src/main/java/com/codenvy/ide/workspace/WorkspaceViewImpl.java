@@ -15,7 +15,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -40,18 +47,18 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
     @UiField
     DockLayoutPanel topMenuLayoutPanel;
     @UiField
-    FlowPanel updateExtensionPanel;
+    FlowPanel       updateExtensionPanel;
     @UiField
-    SimplePanel menuPanel;
+    SimplePanel     menuPanel;
 
     @UiField
     SimplePanel toolbarPanel, noToolbarPanel;
 
     @UiField
-    SimplePanel  actionsPanel, statusPanel;
+    SimplePanel actionsPanel, statusPanel;
 
     @UiField
-    Button      btnUpdate;
+    Button btnUpdate;
 
     ActionDelegate delegate;
 
@@ -65,7 +72,7 @@ public class WorkspaceViewImpl extends LayoutPanel implements WorkspaceView {
         ideMainDockPanel.setWidgetHidden(actionsPanel, true);
         ideMainDockPanel.setWidgetHidden(statusPanel, true);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget getMenuPanel() {

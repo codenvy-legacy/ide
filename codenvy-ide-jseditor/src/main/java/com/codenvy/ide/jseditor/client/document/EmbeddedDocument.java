@@ -16,58 +16,61 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
  * An abstraction over the editor representatin of the document.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedDocument {
 
     /**
      * Returns a line/character position for the given offset position.
-     * 
-     * @param index the position from the start in the document
+     *
+     * @param index
+     *         the position from the start in the document
      * @return the line/character position
      */
     TextPosition getPositionFromIndex(int index);
 
     /**
      * Get linear position in the editor from a line/character position.
-     * 
-     * @param position the line/character position
+     *
+     * @param position
+     *         the line/character position
      * @return the offset from the document start
      */
     int getIndexFromPosition(TextPosition position);
 
     /**
      * Changes the cursor position.
-     * 
-     * @param position the new position
+     *
+     * @param position
+     *         the new position
      */
     void setCursorPosition(TextPosition position);
 
     /**
      * Returns the curosr position in the editor.
-     * 
+     *
      * @return the cursor position
      */
     TextPosition getCursorPosition();
 
     /**
      * Returns the number of lines in the document.
-     * 
+     *
      * @return the number of lines
      */
     int getLineCount();
 
     /**
      * Returns the contents of the editor.
-     * 
+     *
      * @return the contents
      */
     String getContents();
 
     /**
      * A position in the text editor.
-     * 
+     *
      * @author "Mickaël Leduque"
      */
     public class TextPosition {
@@ -93,8 +96,9 @@ public interface EmbeddedDocument {
 
     /**
      * Adds a cursor handler.
-     * 
-     * @param handler the added handler
+     *
+     * @param handler
+     *         the added handler
      * @return a handle to remove the handler
      */
     HandlerRegistration addCursorHandler(CursorActivityHandler handler);

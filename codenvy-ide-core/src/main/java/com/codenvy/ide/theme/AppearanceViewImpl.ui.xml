@@ -14,12 +14,12 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
-        .main{
+        .main {
             margin: 5px;
         }
     </ui:style>
     <g:FlowPanel styleName="{style.main}">
-        <g:Label>Theme: </g:Label>
+        <g:Label>Theme:</g:Label>
         <g:ListBox ui:field="themeBox" visibleItemCount="1" debugId="window-preferences-appearance-themeBox"></g:ListBox>
     </g:FlowPanel>
 </ui:UiBinder>

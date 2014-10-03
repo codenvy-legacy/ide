@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * {@link FileTypeIdentifier} that chains multiples ways to try to recognize file types.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public class MultipleMethodFileIdentifier implements FileTypeIdentifier {

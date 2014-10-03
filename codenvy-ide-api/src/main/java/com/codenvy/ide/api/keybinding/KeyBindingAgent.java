@@ -13,8 +13,8 @@ package com.codenvy.ide.api.keybinding;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Public interface of the key binding management.
@@ -52,10 +52,10 @@ public interface KeyBindingAgent {
 
     /**
      * @return keyboard shortcut for the action with the specified <code>actionId</code>
-     *         or an null if the action doesn't have any keyboard shortcut.
+     * or an null if the action doesn't have any keyboard shortcut.
      */
     @Nullable
-    CharCodeWithModifiers getKeyBinding(@NotNull String actionId);
+    CharCodeWithModifiers getKeyBinding(@Nonnull String actionId);
 
 
 }

@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text.annotation;
 
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.BadPositionCategoryException;
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.DocumentEvent;
 import com.codenvy.ide.api.text.DocumentListener;
 import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;

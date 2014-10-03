@@ -67,7 +67,7 @@ public interface CodeAssistant {
      *         the type of the content for which this
      *         content assistant is to be requested
      * @return an instance code assist processor or
-     *         <code>null</code> if none exists for the specified content type
+     * <code>null</code> if none exists for the specified content type
      */
     CodeAssistProcessor getCodeAssistProcessor(String contentType);
 }

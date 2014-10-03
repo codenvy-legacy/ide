@@ -15,6 +15,7 @@ import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.DocumentCommand;
 import com.codenvy.ide.api.text.edits.DeleteEdit;
 import com.codenvy.ide.api.text.edits.InsertEdit;
+import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextChange;
@@ -22,7 +23,6 @@ import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
 import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
@@ -124,7 +124,7 @@ public class EditorTextStoreMutator implements TextStoreMutator {
             int lineOffset = document.getLineOffset(lineNumber);
             documentCommand.initialize(lineOffset + column, 0, text);
             editor.customizeDocumentCommand(documentCommand);
-            if(documentCommand.length != 0){
+            if (documentCommand.length != 0) {
                 DeleteEdit deleteEdit = new DeleteEdit(documentCommand.offset, documentCommand.length);
                 deleteEdit.apply(document);
             }

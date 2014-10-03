@@ -15,19 +15,19 @@
 package com.codenvy.ide.texteditor.codeassistant;
 
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Element;
 import elemental.dom.Node;
 import elemental.html.ClientRect;
-import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.api.texteditor.FocusManager;
+import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.api.texteditor.codeassistant.CompletionProposal;
 import com.codenvy.ide.ui.Popup;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
@@ -63,8 +63,8 @@ public class AutocompleteUiController implements AutocompleteBox {
                     TableCellElement icon = Elements.createTDElement(css.proposalIcon());
                     TableCellElement label = Elements.createTDElement(css.proposalLabel());
                     TableCellElement group = Elements.createTDElement(css.proposalGroup());
-                    if (itemData.getIcon() != null && itemData.getIcon().getSVGImage() != null){
-                        icon.appendChild((Node)itemData.getIcon().getSVGImage().getElement()); 
+                    if (itemData.getIcon() != null && itemData.getIcon().getSVGImage() != null) {
+                        icon.appendChild((Node)itemData.getIcon().getSVGImage().getElement());
                     } else if (itemData.getIcon() != null && itemData.getIcon().getImage() != null) {
                         icon.appendChild((Node)itemData.getIcon().getImage().getElement());
                     }
@@ -448,7 +448,7 @@ public class AutocompleteUiController implements AutocompleteBox {
         String proposalLabel();
 
         String proposalGroup();
-        
+
         String infoPopup();
 
         String container();

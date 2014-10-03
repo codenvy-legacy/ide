@@ -18,8 +18,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -38,13 +38,13 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
-    private NotificationManager                   notificationManager;
-    private String                                title;
-    private UpdateDelegate                        delegate;
-    private WizardContext                         wizardContext;
+    private   NotificationManager                   notificationManager;
+    private   String                                title;
+    private   UpdateDelegate                        delegate;
+    private   WizardContext                         wizardContext;
     protected Array<Provider<? extends WizardPage>> wizardPageProviders;
     protected Array<WizardPage>                     wizardPages;
-    private int                                   index;
+    private   int                                   index;
 
     /**
      * Create default wizard.
@@ -69,7 +69,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      * @param page
      *         page that need to add
      */
-    public void addPage(@NotNull Provider<? extends WizardPage> page) {
+    public void addPage(@Nonnull Provider<? extends WizardPage> page) {
         wizardPageProviders.add(page);
     }
 
@@ -84,7 +84,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
      *         <code>true</code> if one needs to replace a page with a given index, and <code>false</code> if a page needs to be inserted
      *         at a given position
      */
-    public void addPage(@NotNull Provider<? extends WizardPage> page, int index, boolean replace) {
+    public void addPage(@Nonnull Provider<? extends WizardPage> page, int index, boolean replace) {
         if (index >= wizardPageProviders.size()) {
             addPage(page);
             return;
@@ -108,16 +108,17 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     /**
      * Check if this wizard contains page.
      *
-     * @param page the page
+     * @param page
+     *         the page
      * @return the boolean
      */
-    public boolean containsPage(@NotNull Provider<? extends WizardPage> page) {
+    public boolean containsPage(@Nonnull Provider<? extends WizardPage> page) {
         return wizardPageProviders.contains(page);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setUpdateDelegate(@NotNull UpdateDelegate delegate) {
+    public void setUpdateDelegate(@Nonnull UpdateDelegate delegate) {
         this.delegate = delegate;
         for (WizardPage page : wizardPages.asIterable()) {
             page.setUpdateDelegate(delegate);
@@ -251,7 +252,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
 
     /** {@inheritDoc} */
     @Override
-    public void onFailure(@NotNull Throwable exception) {
+    public void onFailure(@Nonnull Throwable exception) {
         Notification notification = new Notification(exception.getMessage(), ERROR);
         notificationManager.showNotification(notification);
 

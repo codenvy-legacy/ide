@@ -60,7 +60,7 @@ public class WhitespaceRule implements Rule {
      * {@inheritDoc}
      *
      * @return {@link #fWhitespaceToken} if whitespace got detected, {@link TokenImpl#UNDEFINED}
-     *         otherwise
+     * otherwise
      */
     public Token evaluate(CharacterScanner scanner) {
         int c = scanner.read();

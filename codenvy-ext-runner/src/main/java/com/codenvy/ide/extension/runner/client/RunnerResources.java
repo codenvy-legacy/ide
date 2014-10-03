@@ -74,7 +74,7 @@ public interface RunnerResources extends ClientBundle {
 
         @ClassName("data-label")
         String dataLabel();
-        
+
         @ClassName("main-style")
         String mainStyle();
 

@@ -42,18 +42,18 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
-
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
 /**
  * Presenter for import project wizard dialog.
- * 
+ *
  * @author Ann Shumilova
  */
-public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate, ImportProjectWizardView.EnterPressedDelegate {
+public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate,
+                                                     ImportProjectWizardView.EnterPressedDelegate {
     private final ProjectServiceClient        projectService;
     private       RunnerServiceClient         runnerService;
     private final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
@@ -185,16 +185,17 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 notificationManager.showNotification(notification);
 
                 if (importedProject != null && (importedProject.getProjectTypeId() == null ||
-                    com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getProjectTypeId()))) {
+                                                com.codenvy.api.project.shared.Constants.BLANK_ID
+                                                        .equals(importedProject.getProjectTypeId()))) {
 
                     WizardContext context = new WizardContext();
-                    context.putData(ProjectWizard.PROJECT, importedProject);
+                    context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
                     newProjectWizardPresenter.show(context);
                 }
             }
 
             @Override
-            public void onFailure(@NotNull Throwable exception) {
+            public void onFailure(@Nonnull Throwable exception) {
                 Info info = new Info(exception.getMessage());
                 info.show();
             }
@@ -206,7 +207,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             protected void onSuccess(ProjectDescriptor result) {
                 // Project with the same name already exists
                 Info info =
-                            new Info(locale.createProjectWarningTitle(), locale.createProjectFromTemplateProjectExists(projectName));
+                        new Info(locale.createProjectWarningTitle(), locale.createProjectFromTemplateProjectExists(projectName));
                 info.show();
             }
 
@@ -227,11 +228,15 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Import project with the pointed importer, location.
-     * 
-     * @param importer project's importer
-     * @param url project's location
-     * @param projectName name of the project
-     * @param callback wizard callback
+     *
+     * @param importer
+     *         project's importer
+     * @param url
+     *         project's location
+     * @param projectName
+     *         name of the project
+     * @param callback
+     *         wizard callback
      */
     private void importProject(ProjectImporterDescriptor importer,
                                String url,
@@ -240,15 +245,15 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
         importedProject = null;
         ImportSourceDescriptor importSourceDescriptor =
-                                                        dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
-                                                                  .withLocation(url);
+                dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
+                          .withLocation(url);
 
         showProcessing(true);
         projectService.importProject(projectName,
                                      false,
                                      importSourceDescriptor,
                                      new AsyncRequestCallback<ProjectDescriptor>(
-                                                                                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
                                              importedProject = result;
@@ -262,9 +267,9 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                              String errorMessage;
                                              if (exception instanceof UnauthorizedException) {
                                                  ServiceError serverError =
-                                                                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
-                                                                                                                                           .getText(),
-                                                                                                         ServiceError.class);
+                                                         dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
+                                                                                                                        .getText(),
+                                                                                      ServiceError.class);
                                                  errorMessage = serverError.getMessage();
                                              } else {
                                                  Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
@@ -282,7 +287,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
         String defaultRunnerEnvironment = projectDescriptor.getDefaultRunnerEnvironment();
 
-        if (runEnvConfigurations != null && defaultRunnerEnvironment != null && runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
+        if (runEnvConfigurations != null && defaultRunnerEnvironment != null &&
+            runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
             RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
             requiredMemorySize = runEnvConfDescriptor.getRequiredMemorySize();
         }
@@ -339,9 +345,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Update project's description and visibility, if necessary.
-     * 
-     * @param project project to update
-     * @param callback wizard's callback
+     *
+     * @param project
+     *         project to update
+     * @param callback
+     *         wizard's callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
         final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
@@ -350,7 +358,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         projectService.updateProject(project.getPath(),
                                      project,
                                      new AsyncRequestCallback<ProjectDescriptor>(
-                                                                                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
+                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(ProjectDescriptor result) {
                                              showProcessing(false);
@@ -371,9 +379,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Switch the project's visibility (private/public).
-     * 
-     * @param callback wizard's callback
-     * @param project project on which to switch visibility
+     *
+     * @param callback
+     *         wizard's callback
+     * @param project
+     *         project on which to switch visibility
      */
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
@@ -396,7 +406,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Get the imported project.
-     * 
+     *
      * @param name
      * @param callback
      */
@@ -409,8 +419,9 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Delete folder by name.
-     * 
-     * @param name name of the folder to delete
+     *
+     * @param name
+     *         name of the folder to delete
      */
     private void deleteFolder(String name) {
         projectService.delete(name, new AsyncRequestCallback<Void>() {
@@ -426,10 +437,10 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     /**
      * Sets the wizard's current page.
-     * 
+     *
      * @param wizardPage
      */
-    private void setPage(@NotNull WizardPage wizardPage) {
+    private void setPage(@Nonnull WizardPage wizardPage) {
         currentPage = wizardPage;
         currentPage.setContext(wizardContext);
         updateControls();
@@ -448,10 +459,10 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             onImportClicked();
         }
     }
-    
+
     /**
      * Shown the state that the request is processing.
-     * 
+     *
      * @param inProgress
      */
     private void showProcessing(boolean inProgress) {

@@ -42,7 +42,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
@@ -131,7 +131,7 @@ public class EditorAgentImpl implements EditorAgent {
 
     /** {@inheritDoc} */
     @Override
-    public void openEditor(@NotNull final FileNode file) {
+    public void openEditor(@Nonnull final FileNode file) {
         if (openedEditors.containsKey(file.getPath())) {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {

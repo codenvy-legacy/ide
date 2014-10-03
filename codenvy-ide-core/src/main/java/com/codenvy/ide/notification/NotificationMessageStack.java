@@ -18,7 +18,7 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.validation.constraints.NotNull;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
          * @param notification
          *         notification that is tried opening
          */
-        void onOpenMessageClicked(@NotNull Notification notification);
+        void onOpenMessageClicked(@Nonnull Notification notification);
 
         /**
          * Performs some actions in response to a user's closing a notification.
@@ -45,7 +45,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
          * @param notification
          *         notification that is tried closing
          */
-        void onCloseMessageClicked(@NotNull Notification notification);
+        void onCloseMessageClicked(@Nonnull Notification notification);
     }
 
     public static final int POPUP_COUNT = 3;
@@ -67,7 +67,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
     }
 
     /** Sets the delegate for receiving events from this view. */
-    public void setDelegate(@NotNull ActionDelegate delegate) {
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
@@ -77,7 +77,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
      * @param notification
      *         notification that need to add
      */
-    public void addNotification(@NotNull Notification notification) {
+    public void addNotification(@Nonnull Notification notification) {
         NotificationMessage message = new NotificationMessage(resources, notification, this);
         notificationMessage.put(notification, message);
         messages.add(message);
@@ -103,20 +103,20 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
      * @param notification
      *         notification that need to remove
      */
-    public void removeNotification(@NotNull Notification notification) {
+    public void removeNotification(@Nonnull Notification notification) {
         NotificationMessage message = notificationMessage.remove(notification);
         message.hide();
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onOpenMessageClicked(@NotNull Notification notification) {
+    public void onOpenMessageClicked(@Nonnull Notification notification) {
         delegate.onOpenMessageClicked(notification);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseMessageClicked(@NotNull Notification notification) {
+    public void onCloseMessageClicked(@Nonnull Notification notification) {
         NotificationMessage message = notificationMessage.get(notification);
         message.hide();
         delegate.onCloseMessageClicked(notification);
@@ -124,13 +124,13 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
 
     /** {@inheritDoc} */
     @Override
-    public void onClosingDialog(@NotNull NotificationMessage message) {
+    public void onClosingDialog(@Nonnull NotificationMessage message) {
         messages.remove(message);
         showMessage();
     }
 
     public void clear() {
-        for(NotificationMessage notification : notificationMessage.values()) {
+        for (NotificationMessage notification : notificationMessage.values()) {
             notification.hide();
         }
         notificationMessage.clear();

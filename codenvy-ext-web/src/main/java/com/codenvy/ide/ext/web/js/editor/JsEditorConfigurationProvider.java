@@ -17,6 +17,7 @@ import java.util.Set;
 
 /**
  * Provider for HTML Editor configuration.
+ *
  * @author Florent Benoit
  */
 
@@ -34,6 +35,7 @@ public class JsEditorConfigurationProvider implements Provider<JsEditorConfigura
 
     /**
      * Build a new instance of JsEditor Configuration
+     *
      * @return
      */
     @Override

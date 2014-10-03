@@ -13,7 +13,7 @@ package com.codenvy.ide.api.texteditor;
 
 /**
  * Interface for editors which view is {@link HandlesTextOperations}.
- * 
+ *
  * @author "Mickaël Leduque"
  */
 public interface HasHandlesOperationsView {

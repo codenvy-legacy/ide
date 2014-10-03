@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
  */
 public abstract class Window implements IsWidget {
 
-    private static final Resources resources = GWT.create(Resources.class);
+    protected static final Resources resources = GWT.create(Resources.class);
 
     static {
         resources.centerPanelCss().ensureInjected();
@@ -67,7 +67,7 @@ public abstract class Window implements IsWidget {
 
     /**
      * ensureDebugId on the current window container. ensureDebugId id + "-headerLabel" on the window control bar title
-     * 
+     *
      * @see UIObject#ensureDebugId(String)
      */
     public void ensureDebugId(String id) {
@@ -130,6 +130,7 @@ public abstract class Window implements IsWidget {
         button.ensureDebugId(debugId);
         button.getElement().setId(debugId);
         button.addStyleName(resources.centerPanelCss().alignBtn());
+        button.addStyleName(resources.centerPanelCss().button());
         button.addClickHandler(clickHandler);
         return button;
     }
@@ -271,6 +272,12 @@ public abstract class Window implements IsWidget {
         String alignBtn();
 
         String crossButton();
+        
+        String blueButton();
+        
+        String button();
+        
+        String label();
     }
 
     /**

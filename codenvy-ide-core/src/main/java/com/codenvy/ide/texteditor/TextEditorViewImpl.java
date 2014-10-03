@@ -16,7 +16,28 @@ package com.codenvy.ide.texteditor;
 
 import elemental.dom.Element;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.api.text.DocumentCommand;
+import com.codenvy.ide.api.text.Position;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.RegionImpl;
+import com.codenvy.ide.api.text.TextUtilities;
+import com.codenvy.ide.api.text.annotation.AnnotationModel;
+import com.codenvy.ide.api.texteditor.AutoEditStrategy;
+import com.codenvy.ide.api.texteditor.ContentFormatter;
 import com.codenvy.ide.api.texteditor.FocusManager;
+import com.codenvy.ide.api.texteditor.KeyListener;
+import com.codenvy.ide.api.texteditor.NativeKeyUpListener;
+import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
+import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.api.texteditor.TextInputListener;
+import com.codenvy.ide.api.texteditor.UndoManager;
+import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.api.texteditor.parser.Parser;
+import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
+import com.codenvy.ide.api.texteditor.reconciler.Reconciler;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -25,34 +46,13 @@ import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.DocumentCommand;
 import com.codenvy.ide.text.DocumentImpl;
-import com.codenvy.ide.api.text.Position;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.text.RegionImpl;
-import com.codenvy.ide.api.text.TextUtilities;
-import com.codenvy.ide.api.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.api.texteditor.AutoEditStrategy;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
-import com.codenvy.ide.api.texteditor.ContentFormatter;
-import com.codenvy.ide.api.texteditor.KeyListener;
-import com.codenvy.ide.api.texteditor.NativeKeyUpListener;
-import com.codenvy.ide.api.texteditor.TextEditorConfiguration;
-import com.codenvy.ide.api.texteditor.TextEditorOperations;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
-import com.codenvy.ide.api.texteditor.TextInputListener;
 import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.api.texteditor.UndoManager;
-import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
-import com.codenvy.ide.api.texteditor.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
-import com.codenvy.ide.api.texteditor.quickassist.QuickAssistProcessor;
-import com.codenvy.ide.api.texteditor.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
 import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
@@ -782,7 +782,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         String lineWarning();
 
         String lineError();
-        
+
         String imageViewer();
 
         String withEditorInfo();
@@ -799,7 +799,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
         @Source("squiggle-warning.png")
         ImageResource squiggleWarning();
-        
+
         @Source("image-viewer-bg.png")
         ImageResource imageViewerBackground();
     }
@@ -820,8 +820,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         final         Css       css;
         final         Resources res;
         private final Element   bufferElement;
-        private Element rootElement;
-        private Element infoPanel;
+        private       Element   rootElement;
+        private       Element   infoPanel;
         private boolean infoPanelExist = false;
 
         private View(Resources res, Element bufferElement, Element inputElement, Element infoPanel) {
@@ -838,7 +838,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         }
 
         public void setInfoPanelExist(boolean infoPanelExist) {
-            if(this.infoPanelExist != infoPanelExist){
+            if (this.infoPanelExist != infoPanelExist) {
                 this.infoPanelExist = infoPanelExist;
                 if (infoPanelExist) {
                     Elements.addClassName(css.withEditorInfo(), rootElement);

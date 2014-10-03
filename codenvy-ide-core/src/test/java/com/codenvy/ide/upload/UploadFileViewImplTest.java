@@ -22,7 +22,6 @@ import com.googlecode.gwt.test.utils.events.Browser;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;

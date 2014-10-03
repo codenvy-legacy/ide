@@ -38,13 +38,13 @@ public interface LineRenderer {
      * Called when a line is about to be rendered.
      *
      * @return true if this LineRenderer wants to participate in the rendering of
-     *         this line
+     * this line
      */
     boolean resetToBeginningOfLine(Line line, int lineNumber);
 
     /**
      * @return true if last chunk (\n character) style should fill to right until
-     *         visible end of the editor line
+     * visible end of the editor line
      */
     boolean shouldLastChunkFillToRight();
 }
