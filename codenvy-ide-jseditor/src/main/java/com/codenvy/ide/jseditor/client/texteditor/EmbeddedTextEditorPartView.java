@@ -105,4 +105,19 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      */
     void setSelectedRegion(Region region, boolean show);
 
+    /**
+     * Display a message in the editor.
+     *
+     * @param message the message to display
+     */
+    void showMessage(String message);
+
+    /**
+     * Return the content type of the editor content.<br>
+     * Returns null if the type is not known yet.
+     *
+     * @return the content type
+     */
+    String getContentType();
+
 }

@@ -209,6 +209,20 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         this.editor.setSelectedRange(region, show);
     }
 
+    public void showMessage(final String message) {
+        this.editor.showMessage(message);
+    }
+
+    @Override
+    public String getContentType() {
+        // Before the editor content is ready (configure), the editorModes is not defined
+        if (this.editorModes == null || this.editorModes.isEmpty()) {
+            return null;
+        } else {
+            return this.editorModes.get(0);
+        }
+    }
+
     @Override
     public void onResize() {
         this.editor.onResize();
