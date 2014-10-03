@@ -12,6 +12,8 @@ package com.codenvy.ide.api.app;
 
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 
+import java.util.Map;
+
 /**
  * Describes current state of user.
  *
@@ -19,7 +21,8 @@ import com.codenvy.api.user.shared.dto.ProfileDescriptor;
  */
 public class CurrentUser {
 
-    private ProfileDescriptor profileDescriptor;
+    private ProfileDescriptor   profileDescriptor;
+    private Map<String, String> preferences;
 
     public CurrentUser() {
     }
@@ -56,4 +59,11 @@ public class CurrentUser {
         return true;
     }
 
+    public Map<String, String> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Map<String, String> preferences) {
+        this.preferences = preferences;
+    }
 }

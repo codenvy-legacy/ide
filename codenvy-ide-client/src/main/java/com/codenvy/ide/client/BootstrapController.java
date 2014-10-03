@@ -44,6 +44,7 @@ import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.StringMapUnmarshaller;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.UUID;
@@ -76,7 +77,6 @@ public class BootstrapController {
 
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
-    private final DtoFactory                    dtoFactory;
     private       AppContext                    appContext;
     private final ProjectTypeServiceClient      projectTypeDescriptionServiceClient;
     private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
@@ -124,7 +124,6 @@ public class BootstrapController {
         this.styleInjector = styleInjector;
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
-        this.dtoFactory = dtoFactory;
         this.appContext = appContext;
         this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
         this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
@@ -193,20 +192,14 @@ public class BootstrapController {
 
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
-        userProfileService.getCurrentProfile(null,
-                                             new AsyncRequestCallback<ProfileDescriptor>(
+        userProfileService.getCurrentProfile(new AsyncRequestCallback<ProfileDescriptor>(
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
                                                  protected void onSuccess(final ProfileDescriptor profile) {
                                                      appContext.setCurrentUser(new CurrentUser(profile));
-
-                                                     /**
-                                                      * Profile received, restore preferences and theme
-                                                      */
-                                                     preferencesManager.load(profile.getPreferences());
+                                                     loadPreferences();
                                                      setTheme();
                                                      styleInjector.inject();
-
                                                      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                                                          @Override
                                                          public void execute() {
@@ -224,6 +217,21 @@ public class BootstrapController {
                                             );
     }
 
+    private void loadPreferences() {
+        userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+            @Override
+            protected void onSuccess(Map<String, String> preferences) {
+                appContext.getCurrentUser().setPreferences(preferences);
+                preferencesManager.load(preferences);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, "Unable to load user preferences", exception);
+                initializationFailed("Unable to load preferences");
+            }
+        });
+    }
 
     /** Initialize Component Registry, start extensions */
     private void initializeComponentRegistry() {
@@ -409,8 +417,8 @@ public class BootstrapController {
 
     private static class AnalyticsSessions {
         private String id;
-        private long   startTime;
-        private long   lastRequestTime;
+        private long startTime;
+        private long lastRequestTime;
 
         private AnalyticsSessions() {
             makeNew();

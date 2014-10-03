@@ -195,22 +195,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.setCurrentRunnerStatus(RunnerStatus.IDLE);
             }
         });
-
-        eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
-            @Override
-            public void onWindowClosing(WindowActionEvent event) {
-                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                    event.setMessage(constant.appWillBeStopped(appContext.getCurrentProject().getProjectDescription().getName()));
-                }
-            }
-
-            @Override
-            public void onWindowClosed(WindowActionEvent event) {
-                if (!getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                    stopActiveProject(false);
-                }
-            }
-        });
     }
 
     @Override
@@ -354,7 +338,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                             if (runEnvConfigurations != null && projectDescriptor.getDefaultRunnerEnvironment() != null) {
                                 runEnvConfDescriptor = runEnvConfigurations.get(projectDescriptor.getDefaultRunnerEnvironment());
                             }
-                            Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
+                            Map<String, String> preferences = appContext.getCurrentUser().getPreferences();
                             if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
                                 try {
                                     overrideMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));

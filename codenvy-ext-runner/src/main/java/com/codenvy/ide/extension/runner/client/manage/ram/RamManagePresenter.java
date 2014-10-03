@@ -15,16 +15,17 @@ import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
-import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
-import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.StringMapUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.inject.Inject;
 import java.util.Map;
+
+import static com.codenvy.ide.extension.runner.client.RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT;
 
 /**
  * @author Vitaly Parfonov
@@ -32,8 +33,7 @@ import java.util.Map;
 public class RamManagePresenter extends AbstractPreferencesPagePresenter implements RamManagerView.ActionDelegate {
 
     private RunnerLocalizationConstant localizationConstant;
-    private RunnerResources            resources;
-    private UserProfileServiceClient   userProfileService;
+    private UserProfileServiceClient   profileService;
     private RamManagerView             view;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private AppContext                 appContext;
@@ -44,15 +44,13 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
      */
     @Inject
     public RamManagePresenter(RunnerLocalizationConstant localizationConstant,
-                              RunnerResources resources,
-                              UserProfileServiceClient userProfileService,
+                              UserProfileServiceClient profileService,
                               RamManagerView view,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
                               AppContext appContext) {
         super(localizationConstant.titlesRamManager(), null);
         this.localizationConstant = localizationConstant;
-        this.resources = resources;
-        this.userProfileService = userProfileService;
+        this.profileService = profileService;
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.appContext = appContext;
@@ -61,7 +59,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
 
     @Override
     public void doApply() {
-        save();
+        profileService.getPreferences(null, setRamCallback());
     }
 
     @Override
@@ -77,82 +75,73 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
 
     @Override
     public void validateRamSize(String value) {
-        if (value.isEmpty()) {
-            return;
-        }
-        try {
-            int ram = Integer.parseInt(value);
-            if (ram > 0 && ram % 128 == 0) {
-                setDirty(true);
-            } else {
-                view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
-                setDirty(false);
+        if (!value.isEmpty()) {
+            try {
+                final int ram = Integer.parseInt(value);
+                if (ram > 0 && ram % 128 == 0) {
+                    setDirty(true);
+                } else {
+                    view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
+                    setDirty(false);
+                }
+                delegate.onDirtyChanged();
+            } catch (NumberFormatException e) {
+                Log.error(RamManagePresenter.class, e.getMessage());
+                view.showWarnMessage(localizationConstant.enteredValueNotCorrect());
             }
-            delegate.onDirtyChanged();
-        } catch (NumberFormatException e) {
-            Log.error(RamManagePresenter.class, e.getMessage());
-            view.showWarnMessage(localizationConstant.enteredValueNotCorrect());
         }
     }
 
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-        userProfileService.getCurrentProfile(null, new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(
-                ProfileDescriptor.class)) {
-            @Override
-            protected void onSuccess(ProfileDescriptor result) {
-                Map<String, String> preferences = result.getPreferences();
+        profileService.getPreferences(null, showRamCallback());
+    }
 
-                if (preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
-                    String ram = preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT);
-                    view.showRam(ram);
+    private AsyncRequestCallback<Map<String, String>> showRamCallback() {
+        return new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+            @Override
+            protected void onSuccess(Map<String, String> preferences) {
+                if (preferences.containsKey(PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                    view.showRam(preferences.get(PREFS_RUNNER_RAM_SIZE_DEFAULT));
                 }
-
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(RamManagePresenter.class, exception);
             }
-        });
+        };
     }
 
+    private AsyncRequestCallback<Map<String, String>> setRamCallback() {
+        return new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+            @Override
+            protected void onSuccess(Map<String, String> preferences) {
+                preferences.put(PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
+                profileService.updateCurrentProfile(preferences, setProfileCallback());
+            }
 
-    private void save() {
-        userProfileService.getCurrentProfile(null, new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(
-                ProfileDescriptor.class)) {
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(RamManagePresenter.class, exception);
+            }
+        };
+    }
+
+    private AsyncRequestCallback<ProfileDescriptor> setProfileCallback() {
+        return new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
             @Override
             protected void onSuccess(ProfileDescriptor result) {
-                Map<String, String> preferences = result.getPreferences();
-                preferences.put(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
-
-                userProfileService
-                        .updatePreferences(preferences, new AsyncRequestCallback<ProfileDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(
-                                ProfileDescriptor.class)) {
-                            @Override
-                            protected void onSuccess(ProfileDescriptor result) {
-                                CurrentUser currentUser = appContext.getCurrentUser() == null ? new CurrentUser()
-                                                                                              : appContext.getCurrentUser();
-                                currentUser.setProfile(result);
-                                appContext.setCurrentUser(currentUser);
-                            }
-
-                            @Override
-                            protected void onFailure(Throwable exception) {
-
-                            }
-                        });
-
-
+                CurrentUser currentUser = appContext.getCurrentUser() == null ? new CurrentUser() : appContext.getCurrentUser();
+                currentUser.setProfile(result);
+                appContext.setCurrentUser(currentUser);
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(RamManagePresenter.class, exception);
             }
-        });
-
+        };
     }
-
 }

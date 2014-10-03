@@ -12,9 +12,9 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument.TextPosition;
 import com.codenvy.ide.jseditor.client.events.CursorActivityEvent;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
