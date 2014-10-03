@@ -170,6 +170,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             contentPanel.remove(contentPanel.getWidget(index));
         }
         setVisible(tabs.size() > 0);
+        processPanelSize();
     }
 
     /** {@inheritDoc} */
