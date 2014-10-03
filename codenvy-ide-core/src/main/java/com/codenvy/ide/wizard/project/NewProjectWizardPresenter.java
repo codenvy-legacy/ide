@@ -211,7 +211,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
 
-        if (project != null && projectName.equals(project.getName())) {
+        if (project != null) {
             checkRamAndUpdateProject(project, callback);
             return;
         }
@@ -229,6 +229,20 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 //Project with the same name does not exist
                 checkRamAndCreateProject(callback);
+            }
+        });
+    }
+
+    private void renameProject(final String newName, final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
+        projectService.rename(project.getPath(), newName, null, new AsyncRequestCallback<Void>() {
+            @Override
+            protected void onSuccess(Void result) {
+                getProject(newName, callback);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                callback.onFailure(exception);
             }
         });
     }
@@ -311,7 +325,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-        final boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+
 
         ProjectDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT);
         ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
@@ -323,12 +337,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                view.setLoaderVisibled(false);
-                if (project.getVisibility().equals(visibility)) {
-                    getProject(project.getName(), callback);
-                } else {
-                    switchVisibility(callback, result);
-                }
+                checkVisibility(result, callback);
             }
 
             @Override
@@ -337,6 +346,26 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 callback.onFailure(exception);
             }
         });
+    }
+
+    private void checkVisibility(ProjectDescriptor result,
+                                 WizardPage.CommitCallback callback) {
+        String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
+        view.setLoaderVisibled(false);
+        if (result.getVisibility().equals(visibility)) {
+            checkName(result, callback);
+        } else {
+            switchVisibility(callback, result);
+        }
+    }
+
+    private void checkName(ProjectDescriptor result, WizardPage.CommitCallback callback) {
+        String newName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        if (!result.getName().equals(newName)) {
+            renameProject(newName, result, callback);
+        } else {
+            getProject(newName, callback);
+        }
     }
 
     /**
@@ -432,7 +461,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onSuccess(Void result) {
-                getProject(project.getName(), callback);
+                checkName(project, callback);
             }
 
             @Override

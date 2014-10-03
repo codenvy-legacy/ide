@@ -195,22 +195,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.setCurrentRunnerStatus(RunnerStatus.IDLE);
             }
         });
-
-        eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
-            @Override
-            public void onWindowClosing(WindowActionEvent event) {
-                if (isAnyAppRunning() && !getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                    event.setMessage(constant.appWillBeStopped(appContext.getCurrentProject().getProjectDescription().getName()));
-                }
-            }
-
-            @Override
-            public void onWindowClosed(WindowActionEvent event) {
-                if (!getRunnerMetric(RunnerMetric.TERMINATION_TIME).getValue().equals(RunnerMetric.ALWAYS_ON)) {
-                    stopActiveProject(false);
-                }
-            }
-        });
     }
 
     @Override
