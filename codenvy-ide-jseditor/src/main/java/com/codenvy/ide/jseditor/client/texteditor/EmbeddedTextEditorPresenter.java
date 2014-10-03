@@ -214,7 +214,16 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public void doSave() {
-        doSave(null);
+        doSave(new AsyncCallback<EditorInput>() {
+            @Override
+            public void onSuccess(final EditorInput result) {
+                // do nothing
+            }
+            @Override
+            public void onFailure(final Throwable caught) {
+                // do nothing
+            }
+        });
     }
 
     @Override
