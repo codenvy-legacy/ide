@@ -14,6 +14,7 @@ import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import java.util.Map;
 
 /**
  * Describes current state of application.
@@ -23,11 +24,10 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class AppContext {
+
     private WorkspaceDescriptor workspace;
-
-    private CurrentProject currentProject;
-
-    private CurrentUser currentUser;
+    private CurrentProject      currentProject;
+    private CurrentUser         currentUser;
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;

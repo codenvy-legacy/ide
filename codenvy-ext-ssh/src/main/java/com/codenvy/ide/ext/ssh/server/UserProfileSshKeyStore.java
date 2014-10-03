@@ -12,9 +12,8 @@ package com.codenvy.ide.ext.ssh.server;
 
 import com.codenvy.api.core.NotFoundException;
 import com.codenvy.api.core.ServerException;
-import com.codenvy.api.user.server.dao.Profile;
+import com.codenvy.api.user.server.dao.PreferenceDao;
 import com.codenvy.api.user.server.dao.UserDao;
-import com.codenvy.api.user.server.dao.UserProfileDao;
 import com.codenvy.api.user.server.dao.User;
 import com.codenvy.commons.env.EnvironmentContext;
 import com.jcraft.jsch.JSch;
@@ -39,31 +38,28 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     /** Prefix for attribute of user profile that store public SSH key. */
     private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX  = KEY_ATTRIBUTE_PREFIX + "public.";
 
-    private final JSch           genJsch;
-    private final UserProfileDao profileDao;
-    private final UserDao        userDao;
+    private final JSch          genJsch;
+    private final UserDao       userDao;
+    private final PreferenceDao preferenceDao;
 
     @Inject
-    public UserProfileSshKeyStore(UserProfileDao profileDao, UserDao userDao) {
+    public UserProfileSshKeyStore(PreferenceDao preferenceDao, UserDao userDao) {
         this.genJsch = new JSch();
-        this.profileDao = profileDao;
         this.userDao = userDao;
+        this.preferenceDao = preferenceDao;
     }
 
     @Override
     public void addPrivateKey(String host, byte[] key) throws SshKeyStoreException {
         User user = getUser(getUserId());
-        Profile profile;
         try {
-            profile = profileDao.getById(user.getId());
-
             final String sshKeyAttributeName = sshKeyAttributeName(host, PRIVATE);
-
-            if (profile.getPreferences().get(sshKeyAttributeName) != null) {
+            final Map<String, String> preferences = preferenceDao.getPreferences(user.getId());
+            if (preferences.get(sshKeyAttributeName) != null) {
                 throw new SshKeyStoreException(String.format("Private key for host: '%s' already exists. ", host));
             }
-            profile.getPreferences().put(sshKeyAttributeName, new String(key));
-            profileDao.update(profile);
+            preferences.put(sshKeyAttributeName, new String(key));
+            preferenceDao.setPreferences(user.getId(), preferences);
         } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to add private key for host '%s'.", host));
         }
@@ -81,20 +77,20 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
     private SshKey getKey(String host, int i) throws SshKeyStoreException {
         User user = getUser(getUserId());
-        Profile profile;
+        Map<String, String> preferences;
         try {
-            profile = profileDao.getById(user.getId());
-        } catch (NotFoundException | ServerException e) {
+            preferences = preferenceDao.getPreferences(user.getId());
+        } catch (ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to get key for host '%s'.", host));
         }
 
         String keyIdentifier = sshKeyAttributeName(host, i);
-        String keyAsString = profile.getPreferences().get(keyIdentifier);
+        String keyAsString = preferences.get(keyIdentifier);
         if (keyAsString == null) {
             // Try to find key for parent domain. This is required for openshift integration but may be useful for others also.
             final String attributePrefix = i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX;
-            for (Iterator<Map.Entry<String, String>> iterator = profile.getPreferences().entrySet().iterator(); iterator.hasNext()
-                                                                                                                && keyAsString == null; ) {
+            for (Iterator<Map.Entry<String, String>> iterator = preferences.entrySet().iterator(); iterator.hasNext()
+                                                                                                   && keyAsString == null; ) {
                 Map.Entry<String, String> entry = iterator.next();
                 String attributeName = entry.getKey();
                 if (attributeName.startsWith(attributePrefix)) {
@@ -119,20 +115,18 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     @Override
     public SshKeyPair genKeyPair(String host, String comment, String passPhrase, String keyMail) throws SshKeyStoreException {
         User user = getUser(EnvironmentContext.getCurrent().getUser().getName());
-        Profile profile;
         try {
-            profile = profileDao.getById(user.getId());
-
+            Map<String, String> preferences = preferenceDao.getPreferences(user.getId());
             if (keyMail == null) {
                 keyMail = user.getEmail() != null ? user.getEmail() : user.getId();
             }
             final String sshPrivateKeyAttributeName = sshKeyAttributeName(host, PRIVATE);
             final String sshPublicKeyAttributeName = sshKeyAttributeName(host, PUBLIC);
             // Be sure keys are not created yet.
-            if (profile.getPreferences().get(sshPrivateKeyAttributeName) != null) {
+            if (preferences.get(sshPrivateKeyAttributeName) != null) {
                 throw new SshKeyStoreException(String.format("Private key for host: '%s' already exists. ", host));
             }
-            if (profile.getPreferences().get(sshPublicKeyAttributeName) != null) {
+            if (preferences.get(sshPublicKeyAttributeName) != null) {
                 throw new SshKeyStoreException(String.format("Public key for host: '%s' already exists. ", host));
             }
             // Gen key pair.
@@ -150,16 +144,16 @@ public class UserProfileSshKeyStore implements SshKeyStore {
 
             keyPair.writePrivateKey(buff);
             privateKey = new SshKey(sshPrivateKeyAttributeName, buff.toByteArray());
-            profile.getPreferences().put(sshPrivateKeyAttributeName, new String(buff.toByteArray()));
+            preferences.put(sshPrivateKeyAttributeName, new String(buff.toByteArray()));
 
             buff.reset();
 
             keyPair.writePublicKey(buff,
                                    comment != null ? comment : (keyMail.indexOf('@') > 0 ? keyMail : (keyMail + "@ide.codenvy.local")));
             publicKey = new SshKey(sshPublicKeyAttributeName, buff.toByteArray());
-            profile.getPreferences().put(sshPublicKeyAttributeName, new String(buff.toByteArray()));
+            preferences.put(sshPublicKeyAttributeName, new String(buff.toByteArray()));
 
-            profileDao.update(profile);
+            preferenceDao.setPreferences(user.getId(), preferences);
 
             return new SshKeyPair(publicKey, privateKey);
         } catch (NotFoundException | ServerException e) {
@@ -170,12 +164,11 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     @Override
     public void removeKeys(String host) throws SshKeyStoreException {
         User user = getUser(getUserId());
-        Profile profile;
         try {
-            profile = profileDao.getById(user.getId());
-            profile.getPreferences().remove(sshKeyAttributeName(host, PRIVATE));
-            profile.getPreferences().remove(sshKeyAttributeName(host, PUBLIC));
-            profileDao.update(profile);
+            Map<String, String> preferences = preferenceDao.getPreferences(user.getId());
+            preferences.remove(sshKeyAttributeName(host, PRIVATE));
+            preferences.remove(sshKeyAttributeName(host, PUBLIC));
+            preferenceDao.setPreferences(user.getId(), preferences);
         } catch (NotFoundException | ServerException e) {
             throw new SshKeyStoreException(String.format("Failed to remove keys for host '%s'.", host));
         }
@@ -184,17 +177,17 @@ public class UserProfileSshKeyStore implements SshKeyStore {
     @Override
     public Set<String> getAll() throws SshKeyStoreException {
         User user = getUser(getUserId());
-        Profile profile;
+        Map<String, String> preferences;
         try {
-            profile = profileDao.getById(user.getId());
-        } catch (NotFoundException | ServerException e) {
+            preferences = preferenceDao.getPreferences(user.getId());
+        } catch (ServerException e) {
             throw new SshKeyStoreException("Failed to get all keys.");
         }
 
 
         final Set<String> keys = new HashSet<String>();
         // Check only for private keys.
-        for (String str : profile.getPreferences().keySet()) {
+        for (String str : preferences.keySet()) {
             if (str.startsWith(PRIVATE_KEY_ATTRIBUTE_PREFIX)) {
                 keys.add(str.substring(PRIVATE_KEY_ATTRIBUTE_PREFIX.length()));
             }

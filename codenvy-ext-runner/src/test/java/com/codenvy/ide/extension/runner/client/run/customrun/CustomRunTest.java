@@ -88,7 +88,6 @@ public class CustomRunTest extends BaseTest {
         when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
-        when(profileDescriptor.getPreferences()).thenReturn(null);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");
 

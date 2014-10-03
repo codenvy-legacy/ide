@@ -183,7 +183,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 if (defaultRunnerMemory <= 0) {
                     //the value of memory from runnerEnvironmentConfigurationDescriptor <= 0
                     //trying to get the value of memory from user preferences
-                    Map<String, String> preferences = appContext.getCurrentUser().getProfile().getPreferences();
+                    Map<String, String> preferences = appContext.getCurrentUser().getPreferences();
                     if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
                         try {
                             defaultRunnerMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
