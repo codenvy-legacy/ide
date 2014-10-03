@@ -32,6 +32,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.builder.client.BuilderExtension;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.ask.Ask;
@@ -151,7 +152,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
-                            Log.error(getClass(), caught.getMessage());
+                            Log.error(getClass(), JsonHelper.parsingJsonMessage(caught.getMessage()));
                         }
 
                         @Override
@@ -220,7 +221,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
                               console.setCurrentBuilderStatus(BuilderStatus.FAILED);
-                              console.print(exception.getMessage());
+                              console.print(JsonHelper.parsingJsonMessage(exception.getMessage()));
                               buildContext.setBuilding(false);
                           }
                       }

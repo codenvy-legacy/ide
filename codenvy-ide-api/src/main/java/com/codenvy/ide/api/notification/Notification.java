@@ -12,6 +12,7 @@ package com.codenvy.ide.api.notification;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.json.JsonHelper;
 
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
@@ -481,6 +482,9 @@ public final class Notification {
     /** @return notification's message */
     @Nonnull
     public String getMessage() {
+        if (type == Type.ERROR) {
+            return JsonHelper.parsingJsonMessage(message);
+        }
         return message;
     }
 
@@ -653,8 +657,6 @@ public final class Notification {
         result = 31 * result + (observers != null ? observers.hashCode() : 0);
         return result;
     }
-
-
 
 
     /**
