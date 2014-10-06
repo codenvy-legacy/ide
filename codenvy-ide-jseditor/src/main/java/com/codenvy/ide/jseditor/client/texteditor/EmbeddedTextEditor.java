@@ -13,11 +13,12 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.api.texteditor.outline.HasOutline;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 
 import javax.annotation.Nonnull;
 
-public interface EmbeddedTextEditor extends EditorPartPresenter {
+public interface EmbeddedTextEditor extends EditorPartPresenter, HasOutline {
 
     /**
      * Initializes this editor with the configuration and document provider/
@@ -27,7 +28,8 @@ public interface EmbeddedTextEditor extends EditorPartPresenter {
      * @param notificationManager
      *         the manager that provides showing notifications
      */
-    void initialize(@Nonnull EmbeddedTextEditorConfiguration configuration,
+
+    void initialize(@Nonnull TextEditorConfiguration configuration,
                     @Nonnull NotificationManager notificationManager);
 
     /**
@@ -38,7 +40,7 @@ public interface EmbeddedTextEditor extends EditorPartPresenter {
     /**
      * @return the text editor configuration
      */
-    EmbeddedTextEditorConfiguration getConfiguration();
+    TextEditorConfiguration getConfiguration();
 
     /**
      * Closes this text editor after optionally saving changes.

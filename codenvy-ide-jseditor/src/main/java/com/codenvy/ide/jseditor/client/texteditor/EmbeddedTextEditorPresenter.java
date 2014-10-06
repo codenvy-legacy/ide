@@ -23,10 +23,12 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -46,40 +48,52 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Presenter part for the embedded variety of editor implementations.
- *
- * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
-                                                                                    UndoableEditor {
+                                                                                    UndoableEditor,
+                                                                                    Delegate {
+
+    /** File type used when we have no idea of the actual content type. */
+    public final static String DEFAULT_CONTENT_TYPE = "text/plain";
 
     private final Resources                     resources;
     private final WorkspaceAgent                workspaceAgent;
     private final EmbeddedTextEditorViewFactory textEditorViewFactory;
 
     private final DocumentStorage documentStorage;
-
-    private EmbeddedTextEditorConfiguration configuration;
+    private final EventBus                      generalEventBus;
+    private final CodeAssistantFactory          codeAssistantFactory;
+    
+    private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
     private EmbeddedTextEditorPartView      editor;
     private OutlineImpl                     outline;
+
+    /** The editor's error state. */
+    private EditorState errorState;
 
     @AssistedInject
     public EmbeddedTextEditorPresenter(final Resources resources,
                                        final WorkspaceAgent workspaceAgent,
                                        final EventBus eventBus,
                                        final DocumentStorage documentStorage,
+                                       final CodeAssistantFactory codeAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory) {
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
+        this.codeAssistantFactory = codeAssistantFactory;
 
+        this.generalEventBus = eventBus;
         eventBus.addHandler(FileEvent.TYPE, this);
     }
 
     @Override
     protected void initializeEditor() {
         editor.configure(getConfiguration(), getEditorInput().getFile());
+        new TextEditorInit(configuration, generalEventBus,
+                           this.editor.getEditorHandle(), this.codeAssistantFactory).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
@@ -173,23 +187,24 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
             return;
         }
 
-        FileNode eventFile = event.getFile();
-        FileNode file = input.getFile();
+        final FileNode eventFile = event.getFile();
+        final FileNode file = input.getFile();
         if (file.equals(eventFile)) {
             workspaceAgent.removePart(this);
         }
     }
 
     @Override
-    public void initialize(@Nonnull EmbeddedTextEditorConfiguration configuration,
-                           @Nonnull NotificationManager notificationManager) {
+    public void initialize(@Nonnull final TextEditorConfiguration configuration,
+                           @Nonnull final NotificationManager notificationManager) {
         this.configuration = configuration;
         this.notificationManager = notificationManager;
         this.editor = this.textEditorViewFactory.createTextEditorPartView();
+        this.editor.setDelegate(this);
     }
 
     @Override
-    public EmbeddedTextEditorConfiguration getConfiguration() {
+    public TextEditorConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -268,5 +283,16 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         } else {
             return null;
         }
+    }
+
+    @Override
+    public EditorState getErrorState() {
+        return this.errorState;
+    }
+
+    @Override
+    public void setErrorState(final EditorState errorState) {
+        this.errorState = errorState;
+        firePropertyChange(ERROR_STATE);
     }
 }

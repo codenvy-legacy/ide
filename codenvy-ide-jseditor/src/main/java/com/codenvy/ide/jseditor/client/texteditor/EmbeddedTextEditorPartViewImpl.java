@@ -16,11 +16,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
+import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
@@ -33,15 +38,18 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
  * 
  * @author "Mickaël Leduque"
  */
-public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
+public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView,
+                                                                         EditorWithErrors {
 
     private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
+    private final EventBus generalEventBus;
 
     private final FileTypeIdentifier fileTypeIdentifier;
 
@@ -56,10 +64,14 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private CursorModelWithHandler cursorModel;
     private EmbeddedDocument embeddedDocument;
 
+    /** The view delegate. */
+    private Delegate delegate;
+
     private List<String> editorModes = null;
 
     private int tabSize = 3;
     private boolean delayedFocus = false;
+	private boolean codeAssistEnabled = false;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -71,23 +83,24 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Inject
     public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
-                                          final InfoPanelFactory infoPanelFactory) {
-        infoPanel = infoPanelFactory.create(this);
+                                          final InfoPanelFactory infoPanelFactory,
+                                          final EventBus generalEventBus) {
+        this.infoPanel = infoPanelFactory.create(this);
 
         final HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
 
         this.fileTypeIdentifier = fileTypeIdentifier;
-
+        this.generalEventBus = generalEventBus;
     }
 
     @Override
-    public void configure(final EmbeddedTextEditorConfiguration configuration) {
+    public void configure(final TextEditorConfiguration configuration) {
         configure(configuration, null);
     }
 
     @Override
-    public void configure(final EmbeddedTextEditorConfiguration configuration, final FileNode file) {
+    public void configure(final TextEditorConfiguration configuration, final FileNode file) {
         if (file != null) {
             final List<String> types = this.fileTypeIdentifier.identifyType(file);
             if (types != null && !types.isEmpty()) {
@@ -97,7 +110,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
         // ultimate fallback - can't make more generic for text
         if (this.editorModes == null) {
-            this.editorModes = Collections.singletonList("text/plain");
+            this.editorModes = Collections.singletonList(EmbeddedTextEditorPresenter.DEFAULT_CONTENT_TYPE);
         }
 
         this.tabSize = configuration.getTabWidth();
@@ -111,6 +124,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
         this.embeddedDocument = this.editor.getDocument();
         this.cursorModel = new EmbeddedEditorCursorModel(this.embeddedDocument);
+
+        // Inform of the document availability
+        // Send *before* setting the content or the listeners will not be ready to listen
+        // to document change events
+        this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.embeddedDocument));
 
         this.editor.setValue(contents);
         this.editor.setTabSize(this.tabSize);
@@ -149,17 +167,24 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public boolean canDoOperation(int operation) {
+    public boolean canDoOperation(final int operation) {
+        if (TextEditorOperations.CODEASSIST_PROPOSALS == operation && this.codeAssistEnabled) {
+            return true;
+        }
         return false;
     }
 
     @Override
-    public void doOperation(int operation) {
+    public void doOperation(final int operation) {
         switch (operation) {
+            case TextEditorOperations.CODEASSIST_PROPOSALS:
+                if (this.embeddedDocument != null) {
+                    this.embeddedDocument.getDocumentHandle().getDocEventBus().fireEvent(new CompletionRequestEvent());
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }
-
     }
 
     @Override
@@ -240,6 +265,51 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         this.editorWidgetFactory = editorWidgetFactory;
     }
 
+    @Override
+    public HasGutter getHasGutter() {
+        return this.editor;
+    }
+
+    @Override
+    public HasTextMarkers getHasTextMarkers() {
+        return this.editor;
+    }
+
+    @Override
+    public HasKeybindings getHasKeybindings() {
+        return this.editor;
+    }
+
+    @Override
+    public void showCompletionProposals(final CompletionsSource source) {
+        this.editor.showCompletionProposals(source);
+    }
+
+
+    @Override
+    public void setDelegate(final Delegate delegate) {
+        this.delegate = delegate;
+    }
+
+    protected Delegate getDelegate() {
+        return this.delegate;
+    }
+
+    @Override
+    public EditorState getErrorState() {
+        return this.delegate.getErrorState();
+    }
+
+    @Override
+    public void setErrorState(final EditorState errorState) {
+        this.delegate.setErrorState(errorState);
+    }
+
+    @Override
+    public void setCodeAssistEnabled(boolean codeAssistEnabled) {
+        this.codeAssistEnabled = true;
+    }
+
     /**
      * UI binder interface for this component.
      * 
@@ -252,5 +322,4 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     public void markClean() {
         this.editor.markClean();
     }
-
 }

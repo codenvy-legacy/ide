@@ -8,18 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.editorconfig;
+package com.codenvy.ide.jseditor.client.partition;
 
-import com.codenvy.ide.api.texteditor.outline.OutlineModel;
+import java.util.List;
 
-public class DefaultEmbeddedTextEditorConf implements EmbeddedTextEditorConfiguration {
+/**
+ * A {@link TokenScanner} that detects partitions.
+ */
+public interface PartitionScanner extends TokenScanner {
 
-    public int getTabWidth() {
-        return 3;
-    }
+    /**
+     * Set the list of line delimiters.
+     * @param delimiters the delimiters
+     */
+    void setLegalLineDelimiters(final List<String> delimiters);
 
-    public OutlineModel getOutline() {
-        return null;
-    }
-
+    /**
+     * Set the string to scan.
+     * @param content the new content to parse
+     */
+    void setScannedString(String content);
 }

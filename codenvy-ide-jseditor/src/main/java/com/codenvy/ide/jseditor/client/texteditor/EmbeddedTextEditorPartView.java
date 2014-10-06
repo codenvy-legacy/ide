@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.EmbeddedTextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -29,8 +31,9 @@ import com.google.gwt.user.client.ui.RequiresResize;
  * @author "Mickaël Leduque"
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
-                                                    IsConfigurable<EmbeddedTextEditorConfiguration>, RequiresResize, IsWidget,
+                                                    IsConfigurable<TextEditorConfiguration>, RequiresResize, IsWidget,
                                                     HasChangeHandlers, UndoableEditor {
+
 
     /**
      * Tells is the editor is dirty (if changes were made since opening or since last time {@link #markClean()} was called).
@@ -71,7 +74,7 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @param configuration the configuration object
      * @param file the file object
      */
-    void configure(EmbeddedTextEditorConfiguration configuration, FileNode file);
+    void configure(TextEditorConfiguration configuration, FileNode file);
 
     /**
      * Returns the instance of embedded document for this editor.
@@ -125,4 +128,45 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @param factory the new factory
      */
     public void setEditorWidgetFactory(EditorWidgetFactory<?> factory);
+
+    /**
+     * Returns a component handling the gutter.
+     * @return the {@link HasGutter}
+     */
+    HasGutter getHasGutter();
+
+    /**
+     * Returns a component handling the text markers.
+     * @return the {@link HasTextMarkers}
+     */
+    HasTextMarkers getHasTextMarkers();
+
+    /**
+     * Returns a component handling the key bindings.
+     * @return the {@link HasKeybindings}
+     */
+    HasKeybindings getHasKeybindings();
+
+    /**
+     * Invoke the code complete dialog.
+     *
+     * @param completionsSource the completion source
+     */
+    void showCompletionProposals(CompletionsSource completionsSource);
+
+    /**
+     * Mark the editor view as allowing code assist.
+     * @param codeAssistEnabled true to enable code assist
+     */
+    void setCodeAssistEnabled(boolean codeAssistEnabled);
+
+    /**
+     * Sets the view delegate.
+     * @param delegate the delegate
+     */
+    void setDelegate(Delegate delegate);
+
+    /** Delegate interface for theis view. */
+    public interface Delegate extends EditorWithErrors {
+    }
 }

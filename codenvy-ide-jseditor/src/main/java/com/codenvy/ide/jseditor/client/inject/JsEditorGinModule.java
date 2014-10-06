@@ -15,18 +15,25 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantImpl;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.jseditor.client.editortype.EditorTypeMapping;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistryImpl;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.filetype.MultipleMethodFileIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
+import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
+import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
+import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
+import com.codenvy.ide.jseditor.client.reconciler.ReconcilerFactory;
+import com.codenvy.ide.jseditor.client.reconciler.ReconcilerImpl;
 import com.codenvy.ide.jseditor.client.requirejs.ModuleHolder;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartViewImpl;
@@ -45,6 +52,9 @@ import javax.inject.Singleton;
 
 @ExtensionGinModule
 public class JsEditorGinModule extends AbstractGinModule {
+
+    /** The default text file type: text/plain. */
+    private static final String CONTENT_TYPE_TEXT_PLAIN = "text/plain";
 
     @Override
     protected void configure() {
@@ -76,6 +86,19 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // bind the info panel factory
         install(new GinFactoryModuleBuilder().build(InfoPanelFactory.class));
+
+        // bind the document position model
+        bind(DocumentPositionMap.class).to(DocumentPositionMapImpl.class);
+
+        // bind the reconciler
+        install(new GinFactoryModuleBuilder()
+                    .implement(Reconciler.class, ReconcilerImpl.class)
+                    .build(ReconcilerFactory.class));
+
+        // bind the code assistant
+        install(new GinFactoryModuleBuilder()
+                    .implement(CodeAssistant.class, CodeAssistantImpl.class)
+                    .build(CodeAssistantFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation
@@ -92,7 +115,7 @@ public class JsEditorGinModule extends AbstractGinModule {
     protected FileType textPlainFileType(final JsEditorConstants constants) {
         return new FileType(constants.defaultEditorDescription(),
                             (SVGResource)null,
-                            EditorTypeMapping.CONTENT_TYPE_TEXT_PLAIN,
+                            CONTENT_TYPE_TEXT_PLAIN,
                             (String)null);
     }
 }
