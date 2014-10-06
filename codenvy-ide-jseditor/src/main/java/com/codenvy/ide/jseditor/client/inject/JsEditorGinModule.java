@@ -28,7 +28,10 @@ import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
 import com.codenvy.ide.jseditor.client.requirejs.ModuleHolder;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartViewImpl;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenterFactory;
+import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorViewFactory;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
@@ -49,6 +52,10 @@ public class JsEditorGinModule extends AbstractGinModule {
 
         // Bind the embedded text editor presenter factory
         install(new GinFactoryModuleBuilder().build(EmbeddedTextEditorPresenterFactory.class));
+        // the view factory
+        install(new GinFactoryModuleBuilder()
+                .implement(EmbeddedTextEditorPartView.class, EmbeddedTextEditorPartViewImpl.class)
+                .build(EmbeddedTextEditorViewFactory.class));
 
         // Bind the file type identifier
         bind(FileTypeIdentifier.class).to(MultipleMethodFileIdentifier.class);

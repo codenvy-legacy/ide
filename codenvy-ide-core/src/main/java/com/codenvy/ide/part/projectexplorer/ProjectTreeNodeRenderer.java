@@ -112,12 +112,9 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         } else if (node instanceof FolderNode) {
             icon = iconRegistry.getIcon(projectTypeId + ".folder.small.icon");
         } else if (node instanceof FileNode) {
-            FileType fileType = fileTypeRegistry.getFileTypeByFile((FileNode)node);
-            if (fileType != null && fileType.getSVGImage() != null) {
-                return new SVGImage(fileType.getSVGImage());
-            }
 
             final String fileName = ((FileNode)node).getName();
+
             // try to get icon for file name
             icon = iconRegistry.getIconIfExist(projectTypeId + "/" + fileName + ".file.small.icon");
             // try to get icon for file extension
@@ -125,6 +122,13 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
                 String[] split = fileName.split("\\.");
                 String ext = split[split.length - 1];
                 icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+            }
+            //use default icons from file type
+            if(icon == null) {
+                FileType fileType = fileTypeRegistry.getFileTypeByFile((FileNode)node);
+                if (fileType != null && fileType.getSVGImage() != null) {
+                    return new SVGImage(fileType.getSVGImage());
+                }
             }
         }
         if (icon == null) {

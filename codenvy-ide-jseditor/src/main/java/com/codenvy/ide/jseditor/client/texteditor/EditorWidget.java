@@ -10,12 +10,18 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+
+import java.util.List;
+
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
+import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
@@ -24,12 +30,9 @@ import com.google.gwt.user.client.ui.RequiresResize;
 
 import javax.annotation.Nonnull;
 
-/**
- * An interface for editor widget implementations.
- *
- * @author "Mickaël Leduque"
- */
-public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers, HasCursorActivityHandlers,
+/** An interface for editor widget implementations. */
+public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
+                                      HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
                                       RequiresResize, UndoableEditor {
 
     /**
@@ -127,4 +130,47 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
 
     /** Give the focus to the editor. */
     void setFocus();
+
+    /**
+     * Show a message to the user.
+     * 
+     * @param message the message
+     */
+    void showMessage(String message);
+
+    /**
+     * Selects the given range in the editor.
+     * 
+     * @param selection the new selection
+     * @param show whether the editor should be scrolled to show the range
+     */
+    void setSelectedRange(Region selection, boolean show);
+
+    /**
+     * Scroll the editor to show the given range.
+     * 
+     * @param range the range to show
+     */
+    void setDisplayRange(Region range);
+
+    /**
+     * Returns a position converter relative to this editor (pixel coordinates <-> line char positions).
+     * 
+     * @return a position converter
+     */
+    PositionConverter getPositionConverter();
+
+    /**
+     * Display the completion proposals.
+     * 
+     * @param proposals the proposals
+     */
+    void showCompletionsProposals(List<CompletionProposal> proposals);
+
+    /**
+     * Display the completion proposals.
+     * 
+     * @param completionsSource the completion source
+     */
+    void showCompletionProposals(CompletionsSource completionsSource);
 }

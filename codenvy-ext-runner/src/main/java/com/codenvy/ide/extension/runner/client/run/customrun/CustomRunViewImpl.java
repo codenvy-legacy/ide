@@ -104,6 +104,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
                 delegate.onRunClicked();
             }
         });
+        runButton.getElement().addClassName(resources.runner().runButton());
 
         Button cancelButton = createButton(locale.buttonCancel(), "project-customRun-cancel", new ClickHandler() {
             @Override
@@ -111,9 +112,10 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
                 delegate.onCancelClicked();
             }
         });
+        cancelButton.getElement().addClassName(resources.runner().cancelButton());
 
-        getFooter().add(cancelButton);
         getFooter().add(runButton);
+        getFooter().add(cancelButton);
     }
 
     @Override
