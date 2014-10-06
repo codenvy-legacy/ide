@@ -19,12 +19,14 @@ import javax.inject.Inject;
 import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
+import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
+import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
@@ -125,12 +127,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         this.embeddedDocument = this.editor.getDocument();
         this.cursorModel = new EmbeddedEditorCursorModel(this.embeddedDocument);
 
-        // Inform of the document availability
-        // Send *before* setting the content or the listeners will not be ready to listen
-        // to document change events
-        this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.embeddedDocument));
-
         this.editor.setValue(contents);
+        this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.embeddedDocument));
+        final DocumentHandle docHandle = this.embeddedDocument.getDocumentHandle();
+        docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, contents.length(), contents));
+
         this.editor.setTabSize(this.tabSize);
 
         // set up infopanel
