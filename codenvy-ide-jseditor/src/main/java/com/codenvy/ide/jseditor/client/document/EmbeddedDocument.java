@@ -11,6 +11,7 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
+import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -90,4 +91,11 @@ public interface EmbeddedDocument {
      * @return a handle to remove the handler
      */
     HandlerRegistration addCursorHandler(CursorActivityHandler handler);
+
+    /**
+     * Replaces the text range with the given replacement contents.
+     * @param region the original region to replace
+     * @param text the replacement text
+     */
+    void replace(Region region, String text);
 }
