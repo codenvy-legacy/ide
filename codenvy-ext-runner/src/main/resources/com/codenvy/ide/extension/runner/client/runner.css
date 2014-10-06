@@ -66,3 +66,23 @@ svg.partIcon {
 .timeout {
     fill: #ffba00;
 }
+
+.runButton {
+    background-image: linear-gradient(#00874d 0px, #00874d 5%, #00804d 5%, #00804d 100%);
+}
+
+.runButton,
+.cancelButton {
+    font-size: 12px;
+    font-weight: bold;
+    font-family: mainFontFamily;
+    border-radius: 1px;
+}
+
+.runButton:active {
+    box-shadow: 0 1px 2px 0 rgba(0, 52, 26, 0.29), inset 0 1px 1px 0 rgba(0, 52, 26, 0.75);
+}
+
+.cancelButton:active {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.29), inset 0 1px 1px 0 rgba(0, 0, 0, 0.75);
+}
