@@ -63,7 +63,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final DocumentStorage documentStorage;
     private final EventBus                      generalEventBus;
     private final CodeAssistantFactory          codeAssistantFactory;
-    
+
     private TextEditorConfiguration         configuration;
     private NotificationManager             notificationManager;
     private EmbeddedTextEditorPartView      editor;
