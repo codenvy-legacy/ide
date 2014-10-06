@@ -14,6 +14,8 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
@@ -34,30 +36,30 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
- *
+ * 
  * @author "Mickaël Leduque"
  */
-public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Composite implements EmbeddedTextEditorPartView {
+public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView {
 
-    private final static EditorViewUiBinder uibinder    = GWT.create(EditorViewUiBinder.class);
+    private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
 
-    private final EditorWidgetFactory<T>    editorWidgetFactory;
-    private final FileTypeIdentifier        fileTypeIdentifier;
+    private final FileTypeIdentifier fileTypeIdentifier;
 
     @UiField(provided = true)
-    InfoPanel                               infoPanel;
+    InfoPanel infoPanel;
 
     @UiField
-    SimplePanel                             editorPanel;
+    SimplePanel editorPanel;
 
-    private T                               editor;
-    private CursorModelWithHandler          cursorModel;
-    private EmbeddedDocument                embeddedDocument;
+    private EditorWidgetFactory< ? > editorWidgetFactory;
+    private EditorWidget editor;
+    private CursorModelWithHandler cursorModel;
+    private EmbeddedDocument embeddedDocument;
 
-    private List<String>                    editorModes = null;
+    private List<String> editorModes = null;
 
-    private int                             tabSize     = 3;
-    private boolean                         delayedFocus = false;
+    private int tabSize = 3;
+    private boolean delayedFocus = false;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -67,15 +69,14 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         }
     };
 
-    public EmbeddedTextEditorPartViewImpl(final EditorWidgetFactory<T> editorWidgetFactory,
-                                          final FileTypeIdentifier fileTypeIdentifier,
+    @Inject
+    public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
                                           final InfoPanelFactory infoPanelFactory) {
         infoPanel = infoPanelFactory.create(this);
 
         final HTMLPanel panel = uibinder.createAndBindUi(this);
         initWidget(panel);
 
-        this.editorWidgetFactory = editorWidgetFactory;
         this.fileTypeIdentifier = fileTypeIdentifier;
 
     }
@@ -200,6 +201,30 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
     }
 
     @Override
+    public void setSelectedRegion(final Region region) {
+        this.setSelectedRegion(region, true);
+    }
+
+    @Override
+    public void setSelectedRegion(final Region region, final boolean show) {
+        this.editor.setSelectedRange(region, show);
+    }
+
+    public void showMessage(final String message) {
+        this.editor.showMessage(message);
+    }
+
+    @Override
+    public String getContentType() {
+        // Before the editor content is ready (configure), the editorModes is not defined
+        if (this.editorModes == null || this.editorModes.isEmpty()) {
+            return null;
+        } else {
+            return this.editorModes.get(0);
+        }
+    }
+
+    @Override
     public void onResize() {
         this.editor.onResize();
     }
@@ -209,12 +234,18 @@ public class EmbeddedTextEditorPartViewImpl<T extends EditorWidget> extends Comp
         return this.editor.getUndoRedo();
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void setEditorWidgetFactory(final EditorWidgetFactory editorWidgetFactory) {
+        this.editorWidgetFactory = editorWidgetFactory;
+    }
+
     /**
      * UI binder interface for this component.
-     *
+     * 
      * @author "Mickaël Leduque"
      */
-    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl<?>> {
+    interface EditorViewUiBinder extends UiBinder<HTMLPanel, EmbeddedTextEditorPartViewImpl> {
     }
 
     @Override
