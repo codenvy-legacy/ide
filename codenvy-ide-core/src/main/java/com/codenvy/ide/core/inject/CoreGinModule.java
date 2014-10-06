@@ -43,6 +43,7 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -81,6 +82,7 @@ import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
 import com.codenvy.ide.icon.IconRegistryImpl;
+import com.codenvy.ide.importproject.ImportProjectNotificationSubscriberImpl;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
@@ -191,6 +193,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         bind(PreSelectedProjectTypeManager.class).to(PreSelectedProjectTypeManagerImpl.class).in(Singleton.class);
         bind(ImportProjectWizardRegistry.class).to(ImportProjectWizardRegistryImpl.class).in(Singleton.class);
+        bind(ImportProjectNotificationSubscriber.class).to(ImportProjectNotificationSubscriberImpl.class);
 
         configurePlatformApiGwtClients();
         configureApiBinding();
