@@ -43,6 +43,16 @@
 
         .radioButton {
             margin-left: 42px;
+            white-space: nowrap;
+        }
+
+        .radioButton label {
+            padding-top: 2px;
+            height: 17px;
+        }
+
+        .radioButton label::before {
+            margin-top: 1px;
         }
 
         .radioButton span {

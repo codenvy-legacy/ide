@@ -101,6 +101,12 @@ public interface RunnerResources extends ClientBundle {
 
         @ClassName("timeout")
         String timeout();
+
+        @ClassName("runButton")
+        String runButton();
+
+        @ClassName("cancelButton")
+        String cancelButton();
     }
 
     @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})
