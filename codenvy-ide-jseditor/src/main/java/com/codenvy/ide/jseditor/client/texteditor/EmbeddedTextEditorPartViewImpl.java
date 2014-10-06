@@ -71,7 +71,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     private int tabSize = 3;
     private boolean delayedFocus = false;
-	private boolean codeAssistEnabled = false;
+    private boolean codeAssistEnabled = false;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
