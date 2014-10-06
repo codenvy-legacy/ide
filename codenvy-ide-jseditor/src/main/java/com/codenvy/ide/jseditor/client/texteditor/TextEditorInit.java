@@ -136,6 +136,7 @@ public class TextEditorInit {
         inlineAnnotationRenderer.setDocumentHandle(documentHandle);
         inlineAnnotationRenderer.setHasTextMarkers(this.editorHandle.getEditor().getHasTextMarkers());
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, inlineAnnotationRenderer);
+        documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, inlineAnnotationRenderer);
 
         annotationModel.setDocumentHandle(documentHandle);
         documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, annotationModel);
