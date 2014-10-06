@@ -243,7 +243,6 @@ public abstract class Window implements IsWidget {
 
         @Source("close-white-normal.png")
         ImageResource closeWhite();
-
     }
 
     /**
@@ -286,6 +285,8 @@ public abstract class Window implements IsWidget {
         String button();
         
         String label();
+
+        String image();
     }
 
     /**

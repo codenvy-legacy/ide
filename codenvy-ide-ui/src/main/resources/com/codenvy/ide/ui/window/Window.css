@@ -220,3 +220,8 @@
 	color: mainFontColor;
 }
 
+svg.image {
+    fill: mainFontColor;
+    width: 56px;
+    height: 56px;
+}

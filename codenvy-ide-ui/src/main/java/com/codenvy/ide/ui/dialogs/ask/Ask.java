@@ -20,6 +20,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
  * PopUp Dialog window with title, message and buttons "Ok" and "Cancel"/
@@ -30,6 +31,9 @@ public class Ask extends Window {
 
     @UiField
     SimplePanel message;
+
+    @UiField
+    SVGImage questionImage;
 
     interface AskUiBinder extends UiBinder<Widget, Ask> {
     }
@@ -52,11 +56,13 @@ public class Ask extends Window {
      */
     public Ask(String title, String question, final AskHandler handler) {
         this.handler = handler;
-        Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
-        message.addStyleName(resources.centerPanelCss().label());
-        this.message.getElement().setInnerHTML(question);
+        Widget widget = uiBinder.createAndBindUi(this);
         setWidget(widget);
+        message.addStyleName(resources.centerPanelCss().label());
+        message.getElement().setInnerHTML(question);
+        questionImage.getElement().setAttribute("class", resources.centerPanelCss().image());
+
         Button ok = createButton(locale.ok(), "ask-dialog-ok", new ClickHandler() {
 
             @Override

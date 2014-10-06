@@ -16,15 +16,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='resources' type='com.codenvy.ide.ui.Resources'/>
     <ui:style>
-		@eval mainFontColor com.codenvy.ide.api.theme.Style.getMainFontColor();
-		
         .emptyBorder {
             margin: 6px;
         }
-
-		.image {
-			fill: mainFontColor;
-		}
 
 		.label {
 			margin-bottom: 10px
@@ -32,7 +26,7 @@
     </ui:style>
     <g:HorizontalPanel width="350px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:cell verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER" width="80px">
-            <svg:SVGImage resource="{resources.question}" classNameBaseVal="{style.image}" width="56px" height="56px"/>
+            <svg:SVGImage resource="{resources.question}" ui:field="questionImage"/>
         </g:cell>
         <g:cell verticalAlignment="ALIGN_MIDDLE">
             <g:SimplePanel ui:field="message" addStyleNames="{style.label}" width="270px"/>
