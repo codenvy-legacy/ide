@@ -12,6 +12,7 @@ package com.codenvy.ide.api.notification;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.json.JsonHelper;
 
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
@@ -83,7 +84,8 @@ public final class Notification {
 
     /**
      * Create notification with message and type. Other parameters will be added with default values. This notification has got an unread
-     * state, a finished status. It will be a non-important message that does not delegate any actions in response to opening and closing of
+     * state, a finished status. It will be a non-important message that does not delegate any actions in response to opening and closing
+     * of
      * a notification.
      *
      * @param message
@@ -481,6 +483,9 @@ public final class Notification {
     /** @return notification's message */
     @Nonnull
     public String getMessage() {
+        if (isError()) {
+            return JsonHelper.parsingJsonMessage(message);
+        }
         return message;
     }
 
@@ -653,8 +658,6 @@ public final class Notification {
         result = 31 * result + (observers != null ? observers.hashCode() : 0);
         return result;
     }
-
-
 
 
     /**

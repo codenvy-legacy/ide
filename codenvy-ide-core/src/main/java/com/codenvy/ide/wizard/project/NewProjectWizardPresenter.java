@@ -34,6 +34,7 @@ import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -133,7 +134,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(getClass(), exception.getMessage());
+                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
             }
         });
     }
@@ -159,7 +160,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(getClass(), exception.getMessage());
+                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
             }
         });
     }
@@ -203,7 +204,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                Info info = new Info(exception.getMessage());
+                Info info = new Info(JsonHelper.parsingJsonMessage(exception.getMessage()));
                 info.show();
             }
         };
@@ -581,7 +582,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             protected void onFailure(Throwable exception) {
                 Info infoWindow = new Info(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed());
                 infoWindow.show();
-                Log.error(getClass(), exception.getMessage());
+                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
             }
         });
     }
@@ -700,12 +701,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             if (usedMemory != null) {
                 availableRam -= Integer.valueOf(usedMemory);
             }
-            if (availableRam > 1000) {
-                String fractionalPart =
-                        (availableRam % 1000 < 100) ? (".0" + availableRam % 1000 + "GB") : ("." + availableRam % 1000 + "GB");
-                return availableRam / 1000 + fractionalPart;
-            }
-            if (availableRam > 0 && availableRam < 1000) {
+            if (availableRam > 0) {
                 return availableRam + "MB";
             }
         }

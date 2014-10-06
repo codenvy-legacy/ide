@@ -32,6 +32,7 @@ import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.info.Info;
@@ -196,7 +197,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                Info info = new Info(exception.getMessage());
+                Info info = new Info(JsonHelper.parsingJsonMessage(exception.getMessage()));
                 info.show();
             }
         };
