@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -34,7 +37,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Evgen Vidolob
  */
 @Singleton
-public class BreakpointGutterManager {
+public class BreakpointGutterManager implements BreakpointManager {
     private StringMap<Array<Breakpoint>> breakpoints;
     private EditorAgent                  editorAgent;
     private DebuggerManager              debuggerManager;
@@ -62,6 +65,7 @@ public class BreakpointGutterManager {
      * @param lineNumber
      *         active editor's line number where breakpoint is
      */
+    @Override
     public void changeBreakPointState(final int lineNumber) {
         final Debugger debugger = debuggerManager.getDebugger();
         if (debugger == null) {
@@ -128,7 +132,8 @@ public class BreakpointGutterManager {
     }
 
     /** Remove all breakpoints. */
-    public void removeAllBreakPoints() {
+    @Override
+    public void removeAllBreakpoints() {
         breakpoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
             @Override
             public void onIteration(String key, Array<Breakpoint> value) {
@@ -143,14 +148,14 @@ public class BreakpointGutterManager {
         });
     }
 
-    /**
-     * Check whether breakpoint in this line exist.
-     *
-     * @param lineNumber
-     *         line where breakpoint is
-     * @return <code>true</code> if the breakpoint exist, and <code>false</code> otherwise
-     */
+    @Override
+    @Deprecated
     public boolean isBreakPointExist(int lineNumber) {
+        return breakpointExists(lineNumber);
+    }
+
+    @Override
+    public boolean breakpointExists(final int lineNumber) {
         if (editorAgent.getActiveEditor() == null) {
             return false;
         }
@@ -168,7 +173,8 @@ public class BreakpointGutterManager {
         return false;
     }
 
-    /** @return all breakpoints. */
+    @Deprecated
+    @Override
     public Array<Breakpoint> getBreakpoints() {
         final Array<Breakpoint> breakpoints = Collections.createArray();
         this.breakpoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
@@ -180,12 +186,27 @@ public class BreakpointGutterManager {
         return breakpoints;
     }
 
+    @Override
+    public List<Breakpoint> getBreakpointList() {
+        final List<Breakpoint> breakpoints = new ArrayList<>();
+        this.breakpoints.iterate(new StringMap.IterationCallback<Array<Breakpoint>>() {
+            @Override
+            public void onIteration(String key, Array<Breakpoint> value) {
+                for (final Breakpoint breakpoint: value.asIterable()) {
+                    breakpoints.add(breakpoint);
+                }
+            }
+        });
+        return breakpoints;
+    }
+
     /**
      * Mark current line.
      *
      * @param lineNumber
      *         line which need to mark
      */
+    @Override
     public void markCurrentBreakpoint(int lineNumber) {
         int oldLineNumber = 0;
         if (currentBreakpoint != null) {
@@ -216,6 +237,7 @@ public class BreakpointGutterManager {
     }
 
     /** Unmark current line. */
+    @Override
     public void unmarkCurrentBreakpoint() {
         if (currentBreakpoint != null) {
             final int oldLineNumber = currentBreakpoint.getLineNumber();
@@ -228,14 +250,14 @@ public class BreakpointGutterManager {
         }
     }
 
-    /**
-     * Check whether line is marked.
-     *
-     * @param lineNumber
-     *         line which need to check
-     * @return <code>true</code> if the line is marked, and <code>false</code> otherwise
-     */
+    @Override
+    @Deprecated
     public boolean isMarkedLine(int lineNumber) {
+        return isCurrentBreakpoint(lineNumber);
+    }
+
+    @Override
+    public boolean isCurrentBreakpoint(int lineNumber) {
         if (currentBreakpoint != null) {
             FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
             boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(currentBreakpoint.getPath());
