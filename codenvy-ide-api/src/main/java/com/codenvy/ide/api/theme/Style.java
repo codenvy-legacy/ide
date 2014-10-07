@@ -356,6 +356,10 @@ public class Style {
         return theme.getToolbarIconColor();
     }
 
+    public static String getTooltipBackgroundColor() {
+        return theme.getTooltipBackgroundColor();
+    }
+
     public static String getProgressColor() {
         return theme.getProgressColor();
     }

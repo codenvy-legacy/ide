@@ -568,6 +568,13 @@ public interface Theme {
     String getToolbarIconColor();
 
     /**
+     * The color of the tooltip background.
+     *
+     * @return {@link String} color
+     */
+    String getTooltipBackgroundColor();
+
+    /**
      * @return the progress icon color
      */
     String getProgressColor();

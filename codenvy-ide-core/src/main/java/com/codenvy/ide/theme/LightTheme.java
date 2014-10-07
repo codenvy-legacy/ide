@@ -441,6 +441,9 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getTooltipBackgroundColor() { return "#FFFFFF";}
+
+    @Override
     public String getProgressColor() {
         return "#000000";
     }
