@@ -15,8 +15,12 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,15 +45,37 @@ public class SaveAllAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        StringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
-        editors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
-            @Override
-            public void onIteration(String key, EditorPartPresenter value) {
-                if (value.isDirty()) {
-                    value.doSave();
+        Array<EditorPartPresenter> values = editorAgent.getOpenedEditors().getValues();
+        Array<EditorPartPresenter> editors = Collections.createArray(values.asIterable());
+        save(editors);
+    }
+
+    private void save(final Array<EditorPartPresenter> editors) {
+        if (editors.isEmpty()) {
+            return;
+        }
+
+        final EditorPartPresenter editorPartPresenter = editors.get(0);
+        if (editorPartPresenter.isDirty()) {
+            editorPartPresenter.doSave(new AsyncCallback<EditorInput>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(SaveAllAction.class, caught);
+                    //try to save other files
+                    editors.remove(editorPartPresenter);
+                    save(editors);
                 }
-            }
-        });
+
+                @Override
+                public void onSuccess(EditorInput result) {
+                    editors.remove(editorPartPresenter);
+                    save(editors);
+                }
+            });
+        } else {
+            editors.remove(editorPartPresenter);
+            save(editors);
+        }
     }
 
     /** {@inheritDoc} */
