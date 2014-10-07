@@ -14,6 +14,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.json.JsonHelper;
 
+import com.google.gwt.user.client.Random;
+
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Date;
@@ -72,6 +74,7 @@ public final class Notification {
         READ, UNREAD
     }
 
+    private int                         randomId;
     private String                      message;
     private Type                        type;
     private Status                      status;
@@ -457,6 +460,7 @@ public final class Notification {
         this.openHandler = openHandler;
         this.closeHandler = closeHandler;
         this.observers = Collections.createArray();
+        randomId = Random.nextInt();
     }
 
     public void update(String message, Type type, Status status, State state, Boolean important) {
@@ -647,16 +651,9 @@ public final class Notification {
 
     @Override
     public int hashCode() {
-        int result = message != null ? message.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (important ? 1 : 0);
-        result = 31 * result + (openHandler != null ? openHandler.hashCode() : 0);
-        result = 31 * result + (closeHandler != null ? closeHandler.hashCode() : 0);
-        result = 31 * result + (observers != null ? observers.hashCode() : 0);
-        return result;
+        int hash = 7;
+        hash = 31 * hash + randomId;
+        return hash;
     }
 
 
