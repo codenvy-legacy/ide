@@ -14,8 +14,6 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.json.JsonHelper;
 
-import com.google.gwt.user.client.Random;
-
 import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Date;
@@ -74,16 +72,17 @@ public final class Notification {
         READ, UNREAD
     }
 
-    private int                         randomId;
-    private String                      message;
-    private Type                        type;
-    private Status                      status;
-    private State                       state;
-    private Date                        time;
-    private boolean                     important;
-    private OpenNotificationHandler     openHandler;
-    private CloseNotificationHandler    closeHandler;
-    private Array<NotificationObserver> observers;
+    private static int                         counter;
+    private        int                         id;
+    private        String                      message;
+    private        Type                        type;
+    private        Status                      status;
+    private        State                       state;
+    private        Date                        time;
+    private        boolean                     important;
+    private        OpenNotificationHandler     openHandler;
+    private        CloseNotificationHandler    closeHandler;
+    private        Array<NotificationObserver> observers;
 
     /**
      * Create notification with message and type. Other parameters will be added with default values. This notification has got an unread
@@ -460,7 +459,7 @@ public final class Notification {
         this.openHandler = openHandler;
         this.closeHandler = closeHandler;
         this.observers = Collections.createArray();
-        randomId = Random.nextInt();
+        id = counter++;
     }
 
     public void update(String message, Type type, Status status, State state, Boolean important) {
@@ -639,20 +638,14 @@ public final class Notification {
 
         Notification that = (Notification)o;
 
-        if (important != that.important) return false;
-        if (!message.equals(that.message)) return false;
-        if (state != that.state) return false;
-        if (status != that.status) return false;
-        if (!time.equals(that.time)) return false;
-        if (type != that.type) return false;
-
+        if (id != (that.id)) return false;
         return true;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + randomId;
+        hash = 31 * hash + id;
         return hash;
     }
 
