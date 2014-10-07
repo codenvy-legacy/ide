@@ -29,12 +29,13 @@
             word-wrap: break-word;
             -moz-user-select: initial;
             -webkit-user-select: initial;
+            padding: 2px;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="160px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:FlowPanel>
-                <g:SimplePanel ui:field="message" width="98%" height="100%"
+                <g:SimplePanel ui:field="message" width="97%" height="100%"
                                addStyleNames="{style.noResize} {style.textArea}" debugId="info-window-message"/>
             </g:FlowPanel>
         </g:center>
