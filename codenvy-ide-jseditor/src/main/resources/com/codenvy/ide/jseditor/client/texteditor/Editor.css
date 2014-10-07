@@ -36,3 +36,7 @@
 .annotation {
     width: 1em;
 }
+
+.debugLine {
+    background-color: rgba(255, 120, 100, 0.5) !important;
+}
