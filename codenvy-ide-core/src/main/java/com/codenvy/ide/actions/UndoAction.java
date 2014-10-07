@@ -12,6 +12,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -34,8 +35,9 @@ public class UndoAction extends Action {
     @Inject
     public UndoAction(EditorAgent editorAgent,
                       CoreLocalizationConstant localization,
-                      AnalyticsEventLogger eventLogger) {
-        super(localization.undoName(), localization.undoDescription(), null);
+                      AnalyticsEventLogger eventLogger,
+                      Resources resources) {
+        super(localization.undoName(), localization.undoDescription(), null, resources.undo());
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }

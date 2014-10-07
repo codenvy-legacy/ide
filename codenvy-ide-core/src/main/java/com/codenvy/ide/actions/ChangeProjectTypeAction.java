@@ -11,6 +11,7 @@
 package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
@@ -33,8 +34,9 @@ public class ChangeProjectTypeAction extends Action {
     private final AnalyticsEventLogger      eventLogger;
 
     @Inject
-    public ChangeProjectTypeAction(AppContext appContext, NewProjectWizardPresenter wizardPresenter, AnalyticsEventLogger eventLogger) {
-        super("Project Configuration...", "Change project type", null, null);
+    public ChangeProjectTypeAction(AppContext appContext, NewProjectWizardPresenter wizardPresenter, AnalyticsEventLogger eventLogger,
+                                   Resources resources) {
+        super("Project Configuration...", "Change project type", null, resources.projectConfiguration());
         this.appContext = appContext;
         this.wizardPresenter = wizardPresenter;
         this.eventLogger = eventLogger;

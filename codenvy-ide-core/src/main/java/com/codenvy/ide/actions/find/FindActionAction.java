@@ -11,6 +11,7 @@
 package com.codenvy.ide.actions.find;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.google.inject.Inject;
@@ -28,8 +29,8 @@ public class FindActionAction extends Action {
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public FindActionAction(FindActionPresenter presenter, AnalyticsEventLogger eventLogger) {
-        super("Find Action", "Find Action by name");
+    public FindActionAction(FindActionPresenter presenter, AnalyticsEventLogger eventLogger, Resources resources) {
+        super("Find Action", "Find Action by name", null, resources.findActions());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
     }
