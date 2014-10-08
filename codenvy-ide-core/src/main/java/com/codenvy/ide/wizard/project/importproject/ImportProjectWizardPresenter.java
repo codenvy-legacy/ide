@@ -250,10 +250,10 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         projectImporter.importSources(url, projectName, new ProjectImporter.ImportCallback() {
             @Override
             public void onSuccess(ProjectDescriptor projectDescriptor) {
+                importProjectNotificationSubscriber.onSuccess();
                 importedProject = projectDescriptor;
                 showProcessing(false);
                 checkRam(projectDescriptor, callback);
-                importProjectNotificationSubscriber.onSuccess();
             }
 
             @Override
