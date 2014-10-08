@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.annotation;
 
+import static com.codenvy.ide.jseditor.client.gutter.Gutters.ANNOTATION_GUTTER;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,8 +34,6 @@ import elemental.events.EventListener;
  * Renderer for annotation marks in gutter (on the left margin of the text).
  */
 public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAnnotationModelHandler, UseDocumentHandle {
-    /** Logical identifer for the annotation gutter. */
-    private static final String ANNOTATION_GUTTER = "annotation";
 
     /** The logger. */
     private static Logger LOG = Logger.getLogger(GutterAnnotationRenderer.class.getName());
