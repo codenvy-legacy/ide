@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.importproject;
 
-import elemental.events.KeyboardEvent.KeyCode;
-
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
@@ -22,20 +21,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -51,8 +42,7 @@ import java.util.Set;
  */
 public class MainPageViewImpl implements MainPageView {
 
-    private static MainPageViewImplUiBinder uiBinder =
-            GWT.create(MainPageViewImplUiBinder.class);
+    private static MainPageViewImplUiBinder uiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
     private final Category.CategoryEventDelegate<ProjectImporterDescriptor> projectImporterDelegate =
             new Category.CategoryEventDelegate<ProjectImporterDescriptor>() {
@@ -63,52 +53,33 @@ public class MainPageViewImpl implements MainPageView {
                 }
             };
 
-    private final CategoryRenderer<ProjectImporterDescriptor> projectImporterRenderer =
-            new CategoryRenderer<ProjectImporterDescriptor>() {
-                @Override
-                public void renderElement(com.google.gwt.dom.client.Element element,
-                                          ProjectImporterDescriptor data) {
-                    String str = data.getId();
-                    str =
-                            str.length() > 1
-                            ? Character.toUpperCase(str.charAt(0))
-                              +
-                              str.substring(1)
-                            : str.toUpperCase();
-                    element.setInnerText(str);
-                }
+    private final CategoryRenderer<ProjectImporterDescriptor> projectImporterRenderer = new CategoryRenderer<ProjectImporterDescriptor>() {
+        @Override
+        public void renderElement(Element element, ProjectImporterDescriptor data) {
+            String str = data.getId();
+            str = str.length() > 1 ? Character.toUpperCase(str.charAt(0)) + str.substring(1) : str.toUpperCase();
+            element.setInnerText(str);
+        }
 
-                @Override
-                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectImporterDescriptor> category) {
-                    return renderCategoryWithIcon(category.getTitle());
-                }
-            };
+        @Override
+        public SpanElement renderCategory(Category<ProjectImporterDescriptor> category) {
+            return renderCategoryWithIcon(category.getTitle());
+        }
+    };
 
     private final IconRegistry iconRegistry;
 
     @UiField
-    Style                                                                   style;
+    Style       style;
     @UiField
-    Label                                                                   labelUrlError;
+    SimplePanel importerPanel;
     @UiField
-    SimplePanel                                                             categoriesPanel;
-    @UiField
-    HTMLPanel                                                               descriptionArea;
-    @UiField
-    TextBox                                                                 projectName;
-    @UiField
-    TextArea                                                                projectDescription;
-    @UiField
-    RadioButton                                                             projectPrivate;
-    @UiField
-    RadioButton                                                             projectPublic;
-    @UiField
-    TextBox                                                                 projectUrl;
+    SimplePanel categoriesPanel;
     @UiField(provided = true)
-    com.codenvy.ide.Resources                                               resources;
-    private ActionDelegate                                                  delegate;
-    private Map<String, Set<ProjectImporterDescriptor>>                     categories;
-    private CategoriesList                                                  list;
+    com.codenvy.ide.Resources   resources;
+    private ActionDelegate                    delegate;
+    private Map<String, Set<ProjectImporterDescriptor>> categories;
+    private CategoriesList                    list;
 
     @Inject
     public MainPageViewImpl(Resources resources,
@@ -116,35 +87,6 @@ public class MainPageViewImpl implements MainPageView {
         this.resources = resources;
         this.iconRegistry = iconRegistry;
         rootElement = uiBinder.createAndBindUi(this);
-        projectName.getElement().setAttribute("maxlength", "32");
-        projectDescription.getElement().setAttribute("maxlength", "256");
-    }
-
-    @UiHandler("projectName")
-    void onProjectNameChanged(KeyUpEvent event) {
-        delegate.projectNameChanged(projectName.getValue());
-    }
-
-    @UiHandler("projectUrl")
-    void onProjectUrlChanged(KeyUpEvent event) {
-        delegate.projectUrlChanged(projectUrl.getValue());
-    }
-
-    @UiHandler("projectDescription")
-    void onProjectDescriptionChanged(KeyUpEvent event) {
-        delegate.projectDescriptionChanged(projectDescription.getValue());
-    }
-
-    @UiHandler({"projectDescription", "projectUrl", "projectName"})
-    void onEnterClicked(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCode.ENTER) {
-            delegate.onEnterClicked();
-        }
-    }
-
-    @UiHandler({"projectPublic", "projectPrivate"})
-    void visibilityHandler(ValueChangeEvent<Boolean> event) {
-        delegate.projectVisibilityChanged(projectPublic.getValue());
     }
 
     private SpanElement renderCategoryWithIcon(String title) {
@@ -156,13 +98,6 @@ public class MainPageViewImpl implements MainPageView {
 
     @Override
     public void reset() {
-        projectName.setText("");
-        projectDescription.setText("");
-        projectUrl.setText("");
-        projectPublic.setValue(true);
-        projectPrivate.setValue(false);
-        descriptionArea.clear();
-
         categoriesPanel.clear();
         list = new CategoriesList(resources);
         categoriesPanel.add(list);
@@ -189,25 +124,7 @@ public class MainPageViewImpl implements MainPageView {
 
         String rightPart();
 
-        String namePanel();
-
-        String projectName();
-
-        String projectDescription();
-
-        String labelPosition();
-
-        String radioButtonPosition();
-
         String categories();
-
-        String description();
-
-        String configuration();
-
-        String label();
-
-        String horizontalLine();
     }
 
     /** {@inheritDoc} */
@@ -217,76 +134,22 @@ public class MainPageViewImpl implements MainPageView {
 
         List<Category<?>> categoriesList = new ArrayList<>();
         for (String s : categories.keySet()) {
-            Category<ProjectImporterDescriptor> category =
-                    new Category<ProjectImporterDescriptor>(s, projectImporterRenderer,
-                                                            categories.get(s),
-                                                            projectImporterDelegate);
+            Category<ProjectImporterDescriptor> category = new Category<>(s, projectImporterRenderer,
+                                                                categories.get(s),
+                                                                projectImporterDelegate);
             categoriesList.add(category);
         }
         list.render(categoriesList);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void showNameError() {
-        projectName.addStyleName(resources.wizardCss().inputError());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void hideNameError() {
-        projectName.removeStyleName(resources.wizardCss().inputError());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setImporterDescription(String text) {
-        descriptionArea.getElement().setInnerText(text);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void showUrlError(String message) {
-        projectUrl.addStyleName(resources.wizardCss().inputError());
-        labelUrlError.setText(message);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void hideUrlError() {
-        projectUrl.removeStyleName(resources.wizardCss().inputError());
-        labelUrlError.setText("");
+    public AcceptsOneWidget getImporterPanel() {
+        return importerPanel;
     }
 
     /** {@inheritDoc} */
     @Override
     public void selectImporter(ProjectImporterDescriptor importer) {
         list.selectElement(importer);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getProjectName() {
-        return projectName.getValue();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setProjectName(String projectName) {
-        this.projectName.setValue(projectName);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void focusInUrlInput() {
-        projectUrl.setFocus(true);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setInputsEnableState(boolean isEnabled) {
-        projectName.setEnabled(isEnabled);
-        projectDescription.setEnabled(isEnabled);
-        projectUrl.setEnabled(isEnabled);
     }
 }

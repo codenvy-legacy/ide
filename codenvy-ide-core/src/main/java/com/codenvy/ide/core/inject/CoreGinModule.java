@@ -43,6 +43,7 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -57,6 +58,8 @@ import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.preferences.PreferencesAgent;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
+import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
@@ -81,6 +84,7 @@ import com.codenvy.ide.extension.ExtensionManagerViewImpl;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.filetypes.FileTypeRegistryImpl;
 import com.codenvy.ide.icon.IconRegistryImpl;
+import com.codenvy.ide.importproject.ImportProjectNotificationSubscriberImpl;
 import com.codenvy.ide.importproject.ImportProjectView;
 import com.codenvy.ide.importproject.ImportProjectViewImpl;
 import com.codenvy.ide.keybinding.KeyBindingManager;
@@ -114,6 +118,8 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
+import com.codenvy.ide.projectimporter.ZipProjectImporter;
+import com.codenvy.ide.projectimporter.importerpage.ZipImporterPagePresenter;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.projecttype.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
@@ -191,6 +197,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         bind(PreSelectedProjectTypeManager.class).to(PreSelectedProjectTypeManagerImpl.class).in(Singleton.class);
         bind(ImportProjectWizardRegistry.class).to(ImportProjectWizardRegistryImpl.class).in(Singleton.class);
+        bind(ImportProjectNotificationSubscriber.class).to(ImportProjectNotificationSubscriberImpl.class);
 
         configurePlatformApiGwtClients();
         configureApiBinding();
@@ -228,10 +235,16 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
         bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
+
+        GinMultibinder<ProjectImporter> projectImporterMultibinder = GinMultibinder.newSetBinder(binder(), ProjectImporter.class);
+        projectImporterMultibinder.addBinding().to(ZipProjectImporter.class);
     }
 
     /** Configure Core UI components, resources and views */
     protected void configureCoreUI() {
+        GinMultibinder<ImporterPagePresenter> importerPageMultibinder = GinMultibinder.newSetBinder(binder(), ImporterPagePresenter.class);
+        importerPageMultibinder.addBinding().to(ZipImporterPagePresenter.class);
+
         GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);

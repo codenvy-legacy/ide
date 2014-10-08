@@ -12,7 +12,6 @@ package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
@@ -20,9 +19,9 @@ import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.Notification.Type;
-import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projectimporter.ProjectImporter;
+import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
+import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
@@ -46,8 +45,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-
 /**
  * Presenter for import project wizard dialog.
  *
@@ -56,6 +53,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 public class ImportProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ImportProjectWizardView.ActionDelegate,
                                                      ImportProjectWizardView.EnterPressedDelegate {
     private final ProjectServiceClient        projectService;
+    private       ProjectImporterRegistry     projectImporterRegistry;
     private       RunnerServiceClient         runnerService;
     private final DtoUnmarshallerFactory      dtoUnmarshallerFactory;
     private final CoreLocalizationConstant    locale;
@@ -68,7 +66,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private       NewProjectWizardPresenter   newProjectWizardPresenter;
     private       MainPagePresenter           mainPage;
     private final EventBus                    eventBus;
-    private final NotificationManager         notificationManager;
     private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -78,9 +75,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private ProjectDescriptor importedProject;
     private boolean canImport = false;
     private boolean canGoNext = false;
+    private ImportProjectNotificationSubscriber importProjectNotificationSubscriber;
 
     @Inject
     public ImportProjectWizardPresenter(ImportProjectWizardView view,
+                                        ProjectImporterRegistry projectImporterRegistry,
                                         MainPagePresenter mainPage,
                                         ProjectServiceClient projectService,
                                         RunnerServiceClient runnerService,
@@ -89,12 +88,13 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         ImportProjectWizardRegistry wizardRegistry,
                                         DtoFactory factory,
                                         EventBus eventBus,
-                                        NotificationManager notificationManager,
+                                        ImportProjectNotificationSubscriber importProjectNotificationSubscriber,
                                         NewProjectWizardPresenter newProjectWizardPresenter) {
         this.view = view;
+        this.projectImporterRegistry = projectImporterRegistry;
         this.eventBus = eventBus;
         this.wizardRegistry = wizardRegistry;
-        this.notificationManager = notificationManager;
+        this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
         this.newProjectWizardPresenter = newProjectWizardPresenter;
         this.projectService = projectService;
         this.runnerService = runnerService;
@@ -182,8 +182,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             @Override
             public void onSuccess() {
                 view.close();
-                Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
-                notificationManager.showNotification(notification);
 
                 if (importedProject != null && (importedProject.getProjectTypeId() == null ||
                                                 com.codenvy.api.project.shared.Constants.BLANK_ID
@@ -243,44 +241,40 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                String url,
                                final String projectName,
                                final WizardPage.CommitCallback callback) {
-
         importedProject = null;
-        ImportSourceDescriptor importSourceDescriptor =
-                dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
-                          .withLocation(url);
+        importProjectNotificationSubscriber.subscribe(projectName);
 
         showProcessing(true);
-        projectService.importProject(projectName,
-                                     false,
-                                     importSourceDescriptor,
-                                     new AsyncRequestCallback<ProjectDescriptor>(
-                                             dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
-                                         @Override
-                                         protected void onSuccess(ProjectDescriptor result) {
-                                             importedProject = result;
-                                             showProcessing(false);
-                                             checkRam(result, callback);
-                                         }
 
-                                         @Override
-                                         protected void onFailure(Throwable exception) {
-                                             showProcessing(false);
-                                             String errorMessage;
-                                             if (exception instanceof UnauthorizedException) {
-                                                 ServiceError serverError =
-                                                         dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
-                                                                                                                        .getText(),
-                                                                                      ServiceError.class);
-                                                 errorMessage = serverError.getMessage();
-                                             } else {
-                                                 Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
-                                                 errorMessage = exception.getMessage();
-                                             }
-                                             Notification notification = new Notification(errorMessage, Type.ERROR);
-                                             notificationManager.showNotification(notification);
-                                             deleteFolder(projectName);
-                                         }
-                                     });
+        ProjectImporter projectImporter = projectImporterRegistry.getImporter(importer.getId());
+        projectImporter.importSources(url, projectName, new ProjectImporter.ImportCallback() {
+            @Override
+            public void onSuccess(ProjectDescriptor projectDescriptor) {
+                importProjectNotificationSubscriber.onSuccess();
+                importedProject = projectDescriptor;
+                showProcessing(false);
+                checkRam(projectDescriptor, callback);
+            }
+
+            @Override
+            public void onFailure(@Nonnull Throwable exception) {
+                showProcessing(false);
+                String errorMessage;
+                if (exception instanceof UnauthorizedException) {
+                    ServiceError serverError =
+                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
+                                                                                           .getText(),
+                                                         ServiceError.class
+                                                        );
+                    errorMessage = serverError.getMessage();
+                } else {
+                    Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
+                    errorMessage = exception.getMessage();
+                }
+                importProjectNotificationSubscriber.onFailure(errorMessage);
+                deleteFolder(projectName);
+            }
+        });
     }
 
     private void checkRam(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {

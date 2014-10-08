@@ -15,6 +15,8 @@ import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
+import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
@@ -24,7 +26,6 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardView.EnterPressedDelegate;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -44,26 +45,30 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_-]*$");
     private final MainPageView                  view;
-    private final ProjectImportersServiceClient projectImportersService;
-    private final NotificationManager           notificationManager;
+    private final ProjectImporterRegistry       projectImporterRegistry;
+    private       ProjectImportersServiceClient projectImportersService;
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private final CoreLocalizationConstant      locale;
+    private final NotificationManager           notificationManager;
     private       ProjectImporterDescriptor     projectImporter;
+    private       ImporterPagePresenter         importerPage;
+    private final CoreLocalizationConstant      locale;
     private       EnterPressedDelegate          enterPressedDelegate;
 
     @Inject
-    public MainPagePresenter(ProjectImportersServiceClient projectImportersService,
-                             MainPageView view,
+    public MainPagePresenter(ProjectImporterRegistry projectImporterRegistry,
+                             ProjectImportersServiceClient projectImportersService,
+                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                              NotificationManager notificationManager,
-                             DtoUnmarshallerFactory dtoUnmarshallerFactory, CoreLocalizationConstant locale) {
+                             CoreLocalizationConstant locale,
+                             MainPageView view) {
         super("Choose Project", null);
         this.view = view;
         view.setDelegate(this);
+        this.projectImporterRegistry = projectImporterRegistry;
         this.projectImportersService = projectImportersService;
-        this.notificationManager = notificationManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.notificationManager = notificationManager;
         this.locale = locale;
     }
 
@@ -75,38 +80,14 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
      * Disable all page inputs.
      */
     public void disableInputs() {
-        view.setInputsEnableState(false);
+        importerPage.disableInputs();
     }
 
     /**
      * Enable all page inputs.
      */
     public void enableInputs() {
-        view.setInputsEnableState(true);
-    }
-
-    @Override
-    public void projectNameChanged(String name) {
-        if (name == null || name.isEmpty()) {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-        } else if (NAME_PATTERN.test(name)) {
-            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
-            view.hideNameError();
-        } else {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-            view.showNameError();
-        }
-        delegate.updateControls();
-    }
-
-    @Override
-    public void projectDescriptionChanged(String projectDescriptionValue) {
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
-    }
-
-    @Override
-    public void projectVisibilityChanged(Boolean aPublic) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
+        importerPage.enableInputs();
     }
 
     @Override
@@ -118,46 +99,18 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     @Override
     public void projectImporterSelected(ProjectImporterDescriptor importer) {
         this.projectImporter = importer;
-        wizardContext.putData(ImportProjectWizard.PROJECT_IMPORTER, importer);
-        view.setImporterDescription(importer.getDescription());
-        view.focusInUrlInput();
+        wizardContext.putData(ImportProjectWizard.PROJECT_IMPORTER, projectImporter);
+        setImporterPage();
+    }
+
+    private void setImporterPage() {
+        this.importerPage = projectImporterRegistry.getImporterPage(projectImporter.getId());
+        importerPage.setContext(wizardContext);
+        importerPage.setProjectWizardDelegate(delegate);
+        importerPage.go(view.getImporterPanel());
         delegate.updateControls();
     }
 
-
-    /** {@inheritDoc} */
-    @Override
-    public void projectUrlChanged(String url) {
-        if (!isGitUrlCorrect(url)) {
-            wizardContext.removeData(ImportProjectWizard.PROJECT_URL);
-        } else {
-            wizardContext.putData(ImportProjectWizard.PROJECT_URL, url);
-            view.hideUrlError();
-
-            String projectName = view.getProjectName();
-            if (projectName.isEmpty()) {
-                projectName = parseUri(url);
-                view.setProjectName(projectName);
-                projectNameChanged(projectName);
-            }
-        }
-        delegate.updateControls();
-    }
-
-    /** Gets project name from uri. */
-    private String parseUri(String uri) {
-        String result;
-        int indexStartProjectName = uri.lastIndexOf("/") + 1;
-        int indexFinishProjectName = uri.indexOf(".", indexStartProjectName);
-        if (indexStartProjectName != 0 && indexFinishProjectName != (-1)) {
-            result = uri.substring(indexStartProjectName, indexFinishProjectName);
-        } else if (indexStartProjectName != 0) {
-            result = uri.substring(indexStartProjectName);
-        } else {
-            result = "";
-        }
-        return result;
-    }
 
     @Nullable
     @Override
@@ -184,10 +137,16 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     @Override
     public void go(final AcceptsOneWidget container) {
         projectImporter = null;
+        if (importerPage != null) {
+            importerPage.clear();
+            importerPage = null;
+        }
         view.reset();
         container.setWidget(view);
-        view.setInputsEnableState(true);
+        setImporters();
+    }
 
+    private void setImporters() {
         final Map<String, Set<ProjectImporterDescriptor>> importers = new HashMap<>();
         projectImportersService.getProjectImporters(new AsyncRequestCallback<Array<ProjectImporterDescriptor>>(
                 dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectImporterDescriptor.class)) {
@@ -203,7 +162,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                         if (importers.containsKey(importer.getCategory())) {
                             importers.get(importer.getCategory()).add(importer);
                         } else {
-                            Set<ProjectImporterDescriptor> importersSet = new HashSet<ProjectImporterDescriptor>();
+                            Set<ProjectImporterDescriptor> importersSet = new HashSet<>();
                             importersSet.add(importer);
                             importers.put(importer.getCategory(), importersSet);
                         }
@@ -216,7 +175,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                         if (importers.keySet().iterator().hasNext()) {
                             view.selectImporter(importers.get(importers.keySet().iterator().next()).iterator().next());
                         }
-                        view.focusInUrlInput();
                     }
                 }.schedule(300);
 
@@ -231,59 +189,11 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         });
     }
 
-
     /** {@inheritDoc} */
     @Override
     public void onEnterClicked() {
         if (enterPressedDelegate != null) {
             enterPressedDelegate.onEnterKeyPressed();
         }
-    }
-
-    private boolean isGitUrlCorrect(String url) {
-        // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
-        RegExp scpLikeSyntax = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
-
-        // the transport protocol
-        RegExp protocol = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
-
-        // the address of the remote server between // and /
-        RegExp host1 = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
-
-        // the address of the remote server between @ and : or /
-        RegExp host2 = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
-
-        // the repository name
-        RegExp repoName = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
-
-        // start with white space
-        RegExp whiteSpace = RegExp.compile("^\\s");
-
-        if (whiteSpace.test(url)) {
-            view.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
-            return false;
-        }
-
-        if (scpLikeSyntax.test(url) && repoName.test(url)) {
-            return true;
-        } else if (scpLikeSyntax.test(url) && !repoName.test(url)) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
-            return false;
-        }
-
-        if (!protocol.test(url)) {
-            view.showUrlError(locale.importProjectMessageProtocolIncorrect());
-            return false;
-        }
-        if (!(host1.test(url) || host2.test(url))) {
-            view.showUrlError(locale.importProjectMessageHostIncorrect());
-            return false;
-        }
-        if (!(repoName.test(url))) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
-            return false;
-        }
-        view.hideUrlError();
-        return true;
     }
 }
