@@ -448,6 +448,9 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getTooltipBackgroundColor() { return "#202020";}
+
+    @Override
     public String getProgressColor() {
         return "#ffffff";
     }

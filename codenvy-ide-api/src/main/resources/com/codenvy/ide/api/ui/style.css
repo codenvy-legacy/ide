@@ -148,6 +148,8 @@
 @eval toolbarBackgroundColor com.codenvy.ide.api.theme.Style.getToolbarBackgroundColor();
 @eval toolbarIconColor com.codenvy.ide.api.theme.Style.getToolbarIconColor();
 
+@eval tooltipBackgroundColor com.codenvy.ide.api.theme.Style.getTooltipBackgroundColor();
+
 /* DialogBox*/
 @eval dialogTopLeft com.codenvy.ide.api.theme.Style.getTabBorderColor();
 @eval dialogTopCenter com.codenvy.ide.api.theme.Style.getTabBorderColor();

@@ -30,8 +30,6 @@ import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.api.event.WindowActionEvent;
-import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
@@ -86,7 +84,6 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls launching application.
@@ -175,7 +172,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                                                             getLogs(false);
                                                             console.onAppStarted(appContext.getCurrentProject().getProcessDescriptor());
                                                             notificationManager.showNotification(new Notification(
-                                                                    constant.projectRunningNow(event.getProject().getName()), INFO));
+                                                                    constant.projectRunningNow(event.getProject().getName()), INFO, true));
 
                                                             break;
                                                         }
@@ -471,7 +468,9 @@ public class RunController implements Notification.OpenNotificationHandler {
      */
     private void runProject(RunOptions runOptions, final boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
-        notification = new Notification(constant.applicationStarting(currentProject.getProjectDescription().getName()), PROGRESS,
+        notification = new Notification(constant.launchingRunner(currentProject.getProjectDescription().getName()),
+                                        PROGRESS,
+                                        true,
                                         RunController.this);
         notificationManager.showNotification(notification);
         console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
@@ -653,6 +652,22 @@ public class RunController implements Notification.OpenNotificationHandler {
                     final String urlStatus = jsonObject.get("status").isString().stringValue();
                     if (urlStatus.equals("OK")) {
                         isLastAppHealthOk = true;
+
+                        String projectName = appContext.getCurrentProject().getProjectDescription().getName();
+
+                        String notificationMessage = constant.applicationStarted(projectName);
+                        Notification.Type notificationType = INFO;
+                        Notification.Status notificationStatus = FINISHED;
+                        if (notification == null) {
+                            notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                            notificationManager.showNotification(notification);
+                        } else {
+                            notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                        }
+
+                        console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+                        console.print("[INFO] " + notificationMessage);
+
                         console.onAppStarted(applicationProcessDescriptor);
                         stopCheckingAppHealth(applicationProcessDescriptor);
                     }
@@ -682,6 +697,21 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        String projectName = appContext.getCurrentProject().getProjectDescription().getName();
+
+        String notificationMessage = constant.environmentCooking(projectName);
+        Notification.Type notificationType = INFO;
+        Notification.Status notificationStatus = PROGRESS;
+        if (notification == null) {
+            notification = new Notification(notificationMessage, notificationType, notificationStatus);
+            notificationManager.showNotification(notification);
+        } else {
+            notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+        }
+
+        console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+        console.print("[INFO] " + notificationMessage);
+
         console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
@@ -705,17 +735,26 @@ public class RunController implements Notification.OpenNotificationHandler {
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
         appContext.getCurrentProject().setProcessDescriptor(descriptor);
 
+        String notificationMessage = "";
+        Notification.Type notificationType = INFO;
+        Notification.Status notificationStatus = FINISHED;
         switch (descriptor.getStatus()) {
             case RUNNING:
                 isAnyAppRunning = true;
                 startCheckingAppHealth(descriptor);
-                if (notification == null)
-                    notification = new Notification(constant.applicationStarted(projectName), INFO);
-                notification.setStatus(FINISHED);
-                notification.setMessage(constant.applicationStarted(projectName));
+
+                notificationMessage = constant.applicationStarting(projectName);
+                notificationType = INFO;
+                notificationStatus = FINISHED;
+                if (notification == null) {
+                    notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                    notificationManager.showNotification(notification);
+                } else {
+                    notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                }
 
                 console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
-                console.print("[INFO] " + notification.getMessage());
+                console.print("[INFO] " + notificationMessage);
 
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
@@ -732,19 +771,30 @@ public class RunController implements Notification.OpenNotificationHandler {
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
-                if (notification == null)
-                    notification = new Notification(constant.applicationStopped(descriptor.getProject()), INFO);
+                notificationMessage = constant.applicationStopped(projectName);
+                notificationStatus = FINISHED;
 
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
-                    notification.setType(ERROR);
+                    notificationType= ERROR;
                     getLogs(false);
+                } else {
+                    notificationType = INFO;
                 }
-                notification.setStatus(FINISHED);
-                notification.setMessage(constant.applicationStopped(projectName));
+                if (notification == null) {
+                    notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                    notificationManager.showNotification(notification);
+                } else {
+                    notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                }
 
-                console.setCurrentRunnerStatus(RunnerStatus.DONE);
-                console.print("[INFO] " + notification.getMessage());
+                if (descriptor.getStartTime() == -1) {
+                    console.setCurrentRunnerStatus(RunnerStatus.FAILED);
+                    console.print("[ERROR] " + notificationMessage);
+                } else {
+                    console.setCurrentRunnerStatus(RunnerStatus.DONE);
+                    console.print("[INFO] " + notificationMessage);
+                }
 
                 console.onAppStopped();
                 break;
@@ -757,13 +807,18 @@ public class RunController implements Notification.OpenNotificationHandler {
                 isLastAppHealthOk = false;
                 getLogs(false);
 
-                if (notification == null)
-                    notification = new Notification(constant.applicationFailed(projectName), ERROR);
-                notification.setStatus(FINISHED);
-                notification.setMessage(constant.applicationFailed(projectName));
+                notificationMessage = constant.applicationFailed(projectName);
+                notificationStatus = FINISHED;
+                notificationType = ERROR;
+                if (notification == null) {
+                    notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                    notificationManager.showNotification(notification);
+                } else {
+                    notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                }
 
                 console.setCurrentRunnerStatus(RunnerStatus.FAILED);
-                console.print("[INFO] " + notification.getMessage());
+                console.print("[ERROR] " + notificationMessage);
 
                 console.onAppStopped();
                 break;
@@ -775,13 +830,18 @@ public class RunController implements Notification.OpenNotificationHandler {
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppOutput(descriptor);
 
-                if (notification == null)
-                    notification = new Notification(constant.applicationCanceled(projectName), WARNING);
-                notification.setStatus(FINISHED);
-                notification.setMessage(constant.applicationCanceled(projectName));
+                notificationMessage = constant.applicationCanceled(projectName);
+                notificationStatus = FINISHED;
+                notificationType = ERROR;
+                if (notification == null) {
+                    notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                    notificationManager.showNotification(notification);
+                } else {
+                    notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                }
 
-                console.setCurrentRunnerStatus(RunnerStatus.DONE);
-                console.print("[INFO] " + notification.getMessage());
+                console.setCurrentRunnerStatus(RunnerStatus.FAILED);
+                console.print("[ERROR] " + notificationMessage);
 
                 console.onAppStopped();
                 break;
