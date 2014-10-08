@@ -21,18 +21,25 @@
         }
 
         .spacingTop {
-            margin-top: 20px;
+            margin-top: 5px;
         }
 
         .labelMargin {
-            margin-bottom: 5px;
+            margin: 5px 0;
+        }
+
+        .box {
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
         }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label width="100%" addStyleNames="{style.labelMargin}" text="{locale.navigateToFileViewFileFieldTitle}"/>
-                <g:SuggestBox ui:field="files" width="100%" debugId="file-navigateToFile-fileName"/>
+                <g:SuggestBox ui:field="files" width="100%" addStyleNames="{style.box}" debugId="file-navigateToFile-fileName"/>
+                <g:Label width="100%" addStyleNames="{style.labelMargin} {res.coreCss.greyFontColor}" text="{locale.navigateToFileViewFileFieldPrompt}"/>
             </g:FlowPanel>
         </g:center>
     </g:DockLayoutPanel>

@@ -90,7 +90,7 @@ textarea {
     background: radial-gradient(ellipse at center, windowContentBackground 35%, radioButtonBackgroundColor 40%); /* W3C*/
 }
 
-.gwt-TextBox, .gwt-PasswordTextBox {
+.gwt-TextBox, .gwt-PasswordTextBox, .gwt-SuggestBox {
     background-color: boxBackgroundColor;
     color: boxTextColor;
     border: 1px solid boxBorderColor;
@@ -101,7 +101,7 @@ textarea {
     text-shadow: boxTextShadow;
 }
 
-.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled] {
+.gwt-TextBox[disabled], .gwt-PasswordTextBox[disabled], .gwt-SuggestBox[disabled] {
     background-color: boxBackgroundColorDisabled;
 }
 
@@ -280,7 +280,7 @@ a {
 }
 
 .greyFontColor {
-    color: #545454;
+    color: #888888;
 }
 
 .defaultFont {
