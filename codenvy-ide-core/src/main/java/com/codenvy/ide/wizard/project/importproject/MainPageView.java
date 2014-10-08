@@ -13,6 +13,7 @@ package com.codenvy.ide.wizard.project.importproject;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.ImplementedBy;
 
 import java.util.Map;
@@ -33,38 +34,12 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
      */
     void setImporters(Map<String, Set<ProjectImporterDescriptor>> categories);
 
+    AcceptsOneWidget getImporterPanel();
+
     /**
      * REset the page.
      */
     void reset();
-
-    /**
-     * Show the name error.
-     */
-    void showNameError();
-
-    /**
-     * Hide the name error.
-     */
-    void hideNameError();
-
-    /**
-     * Show URL error.
-     */
-    void showUrlError(String message);
-
-    /**
-     * Hide URL error.
-     */
-    void hideUrlError();
-
-    /**
-     * Display importer's description.
-     *
-     * @param text
-     *         description
-     */
-    void setImporterDescription(String text);
 
     /**
      * Select importer in the list.
@@ -74,47 +49,7 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
      */
     void selectImporter(ProjectImporterDescriptor importer);
 
-    /**
-     * Get the project's name value.
-     *
-     * @return {@link String} project's name
-     */
-    String getProjectName();
-
-    /**
-     * Set the project's name value.
-     *
-     * @param projectName
-     *         project's name to set
-     */
-    void setProjectName(String projectName);
-
-    /**
-     * Give focus to project's URL input.
-     */
-    void focusInUrlInput();
-
-    /**
-     * Set the enable state of the inputs.
-     *
-     * @param isEnabled
-     *         <code>true</code> if enabled, <code>false</code> if disabled
-     */
-    void setInputsEnableState(boolean isEnabled);
-
     public interface ActionDelegate {
-
-        /** Performs any actions appropriate in response to the user having changed the project's name. */
-        void projectNameChanged(String name);
-
-        /** Performs any actions appropriate in response to the user having changed the project's URL. */
-        void projectUrlChanged(String url);
-
-        /** Performs any actions appropriate in response to the user having changed the project's description. */
-        void projectDescriptionChanged(String projectDescriptionValue);
-
-        /** Performs any actions appropriate in response to the user having changed the project's visibility. */
-        void projectVisibilityChanged(Boolean aPublic);
 
         ProjectWizardView.ActionDelegate getProjectWizardDelegate();
 
