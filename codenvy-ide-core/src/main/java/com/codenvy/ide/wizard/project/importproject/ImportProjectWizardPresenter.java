@@ -20,9 +20,7 @@ import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.Notification.Type;
-import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
@@ -46,8 +44,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-
 /**
  * Presenter for import project wizard dialog.
  *
@@ -68,7 +64,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private       NewProjectWizardPresenter   newProjectWizardPresenter;
     private       MainPagePresenter           mainPage;
     private final EventBus                    eventBus;
-    private final NotificationManager         notificationManager;
     private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -78,6 +73,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private ProjectDescriptor importedProject;
     private boolean canImport = false;
     private boolean canGoNext = false;
+    private ImportProjectNotificationSubscriber importProjectNotificationSubscriber;
 
     @Inject
     public ImportProjectWizardPresenter(ImportProjectWizardView view,
@@ -89,12 +85,12 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         ImportProjectWizardRegistry wizardRegistry,
                                         DtoFactory factory,
                                         EventBus eventBus,
-                                        NotificationManager notificationManager,
+                                        ImportProjectNotificationSubscriber importProjectNotificationSubscriber,
                                         NewProjectWizardPresenter newProjectWizardPresenter) {
         this.view = view;
         this.eventBus = eventBus;
         this.wizardRegistry = wizardRegistry;
-        this.notificationManager = notificationManager;
+        this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
         this.newProjectWizardPresenter = newProjectWizardPresenter;
         this.projectService = projectService;
         this.runnerService = runnerService;
@@ -182,8 +178,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             @Override
             public void onSuccess() {
                 view.close();
-                Notification notification = new Notification(locale.importProjectMessageSuccess(), INFO);
-                notificationManager.showNotification(notification);
 
                 if (importedProject != null && (importedProject.getProjectTypeId() == null ||
                                                 com.codenvy.api.project.shared.Constants.BLANK_ID
@@ -249,6 +243,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(importer.getId())
                           .withLocation(url);
 
+        importProjectNotificationSubscriber.subscribe(projectName);
+
         showProcessing(true);
         projectService.importProject(projectName,
                                      false,
@@ -260,6 +256,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                              importedProject = result;
                                              showProcessing(false);
                                              checkRam(result, callback);
+                                             importProjectNotificationSubscriber.onSuccess();
                                          }
 
                                          @Override
@@ -276,8 +273,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                  Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
                                                  errorMessage = exception.getMessage();
                                              }
-                                             Notification notification = new Notification(errorMessage, Type.ERROR);
-                                             notificationManager.showNotification(notification);
+                                             importProjectNotificationSubscriber.onFailure(errorMessage);
+
                                              deleteFolder(projectName);
                                          }
                                      });
