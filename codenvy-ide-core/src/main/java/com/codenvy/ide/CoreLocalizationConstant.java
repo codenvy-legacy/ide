@@ -290,6 +290,18 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.newXmlFile.description")
     String actionNewXmlFileDescription();
 
+    @Key("action.changeProjectType.description")
+    String actionChangeProjectTypeDescription();
+
+    @Key("action.changeProjectType.title")
+    String actionChangeProjectTypeTitle();
+
+    @Key("action.findAction.description")
+    String actionFindActionDescription();
+
+    @Key("action.findAction.title")
+    String actionFindActionTitle();
+
     /* Redirect Actions */
     @Key("action.redirectToHelp.title")
     String actionRedirectToHelpTitle();
