@@ -29,6 +29,7 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.debug.BreakpointManager;
 import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
@@ -37,6 +38,9 @@ import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocument
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
+import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
@@ -73,6 +77,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final EventBus             generalEventBus;
     private final DialogFactory        dialogFactory;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final BreakpointManager    breakpointManager;
 
     private TextEditorConfiguration    configuration;
     private NotificationManager        notificationManager;
@@ -83,20 +88,22 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private EditorState errorState;
 
     @AssistedInject
-    public EmbeddedTextEditorPresenter(final Resources resources,
+    public EmbeddedTextEditorPresenter(final BreakpointManager breakpointManager,
+                                       final Resources resources,
                                        final WorkspaceAgent workspaceAgent,
                                        final EventBus eventBus,
+                                       final EditorPrefLocalizationConstant constant,
                                        final DocumentStorage documentStorage,
                                        final CodeAssistantFactory codeAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
-                                       EditorPrefLocalizationConstant constant,
                                        DialogFactory dialogFactory) {
+        this.breakpointManager = breakpointManager;
+        this.constant = constant;
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
         this.codeAssistantFactory = codeAssistantFactory;
-        this.constant = constant;
 
         this.generalEventBus = eventBus;
         this.dialogFactory = dialogFactory;
@@ -119,15 +126,28 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                     public void onDocumentReceived(final String contents) {
                         editor.setContents(contents, input.getFile());
                         firePropertyChange(PROP_INPUT);
-                        editor.addChangeHandler(new ChangeHandler() {
 
-                            @Override
-                            public void onChange(ChangeEvent event) {
-                                handleDocumentChanged();
-                            }
-                        });
+                        setupEventHandlers();
                     }
                 });
+            }
+        });
+    }
+
+    private void setupEventHandlers() {
+        this.editor.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(final ChangeEvent event) {
+                handleDocumentChanged();
+            }
+        });
+        this.editor.addGutterClickHandler(new GutterClickHandler() {
+            @Override
+            public void onGutterClick(final GutterClickEvent event) {
+                if (Gutters.BREAKPOINTS_GUTTER.equals(event.getGutterId())
+                    ||Gutters.LINE_NUMBERS_GUTTER.equals(event.getGutterId())) {
+                    breakpointManager.changeBreakPointState(event.getLineNumber());
+                }
             }
         });
     }

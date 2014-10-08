@@ -32,6 +32,8 @@ import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
@@ -52,6 +54,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView,
+                                                                         HasGutterClickHandlers,
                                                                          EditorWithErrors {
 
     private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
@@ -364,5 +367,10 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void markClean() {
         this.editor.markClean();
+    }
+
+    @Override
+    public HandlerRegistration addGutterClickHandler(final GutterClickHandler handler) {
+        return this.editor.addGutterClickHandler(handler);
     }
 }

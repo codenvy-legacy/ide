@@ -21,8 +21,10 @@ import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 
@@ -174,6 +176,13 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @param delegate the delegate
      */
     void setDelegate(Delegate delegate);
+
+    /**
+     * Adds a handler for gutter click events.
+     * @param gutterClickHandler the handler
+     * @return 
+     */
+    HandlerRegistration addGutterClickHandler(GutterClickHandler handler);
 
     /** Delegate interface for theis view. */
     public interface Delegate extends EditorWithErrors {
