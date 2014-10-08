@@ -10,11 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.api.importproject;
 
+import com.codenvy.ide.api.notification.Notification;
+
 /**
  * Client service that subscribes a project to import project output notifications. Default implementation get the output stream of the
  * remote import process through a Websocket channel.
  */
 public interface ImportProjectNotificationSubscriber {
+
+    /**
+     * Subscribe to display the import output notifications. To be called before triggering the import. Reusing already shown notification.
+     *
+     * @param projectName
+     * @param notification existing already shown notification.
+     */
+    void subscribe(String projectName, Notification notification);
 
     /**
      * Subscribe to display the import output notifications. To be called before triggering the import.

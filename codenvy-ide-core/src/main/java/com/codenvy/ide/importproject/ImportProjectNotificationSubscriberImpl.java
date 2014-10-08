@@ -48,9 +48,13 @@ public class ImportProjectNotificationSubscriberImpl implements ImportProjectNot
 
     @Override
     public void subscribe(String projectName) {
-        wsChannel = "importProject:output:" + workspaceId + ":" + projectName;
-        notification = new Notification(locale.importingProject(), Notification.Status.PROGRESS);
+        subscribe(projectName, new Notification(locale.importingProject(), Notification.Status.PROGRESS));
+    }
 
+    @Override
+    public void subscribe(String projectName, Notification existingNotification) {
+        notification = existingNotification;
+        wsChannel = "importProject:output:" + workspaceId + ":" + projectName;
         importProjectOutputWShandler = new SubscriptionHandler<String>(new LineUnmarshaller()) {
 
             @Override
