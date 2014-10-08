@@ -34,4 +34,13 @@ public interface LineStyler {
      * @param lineNumber the line number
      */
     void clearLineStyles(int lineNumber);
+
+    /** Components that hold a line styler. */
+    public interface HasLineStyler {
+        /**
+         * Returns the LineStyler instance
+         * @return the line styler instance
+         */
+        LineStyler getLineStyler();
+    }
 }
