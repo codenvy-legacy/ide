@@ -22,6 +22,7 @@ import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
+import com.codenvy.ide.jseditor.client.texteditor.LineStyler.HasLineStyler;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
 /** An interface for editor widget implementations. */
 public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
                                       HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
+                                      HasLineStyler,
                                       RequiresResize, UndoableEditor {
 
     /**
