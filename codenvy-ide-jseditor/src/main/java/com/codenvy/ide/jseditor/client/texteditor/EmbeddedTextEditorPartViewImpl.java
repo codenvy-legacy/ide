@@ -23,7 +23,9 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
+import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
+import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
@@ -67,6 +69,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private EditorWidget editor;
     private CursorModelWithHandler cursorModel;
     private EmbeddedDocument embeddedDocument;
+    private BreakpointRenderer breakpointRenderer;
 
     /** The view delegate. */
     private Delegate delegate;
@@ -76,6 +79,8 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private int tabSize = 3;
     private boolean delayedFocus = false;
     private boolean codeAssistEnabled = false;
+
+    private BreakpointRendererFactory breakpointRendererFactory;
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -291,6 +296,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
+    public LineStyler getLineStyler() {
+        return this.editor.getLineStyler();
+    }
+
+    @Override
     public HasTextMarkers getHasTextMarkers() {
         return this.editor;
     }
@@ -328,6 +338,19 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void setCodeAssistEnabled(boolean codeAssistEnabled) {
         this.codeAssistEnabled = true;
+    }
+
+    @Override
+    public BreakpointRenderer getBreakpointRenderer() {
+        if (this.breakpointRenderer == null && this.editor != null) {
+            this.breakpointRenderer = this.breakpointRendererFactory.create(getEditorHandle());
+        }
+        return this.breakpointRenderer;
+    }
+
+    @Inject
+    public void setBreakpointRendererFactory(final BreakpointRendererFactory breakpointRendererFactory) {
+        this.breakpointRendererFactory = breakpointRendererFactory;
     }
 
     /**

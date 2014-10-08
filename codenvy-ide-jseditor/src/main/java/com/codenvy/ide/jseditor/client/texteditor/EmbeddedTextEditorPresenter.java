@@ -10,6 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
+import javax.annotation.Nonnull;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -23,6 +29,8 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.debug.BreakpointRenderer;
+import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
@@ -50,9 +58,13 @@ import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
-/** Presenter part for the embedded variety of editor implementations. */
+
+/**
+ * Presenter part for the embedded variety of editor implementations.
+ */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
                                                                                     UndoableEditor,
+                                                                                    HasBreakpointRenderer,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
@@ -332,5 +344,10 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     public void setErrorState(final EditorState errorState) {
         this.errorState = errorState;
         firePropertyChange(ERROR_STATE);
+    }
+
+    @Override
+    public BreakpointRenderer getBreakpointRenderer() {
+        return this.editor.getBreakpointRenderer();
     }
 }

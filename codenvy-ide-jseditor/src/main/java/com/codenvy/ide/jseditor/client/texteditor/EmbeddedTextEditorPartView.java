@@ -16,8 +16,9 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
-import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.debug.HasBreakpointRenderer;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
@@ -32,7 +33,8 @@ import com.google.gwt.user.client.ui.RequiresResize;
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
                                                     IsConfigurable<TextEditorConfiguration>, RequiresResize, IsWidget,
-                                                    HasChangeHandlers, UndoableEditor {
+                                                    HasChangeHandlers, UndoableEditor,
+                                                    HasBreakpointRenderer {
 
 
     /**
@@ -135,6 +137,12 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @return the {@link HasGutter}
      */
     HasGutter getHasGutter();
+    
+    /**
+     * Returns a component handling line styling.
+     * @return the {@link LineStyler}
+     */
+    LineStyler getLineStyler();
 
     /**
      * Returns a component handling the text markers.
