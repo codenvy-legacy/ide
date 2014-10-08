@@ -362,7 +362,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
      * @param constraint
      */
     protected void sortPartsOnView(Constraints constraint) {
-        int boofPartPosition;
+        int oldPartPosition;
         int partPositionsSize = viewPartPositions.size();
         int positionOfLastElement = viewPartPositions.get(partPositionsSize - 1);
         int lastPositionOfSorting = partPositionsSize - 1;
@@ -372,9 +372,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             checkPart = parts.get(viewPartPositions.get(partPositionsSize - 2));
             Constraints previousConstraint = priorityPositionMap.get(checkPart.getTitle());
             if (previousConstraint != null && previousConstraint.myAnchor.equals(Anchor.LAST)) {
-                boofPartPosition = viewPartPositions.get(partPositionsSize - 2);
+                oldPartPosition = viewPartPositions.get(partPositionsSize - 2);
                 viewPartPositions.set(partPositionsSize - 2, viewPartPositions.get(partPositionsSize - 1));
-                viewPartPositions.set(partPositionsSize - 1, boofPartPosition);
+                viewPartPositions.set(partPositionsSize - 1, oldPartPosition);
                 lastPositionOfSorting = partPositionsSize - 2;
             }
         }
@@ -389,20 +389,20 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             if (localeConstraint != null) {
                 if (localeConstraint.myAnchor == Anchor.LAST) {
                     if (viewPartPositions.get(labelOfPartsPos) != positionOfLastElement) {
-                        boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                        oldPartPosition = viewPartPositions.get(labelOfPartsPos);
                         for (int partPosition = labelOfPartsPos; partPosition < partPositionsSize - 1; partPosition++) {
                             viewPartPositions.set(partPosition, viewPartPositions.get(partPosition + 1));
                         }
-                        viewPartPositions.set(partPositionsSize - 1, boofPartPosition);
+                        viewPartPositions.set(partPositionsSize - 1, oldPartPosition);
                     }
                     continue;
                 } else if (localeConstraint.myAnchor == Anchor.FIRST) {
                     if (viewPartPositions.get(labelOfPartsPos) != 0) {
-                        boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                        oldPartPosition = viewPartPositions.get(labelOfPartsPos);
                         for (int partPosition = labelOfPartsPos; partPosition > 0; partPosition--) {
                             viewPartPositions.set(partPosition, viewPartPositions.get(partPosition - 1));
                         }
-                        viewPartPositions.set(0, boofPartPosition);
+                        viewPartPositions.set(0, oldPartPosition);
                     }
                     continue;
                 } else if (localeConstraint.myAnchor == Anchor.BEFORE) {
@@ -417,21 +417,21 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                     }
                 }
                 if (labelOfPartsPos < lastPositionOfSorting) {
-                    boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                    oldPartPosition = viewPartPositions.get(labelOfPartsPos);
                     for (int partPosition = labelOfPartsPos; partPosition < lastPositionOfSorting; partPosition++) {
                         viewPartPositions.set(partPosition, viewPartPositions.get(partPosition + 1));
                     }
-                    viewPartPositions.set(lastPositionOfSorting, boofPartPosition);
+                    viewPartPositions.set(lastPositionOfSorting, oldPartPosition);
                 }
-                boofPartPosition = viewPartPositions.get(labelOfPartsPos);
+                oldPartPosition = viewPartPositions.get(labelOfPartsPos);
                 for (int partPosition = lastPositionOfSorting; partPosition > 0; partPosition--) {
                     if (parts.get(viewPartPositions.get(partPosition - 1)).getTitle().equals(localeConstraint.myRelativeToActionId)) {
                         if (localeConstraint.myAnchor == Anchor.BEFORE) {
-                            viewPartPositions.set(partPosition, boofPartPosition);
+                            viewPartPositions.set(partPosition, oldPartPosition);
                         } else {
                             if (partPosition > 1) {
                                 viewPartPositions.set(partPosition, viewPartPositions.get(partPosition - 1));
-                                viewPartPositions.set(partPosition - 1, boofPartPosition);
+                                viewPartPositions.set(partPosition - 1, oldPartPosition);
                             }
                         }
                         break;
