@@ -14,14 +14,14 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <g:DockLayoutPanel unit="PCT" width="400px" height="50px">
         <g:north size="50">
-            <g:DockLayoutPanel unit="PCT">
-                <g:west size="50">
+            <g:HorizontalPanel>
+                <g:cell width="50%" verticalAlignment="ALIGN_MIDDLE">
                     <g:Label>Enter action name:</g:Label>
-                </g:west>
-                <g:east size="50">
+                </g:cell>
+                <g:cell width="50%" verticalAlignment="ALIGN_MIDDLE">
                     <g:CheckBox ui:field="includeNonMenu" text="Include non menu actions"/>
-                </g:east>
-            </g:DockLayoutPanel>
+                </g:cell>
+            </g:HorizontalPanel>
         </g:north>
         <g:south size="50">
             <g:TextBox ui:field="nameField" width="394px" height="18px"/>

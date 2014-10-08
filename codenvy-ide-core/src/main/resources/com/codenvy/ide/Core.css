@@ -51,6 +51,19 @@ textarea {
     background-color: boxBackgroundColorDisabled;
 }
 
+.gwt-CheckBox {
+    display: block;
+}
+
+.gwt-CheckBox label {
+    float: left;
+    line-height: 20px;
+}
+
+.gwt-CheckBox input {
+    float: left;
+}
+
 .gwt-RadioButton label {
     display: inline-block;
     cursor: pointer;

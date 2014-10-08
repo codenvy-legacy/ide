@@ -139,7 +139,7 @@ public class FindActionPresenter implements Presenter, FindActionView.ActionDele
                 Action action = actionManager.getAction(id);
                 Presentation presentation = action.getTemplatePresentation();
                 String text = presentation.getText();
-                if (regExp.test(text)) {
+                if (text != null && regExp.test(text)) {
                     actions.put(action, null);
                 }
             }
