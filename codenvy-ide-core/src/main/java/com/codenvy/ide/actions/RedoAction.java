@@ -12,6 +12,7 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.editor.EditorAgent;
@@ -34,8 +35,9 @@ public class RedoAction extends Action {
     @Inject
     public RedoAction(EditorAgent editorAgent,
                       CoreLocalizationConstant localization,
-                      AnalyticsEventLogger eventLogger) {
-        super(localization.redoName(), localization.redoDescription(), null);
+                      AnalyticsEventLogger eventLogger,
+                      Resources resources) {
+        super(localization.redoName(), localization.redoDescription(), null, resources.redo());
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }

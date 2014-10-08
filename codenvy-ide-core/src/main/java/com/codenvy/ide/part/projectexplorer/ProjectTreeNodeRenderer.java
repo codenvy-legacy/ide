@@ -121,7 +121,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
             if (icon == null) {
                 String[] split = fileName.split("\\.");
                 String ext = split[split.length - 1];
-                icon = iconRegistry.getIcon(projectTypeId + "/" + ext + ".file.small.icon");
+                icon = iconRegistry.getIconIfExist(projectTypeId + "/" + ext + ".file.small.icon");
             }
             //use default icons from file type
             if(icon == null) {
