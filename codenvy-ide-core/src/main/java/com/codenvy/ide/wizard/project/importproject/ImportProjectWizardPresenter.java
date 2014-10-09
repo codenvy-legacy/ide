@@ -30,6 +30,7 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardPage;
+import com.codenvy.ide.commons.exception.JobNotFoundException;
 import com.codenvy.ide.commons.exception.UnauthorizedException;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
@@ -266,6 +267,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                          ServiceError.class
                                                         );
                     errorMessage = serverError.getMessage();
+                } else if (exception instanceof JobNotFoundException) {
+                    errorMessage = "Project import failed";
                 } else {
                     Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
                     errorMessage = exception.getMessage();
