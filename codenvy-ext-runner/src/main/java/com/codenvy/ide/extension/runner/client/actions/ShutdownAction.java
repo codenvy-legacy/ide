@@ -58,7 +58,7 @@ public class ShutdownAction extends Action {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             e.getPresentation().setVisible(currentProject.getRunner() != null);
-            e.getPresentation().setEnabled(runController.isAnyAppRunning());
+            e.getPresentation().setEnabled(runController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }
