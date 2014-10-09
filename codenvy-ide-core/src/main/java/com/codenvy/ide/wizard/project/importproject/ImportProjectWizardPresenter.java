@@ -44,7 +44,6 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * Presenter for import project wizard dialog.

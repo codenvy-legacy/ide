@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.importproject;
+package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
@@ -79,7 +79,7 @@ public class ImportProjectNotificationSubscriberImpl implements ImportProjectNot
         try {
             messageBus.subscribe(wsChannel, importProjectOutputWShandler);
         } catch (WebSocketException e1) {
-            Log.error(ImportProjectPresenter.class, e1);
+            Log.error(ImportProjectWizardPresenter.class, e1);
         }
 
         notificationManager.showNotification(notification);
