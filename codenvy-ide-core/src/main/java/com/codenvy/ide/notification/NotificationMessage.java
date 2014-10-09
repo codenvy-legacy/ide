@@ -176,6 +176,10 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
 
             changeIcon();
 
+            if (notification.isImportant() && !notification.isRead()) {
+                show();
+            }
+
             prevState = notification.clone();
         }
     }

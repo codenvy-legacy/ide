@@ -480,6 +480,7 @@ public final class Notification {
         }
 
         this.time = new Date();
+        setState(UNREAD);
         notifyObservers();
     }
 
@@ -500,6 +501,7 @@ public final class Notification {
     public void setMessage(@Nonnull String message) {
         this.message = message;
         this.time = new Date();
+        setState(UNREAD);
         notifyObservers();
     }
 
@@ -544,6 +546,7 @@ public final class Notification {
     public void setType(@Nonnull Type type) {
         this.type = type;
         this.time = new Date();
+        setState(UNREAD);
         notifyObservers();
     }
 
@@ -564,6 +567,7 @@ public final class Notification {
     public void setStatus(@Nonnull Status status) {
         this.status = status;
         this.time = new Date();
+        setState(UNREAD);
         notifyObservers();
     }
 
@@ -609,6 +613,7 @@ public final class Notification {
     public void setImportant(boolean important) {
         this.important = important;
         this.time = new Date();
+        setState(UNREAD);
         notifyObservers();
     }
 
