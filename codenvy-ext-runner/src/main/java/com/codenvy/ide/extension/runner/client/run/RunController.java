@@ -105,6 +105,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     private final AppContext             appContext;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning = false;
+    protected boolean isAnyAppLaunched = false;
     protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
     protected SubscriptionHandler<String>                       runnerHealthHandler;
@@ -203,6 +204,13 @@ public class RunController implements Notification.OpenNotificationHandler {
     /**
      * Determines whether any application is running.
      *
+     * @return <code>true</code> if any application has been launched, and <code>false</code> otherwise
+     */
+    public boolean isAnyAppLaunched() { return isAnyAppLaunched; }
+
+    /**
+     * Determines whether any application is running.
+     *
      * @return <code>true</code> if any application is running, and <code>false</code> otherwise
      */
     public boolean isAnyAppRunning() {
@@ -220,7 +228,7 @@ public class RunController implements Notification.OpenNotificationHandler {
      *         points whether the build is started directly by user interaction
      */
     public void runActiveProject(final RunOptions runOptions, final ProjectRunCallback callback, final boolean isUserAction) {
-        if (isAnyAppRunning) {
+        if (isAnyAppLaunched) {
             notification = new Notification(constant.anotherProjectRunningNow(), ERROR);
             notificationManager.showNotification(notification);
             return;
@@ -228,11 +236,13 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (appContext.getCurrentProject() == null) {
             return;
         }
+
         runCallback = callback;
 
         // Save the files before running if necessary
         Array<EditorPartPresenter> dirtyEditors = editorAgent.getDirtyEditors();
         if (dirtyEditors.isEmpty()) {
+            isAnyAppLaunched = true;
             checkRamAndRunProject(runOptions, isUserAction);
         } else {
             Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
@@ -247,6 +257,7 @@ public class RunController implements Notification.OpenNotificationHandler {
 
                         @Override
                         public void onSuccess(Object result) {
+                            isAnyAppLaunched = true;
                             checkRamAndRunProject(runOptions, isUserAction);
                         }
                     });
@@ -637,6 +648,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         //app was stopped in CloseProjectAction
         if (appContext.getCurrentProject() == null) {
             totalActiveTimeTimer.cancel();
+            isAnyAppLaunched = false;
             isAnyAppRunning = false;
             isLastAppHealthOk = false;
 
@@ -653,6 +665,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         switch (descriptor.getStatus()) {
             case RUNNING:
                 isAnyAppRunning = true;
+
                 startCheckingAppHealth(descriptor);
 
                 notificationMessage = constant.applicationStarting(projectName);
@@ -676,6 +689,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 break;
             case STOPPED:
                 totalActiveTimeTimer.cancel();
+                isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
@@ -712,6 +726,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 break;
             case FAILED:
                 totalActiveTimeTimer.cancel();
+                isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
@@ -736,6 +751,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 break;
             case CANCELLED:
                 totalActiveTimeTimer.cancel();
+                isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
@@ -785,6 +801,8 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onFail(String message, Throwable exception) {
+        isAnyAppLaunched = false;
+
         if (notification != null) {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
@@ -819,6 +837,7 @@ public class RunController implements Notification.OpenNotificationHandler {
 
             @Override
             protected void onFailure(Throwable exception) {
+                isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 appContext.getCurrentProject().setProcessDescriptor(null);
