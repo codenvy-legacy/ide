@@ -52,12 +52,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
-
-import javax.annotation.Nonnull;
-
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
 
 /**
  * Presenter part for the embedded variety of editor implementations.

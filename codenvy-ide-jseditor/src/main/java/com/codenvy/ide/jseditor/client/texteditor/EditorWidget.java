@@ -20,6 +20,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
+import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.codenvy.ide.jseditor.client.texteditor.LineStyler.HasLineStyler;
@@ -35,6 +36,7 @@ import javax.annotation.Nonnull;
 public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
                                       HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
                                       HasLineStyler,
+                                      HasGutterClickHandlers,
                                       RequiresResize, UndoableEditor {
 
     /**
