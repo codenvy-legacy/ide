@@ -49,6 +49,10 @@
     font-size: 12px;
 }
 
+.inputFieldPosition {
+    float: right;
+}
+
 .labelTitle {
     position: relative;
     line-height: 35px;

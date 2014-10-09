@@ -397,6 +397,8 @@ public class MainPageViewImpl implements MainPageView {
 
         String labelPosition();
 
+        String inputFieldPosition();
+
         String radioButtonPosition();
 
         String categories();
