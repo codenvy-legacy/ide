@@ -14,12 +14,14 @@ import com.codenvy.api.builder.dto.BuilderDescriptor;
 import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
-import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerConfiguration;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.runner.dto.RunnerEnvironment;
@@ -289,21 +291,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private int getRequiredMemorySize() {
-        int requiredMemorySize = 0;
+        int memorySize = 0;
 
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
         if (templateDescriptor != null) {
-            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
-            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
-
-            if (defaultEnvironment != null && configurations != null && configurations.containsKey(defaultEnvironment)) {
-                RunnerEnvironmentConfigurationDescriptor runEnvConfigDescriptor = configurations.get(defaultEnvironment);
-                if (runEnvConfigDescriptor != null) {
-                    requiredMemorySize = runEnvConfigDescriptor.getRequiredMemorySize();
+            final RunnersDescriptor runners = templateDescriptor.getRunners();
+            if (runners != null) {
+                final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
+                if (runnerConfiguration != null) {
+                    memorySize = runnerConfiguration.getRam();
                 }
             }
         }
-        return requiredMemorySize;
+        return memorySize;
     }
 
     private void createProject(final WizardPage.CommitCallback callback) {
@@ -326,11 +326,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
-
-
-        ProjectDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT);
         ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
-        fillProjectUpdate(descriptor, projectUpdate);
+        ProjectDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT);
+        if (descriptor != null) {
+            fillProjectUpdate(descriptor, projectUpdate);
+        }
 
         view.setLoaderVisibled(true);
 
@@ -377,7 +377,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      * @param callback
      */
     private void updateProjectAfterImport(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
-        String description = wizardContext.getData(ProjectWizard.PROJECT).getDescription();
+        final ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        String description = null;
+        if (project != null) {
+            description = project.getDescription();
+        }
         ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
         fillProjectUpdate(projectDescriptor, projectUpdate);
         final ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
@@ -394,7 +398,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
                 view.setLoaderVisibled(false);
-                if (wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) {
+                Boolean visibility;
+                if ((visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) != null && visibility) {
                     getProject(projectDescriptor.getName(), callback);
                 } else {
                     switchVisibility(callback, projectDescriptor);
@@ -412,7 +417,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void doCreateProject(final WizardPage.CommitCallback callback) {
         NewProject newProject = dtoFactory.createDto(NewProject.class);
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
-        fillNewProject(projectDescriptor, newProject);
+        if (projectDescriptor != null) {
+            fillNewProject(projectDescriptor, newProject);
+        }
 
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         view.setLoaderVisibled(true);
@@ -490,7 +497,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         if (currentPage == mainPage) {
             ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
             if (descriptor != null) {
-                wizard = wizardRegistry.getWizard(descriptor.getProjectTypeId());
+                wizard = wizardRegistry.getWizard(descriptor.getType());
                 if (wizard != null) {
                     wizard.setUpdateDelegate(this);
                     if (!wizard.containsPage(mainPageProvider)) {
@@ -516,32 +523,34 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
-                                    (descriptor != null && descriptor.getProjectTypeId().equals(
+                                    (descriptor != null && descriptor.getType().equals(
                                             com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
-        String requiredMemorySize = "undefined";
+        String memorySize = "undefined";
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
-            view.setRunnerEnvirConfig(runnersDescriptionMap.get(templateDescriptor.getRunnerName()));
-            view.setBuilderEnvirConfig(builderDescriptionMap.get(templateDescriptor.getBuilderName()));
-            String defaultEnvironment = templateDescriptor.getDefaultRunnerEnvironment();
-            Map<String, RunnerEnvironmentConfigurationDescriptor> configurations = templateDescriptor.getRunnerEnvironmentConfigurations();
-            if (defaultEnvironment != null && configurations != null) {
-                RunnerEnvironmentConfigurationDescriptor configurationDescriptor = configurations.get(defaultEnvironment);
-                if (configurationDescriptor != null) {
-                    int memorySize = configurationDescriptor.getRecommendedMemorySize();
-                    if (memorySize > 0) {
-                        requiredMemorySize = String.valueOf(memorySize).concat("MB");
+            final BuildersDescriptor builders = templateDescriptor.getBuilders();
+            if (builders != null) {
+                view.setBuilderEnvirConfig(builderDescriptionMap.get(builders.getDefault()));
+            }
+            final RunnersDescriptor runners = templateDescriptor.getRunners();
+            if (runners != null) {
+                view.setRunnerEnvirConfig(runnersDescriptionMap.get(runners.getDefault()));
+                final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
+                if (runnerConfiguration != null) {
+                    int ram = runnerConfiguration.getRam();
+                    if (ram > 0) {
+                        memorySize = String.valueOf(ram).concat("MB");
                     }
                 }
             }
-            view.setRAMRequired(requiredMemorySize);
+            view.setRAMRequired(memorySize);
             //set info visible
             view.setInfoVisibled(true);
         } else if (descriptor != null) {
-            view.setRunnerEnvirConfig(runnersDescriptionMap.get(descriptor.getRunner()));
-            view.setBuilderEnvirConfig(builderDescriptionMap.get(descriptor.getBuilder()));
-            view.setRAMRequired(requiredMemorySize);
+// TODO (andrew00x)           view.setRunnerEnvirConfig(runnersDescriptionMap.get(descriptor.getRunner()));
+//            view.setBuilderEnvirConfig(builderDescriptionMap.get(descriptor.getBuilder()));
+//            view.setRAMRequired(requiredMemorySize);
             view.setInfoVisibled(true);
         } else {
             view.setInfoVisibled(false);
@@ -651,38 +660,30 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 //        }
 //    }
     private void fillProjectUpdate(ProjectDescriptor projectDescriptor, ProjectUpdate projectUpdate) {
-        projectUpdate.setProjectTypeId(projectDescriptor.getProjectTypeId());
+        projectUpdate.setType(projectDescriptor.getType());
         projectUpdate.setDescription(projectDescriptor.getDescription());
         projectUpdate.setAttributes(projectDescriptor.getAttributes());
 
-        projectUpdate.setRunner(projectDescriptor.getRunner());
-        projectUpdate.setRunnerEnvironmentConfigurations(projectDescriptor.getRunnerEnvironmentConfigurations());
-        projectUpdate.setDefaultRunnerEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+        projectUpdate.setRunners(projectDescriptor.getRunners());
 
-        projectUpdate.setBuilderEnvironmentConfigurations(projectDescriptor.getBuilderEnvironmentConfigurations());
-        projectUpdate.setBuilder(projectDescriptor.getBuilder());
-        projectUpdate.setDefaultBuilderEnvironment(projectDescriptor.getDefaultBuilderEnvironment());
+        projectUpdate.setBuilders(projectDescriptor.getBuilders());
     }
 
     private void fillNewProject(ProjectDescriptor projectDescriptor, NewProject newproject) {
-        newproject.setProjectTypeId(projectDescriptor.getProjectTypeId());
+        newproject.setType(projectDescriptor.getType());
         newproject.setDescription(projectDescriptor.getDescription());
         newproject.setAttributes(projectDescriptor.getAttributes());
 
-        newproject.setRunner(projectDescriptor.getRunner());
-        newproject.setRunnerEnvironmentConfigurations(projectDescriptor.getRunnerEnvironmentConfigurations());
-        newproject.setDefaultRunnerEnvironment(projectDescriptor.getDefaultRunnerEnvironment());
+        newproject.setRunners(projectDescriptor.getRunners());
 
-        newproject.setBuilder(projectDescriptor.getBuilder());
-        newproject.setBuilderEnvironmentConfigurations(projectDescriptor.getBuilderEnvironmentConfigurations());
-        newproject.setDefaultBuilderEnvironment(projectDescriptor.getDefaultBuilderEnvironment());
+        newproject.setBuilders(projectDescriptor.getBuilders());
     }
 
     /**
-     * Fill the wizardContext with data from projectDescriptor.
+     * Fill the wizardContext with data from ProjectDescriptor.
      *
      * @param projectDescriptor
-     *         data transfer object (DTO) for {@link com.codenvy.api.project.shared.ProjectDescription}.
+     *         ProjectDescriptor
      */
     private void fillWizardContext(ProjectDescriptor projectDescriptor) {
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility()));

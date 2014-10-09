@@ -74,7 +74,7 @@ public class MainPageViewImpl implements MainPageView {
             new CategoryRenderer<ProjectTypeDescriptor>() {
                 @Override
                 public void renderElement(com.google.gwt.dom.client.Element element, ProjectTypeDescriptor data) {
-                    element.setInnerText(data.getProjectTypeName());
+                    element.setInnerText(data.getTypeName());
                 }
 
                 @Override
@@ -169,8 +169,8 @@ public class MainPageViewImpl implements MainPageView {
             projectType.setText(((ProjectTemplateDescriptor)itemData).getDisplayName());
         } else if (itemData instanceof ProjectTypeDescriptor) {
             delegate.projectTypeSelected((ProjectTypeDescriptor)itemData);
-            descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
-            projectType.setText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
+            descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getTypeName());
+            projectType.setText(((ProjectTypeDescriptor)itemData).getTypeName());
         } else {
             descriptionArea.getElement().setInnerText("");
             resetConfigOptions();
@@ -320,7 +320,7 @@ public class MainPageViewImpl implements MainPageView {
         ProjectTypeDescriptor typeDescriptor = null;
         for (String category : categories.keySet()) {
             for (ProjectTypeDescriptor descriptor : categories.get(category)) {
-                if (descriptor.getProjectTypeId().equals(projectTypeId)) {
+                if (descriptor.getType().equals(projectTypeId)) {
                     typeDescriptor = descriptor;
                     break;
                 }
@@ -331,7 +331,7 @@ public class MainPageViewImpl implements MainPageView {
         }
         if (typeDescriptor != null) {
             for (ProjectTypeDescriptor existingProjectTypeDescriptor : availableProjectTypes.asIterable()) {
-                if (existingProjectTypeDescriptor.getProjectTypeId().equals(typeDescriptor.getProjectTypeId())) {
+                if (existingProjectTypeDescriptor.getType().equals(typeDescriptor.getType())) {
                     list.selectElement(typeDescriptor);
                     selectNextWizardType(typeDescriptor);
                 }

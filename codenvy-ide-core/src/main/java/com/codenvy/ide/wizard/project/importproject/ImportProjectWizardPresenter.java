@@ -14,7 +14,8 @@ import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
-import com.codenvy.api.project.shared.dto.RunnerEnvironmentConfigurationDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerConfiguration;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -183,9 +184,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             public void onSuccess() {
                 view.close();
 
-                if (importedProject != null && (importedProject.getProjectTypeId() == null ||
-                                                com.codenvy.api.project.shared.Constants.BLANK_ID
-                                                        .equals(importedProject.getProjectTypeId()))) {
+                if (importedProject != null && (importedProject.getType() == null
+                                                || com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getType()))) {
 
                     WizardContext context = new WizardContext();
                     context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
@@ -279,13 +279,12 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     private void checkRam(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
         int requiredMemorySize = 0;
-        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectDescriptor.getRunnerEnvironmentConfigurations();
-        String defaultRunnerEnvironment = projectDescriptor.getDefaultRunnerEnvironment();
-
-        if (runEnvConfigurations != null && defaultRunnerEnvironment != null &&
-            runEnvConfigurations.containsKey(defaultRunnerEnvironment)) {
-            RunnerEnvironmentConfigurationDescriptor runEnvConfDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-            requiredMemorySize = runEnvConfDescriptor.getRequiredMemorySize();
+        final RunnersDescriptor runners = projectDescriptor.getRunners();
+        if (runners != null) {
+            final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
+            if (runnerConfiguration != null) {
+                requiredMemorySize = runnerConfiguration.getRam();
+            }
         }
 
         if (requiredMemorySize > 0) {

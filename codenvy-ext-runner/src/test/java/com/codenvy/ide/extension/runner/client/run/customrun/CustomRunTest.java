@@ -11,6 +11,7 @@
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
@@ -80,8 +81,10 @@ public class CustomRunTest extends BaseTest {
         final ResourcesDescriptor resourcesDescriptor = mock(ResourcesDescriptor.class);
         ProfileDescriptor profileDescriptor = mock(ProfileDescriptor.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
+        RunnersDescriptor runnersDescriptor = mock(RunnersDescriptor.class);
         when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
-        when(projectDescriptor.getDefaultRunnerEnvironment()).thenReturn("Tomcat7");
+        when(projectDescriptor.getRunners()).thenReturn(runnersDescriptor);
+        when(runnersDescriptor.getDefault()).thenReturn("Tomcat7");
         when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");

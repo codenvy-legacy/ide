@@ -45,14 +45,14 @@ public class ProjectTypeDescriptorRegistryImpl implements ProjectTypeDescriptorR
     /** {@inheritDoc} */
     @Override
     public void registerDescriptor(ProjectTypeDescriptor projectTypeDescriptor) {
-        projectTypeDescriptors.put(projectTypeDescriptor.getProjectTypeId(), projectTypeDescriptor);
+        projectTypeDescriptors.put(projectTypeDescriptor.getType(), projectTypeDescriptor);
     }
 
     /** {@inheritDoc} */
     @Override
     public void registerDescriptors(Array<ProjectTypeDescriptor> projectTypeDescriptors) {
         for (ProjectTypeDescriptor descriptor : projectTypeDescriptors.asIterable()) {
-            this.projectTypeDescriptors.put(descriptor.getProjectTypeId(), descriptor);
+            this.projectTypeDescriptors.put(descriptor.getType(), descriptor);
         }
     }
 

@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.api.app;
 
+import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 
 import javax.annotation.Nullable;
@@ -78,15 +80,24 @@ public class CurrentProject {
     }
 
     public String getRunner() {
-        return projectDescription.getRunner();
+        final RunnersDescriptor runners = projectDescription.getRunners();
+        if (runners == null) {
+            return null;
+        }
+        return runners.getDefault();
     }
 
+    @Deprecated
     public String getRunnerEnvId() {
-        return projectDescription.getDefaultRunnerEnvironment();
+        return null;
     }
 
     public String getBuilder() {
-        return projectDescription.getBuilder();
+        final BuildersDescriptor builders = projectDescription.getBuilders();
+        if (builders == null) {
+            return null;
+        }
+        return builders.getDefault();
     }
 
     public ProjectDescriptor getRootProject() {

@@ -69,7 +69,7 @@ public class ProjectNodeTest {
     public void setUp() {
         when(projectDescriptor.getPath()).thenReturn(ITEM_PATH);
         when(projectDescriptor.getName()).thenReturn(ITEM_NAME);
-        when(projectDescriptor.getProjectTypeId()).thenReturn(PROJECT_TYPE_ID);
+        when(projectDescriptor.getType()).thenReturn(PROJECT_TYPE_ID);
     }
 
     @Test
@@ -144,6 +144,6 @@ public class ProjectNodeTest {
 
     @Test
     public void shouldReturnProjectTypeId() throws Exception {
-        assertEquals(projectDescriptor.getProjectTypeId(), projectNode.getProjectTypeId());
+        assertEquals(projectDescriptor.getType(), projectNode.getProjectTypeId());
     }
 }

@@ -226,7 +226,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
 
     /** Get unique ID of type of project. */
     public String getProjectTypeId() {
-        return data.getProjectTypeId();
+        return data.getType();
     }
 
     /**

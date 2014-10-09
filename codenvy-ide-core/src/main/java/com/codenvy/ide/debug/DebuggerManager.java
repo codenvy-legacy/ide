@@ -39,7 +39,7 @@ public class DebuggerManager {
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
-                currentDebugger = debuggers.get(event.getProject().getProjectTypeId());
+                currentDebugger = debuggers.get(event.getProject().getType());
             }
 
             @Override

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.api.project.shared.ProjectTemplateDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -117,22 +116,23 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
         for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
-            if (wizardRegistry.getWizard(descriptor.getProjectTypeId()) != null) {
-                if (!descriptorsByCategory.containsKey(descriptor.getProjectTypeCategory())) {
-                    descriptorsByCategory.put(descriptor.getProjectTypeCategory(), new HashSet<ProjectTypeDescriptor>());
+            if (wizardRegistry.getWizard(descriptor.getType()) != null) {
+                if (!descriptorsByCategory.containsKey(descriptor.getTypeCategory())) {
+                    descriptorsByCategory.put(descriptor.getTypeCategory(), new HashSet<ProjectTypeDescriptor>());
                 }
-                descriptorsByCategory.get(descriptor.getProjectTypeCategory()).add(descriptor);
+                descriptorsByCategory.get(descriptor.getTypeCategory()).add(descriptor);
 
                 // if exist, save the default project type descriptor
-                if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(descriptor.getProjectTypeId())) {
+                if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(descriptor.getType())) {
                     defaultProjectTypeDescriptor = descriptor;
                 }
             }
             if (project == null) {
                 if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
                     for (ProjectTemplateDescriptor templateDescriptor : descriptor.getTemplates()) {
-                        String category = templateDescriptor.getCategory() == null ? ProjectTemplateDescription.defaultCategory
-                                                                                   : templateDescriptor.getCategory();
+                        String category = templateDescriptor.getCategory() == null
+                                          ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
+                                          : templateDescriptor.getCategory();
                         if (!samples.containsKey(category)) {
                             samples.put(category, new HashSet<ProjectTemplateDescriptor>());
                         }
@@ -145,15 +145,14 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         view.setAvailableProjectTypeDescriptors(descriptors);
         view.setProjectTypeCategories(descriptorsByCategory, samples);
         if (project != null) {
-            view.selectProjectType(project.getProjectTypeId());
+            view.selectProjectType(project.getType());
             view.setVisibility(project.getVisibility().equals("public"));
             view.setName(project.getName());
             view.setDescription(project.getDescription());
-            view.setConfigOptions(Arrays.asList(project.getDefaultRunnerEnvironment()));
             projectNameChanged(project.getName());
         } else if (defaultProjectTypeDescriptor != null) {
             // if no project type, pre select maven
-            view.selectProjectType(defaultProjectTypeDescriptor.getProjectTypeId());
+            view.selectProjectType(defaultProjectTypeDescriptor.getType());
             view.focusOnName();
         }
     }
@@ -164,8 +163,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         template = null;
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        project.setProjectTypeId(typeDescriptor.getProjectTypeId());
-        project.setProjectTypeName(typeDescriptor.getProjectTypeName());
+        project.setType(typeDescriptor.getType());
+        project.setTypeName(typeDescriptor.getTypeName());
 
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
