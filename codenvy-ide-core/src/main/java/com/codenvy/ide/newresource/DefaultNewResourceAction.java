@@ -24,6 +24,7 @@ import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -42,13 +43,14 @@ import javax.annotation.Nullable;
  * @author Artem Zatsarynnyy
  */
 public class DefaultNewResourceAction extends Action {
-    protected String               title;
-    protected AppContext           appContext;
-    protected SelectionAgent       selectionAgent;
-    protected EditorAgent          editorAgent;
-    protected ProjectServiceClient projectServiceClient;
-    protected EventBus             eventBus;
-    protected AnalyticsEventLogger eventLogger;
+    protected String                 title;
+    protected AppContext             appContext;
+    protected SelectionAgent         selectionAgent;
+    protected EditorAgent            editorAgent;
+    protected ProjectServiceClient   projectServiceClient;
+    protected EventBus               eventBus;
+    protected AnalyticsEventLogger   eventLogger;
+    private   DtoUnmarshallerFactory unmarshallerFactory;
 
     /**
      * Creates new action.
@@ -79,14 +81,10 @@ public class DefaultNewResourceAction extends Action {
                                     SelectionAgent selectionAgent,
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient,
-                                    EventBus eventBus) {
-        super(title, description, icon, svgIcon);
-        this.title = title;
-        this.appContext = appContext;
-        this.selectionAgent = selectionAgent;
-        this.editorAgent = editorAgent;
-        this.projectServiceClient = projectServiceClient;
-        this.eventBus = eventBus;
+                                    EventBus eventBus,
+                                    DtoUnmarshallerFactory unmarshallerFactory) {
+        this(title, description, icon, svgIcon, appContext, selectionAgent, editorAgent, projectServiceClient, eventBus, null,
+             unmarshallerFactory);
     }
 
     /**
@@ -121,7 +119,8 @@ public class DefaultNewResourceAction extends Action {
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient,
                                     EventBus eventBus,
-                                    AnalyticsEventLogger eventLogger) {
+                                    AnalyticsEventLogger eventLogger,
+                                    DtoUnmarshallerFactory unmarshallerFactory) {
         super(title, description, icon, svgIcon);
         this.title = title;
         this.appContext = appContext;
@@ -130,6 +129,7 @@ public class DefaultNewResourceAction extends Action {
         this.projectServiceClient = projectServiceClient;
         this.eventBus = eventBus;
         this.eventLogger = eventLogger;
+        this.unmarshallerFactory = unmarshallerFactory;
     }
 
     @Override
@@ -144,11 +144,17 @@ public class DefaultNewResourceAction extends Action {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
                 final StorableNode parent = getParent();
                 projectServiceClient.createFile(parent.getPath(), name, getDefaultContent(), getMimeType(),
-                                                new AsyncRequestCallback<ItemReference>() {
+                                                new AsyncRequestCallback<ItemReference>(
+                                                        unmarshallerFactory.newUnmarshaller(ItemReference.class)) {
                                                     @Override
                                                     protected void onSuccess(ItemReference result) {
                                                         eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent(
                                                                 (AbstractTreeNode<?>)parent));
+                                                        if ("file".equals(result.getType())) {
+                                                            FileNode file =
+                                                                    new FileNode(null, result, eventBus, projectServiceClient, null);
+                                                            editorAgent.openEditor(file);
+                                                        }
                                                     }
 
                                                     @Override

@@ -22,6 +22,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -45,7 +46,8 @@ public class NewFolderAction extends DefaultNewResourceAction {
                            Resources resources,
                            ProjectServiceClient projectServiceClient,
                            EventBus eventBus,
-                           AnalyticsEventLogger eventLogger) {
+                           AnalyticsEventLogger eventLogger,
+                           DtoUnmarshallerFactory unmarshallerFactory) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
@@ -55,7 +57,8 @@ public class NewFolderAction extends DefaultNewResourceAction {
               null,
               projectServiceClient,
               eventBus,
-              eventLogger);
+              eventLogger,
+              unmarshallerFactory);
         this.localizationConstant = localizationConstant;
     }
 

@@ -18,6 +18,7 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.DefaultNewResourceAction;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -47,7 +48,8 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
                              EditorAgent editorAgent,
                              ProjectServiceClient projectServiceClient,
                              EventBus eventBus,
-                             AnalyticsEventLogger eventLogger) {
+                             AnalyticsEventLogger eventLogger,
+                             DtoUnmarshallerFactory unmarshallerFactory) {
         super(localizationConstant.newHtmlFileActionTitle(),
               localizationConstant.newHtmlFileActionDescription(),
               webExtensionResource.html(),
@@ -57,7 +59,8 @@ public class NewHtmlFileAction extends DefaultNewResourceAction {
               editorAgent,
               projectServiceClient,
               eventBus,
-              eventLogger);
+              eventLogger,
+              unmarshallerFactory);
     }
 
     @Override
