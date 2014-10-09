@@ -75,6 +75,17 @@ public class Breakpoint {
         return file;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Breakpoint [lineNumber=").append(lineNumber)
+               .append(", type=").append(type)
+               .append(", message=").append(message)
+               .append(", path=").append(path)
+               .append("]");
+        return builder.toString();
+    }
+
     public enum Type {
         BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
     }
