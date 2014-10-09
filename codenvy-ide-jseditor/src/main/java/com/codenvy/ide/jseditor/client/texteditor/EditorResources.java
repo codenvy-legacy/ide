@@ -25,8 +25,6 @@ public interface EditorResources extends ClientBundle {
         /** Style added to errors. */
         String lineError();
 
-        String annotation();
-
         /** Style added to the current breakpoint line. */
         String debugLine();
     }
