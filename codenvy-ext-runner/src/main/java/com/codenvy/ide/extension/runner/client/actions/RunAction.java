@@ -61,7 +61,7 @@ public class RunAction extends Action {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             e.getPresentation().setVisible(currentProject.getRunner() != null);
-            e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !runController.isAnyAppRunning());
+            e.getPresentation().setEnabled(currentProject.getIsRunningEnabled() && !runController.isAnyAppLaunched());
         } else {
             e.getPresentation().setEnabledAndVisible(false);
         }
