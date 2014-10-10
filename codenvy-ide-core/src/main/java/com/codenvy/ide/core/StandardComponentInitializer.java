@@ -11,7 +11,26 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.*;
+import com.codenvy.ide.actions.ChangeProjectTypeAction;
+import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.DeleteItemAction;
+import com.codenvy.ide.actions.ExpandEditorAction;
+import com.codenvy.ide.actions.FormatterAction;
+import com.codenvy.ide.actions.ImportProjectFromLocationAction;
+import com.codenvy.ide.actions.NavigateToFileAction;
+import com.codenvy.ide.actions.NewProjectWizardAction;
+import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.RedirectToFeedbackAction;
+import com.codenvy.ide.actions.RedirectToForumsAction;
+import com.codenvy.ide.actions.RedirectToHelpAction;
+import com.codenvy.ide.actions.RedoAction;
+import com.codenvy.ide.actions.RenameItemAction;
+import com.codenvy.ide.actions.SaveAction;
+import com.codenvy.ide.actions.SaveAllAction;
+import com.codenvy.ide.actions.ShowAboutAction;
+import com.codenvy.ide.actions.ShowPreferencesAction;
+import com.codenvy.ide.actions.UndoAction;
+import com.codenvy.ide.actions.UploadFileAction;
 import com.codenvy.ide.actions.find.FindActionAction;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.DefaultActionGroup;
@@ -35,7 +54,6 @@ import com.codenvy.ide.newresource.NewFolderAction;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.xml.NewXmlFileAction;
-import com.codenvy.ide.xml.editor.XmlEditorProvider;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -62,9 +80,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private FileTypeRegistry fileTypeRegistry;
-
-    @Inject
-    private XmlEditorProvider xmlEditorProvider;
 
     @Inject
     private Resources resources;
@@ -213,7 +228,6 @@ public class StandardComponentInitializer {
 
     public void initialize() {
         fileTypeRegistry.registerFileType(xmlFile);
-        editorRegistry.registerDefaultEditor(xmlFile, xmlEditorProvider);
 
         fileTypeRegistry.registerFileType(pngFile);
         editorRegistry.registerDefaultEditor(pngFile, imageViewerProvider);
