@@ -11,6 +11,7 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
@@ -98,4 +99,8 @@ public interface EmbeddedDocument {
      * @param text the replacement text
      */
     void replace(Region region, String text);
+
+    void setFile(FileNode file);
+
+    FileNode getFile();
 }
