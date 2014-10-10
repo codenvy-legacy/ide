@@ -18,7 +18,7 @@ import com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource;
 import com.codenvy.ide.jseditor.client.texteditor.EditorResources;
 import com.google.inject.Inject;
 
-@Extension(title = "Common editor components.", version = "3.1.0")
+@Extension(title = "Common Editor", version = "3.1.0")
 public class JsEditorExtension {
 
     /** The default editor injection name. */
