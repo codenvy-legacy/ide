@@ -49,6 +49,7 @@ public class ImportProjectNotificationSubscriberImpl implements ImportProjectNot
     @Override
     public void subscribe(String projectName) {
         subscribe(projectName, new Notification(locale.importingProject(), Notification.Status.PROGRESS));
+        notificationManager.showNotification(notification);
     }
 
     @Override
@@ -81,8 +82,6 @@ public class ImportProjectNotificationSubscriberImpl implements ImportProjectNot
         } catch (WebSocketException e1) {
             Log.error(ImportProjectWizardPresenter.class, e1);
         }
-
-        notificationManager.showNotification(notification);
     }
 
     @Override
