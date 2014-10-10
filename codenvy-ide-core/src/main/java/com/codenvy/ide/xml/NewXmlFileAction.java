@@ -30,8 +30,7 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class NewXmlFileAction extends DefaultNewResourceAction {
-    private static final String DEFAULT_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                  "</xml>";
+    private static final String DEFAULT_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
     @Inject
     public NewXmlFileAction(AppContext appContext,
