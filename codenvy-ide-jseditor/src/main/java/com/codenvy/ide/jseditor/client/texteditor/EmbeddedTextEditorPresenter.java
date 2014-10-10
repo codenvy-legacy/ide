@@ -111,7 +111,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                 documentStorage.getDocument(input.getFile(), new EmbeddedDocumentCallback() {
                     @Override
                     public void onDocumentReceived(final String contents) {
-                        editor.setContents(contents);
+                        editor.setContents(contents, input.getFile());
                         firePropertyChange(PROP_INPUT);
                         editor.addChangeHandler(new ChangeHandler() {
 

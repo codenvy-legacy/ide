@@ -137,12 +137,13 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public void setContents(final String contents) {
+    public void setContents(final String contents, final FileNode file) {
 
         this.editor = editorWidgetFactory.createEditorWidget(this.editorModes.get(0));
         this.editorPanel.add(this.editor);
 
         this.embeddedDocument = this.editor.getDocument();
+        this.embeddedDocument.setFile(file);
         this.cursorModel = new EmbeddedEditorCursorModel(this.embeddedDocument);
 
         this.editor.setValue(contents);

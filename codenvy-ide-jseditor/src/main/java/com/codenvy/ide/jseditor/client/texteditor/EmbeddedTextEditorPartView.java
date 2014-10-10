@@ -58,8 +58,9 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * Sets the editor contents.
      *
      * @param contents the new contents
+     * @param fileNode the file
      */
-    void setContents(String contents);
+    void setContents(String contents, FileNode fileNode);
 
     /**
      * Returns an object that describes the current selection (primary selection if the editor implementation supports multiple selection).
