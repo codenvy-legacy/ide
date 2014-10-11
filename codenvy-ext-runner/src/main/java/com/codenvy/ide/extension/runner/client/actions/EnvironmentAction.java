@@ -62,8 +62,8 @@ public class EnvironmentAction extends Action {
         eventLogger.log(this);
 
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-        runOptions.setRunnerName("docker");
 
+        runOptions.setEnvironmentId("project://" + envFolderPath);
         List<String> scriptFiles = new ArrayList<>();
         for (String scriptName : customEnvironment.getScriptNames(true)) {
             scriptFiles.add(envFolderPath + '/' + scriptName);
