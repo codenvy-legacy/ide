@@ -166,9 +166,13 @@ public class RunController implements Notification.OpenNotificationHandler {
                                             new AsyncRequestCallback<Array<ApplicationProcessDescriptor>>(unmarshaller) {
                                                 @Override
                                                 protected void onSuccess(Array<ApplicationProcessDescriptor> result) {
+
                                                     for (ApplicationProcessDescriptor processDescriptor : result.asIterable()) {
                                                         if (processDescriptor.getStatus() == NEW ||
                                                             processDescriptor.getStatus() == RUNNING) {
+                                                            isLastAppHealthOk = true; //set true here because we don't get information
+                                                            isAnyAppRunning = true;   // about app health in case we open already run app
+                                                            console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
                                                             console.onAppStarted(appContext.getCurrentProject().getProcessDescriptor());
@@ -270,6 +274,8 @@ public class RunController implements Notification.OpenNotificationHandler {
      *         points whether the build is started directly by user interaction
      */
     private void checkRamAndRunProject(final RunOptions runOptions, final boolean isUserAction) {
+        if (appContext.getCurrentProject() == null)
+            return;
         service.getResources(
                 new AsyncRequestCallback<ResourcesDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class)) {
                     @Override
@@ -387,6 +393,8 @@ public class RunController implements Notification.OpenNotificationHandler {
      */
     private void runProject(RunOptions runOptions, final boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject == null)
+            return;
         notification = new Notification(constant.launchingRunner(currentProject.getProjectDescription().getName()),
                                         PROGRESS,
                                         true,
@@ -492,6 +500,10 @@ public class RunController implements Notification.OpenNotificationHandler {
             @Override
             protected void onErrorReceived(Throwable exception) {
                 isAnyAppRunning = false;
+                if (appContext.getCurrentProject() == null) {
+                    Log.error(RunController.class, exception);
+                    return;
+                }
 
                 if (exception instanceof ServerException &&
                     ((ServerException)exception).getHTTPStatus() == 500) {
@@ -546,8 +558,6 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingAppHealth(final ApplicationProcessDescriptor applicationProcessDescriptor) {
-        isLastAppHealthOk = false;
-
         setAppHealthOkTimer = new Timer() {
             @Override
             public void run() {
@@ -609,6 +619,9 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        if (appContext.getCurrentProject() == null) {
+            return; //MUST never happen
+        }
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
 
         String notificationMessage = constant.environmentCooking(projectName);
@@ -621,10 +634,9 @@ public class RunController implements Notification.OpenNotificationHandler {
             notification.update(notificationMessage, notificationType, notificationStatus, null, true);
         }
 
-        console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+
         console.print("[INFO] " + notificationMessage);
 
-        console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
         startCheckingAppStatus(applicationProcessDescriptor);
@@ -633,7 +645,6 @@ public class RunController implements Notification.OpenNotificationHandler {
 
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
-
         //app was stopped in CloseProjectAction
         if (appContext.getCurrentProject() == null) {
             totalActiveTimeTimer.cancel();
@@ -647,11 +658,12 @@ public class RunController implements Notification.OpenNotificationHandler {
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
         appContext.getCurrentProject().setProcessDescriptor(descriptor);
 
-        String notificationMessage = "";
-        Notification.Type notificationType = INFO;
-        Notification.Status notificationStatus = FINISHED;
+        String notificationMessage;
+        Notification.Type notificationType;
+        Notification.Status notificationStatus;
         switch (descriptor.getStatus()) {
             case RUNNING:
+                console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
                 isAnyAppRunning = true;
                 startCheckingAppHealth(descriptor);
 
@@ -757,31 +769,38 @@ public class RunController implements Notification.OpenNotificationHandler {
 
                 console.onAppStopped();
                 break;
+            case NEW:
+                console.setCurrentRunnerStatus(RunnerStatus.IN_PROGRESS);
+                break;
+
         }
     }
 
     /** Get logs of the currently launched application. */
     public void getLogs(boolean isUserAction) {
-        final Link viewLogsLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_VIEW_LOG);
-        if (viewLogsLink == null) {
-            onFail(constant.getApplicationLogsFailed(), null);
-        }
-
-        if (isUserAction) {
-            console.setActive();
-        }
-
-        service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
-            @Override
-            protected void onSuccess(String result) {
-                console.print(result);
+        if (appContext.getCurrentProject() != null) {
+            final Link viewLogsLink =
+                    RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_VIEW_LOG);
+            if (viewLogsLink == null) {
+                onFail(constant.getApplicationLogsFailed(), null);
             }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                onFail(constant.getApplicationLogsFailed(), exception);
+            if (isUserAction) {
+                console.setActive();
             }
-        });
+
+            service.getLogs(viewLogsLink, new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+                @Override
+                protected void onSuccess(String result) {
+                    console.print(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    onFail(constant.getApplicationLogsFailed(), exception);
+                }
+            });
+        }
     }
 
     private void onFail(String message, Throwable exception) {
