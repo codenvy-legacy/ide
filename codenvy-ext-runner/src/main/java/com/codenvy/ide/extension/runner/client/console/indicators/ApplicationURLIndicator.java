@@ -16,6 +16,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -38,10 +39,12 @@ public class ApplicationURLIndicator extends IndicatorAction {
 
     @Override
     public void update(ActionEvent e) {
+        final Presentation presentation = e.getPresentation();
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null && currentProject.getProcessDescriptor() != null) {
-            final Presentation presentation = e.getPresentation();
             presentation.putClientProperty(Properties.DATA_PROPERTY, runController.getCurrentAppURL());
+        } else {
+            presentation.putClientProperty(Properties.DATA_PROPERTY, "");
         }
     }
 }
