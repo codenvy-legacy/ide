@@ -20,7 +20,6 @@ import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.ext.web.css.NewCssFileAction;
 import com.codenvy.ide.ext.web.css.NewLessFileAction;
-import com.codenvy.ide.ext.web.css.editor.CssEditorProvider;
 import com.codenvy.ide.ext.web.html.NewHtmlFileAction;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorProvider;
 import com.codenvy.ide.ext.web.js.NewJavaScriptFileAction;
@@ -77,7 +76,6 @@ public class WebExtension {
     public WebExtension(FileTypeRegistry fileTypeRegistry,
                         HtmlEditorProvider htmlEditorProvider,
                         JsEditorProvider jsEditorProvider,
-                        CssEditorProvider cssEditorProvider,
                         EditorRegistry editorRegistry,
                         ParserResource res,
                         WebLocalizationConstant constant,
@@ -129,8 +127,6 @@ public class WebExtension {
         fileTypeRegistry.registerFileType(phpFile);
 
         // register Editor Provider
-        editorRegistry.registerDefaultEditor(cssFile, cssEditorProvider);
-        editorRegistry.registerDefaultEditor(lessFile, cssEditorProvider);
         editorRegistry.registerDefaultEditor(jsFile, jsEditorProvider);
         editorRegistry.registerDefaultEditor(htmlFile, htmlEditorProvider);
         Elements.injectJs(res.webParser().getText());
