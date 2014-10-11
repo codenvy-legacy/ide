@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
-import com.codenvy.api.runner.dto.RunnerEnvironment;
+
+import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 
 /**
  * Adapter that allows to display {@link RunnerEnvironment} in {@link CustomRunViewImpl}.

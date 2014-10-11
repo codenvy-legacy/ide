@@ -13,11 +13,10 @@ package com.codenvy.ide.extension.runner.client.run.customrun;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
-import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.api.runner.dto.RunnerDescriptor;
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
@@ -41,8 +40,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -120,24 +117,24 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     }
 
     private void requestRunnerEnvironments() {
-        final Unmarshallable<Array<RunnerDescriptor>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class);
+        final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
         runnerServiceClient.getRunners(
-                new AsyncRequestCallback<Array<RunnerDescriptor>>(unmarshaller) {
+                new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
                     @Override
-                    protected void onSuccess(Array<RunnerDescriptor> availableRunners) {
-                        final CurrentProject activeProject = appContext.getCurrentProject();
-                        if (activeProject != null) {
-                            view.addEnvironments(getRunnerEnvironmentsForProject(activeProject, availableRunners));
-                            setMemoryFields();
-                            final ProjectDescriptor projectDescription = activeProject.getProjectDescription();
-                            final RunnersDescriptor runners = projectDescription.getRunners();
-                            if (runners != null) {
-                                final String defaultRunner = runners.getDefault();
-                                if (defaultRunner != null) {
-                                    view.setSelectedEnvironment(defaultRunner);
-                                }
-                            }
-                        }
+                    protected void onSuccess(RunnerEnvironmentTree availableRunners) {
+//                        final CurrentProject activeProject = appContext.getCurrentProject();
+//                        if (activeProject != null) {
+//                            view.addEnvironments(getRunnerEnvironmentsForProject(activeProject, availableRunners));
+//                            setMemoryFields();
+//                            final ProjectDescriptor projectDescription = activeProject.getProjectDescription();
+//                            final RunnersDescriptor runners = projectDescription.getRunners();
+//                            if (runners != null) {
+//                                final String defaultRunner = runners.getDefault();
+//                                if (defaultRunner != null) {
+//                                    view.setSelectedEnvironment(defaultRunner);
+//                                }
+//                            }
+//                        }
                     }
 
                     @Override
@@ -150,14 +147,14 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     private Array<Environment> getRunnerEnvironmentsForProject(CurrentProject project, Array<RunnerDescriptor> allRunners) {
         Array<Environment> environments = Collections.createArray();
-        for (RunnerDescriptor runner : allRunners.asIterable()) {
-            if (project.getRunner().equals(runner.getName())) {
-                for (RunnerEnvironment environment : runner.getEnvironments().values()) {
-                    environments.add(new RunnerEnvironmentAdapter(environment));
-                }
-                break;
-            }
-        }
+//        for (RunnerDescriptor runner : allRunners.asIterable()) {
+//            if (project.getRunner().equals(runner.getName())) {
+//                for (RunnerEnvironment environment : runner.getEnvironments().values()) {
+//                    environments.add(new RunnerEnvironmentAdapter(environment));
+//                }
+//                break;
+//            }
+//        }
         return environments;
     }
 
@@ -217,35 +214,35 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
 
     @Override
     public void onRunClicked() {
-        if (view.getSelectedEnvironment() == null) {
-            return;
-        }
-        if (view.isRememberOptionsSelected()) {
-            saveOptions();
-        }
-        if (isRunnerMemoryCorrect()) {
-            RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-            runOptions.setMemorySize(Integer.valueOf(view.getRunnerMemorySize()));
-            runOptions.setSkipBuild(view.isSkipBuildSelected());
-
-            final Environment selectedEnvironment = view.getSelectedEnvironment();
-            if (selectedEnvironment != null) {
-                if (selectedEnvironment instanceof RunnerEnvironmentAdapter) {
-                    runOptions.setEnvironmentId(((RunnerEnvironmentAdapter)selectedEnvironment).getRunnerEnvironment().getId());
-                } else if (selectedEnvironment instanceof CustomEnvironmentAdapter) {
-                    final CustomEnvironment customEnvironment = ((CustomEnvironmentAdapter)selectedEnvironment).getCustomEnvironment();
-                    List<String> scriptFiles = new ArrayList<>();
-                    for (String scriptName : customEnvironment.getScriptNames(true)) {
-                        scriptFiles.add(envFolderPath + '/' + scriptName);
-                    }
-                    runOptions.setRunnerName("docker");
-                    runOptions.setScriptFiles(scriptFiles);
-                }
-            }
-
-            view.close();
-            runController.runActiveProject(runOptions, null, true);
-        }
+//        if (view.getSelectedEnvironment() == null) {
+//            return;
+//        }
+//        if (view.isRememberOptionsSelected()) {
+//            saveOptions();
+//        }
+//        if (isRunnerMemoryCorrect()) {
+//            RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+//            runOptions.setMemorySize(Integer.valueOf(view.getRunnerMemorySize()));
+//            runOptions.setSkipBuild(view.isSkipBuildSelected());
+//
+//            final Environment selectedEnvironment = view.getSelectedEnvironment();
+//            if (selectedEnvironment != null) {
+//                if (selectedEnvironment instanceof RunnerEnvironmentAdapter) {
+//                    runOptions.setEnvironmentId(((RunnerEnvironmentAdapter)selectedEnvironment).getRunnerEnvironment().getId());
+//                } else if (selectedEnvironment instanceof CustomEnvironmentAdapter) {
+//                    final CustomEnvironment customEnvironment = ((CustomEnvironmentAdapter)selectedEnvironment).getCustomEnvironment();
+//                    List<String> scriptFiles = new ArrayList<>();
+//                    for (String scriptName : customEnvironment.getScriptNames(true)) {
+//                        scriptFiles.add(envFolderPath + '/' + scriptName);
+//                    }
+//                    runOptions.setRunnerName("docker");
+//                    runOptions.setScriptFiles(scriptFiles);
+//                }
+//            }
+//
+//            view.close();
+//            runController.runActiveProject(runOptions, null, true);
+//        }
     }
 
     private void saveOptions() {

@@ -11,40 +11,49 @@
 
 package com.codenvy.ide.extension.runner.client.wizard;
 
-import com.codenvy.api.runner.dto.RunnerDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
-import java.util.Collection;
+import javax.annotation.Nullable;
 
 /**
  * @author Evgen Vidolob
  */
 @ImplementedBy(SelectRunnerPageViewImpl.class)
 public interface SelectRunnerPageView extends View<SelectRunnerPageView.ActionDelegate> {
-    void showRunners(Collection<RunnerDescriptor> runnerDescriptors);
+//    void showRunners(Collection<RunnerDescriptor> runnerDescriptors);
+//
+//    void selectRunner(String runnerName);
 
-    void selectRunner(String runnerName);
-
-    /**
-     * Set selected environment.
-     *
-     * @param environmentName
-     *         runner environment
-     */
-    void setSelectedEnvironment(String environmentName);
+//    /**
+//     * Set selected environment.
+//     *
+//     * @param environmentName
+//     *         runner environment
+//     */
+//    void setSelectedEnvironment(String environmentName);
 
     /** Set  recommended memory size for runner. */
-    void setRecommendedMemorySize(String recommendedRam);
+    void setRecommendedMemorySize(int recommendedRam);
 
     /** Get recommended memory size for runner. */
-    String getRecommendedMemorySize();
+    int getRecommendedMemorySize();
+
+    void showRunnerDescriptions(String description);
+
+    void addRunner(RunnerEnvironmentTree environmentTree);
+
+    void selectRunnerEnvironment(String environmentId);
 
     public interface ActionDelegate {
-        void runnerSelected(RunnerDescriptor runner);
-
-        void runnerEnvironmentSelected(String environmentId);
+//        void runnerSelected(RunnerDescriptor runner);
+//
+//        void runnerEnvironmentSelected(String environmentId);
 
         void recommendedMemoryChanged();
+
+        void environmentSelected(@Nullable RunnerEnvironment environment);
     }
 }

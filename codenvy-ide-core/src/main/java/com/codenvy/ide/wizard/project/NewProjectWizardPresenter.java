@@ -23,8 +23,6 @@ import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
-import com.codenvy.api.runner.dto.RunnerDescriptor;
-import com.codenvy.api.runner.dto.RunnerEnvironment;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
@@ -142,29 +140,29 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void updateRunnersDescriptor() {
-        runnerServiceClient.getRunners(new AsyncRequestCallback<Array<RunnerDescriptor>>(
-                dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
-            @Override
-            protected void onSuccess(Array<RunnerDescriptor> results) {
-                for (RunnerDescriptor runnerDescriptor : results.asIterable()) {
-                    StringBuilder runnerDescriptionStr = new StringBuilder();
-                    for (RunnerEnvironment environment : runnerDescriptor.getEnvironments().values()) {
-                        if (environment.getDisplayName() != null) {
-                            runnerDescriptionStr.append(environment.getDisplayName());
-                        }
-                    }
-                    if (runnerDescriptionStr.length() == 0) {
-                        runnerDescriptionStr.append("undefined");
-                    }
-                    runnersDescriptionMap.put(runnerDescriptor.getName(), runnerDescriptionStr.toString());
-                }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
-            }
-        });
+//        runnerServiceClient.getRunners(new AsyncRequestCallback<Array<RunnerDescriptor>>(
+//                dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
+//            @Override
+//            protected void onSuccess(Array<RunnerDescriptor> results) {
+//                for (RunnerDescriptor runnerDescriptor : results.asIterable()) {
+//                    StringBuilder runnerDescriptionStr = new StringBuilder();
+//                    for (RunnerEnvironment environment : runnerDescriptor.getEnvironments()) {
+//                        if (environment.getDisplayName() != null) {
+//                            runnerDescriptionStr.append(environment.getDisplayName());
+//                        }
+//                    }
+//                    if (runnerDescriptionStr.length() == 0) {
+//                        runnerDescriptionStr.append("undefined");
+//                    }
+//                    runnersDescriptionMap.put(runnerDescriptor.getName(), runnerDescriptionStr.toString());
+//                }
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception) {
+//                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
+//            }
+//        });
     }
 
     /** {@inheritDoc} */
