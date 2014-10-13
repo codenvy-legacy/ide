@@ -318,6 +318,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         this.editor.showCompletionProposals(source);
     }
 
+    @Override
+    public void showCompletionProposals() {
+        this.editor.showCompletionProposals();
+    }
+
 
     @Override
     public void setDelegate(final Delegate delegate) {
@@ -336,11 +341,6 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void setErrorState(final EditorState errorState) {
         this.delegate.setErrorState(errorState);
-    }
-
-    @Override
-    public void setCodeAssistEnabled(boolean codeAssistEnabled) {
-        this.codeAssistEnabled = true;
     }
 
     @Override

@@ -154,7 +154,6 @@ public class TextEditorInit {
 
         if (processors != null) {
             LOG.info("Creating code assistant.");
-            this.editorHandle.getEditor().setCodeAssistEnabled(true);
 
             final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.editorHandle,
                                                                                  this.configuration.getPartitioner());
@@ -180,6 +179,23 @@ public class TextEditorInit {
                     showCompletion(codeAssistant);
                 }
             });
+        } else {
+            final KeyBindingAction action = new KeyBindingAction() {
+                @Override
+                public void action() {
+                    showCompletion();
+                }
+            };
+            final HasKeybindings hasKeybindings = this.editorHandle.getEditor().getHasKeybindings();
+            hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.SPACE, action));
+
+            // handle CompletionRequest events that come from text operations instead of simple key binding
+            documentHandle.getDocEventBus().addHandler(CompletionRequestEvent.TYPE, new CompletionRequestHandler() {
+                @Override
+                public void onCompletionRequest(final CompletionRequestEvent event) {
+                    showCompletion();
+                }
+            });
         }
     }
 
@@ -189,8 +205,7 @@ public class TextEditorInit {
      * @param codeAssistant the code assistant
      */
     private void showCompletion(final CodeAssistant codeAssistant) {
-        editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
-
+        this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
             @Override
             public void computeCompletions(final CompletionReadyCallback callback) {
                 codeAssistant.computeCompletionProposals(new CodeAssistCallback() {
@@ -201,5 +216,10 @@ public class TextEditorInit {
                 });
             }
         });
+    }
+
+    /** Show the available completions. */
+    private void showCompletion() {
+        editorHandle.getEditor().showCompletionProposals();
     }
 }

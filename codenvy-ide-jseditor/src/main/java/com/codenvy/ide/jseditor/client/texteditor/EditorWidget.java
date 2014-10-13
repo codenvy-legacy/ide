@@ -13,6 +13,8 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
@@ -29,8 +31,6 @@ import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
-
-import javax.annotation.Nonnull;
 
 /** An interface for editor widget implementations. */
 public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
@@ -177,4 +177,9 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      * @param completionsSource the completion source
      */
     void showCompletionProposals(CompletionsSource completionsSource);
+    
+    /**
+     * Display the default completion proposals.
+     */
+    void showCompletionProposals();
 }
