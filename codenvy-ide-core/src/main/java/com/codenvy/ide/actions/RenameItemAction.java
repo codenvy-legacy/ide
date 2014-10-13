@@ -141,7 +141,7 @@ public class RenameItemAction extends Action {
                            nodeToRename.getName(),
                            0,
                            nodeToRename.getName().indexOf('.') >= 0 ?
-                           nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(),
+                           nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(), false,
                            new AskValueCallback() {
                                @Override
                                public void onOk(final String newName) {
