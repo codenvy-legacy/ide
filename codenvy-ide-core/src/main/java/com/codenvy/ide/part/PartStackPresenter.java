@@ -266,13 +266,14 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         if (part.onClose()) {
             int partIndex = parts.indexOf(part);
             if (activePart == part) {
-                PartPresenter newPart = null;
-                for (int pos = parts.size() - 1; pos >= 0; pos--) {
-                    if (parts.get(pos) instanceof ProjectExplorerPartPresenter) {
-                        newPart = parts.get(pos);
+                PartPresenter newActivePart = null;
+                for (PartPresenter tmpPart : parts.asIterable()) {
+                    if (tmpPart instanceof ProjectExplorerPartPresenter) {
+                        newActivePart = tmpPart;
+                        break;
                     }
                 }
-                setActivePart(newPart);
+                setActivePart(newActivePart);
             }
             view.removeTab(partIndex);
             int viewPartPositionsIndex = viewPartPositions.indexOf(partIndex);

@@ -186,6 +186,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
             if (activePart == part) {
                 //select another part
                 setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
+                partStackHandler.onActivePartChanged(activePart);
             }
         }
     }
