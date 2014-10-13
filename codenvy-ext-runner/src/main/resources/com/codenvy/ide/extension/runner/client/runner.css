@@ -82,3 +82,14 @@ svg.partIcon {
 .runButton:hover {
     background: rgba(0, 98, 53, 0.74);
 }
+
+.tree-icon {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -2px;
+    pointer-events: none; /* do not allow SVG element to intercept pointer events */
+    fill: mainFontColor;
+}

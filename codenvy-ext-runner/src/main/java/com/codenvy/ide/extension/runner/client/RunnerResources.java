@@ -107,6 +107,9 @@ public interface RunnerResources extends ClientBundle {
 
         @ClassName("cancelButton")
         String cancelButton();
+
+        @ClassName("tree-icon")
+        String treeIcon();
     }
 
     @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})

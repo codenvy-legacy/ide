@@ -11,19 +11,15 @@
 
 package com.codenvy.ide.extension.runner.client.wizard;
 
-import elemental.dom.Element;
 import elemental.events.KeyboardEvent;
 import elemental.events.MouseEvent;
-import elemental.html.SpanElement;
 
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.ui.tree.NodeRenderer;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
-import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -60,14 +56,14 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     private Map<String, RunnerEnvironment> environmentMap      = new HashMap<>();
 
     @Inject
-    public SelectRunnerPageViewImpl(Resources resources, DtoFactory dtoFactory) {
+    public SelectRunnerPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
         rootElement = ourUiBinder.createAndBindUi(this);
         recommendedMemory.getElement().setAttribute("type", "number");
         recommendedMemory.getElement().setAttribute("step", "128");
         recommendedMemory.getElement().setAttribute("min", "0");
 
         root = dtoFactory.createDto(RunnerEnvironmentTree.class);
-        tree = Tree.create(resources, new RunnersDataAdapter(), new RunnersRenderer());
+        tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
         treeContainer.add(tree);
         tree.setTreeEventHandler(new Tree.Listener<Object>() {
             @Override
@@ -193,28 +189,4 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
             extends UiBinder<DockLayoutPanel, SelectRunnerPageViewImpl> {
     }
 
-    class RunnersRenderer implements NodeRenderer<Object> {
-
-        @Override
-        public Element getNodeKeyTextContainer(SpanElement treeNodeLabel) {
-            return null;
-        }
-
-        @Override
-        public SpanElement renderNodeContents(Object data) {
-            SpanElement divElement = Elements.createSpanElement();
-            if (data instanceof RunnerEnvironmentTree) {
-                divElement.setInnerText(((RunnerEnvironmentTree)data).getDisplayName());
-            } else if (data instanceof RunnerEnvironment) {
-                divElement.setInnerText(((RunnerEnvironment)data).getDisplayName());
-            }
-
-            return divElement;
-        }
-
-        @Override
-        public void updateNodeContents(TreeNodeElement<Object> treeNode) {
-
-        }
-    }
 }
