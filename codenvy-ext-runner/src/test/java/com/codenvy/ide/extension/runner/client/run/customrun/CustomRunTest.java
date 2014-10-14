@@ -36,6 +36,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -84,7 +85,9 @@ public class CustomRunTest extends BaseTest {
         when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getRunners()).thenReturn(runnersDescriptor);
         when(runnersDescriptor.getDefault()).thenReturn("Tomcat7");
-        when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
+        final CurrentUser currentUser = new CurrentUser(profileDescriptor);
+        currentUser.setPreferences(new HashMap<String, String>(0));
+        when(appContext.getCurrentUser()).thenReturn(currentUser);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");
 
