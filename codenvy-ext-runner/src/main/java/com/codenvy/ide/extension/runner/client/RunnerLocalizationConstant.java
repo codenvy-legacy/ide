@@ -133,6 +133,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("appStarted")
     String applicationStarted(String name);
 
+    @Key("appMaybeStarted")
+    String applicationMaybeStarted(String name);
+
     @Key("environmentCooking")
     String environmentCooking(String name);
 
