@@ -104,11 +104,9 @@ public class CustomEnvironment {
      */
     public List<String> getScriptNames(boolean encode) {
         final String dockerScriptName = "/Dockerfile";
-        //final String mapperFileName = "/Mapper.json";
 
         List<String> list = new LinkedList<>();
         list.add((encode ? URL.encodePathSegment(name) : name) + dockerScriptName);
-        //list.add((encode ? URL.encodePathSegment(name) : name) + mapperFileName);
         return list;
     }
 

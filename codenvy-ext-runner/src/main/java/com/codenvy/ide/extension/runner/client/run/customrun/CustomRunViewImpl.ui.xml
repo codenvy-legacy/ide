@@ -16,13 +16,10 @@
     <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
     <ui:with field='resources' type='com.codenvy.ide.extension.runner.client.RunnerResources'/>
     <ui:style>
-
-        .spacingTop {
-            margin-top: 5px;
-        }
-
+        @eval InputBackgroundColor com.codenvy.ide.api.theme.Style.getInputBackground();
         .labelMargin {
             margin-bottom: 5px;
+            margin-left: 5px;
         }
 
         .emptyBorder {
@@ -59,16 +56,22 @@
             display: block;
         }
 
+        .treeContainer {
+            margin: 5px;
+            position: relative;
+            border: 1px solid InputBackgroundColor;
+            height: 323px;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="350px" height="360px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}"
+    <g:DockLayoutPanel unit="PX" width="600px" height="360px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}"
                        debugId="customRun-panel">
-        <g:north size="65.0">
-            <g:FlowPanel addStyleNames="{style.spacingTop}">
-                <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" height="20px" width="100%"
+        <g:west size="240">
+            <g:FlowPanel>
+                <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" width="100%"
                          addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
-                <g:ListBox ui:field="environmentField" height="20px" width="100%" debugId="project-customRun-environment"/>
+                <g:SimplePanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
-        </g:north>
+        </g:west>
         <g:north size="20">
             <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
                 <g:Label text="{locale.runConfigurationViewMemoryRunnerLabel}" width="100%" addStyleNames="{resources.runner.mainStyle}"/>

@@ -20,10 +20,6 @@ import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironment;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.name.Named;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Action for executing custom runner environments.
@@ -37,13 +33,11 @@ public class EnvironmentAction extends Action {
 
     private final RunController        runController;
     private final DtoFactory           dtoFactory;
-    private final String               envFolderPath;
     private final CustomEnvironment    customEnvironment;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public EnvironmentAction(RunnerResources resources, RunController runController, DtoFactory dtoFactory,
-                             @Named("envFolderPath") String envFolderPath,
                              @Assisted("title") String title,
                              @Assisted("description") String description,
                              @Assisted CustomEnvironment customEnvironment,
@@ -51,7 +45,6 @@ public class EnvironmentAction extends Action {
         super(title, description, null, resources.environment());
         this.runController = runController;
         this.dtoFactory = dtoFactory;
-        this.envFolderPath = envFolderPath;
         this.customEnvironment = customEnvironment;
         this.eventLogger = eventLogger;
     }
@@ -62,14 +55,7 @@ public class EnvironmentAction extends Action {
         eventLogger.log(this);
 
         RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-
-        runOptions.setEnvironmentId("project://" + envFolderPath);
-        List<String> scriptFiles = new ArrayList<>();
-        for (String scriptName : customEnvironment.getScriptNames(true)) {
-            scriptFiles.add(envFolderPath + '/' + scriptName);
-        }
-
-        runOptions.setScriptFiles(scriptFiles);
+        runOptions.setEnvironmentId("project://" + customEnvironment.getName());
         runController.runActiveProject(runOptions, null, true);
     }
 

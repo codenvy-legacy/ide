@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
+import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.collections.Array;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -24,28 +24,20 @@ import javax.annotation.Nullable;
 public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
     /**
-     * Returns chosen environment.
+     * Add environment to the tree.
      *
-     * @return {@link Environment}
+     * @param environmentTree
+     *         environment to add
      */
-    @Nullable
-    Environment getSelectedEnvironment();
+    void addRunner(RunnerEnvironmentTree environmentTree);
 
     /**
-     * Set selected environment.
+     * Set description field value.
      *
-     * @param environmentId
-     *         runner environment
+     * @param description
+     *         description to set
      */
-    void setSelectedEnvironment(@Nonnull String environmentId);
-
-    /**
-     * Add environments to the list.
-     *
-     * @param environments
-     *         runner environments
-     */
-    void addEnvironments(@Nonnull Array<Environment> environments);
+    void setEnvironmentDescription(String description);
 
     /** Get memory size for runner. */
     String getRunnerMemorySize();
@@ -67,6 +59,9 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
      * It's value is calculated as (Workspace RAM - RAM allocated to current Runners)
      */
     void setAvailableMemorySize(String memorySize);
+
+    /** Set "enable" state of the 'Run' button. */
+    void setRunButtonState(boolean enabled);
 
     /** Set "enable" state of the radio buttons, the value memory of which is < than workspaceRam. */
     void setEnabledRadioButtons(int workspaceRam);
@@ -92,5 +87,8 @@ public interface CustomRunView extends View<CustomRunView.ActionDelegate> {
 
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
         void onCancelClicked();
+
+        /** Performs any actions appropriate in response to the user having selected the environment in the tree. */
+        void onEnvironmentSelected(@Nullable RunnerEnvironment environment);
     }
 }
