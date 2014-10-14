@@ -304,14 +304,14 @@ public class BootstrapController {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
-                onFocusOut(analyticsSessions);
+                onFocusOut(analyticsSessions, true);
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
-                onFocusOut(analyticsSessions);
+                onFocusOut(analyticsSessions, true);
             }
         });
 
@@ -320,42 +320,45 @@ public class BootstrapController {
         window.addEventListener(Event.FOCUS, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusIn(analyticsSessions);
+                onFocusIn(analyticsSessions, false);
             }
         }, true);
 
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusOut(analyticsSessions);
+                onFocusOut(analyticsSessions, false);
             }
         }, true);
 
-        onFocusIn(analyticsSessions); // This is necessary to forcibly print the very first event
+        onFocusIn(analyticsSessions, true); // This is necessary to forcibly print the very first event
     }
 
-    private void onFocusIn(AnalyticsSessions analyticsSessions) {
+    private void onFocusIn(AnalyticsSessions analyticsSessions, boolean force) {
         if (analyticsSessions.getIdleTime() > 600000) { // 10 min
             analyticsSessions.makeNew();
+            logSessionUsageEvent(analyticsSessions, true);
+        } else {
+            logSessionUsageEvent(analyticsSessions, force);
         }
-
-        logSessionUsageEvent(analyticsSessions);
     }
 
-    private void onFocusOut(AnalyticsSessions analyticsSessions) {
-        logSessionUsageEvent(analyticsSessions);
+    private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
+        logSessionUsageEvent(analyticsSessions, force);
     }
 
-    private void logSessionUsageEvent(AnalyticsSessions analyticsSessions) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("START-TIME", Long.toString(analyticsSessions.getStartTime()));
-        parameters.put("USAGE-TIME", Long.toString(analyticsSessions.getUsageTime()));
-        parameters.put("SESSION-ID", analyticsSessions.getId());
+    private void logSessionUsageEvent(AnalyticsSessions analyticsSessions, boolean force) {
+        if (force || analyticsSessions.getIdleTime() > 60000) { // 1 min, don't log frequently than once per minute
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("START-TIME", Long.toString(analyticsSessions.getStartTime()));
+            parameters.put("USAGE-TIME", Long.toString(analyticsSessions.getUsageTime()));
+            parameters.put("SESSION-ID", analyticsSessions.getId());
 
-        analyticsEventLoggerExt.logEvent(EventLogger.SESSION_USAGE, parameters);
+            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_USAGE, parameters);
 
-        if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
-            analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
+            if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
+                analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
+            }
         }
     }
 
