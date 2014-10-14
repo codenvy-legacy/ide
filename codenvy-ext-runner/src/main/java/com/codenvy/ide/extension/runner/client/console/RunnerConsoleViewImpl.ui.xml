@@ -85,6 +85,7 @@
         }
 
         .appFrame {
+            background-color: white;
             position: absolute;
             left: 0px;
             top: 0px;
