@@ -209,7 +209,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @UiHandler({"otherValueMemory"})
     void otherMemoryHandler(KeyUpEvent event) {
-        clearStandardMemoryFilds();
+        clearStandardMemoryFields();
         radioButOther.setValue(true);
     }
 
@@ -225,7 +225,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void setRunnerMemorySize(String memorySize) {
-        clearStandardMemoryFilds();
+        clearStandardMemoryFields();
         otherValueMemory.setText("");
 
         int index;
@@ -332,7 +332,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         rememberRunMemory.setValue(false);
     }
 
-    private void clearStandardMemoryFilds() {
+    private void clearStandardMemoryFields() {
         for (RadioButton radioButton : radioButtons.asIterable()) {
             radioButton.setValue(false);
         }
