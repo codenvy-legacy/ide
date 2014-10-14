@@ -96,14 +96,6 @@ public class FileType {
         this(contentDescription, null, imageSVG, null, null, namePattern);
     }
 
-    private FileType(ImageResource image, Array<String> mimeTypes, String extension, String namePattern) {
-        this(null, image, null, mimeTypes, extension, namePattern);
-    }
-
-    private FileType(SVGResource imageSVG, Array<String> mimeTypes, String extension, String namePattern) {
-        this(null, null, imageSVG, mimeTypes, extension, namePattern);
-    }
-
     private FileType(String contentDescription, ImageResource image, SVGResource imageSVG, Array<String> mimeTypes, String extension,
                      String namePattern) {
         super();

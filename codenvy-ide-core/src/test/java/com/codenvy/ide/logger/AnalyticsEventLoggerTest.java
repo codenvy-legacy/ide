@@ -67,7 +67,7 @@ public class AnalyticsEventLoggerTest {
         ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
 
-        eventLogger.log(new TestedAction(), null, null);
+        eventLogger.log(new TestedAction());
 
         verify(eventLogger).send(eventParam.capture(), paramsParam.capture());
 
@@ -99,6 +99,26 @@ public class AnalyticsEventLoggerTest {
         assertEquals(params.get(AnalyticsEventLoggerImpl.WS_PARAM), "workspaceId");
         assertEquals(params.get(AnalyticsEventLoggerImpl.SOURCE_PARAM), "com.codenvy.ide.logger.AnalyticsEventLoggerTest$TestedAction");
         assertEquals(params.get(AnalyticsEventLoggerImpl.ACTION_PARAM), "IDE: Action");
+    }
+
+    @Test
+    public void shouldAction() {
+        doNothing().when(eventLogger).send(anyString(), anyMap());
+
+        ArgumentCaptor<String> eventParam = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> paramsParam = ArgumentCaptor.forClass(Map.class);
+
+        eventLogger.log("Autocompleting");
+
+        verify(eventLogger).send(eventParam.capture(), paramsParam.capture());
+
+        String event = eventParam.getValue();
+        assertEquals(event, "ide-usage");
+
+        Map<String, String> params = paramsParam.getValue();
+        assertEquals(params.size(), 2);
+        assertEquals(params.get(AnalyticsEventLoggerImpl.WS_PARAM), "workspaceId");
+        assertEquals(params.get(AnalyticsEventLoggerImpl.SOURCE_PARAM), "Autocompleting");
     }
 
     @Test

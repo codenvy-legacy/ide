@@ -215,7 +215,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         view.hideAppPreview();
     }
 
-    /** Should be called when current app is stopped. */
+    /** Should be called when current app is started. */
     public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
         appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor,
                                                                                                                   Constants

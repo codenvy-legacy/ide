@@ -101,7 +101,12 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     @Override
     @Deprecated
     public void log(String action) {
-        // do nothing
+        if (action != null) {
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put(SOURCE_PARAM, action);
+
+            doLog(IDE_EVENT, null, null, parameters);
+        }
     }
 
     @Override
@@ -121,9 +126,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
                        @Nullable String actionName,
                        @Nullable Map<String, String> additionalParams) {
         // we can put here additional params depending on action class
-        if (action != null) {
-            doLog(event, action.getClass(), actionName, additionalParams);
-        }
+        doLog(event, action == null ? null : action.getClass(), actionName, additionalParams);
     }
 
     private void doLog(@Nullable String event,
@@ -150,7 +153,6 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
 
         putReservedParameters(additionalParams);
         send(event, additionalParams);
-
     }
 
     private void putReservedParameters(Map<String, String> additionalParams) {
