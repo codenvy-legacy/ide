@@ -25,7 +25,6 @@ import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -39,6 +38,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.extension.runner.client.RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT;
 
 /**
  * Presenter for customizing running the project.
@@ -194,7 +194,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 final ProjectDescriptor projectDescriptor = currentProject.getProjectDescription();
                 final RunnersDescriptor runners = projectDescriptor.getRunners();
                 if (runners != null) {
-                    // Trying to get the value of memory from default runner configuration
+                    // Try to get the value of memory from default runner configuration
                     RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                     if (runnerConfiguration != null) {
                         requiredMemory = runnerConfiguration.getRam();
@@ -202,25 +202,23 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 }
 
                 if (requiredMemory <= 0) {
-                    //the value of memory from runner configuration <= 0
-                    //trying to get the value of memory from user preferences
+                    // the value of memory from runner configuration <= 0
+                    // try to get the value of memory from user preferences
                     Map<String, String> preferences = appContext.getCurrentUser().getPreferences();
-                    if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                    final String ramSize = preferences.get(PREFS_RUNNER_RAM_SIZE_DEFAULT);
+                    if (ramSize != null) {
                         try {
-                            requiredMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
-                        } catch (NumberFormatException e) {
-                            //do nothing
+                            requiredMemory = Integer.parseInt(ramSize);
+                        } catch (NumberFormatException ignore) {
                         }
                     }
                 }
 
-                // Provide runnerMemorySize = 256 if:
+                // Set 'runnerMemorySize' = 256 if:
                 // - the value of 'requiredMemory' from runner configuration <= 0 &&
-                // - the value of memory from user preferences <= 0 &&
-                // or the resulting value > workspaceMemory or the resulting value is not a multiple of 128
-                //
-                requiredMemory = (requiredMemory > 0 && requiredMemory <= totalMemory && requiredMemory % 128 == 0)
-                                 ? requiredMemory : 256;
+                // - the value of memory from user preferences <= 0
+                // - or the resulting value is not a multiple of 128
+                requiredMemory = (requiredMemory > 0 && requiredMemory % 128 == 0) ? requiredMemory : 256;
 
                 view.setEnabledRadioButtons(totalMemory);
                 view.setRunnerMemorySize(String.valueOf(requiredMemory));
