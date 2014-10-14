@@ -40,11 +40,15 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
     private static final String INFO         = "[INFO]";
+    private static final String ERROR        = "[ERROR]";
+    private static final String WARN         = "[WARNING]";
     private static final String DOCKER       = "[DOCKER]";
     private static final String DOCKER_ERROR = "[DOCKER] [ERROR]";
 
     private static final String PRE_STYLE          = "style='margin:0px; font-weight:700;'";
     private static final String INFO_COLOR         = "lightgreen'";
+    private static final String WARN_COLOR         = "#FFBA00'";
+    private static final String ERROR_COLOR        = "#F62217'";
     private static final String DOCKER_COLOR       = "#00B7EC'";
     private static final String DOCKER_ERROR_COLOR = "#F62217'";
     private RunnerResources runnerResources;
@@ -213,6 +217,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
                          message.substring(INFO.length()) + "</pre>");
+        } else if (message.startsWith(ERROR)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
+                         message.substring(ERROR.length()) + "</pre>");
+        } else if (message.startsWith(WARN)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
+                         message.substring(WARN.length()) + "</pre>");
         } else if (message.startsWith(DOCKER_ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
