@@ -72,10 +72,14 @@ public class PopupMenu extends Composite {
      * menu.
      */
     private       MenuLockLayer         lockLayer;
+
     /** Contains opened sub Popup Menu. */
     private       PopupMenu             openedSubPopup;
+    private       Element               subPopupAnchor;
+
     /** Contains HTML element ( <TR> ) which is hovered for the current time. */
     private       Element               hoveredTR;
+
     /**
      * Working variable.
      * PopupMenu panel.
@@ -91,20 +95,25 @@ public class PopupMenu extends Composite {
      */
     private       String                itemIdPrefix;
     private       Array<Action>         list;
+
     private Timer openSubPopupTimer  = new Timer() {
         @Override
         public void run() {
             openSubPopup(hoveredTR);
         }
     };
+
     private Timer closeSubPopupTimer = new Timer() {
         @Override
         public void run() {
             if (openedSubPopup != null) {
                 openedSubPopup.closePopup();
                 openedSubPopup = null;
-            }
 
+                Element e = subPopupAnchor;
+                subPopupAnchor = null;
+                setStyleNormal(e);
+            }
         }
     };
 
@@ -143,6 +152,10 @@ public class PopupMenu extends Composite {
 
                 PopupMenu.this.setStyleNormal(hoveredTR);
                 hoveredTR = null;
+
+                if (subPopupAnchor != null) {
+                    setStyleHovered(subPopupAnchor);
+                }
             }
         }, MouseOutEvent.getType());
 
@@ -179,6 +192,7 @@ public class PopupMenu extends Composite {
         if (openedSubPopup != null) {
             openedSubPopup.closePopup();
         }
+
         removeFromParent();
     }
 
@@ -291,11 +305,6 @@ public class PopupMenu extends Composite {
                 }
                 UIObject.ensureDebugId(table.getRowFormatter().getElement(i), debugId);
             }
-
-//            Element row = table.getRowFormatter().getElement(i);
-//            for (Map.Entry<String, String> attrEntry : menuItem.getAttributes().entrySet()) {
-//                row.setAttribute(attrEntry.getKey(), attrEntry.getValue());
-//            }
         }
 
         popupMenuPanel.add(table);
@@ -391,6 +400,10 @@ public class PopupMenu extends Composite {
         }
 
         setStyleNormal(hoveredTR);
+        if (subPopupAnchor != null) {
+            setStyleHovered(subPopupAnchor);
+        }
+
         if (!isRowEnabled(tr)) {
             hoveredTR = null;
             return;
@@ -418,7 +431,7 @@ public class PopupMenu extends Composite {
      * @param tr
      */
     protected void onRowClicked(Element tr) {
-        if (!isRowEnabled(tr)) {
+        if (!isRowEnabled(tr) || tr == subPopupAnchor) {
             return;
         }
 
@@ -442,17 +455,31 @@ public class PopupMenu extends Composite {
             return;
         }
 
-        int itemIndex = Integer.parseInt(DOM.getElementAttribute(tableRowElement, "item-index"));
-        Action menuItem = list.get(itemIndex);
-
         if (openedSubPopup != null) {
+            if (tableRowElement == subPopupAnchor) {
+                return;
+            }
+
             openedSubPopup.closePopup();
         }
+
+        if (subPopupAnchor != null) {
+            Element e = subPopupAnchor;
+            subPopupAnchor = null;
+            setStyleNormal(e);
+        }
+
+        subPopupAnchor = tableRowElement;
+        setStyleHovered(subPopupAnchor);
+
+        int itemIndex = Integer.parseInt(DOM.getElementAttribute(tableRowElement, "item-index"));
+        Action menuItem = list.get(itemIndex);
 
         String idPrefix = itemIdPrefix;
         if (idPrefix != null) {
             idPrefix += "/" + presentationFactory.getPresentation(menuItem).getText();
         }
+
         openedSubPopup =
                 new PopupMenu((ActionGroup)menuItem, actionManager, place, presentationFactory, lockLayer, actionSelectedHandler,
                               keyBindingAgent, idPrefix);
