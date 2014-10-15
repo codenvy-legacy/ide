@@ -22,6 +22,7 @@ import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
+import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -110,7 +111,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.runnerServiceClient = runnerServiceClient;
         this.builderServiceClient = builderServiceClient;
         requestBuildersDescriptor();
-        requestRunnersDescriptor();
     }
 
     private void requestBuildersDescriptor() {
@@ -137,32 +137,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
             }
         });
-    }
-
-    private void requestRunnersDescriptor() {
-//        runnerServiceClient.getRunners(new AsyncRequestCallback<Array<RunnerDescriptor>>(
-//                dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
-//            @Override
-//            protected void onSuccess(Array<RunnerDescriptor> results) {
-//                for (RunnerDescriptor runnerDescriptor : results.asIterable()) {
-//                    StringBuilder runnerDescriptionStr = new StringBuilder();
-//                    for (RunnerEnvironment environment : runnerDescriptor.getEnvironments()) {
-//                        if (environment.getDisplayName() != null) {
-//                            runnerDescriptionStr.append(environment.getDisplayName());
-//                        }
-//                    }
-//                    if (runnerDescriptionStr.length() == 0) {
-//                        runnerDescriptionStr.append("undefined");
-//                    }
-//                    runnersDescriptionMap.put(runnerDescriptor.getName(), runnerDescriptionStr.toString());
-//                }
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable exception) {
-//                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
-//            }
-//        });
     }
 
     /** {@inheritDoc} */
@@ -443,7 +417,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                final String projectName) {
         view.setLoaderVisible(true);
         projectService.importProject(projectName, false,
-                                     templateDescriptor.getSource(),
+                                     dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
