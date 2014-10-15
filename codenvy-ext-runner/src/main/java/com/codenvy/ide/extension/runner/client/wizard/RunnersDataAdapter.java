@@ -12,6 +12,7 @@
 package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -33,10 +34,9 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
 
     @Override
     public boolean hasChildren(Object data) {
-        if(data instanceof RunnerEnvironmentTree){
+        if (data instanceof RunnerEnvironmentTree) {
             RunnerEnvironmentTree environmentTree = (RunnerEnvironmentTree)data;
-            if(!environmentTree.getChildren().isEmpty() || (environmentTree.getEnvironments() != null && !environmentTree.getEnvironments().isEmpty()))
-                return true;
+            return !(environmentTree.getNodes().isEmpty() && environmentTree.getLeaves().isEmpty());
         }
         return false;
 
@@ -46,15 +46,16 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
     @Override
     public Array<Object> getChildren(Object data) {
         Array<Object> res = Collections.createArray();
-        if(data instanceof RunnerEnvironmentTree){
+        if (data instanceof RunnerEnvironmentTree) {
             RunnerEnvironmentTree environmentTree = (RunnerEnvironmentTree)data;
-            for (RunnerEnvironmentTree runnerEnvironmentTree : environmentTree.getChildren()) {
+            for (RunnerEnvironmentTree runnerEnvironmentTree : environmentTree.getNodes()) {
                 res.add(runnerEnvironmentTree);
             }
 
-            if(environmentTree.getEnvironments() != null){
-                for (RunnerEnvironment environment : environmentTree.getEnvironments()) {
-                    res.add(environment);
+            for (RunnerEnvironmentLeaf leaf : environmentTree.getLeaves()) {
+                RunnerEnvironment environment = leaf.getEnvironment();
+                if (environment != null) {
+                    res.add(leaf);
                 }
             }
 

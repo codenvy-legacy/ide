@@ -19,29 +19,32 @@ import com.codenvy.api.project.shared.dto.RunnerEnvironment;
  * @author Artem Zatsarynnyy
  */
 public class RunnerEnvironmentAdapter implements Environment {
-    private final RunnerEnvironment runnerEnvironment;
-
-    public RunnerEnvironmentAdapter(RunnerEnvironment runnerEnvironment) {
-        this.runnerEnvironment = runnerEnvironment;
-    }
+//    private final RunnerEnvironment runnerEnvironment;
+//
+//    public RunnerEnvironmentAdapter(RunnerEnvironment runnerEnvironment) {
+//        this.runnerEnvironment = runnerEnvironment;
+//    }
 
     @Override
     public String getId() {
-        return runnerEnvironment.getId();
+        return null;
+//        return runnerEnvironment.getId();
     }
 
     @Override
     public String getDisplayName() {
-        return runnerEnvironment.getDisplayName() == null ? runnerEnvironment.getId() : runnerEnvironment.getDisplayName();
+        return null;
+//        return runnerEnvironment.getDisplayName() == null ? runnerEnvironment.getId() : runnerEnvironment.getDisplayName();
     }
 
     @Override
     public String getDescription() {
-        return runnerEnvironment.getDescription();
+        return null;
+//        return runnerEnvironment.getDescription();
     }
 
-    /** Get adapted {@link RunnerEnvironment}. */
-    public RunnerEnvironment getRunnerEnvironment() {
-        return runnerEnvironment;
-    }
+//    /** Get adapted {@link RunnerEnvironment}. */
+//    public RunnerEnvironment getRunnerEnvironment() {
+//        return runnerEnvironment;
+//    }
 }

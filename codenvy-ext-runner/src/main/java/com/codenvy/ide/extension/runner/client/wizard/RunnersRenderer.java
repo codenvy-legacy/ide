@@ -15,6 +15,7 @@ import elemental.dom.Element;
 import elemental.html.SpanElement;
 
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.ui.tree.NodeRenderer;
@@ -46,12 +47,12 @@ public class RunnersRenderer implements NodeRenderer<Object> {
         SpanElement rootElement = Elements.createSpanElement();
         if (data instanceof RunnerEnvironmentTree) {
             rootElement.setInnerHTML(((RunnerEnvironmentTree)data).getDisplayName());
-        } else if (data instanceof RunnerEnvironment) {
+        } else if (data instanceof RunnerEnvironmentLeaf) {
             SVGResource environment = resources.environment();
             SVGImage image = new SVGImage(environment);
             image.getElement().setAttribute("class", resources.runner().treeIcon());
             rootElement.appendChild((elemental.dom.Node)image.getElement());
-            rootElement.setInnerHTML(rootElement.getInnerHTML() + "&nbsp;" + ((RunnerEnvironment)data).getDisplayName());
+            rootElement.setInnerHTML(rootElement.getInnerHTML() + "&nbsp;" + ((RunnerEnvironmentLeaf)data).getDisplayName());
         }
 
         return rootElement;
