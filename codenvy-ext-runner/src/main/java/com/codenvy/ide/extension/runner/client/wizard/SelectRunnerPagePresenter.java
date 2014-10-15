@@ -18,12 +18,14 @@ import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -43,6 +45,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private ProjectServiceClient   projectServiceClient;
     private DtoFactory             dtoFactory;
+    private AppContext             appContext;
 
 
     /**
@@ -53,13 +56,15 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
-                                     DtoFactory dtoFactory) {
+                                     DtoFactory dtoFactory,
+                                     AppContext appContext) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
         this.dtoFactory = dtoFactory;
+        this.appContext = appContext;
         view.setDelegate(this);
     }
 
@@ -76,20 +81,16 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     @Override
     public void focusComponent() {
-
     }
 
     @Override
     public void removeOptions() {
-
     }
-
 
     @Override
     public void setUpdateDelegate(@Nonnull Wizard.UpdateDelegate delegate) {
         super.setUpdateDelegate(delegate);
     }
-
 
     @Override
     public void go(AcceptsOneWidget container) {
@@ -103,7 +104,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                     @Override
                     protected void onSuccess(RunnerEnvironmentTree result) {
                         view.addRunner(result);
-                        selectRunner();
+                        requestProjectScopedEnvironments();
                     }
 
                     @Override
@@ -111,6 +112,25 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                         Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
                     }
                 });
+    }
+
+    private void requestProjectScopedEnvironments() {
+        final String projectPath = appContext.getCurrentProject().getProjectDescription().getPath();
+        final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
+        projectServiceClient.getRunnerEnvironments(projectPath, new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
+            @Override
+            protected void onSuccess(RunnerEnvironmentTree result) {
+                if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
+                    view.addRunner(result);
+                }
+                selectRunner();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(SelectRunnerPagePresenter.class, "Can't get project-scoped runner environments", exception);
+            }
+        });
     }
 
     private void selectRunner() {
