@@ -19,17 +19,36 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
  * @author Evgen Vidolob
  */
 public class RunnersDataAdapter implements NodeDataAdapter<Object> {
-    private HashMap<Object, TreeNodeElement<Object>> treeNodeElements = new HashMap<>();
+    private static final Comparator<Object>                       COMPARATOR       = new Comparator<Object>() {
+        @Override
+        public int compare(Object o1, Object o2) {
+            if (o1 instanceof RunnerEnvironmentTree && o2 instanceof RunnerEnvironmentLeaf) {
+                return 1;
+            }
+            if (o2 instanceof RunnerEnvironmentTree && o1 instanceof RunnerEnvironmentLeaf) {
+                return -1;
+            }
+            if (o1 instanceof RunnerEnvironmentTree && o2 instanceof RunnerEnvironmentTree) {
+                return ((RunnerEnvironmentTree)o1).getDisplayName().compareTo(((RunnerEnvironmentTree)o2).getDisplayName());
+            }
+            if (o1 instanceof RunnerEnvironmentLeaf && o2 instanceof RunnerEnvironmentLeaf) {
+                return ((RunnerEnvironmentLeaf)o1).getDisplayName().compareTo(((RunnerEnvironmentLeaf)o2).getDisplayName());
+            }
+            return 0;
+        }
+    };
+    private              HashMap<Object, TreeNodeElement<Object>> treeNodeElements = new HashMap<>();
 
     @Override
     public int compare(Object a, Object b) {
-        return 0;
+        return COMPARATOR.compare(a, b);
     }
 
     @Override
@@ -60,6 +79,7 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
             }
 
         }
+        res.sort(COMPARATOR);
         return res;
     }
 
