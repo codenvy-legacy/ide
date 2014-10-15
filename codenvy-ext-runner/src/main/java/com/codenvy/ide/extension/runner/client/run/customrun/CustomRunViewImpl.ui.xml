@@ -69,7 +69,7 @@
             <g:FlowPanel>
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" width="100%"
                          addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
-                <g:SimplePanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
+                <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>
         <g:north size="20">
