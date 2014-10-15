@@ -275,7 +275,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void close() {
-        clear();
+        onClose();
         this.hide();
     }
 
@@ -304,7 +304,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     protected void onClose() {
-        //do nothing
+        clear();
     }
 
     private String parseRadioButMemoryValue(String memory) {
