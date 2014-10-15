@@ -14,8 +14,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.json.JsonHelper;
 
-import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Date;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
@@ -546,6 +546,9 @@ public final class Notification {
     public void setType(@Nonnull Type type) {
         this.type = type;
         this.time = new Date();
+        if (ERROR.equals(type)) {
+            setStatus(FINISHED);
+        }
         setState(UNREAD);
         notifyObservers();
     }
