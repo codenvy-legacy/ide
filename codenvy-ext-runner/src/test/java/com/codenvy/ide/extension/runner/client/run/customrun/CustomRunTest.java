@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
@@ -19,19 +21,13 @@ import com.codenvy.api.runner.dto.RunnerDescriptor;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.BaseTest;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
-import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironment;
-import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionsManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -40,42 +36,43 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link CustomRunPresenter} functionality.
  *
  * @author Artem Zatsarynnyy
  */
-@Ignore
 public class CustomRunTest extends BaseTest {
     private static String RUNNER_NAME = "my_runner";
     @Mock
-    private CustomRunView             view;
+    private CustomRunView        view;
     @Mock
-    private DtoFactory                dtoFactory;
+    private DtoFactory           dtoFactory;
     @Mock
-    private EnvironmentActionsManager environmentActionsManager;
+    private ProjectServiceClient projectServiceClient;
     @InjectMocks
-    private CustomRunPresenter        presenter;
-    private Array<RunnerDescriptor> runnerDescriptors = Collections.createArray();
+    private CustomRunPresenter   presenter;
 
     @Before
     @Override
     public void setUp() {
         super.setUp();
 
-        runnerDescriptors.clear();
         RunnerDescriptor runnerDescriptor = mock(RunnerDescriptor.class);
         when(runnerDescriptor.getName()).thenReturn(RUNNER_NAME);
-        runnerDescriptors.add(runnerDescriptor);
-
         when(currentProject.getRunner()).thenReturn(RUNNER_NAME);
     }
 
@@ -88,55 +85,51 @@ public class CustomRunTest extends BaseTest {
         when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getRunners()).thenReturn(runnersDescriptor);
         when(runnersDescriptor.getDefault()).thenReturn("Tomcat7");
-        when(appContext.getCurrentUser()).thenReturn(new CurrentUser(profileDescriptor));
+        final CurrentUser currentUser = new CurrentUser(profileDescriptor);
+        currentUser.setPreferences(new HashMap<String, String>(0));
+        when(appContext.getCurrentUser()).thenReturn(currentUser);
         when(resourcesDescriptor.getTotalMemory()).thenReturn("512");
         when(resourcesDescriptor.getUsedMemory()).thenReturn("256");
 
-        final Array<CustomEnvironment> customEnvironments = Collections.createArray();
-        customEnvironments.add(new CustomEnvironment("env_1"));
-
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<RunnerEnvironmentTree> callback = (AsyncCallback<RunnerEnvironmentTree>)arguments[1];
+                AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[1];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, customEnvironments);
+                onSuccess.invoke(callback, mock(RunnerEnvironmentTree.class));
                 return callback;
             }
-        }).when(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
-                                                                               Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject());
+        }).when(projectServiceClient).getRunnerEnvironments(anyString(), Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<RunnerEnvironmentTree> callback = (AsyncCallback<RunnerEnvironmentTree>)arguments[1];
+                AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[0];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, runnerDescriptors);
+                onSuccess.invoke(callback, mock(RunnerEnvironmentTree.class));
                 return callback;
             }
-        }).when(service).getRunners(Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
+        }).when(runnerServiceClient).getRunners(Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
-                AsyncCallback<RunnerEnvironmentTree> callback = (AsyncCallback<RunnerEnvironmentTree>)arguments[1];
+                AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[0];
                 Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
                 onSuccess.invoke(callback, resourcesDescriptor);
                 return callback;
             }
-        }).when(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
+        }).when(runnerServiceClient).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
 
         presenter.showDialog();
 
-        verify(environmentActionsManager).requestCustomEnvironmentsForProject(Matchers.<ProjectDescriptor>anyObject(),
-                                                                              Matchers.<AsyncCallback<Array<CustomEnvironment>>>anyObject
-                                                                                      ());
-        verify(service).getRunners(Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
-        verify(service).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
-        verify(view, times(2)).addEnvironments(Matchers.<Array<Environment>>anyObject());
+        verify(projectServiceClient).getRunnerEnvironments(anyString(), Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
+        verify(view).addRunner(Matchers.<RunnerEnvironmentTree>anyObject());
+        verify(runnerServiceClient).getRunners(Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
+        verify(runnerServiceClient).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
         verify(view).setRunnerMemorySize(anyString());
         verify(view).setTotalMemorySize(anyString());
         verify(view).setAvailableMemorySize(anyString());
@@ -147,17 +140,16 @@ public class CustomRunTest extends BaseTest {
     @Test
     public void onRunClickedAndRunnerMemoryCorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
-        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
         when(view.getRunnerMemorySize()).thenReturn("128");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
         when(dtoFactory.createDto(RunOptions.class)).thenReturn(runOptions);
 
+        presenter.onEnvironmentSelected(mock(RunnerEnvironment.class));
         presenter.onRunClicked();
 
         verify(view).close();
         verify(dtoFactory).createDto(eq(RunOptions.class));
-        verify(view, times(2)).getSelectedEnvironment();
         verify(view, times(2)).getRunnerMemorySize();
         verify(view).getTotalMemorySize();
         verify(view).getAvailableMemorySize();
@@ -171,8 +163,8 @@ public class CustomRunTest extends BaseTest {
         when(view.getRunnerMemorySize()).thenReturn("1024");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
-        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
+        presenter.onEnvironmentSelected(mock(RunnerEnvironment.class));
         presenter.onRunClicked();
 
         verify(view).getRunnerMemorySize();
@@ -189,8 +181,8 @@ public class CustomRunTest extends BaseTest {
     public void onRunClickedAndCustomRunMemoryIncorrect() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("not int");
-        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
+        presenter.onEnvironmentSelected(mock(RunnerEnvironment.class));
         presenter.onRunClicked();
 
         verify(view).getRunnerMemorySize();
@@ -205,8 +197,8 @@ public class CustomRunTest extends BaseTest {
     public void onRunClickedAndCustomRunMemoryNotMultipleOf128() throws Exception {
         RunOptions runOptions = mock(RunOptions.class);
         when(view.getRunnerMemorySize()).thenReturn("255");
-        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
+        presenter.onEnvironmentSelected(mock(RunnerEnvironment.class));
         presenter.onRunClicked();
 
         verify(view).getRunnerMemorySize();
@@ -223,8 +215,8 @@ public class CustomRunTest extends BaseTest {
         when(view.getRunnerMemorySize()).thenReturn("512");
         when(view.getTotalMemorySize()).thenReturn("512");
         when(view.getAvailableMemorySize()).thenReturn("256");
-        when(view.getSelectedEnvironment()).thenReturn(mock(Environment.class));
 
+        presenter.onEnvironmentSelected(mock(RunnerEnvironment.class));
         presenter.onRunClicked();
 
         verify(view).getRunnerMemorySize();

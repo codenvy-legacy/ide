@@ -10,14 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customrun;
 
+import elemental.events.KeyboardEvent;
+import elemental.events.MouseEvent;
+
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.codenvy.ide.extension.runner.client.wizard.RunnersDataAdapter;
+import com.codenvy.ide.extension.runner.client.wizard.RunnersRenderer;
 import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.tree.Tree;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
+import com.codenvy.ide.util.input.SignalEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -28,16 +37,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * The implementation of {@link CustomRunView}.
@@ -47,11 +53,12 @@ import javax.annotation.Nullable;
 @Singleton
 public class CustomRunViewImpl extends Window implements CustomRunView {
     @UiField(provided = true)
-    final RunnerResources            resources;
+    final         RunnerResources            resources;
     @UiField(provided = true)
-    final RunnerLocalizationConstant locale;
+    final         RunnerLocalizationConstant locale;
+    private final RunnerEnvironmentTree      rootNode;
     @UiField
-    ListBox         environmentField;
+    SimplePanel     treeContainer;
     @UiField
     TextBox         memoryTotal;
     @UiField
@@ -71,25 +78,72 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @UiField
     HorizontalPanel memoryPanel2;
     private ActionDelegate delegate;
-    private Array<Environment> environments = Collections.createArray();
+    private Tree<Object>   tree;
     private Array<RadioButton> radioButtons = Collections.createArray();
+    private Button runButton;
 
     /** Create view. */
     @Inject
-    protected CustomRunViewImpl(RunnerResources resources, RunnerLocalizationConstant constant, CustomRunViewImplUiBinder uiBinder) {
-        this.resources = resources;
+    protected CustomRunViewImpl(com.codenvy.ide.Resources resources, RunnerResources runnerResources, RunnerLocalizationConstant constant,
+                                CustomRunViewImplUiBinder uiBinder, RunnersRenderer runnersRenderer, DtoFactory dtoFactory) {
+        this.resources = runnerResources;
         this.locale = constant;
         setTitle(constant.runConfigurationViewTitle());
         setWidget(uiBinder.createAndBindUi(this));
         ensureDebugId("customRun-window");
 
-        environmentField.addChangeHandler(new ChangeHandler() {
+        rootNode = dtoFactory.createDto(RunnerEnvironmentTree.class);
+        tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
+        treeContainer.add(tree);
+        tree.getModel().setRoot(rootNode);
+        tree.setTreeEventHandler(new Tree.Listener<Object>() {
             @Override
-            public void onChange(ChangeEvent event) {
-                Environment environment = environments.get(environmentField.getSelectedIndex());
-                descriptionField.setText(environment.getDescription());
+            public void onNodeAction(TreeNodeElement<Object> node) {
+            }
+
+            @Override
+            public void onNodeClosed(TreeNodeElement<Object> node) {
+            }
+
+            @Override
+            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Object> node) {
+            }
+
+            @Override
+            public void onNodeDragStart(TreeNodeElement<Object> node, MouseEvent event) {
+            }
+
+            @Override
+            public void onNodeDragDrop(TreeNodeElement<Object> node, MouseEvent event) {
+            }
+
+            @Override
+            public void onNodeExpanded(TreeNodeElement<Object> node) {
+            }
+
+            @Override
+            public void onNodeSelected(TreeNodeElement<Object> node, SignalEvent event) {
+                Object data = node.getData();
+                if (data instanceof RunnerEnvironmentLeaf) {
+                    delegate.onEnvironmentSelected(((RunnerEnvironmentLeaf)data).getEnvironment());
+                } else {
+                    delegate.onEnvironmentSelected(null);
+                }
+            }
+
+            @Override
+            public void onRootContextMenu(int mouseX, int mouseY) {
+            }
+
+            @Override
+            public void onRootDragDrop(MouseEvent event) {
+            }
+
+            @Override
+            public void onKeyboard(KeyboardEvent event) {
             }
         });
+
         for (int i = 0; i < memoryPanel1.getWidgetCount(); i++) {
             radioButtons.add((RadioButton)memoryPanel1.getWidget(i));
             radioButtons.add((RadioButton)memoryPanel2.getWidget(i));
@@ -98,7 +152,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     }
 
     private void createButtons() {
-        Button runButton = createButton(locale.buttonRun(), "project-customRun-run", new ClickHandler() {
+        runButton = createButton(locale.buttonRun(), "project-customRun-run", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onRunClicked();
@@ -132,32 +186,20 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         radioButOther.setEnabled(true);
     }
 
-    @Nullable
     @Override
-    public Environment getSelectedEnvironment() {
-        int selectedIndex = environmentField.getSelectedIndex();
-        if (selectedIndex != -1) {
-            return environments.get(selectedIndex);
-        }
-        return null;
+    public void setEnvironmentDescription(String description) {
+        descriptionField.setText(description);
     }
 
     @Override
-    public void setSelectedEnvironment(@Nonnull String environmentId) {
-        for (Environment environment : environments.asIterable()) {
-            if (environmentId.equals(environment.getId())) {
-                environmentField.setSelectedIndex(environments.indexOf(environment));
-                return;
-            }
-        }
+    public void setRunButtonState(boolean enabled) {
+        runButton.setEnabled(enabled);
     }
 
     @Override
-    public void addEnvironments(@Nonnull Array<Environment> environments) {
-        this.environments.addAll(environments);
-        for (Environment environment : environments.asIterable()) {
-            environmentField.addItem(environment.getDisplayName(), environment.getId());
-        }
+    public void addRunner(RunnerEnvironmentTree environmentTree) {
+        rootNode.getNodes().add(environmentTree);
+        tree.renderTree();
     }
 
     @UiHandler({"runnerMemory128", "runnerMemory256", "runnerMemory512", "runnerMemory1GB", "runnerMemory2GB"})
@@ -167,7 +209,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @UiHandler({"otherValueMemory"})
     void otherMemoryHandler(KeyUpEvent event) {
-        clearStandardMemoryFilds();
+        clearStandardMemoryFields();
         radioButOther.setValue(true);
     }
 
@@ -183,7 +225,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void setRunnerMemorySize(String memorySize) {
-        clearStandardMemoryFilds();
+        clearStandardMemoryFields();
         otherValueMemory.setText("");
 
         int index;
@@ -233,14 +275,15 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void close() {
-        clear();
+        onClose();
         this.hide();
     }
 
     @Override
     public void showDialog() {
-        this.environments.clear();
-        environmentField.clear();
+        runButton.setEnabled(false);
+        rootNode.getNodes().clear();
+        tree.renderTree();
         this.show();
     }
 
@@ -261,7 +304,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     protected void onClose() {
-        //do nothing
+        clear();
     }
 
     private String parseRadioButMemoryValue(String memory) {
@@ -289,7 +332,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         rememberRunMemory.setValue(false);
     }
 
-    private void clearStandardMemoryFilds() {
+    private void clearStandardMemoryFields() {
         for (RadioButton radioButton : radioButtons.asIterable()) {
             radioButton.setValue(false);
         }

@@ -34,7 +34,7 @@ public abstract class BaseTest {
     @Mock
     protected RunController              runController;
     @Mock
-    protected RunnerServiceClient        service;
+    protected RunnerServiceClient        runnerServiceClient;
     @Mock
     protected NotificationManager        notificationManager;
     @Mock

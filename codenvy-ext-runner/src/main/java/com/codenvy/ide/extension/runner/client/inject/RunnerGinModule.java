@@ -52,11 +52,11 @@ public class RunnerGinModule extends AbstractGinModule {
         bind(CustomEnvironmentsView.class).to(CustomEnvironmentsViewImpl.class).in(Singleton.class);
     }
 
-    /** Provides project-relative path to the folder for custom environments for runner. */
+    /** Provides project-relative path to the folder for project-scoped runner environments. */
     @Provides
     @Named("envFolderPath")
     @Singleton
     protected String provideEnvironmentsFolderRelPath() {
-        return ".codenvy/environments";
+        return ".codenvy/runners/environments";
     }
 }

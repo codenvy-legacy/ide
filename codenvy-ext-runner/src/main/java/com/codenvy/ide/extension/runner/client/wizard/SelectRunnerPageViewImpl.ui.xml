@@ -57,7 +57,7 @@
             <g:FlowPanel>
                 <g:Label text="Select Runner environment:"
                          addStyleNames="{style.labelPosition} {style.margin}"/>
-                <g:SimplePanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
+                <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>
         <g:east size="50">

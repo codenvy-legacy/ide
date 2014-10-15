@@ -35,11 +35,11 @@ public interface SelectRunnerPageView extends View<SelectRunnerPageView.ActionDe
 //     */
 //    void setSelectedEnvironment(String environmentName);
 
-    /** Set  recommended memory size for runner. */
-    void setRecommendedMemorySize(int recommendedRam);
-
     /** Get recommended memory size for runner. */
     int getRecommendedMemorySize();
+
+    /** Set  recommended memory size for runner. */
+    void setRecommendedMemorySize(int recommendedRam);
 
     void showRunnerDescriptions(String description);
 

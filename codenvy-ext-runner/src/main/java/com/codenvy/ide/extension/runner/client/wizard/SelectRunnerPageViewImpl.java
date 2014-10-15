@@ -100,8 +100,8 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
             @Override
             public void onNodeSelected(TreeNodeElement<Object> node, SignalEvent event) {
                 Object data = node.getData();
-                if (data instanceof RunnerEnvironment) {
-                    delegate.environmentSelected((RunnerEnvironment)data);
+                if (data instanceof RunnerEnvironmentLeaf) {
+                    delegate.environmentSelected(((RunnerEnvironmentLeaf)data).getEnvironment());
                 } else {
                     delegate.environmentSelected(null);
                 }
