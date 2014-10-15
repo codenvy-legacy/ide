@@ -299,6 +299,12 @@ public class DocumentPositionMapImpl implements DocumentPositionMap {
     }
 
     @Override
+    public List<TypedPosition> getPositions(int offset, int length, boolean canStartBefore,
+                                            boolean canEndAfter) throws BadPositionCategoryException {
+        return getPositions(Categories.DEFAULT_CATEGORY, offset, length, canStartBefore, canEndAfter);
+    }
+
+    @Override
     public List<TypedPosition> getPositions(String category, int offset, int length, boolean canStartBefore,
                                             boolean canEndAfter) throws BadPositionCategoryException {
         if (canStartBefore && canEndAfter || (!canStartBefore && !canEndAfter)) {

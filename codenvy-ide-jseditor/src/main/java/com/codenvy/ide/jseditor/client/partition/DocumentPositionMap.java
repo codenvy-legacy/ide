@@ -88,6 +88,9 @@ public interface DocumentPositionMap {
     List<TypedPosition> getPositions(String category, int offset, int length,
                                      boolean canStartBefore, boolean canEndAfter) throws BadPositionCategoryException;
 
+    List<TypedPosition> getPositions(int offset, int length,
+                                     boolean canStartBefore, boolean canEndAfter) throws BadPositionCategoryException;
+
     /**
      * Sets the length of the mapped content.
      * @param newLength the new value
