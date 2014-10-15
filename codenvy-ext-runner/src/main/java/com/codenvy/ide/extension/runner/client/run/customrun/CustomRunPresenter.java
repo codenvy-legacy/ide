@@ -96,7 +96,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         projectService.getRunnerEnvironments(projectPath, new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
-                if (!result.getEnvironments().isEmpty() || !result.getChildren().isEmpty()) {
+                if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
                     view.addRunner(result);
                 }
                 requestSystemEnvironments();

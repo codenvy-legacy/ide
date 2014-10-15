@@ -118,7 +118,10 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         if (descriptor.getRunners() != null) {
             RunnersDescriptor runners = descriptor.getRunners();
             view.selectRunnerEnvironment(runners.getDefault());
-            view.setRecommendedMemorySize(runners.getConfigs().get(runners.getDefault()).getRam());
+            final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
+            if (runnerConfiguration != null) {
+                view.setRecommendedMemorySize(runnerConfiguration.getRam());
+            }
         }
     }
 
@@ -160,6 +163,4 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             view.showRunnerDescriptions("");
         }
     }
-
-
 }

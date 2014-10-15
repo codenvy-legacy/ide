@@ -13,7 +13,7 @@ package com.codenvy.ide.extension.runner.client.run.customrun;
 import elemental.events.KeyboardEvent;
 import elemental.events.MouseEvent;
 
-import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -124,8 +124,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
             @Override
             public void onNodeSelected(TreeNodeElement<Object> node, SignalEvent event) {
                 Object data = node.getData();
-                if (data instanceof RunnerEnvironment) {
-                    delegate.onEnvironmentSelected((RunnerEnvironment)data);
+                if (data instanceof RunnerEnvironmentLeaf) {
+                    delegate.onEnvironmentSelected(((RunnerEnvironmentLeaf)data).getEnvironment());
                 } else {
                     delegate.onEnvironmentSelected(null);
                 }
@@ -198,7 +198,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void addRunner(RunnerEnvironmentTree environmentTree) {
-        rootNode.getChildren().add(environmentTree);
+        rootNode.getNodes().add(environmentTree);
         tree.renderTree();
     }
 
@@ -282,7 +282,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @Override
     public void showDialog() {
         runButton.setEnabled(false);
-        rootNode.getChildren().clear();
+        rootNode.getNodes().clear();
         tree.renderTree();
         this.show();
     }
