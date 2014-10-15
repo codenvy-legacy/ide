@@ -10,14 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -39,17 +40,12 @@ import java.util.Map;
 public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
 
-    private static final String                 defaultTitleText                 = "Create New Project";
-    private static final String                 titleText                        = "Project Configuration";
-    private static final String                 defaultSaveButtonText            = "Create";
-    private static final String                 saveButtonText                   = "Save";
-    private              Map<Presenter, Widget> pageCache                        = new HashMap<Presenter, Widget>();
-    private              HandlerRegistration    nativePreviewHandlerRegistration = null;
+    private final CoreLocalizationConstant coreLocalizationConstant;
+    private Map<Presenter, Widget> pageCache                        = new HashMap<>();
+    private HandlerRegistration    nativePreviewHandlerRegistration = null;
     private boolean        isSaveActionTitle;
     private ActionDelegate delegate;
 
-    @UiField
-    Style       style;
     @UiField
     SimplePanel wizardPanel;
     @UiField
@@ -74,29 +70,28 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     Button      saveButton;
 
     @Inject
-    public ProjectWizardViewImpl(com.codenvy.ide.Resources resources) {
+    public ProjectWizardViewImpl(com.codenvy.ide.Resources resources, CoreLocalizationConstant coreLocalizationConstant) {
         super(false);
+        this.coreLocalizationConstant = coreLocalizationConstant;
+        setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
         isSaveActionTitle = false;
-        setTitle(defaultTitleText);
         setWidget(ourUiBinder.createAndBindUi(this));
         nextStepButton.sinkEvents(Event.ONCLICK);
         previousStepButton.sinkEvents(Event.ONCLICK);
         nextStepButton.addHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!nextStepButton.getStyleName().contains(style.disabled()))
-                    delegate.onNextClicked();
+                delegate.onNextClicked();
             }
         }, ClickEvent.getType());
         previousStepButton.addHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!previousStepButton.getStyleName().contains(style.disabled()))
-                    delegate.onBackClicked();
+                delegate.onBackClicked();
             }
         }, ClickEvent.getType());
         saveButton.addStyleName(resources.Css().buttonLoader());
-        saveButton.setText(defaultSaveButtonText);
+        saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
         builderEnvConfText.setVisible(false);
         builderEnvConf.setVisible(false);
         runnerEnvConfText.setVisible(false);
@@ -113,24 +108,23 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     public void setSaveActionTitle(boolean isSaveActionTitle) {
         this.isSaveActionTitle = isSaveActionTitle;
         if (isSaveActionTitle) {
-            setTitle(titleText);
-            saveButton.setText(saveButtonText);
+            setTitle(coreLocalizationConstant.projectWizardTitleText());
+            saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
         } else {
-            setTitle(defaultTitleText);
-            saveButton.setText(defaultSaveButtonText);
+            setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
+            saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
         }
     }
 
-    @Override
-    public void setLoaderVisibled(boolean enabled) {
+    public void setLoaderVisible(boolean enabled) {
         if (enabled) {
             saveButton.setHTML("<i></i>");
             saveButton.setEnabled(false);
         } else {
             if (isSaveActionTitle) {
-                saveButton.setText(saveButtonText);
+                saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
             } else {
-                saveButton.setText(defaultSaveButtonText);
+                saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
             }
             saveButton.setEnabled(true);
         }
@@ -149,7 +143,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setBuilderEnvirConfig(String text) {
+    public void setBuilderEnvironmentConfig(String text) {
         if (text == null) {
             if (builderEnvConfText.isVisible()) builderEnvConfText.setVisible(false);
             if (builderEnvConf.isVisible()) builderEnvConf.setVisible(false);
@@ -161,7 +155,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setRunnerEnvirConfig(String text) {
+    public void setRunnerEnvironmentConfig(String text) {
         if (text == null) {
             if (runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(false);
             if (runnerEnvConf.isVisible()) runnerEnvConf.setVisible(false);
@@ -173,11 +167,11 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setInfoVisibled(boolean enabled) {
+    public void setInfoVisible(boolean enabled) {
         if (enabled) {
-            infoRAMPanel.getElement().replaceClassName(style.hidden(), style.visible());
+            infoRAMPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
         } else {
-            infoRAMPanel.getElement().replaceClassName(style.visible(), style.hidden());
+            infoRAMPanel.getElement().getStyle().setVisibility(Visibility.HIDDEN);
         }
     }
 
@@ -258,41 +252,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     protected void onClose() {
         pageCache.clear();
         delegate.onCancelClicked();
-    }
-
-    interface Style extends CssResource {
-
-        String namePanel();
-
-        String projectNamePosition();
-
-        String project();
-
-        String privacy();
-
-        String tab();
-
-        String namePanelRight();
-
-        String rootPanel();
-
-        String topPanel();
-
-        String centerPanel();
-
-        String disabled();
-
-        String infoText();
-
-        String infoValue();
-
-        String labelPanel();
-
-        String visible();
-
-        String hidden();
-
-        String grayColor();
     }
 
     interface ProjectWizardViewImplUiBinder
