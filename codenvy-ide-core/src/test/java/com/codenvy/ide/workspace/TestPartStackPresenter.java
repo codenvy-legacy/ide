@@ -15,8 +15,10 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.google.gwt.junit.GWTMockUtilities;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,16 +27,22 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Method;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
 
 /**
  * Testing {@link PartStackPresenter} functionality.
@@ -145,8 +153,26 @@ public class TestPartStackPresenter {
         PartPresenter part = mock(PartPresenter.class);
         PartPresenter part2 = mock(PartPresenter.class);
 
-        when(part.onClose()).thenReturn(true);
-        when(part2.onClose()).thenReturn(true);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Object[] arguments = invocationOnMock.getArguments();
+                AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback);
+                return callback;
+            }
+        }).when(part).onClose((AsyncCallback<Void>)anyObject());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Object[] arguments = invocationOnMock.getArguments();
+                AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
+                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
+                onSuccess.invoke(callback);
+                return callback;
+            }
+        }).when(part2).onClose((AsyncCallback<Void>)anyObject());
 
         reset(handler);
         stack.addPart(part);

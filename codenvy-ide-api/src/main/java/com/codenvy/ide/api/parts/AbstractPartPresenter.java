@@ -13,6 +13,7 @@ package com.codenvy.ide.api.parts;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
@@ -38,8 +39,8 @@ public abstract class AbstractPartPresenter implements PartPresenter {
 
     /** {@inheritDoc} */
     @Override
-    public boolean onClose() {
-        return true;
+    public void onClose(@Nonnull AsyncCallback<Void> callback) {
+        callback.onSuccess(null);
     }
 
     /** {@inheritDoc} */
@@ -75,6 +76,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public Selection<?> getSelection() {
         return this.selection;

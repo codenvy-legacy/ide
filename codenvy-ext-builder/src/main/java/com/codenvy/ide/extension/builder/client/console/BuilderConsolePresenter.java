@@ -27,6 +27,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Builder console.
  *
@@ -68,6 +70,7 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return builderLocalizationConstant.builderConsoleViewTitle() + (isUnread ? " *" : "");

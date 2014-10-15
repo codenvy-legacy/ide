@@ -23,6 +23,8 @@ import com.google.inject.Singleton;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Template for the Console View Part.
@@ -43,6 +45,7 @@ public class ConsolePartPresenter extends BasePresenter implements ConsolePartVi
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return TITLE;

@@ -31,6 +31,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Runner console.
  *
@@ -83,6 +85,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return runnerLocalizationConstant.runnerConsoleViewTitle() + (isUnread ? " *" : "");

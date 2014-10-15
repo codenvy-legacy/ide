@@ -177,18 +177,25 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     /** {@inheritDoc} */
     @Override
-    protected void close(PartPresenter part) {
-        // may cancel close
-        if (part.onClose()) {
-            view.removeTab(parts.indexOf(part));
-            parts.remove(part);
-            part.removePropertyListener(propertyListener);
-            if (activePart == part) {
-                //select another part
-                setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
-                partStackHandler.onActivePartChanged(activePart);
+    protected void close(final PartPresenter part) {
+        part.onClose(new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
             }
-        }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+                view.removeTab(parts.indexOf(part));
+                parts.remove(part);
+                part.removePropertyListener(propertyListener);
+                if (activePart == part) {
+                    //select another part
+                    setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
+                    partStackHandler.onActivePartChanged(activePart);
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */

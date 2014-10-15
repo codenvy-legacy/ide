@@ -192,6 +192,7 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         }
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return TITLE;
