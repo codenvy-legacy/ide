@@ -37,7 +37,7 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
 
     private static final String PRE_STYLE   = "style='margin:0px; font-weight:700;'";
     private static final String INFO_COLOR  = "lightgreen'";
-    private static final String WARN_COLOR  = "cyan'";
+    private static final String WARN_COLOR  = "#FFBA00'";
     private static final String ERROR_COLOR = "#F62217'";
 
     interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
