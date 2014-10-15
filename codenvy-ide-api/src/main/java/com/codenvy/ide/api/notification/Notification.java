@@ -481,7 +481,6 @@ public final class Notification {
 
         this.time = new Date();
         setState(UNREAD);
-        notifyObservers();
     }
 
     /** @return notification's message */
@@ -502,7 +501,6 @@ public final class Notification {
         this.message = message;
         this.time = new Date();
         setState(UNREAD);
-        notifyObservers();
     }
 
     /**
@@ -547,7 +545,6 @@ public final class Notification {
         this.type = type;
         this.time = new Date();
         setState(UNREAD);
-        notifyObservers();
     }
 
     /**
@@ -568,7 +565,6 @@ public final class Notification {
         this.status = status;
         this.time = new Date();
         setState(UNREAD);
-        notifyObservers();
     }
 
     /**
@@ -614,7 +610,6 @@ public final class Notification {
         this.important = important;
         this.time = new Date();
         setState(UNREAD);
-        notifyObservers();
     }
 
     /** @return delegate with actions in response on opening notification */

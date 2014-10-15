@@ -15,22 +15,8 @@
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:with field='locale' type='com.codenvy.ide.CoreLocalizationConstant'/>
     <ui:with field='resources' type='com.codenvy.ide.Resources'/>
-    <ui:style src="com/codenvy/ide/api/ui/style.css" type="com.codenvy.ide.wizard.project.ProjectWizardViewImpl.Style">
+    <ui:style>
         @eval bgTopPanel com.codenvy.ide.api.theme.Style.getConsolePanelColor();
-        .project {
-            /*margin-right: 8px;*/
-            margin-top: 4px;
-            margin-left: 5px;
-        }
-
-        .projectNamePosition {
-            position: relative;
-            line-height: 29px;
-            margin-left: 9px;
-            font-weight: 700;
-            float: left;
-            font-size: 12px;
-        }
 
         .topPanel {
             height: 38px;
@@ -41,31 +27,9 @@
             font-size: 12px;
         }
 
-        .namePanel, .namePanelRight {
-            border-right: 1px solid tabBorder;
-            box-shadow: 1px 0px 0px 0px tabBorderShadow;
-            position: relative;
-            top: -1px;
-            overflow: hidden;
-            display: inline-block;
-            /*background-color: dialogContentBackground ;*/
-
-        }
-
-        .namePanelRight {
-            border-right: none;
-            box-shadow: 0px 0px 0 0 tabBorderShadow;
-        }
-
         .rootPanel {
             position: relative;
             text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-        }
-
-        .privacy {
-            display: inline-block;
-            margin-top: 8px;
-            margin-left: 5px;
         }
 
         .privacy label {
@@ -80,34 +44,16 @@
             position: absolute !important;
         }
 
-        .buttonLikePanelLeft, .buttonLikePanelRight {
-            cursor: pointer;
-            background-color: toolbarBackgroundColor;
-            width: 26px;
-            position: absolute;
-        }
-
         .centerPanel {
             position: relative;
             box-shadow: 0 -1px 0 0 tabBorder;
-        }
-
-        .svgStyle, .svgRotated {
-            width: 26px;
-            height: 24px;
-            position: relative;
-            top: 200px;
-        }
-
-        .disabled {
-            /* opacity now done in button/blueButton[disabled] in the text color and background */
-            /* opacity: 0.35; */
         }
 
         .labelPanel {
             float: left;
             display: block;
             font-size: 11px;
+            min-width: 90px;
         }
 
         .labelPanelLeft {
@@ -158,10 +104,6 @@
             margin-right: 20px;
         }
 
-        .visible {
-            visibility: visible;
-        }
-
         .hidden {
             visibility: hidden;
         }
@@ -207,7 +149,7 @@
                     <g:Label ui:field="availableRAM" addStyleNames="{style.infoValue}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel} {style.infoText}">
-                    <g:Anchor text="Get More RAM" href="{locale.createProjectFromTemplatelinkGetMoreRAM}" target="_blank"
+                    <g:Anchor text="Get More RAM" href="{locale.projectWizardLinkGetMoreRAM}" target="_blank"
                               addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
             </g:FlowPanel>

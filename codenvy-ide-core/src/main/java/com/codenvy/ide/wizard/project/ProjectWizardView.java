@@ -29,15 +29,15 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setRAMAvailable(String amountOfRAM);
 
-    void setBuilderEnvirConfig(String text);
+    void setBuilderEnvironmentConfig(String text);
 
-    void setRunnerEnvirConfig(String text);
+    void setRunnerEnvironmentConfig(String text);
 
-    void setInfoVisibled(boolean enabled);
+    void setInfoVisible(boolean enabled);
 
     void setSaveActionTitle(boolean isSaveActionTitle);
 
-    void setLoaderVisibled(boolean enabled);
+    void setLoaderVisible(boolean enabled);
 
     void setEnabledAnimation(boolean enabled);
 

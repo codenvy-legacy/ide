@@ -172,8 +172,20 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.privateDescription")
     String createProjectFromTemplatePrivateDescription();
 
-    @Key("createProjectFromTemplate.linkGetMoreRAM")
-    String createProjectFromTemplatelinkGetMoreRAM();
+    @Key("projectWizard.linkGetMoreRAM")
+    String projectWizardLinkGetMoreRAM();
+
+    @Key("projectWizard.defaultTitleText")
+    String projectWizardDefaultTitleText();
+
+    @Key("projectWizard.titleText")
+    String projectWizardTitleText();
+
+    @Key("projectWizard.defaultSaveButtonText")
+    String projectWizardDefaultSaveButtonText();
+
+    @Key("projectWizard.saveButtonText")
+    String projectWizardSaveButtonText();
 
     @Key("format.name")
     String formatName();

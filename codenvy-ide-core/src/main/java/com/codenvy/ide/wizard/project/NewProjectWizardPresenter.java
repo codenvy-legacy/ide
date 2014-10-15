@@ -109,11 +109,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         wizardContext = new WizardContext();
         this.runnerServiceClient = runnerServiceClient;
         this.builderServiceClient = builderServiceClient;
-        updateBuildersDescriptor();
-        updateRunnersDescriptor();
+        requestBuildersDescriptor();
+        requestRunnersDescriptor();
     }
 
-    private void updateBuildersDescriptor() {
+    private void requestBuildersDescriptor() {
         builderServiceClient.getRegisteredServers(workspaceId, new AsyncRequestCallback<Array<BuilderDescriptor>>(
                 dtoUnmarshallerFactory.newArrayUnmarshaller(BuilderDescriptor.class)) {
             @Override
@@ -139,7 +139,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         });
     }
 
-    private void updateRunnersDescriptor() {
+    private void requestRunnersDescriptor() {
 //        runnerServiceClient.getRunners(new AsyncRequestCallback<Array<RunnerDescriptor>>(
 //                dtoUnmarshallerFactory.newArrayUnmarshaller(RunnerDescriptor.class)) {
 //            @Override
@@ -199,7 +199,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             public void onSuccess() {
                 view.close();
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
             }
 
             @Override
@@ -330,7 +330,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             fillProjectUpdate(descriptor, projectUpdate);
         }
 
-        view.setLoaderVisibled(true);
+        view.setLoaderVisible(true);
 
         projectService.updateProject(project.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
@@ -341,7 +341,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
                 callback.onFailure(exception);
             }
         });
@@ -350,7 +350,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void checkVisibility(ProjectDescriptor result,
                                  WizardPage.CommitCallback callback) {
         String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
-        view.setLoaderVisibled(false);
+        view.setLoaderVisible(false);
         if (result.getVisibility().equals(visibility)) {
             checkName(result, callback);
         } else {
@@ -390,12 +390,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             projectUpdate.setDescription(description);
         }
 
-        view.setLoaderVisibled(true);
+        view.setLoaderVisible(true);
         projectService.updateProject(projectDescriptor.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor projectDescriptor) {
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
                 Boolean visibility;
                 if ((visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) != null && visibility) {
                     getProject(projectDescriptor.getName(), callback);
@@ -406,7 +406,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable throwable) {
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
                 callback.onFailure(throwable.getCause());
             }
         });
@@ -420,19 +420,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
 
         final String name = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        view.setLoaderVisibled(true);
+        view.setLoaderVisible(true);
         Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectService.createProject(name, newProject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 eventBus.fireEvent(new OpenProjectEvent(result.getName()));
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
                 callback.onSuccess();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                view.setLoaderVisibled(false);
+                view.setLoaderVisible(false);
                 callback.onFailure(exception);
             }
         });
@@ -441,20 +441,20 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void importProject(final WizardPage.CommitCallback callback,
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
-        view.setLoaderVisibled(true);
+        view.setLoaderVisible(true);
         projectService.importProject(projectName, false,
                                      templateDescriptor.getSource(),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
                                          protected void onSuccess(final ProjectDescriptor result) {
-                                             view.setLoaderVisibled(false);
+                                             view.setLoaderVisible(false);
                                              updateProjectAfterImport(result, callback);
                                          }
 
                                          @Override
                                          protected void onFailure(Throwable exception) {
-                                             view.setLoaderVisibled(false);
+                                             view.setLoaderVisible(false);
                                              callback.onFailure(exception);
                                          }
                                      }
@@ -485,7 +485,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /** {@inheritDoc} */
     @Override
     public void onCancelClicked() {
-        view.setLoaderVisibled(false);
+        view.setLoaderVisible(false);
         view.close();
     }
 
@@ -529,11 +529,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setNextButtonEnabled(false);
             final BuildersDescriptor builders = templateDescriptor.getBuilders();
             if (builders != null) {
-                view.setBuilderEnvirConfig(builderDescriptionMap.get(builders.getDefault()));
+                view.setBuilderEnvironmentConfig(builderDescriptionMap.get(builders.getDefault()));
             }
             final RunnersDescriptor runners = templateDescriptor.getRunners();
             if (runners != null) {
-                view.setRunnerEnvirConfig(runnersDescriptionMap.get(runners.getDefault()));
+                view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(runners.getDefault()));
                 final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                 if (runnerConfiguration != null) {
                     int ram = runnerConfiguration.getRam();
@@ -544,14 +544,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             }
             view.setRAMRequired(memorySize);
             //set info visible
-            view.setInfoVisibled(true);
+            view.setInfoVisible(true);
         } else if (descriptor != null) {
-// TODO (andrew00x)           view.setRunnerEnvirConfig(runnersDescriptionMap.get(descriptor.getRunner()));
-//            view.setBuilderEnvirConfig(builderDescriptionMap.get(descriptor.getBuilder()));
+// TODO (andrew00x)           view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(descriptor.getRunner()));
+//            view.setBuilderEnvironmentConfig(builderDescriptionMap.get(descriptor.getBuilder()));
 //            view.setRAMRequired(requiredMemorySize);
-            view.setInfoVisibled(true);
+            view.setInfoVisible(true);
         } else {
-            view.setInfoVisibled(false);
+            view.setInfoVisible(false);
         }
     }
 
