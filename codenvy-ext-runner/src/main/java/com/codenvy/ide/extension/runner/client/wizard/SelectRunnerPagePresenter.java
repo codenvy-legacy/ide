@@ -95,26 +95,10 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-        requestRunners();
+        requestRunnerEnvironments();
     }
 
-    private void requestRunners() {
-        runnerServiceClient.getRunners(
-                new AsyncRequestCallback<RunnerEnvironmentTree>(dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class)) {
-                    @Override
-                    protected void onSuccess(RunnerEnvironmentTree result) {
-                        view.addRunner(result);
-                        requestProjectScopedEnvironments();
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
-                    }
-                });
-    }
-
-    private void requestProjectScopedEnvironments() {
+    private void requestRunnerEnvironments() {
         final String projectPath = appContext.getCurrentProject().getProjectDescription().getPath();
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
         projectServiceClient.getRunnerEnvironments(projectPath, new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
@@ -123,12 +107,28 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                 if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
                     view.addRunner(result);
                 }
-                selectRunner();
+                requestSystemEnvironments();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(SelectRunnerPagePresenter.class, "Can't get project-scoped runner environments", exception);
+            }
+        });
+    }
+
+    private void requestSystemEnvironments() {
+        final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
+        runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
+            @Override
+            protected void onSuccess(RunnerEnvironmentTree result) {
+                view.addRunner(result);
+                selectRunner();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
             }
         });
     }
