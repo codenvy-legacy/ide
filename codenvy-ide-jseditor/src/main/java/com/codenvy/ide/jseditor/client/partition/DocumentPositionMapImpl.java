@@ -292,7 +292,7 @@ public class DocumentPositionMapImpl implements DocumentPositionMap {
     @Override
     public void addPosition(final TypedPosition position) throws BadLocationException {
         try {
-            addPosition(DEFAULT_CATEGORY, position);
+            addPosition(Categories.DEFAULT_CATEGORY, position);
         } catch (final BadPositionCategoryException e) {
             Log.warn(DocumentPositionMapImpl.class, "Should not happen: DEFAULT_CATEGORY is not a valid category!");
         }
