@@ -15,6 +15,7 @@ import elemental.events.KeyboardEvent;
 import elemental.events.MouseEvent;
 
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.dto.DtoFactory;
@@ -53,7 +54,7 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     SimplePanel treeContainer;
     private ActionDelegate delegate;
 
-    private Map<String, RunnerEnvironment> environmentMap      = new HashMap<>();
+    private Map<String, RunnerEnvironment> environmentMap = new HashMap<>();
 
     @Inject
     public SelectRunnerPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
@@ -159,21 +160,22 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
 
     @Override
     public void addRunner(RunnerEnvironmentTree environmentTree) {
-        root.getChildren().add(environmentTree);
+        root.getNodes().add(environmentTree);
         tree.getModel().setRoot(root);
         tree.renderTree();
         collectRunnerEnvironments(environmentTree);
     }
 
     private void collectRunnerEnvironments(RunnerEnvironmentTree environmentTree) {
-        if (environmentTree.getEnvironments() != null) {
-            for (RunnerEnvironment runnerEnvironment : environmentTree.getEnvironments()) {
-                environmentMap.put(runnerEnvironment.getId(), runnerEnvironment);
+        for (RunnerEnvironmentLeaf leaf : environmentTree.getLeaves()) {
+            final RunnerEnvironment environment = leaf.getEnvironment();
+            if (environment != null) {
+                environmentMap.put(environment.getId(), environment);
             }
         }
 
-        for (RunnerEnvironmentTree runnerEnvironmentTree : environmentTree.getChildren()) {
-            collectRunnerEnvironments(runnerEnvironmentTree);
+        for (RunnerEnvironmentTree node : environmentTree.getNodes()) {
+            collectRunnerEnvironments(node);
         }
     }
 

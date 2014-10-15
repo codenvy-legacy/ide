@@ -70,6 +70,8 @@ import com.codenvy.ide.api.text.DocumentFactory;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.api.wizard.DefaultWizardFactory;
+import com.codenvy.ide.api.wizard.WizardDialog;
+import com.codenvy.ide.api.wizard.WizardDialogFactory;
 import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.contexmenu.ContextMenuView;
 import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
@@ -144,6 +146,9 @@ import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.wizard.project.PreSelectedProjectTypeManagerImpl;
+import com.codenvy.ide.wizard.WizardDialogPresenter;
+import com.codenvy.ide.wizard.WizardDialogView;
+import com.codenvy.ide.wizard.WizardDialogViewImpl;
 import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
@@ -227,7 +232,9 @@ public class CoreGinModule extends AbstractGinModule {
         bind(IconRegistry.class).to(IconRegistryImpl.class).in(Singleton.class);
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
+        install(new GinFactoryModuleBuilder().implement(WizardDialog.class, WizardDialogPresenter.class).build(WizardDialogFactory.class));
         install(new GinFactoryModuleBuilder().build(DefaultWizardFactory.class));
+        bind(WizardDialogView.class).to(WizardDialogViewImpl.class);
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
         bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);

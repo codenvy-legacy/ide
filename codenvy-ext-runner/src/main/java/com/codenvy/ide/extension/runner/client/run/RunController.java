@@ -85,6 +85,7 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls launching application.
@@ -573,6 +574,23 @@ public class RunController implements Notification.OpenNotificationHandler {
             @Override
             public void run() {
                 isLastAppHealthOk = true;
+
+                String projectName = appContext.getCurrentProject().getProjectDescription().getName();
+
+                String notificationMessage = constant.applicationMaybeStarted(projectName);
+                Notification.Type notificationType = WARNING;
+                Notification.Status notificationStatus = FINISHED;
+                if (notification == null) {
+                    notification = new Notification(notificationMessage, notificationType, notificationStatus);
+                    notificationManager.showNotification(notification);
+                } else {
+                    notification.update(notificationMessage, notificationType, notificationStatus, null, true);
+                }
+
+                console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+                console.print("[WARNING] " + notificationMessage);
+
+                console.onAppStarted(applicationProcessDescriptor);
             }
         };
         setAppHealthOkTimer.schedule(30 * 1000);
@@ -584,6 +602,8 @@ public class RunController implements Notification.OpenNotificationHandler {
                 if (jsonObject != null && jsonObject.containsKey("url") && jsonObject.containsKey("status")) {
                     final String urlStatus = jsonObject.get("status").isString().stringValue();
                     if (urlStatus.equals("OK")) {
+                        setAppHealthOkTimer.cancel();
+
                         isLastAppHealthOk = true;
 
                         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
@@ -696,7 +716,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 if (runCallback != null) {
                     runCallback.onRun(descriptor, appContext.getCurrentProject().getProjectDescription());
                 }
-                startCheckingAppHealth(descriptor);
                 console.onShellStarted(descriptor);
                 break;
             case STOPPED:
@@ -831,6 +850,8 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
+
+        console.onAppStopped();
         console.setCurrentRunnerStatus(RunnerStatus.FAILED);
         console.print(message);
     }
