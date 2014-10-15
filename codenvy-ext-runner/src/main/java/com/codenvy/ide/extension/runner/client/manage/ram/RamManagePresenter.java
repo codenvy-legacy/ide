@@ -15,11 +15,13 @@ import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringMapUnmarshaller;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.inject.Inject;
@@ -37,6 +39,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
     private RamManagerView             view;
     private DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private AppContext                 appContext;
+    private PreferencesManager         preferencesManager;
     private boolean dirty = false;
 
     /**
@@ -47,13 +50,15 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
                               UserProfileServiceClient profileService,
                               RamManagerView view,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                              AppContext appContext) {
+                              AppContext appContext,
+                              PreferencesManager preferencesManager) {
         super(localizationConstant.titlesRamManager(), null);
         this.localizationConstant = localizationConstant;
         this.profileService = profileService;
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.appContext = appContext;
+        this.preferencesManager = preferencesManager;
         this.view.setDelegate(this);
     }
 
@@ -103,7 +108,8 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
             @Override
             protected void onSuccess(Map<String, String> preferences) {
                 if (preferences.containsKey(PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
-                    view.showRam(preferences.get(PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                    final String ramSize = preferences.get(PREFS_RUNNER_RAM_SIZE_DEFAULT);
+                    view.showRam(ramSize.replace("\"", ""));
                 }
             }
 
@@ -120,6 +126,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
             protected void onSuccess(Map<String, String> preferences) {
                 preferences.put(PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
                 profileService.updateCurrentProfile(preferences, setProfileCallback());
+                saveToPreferences();
             }
 
             @Override
@@ -127,6 +134,19 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
                 Log.error(RamManagePresenter.class, exception);
             }
         };
+    }
+
+    private void saveToPreferences() {
+        preferencesManager.setPreference(PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
+        preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
+            @Override
+            public void onSuccess(ProfileDescriptor result) {
+            }
+
+            @Override
+            public void onFailure(Throwable ignore) {
+            }
+        });
     }
 
     private AsyncRequestCallback<ProfileDescriptor> setProfileCallback() {
