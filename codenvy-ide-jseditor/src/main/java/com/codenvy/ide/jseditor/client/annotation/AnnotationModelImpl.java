@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.annotation;
 
-import static com.codenvy.ide.jseditor.client.partition.DocumentPositionMap.DEFAULT_CATEGORY;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -143,7 +141,7 @@ public class AnnotationModelImpl implements AnnotationModel {
                                                                                             canStartBefore, canEndAfter);
             return new AnnotationsIterator(annotationPos, this.positions);
         } catch (final BadPositionCategoryException e) {
-            Log.warn(AnnotationModelImpl.class, "Bad position category (on default category!): " + DEFAULT_CATEGORY);
+            Log.warn(AnnotationModelImpl.class, "Bad position category (on default category!)");
             return null;
         }
 
