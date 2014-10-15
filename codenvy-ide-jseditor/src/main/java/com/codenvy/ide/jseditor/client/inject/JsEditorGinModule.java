@@ -42,6 +42,9 @@ import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistantImpl;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 import com.codenvy.ide.jseditor.client.reconciler.ReconcilerFactory;
 import com.codenvy.ide.jseditor.client.reconciler.ReconcilerImpl;
@@ -100,10 +103,13 @@ public class JsEditorGinModule extends AbstractGinModule {
                     .implement(Reconciler.class, ReconcilerImpl.class)
                     .build(ReconcilerFactory.class));
 
-        // bind the code assistant
+        // bind the code assistant and quick assistant
         install(new GinFactoryModuleBuilder()
                     .implement(CodeAssistant.class, CodeAssistantImpl.class)
                     .build(CodeAssistantFactory.class));
+        install(new GinFactoryModuleBuilder()
+                    .implement(QuickAssistAssistant.class, QuickAssistAssistantImpl.class)
+                    .build(QuickAssistantFactory.class));
 
         // breakpoint renderer and manager
         install(new GinFactoryModuleBuilder()
