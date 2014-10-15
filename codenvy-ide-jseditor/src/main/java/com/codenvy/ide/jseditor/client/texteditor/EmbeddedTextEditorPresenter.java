@@ -28,7 +28,10 @@ import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -56,18 +59,19 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     /** File type used when we have no idea of the actual content type. */
     public final static String DEFAULT_CONTENT_TYPE = "text/plain";
 
-    private final Resources                     resources;
-    private final WorkspaceAgent                workspaceAgent;
-    private final EmbeddedTextEditorViewFactory textEditorViewFactory;
+    private final Resources                      resources;
+    private final WorkspaceAgent                 workspaceAgent;
+    private final EmbeddedTextEditorViewFactory  textEditorViewFactory;
+    private       EditorPrefLocalizationConstant constant;
 
-    private final DocumentStorage documentStorage;
-    private final EventBus                      generalEventBus;
-    private final CodeAssistantFactory          codeAssistantFactory;
+    private final DocumentStorage      documentStorage;
+    private final EventBus             generalEventBus;
+    private final CodeAssistantFactory codeAssistantFactory;
 
-    private TextEditorConfiguration         configuration;
-    private NotificationManager             notificationManager;
-    private EmbeddedTextEditorPartView      editor;
-    private OutlineImpl                     outline;
+    private TextEditorConfiguration    configuration;
+    private NotificationManager        notificationManager;
+    private EmbeddedTextEditorPartView editor;
+    private OutlineImpl                outline;
 
     /** The editor's error state. */
     private EditorState errorState;
@@ -78,12 +82,14 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                                        final EventBus eventBus,
                                        final DocumentStorage documentStorage,
                                        final CodeAssistantFactory codeAssistantFactory,
-                                       @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory) {
+                                       @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
+                                       EditorPrefLocalizationConstant constant) {
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
         this.codeAssistantFactory = codeAssistantFactory;
+        this.constant = constant;
 
         this.generalEventBus = eventBus;
         eventBus.addHandler(FileEvent.TYPE, this);
@@ -171,6 +177,33 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         return null;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onClose(@Nonnull final AsyncCallback<Void> callback) {
+        if (isDirty()) {
+            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.askWindowSaveChangesMessage(getEditorInput().getName()),
+                              new AskHandler() {
+                                  @Override
+                                  public void onOk() {
+                                      doSave();
+                                      handleClose();
+                                      callback.onSuccess(null);
+                                  }
+
+                                  @Override
+                                  public void onCancel() {
+                                      handleClose();
+                                      callback.onSuccess(null);
+                                  }
+                              }
+            );
+            ask.show();
+        } else {
+            handleClose();
+            callback.onSuccess(null);
+        }
+    }
+
     @Override
     public EmbeddedTextEditorPartView getView() {
         return this.editor;
@@ -218,6 +251,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         return input.getSVGResource();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         if (isDirty()) {

@@ -13,7 +13,6 @@ package com.codenvy.ide.api.editor;
 import com.codenvy.ide.api.parts.AbstractPartPresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.google.gwt.user.client.Window;
 
 import javax.annotation.Nonnull;
 
@@ -67,18 +66,6 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
     @Override
     public EditorInput getEditorInput() {
         return input;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean onClose() {
-        if (isDirty()) {
-            if (Window.confirm("'" + getEditorInput().getName() + "' has been modified. Save changes?")) {
-                doSave();
-            }
-        }
-        handleClose();
-        return true;
     }
 
     protected void handleClose() {

@@ -371,6 +371,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.getResourcesFailed")
     String messagesGetResourcesFailed();
 
+    @Key("messages.saveChanges")
+    String messagesSaveChanges(String name);
+
     /* Buttons */
     @Key("ok")
     String ok();
@@ -411,6 +414,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("closeProject.askWindow.title")
     String closeProjectAskTitle();
+
+    @Key("askWindow.close.title")
+    String askWindowCloseTitle();
 
     /* Outline */
     @Key("outline.button.title")

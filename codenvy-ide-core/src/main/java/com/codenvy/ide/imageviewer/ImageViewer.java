@@ -11,9 +11,12 @@
 package com.codenvy.ide.imageviewer;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,6 +30,8 @@ import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import javax.annotation.Nonnull;
+
 /**
  * Is used for displaying images in editor area.
  *
@@ -35,13 +40,16 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public class ImageViewer extends AbstractEditorPresenter {
 
     private Resources resources;
+    private CoreLocalizationConstant constant;
 
     /**
      *
      */
     @Inject
-    public ImageViewer(Resources resources) {
+    public ImageViewer(Resources resources,
+                       CoreLocalizationConstant constant) {
         this.resources = resources;
+        this.constant = constant;
     }
 
     /** {@inheritDoc} */
@@ -65,6 +73,7 @@ public class ImageViewer extends AbstractEditorPresenter {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return input.getName();
@@ -86,6 +95,31 @@ public class ImageViewer extends AbstractEditorPresenter {
     @Override
     public String getTitleToolTip() {
         return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onClose(@Nonnull final AsyncCallback<Void> callback) {
+        if (isDirty()) {
+            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.messagesSaveChanges(getEditorInput().getName()), new AskHandler() {
+                @Override
+                public void onOk() {
+                    doSave();
+                    handleClose();
+                    callback.onSuccess(null);
+                }
+
+                @Override
+                public void onCancel() {
+                    handleClose();
+                    callback.onSuccess(null);
+                }
+            });
+            ask.show();
+        } else {
+            handleClose();
+            callback.onSuccess(null);
+        }
     }
 
     /** {@inheritDoc} */

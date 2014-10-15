@@ -68,6 +68,7 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         if (isDirty()) {

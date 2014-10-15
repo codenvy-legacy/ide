@@ -98,6 +98,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return coreLocalizationConstant.projectExplorerButtonTitle();

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
@@ -34,8 +35,11 @@ import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
+import com.codenvy.ide.ui.dialogs.ask.Ask;
+import com.codenvy.ide.ui.dialogs.ask.AskHandler;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -48,14 +52,15 @@ import javax.annotation.Nonnull;
 public class TextEditorPresenter extends AbstractTextEditorPresenter
         implements FileEventHandler, EditorWithErrors, HasHandlesOperationsView {
 
-    protected TextEditorViewImpl      editor;
-    private   Resources               resources;
-    private   UserActivityManager     userActivityManager;
-    private   OutlineImpl             outline;
-    private   BreakpointGutterManager breakpointGutterManager;
-    private   DtoFactory              dtoFactory;
-    private   WorkspaceAgent          workspaceAgent;
-    private   EditorState             errorState;
+    protected TextEditorViewImpl       editor;
+    private   Resources                resources;
+    private   UserActivityManager      userActivityManager;
+    private   OutlineImpl              outline;
+    private   BreakpointGutterManager  breakpointGutterManager;
+    private   DtoFactory               dtoFactory;
+    private   WorkspaceAgent           workspaceAgent;
+    private   EditorState              errorState;
+    private   CoreLocalizationConstant constant;
 
     @Inject
     public TextEditorPresenter(Resources resources,
@@ -63,12 +68,14 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
                                BreakpointGutterManager breakpointGutterManager,
                                DtoFactory dtoFactory,
                                WorkspaceAgent workspaceAgent,
+                               CoreLocalizationConstant constant,
                                EventBus eventBus) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
         this.dtoFactory = dtoFactory;
         this.workspaceAgent = workspaceAgent;
+        this.constant = constant;
 
         eventBus.addHandler(FileEvent.TYPE, this);
     }
@@ -228,6 +235,31 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
     public void setErrorState(EditorState errorState) {
         this.errorState = errorState;
         firePropertyChange(ERROR_STATE);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onClose(@Nonnull final AsyncCallback<Void> callback) {
+        if (isDirty()) {
+            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.messagesSaveChanges(getEditorInput().getName()), new AskHandler() {
+                @Override
+                public void onOk() {
+                    doSave();
+                    handleClose();
+                    callback.onSuccess(null);
+                }
+
+                @Override
+                public void onCancel() {
+                    handleClose();
+                    callback.onSuccess(null);
+                }
+            });
+            ask.show();
+        } else {
+            handleClose();
+            callback.onSuccess(null);
+        }
     }
 
     public UndoManager getUndoManager() {

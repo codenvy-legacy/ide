@@ -26,6 +26,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Part presenter for Outline.
@@ -62,6 +64,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getTitle() {
         return coreLocalizationConstant.outlineButtonTitle();

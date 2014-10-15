@@ -13,6 +13,7 @@ package com.codenvy.ide.api.parts;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.selection.Selection;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
@@ -109,12 +110,11 @@ public interface PartPresenter extends Presenter {
     void onOpen();
 
     /**
-     * This method is called when part is going to be closed. Part itself can deny blocking, by returning false, i.e. when document is
+     * This method is called when part is going to be closed. Part itself can deny blocking, by calling onFailure() on callback, i.e. when document is
      * being edited and accidentally close button pressed.
-     *
-     * @return allow close
+     * @param callback
      */
-    boolean onClose();
+    void onClose(@Nonnull AsyncCallback<Void> callback);
 
     /**
      * Adds a listener for changes to properties of this part. Has no effect if an identical listener is already registered.

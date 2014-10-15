@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -261,34 +262,41 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
      *
      * @param part
      */
-    protected void close(PartPresenter part) {
-        // may cancel close
-        if (part.onClose()) {
-            int partIndex = parts.indexOf(part);
-            if (activePart == part) {
-                PartPresenter newActivePart = null;
-                for (PartPresenter tmpPart : parts.asIterable()) {
-                    if (tmpPart instanceof ProjectExplorerPartPresenter) {
-                        newActivePart = tmpPart;
-                        break;
-                    }
-                }
-                setActivePart(newActivePart);
-            }
-            view.removeTab(partIndex);
-            int viewPartPositionsIndex = viewPartPositions.indexOf(partIndex);
-            if (viewPartPositionsIndex >= 0) {
-                int lastPosOfViewPart = viewPartPositions.size() - 1;
-                for (; viewPartPositionsIndex < lastPosOfViewPart; viewPartPositionsIndex++) {
-                    viewPartPositions.set(viewPartPositions.get(viewPartPositionsIndex + 1), viewPartPositionsIndex);
-                }
-                viewPartPositions.remove(lastPosOfViewPart);
+    protected void close(final PartPresenter part) {
+        part.onClose(new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
             }
 
-            parts.remove(part);
-            partSizes.remove(part);
-            part.removePropertyListener(propertyListener);
-        }
+            @Override
+            public void onSuccess(Void aVoid) {
+                int partIndex = parts.indexOf(part);
+                if (activePart == part) {
+                    PartPresenter newActivePart = null;
+                    for (PartPresenter tmpPart : parts.asIterable()) {
+                        if (tmpPart instanceof ProjectExplorerPartPresenter) {
+                            newActivePart = tmpPart;
+                            break;
+                        }
+                    }
+                    setActivePart(newActivePart);
+                }
+                view.removeTab(partIndex);
+                int viewPartPositionsIndex = viewPartPositions.indexOf(partIndex);
+                if (viewPartPositionsIndex >= 0) {
+                    int lastPosOfViewPart = viewPartPositions.size() - 1;
+                    for (; viewPartPositionsIndex < lastPosOfViewPart; viewPartPositionsIndex++) {
+                        viewPartPositions.set(viewPartPositions.get(viewPartPositionsIndex + 1), viewPartPositionsIndex);
+                    }
+                    viewPartPositions.remove(lastPosOfViewPart);
+                }
+
+                parts.remove(part);
+                partSizes.remove(part);
+                part.removePropertyListener(propertyListener);
+            }
+        });
     }
 
     /**
