@@ -44,6 +44,7 @@ import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistantImpl;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistWidgetFactory;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 import com.codenvy.ide.jseditor.client.reconciler.ReconcilerFactory;
@@ -116,6 +117,10 @@ public class JsEditorGinModule extends AbstractGinModule {
                     .implement(BreakpointRenderer.class, BreakpointRendererImpl.class)
                     .build(BreakpointRendererFactory.class));
         bind(BreakpointManager.class).to(BreakpointManagerImpl.class).in(Singleton.class);
+
+        // bind the quick assist widget factory
+        install(new GinFactoryModuleBuilder()
+                    .build(QuickAssistWidgetFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation
