@@ -20,6 +20,7 @@ import com.codenvy.ide.jseditor.client.annotation.AnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.GutterAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.InlineAnnotationRenderer;
+import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
@@ -155,6 +156,9 @@ public class TextEditorInit {
 
         annotationModel.setDocumentHandle(documentHandle);
         documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, annotationModel);
+
+        // the model listens to QueryAnnotation events
+        documentHandle.getDocEventBus().addHandler(QueryAnnotationsEvent.TYPE, annotationModel);
     }
 
     /**
