@@ -139,8 +139,8 @@ public class AnnotationModelImpl implements AnnotationModel {
         //cleanup(true);
 
         try {
-            final List<TypedPosition> annotationPos = this.documentPositionMap.getPositions(DEFAULT_CATEGORY, offset,
-                                                                                            length, canStartBefore, canEndAfter);
+            final List<TypedPosition> annotationPos = this.documentPositionMap.getPositions(offset, length, 
+                                                                                            canStartBefore, canEndAfter);
             return new AnnotationsIterator(annotationPos, this.positions);
         } catch (final BadPositionCategoryException e) {
             Log.warn(AnnotationModelImpl.class, "Bad position category (on default category!): " + DEFAULT_CATEGORY);
