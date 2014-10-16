@@ -30,7 +30,7 @@ import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.contexmenu.ContextMenuPresenter;
+import com.codenvy.ide.menu.ContextMenu;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
@@ -54,7 +54,7 @@ import javax.annotation.Nonnull;
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
     private ProjectExplorerView           view;
     private EventBus                      eventBus;
-    private ContextMenuPresenter          contextMenuPresenter;
+    private ContextMenu                   contextMenu;
     private ProjectServiceClient          projectServiceClient;
     private DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private CoreLocalizationConstant      coreLocalizationConstant;
@@ -67,12 +67,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                                        DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenuPresenter contextMenuPresenter,
+                                        DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenu contextMenu,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
                                         TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler) {
         this.view = view;
         this.eventBus = eventBus;
-        this.contextMenuPresenter = contextMenuPresenter;
+        this.contextMenu = contextMenu;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.coreLocalizationConstant = coreLocalizationConstant;
@@ -258,7 +258,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onContextMenu(int mouseX, int mouseY) {
-        contextMenuPresenter.show(mouseX, mouseY);
+        contextMenu.show(mouseX, mouseY);
     }
 
     private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
