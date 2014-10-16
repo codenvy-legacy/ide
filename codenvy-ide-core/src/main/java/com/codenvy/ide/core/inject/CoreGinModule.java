@@ -73,8 +73,6 @@ import com.codenvy.ide.api.wizard.DefaultWizardFactory;
 import com.codenvy.ide.api.wizard.WizardDialog;
 import com.codenvy.ide.api.wizard.WizardDialogFactory;
 import com.codenvy.ide.build.BuildContextImpl;
-import com.codenvy.ide.contexmenu.ContextMenuView;
-import com.codenvy.ide.contexmenu.ContextMenuViewImpl;
 import com.codenvy.ide.core.ProjectStateHandler;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
@@ -268,7 +266,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ToolbarView.class).to(ToolbarViewImpl.class);
         bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarMainPresenter.class).in(Singleton.class);
 
-        bind(ContextMenuView.class).to(ContextMenuViewImpl.class).in(Singleton.class);
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
 //        bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
