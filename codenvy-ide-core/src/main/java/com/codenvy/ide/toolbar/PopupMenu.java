@@ -215,9 +215,11 @@ public class PopupMenu extends Composite {
             Action menuItem = list.get(i);
 
             if (menuItem instanceof Separator) {
-                table.getFlexCellFormatter().setColSpan(i, 0, hasCheckedItems ? 5 : 4);
-                table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" size=\"1\"></nobr>");
-                table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
+                if (i > 0 && i < list.size() - 1) {
+                    table.getFlexCellFormatter().setColSpan(i, 0, hasCheckedItems ? 5 : 4);
+                    table.setHTML(i, 0, "<nobr><hr noshade=\"noshade\" size=\"1\"></nobr>");
+                    table.getCellFormatter().setStyleName(i, 0, POPUP_RESOURCES.popup().popupMenuDelimiter());
+                }
             } else {
                 Presentation presentation = presentationFactory.getPresentation(menuItem);
 
