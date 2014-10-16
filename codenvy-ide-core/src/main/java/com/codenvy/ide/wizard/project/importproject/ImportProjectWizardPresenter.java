@@ -14,15 +14,16 @@ import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectProblem;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
-import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
@@ -45,6 +46,7 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Presenter for import project wizard dialog.
@@ -183,9 +185,19 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             @Override
             public void onSuccess() {
                 view.close();
-
-                if (importedProject != null && (importedProject.getType() == null
-                                                || com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getType()))) {
+                if (importedProject == null) {
+                    return;
+                }
+                boolean projectTypeResolvedViaResolver = false;
+                List<ProjectProblem> problems = importedProject.getProblems();
+                for (ProjectProblem problem : problems) {
+                    if (problem.getCode() == 300) {
+                        projectTypeResolvedViaResolver = true;
+                    }
+                }
+                if (importedProject.getType() == null
+                    || com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getType())
+                    || projectTypeResolvedViaResolver) {
 
                     WizardContext context = new WizardContext();
                     context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
