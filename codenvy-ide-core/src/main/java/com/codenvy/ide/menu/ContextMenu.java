@@ -49,6 +49,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Manages the Content menu.
+ * Call <b>show</b> method to show menu and <b>hide</b> to hide it.
+ * Also this manager filters the list of actions and displays only actions that are belong to Main Context menu group.
+ *
  * @author Vitaliy Guliy
  */
 @Singleton
@@ -65,7 +69,12 @@ public class ContextMenu implements CloseMenuHandler, ActionSelectedHandler {
 
     private static final String place = ActionPlaces.MAIN_CONTEXT_MENU;
 
-
+    /**
+     * Creates an instance of this ContextMenu manager.
+     *
+     * @param actionManager
+     * @param keyBindingAgent
+     */
     @Inject
     public ContextMenu(ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
         this.actionManager = actionManager;
@@ -77,6 +86,9 @@ public class ContextMenu implements CloseMenuHandler, ActionSelectedHandler {
         blockBrowserMenu();
     }
 
+    /**
+     * Add a handler to block browser content menu.
+     */
     private void blockBrowserMenu() {
         com.google.gwt.user.client.Event.sinkEvents(RootPanel.getBodyElement(), com.google.gwt.user.client.Event.ONCONTEXTMENU);
         DOM.setEventListener(RootPanel.getBodyElement(), new com.google.gwt.user.client.EventListener() {
@@ -91,10 +103,12 @@ public class ContextMenu implements CloseMenuHandler, ActionSelectedHandler {
         });
     }
 
-    private final native void trace(String msg) /*-{
-        console.log(msg);
-    }-*/;
-
+    /**
+     * Shows a content menu and moves it to specified position.
+     *
+     * @param x
+     * @param y
+     */
     public void show(int x, int y) {
         hide();
         updateActions();
@@ -108,7 +122,9 @@ public class ContextMenu implements CloseMenuHandler, ActionSelectedHandler {
         popupMenu.getElement().getStyle().setLeft(x, com.google.gwt.dom.client.Style.Unit.PX);
     }
 
-    /** Update action list. */
+    /**
+     * Updates the list of visible actions.
+     */
     private void updateActions() {
         actions.removeAll();
 
@@ -139,6 +155,9 @@ public class ContextMenu implements CloseMenuHandler, ActionSelectedHandler {
         hide();
     }
 
+    /**
+     * Hides opened content menu.
+     */
     public void hide() {
         if (popupMenu != null) {
             popupMenu.removeFromParent();
