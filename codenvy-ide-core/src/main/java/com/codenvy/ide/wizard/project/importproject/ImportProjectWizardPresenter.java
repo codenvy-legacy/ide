@@ -382,13 +382,15 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
      *         project on which to switch visibility
      */
     private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
-        String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
+        final String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
         showProcessing(true);
         projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
 
             @Override
             protected void onSuccess(Void result) {
                 showProcessing(false);
+                project.setVisibility(visibility);
+                importedProject = project;
                 getProject(project.getName(), callback);
             }
 
