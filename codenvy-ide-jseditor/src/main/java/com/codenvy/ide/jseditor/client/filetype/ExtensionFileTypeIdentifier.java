@@ -151,6 +151,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("vbs", makeList("text/vbscript"));
 
         this.mappings.put("pp", makeList("text/x-puppet"));
+        this.mappings.put("docker", makeList("text/x-dockerfile-config"));
     }
 
     /**

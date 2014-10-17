@@ -38,6 +38,9 @@ public class FileNameFileTypeIdentifier implements FileTypeIdentifier {
         if (filename != null && "VAGRANTFILE".equals(filename.toUpperCase())) {
             return Collections.singletonList("text/x-ruby");
         }
+        if ("Dockerfile".equals(filename)) {
+            return Collections.singletonList("text/x-dockerfile-config");
+        }
 
         // not a known file name
         return null;
