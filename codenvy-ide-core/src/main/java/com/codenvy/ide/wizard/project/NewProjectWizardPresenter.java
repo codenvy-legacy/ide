@@ -459,7 +459,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
         if (project != null && appContext.getCurrentProject() != null) {
-            if (appContext.getCurrentProject().getProjectDescription().equals(project)) {
+            if (appContext.getCurrentProject().getRootProject() != null &&
+                !appContext.getCurrentProject().getRootProject().getPath().equals(project.getPath())) {
                 eventBus.fireEvent(new RefreshProjectTreeEvent());
                 callback.onSuccess();
                 return;
