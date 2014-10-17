@@ -69,7 +69,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       String                    workspaceId;
     private       AppContext                appContext;
-    private DtoFactory dtoFactory;
+    private DtoFactory        dtoFactory;
     private EventBus          eventBus;
     private WizardPage        currentPage;
     private ProjectWizardView view;
@@ -458,8 +458,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
-        if(project != null && appContext.getCurrentProject() != null){
-            if(appContext.getCurrentProject().getProjectDescription().equals(project)){
+        if (project != null && appContext.getCurrentProject() != null) {
+            if (appContext.getCurrentProject().getProjectDescription().equals(project)) {
                 eventBus.fireEvent(new RefreshProjectTreeEvent());
                 callback.onSuccess();
                 return;
