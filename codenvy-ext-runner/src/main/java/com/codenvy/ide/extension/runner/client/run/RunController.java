@@ -127,7 +127,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
     private   Timer                                             setAppHealthOkTimer;
     //show time in "Total Time" indicator start immediately  after launch running process
-    private   Timer                                             totalActiveTimeTimer;
+    private   long                                              clientStartTime = 0;
     private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
     private   String                                            theme;
     private   int                                               runnerMemory;
@@ -494,6 +494,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+        clientStartTime = System.currentTimeMillis();
         totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time")
                                           .withName("total_time");
 
@@ -506,8 +507,6 @@ public class RunController implements Notification.OpenNotificationHandler {
             double v = NumberFormat.getDecimalFormat().parse(value);
             initTime = (long)v / 1000;
         }
-        totalActiveTimeTimer = new TotalTimeTimer(initTime);
-        totalActiveTimeTimer.scheduleRepeating(1000);
 
         runnerStatusHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(
                 dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class)) {
@@ -685,7 +684,6 @@ public class RunController implements Notification.OpenNotificationHandler {
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
         //app was stopped in CloseProjectAction
         if (appContext.getCurrentProject() == null) {
-            totalActiveTimeTimer.cancel();
             isAnyAppLaunched = false;
             isAnyAppRunning = false;
             isLastAppHealthOk = false;
@@ -726,7 +724,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onShellStarted(descriptor);
                 break;
             case STOPPED:
-                totalActiveTimeTimer.cancel();
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -763,7 +760,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case FAILED:
-                totalActiveTimeTimer.cancel();
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
@@ -788,7 +784,6 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case CANCELLED:
-                totalActiveTimeTimer.cancel();
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -1011,10 +1006,12 @@ public class RunController implements Notification.OpenNotificationHandler {
     /** Returns uptime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getTotalTime() {
-        if (totalActiveTimeMetric != null && totalActiveTimeMetric.getValue() != null) {
-            return totalActiveTimeMetric;
+        if (clientStartTime == 0) {
+            return null;
         }
-        return null;
+        String humanReadable = StringUtils.timeSecToHumanReadable((System.currentTimeMillis() - clientStartTime)/1000);
+        totalActiveTimeMetric.setValue(humanReadable);
+        return totalActiveTimeMetric;
     }
 
     @Nullable
@@ -1090,20 +1087,4 @@ public class RunController implements Notification.OpenNotificationHandler {
             }
         }
     }
-
-    private class TotalTimeTimer extends Timer {
-        long timeSeconds;
-
-        private TotalTimeTimer(long initTime) {
-            timeSeconds = initTime;
-        }
-
-        @Override
-        public void run() {
-            timeSeconds++;
-            String humanReadable = StringUtils.timeSecToHumanReadable(timeSeconds);
-            totalActiveTimeMetric.setValue(humanReadable);
-        }
-    }
-
 }
