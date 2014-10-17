@@ -52,6 +52,9 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
         this.resources = resources;
         this.locale = locale;
         initWidget(ourUiBinder.createAndBindUi(this));
+        memoryField.getElement().setAttribute("type", "number");
+        memoryField.getElement().setAttribute("step", "128");
+        memoryField.getElement().setAttribute("min", "0");
     }
 
 
