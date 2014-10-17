@@ -223,7 +223,7 @@ public class StandardComponentInitializer {
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer(IconRegistry iconRegistry, StandardComponentInitializer.ParserResource parserResource) {
-        iconRegistry.registerIcon(new Icon("blank.samples.category.icon", parserResource.samplesCategoryBlank()));
+        iconRegistry.registerIcon(new Icon("Blank.samples.category.icon", parserResource.samplesCategoryBlank()));
     }
 
     public void initialize() {
