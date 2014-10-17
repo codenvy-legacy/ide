@@ -83,7 +83,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
         if (!value.isEmpty()) {
             try {
                 final int ram = Integer.parseInt(value);
-                if (ram > 0 && ram % 128 == 0) {
+                if (ram % 128 == 0) {
                     setDirty(true);
                 } else {
                     view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
@@ -137,7 +137,7 @@ public class RamManagePresenter extends AbstractPreferencesPagePresenter impleme
     }
 
     private void saveToPreferences() {
-        preferencesManager.setPreference(PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam());
+        preferencesManager.setPreference(PREFS_RUNNER_RAM_SIZE_DEFAULT, view.getRam().replace("\"", ""));
         preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
             @Override
             public void onSuccess(ProfileDescriptor result) {

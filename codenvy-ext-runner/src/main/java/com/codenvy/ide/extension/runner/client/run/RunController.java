@@ -34,6 +34,7 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.theme.ThemeAgent;
@@ -77,7 +78,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -105,7 +105,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     private final DtoFactory             dtoFactory;
     private final AppContext             appContext;
     /** Whether any app is running now? */
-    protected boolean isAnyAppRunning = false;
+    protected boolean isAnyAppRunning  = false;
     protected boolean isAnyAppLaunched = false;
     protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
@@ -119,6 +119,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     private   RunnerServiceClient                               service;
     private   RunnerLocalizationConstant                        constant;
     private   NotificationManager                               notificationManager;
+    private   PreferencesManager                                preferencesManager;
     private   Notification                                      notification;
     private   ProjectRunCallback                                runCallback;
     private   boolean                                           isLastAppHealthOk;
@@ -138,6 +139,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                          final RunnerServiceClient service,
                          final RunnerLocalizationConstant constant,
                          final NotificationManager notificationManager,
+                         PreferencesManager preferencesManager,
                          DtoFactory dtoFactory,
                          EditorAgent editorAgent,
                          final DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -151,6 +153,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         this.service = service;
         this.constant = constant;
         this.notificationManager = notificationManager;
+        this.preferencesManager = preferencesManager;
         this.dtoFactory = dtoFactory;
         this.editorAgent = editorAgent;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -211,7 +214,9 @@ public class RunController implements Notification.OpenNotificationHandler {
      *
      * @return <code>true</code> if any application has been launched, and <code>false</code> otherwise
      */
-    public boolean isAnyAppLaunched() { return isAnyAppLaunched; }
+    public boolean isAnyAppLaunched() {
+        return isAnyAppLaunched;
+    }
 
     /**
      * Determines whether any application is running.
@@ -314,10 +319,9 @@ public class RunController implements Notification.OpenNotificationHandler {
                             if (runners != null) {
                                 runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                             }
-                            Map<String, String> preferences = appContext.getCurrentUser().getPreferences();
-                            if (preferences != null && preferences.containsKey(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT)) {
+                            if (preferencesManager != null && preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT) != null) {
                                 try {
-                                    overrideMemory = Integer.parseInt(preferences.get(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                                    overrideMemory = Integer.parseInt(preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                                 } catch (NumberFormatException e) {
                                     //do nothing
                                 }
@@ -328,11 +332,13 @@ public class RunController implements Notification.OpenNotificationHandler {
                         }
 
                         if (!isSufficientMemory(totalMemory, usedMemory, requiredMemory)) {
+                            isAnyAppLaunched = false;
                             return;
                         }
 
                         if (overrideMemory > 0) {
                             if (!isOverrideMemoryCorrect(totalMemory, usedMemory, overrideMemory)) {
+                                isAnyAppLaunched = false;
                                 return;
                             }
                             if (overrideMemory < requiredMemory) {
