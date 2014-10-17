@@ -26,7 +26,9 @@ import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -66,11 +68,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private final CoreLocalizationConstant  constant;
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       String                    workspaceId;
-    private       DtoFactory                dtoFactory;
-    private       EventBus                  eventBus;
-    private       WizardPage                currentPage;
-    private       ProjectWizardView         view;
-    private       MainPagePresenter         mainPage;
+    private       AppContext                appContext;
+    private DtoFactory dtoFactory;
+    private EventBus          eventBus;
+    private WizardPage        currentPage;
+    private ProjectWizardView view;
+    private MainPagePresenter mainPage;
     private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -94,6 +97,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      RunnerServiceClient runnerServiceClient,
                                      BuilderServiceClient builderServiceClient,
                                      @Named("workspaceId") String workspaceId,
+                                     AppContext appContext,
                                      DtoFactory dtoFactory,
                                      EventBus eventBus) {
         this.view = view;
@@ -103,6 +107,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.constant = constant;
         this.wizardRegistry = wizardRegistry;
         this.workspaceId = workspaceId;
+        this.appContext = appContext;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
         mainPage.setUpdateDelegate(this);
@@ -452,6 +457,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
+        if(project != null && appContext.getCurrentProject() != null){
+            if(appContext.getCurrentProject().getProjectDescription().equals(project)){
+                eventBus.fireEvent(new RefreshProjectTreeEvent());
+                callback.onSuccess();
+                return;
+            }
+        }
         eventBus.fireEvent(new OpenProjectEvent(name));
         callback.onSuccess();
     }
