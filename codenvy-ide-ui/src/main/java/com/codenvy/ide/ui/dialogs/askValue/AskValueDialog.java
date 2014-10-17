@@ -29,6 +29,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Window for asking user to enter any value.
  *
@@ -48,6 +51,8 @@ public class AskValueDialog extends Window {
     private AskValueCallback callback;
 
     private boolean isEmptyAllowed =true;
+
+    private HashMap<String, String> replaceMap;
 
 
     interface AskUiBinder extends UiBinder<Widget, AskValueDialog> {
@@ -105,8 +110,33 @@ public class AskValueDialog extends Window {
      */
     public AskValueDialog(final String title, final String message, final String defaultValue,
                           final int selectionStartIndex, final int selectionLength, boolean isEmptyAllowed, final AskValueCallback callback) {
+        this(title, message, defaultValue, selectionStartIndex, selectionLength, isEmptyAllowed, null, callback);
+    }
+
+    /**
+     * Creates and displays new AskValueDialog.
+     *
+     * @param title
+     *         the title for popup window
+     * @param message
+     *         the message for input field
+     * @param defaultValue
+     *         default value for input field
+     * @param selectionStartIndex
+     *         indicates the start position of selection
+     * @param selectionLength
+     *         indicates length of selection
+     * @param callback
+     *         the callback that call after user interact
+     */
+    public AskValueDialog(final String title, final String message, final String defaultValue,
+                          final int selectionStartIndex, final int selectionLength,
+                          boolean isEmptyAllowed, final HashMap<String, String> replaceMap,
+                          final AskValueCallback callback) {
         this.callback = callback;
         this.isEmptyAllowed = isEmptyAllowed;
+        this.replaceMap = replaceMap;
+
         Widget widget = uiBinder.createAndBindUi(this);
         setTitle(title);
         this.message.setText(message);
@@ -136,21 +166,37 @@ public class AskValueDialog extends Window {
             Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override
                 public void execute() {
-                    //value.setSelectionRange(0, defaultValue.lastIndexOf('.'));
                     value.setSelectionRange(selectionStartIndex, selectionLength);
                 }
             });
         }
         this.ensureDebugId("askValueDialog-window");
         this.value.ensureDebugId("askValueDialog-textBox");
+
+        if (!isEmptyAllowed && defaultValue == null) {
+            ok.setEnabled(false);
+        }
     }
 
     @UiHandler("value")
     void onKeyUp(KeyUpEvent event) {
         if (!isEmptyAllowed) {
-            ok.setEnabled((value.getValue() != null && !value.getValue().trim().isEmpty()));
-            if (value.getValue() == null || value.getValue().trim().isEmpty()) {
-                return;
+            if (value.getValue() != null) {
+                if (replaceMap != null) {
+                    for (Map.Entry<String, String> entry : replaceMap.entrySet()) {
+                        if (value.getValue().indexOf(entry.getKey()) >= 0) {
+                            value.setValue(value.getValue().replaceAll(entry.getKey(), entry.getValue()));
+                        }
+                    }
+                }
+
+                if (value.getValue().trim().isEmpty()) {
+                    ok.setEnabled(false);
+                } else {
+                    ok.setEnabled(true);
+                }
+            } else {
+                ok.setEnabled(false);
             }
         }
 
@@ -159,7 +205,6 @@ public class AskValueDialog extends Window {
             onClose();
         }
     }
-
 
 
     @Override
