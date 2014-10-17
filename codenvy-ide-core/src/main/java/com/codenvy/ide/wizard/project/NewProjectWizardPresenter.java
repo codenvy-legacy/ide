@@ -658,7 +658,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      *         ProjectDescriptor
      */
     private void fillWizardContext(ProjectDescriptor projectDescriptor) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility()));
+        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility().equals("public")));
         wizardContext.putData(ProjectWizard.PROJECT, copyProjectDescriptor(projectDescriptor));
     }
 
