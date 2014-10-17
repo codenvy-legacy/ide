@@ -320,9 +320,11 @@ public class RunController implements Notification.OpenNotificationHandler {
                             if (runners != null) {
                                 runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                             }
-                            if (preferencesManager != null && preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT) != null) {
+                            if (preferencesManager != null &&
+                                preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT) != null) {
                                 try {
-                                    overrideMemory = Integer.parseInt(preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                                    overrideMemory =
+                                            Integer.parseInt(preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                                 } catch (NumberFormatException e) {
                                     //do nothing
                                 }
@@ -576,6 +578,10 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void startCheckingAppHealth(final ApplicationProcessDescriptor applicationProcessDescriptor) {
+        if (RunnerUtils.getLink(applicationProcessDescriptor, Constants.LINK_REL_WEB_URL) == null) {
+            return;
+        }
+
         setAppHealthOkTimer = new Timer() {
             @Override
             public void run() {
@@ -647,9 +653,13 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void stopCheckingAppHealth(ApplicationProcessDescriptor applicationProcessDescriptor) {
-        setAppHealthOkTimer.cancel();
+        if (setAppHealthOkTimer != null) {
+            setAppHealthOkTimer.cancel();
+        }
         try {
-            messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
+            if (applicationProcessDescriptor != null) {
+                messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
+            }
         } catch (WebSocketException e) {
             Log.error(RunController.class, e);
         }
@@ -689,6 +699,7 @@ public class RunController implements Notification.OpenNotificationHandler {
             isLastAppHealthOk = false;
 
             stopCheckingAppStatus(descriptor);
+            stopCheckingAppHealth(descriptor);
             stopCheckingAppOutput(descriptor);
             console.onAppStopped();
             return;
@@ -731,6 +742,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 appContext.getCurrentProject().setProcessDescriptor(null);
                 stopCheckingAppStatus(descriptor);
+                stopCheckingAppHealth(descriptor);
                 stopCheckingAppOutput(descriptor);
 
                 notificationMessage = constant.applicationStopped(projectName);
@@ -765,6 +777,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
+                stopCheckingAppHealth(descriptor);
                 stopCheckingAppOutput(descriptor);
                 isLastAppHealthOk = false;
                 getLogs(false);
@@ -790,6 +803,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 stopCheckingAppStatus(descriptor);
+                stopCheckingAppHealth(descriptor);
                 stopCheckingAppOutput(descriptor);
 
                 notificationMessage = constant.applicationCanceled(projectName);
@@ -844,12 +858,13 @@ public class RunController implements Notification.OpenNotificationHandler {
     private void onFail(String message, Throwable exception) {
         isAnyAppLaunched = false;
 
+        stopCheckingAppHealth(appContext.getCurrentProject().getProcessDescriptor());
+
         if (notification != null) {
             notification.setStatus(FINISHED);
             notification.setType(ERROR);
             notification.setMessage(message);
         }
-
         if (exception != null && exception.getMessage() != null) {
             message += ": " + exception.getMessage();
         }
@@ -857,6 +872,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         console.onAppStopped();
         console.setCurrentRunnerStatus(RunnerStatus.FAILED);
         console.print(message);
+
     }
 
     /** Stop the currently running application. */
