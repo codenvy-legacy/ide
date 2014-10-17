@@ -51,6 +51,10 @@
     pointer-events: none; /* do not allow SVG element to intercept pointer events */
 }
 
+.projectProblem {
+    color: red;
+}
+
 .folderFont {
     font-family: fileTreeFontFamily;
     font-weight: bold;
