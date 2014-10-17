@@ -9,11 +9,19 @@
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
 .notificationItem {
-    font-size: secondaryTextFontSize;
     font-family: mainFontFamily;
     border-bottom: 1px solid delimeterColor;
-    height: 20px;
     vertical-align: middle;
+}
+
+.notificationGrid {
+    border-collapse: collapse;
+    width: 100%;
+    height: 100%;
+}
+
+.notificationGrid td {
+    font-size: secondaryTextFontSize !important;
     text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
 }
 
@@ -30,7 +38,6 @@
 .notificationItem svg {
     width: 15px;
     height: 15px;
-    margin: 2px 4px;
 }
 
 .notificationItem a, .notificationPopup a {
@@ -68,9 +75,12 @@
 }
 
 .close {
-    margin-top: 2px;
-    padding: 5px 10px;
+    float: right;
+    margin: auto;
+    width: 7px;
+    height: 7px;
     opacity: 0.5;
+    padding: 5px 10px;
 }
 
 .close:hover {

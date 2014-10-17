@@ -13,13 +13,21 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,10 +41,15 @@ import java.util.Map;
 public class NotificationContainer extends FlowPanel implements View<NotificationItem.ActionDelegate> {
     public static final int WIDTH  = 400;
     public static final int HEIGHT = 200;
-    private FlowPanel                           panel;
+    private Grid panel;
     private Resources                           resources;
-    private Map<Notification, NotificationItem> notificationWidget;
+    private List<Notification>                  notificationWidget;
     private NotificationItem.ActionDelegate     delegate;
+    private Timer doubleClickTimer = new Timer() {
+        @Override
+        public void run() {
+        }
+    };
 
     /**
      * Create notification container.
@@ -46,14 +59,32 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
     @Inject
     public NotificationContainer(Resources resources) {
         this.resources = resources;
-        this.notificationWidget = new HashMap<Notification, NotificationItem>();
+        this.notificationWidget = new ArrayList<Notification>();
 
         ScrollPanel scrollpanel = new ScrollPanel();
         add(scrollpanel);
 
-        panel = new FlowPanel();
-        panel.setWidth("100%");
-        panel.setHeight("100%");
+        panel = new Grid(0, 4);
+        panel.getColumnFormatter().setWidth(0, "20px");
+        panel.getColumnFormatter().setWidth(1, "54px");
+        panel.getColumnFormatter().setWidth(3, "26px");
+        panel.setStyleName(resources.notificationCss().notificationGrid());
+
+        panel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                HTMLTable.Cell cell = panel.getCellForEvent(event);
+                Notification notification = notificationWidget.get(cell.getRowIndex());
+                //Detect double click:
+                if (doubleClickTimer.isRunning()){
+                    delegate.onOpenItemClicked(notification);
+                    doubleClickTimer.cancel();
+                } else {
+                    doubleClickTimer.schedule(1000);
+                }
+            }
+        });
+
         scrollpanel.add(panel);
     }
 
@@ -65,9 +96,9 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
      *         notification that need to show
      */
     public void addNotification(@Nonnull Notification notification) {
-        NotificationItem item = new NotificationItem(resources, notification, delegate);
-        panel.add(item);
-        notificationWidget.put(notification, item);
+        //Will be added to parent container itself.
+        NotificationItem item = new NotificationItem(resources, notification, delegate, panel);
+        notificationWidget.add(notification);
     }
 
     /**
@@ -77,8 +108,11 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
      *         notification that need to disable
      */
     public void removeNotification(@Nonnull Notification notification) {
-        NotificationItem item = notificationWidget.get(notification);
-        panel.remove(item);
+        int index = notificationWidget.indexOf(notification);
+        if (index >= 0) {
+            panel.removeRow(index);
+            notificationWidget.remove(index);
+        }
     }
 
     /** {@inheritDoc} */

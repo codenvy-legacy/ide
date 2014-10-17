@@ -25,6 +25,8 @@ public interface NotificationResources extends ClientBundle {
 
         String notificationItem();
 
+        String notificationGrid();
+
         String floatLeft();
 
         String margin4px();
