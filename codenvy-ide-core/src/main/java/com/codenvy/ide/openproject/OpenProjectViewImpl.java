@@ -73,6 +73,9 @@ public class OpenProjectViewImpl extends Window implements OpenProjectView {
         }
 
         public void onListItemDoubleClicked(Element listItemBase, ProjectReference itemData) {
+            list.getSelectionModel().setSelectedItem(itemData);
+            delegate.selectedProject(itemData);
+            delegate.onOpenClicked();
         }
     };
 
