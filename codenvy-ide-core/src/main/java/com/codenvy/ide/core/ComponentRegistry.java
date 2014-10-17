@@ -17,16 +17,20 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
 
-/** @author Nikolay Zamosenchuk */
+/**
+ * @author Nikolay Zamosenchuk
+ * @author Artem Zatsarynnyy
+ */
 public class ComponentRegistry {
     private Array<Component>             pendingComponents;
     private StandardComponentInitializer componentInitializer;
 
     /** Instantiates Component Registry. All components should be listed in this constructor. */
     @Inject
-    public ComponentRegistry(StandardComponentInitializer componentInitializer) {
+    public ComponentRegistry(ProjectStateHandler projectStateHandler, StandardComponentInitializer componentInitializer) {
         this.componentInitializer = componentInitializer;
         pendingComponents = Collections.createArray();
+        pendingComponents.add(projectStateHandler);
     }
 
     /**

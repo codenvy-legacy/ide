@@ -421,6 +421,12 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("codenvy.projectOpened.title")
     String codenvyTabTitle(String projectName);
 
+    @Key("projectProblem.title")
+    String projectProblemTitle();
+
+    @Key("projectProblem.message")
+    String projectProblemMessage();
+
     @Key("action.expandEditor.title")
     String actionExpandEditorTitle();
 

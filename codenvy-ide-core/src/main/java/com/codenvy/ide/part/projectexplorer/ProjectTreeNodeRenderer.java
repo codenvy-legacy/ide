@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * {@link NodeRenderer} to renderer {@code TreeNode}.
@@ -42,6 +43,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
  */
 public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
     private final Css              css;
+    private final Resources        resources;
     private       IconRegistry     iconRegistry;
     private       FileTypeRegistry fileTypeRegistry;
     private       AppContext       appContext;
@@ -49,6 +51,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
     @Inject
     public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, FileTypeRegistry fileTypeRegistry,
                                    AppContext appContext) {
+        this.resources = resources;
         this.iconRegistry = iconRegistry;
         this.fileTypeRegistry = fileTypeRegistry;
         this.appContext = appContext;
@@ -79,7 +82,11 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         Elements.addClassName(css.label(), root);
 
-        if (node instanceof FileNode) {
+        if (node instanceof ProjectListStructure.ProjectNode) {
+            if (hasProblems((ProjectListStructure.ProjectNode)node)) {
+                Elements.addClassName(css.projectProblem(), root);
+            }
+        } else if (node instanceof FileNode) {
             Elements.addClassName(css.fileFont(), root);
         } else if (node instanceof FolderNode) {
             Elements.addClassName(css.folderFont(), root);
@@ -98,6 +105,12 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         SVGImage nodeIcon = node.getDisplayIcon();
         if (nodeIcon != null) {
             return nodeIcon;
+        }
+
+        if (node instanceof ProjectListStructure.ProjectNode) {
+            if (hasProblems((ProjectListStructure.ProjectNode)node)) {
+                return new SVGImage(resources.projectProblem());
+            }
         }
 
         CurrentProject project = appContext.getCurrentProject();
@@ -124,7 +137,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
                 icon = iconRegistry.getIconIfExist(projectTypeId + "/" + ext + ".file.small.icon");
             }
             //use default icons from file type
-            if(icon == null) {
+            if (icon == null) {
                 FileType fileType = fileTypeRegistry.getFileTypeByFile((FileNode)node);
                 if (fileType != null && fileType.getSVGImage() != null) {
                     return new SVGImage(fileType.getSVGImage());
@@ -135,6 +148,10 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
             return null;
         }
         return icon.getSVGImage();
+    }
+
+    private boolean hasProblems(ProjectListStructure.ProjectNode project) {
+        return !project.getData().getProblems().isEmpty();
     }
 
     @Override
@@ -197,6 +214,8 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         String label();
 
+        String projectProblem();
+
         String folderFont();
 
         String fileFont();
@@ -232,6 +251,8 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         @Source("project.png")
         ImageResource project();
-    }
 
+        @Source("project_problem.svg")
+        SVGResource projectProblem();
+    }
 }
