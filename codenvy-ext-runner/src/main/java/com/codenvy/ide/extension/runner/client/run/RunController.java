@@ -177,6 +177,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                                                             processDescriptor.getStatus() == RUNNING) {
                                                             isLastAppHealthOk = true; //set true here because we don't get information
                                                             isAnyAppRunning = true;   // about app health in case we open already run app
+                                                            isAnyAppLaunched = true;
                                                             console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
                                                             onAppLaunched(processDescriptor);
                                                             getLogs(false);
