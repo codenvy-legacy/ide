@@ -37,6 +37,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 
+import java.util.HashMap;
+
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 /**
@@ -82,8 +84,12 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
+        HashMap<String, String> autoReplace = new HashMap<String, String>();
+        autoReplace.put(" ", "-");
+
         new AskValueDialog(constants.customEnvironmentsViewAddNewEnvTitle(),
                            constants.customEnvironmentsViewAddNewEnvMessage(),
+                           null, 0, 0, false, autoReplace,
                            new AskValueCallback() {
                                @Override
                                public void onOk(final String value) {
