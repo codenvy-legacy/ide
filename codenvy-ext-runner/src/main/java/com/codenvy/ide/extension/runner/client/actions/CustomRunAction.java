@@ -13,6 +13,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -28,21 +29,24 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends Action {
 
+    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
-    private       RunController        runController;
-    private       CustomRunPresenter   customRunPresenter;
+    private final RunController        runController;
+    private final CustomRunPresenter   customRunPresenter;
 
     @Inject
     public CustomRunAction(RunController runController,
                            CustomRunPresenter customRunPresenter,
                            RunnerResources resources,
                            RunnerLocalizationConstant localizationConstants,
+                           AppContext appContext,
                            AnalyticsEventLogger eventLogger) {
         super(localizationConstants.customRunAppActionText(),
               localizationConstants.customRunAppActionDescription(),
               null, resources.launchApp());
         this.runController = runController;
         this.customRunPresenter = customRunPresenter;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -56,7 +60,10 @@ public class CustomRunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(true);
-        e.getPresentation().setEnabled(!runController.isAnyAppRunning());
+        if (appContext.getCurrentProject() != null) {
+            e.getPresentation().setEnabledAndVisible(!runController.isAnyAppLaunched());
+        } else {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
 }

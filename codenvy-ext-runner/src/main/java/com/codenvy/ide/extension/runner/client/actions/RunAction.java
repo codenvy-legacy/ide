@@ -13,6 +13,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -28,18 +29,21 @@ import com.google.inject.Singleton;
 public class RunAction extends Action {
 
     private final RunController        runController;
+    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public RunAction(RunController runController,
                      RunnerResources resources,
                      RunnerLocalizationConstant localizationConstants,
+                     AppContext appContext,
                      AnalyticsEventLogger eventLogger) {
         super(localizationConstants.runAppActionText(),
               localizationConstants.runAppActionDescription(),
               null,
               resources.launchApp());
         this.runController = runController;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
     }
 
@@ -53,7 +57,10 @@ public class RunAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(true);
-        e.getPresentation().setEnabled(!runController.isAnyAppRunning());
+        if (appContext.getCurrentProject() != null) {
+            e.getPresentation().setEnabledAndVisible(!runController.isAnyAppLaunched());
+        } else {
+            e.getPresentation().setEnabledAndVisible(false);
+        }
     }
 }
