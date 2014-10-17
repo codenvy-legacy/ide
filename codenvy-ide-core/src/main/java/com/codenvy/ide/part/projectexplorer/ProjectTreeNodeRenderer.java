@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * {@link NodeRenderer} to renderer {@code TreeNode}.
@@ -105,12 +104,6 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         SVGImage nodeIcon = node.getDisplayIcon();
         if (nodeIcon != null) {
             return nodeIcon;
-        }
-
-        if (node instanceof ProjectListStructure.ProjectNode) {
-            if (hasProblems((ProjectListStructure.ProjectNode)node)) {
-                return new SVGImage(resources.projectProblem());
-            }
         }
 
         CurrentProject project = appContext.getCurrentProject();
@@ -251,8 +244,5 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         @Source("project.png")
         ImageResource project();
-
-        @Source("project_problem.svg")
-        SVGResource projectProblem();
     }
 }
