@@ -12,17 +12,15 @@ package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.*;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -47,7 +45,6 @@ public class NotificationItem extends Composite implements Notification.Notifica
     }
 
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("hh:mm:ss");
-    private DockLayoutPanel mainPanel;
     private HTML            title;
     private Label           time;
     private SimplePanel     iconPanel;
@@ -55,6 +52,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     private Notification    prevState;
     private Notification    notification;
     private ActionDelegate  delegate;
+    private Grid            container;
 
     /**
      * Create notification item.
@@ -63,42 +61,19 @@ public class NotificationItem extends Composite implements Notification.Notifica
      * @param notification
      * @param delegate
      */
-    public NotificationItem(@Nonnull Resources resources, @Nonnull Notification notification, @Nonnull final ActionDelegate delegate) {
+    public NotificationItem(@Nonnull Resources resources, @Nonnull Notification notification, @Nonnull final ActionDelegate delegate, final Grid container) {
         this.resources = resources;
         this.notification = notification;
         this.prevState = notification.clone();
         this.delegate = delegate;
+        this.container = container;
         notification.addObserver(this);
 
-        mainPanel = new DockLayoutPanel(PX);
-        mainPanel.addStyleName(resources.notificationCss().notificationItem());
-
-        if (!notification.isRead()) {
-            mainPanel.addStyleName(resources.notificationCss().unread());
-        }
-
-        DoubleClickHandler handler = new DoubleClickHandler() {
-            @Override
-            public void onDoubleClick(DoubleClickEvent event) {
-                NotificationItem.this.delegate.onOpenItemClicked(NotificationItem.this.notification);
-            }
-        };
-        mainPanel.addDomHandler(handler, DoubleClickEvent.getType());
-
         iconPanel = new SimplePanel();
-        mainPanel.addWest(iconPanel, 25);
 
-        if (!notification.isFinished()) {
-            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
-        } else if (notification.isWarning()) {
-            changeImage(resources.warning());
-            mainPanel.addStyleName(resources.notificationCss().warning());
-        } else if (notification.isError()) {
-            changeImage(resources.error());
-            mainPanel.addStyleName(resources.notificationCss().error());
-        } else {
-            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
-        }
+        time = new Label(DATA_FORMAT.format(notification.getTime()));
+        //If notification message is formated HTML - need to display only plain text from it.
+        title = new HTML(notification.getMessage());
 
         Image closeIcon = new Image(resources.close());
         closeIcon.addStyleName(resources.notificationCss().close());
@@ -108,18 +83,34 @@ public class NotificationItem extends Composite implements Notification.Notifica
                 delegate.onCloseItemClicked(NotificationItem.this.notification);
             }
         });
-        mainPanel.addEast(closeIcon, 25);
 
-        time = new Label(DATA_FORMAT.format(notification.getTime()));
-        time.getElement().getStyle().setLineHeight(20, PX);
-        mainPanel.addWest(time, 55);
-        //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
-        title.addStyleName(resources.notificationCss().center());
-        title.setHeight("20px");
-        mainPanel.add(title);
+        if (!notification.isRead()) {
+            addStyleNameToElements(resources.notificationCss().unread());
+        }
 
-        initWidget(mainPanel);
+        if (!notification.isFinished()) {
+            changeImage(resources.progress()).getElement().setAttribute("class", resources.notificationCss().progress());
+        } else if (notification.isWarning()) {
+            changeImage(resources.warning());
+            addStyleNameToElements(resources.notificationCss().warning());
+        } else if (notification.isError()) {
+            changeImage(resources.error());
+            addStyleNameToElements(resources.notificationCss().error());
+        } else {
+            changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
+        }
+
+        int index = container.getRowCount();
+        container.resizeRows(index + 1);
+        container.setWidget(index, 0, iconPanel);
+        container.setWidget(index, 1, time);
+        container.setWidget(index, 2, title);
+        container.setWidget(index, 3, closeIcon);
+        container.getCellFormatter().setHorizontalAlignment(index, 1, HasAlignment.ALIGN_CENTER);
+        container.getRowFormatter().addStyleName(index, resources.notificationCss().notificationItem());
+        container.getRowFormatter().setVerticalAlign(index, HasAlignment.ALIGN_MIDDLE);
+
+
     }
 
     /**
@@ -139,7 +130,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setHTML("<p>" + notification.getMessage() + "</p>");
+                title.setHTML(notification.getMessage());
             }
 
             if (!notification.isFinished()) {
@@ -156,9 +147,9 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
             if (prevState.isRead() != notification.isRead()) {
                 if (notification.isRead()) {
-                    mainPanel.removeStyleName(resources.notificationCss().unread());
+                    removeStyleNameFromElements(resources.notificationCss().unread());
                 } else {
-                    mainPanel.addStyleName(resources.notificationCss().unread());
+                    addStyleNameToElements(resources.notificationCss().unread());
                 }
             }
 
@@ -169,19 +160,33 @@ public class NotificationItem extends Composite implements Notification.Notifica
     /** Change item's content in response to change notification type */
     private void changeType() {
         if (prevState.isError()) {
-            mainPanel.removeStyleName(resources.notificationCss().error());
+            removeStyleNameFromElements(resources.notificationCss().error());
         } else if (prevState.isWarning()) {
-            mainPanel.removeStyleName(resources.notificationCss().warning());
+            removeStyleNameFromElements(resources.notificationCss().warning());
         }
 
         if (notification.isWarning()) {
             changeImage(resources.warning());
-            mainPanel.addStyleName(resources.notificationCss().warning());
+            addStyleNameToElements(resources.notificationCss().warning());
         } else if (notification.isError()) {
             changeImage(resources.error());
-            mainPanel.addStyleName(resources.notificationCss().error());
+            addStyleNameToElements(resources.notificationCss().error());
         } else {
             changeImage(resources.success()).getElement().setAttribute("class", resources.notificationCss().success());
         }
+    }
+
+    /** Add specified style name to time, title and icon elements */
+    private void addStyleNameToElements(String style){
+        title.addStyleName(style);
+        time.addStyleName(style);
+        iconPanel.addStyleName(style);
+    }
+
+    /** Remove specified style name from time, title and icon elements */
+    private void removeStyleNameFromElements(String style){
+        title.removeStyleName(style);
+        time.removeStyleName(style);
+        iconPanel.removeStyleName(style);
     }
 }
