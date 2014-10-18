@@ -690,6 +690,7 @@ public class RunController implements Notification.OpenNotificationHandler {
 
             stopCheckingAppStatus(descriptor);
             stopCheckingAppOutput(descriptor);
+            console.onAppStopped();
             return;
         }
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
