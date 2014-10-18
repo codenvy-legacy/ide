@@ -12,6 +12,7 @@ package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.api.event.ItemEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
@@ -181,6 +182,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
                         callback.onFailure(exception);
                     }
                 });
+                eventBus.fireEvent(new ItemEvent(ItemNode.this, ItemEvent.ItemOperation.DELETE));
             }
 
             @Override
