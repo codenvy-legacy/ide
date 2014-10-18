@@ -22,6 +22,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -162,7 +163,9 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     public void addRunner(RunnerEnvironmentTree environmentTree) {
         root.getNodes().add(environmentTree);
         tree.getModel().setRoot(root);
-        tree.renderTree();
+        tree.renderTree(1);
+        Log.info(SelectRunnerPagePresenter.class, ">>>>>>>>>> :: " + root.getNodes().toString());
+//        tree.closeNode();
         collectRunnerEnvironments(environmentTree);
     }
 

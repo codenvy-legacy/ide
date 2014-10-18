@@ -199,7 +199,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @Override
     public void addRunner(RunnerEnvironmentTree environmentTree) {
         rootNode.getNodes().add(environmentTree);
-        tree.renderTree();
+        tree.renderTree(1);
     }
 
     @UiHandler({"runnerMemory128", "runnerMemory256", "runnerMemory512", "runnerMemory1GB", "runnerMemory2GB"})
