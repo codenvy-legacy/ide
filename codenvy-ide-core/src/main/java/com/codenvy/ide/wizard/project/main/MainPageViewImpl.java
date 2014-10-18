@@ -20,7 +20,6 @@ import com.codenvy.ide.ui.Styles;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -197,11 +196,11 @@ public class MainPageViewImpl implements MainPageView {
         projectPrivate.setEnabled(enabled);
     }
 
-    private SpanElement renderCategoryWithIcon(String title) {
+    private SpanElement renderCategoryWithIcon(String category) {
         SpanElement textElement = Document.get().createSpanElement();
         textElement.setClassName(resources.defaultCategoriesListCss().headerText());
-        textElement.setInnerText(title.toUpperCase());
-        Icon icon = iconRegistry.getIconIfExist(title + ".samples.category.icon");
+        textElement.setInnerText(category.toUpperCase());
+        Icon icon = iconRegistry.getIconIfExist(category + ".samples.category.icon");
         if (icon != null) {
             Element iconElement = null;
             if (icon.getSVGImage() != null) {

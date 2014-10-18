@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.core;
 
+import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
@@ -223,7 +224,7 @@ public class StandardComponentInitializer {
     /** Instantiates {@link StandardComponentInitializer} an creates standard content. */
     @Inject
     public StandardComponentInitializer(IconRegistry iconRegistry, StandardComponentInitializer.ParserResource parserResource) {
-        iconRegistry.registerIcon(new Icon("Blank.samples.category.icon", parserResource.samplesCategoryBlank()));
+        iconRegistry.registerIcon(new Icon(Constants.BLANK_CATEGORY + ".samples.category.icon", parserResource.samplesCategoryBlank()));
     }
 
     public void initialize() {

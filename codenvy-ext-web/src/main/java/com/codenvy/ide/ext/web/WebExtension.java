@@ -91,7 +91,7 @@ public class WebExtension {
                         @Named("JSFileType") FileType jsFile,
                         @Named("HTMLFileType") FileType htmlFile,
                         @Named("PHPFileType") FileType phpFile) {
-        // register new Icon for javascript projecttype
+        // register new Icon for javascript project type
         iconRegistry.registerIcon(new Icon("JavaScript.samples.category.icon", resources.samplesCategoryJs()));
 
         // Register and add actions
