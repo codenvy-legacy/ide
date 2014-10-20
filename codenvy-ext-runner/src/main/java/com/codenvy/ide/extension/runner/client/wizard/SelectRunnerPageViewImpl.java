@@ -22,13 +22,13 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -46,7 +46,8 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     private final DockLayoutPanel       rootElement;
     private final Tree<Object>          tree;
     private final RunnerEnvironmentTree root;
-
+    @UiField
+    Label       noEnvLabel;
     @UiField
     TextBox     recommendedMemory;
     @UiField
@@ -66,36 +67,30 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
 
         root = dtoFactory.createDto(RunnerEnvironmentTree.class);
         tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
-        treeContainer.add(tree);
+        treeContainer.setWidget(noEnvLabel);
         tree.setTreeEventHandler(new Tree.Listener<Object>() {
             @Override
             public void onNodeAction(TreeNodeElement<Object> node) {
-
             }
 
             @Override
             public void onNodeClosed(TreeNodeElement<Object> node) {
-
             }
 
             @Override
             public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<Object> node) {
-
             }
 
             @Override
             public void onNodeDragStart(TreeNodeElement<Object> node, MouseEvent event) {
-
             }
 
             @Override
             public void onNodeDragDrop(TreeNodeElement<Object> node, MouseEvent event) {
-
             }
 
             @Override
             public void onNodeExpanded(TreeNodeElement<Object> node) {
-
             }
 
             @Override
@@ -110,17 +105,14 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
 
             @Override
             public void onRootContextMenu(int mouseX, int mouseY) {
-
             }
 
             @Override
             public void onRootDragDrop(MouseEvent event) {
-
             }
 
             @Override
             public void onKeyboard(KeyboardEvent event) {
-
             }
         });
     }
@@ -164,9 +156,8 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
         root.getNodes().add(environmentTree);
         tree.getModel().setRoot(root);
         tree.renderTree(1);
-        Log.info(SelectRunnerPagePresenter.class, ">>>>>>>>>> :: " + root.getNodes().toString());
-//        tree.closeNode();
         collectRunnerEnvironments(environmentTree);
+        checkTreeVisibility(environmentTree);
     }
 
     private void collectRunnerEnvironments(RunnerEnvironmentTree environmentTree) {
@@ -182,6 +173,14 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
         }
     }
 
+    private void checkTreeVisibility(RunnerEnvironmentTree environmentTree) {
+        if (environmentTree.getNodes().isEmpty() && environmentTree.getLeaves().isEmpty()) {
+            treeContainer.setWidget(noEnvLabel);
+        } else {
+            treeContainer.setWidget(tree);
+        }
+    }
+
     @Override
     public void selectRunnerEnvironment(String environmentId) {
         if (environmentMap.containsKey(environmentId)) {
@@ -193,5 +192,4 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     interface SelectRunnerViewImplUiBinder
             extends UiBinder<DockLayoutPanel, SelectRunnerPageViewImpl> {
     }
-
 }

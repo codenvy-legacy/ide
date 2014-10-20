@@ -51,12 +51,21 @@
         .margin{
             margin-left: 6px;
         }
+
+        .noEnvLabel {
+            cursor: default;
+            line-height: 350px;
+            text-align: center;
+            width: 100%;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PCT" debugId="mavenPageView-mainPanel" addStyleNames="{style.mainDoc}">
         <g:west size="50">
             <g:FlowPanel>
                 <g:Label text="Select Runner environment:"
                          addStyleNames="{style.labelPosition} {style.margin}"/>
+                <g:Label ui:field="noEnvLabel" text="No environments available" addStyleNames="{style.noEnvLabel}"/>
                 <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>
