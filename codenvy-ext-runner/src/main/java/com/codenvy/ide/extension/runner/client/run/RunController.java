@@ -12,8 +12,6 @@ package com.codenvy.ide.extension.runner.client.run;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
@@ -26,7 +24,6 @@ import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -35,8 +32,6 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -59,11 +54,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.StringUnmarshallerWS;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.json.client.JSONObject;
@@ -75,9 +65,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -112,8 +100,6 @@ public class RunController implements Notification.OpenNotificationHandler {
     protected SubscriptionHandler<String>                       runnerHealthHandler;
     private   EditorAgent                                       editorAgent;
     private   MessageBus                                        messageBus;
-    private   ProjectServiceClient                              projectServiceClient;
-    private   EventBus                                          eventBus;
     private   WorkspaceAgent                                    workspaceAgent;
     private   RunnerConsolePresenter                            console;
     private   RunnerServiceClient                               service;
@@ -127,10 +113,10 @@ public class RunController implements Notification.OpenNotificationHandler {
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
     private   Timer                                             setAppHealthOkTimer;
     //show time in "Total Time" indicator start immediately  after launch running process
-    private   long                                              clientStartTime = 0;
-    private   RunnerMetric                                      totalActiveTimeMetric; //calculate on client-side
-    private   String                                            theme;
-    private   int                                               runnerMemory;
+    private long clientStartTime = 0;
+    private RunnerMetric totalActiveTimeMetric; //calculate on client-side
+    private String       theme;
+    private int          runnerMemory;
 
     @Inject
     public RunController(EventBus eventBus,
@@ -145,9 +131,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                          final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          MessageBus messageBus,
                          ThemeAgent themeAgent,
-                         final AppContext appContext,
-                         ProjectServiceClient projectServiceClient) {
-        this.eventBus = eventBus;
+                         final AppContext appContext) {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -159,7 +143,6 @@ public class RunController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
         this.appContext = appContext;
-        this.projectServiceClient = projectServiceClient;
         theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -320,9 +303,11 @@ public class RunController implements Notification.OpenNotificationHandler {
                             if (runners != null) {
                                 runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                             }
-                            if (preferencesManager != null && preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT) != null) {
+                            if (preferencesManager != null &&
+                                preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT) != null) {
                                 try {
-                                    overrideMemory = Integer.parseInt(preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
+                                    overrideMemory =
+                                            Integer.parseInt(preferencesManager.getValue(RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT));
                                 } catch (NumberFormatException e) {
                                     //do nothing
                                 }
@@ -738,7 +723,7 @@ public class RunController implements Notification.OpenNotificationHandler {
 
                 // this mean that application has failed to start
                 if (descriptor.getStartTime() == -1) {
-                    notificationType= ERROR;
+                    notificationType = ERROR;
                     getLogs(false);
                 } else {
                     notificationType = INFO;
@@ -898,29 +883,6 @@ public class RunController implements Notification.OpenNotificationHandler {
         return false;
     }
 
-    /** Opens runner recipe file in editor. */
-    public void showRecipe() {
-        if (appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
-            final Link recipeLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), "runner recipe");
-            if (recipeLink != null) {
-                List<Link> links = new ArrayList<>(1);
-                links.add(dtoFactory.createDto(Link.class).withHref(recipeLink.getHref())
-                                    .withRel("get content"));
-                ItemReference recipeFile = dtoFactory.createDto(ItemReference.class)
-                                                     .withName("Runner Recipe")
-                                                     .withPath("runner_recipe")
-                                                     .withMediaType("text/plain")
-                                                     .withLinks(links);
-                FileNode recipeFileNode = new RecipeFile(null, recipeFile, eventBus, projectServiceClient, dtoUnmarshallerFactory);
-                editorAgent.openEditor(recipeFileNode);
-                EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFile.getPath());
-                if (editor instanceof CodenvyTextEditor) {
-                    ((CodenvyTextEditor)editor).getView().setReadOnly(true);
-                }
-            }
-        }
-    }
-
     private void showWarning(String warning) {
         Info warningWindow = new Info(constant.titlesWarning(), warning);
         warningWindow.show();
@@ -1010,7 +972,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (clientStartTime == 0) {
             return null;
         }
-        String humanReadable = StringUtils.timeSecToHumanReadable((System.currentTimeMillis() - clientStartTime)/1000);
+        String humanReadable = StringUtils.timeSecToHumanReadable((System.currentTimeMillis() - clientStartTime) / 1000);
         totalActiveTimeMetric.setValue(humanReadable);
         return totalActiveTimeMetric;
     }
@@ -1056,36 +1018,5 @@ public class RunController implements Notification.OpenNotificationHandler {
             }
         }
         return url;
-    }
-
-    private static class RecipeFile extends FileNode {
-        public RecipeFile(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                          DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
-        }
-
-        @Override
-        public void getContent(final AsyncCallback<String> callback) {
-            for (Link link : data.getLinks()) {
-                if ("get content".equals(link.getRel())) {
-                    try {
-                        new RequestBuilder(RequestBuilder.GET, link.getHref()).sendRequest("", new RequestCallback() {
-                            @Override
-                            public void onResponseReceived(Request request, Response response) {
-                                callback.onSuccess(response.getText());
-                            }
-
-                            @Override
-                            public void onError(Request request, Throwable exception) {
-                                Log.error(RecipeFile.class, exception);
-                            }
-                        });
-                    } catch (RequestException e) {
-                        Log.error(RecipeFile.class, e);
-                    }
-                    break;
-                }
-            }
-        }
     }
 }
