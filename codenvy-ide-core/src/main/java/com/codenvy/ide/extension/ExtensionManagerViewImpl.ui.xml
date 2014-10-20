@@ -88,9 +88,9 @@
                     <g:DockLayoutPanel width="100%" height="100%">
                         <g:north size="22" unit="PX">
                             <g:DockLayoutPanel width="100%" height="100%" styleName="{style.headerTitle}">
-                                <g:west size="75" unit="PX">
-                                    <g:Label styleName="{style.labelActivate}">Activate</g:Label>
-                                </g:west>
+                                <!--<g:west size="75" unit="PX">-->
+                                    <!--<g:Label styleName="{style.labelActivate}">Activate</g:Label>-->
+                                <!--</g:west>-->
                                 <g:center>
                                     <g:Label styleName="{style.labelName}">Plugin Name</g:Label>
                                 </g:center>
