@@ -69,32 +69,32 @@ public class ExtensionManagerViewImpl implements ExtensionManagerView {
         toolbarPresenter.bindMainGroup(actionGroup);
         UIObject.ensureDebugId(descriptionArea, "window-preferences-extensions-descriptionArea");
 
-        CheckboxCell checkboxCell = new CheckboxCell(false, false);
-        Column<ExtensionDescription, Boolean> enabledColumn = new Column<ExtensionDescription, Boolean>(checkboxCell) {
-            @Override
-            public Boolean getValue(ExtensionDescription object) {
-                return object.isEnabled();
-            }
+//        CheckboxCell checkboxCell = new CheckboxCell(false, false);
+//        Column<ExtensionDescription, Boolean> enabledColumn = new Column<ExtensionDescription, Boolean>(checkboxCell) {
+//            @Override
+//            public Boolean getValue(ExtensionDescription object) {
+//                return object.isEnabled();
+//            }
+//
+//            @Override
+//            public void render(Cell.Context context, ExtensionDescription object, SafeHtmlBuilder sb) {
+//                sb.appendHtmlConstant(
+//                        "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
+//                super.render(context, object, sb);
+//            }
+//        };
 
-            @Override
-            public void render(Cell.Context context, ExtensionDescription object, SafeHtmlBuilder sb) {
-                sb.appendHtmlConstant(
-                        "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-extensions-row-" + context.getIndex() + "\">");
-                super.render(context, object, sb);
-            }
-        };
-
-        enabledColumn.setFieldUpdater(new FieldUpdater<ExtensionDescription, Boolean>() {
-            @Override
-            public void update(int index, ExtensionDescription object, Boolean value) {
-                object.setEnabled(value);
-                delegate.setDirty();
-            }
-        });
-        enabledColumn.setCellStyleNames(style.enabledColumn());
-
-        dataGrid.addColumn(enabledColumn);
-        dataGrid.setColumnWidth(enabledColumn, 75, com.google.gwt.dom.client.Style.Unit.PX);
+//        enabledColumn.setFieldUpdater(new FieldUpdater<ExtensionDescription, Boolean>() {
+//            @Override
+//            public void update(int index, ExtensionDescription object, Boolean value) {
+//                object.setEnabled(value);
+//                delegate.setDirty();
+//            }
+//        });
+//        enabledColumn.setCellStyleNames(style.enabledColumn());
+//
+//        dataGrid.addColumn(enabledColumn);
+//        dataGrid.setColumnWidth(enabledColumn, 75, com.google.gwt.dom.client.Style.Unit.PX);
 
         Column<ExtensionDescription, String> titleColumn = new Column<ExtensionDescription, String>(new TextCell()) {
             @Override
