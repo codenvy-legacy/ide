@@ -227,6 +227,9 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         @Source({"FileTreeNodeRenderer.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceNavigationFileTreeNodeRendererCss();
 
+        @Source("squiggle.gif")
+        ImageResource squiggle();
+
         @Source("file.png")
         ImageResource file();
 
