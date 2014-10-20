@@ -125,5 +125,6 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
     public void clear() {
         notificationWidget.clear();
         panel.clear();
+        panel.resizeRows(0);
     }
 }
