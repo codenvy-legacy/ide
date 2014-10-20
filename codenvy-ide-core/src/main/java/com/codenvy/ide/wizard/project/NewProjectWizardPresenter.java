@@ -15,6 +15,7 @@ import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
@@ -421,8 +422,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         view.setLoaderVisible(true);
+        ImportProject importProject = dtoFactory.createDto(ImportProject.class).withSource(dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()));
         projectService.importProject(projectName, false,
-                                     dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()),
+                                     importProject,
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
