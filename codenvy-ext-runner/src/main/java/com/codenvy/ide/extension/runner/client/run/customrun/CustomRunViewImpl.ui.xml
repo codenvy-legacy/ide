@@ -62,6 +62,14 @@
             border: 1px solid InputBackgroundColor;
             height: 323px;
         }
+
+        .noEnvLabel {
+            cursor: default;
+            line-height: 250px;
+            text-align: center;
+            width: 100%;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="600px" height="360px" addStyleNames="{style.emptyBorder} {resources.runner.mainStyle}"
                        debugId="customRun-panel">
@@ -69,6 +77,7 @@
             <g:FlowPanel>
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" width="100%"
                          addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
+                <g:Label ui:field="noEnvLabel" text="No environments available" addStyleNames="{style.noEnvLabel}"/>
                 <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>

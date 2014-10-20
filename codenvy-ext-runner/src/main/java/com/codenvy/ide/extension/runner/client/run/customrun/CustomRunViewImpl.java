@@ -37,6 +37,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -57,6 +58,8 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     @UiField(provided = true)
     final         RunnerLocalizationConstant locale;
     private final RunnerEnvironmentTree      rootNode;
+    @UiField
+    Label           noEnvLabel;
     @UiField
     SimplePanel     treeContainer;
     @UiField
@@ -94,7 +97,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
         rootNode = dtoFactory.createDto(RunnerEnvironmentTree.class);
         tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
-        treeContainer.add(tree);
+        treeContainer.setWidget(noEnvLabel);
         tree.getModel().setRoot(rootNode);
         tree.setTreeEventHandler(new Tree.Listener<Object>() {
             @Override
@@ -200,6 +203,15 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     public void addRunner(RunnerEnvironmentTree environmentTree) {
         rootNode.getNodes().add(environmentTree);
         tree.renderTree(1);
+        checkTreeVisibility(environmentTree);
+    }
+
+    private void checkTreeVisibility(RunnerEnvironmentTree environmentTree) {
+        if (environmentTree.getNodes().isEmpty() && environmentTree.getLeaves().isEmpty()) {
+            treeContainer.setWidget(noEnvLabel);
+        } else {
+            treeContainer.setWidget(tree);
+        }
     }
 
     @UiHandler({"runnerMemory128", "runnerMemory256", "runnerMemory512", "runnerMemory1GB", "runnerMemory2GB"})
