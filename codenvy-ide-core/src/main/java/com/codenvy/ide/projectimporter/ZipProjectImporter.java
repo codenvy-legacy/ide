@@ -50,7 +50,7 @@ public class ZipProjectImporter implements ProjectImporter {
 
     @Override
     public void importSources(String url, final String projectName, final ProjectImporter.ImportCallback callback) {
-        Source source = dtoFactory.createDto(Source.class).withSourceDescriptor(
+        Source source = dtoFactory.createDto(Source.class).withProject(
                 dtoFactory.createDto(ImportSourceDescriptor.class).withType(getId()).withLocation(url));
         projectService.importProject(projectName, false, source, new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {

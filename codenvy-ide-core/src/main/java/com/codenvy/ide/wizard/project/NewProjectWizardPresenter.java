@@ -422,7 +422,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                final String projectName) {
         view.setLoaderVisible(true);
         projectService.importProject(projectName, false,
-                                     dtoFactory.createDto(Source.class).withSourceDescriptor(templateDescriptor.getSource()),
+                                     dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()),
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
