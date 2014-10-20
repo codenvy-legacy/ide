@@ -18,7 +18,6 @@ import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -45,26 +44,20 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private ProjectServiceClient   projectServiceClient;
     private DtoFactory             dtoFactory;
-    private AppContext             appContext;
 
-
-    /**
-     * Create wizard page
-     */
+    /** Create wizard page. */
     @Inject
     public SelectRunnerPagePresenter(SelectRunnerPageView view,
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
-                                     DtoFactory dtoFactory,
-                                     AppContext appContext) {
+                                     DtoFactory dtoFactory) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
         this.dtoFactory = dtoFactory;
-        this.appContext = appContext;
         view.setDelegate(this);
     }
 
@@ -99,9 +92,15 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     }
 
     private void requestRunnerEnvironments() {
-        final String projectPath = appContext.getCurrentProject().getProjectDescription().getPath();
+        ProjectDescriptor projectForUpdate = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
+        if (projectForUpdate == null) {
+            // wizard is opened for new project, so we haven't project-scoped environments
+            requestSystemEnvironments();
+            return;
+        }
+
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
-        projectServiceClient.getRunnerEnvironments(projectPath, new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
+        projectServiceClient.getRunnerEnvironments(projectForUpdate.getPath(), new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
                 if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
@@ -147,7 +146,6 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     @Override
     public void recommendedMemoryChanged() {
-
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
         if (projectDescriptor.getRunners() != null) {
             String defaultRunner = projectDescriptor.getRunners().getDefault();
