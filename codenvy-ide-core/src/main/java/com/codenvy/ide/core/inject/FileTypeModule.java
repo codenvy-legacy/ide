@@ -39,6 +39,13 @@ public class FileTypeModule extends AbstractGinModule {
 
     @Provides
     @Singleton
+    @Named("TXTFileType")
+    protected FileType provideTXTFile(Resources resources) {
+        return new FileType("TXT File", resources.defaultFile(), MimeType.TEXT_PLAIN, "txt");
+    }
+
+    @Provides
+    @Singleton
     @Named("JsonFileType")
     protected FileType provideJsonFile(Resources resources) {
         return new FileType("Json file", resources.jsonFile(), MimeType.APPLICATION_JSON, "json");
