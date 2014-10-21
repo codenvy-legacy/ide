@@ -57,7 +57,6 @@ import static com.codenvy.ide.api.notification.Notification.Status.FINISHED;
 import static com.codenvy.ide.api.notification.Notification.Status.PROGRESS;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
-import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * Controls building application.
@@ -350,7 +349,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 return downloadResultLink.getHref();
             if (lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS) ||
                 lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE))
-                return constant.atifactNotReady();
+                return constant.artifactNotReady();
         }
         return null;
     }
