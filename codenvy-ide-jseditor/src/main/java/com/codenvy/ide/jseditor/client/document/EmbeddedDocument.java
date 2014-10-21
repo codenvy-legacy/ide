@@ -14,7 +14,9 @@ package com.codenvy.ide.jseditor.client.document;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
@@ -70,6 +72,27 @@ public interface EmbeddedDocument {
      * @return the contents
      */
     String getContents();
+
+    /**
+     * Returns the line content (without delimiter).
+     * @param line the line index
+     * @return the content of the line
+     */
+    String getLineContent(int line);
+
+    /**
+     * Returns the {@link TextRange} that defines the line.
+     * @param line line index
+     * @return the text range
+     */
+    TextRange getTextRangeForLine(int line);
+
+    /**
+     * Returns the {@link LinearRange} (offset, length) that defines the line.
+     * @param line line index
+     * @return the offset range
+     */
+    LinearRange getLinearRangeForLine(int line);
 
     /**
      * Returns the document text size.
