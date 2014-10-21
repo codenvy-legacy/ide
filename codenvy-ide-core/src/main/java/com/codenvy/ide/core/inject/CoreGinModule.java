@@ -134,6 +134,17 @@ import com.codenvy.ide.toolbar.ToolbarMainPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmWindow;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmWindowFooter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmWindowPresenter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmWindowView;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmWindowViewImpl;
+import com.codenvy.ide.ui.dialogs.message.MessageWindow;
+import com.codenvy.ide.ui.dialogs.message.MessageWindowFooter;
+import com.codenvy.ide.ui.dialogs.message.MessageWindowPresenter;
+import com.codenvy.ide.ui.dialogs.message.MessageWindowView;
+import com.codenvy.ide.ui.dialogs.message.MessageWindowViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
@@ -269,6 +280,14 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+
+        bind(MessageWindowFooter.class);
+        bind(MessageWindowView.class).to(MessageWindowViewImpl.class);
+        bind(ConfirmWindowFooter.class);
+        bind(ConfirmWindowView.class).to(ConfirmWindowViewImpl.class);
+        install(new GinFactoryModuleBuilder().implement(MessageWindow.class, MessageWindowPresenter.class)
+                                             .implement(ConfirmWindow.class, ConfirmWindowPresenter.class)
+                                             .build(DialogFactory.class));
 
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(UploadFileView.class).to(UploadFileViewImpl.class);
