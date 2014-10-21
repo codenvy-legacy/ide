@@ -156,6 +156,12 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
         list.render(environments);
     }
 
+    @Override
+    public void selectEnvironment(CustomEnvironment environment) {
+        list.getSelectionModel().setSelectedItem(environment);
+        delegate.onEnvironmentSelected(environment);
+    }
+
     /** {@inheritDoc} */
     @Override
     public void closeDialog() {
