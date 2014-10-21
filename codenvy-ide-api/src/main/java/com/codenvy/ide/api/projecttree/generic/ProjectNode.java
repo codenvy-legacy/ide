@@ -151,7 +151,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
         projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
-                if (getParent().getParent() == null) {
+                if (isRootProject()) {
                     eventBus.fireEvent(new CloseCurrentProjectEvent());
                 }
                 ProjectNode.super.delete(new DeleteCallback() {
@@ -300,5 +300,9 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
         if (getPath().equals(path)) {
             setData(event.getProjectDescriptor());
         }
+    }
+
+    private boolean isRootProject() {
+        return getParent().getParent() == null;
     }
 }
