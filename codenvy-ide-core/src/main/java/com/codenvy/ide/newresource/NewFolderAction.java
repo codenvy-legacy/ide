@@ -67,7 +67,7 @@ public class NewFolderAction extends DefaultNewResourceAction {
         eventLogger.log(this);
 
         new AskValueDialog(localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
-                           localizationConstant.newResourceLabel(), new AskValueCallback() {
+                           localizationConstant.newResourceLabel(localizationConstant.actionNewFolderTitle().toLowerCase()), new AskValueCallback() {
             @Override
             public void onOk(String value) {
                 final StorableNode parent = getParent();
