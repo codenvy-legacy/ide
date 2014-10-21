@@ -194,6 +194,9 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @Source("defaulticons/image-icon.svg")
     SVGResource defaultImage();
 
+    @Source("defaulticons/md.svg")
+    SVGResource mdFile();
+
     @Source("defaulticons/json.svg")
     SVGResource jsonFile();
 
