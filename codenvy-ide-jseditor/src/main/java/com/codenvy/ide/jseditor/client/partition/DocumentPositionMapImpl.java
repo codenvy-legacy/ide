@@ -12,7 +12,6 @@ package com.codenvy.ide.jseditor.client.partition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -318,8 +317,7 @@ public class DocumentPositionMapImpl implements DocumentPositionMap {
 
             final Position region = new Position(offset, length);
 
-            for (final Iterator<TypedPosition> iterator = documentPositions.iterator(); iterator.hasNext();) {
-                final TypedPosition position = iterator.next();
+            for (final TypedPosition position: documentPositions) {
                 if (isWithinRegion(region, position, canStartBefore, canEndAfter)) {
                     list.add(position);
                 }
