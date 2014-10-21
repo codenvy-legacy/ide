@@ -675,12 +675,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
      */
     private void fillWizardContext(ProjectDescriptor projectDescriptor) {
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility().equals("public")));
-        wizardContext.putData(ProjectWizard.PROJECT, copyProjectDescriptor(projectDescriptor));
+        wizardContext.putData(ProjectWizard.PROJECT, dtoFactory.createDto(ProjectDescriptor.class));
     }
 
-    private ProjectDescriptor copyProjectDescriptor(ProjectDescriptor oldProject) {
-        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
-    }
+//    private ProjectDescriptor copyProjectDescriptor(ProjectDescriptor oldProject) {
+//        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
+//    }
 
 
     private String getAvailableRam(String usedMemory) {

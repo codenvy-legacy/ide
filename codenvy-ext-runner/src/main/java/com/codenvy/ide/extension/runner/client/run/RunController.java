@@ -641,7 +641,10 @@ public class RunController implements Notification.OpenNotificationHandler {
         }
         try {
             if (applicationProcessDescriptor != null) {
-                messageBus.unsubscribe(APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerHealthHandler);
+                String channel = APP_HEALTH_CHANNEL + applicationProcessDescriptor.getProcessId();
+                if (messageBus.isHandlerSubscribed(runnerHealthHandler, channel)) {
+                    messageBus.unsubscribe(channel, runnerHealthHandler);
+                }
             }
         } catch (WebSocketException e) {
             Log.error(RunController.class, e);
@@ -785,6 +788,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
+                appContext.getCurrentProject().setProcessDescriptor(null);
                 stopCheckingAppStatus(descriptor);
                 stopCheckingAppHealth(descriptor);
                 stopCheckingAppOutput(descriptor);

@@ -77,7 +77,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         selected node
          */
-        void onNodeSelected(@Nonnull TreeNode<?> node);
+        void onNodeSelected(TreeNode<?> node);
 
         /**
          * Performs any actions in response to node expanded (opened) action.

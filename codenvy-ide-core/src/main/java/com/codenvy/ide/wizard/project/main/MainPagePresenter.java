@@ -164,6 +164,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
         project.setType(typeDescriptor.getType());
         project.setTypeName(typeDescriptor.getTypeName());
+        project.setBuilders(typeDescriptor.getBuilders());
+        project.setRunners(typeDescriptor.getRunners());
 
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
