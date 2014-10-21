@@ -212,11 +212,13 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeSelected(@Nonnull TreeNode<?> node) {
+    public void onNodeSelected(TreeNode<?> node) {
         selectedNode = node;
         setSelection(new Selection<>(node));
 
-        updateAppContext(node);
+        if (node != null) {
+            updateAppContext(node);
+        }
     }
 
     private void updateAppContext(TreeNode<?> node) {
@@ -227,7 +229,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeExpanded(final TreeNode<?> node) {
+    public void onNodeExpanded(@Nonnull final TreeNode<?> node) {
         if (node.getChildren().isEmpty()) {
             // If children is empty then may be it doesn't refreshed yet?
             node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
