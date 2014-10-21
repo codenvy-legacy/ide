@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
@@ -39,24 +42,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Action to view the runner 'recipe' file being used for running app.
- *
+ * 
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ViewRecipeAction extends Action {
-    private final RunController          controller;
-    private final AppContext             appContext;
-    private final DtoFactory             dtoFactory;
+    private final RunController controller;
+    private final AppContext appContext;
+    private final DtoFactory dtoFactory;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final EditorAgent            editorAgent;
-    private final ProjectServiceClient   projectServiceClient;
-    private final EventBus               eventBus;
-    private final AnalyticsEventLogger   eventLogger;
+    private final EditorAgent editorAgent;
+    private final ProjectServiceClient projectServiceClient;
+    private final EventBus eventBus;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public ViewRecipeAction(RunController runController,
@@ -105,7 +105,7 @@ public class ViewRecipeAction extends Action {
                 ItemReference recipeFileItem = dtoFactory.createDto(ItemReference.class)
                                                          .withName("Runner Recipe")
                                                          .withPath("runner_recipe")
-                                                         .withMediaType("text/plain")
+                                                         .withMediaType("text/x-dockerfile-config")
                                                          .withLinks(links);
                 final FileNode recipeFile = new RecipeFile(null, recipeFileItem, eventBus, projectServiceClient, dtoUnmarshallerFactory);
                 editorAgent.openEditor(recipeFile);
@@ -118,7 +118,7 @@ public class ViewRecipeAction extends Action {
     }
 
     private static class RecipeFile extends FileNode {
-        public RecipeFile(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
+        public RecipeFile(TreeNode< ? > parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
             super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         }
