@@ -13,6 +13,10 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
@@ -21,7 +25,6 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -62,7 +65,6 @@ public class ProjectNodeTest {
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
     @Mock
     private ProjectDescriptor      projectDescriptor;
-    @InjectMocks
     private ProjectNode            projectNode;
 
     @Before
@@ -70,6 +72,12 @@ public class ProjectNodeTest {
         when(projectDescriptor.getPath()).thenReturn(ITEM_PATH);
         when(projectDescriptor.getName()).thenReturn(ITEM_NAME);
         when(projectDescriptor.getType()).thenReturn(PROJECT_TYPE_ID);
+
+        ProjectNode parentProjectNode = mock(ProjectNode.class);
+        Array<TreeNode<?>> children = Collections.createArray();
+        when(parentProjectNode.getChildren()).thenReturn(children);
+        projectNode = new ProjectNode(parentProjectNode, projectDescriptor, null, TreeSettings.DEFAULT, eventBus, projectServiceClient,
+                                      dtoUnmarshallerFactory);
     }
 
     @Test
