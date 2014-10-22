@@ -19,5 +19,5 @@ package com.codenvy.ide.ui.dialogs.input;
 public interface InputDialog {
 
     /** Operate the input dialog: show it and manage user actions. */
-    void confirm();
+    void show();
 }

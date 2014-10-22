@@ -19,5 +19,5 @@ package com.codenvy.ide.ui.dialogs.message;
 public interface MessageDialog {
 
     /** Operate the message dialog: show it and manage user actions. */
-    void inform();
+    void show();
 }

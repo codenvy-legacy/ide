@@ -77,7 +77,7 @@ public class ConfirmDialogPresenter implements ConfirmDialog, ConfirmDialogView.
     }
 
     @Override
-    public void confirm() {
+    public void show() {
         this.view.showDialog();
     }
 }

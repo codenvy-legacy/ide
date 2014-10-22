@@ -64,7 +64,7 @@ public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
     }
 
     @Override
-    public void inform() {
+    public void show() {
         this.view.showDialog();
     }
 }

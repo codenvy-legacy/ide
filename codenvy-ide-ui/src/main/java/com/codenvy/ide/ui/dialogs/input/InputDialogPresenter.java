@@ -68,7 +68,7 @@ public class InputDialogPresenter implements InputDialog, InputDialogView.Action
     }
 
     @Override
-    public void confirm() {
+    public void show() {
         this.view.showDialog();
     }
 }

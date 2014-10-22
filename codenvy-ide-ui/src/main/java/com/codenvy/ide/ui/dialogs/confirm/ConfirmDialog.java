@@ -19,5 +19,5 @@ package com.codenvy.ide.ui.dialogs.confirm;
 public interface ConfirmDialog {
 
     /** Operate the confirmation dialog: show it and manage user actions. */
-    void confirm();
+    void show();
 }
