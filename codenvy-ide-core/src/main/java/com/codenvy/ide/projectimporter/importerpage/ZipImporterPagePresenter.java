@@ -26,7 +26,20 @@ import com.google.inject.Inject;
  */
 public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate{
 
-    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_-]*$");
+    private static final RegExp NAME_PATTERN    = RegExp.compile("^[A-Za-z0-9_-]*$");
+    // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
+    private static final RegExp SCP_LIKE_SYNTAX = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
+    // the transport protocol
+    private static final RegExp PROTOCOL        = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
+    // the address of the remote server between // and /
+    private static final RegExp HOST1           = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
+    // the address of the remote server between @ and : or /
+    private static final RegExp HOST2           = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
+    // the repository name
+    private static final RegExp REPO_NAME       = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
+    // start with white space
+    private static final RegExp WHITE_SPACE     = RegExp.compile("^\\s");
+
     private CoreLocalizationConstant locale;
     private ZipImporterPageView      view;
     private WizardContext            wizardContext;
@@ -143,45 +156,27 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     }
 
     private boolean isGitUrlCorrect(String url) {
-        // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
-        RegExp scpLikeSyntax = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
-
-        // the transport protocol
-        RegExp protocol = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
-
-        // the address of the remote server between // and /
-        RegExp host1 = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
-
-        // the address of the remote server between @ and : or /
-        RegExp host2 = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
-
-        // the repository name
-        RegExp repoName = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
-
-        // start with white space
-        RegExp whiteSpace = RegExp.compile("^\\s");
-
-        if (whiteSpace.test(url)) {
+        if (WHITE_SPACE.test(url)) {
             view.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
             return false;
         }
 
-        if (scpLikeSyntax.test(url) && repoName.test(url)) {
+        if (SCP_LIKE_SYNTAX.test(url) && REPO_NAME.test(url)) {
             return true;
-        } else if (scpLikeSyntax.test(url) && !repoName.test(url)) {
+        } else if (SCP_LIKE_SYNTAX.test(url) && !REPO_NAME.test(url)) {
             view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
             return false;
         }
 
-        if (!protocol.test(url)) {
+        if (!PROTOCOL.test(url)) {
             view.showUrlError(locale.importProjectMessageProtocolIncorrect());
             return false;
         }
-        if (!(host1.test(url) || host2.test(url))) {
+        if (!(HOST1.test(url) || HOST2.test(url))) {
             view.showUrlError(locale.importProjectMessageHostIncorrect());
             return false;
         }
-        if (!(repoName.test(url))) {
+        if (!(REPO_NAME.test(url))) {
             view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
             return false;
         }
