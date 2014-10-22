@@ -111,7 +111,9 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         terminalFrame.addLoadHandler(new LoadHandler() {
             @Override
             public void onLoad(LoadEvent event) {
-                delegate.onTerminalLoaded();
+                if (appPreviewFrame.getUrl() != null && !appPreviewFrame.getUrl().isEmpty()) {
+                    delegate.onAppPreviewLoaded();
+                }
             }
         });
         appPreviewFrame.addLoadHandler(new LoadHandler() {
