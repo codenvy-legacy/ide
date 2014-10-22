@@ -8,42 +8,56 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.confirm;
+package com.codenvy.ide.ui.dialogs.input;
 
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
 /**
- * Implementation for the confirmation window view.
+ * Implementation of the input dialog view.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public class ConfirmWindowViewImpl extends Window implements ConfirmWindowView {
+public class InputDialogViewImpl extends Window implements InputDialogView {
 
     /** The UI binder instance. */
     private static ConfirmWindowUiBinder uiBinder = GWT.create(ConfirmWindowUiBinder.class);
     /** The window footer. */
-    private final ConfirmWindowFooter footer;
-    /** The container for the window content. */
+    private final InputDialogFooter footer;
     @UiField
-    SimplePanel content;
+    Label   label;
+    @UiField
+    TextBox value;
     private ActionDelegate delegate;
 
     @Inject
-    public ConfirmWindowViewImpl(final @Nonnull ConfirmWindowFooter footer) {
+    public InputDialogViewImpl(final @Nonnull InputDialogFooter footer) {
         Widget widget = uiBinder.createAndBindUi(this);
         setWidget(widget);
 
         this.footer = footer;
         getFooter().add(this.footer);
+    }
+
+    @Override
+    public void show() {
+        new Timer() {
+            @Override
+            public void run() {
+                value.setFocus(true);
+            }
+        }.schedule(300);
+        super.show();
     }
 
     @Override
@@ -72,16 +86,21 @@ public class ConfirmWindowViewImpl extends Window implements ConfirmWindowView {
     }
 
     @Override
-    public void setContent(final IsWidget content) {
-        this.content.clear();
-        this.content.setWidget(content);
+    public void setContent(final String label) {
+        this.label.setText(label);
     }
 
-    /**
-     * The UI binder interface for this components.
-     *
-     * @author "Mickaël Leduque"
-     */
-    interface ConfirmWindowUiBinder extends UiBinder<Widget, ConfirmWindowViewImpl> {
+    @Override
+    public void setValue(String value) {
+        this.value.setText(value);
+    }
+
+    @Override
+    public String getValue() {
+        return value.getValue();
+    }
+
+    /** The UI binder interface for this components. */
+    interface ConfirmWindowUiBinder extends UiBinder<Widget, InputDialogViewImpl> {
     }
 }

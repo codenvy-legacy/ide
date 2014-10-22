@@ -8,15 +8,21 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.confirm;
+package com.codenvy.ide.ui;
+
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * Interface to the confirm window component.
- * 
- * @author "Mickaël Leduque"
+ * I18n messages interface for the 'CodenvyUI' module.
+ *
+ * @author Vitaly Parfonov
+ * @author Artem Zatsarynnyy
  */
-public interface ConfirmWindow {
+public interface UILocalizationConstant extends Messages {
 
-    /** Operate the confirmation window: show it and manage user actions. */
-    void confirm();
+    @DefaultMessage("OK")
+    String okButtonText();
+
+    @DefaultMessage("Cancel")
+    String cancelButtonText();
 }

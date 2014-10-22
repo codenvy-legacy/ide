@@ -8,21 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui;
-
-import com.google.gwt.i18n.client.Messages;
+package com.codenvy.ide.ui.dialogs.input;
 
 /**
- * @author Vitaly Parfonov
+ * Interface to the input dialog component.
+ *
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public interface Locale extends Messages {
+public interface InputDialog {
 
-    @Key("ok")
-    @DefaultMessage("OK")
-    String ok();
-
-    @Key("cancel")
-    @DefaultMessage("Cancel")
-    String cancel();
-
+    /** Operate the input dialog: show it and manage user actions. */
+    void confirm();
 }

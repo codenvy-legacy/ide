@@ -11,12 +11,13 @@
 package com.codenvy.ide.ui.dialogs.message;
 
 /**
- * Interface to the message window component.
- * 
- * @author "Mickaël Leduque"
+ * Interface to the message/information dialog component.
+ *
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public interface MessageWindow {
+public interface MessageDialog {
 
-    /** Operate the message window: show it and manage user actions. */
+    /** Operate the message dialog: show it and manage user actions. */
     void inform();
 }

@@ -21,14 +21,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Confirmation window {@link ConfirmWindow} implementation.
+ * {@link ConfirmDialog} implementation.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public class ConfirmWindowPresenter implements ConfirmWindow, ConfirmWindowView.ActionDelegate {
+public class ConfirmDialogPresenter implements ConfirmDialog, ConfirmDialogView.ActionDelegate {
 
     /** This component view. */
-    private final ConfirmWindowView view;
+    private final ConfirmDialogView view;
 
     /** The callback used on OK. */
     private final ConfirmCallback confirmCallback;
@@ -37,7 +38,7 @@ public class ConfirmWindowPresenter implements ConfirmWindow, ConfirmWindowView.
     private final CancelCallback cancelCallback;
 
     @AssistedInject
-    public ConfirmWindowPresenter(final @Nonnull ConfirmWindowView view,
+    public ConfirmDialogPresenter(final @Nonnull ConfirmDialogView view,
                                   final @Nonnull @Assisted("title") String title,
                                   final @Nonnull @Assisted("message") String message,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback,
@@ -46,7 +47,7 @@ public class ConfirmWindowPresenter implements ConfirmWindow, ConfirmWindowView.
     }
 
     @AssistedInject
-    public ConfirmWindowPresenter(final @Nonnull ConfirmWindowView view,
+    public ConfirmDialogPresenter(final @Nonnull ConfirmDialogView view,
                                   final @Nonnull @Assisted String title,
                                   final @Nonnull @Assisted IsWidget content,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback,

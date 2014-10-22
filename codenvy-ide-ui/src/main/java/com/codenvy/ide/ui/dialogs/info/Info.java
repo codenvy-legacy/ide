@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs.info;
 
-import com.codenvy.ide.ui.Locale;
+import com.codenvy.ide.ui.UILocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,8 +31,8 @@ public class Info extends Window {
     interface InfoUiBinder extends UiBinder<Widget, Info> {
     }
 
-    private static InfoUiBinder ourUiBinder = GWT.create(InfoUiBinder.class);
-    private        Locale       locale      = GWT.create(Locale.class);
+    private static InfoUiBinder           ourUiBinder = GWT.create(InfoUiBinder.class);
+    private        UILocalizationConstant locale      = GWT.create(UILocalizationConstant.class);
 
     @UiField
     SimplePanel message;
@@ -49,7 +49,7 @@ public class Info extends Window {
         Widget widget = ourUiBinder.createAndBindUi(this);
         this.setWidget(widget);
 
-        Button btnOk = createButton(locale.ok(), "info-window", new ClickHandler() {
+        Button btnOk = createButton(locale.okButtonText(), "info-window", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -71,7 +71,7 @@ public class Info extends Window {
         Widget widget = ourUiBinder.createAndBindUi(this);
         this.setWidget(widget);
 
-        Button btnOk = createButton(locale.ok(), "info-window", new ClickHandler() {
+        Button btnOk = createButton(locale.okButtonText(), "info-window", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.core.problemDialog;
 
-import com.codenvy.ide.ui.Locale;
+import com.codenvy.ide.ui.UILocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,7 +32,7 @@ public class ProjectProblemDialog extends Window {
     SimplePanel message;
     @UiField
     SVGImage    questionImage;
-    private Locale locale = GWT.create(Locale.class);
+    private UILocalizationConstant locale = GWT.create(UILocalizationConstant.class);
 
     /**
      * Creates new dialog.
@@ -70,7 +70,7 @@ public class ProjectProblemDialog extends Window {
         });
         configureButton.addStyleName(resources.centerPanelCss().blueButton());
 
-        Button cancelButton = createButton(locale.cancel(), "problem-dialog-cancel", new ClickHandler() {
+        Button cancelButton = createButton(locale.cancelButtonText(), "problem-dialog-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 handler.onCancel();

@@ -8,16 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs;
+package com.codenvy.ide.ui.dialogs.confirm;
 
 /**
- * Callback called when the user clicks on "Cancel" in the confirmation/input dialog.
+ * Interface to the confirmation dialog component.
  *
  * @author Mickaël Leduque
  * @author Artem Zatsarynnyy
  */
-public interface CancelCallback {
+public interface ConfirmDialog {
 
-    /** Action called when the user clicks on Cancel. */
-    void cancelled();
+    /** Operate the confirmation dialog: show it and manage user actions. */
+    void confirm();
 }

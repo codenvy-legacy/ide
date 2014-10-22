@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs.askValue;
 
+import elemental.events.KeyboardEvent.KeyCode;
+
+import com.codenvy.ide.ui.UILocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import elemental.events.KeyboardEvent.KeyCode;
-
-import com.codenvy.ide.ui.Locale;
-import com.codenvy.ide.ui.window.Window;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -50,7 +50,7 @@ public class AskValueDialog extends Window {
 
     private AskValueCallback callback;
 
-    private boolean isEmptyAllowed =true;
+    private boolean isEmptyAllowed = true;
 
     private HashMap<String, String> replaceMap;
 
@@ -60,7 +60,7 @@ public class AskValueDialog extends Window {
 
     private static AskUiBinder uiBinder = GWT.create(AskUiBinder.class);
 
-    private Locale locale = GWT.create(Locale.class);
+    private UILocalizationConstant locale = GWT.create(UILocalizationConstant.class);
 
     /**
      * Creates and displays new AskValueDialog.
@@ -109,7 +109,8 @@ public class AskValueDialog extends Window {
      *         the callback that call after user interact
      */
     public AskValueDialog(final String title, final String message, final String defaultValue,
-                          final int selectionStartIndex, final int selectionLength, boolean isEmptyAllowed, final AskValueCallback callback) {
+                          final int selectionStartIndex, final int selectionLength, boolean isEmptyAllowed,
+                          final AskValueCallback callback) {
         this(title, message, defaultValue, selectionStartIndex, selectionLength, isEmptyAllowed, null, callback);
     }
 
@@ -141,7 +142,7 @@ public class AskValueDialog extends Window {
         setTitle(title);
         this.message.setText(message);
         setWidget(widget);
-        ok = createButton(locale.ok(), "askValue-dialog-ok", new ClickHandler() {
+        ok = createButton(locale.okButtonText(), "askValue-dialog-ok", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 callback.onOk(value.getValue());
@@ -151,7 +152,7 @@ public class AskValueDialog extends Window {
         ok.addStyleName(resources.centerPanelCss().blueButton());
         ok.getElement().getStyle().setMarginRight(12, Style.Unit.PX);
 
-        Button cancel = createButton(locale.cancel(), "askValue-dialog-cancel", new ClickHandler() {
+        Button cancel = createButton(locale.cancelButtonText(), "askValue-dialog-cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 callback.onCancel();

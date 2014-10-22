@@ -11,9 +11,10 @@
 package com.codenvy.ide.ui.dialogs;
 
 /**
- * Callback called when the user clicks on "OK" in the confirmation window.
+ * Callback called when the user clicks on "OK" in the confirmation dialog.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
 public interface ConfirmCallback {
 

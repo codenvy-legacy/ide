@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.message;
+package com.codenvy.ide.ui.dialogs.confirm;
 
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
@@ -22,23 +22,24 @@ import com.google.inject.Inject;
 import javax.annotation.Nonnull;
 
 /**
- * Implementation for the message window view.
+ * Implementation of the confirmation dialog view.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public class MessageWindowViewImpl extends Window implements MessageWindowView {
+public class ConfirmDialogViewImpl extends Window implements ConfirmDialogView {
 
     /** The UI binder instance. */
-    private static MessageWindowUiBinder uiBinder = GWT.create(MessageWindowUiBinder.class);
+    private static ConfirmWindowUiBinder uiBinder = GWT.create(ConfirmWindowUiBinder.class);
     /** The window footer. */
-    private final MessageWindowFooter footer;
+    private final ConfirmDialogFooter footer;
     /** The container for the window content. */
     @UiField
     SimplePanel content;
     private ActionDelegate delegate;
 
     @Inject
-    public MessageWindowViewImpl(final @Nonnull MessageWindowFooter footer) {
+    public ConfirmDialogViewImpl(final @Nonnull ConfirmDialogFooter footer) {
         Widget widget = uiBinder.createAndBindUi(this);
         setWidget(widget);
 
@@ -57,6 +58,11 @@ public class MessageWindowViewImpl extends Window implements MessageWindowView {
     }
 
     @Override
+    protected void onEnterClicked() {
+        delegate.accepted();
+    }
+
+    @Override
     public void showDialog() {
         this.show();
     }
@@ -67,21 +73,12 @@ public class MessageWindowViewImpl extends Window implements MessageWindowView {
     }
 
     @Override
-    protected void onEnterClicked() {
-        delegate.accepted();
-    }
-
-    @Override
     public void setContent(final IsWidget content) {
         this.content.clear();
         this.content.setWidget(content);
     }
 
-    /**
-     * The UI binder interface for this component.
-     *
-     * @author "Mickaël Leduque"
-     */
-    interface MessageWindowUiBinder extends UiBinder<Widget, MessageWindowViewImpl> {
+    /** The UI binder interface for this components. */
+    interface ConfirmWindowUiBinder extends UiBinder<Widget, ConfirmDialogViewImpl> {
     }
 }

@@ -8,16 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.confirm;
-
-import com.google.gwt.user.client.ui.IsWidget;
+package com.codenvy.ide.ui.dialogs.input;
 
 /**
- * The view interface for the confirmation window component.
- * 
- * @author "Mickaël Leduque"
+ * The view interface for the input dialog component.
+ *
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public interface ConfirmWindowView {
+public interface InputDialogView {
 
     /** Sets the action delegate. */
     void setDelegate(ActionDelegate delegate);
@@ -29,10 +28,15 @@ public interface ConfirmWindowView {
     void closeDialog();
 
     /** Fill the window with its content. */
-    void setContent(IsWidget content);
+    void setContent(String content);
+
+    /** Sets the value to the input. */
+    void setValue(String value);
 
     /** Sets the window title. */
     void setTitle(String title);
+
+    String getValue();
 
     /** The interface for the action delegate. */
     public interface ActionDelegate {
@@ -40,7 +44,7 @@ public interface ConfirmWindowView {
         /** Defines what's done when the user clicks cancel. */
         void cancelled();
 
-        /** Defines what's done when the user clicks cancel. */
+        /** Defines what's done when the user clicks OK. */
         void accepted();
     }
 }

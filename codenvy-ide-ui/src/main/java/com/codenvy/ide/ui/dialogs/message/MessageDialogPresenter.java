@@ -19,23 +19,24 @@ import com.google.inject.assistedinject.AssistedInject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.codenvy.ide.ui.dialogs.message.MessageWindowView.ActionDelegate;
+import static com.codenvy.ide.ui.dialogs.message.MessageDialogView.ActionDelegate;
 
 /**
- * Message/information window {@link MessageWindow} implementation.
+ * {@link MessageDialog} implementation.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public class MessageWindowPresenter implements MessageWindow, ActionDelegate {
+public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
 
     /** This component view. */
-    private final MessageWindowView view;
+    private final MessageDialogView view;
 
     /** The callback used on OK. */
     private final ConfirmCallback confirmCallback;
 
     @AssistedInject
-    public MessageWindowPresenter(final @Nonnull MessageWindowView view,
+    public MessageDialogPresenter(final @Nonnull MessageDialogView view,
                                   final @Nonnull @Assisted("title") String title,
                                   final @Nonnull @Assisted("message") String message,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback) {
@@ -43,7 +44,7 @@ public class MessageWindowPresenter implements MessageWindow, ActionDelegate {
     }
 
     @AssistedInject
-    public MessageWindowPresenter(final @Nonnull MessageWindowView view,
+    public MessageDialogPresenter(final @Nonnull MessageDialogView view,
                                   final @Nonnull @Assisted String title,
                                   final @Nonnull @Assisted IsWidget content,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback) {

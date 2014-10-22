@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs.ask;
 
-import com.codenvy.ide.ui.Locale;
+import com.codenvy.ide.ui.UILocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,6 +20,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 /**
@@ -40,10 +41,10 @@ public class Ask extends Window {
 
     private static AskUiBinder uiBinder = GWT.create(AskUiBinder.class);
 
-    private Locale locale = GWT.create(Locale.class);
-    
+    private UILocalizationConstant locale = GWT.create(UILocalizationConstant.class);
+
     private final AskHandler handler;
-    
+
     /**
      * Initialization constructor
      *
@@ -63,7 +64,7 @@ public class Ask extends Window {
         message.getElement().setInnerHTML(question);
         questionImage.getElement().setAttribute("class", resources.centerPanelCss().image());
 
-        Button ok = createButton(locale.ok(), "ask-dialog-ok", new ClickHandler() {
+        Button ok = createButton(locale.okButtonText(), "ask-dialog-ok", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -72,8 +73,8 @@ public class Ask extends Window {
             }
         });
         ok.addStyleName(resources.centerPanelCss().blueButton());
-        
-        Button cancel = createButton(locale.cancel(), "ask-dialog-cancel", new ClickHandler() {
+
+        Button cancel = createButton(locale.cancelButtonText(), "ask-dialog-cancel", new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
@@ -81,22 +82,22 @@ public class Ask extends Window {
                 onClose();
             }
         });
-        
+
         getFooter().add(ok);
         getFooter().add(cancel);
-        
+
     }
-    
+
     /** {@inheritDoc} */
     @Override
     protected void onEnterClicked() {
         handler.onOk();
         onClose();
     }
-    
+
     @Override
     protected void onClose() {
         hide();
     }
-    
+
 }

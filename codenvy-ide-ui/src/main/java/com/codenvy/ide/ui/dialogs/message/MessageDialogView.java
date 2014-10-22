@@ -13,11 +13,12 @@ package com.codenvy.ide.ui.dialogs.message;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * The view interface for the message window component.
- * 
- * @author "Mickaël Leduque"
+ * The view interface for the message dialog component.
+ *
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public interface MessageWindowView {
+public interface MessageDialogView {
 
     /** Sets the action delegate. */
     void setDelegate(ActionDelegate delegate);
@@ -37,7 +38,7 @@ public interface MessageWindowView {
     /** The interface for the action delegate. */
     public interface ActionDelegate {
 
-        /** Defines what's done when the user clicks cancel. */
+        /** Defines what's done when the user clicks OK. */
         void accepted();
     }
 }

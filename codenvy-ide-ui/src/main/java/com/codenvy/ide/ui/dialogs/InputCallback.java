@@ -10,18 +10,18 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs;
 
-import com.google.gwt.i18n.client.Messages;
-
 /**
- * I18n messages interface for the confirmation and message windows.
+ * Callback called when the user clicks on "OK" in the input dialog.
  *
- * @author "Mickaël Leduque"
+ * @author Artem Zatsarynnyy
  */
-public interface InteractionWindowMessages extends Messages {
+public interface InputCallback {
 
-    @DefaultMessage("OK")
-    String okButtonText();
-
-    @DefaultMessage("Cancel")
-    String cancelButtonText();
+    /**
+     * Action called when the user clicks on OK.
+     *
+     * @param value
+     *         the string typed into input dialog
+     */
+    void accepted(String value);
 }

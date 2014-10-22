@@ -8,9 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.confirm;
+package com.codenvy.ide.ui.dialogs.message;
 
-import com.codenvy.ide.ui.dialogs.InteractionWindowMessages;
+import com.codenvy.ide.ui.UILocalizationConstant;
+import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,36 +24,32 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-import static com.codenvy.ide.ui.dialogs.confirm.ConfirmWindowView.ActionDelegate;
-import static com.codenvy.ide.ui.window.Window.Resources;
+import static com.codenvy.ide.ui.dialogs.message.MessageDialogView.ActionDelegate;
 
 /**
- * The footer show on confirmation windows.
+ * The footer show on message windows.
  *
- * @author "Mickaël Leduque"
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public class ConfirmWindowFooter extends Composite {
+public class MessageDialogFooter extends Composite {
 
-    private static final Resources                   resources = GWT.create(Resources.class);
+    private static final Window.Resources            resources = GWT.create(Window.Resources.class);
     /** The UI binder instance. */
-    private static       ConfirmWindowFooterUiBinder uiBinder  = GWT.create(ConfirmWindowFooterUiBinder.class);
+    private static       MessageWindowFooterUiBinder uiBinder  = GWT.create(MessageWindowFooterUiBinder.class);
     /** The i18n messages. */
     @UiField(provided = true)
-    InteractionWindowMessages messages;
+    UILocalizationConstant messages;
     @UiField
-    Button                    okButton;
-    @UiField
-    Button                    cancelButton;
+    Button                 okButton;
     /** The action delegate. */
     private ActionDelegate actionDelegate;
 
     @Inject
-    public ConfirmWindowFooter(final @Nonnull InteractionWindowMessages messages) {
+    public MessageDialogFooter(final @Nonnull UILocalizationConstant messages) {
         this.messages = messages;
         initWidget(uiBinder.createAndBindUi(this));
-
-        okButton.addStyleName(resources.centerPanelCss().blueButton());
-        cancelButton.addStyleName(resources.centerPanelCss().button());
+        okButton.addStyleName(resources.centerPanelCss().button());
     }
 
     /**
@@ -76,22 +73,7 @@ public class ConfirmWindowFooter extends Composite {
         this.actionDelegate.accepted();
     }
 
-    /**
-     * Handler set on the cancel button.
-     *
-     * @param event
-     *         the event that triggers the handler call
-     */
-    @UiHandler("cancelButton")
-    public void handleCancelClick(final ClickEvent event) {
-        this.actionDelegate.cancelled();
-    }
-
-    /**
-     * The UI binder interface for this component.
-     *
-     * @author "Mickaël Leduque"
-     */
-    interface ConfirmWindowFooterUiBinder extends UiBinder<Widget, ConfirmWindowFooter> {
+    /** The UI binder interface for this component. */
+    interface MessageWindowFooterUiBinder extends UiBinder<Widget, MessageDialogFooter> {
     }
 }
