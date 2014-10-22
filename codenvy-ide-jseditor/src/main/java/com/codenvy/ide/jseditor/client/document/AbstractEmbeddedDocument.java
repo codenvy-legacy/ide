@@ -49,4 +49,9 @@ public abstract class AbstractEmbeddedDocument implements EmbeddedDocument, Docu
     public FileNode getFile() {
         return this.file;
     }
+
+    @Override
+    public ReadOnlyDocument getReadOnlyDocument() {
+        return this;
+    }
 }

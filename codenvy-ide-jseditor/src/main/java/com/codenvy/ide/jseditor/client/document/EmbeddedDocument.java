@@ -14,9 +14,7 @@ package com.codenvy.ide.jseditor.client.document;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
-import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
-import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
@@ -24,25 +22,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  *
  * @author "Mickaël Leduque"
  */
-public interface EmbeddedDocument {
-
-    /**
-     * Returns a line/character position for the given offset position.
-     *
-     * @param index
-     *         the position from the start in the document
-     * @return the line/character position
-     */
-    TextPosition getPositionFromIndex(int index);
-
-    /**
-     * Get linear position in the editor from a line/character position.
-     *
-     * @param position
-     *         the line/character position
-     * @return the offset from the document start
-     */
-    int getIndexFromPosition(TextPosition position);
+public interface EmbeddedDocument extends ReadOnlyDocument {
 
     /**
      * Changes the cursor position.
@@ -51,54 +31,6 @@ public interface EmbeddedDocument {
      *         the new position
      */
     void setCursorPosition(TextPosition position);
-
-    /**
-     * Returns the curosr position in the editor.
-     *
-     * @return the cursor position
-     */
-    TextPosition getCursorPosition();
-
-    /**
-     * Returns the number of lines in the document.
-     *
-     * @return the number of lines
-     */
-    int getLineCount();
-
-    /**
-     * Returns the contents of the editor.
-     *
-     * @return the contents
-     */
-    String getContents();
-
-    /**
-     * Returns the line content (without delimiter).
-     * @param line the line index
-     * @return the content of the line
-     */
-    String getLineContent(int line);
-
-    /**
-     * Returns the {@link TextRange} that defines the line.
-     * @param line line index
-     * @return the text range
-     */
-    TextRange getTextRangeForLine(int line);
-
-    /**
-     * Returns the {@link LinearRange} (offset, length) that defines the line.
-     * @param line line index
-     * @return the offset range
-     */
-    LinearRange getLinearRangeForLine(int line);
-
-    /**
-     * Returns the document text size.
-     * @return the document size
-     */
-    int getContentsCharCount();
 
 
     /**
@@ -126,4 +58,10 @@ public interface EmbeddedDocument {
     void setFile(FileNode file);
 
     FileNode getFile();
+
+    /**
+     * Returns a {@link ReadOnlyDocument} that refers to the same document.
+     * @return a read-only document
+     */
+    ReadOnlyDocument getReadOnlyDocument();
 }
