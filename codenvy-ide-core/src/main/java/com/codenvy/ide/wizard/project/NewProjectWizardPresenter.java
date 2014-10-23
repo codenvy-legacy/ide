@@ -42,8 +42,8 @@ import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
@@ -70,11 +70,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       String                    workspaceId;
     private       AppContext                appContext;
-    private DtoFactory        dtoFactory;
-    private EventBus          eventBus;
-    private WizardPage        currentPage;
-    private ProjectWizardView view;
-    private MainPagePresenter mainPage;
+    private       DtoFactory                dtoFactory;
+    private       EventBus                  eventBus;
+    private final DialogFactory             dialogFactory;
+    private       WizardPage                currentPage;
+    private       ProjectWizardView         view;
+    private       MainPagePresenter         mainPage;
     private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -86,7 +87,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private WizardContext wizardContext;
     private ProjectWizard wizard;
     private int           workspaceMemory;
-
 
     @Inject
     public NewProjectWizardPresenter(ProjectWizardView view,
@@ -100,7 +100,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      @Named("workspaceId") String workspaceId,
                                      AppContext appContext,
                                      DtoFactory dtoFactory,
-                                     EventBus eventBus) {
+                                     EventBus eventBus,
+                                     DialogFactory dialogFactory) {
         this.view = view;
         this.mainPage = mainPage;
         this.projectService = projectService;
@@ -111,6 +112,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.appContext = appContext;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
+        this.dialogFactory = dialogFactory;
         mainPage.setUpdateDelegate(this);
         view.setDelegate(this);
         wizardContext = new WizardContext();
@@ -154,7 +156,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             wizardPage = wizard.flipToNext();
             setPage(wizardPage);
             currentPage.focusComponent();
-
         }
     }
 
@@ -184,8 +185,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                Info info = new Info(JsonHelper.parsingJsonMessage(exception.getMessage()));
-                info.show();
+                dialogFactory.createMessageDialog("", JsonHelper.parsingJsonMessage(exception.getMessage()), null).show();
             }
         };
 
@@ -201,9 +201,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 //Project with the same name already exists
-                Info info =
-                        new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
-                info.show();
+                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                                  constant.createProjectFromTemplateProjectExists(projectName), null).show();
             }
 
             @Override
@@ -232,17 +231,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         int requiredMemorySize = getRequiredMemorySize();
 
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
-            final Info warningWindow =
-                    new Info(constant.createProjectWarningTitle(),
-                             constant.messagesWorkspaceRamLessRequiredRam(requiredMemorySize, workspaceMemory),
-                             new InfoHandler() {
-                                 @Override
-                                 public void onOk() {
-                                     createProject(callback);
-                                 }
-                             }
-                    );
-            warningWindow.show();
+            dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                              constant.messagesWorkspaceRamLessRequiredRam(requiredMemorySize, workspaceMemory),
+                                              new ConfirmCallback() {
+                                                  @Override
+                                                  public void accepted() {
+                                                      createProject(callback);
+                                                  }
+                                              }).show();
             return;
         }
         createProject(callback);
@@ -250,19 +246,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void checkRamAndUpdateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
         int requiredMemorySize = getRequiredMemorySize();
-
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
-            final Info warningWindow =
-                    new Info(constant.createProjectWarningTitle(),
-                             constant.messagesUpdateProjectWorkspaceRamLessRequired(requiredMemorySize, workspaceMemory),
-                             new InfoHandler() {
-                                 @Override
-                                 public void onOk() {
-                                     updateProject(project, callback);
-                                 }
-                             }
-                    );
-            warningWindow.show();
+            dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                              constant.messagesUpdateProjectWorkspaceRamLessRequired(requiredMemorySize, workspaceMemory),
+                                              new ConfirmCallback() {
+                                                  @Override
+                                                  public void accepted() {
+                                                      updateProject(project, callback);
+                                                  }
+                                              }).show();
             return;
         }
         updateProject(project, callback);
@@ -422,7 +414,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         view.setLoaderVisible(true);
-        ImportProject importProject = dtoFactory.createDto(ImportProject.class).withSource(dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()));
+        ImportProject importProject = dtoFactory.createDto(ImportProject.class)
+                                                .withSource(dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()));
         projectService.importProject(projectName, false,
                                      importProject,
                                      new AsyncRequestCallback<ProjectDescriptor>(
@@ -577,8 +570,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
-                Info infoWindow = new Info(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed());
-                infoWindow.show();
+                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed(), null).show();
                 Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
             }
         });

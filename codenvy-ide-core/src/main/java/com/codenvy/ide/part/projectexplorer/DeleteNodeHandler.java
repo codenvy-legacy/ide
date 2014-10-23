@@ -25,7 +25,6 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
-import com.codenvy.ide.ui.dialogs.info.Info;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -74,7 +73,7 @@ public class DeleteNodeHandler {
                 @Override
                 public void onSuccess(Boolean hasRunningProcesses) {
                     if (hasRunningProcesses) {
-                        new Info(localization.stopProcessesBeforeDeletingProject()).show();
+                        dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
                     } else {
                         askForDeletingNode(nodeToDelete);
                     }

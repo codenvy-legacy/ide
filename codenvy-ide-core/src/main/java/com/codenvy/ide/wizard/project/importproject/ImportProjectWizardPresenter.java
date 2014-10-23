@@ -37,8 +37,8 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.inject.Inject;
@@ -68,6 +68,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private       ImportProjectWizard         wizard;
     private       NewProjectWizardPresenter   newProjectWizardPresenter;
     private       MainPagePresenter           mainPage;
+    private final DialogFactory               dialogFactory;
     private final EventBus                    eventBus;
     private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
         @Override
@@ -92,7 +93,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         DtoFactory factory,
                                         EventBus eventBus,
                                         ImportProjectNotificationSubscriber importProjectNotificationSubscriber,
-                                        NewProjectWizardPresenter newProjectWizardPresenter) {
+                                        NewProjectWizardPresenter newProjectWizardPresenter,
+                                        DialogFactory dialogFactory) {
         this.view = view;
         this.projectImporterRegistry = projectImporterRegistry;
         this.eventBus = eventBus;
@@ -105,12 +107,12 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         this.locale = locale;
         this.dtoFactory = factory;
         this.mainPage = mainPage;
+        this.dialogFactory = dialogFactory;
         this.wizardContext = new WizardContext();
         mainPage.setUpdateDelegate(this);
         mainPage.setEnterPressedDelegate(this);
         view.setDelegate(this);
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -207,8 +209,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                Info info = new Info(JsonHelper.parsingJsonMessage(exception.getMessage()));
-                info.show();
+                dialogFactory.createMessageDialog("", JsonHelper.parsingJsonMessage(exception.getMessage()), null).show();
             }
         };
 
@@ -217,9 +218,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 // Project with the same name already exists
-                Info info =
-                        new Info(locale.createProjectWarningTitle(), locale.createProjectFromTemplateProjectExists(projectName));
-                info.show();
+                dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
+                                                  locale.createProjectFromTemplateProjectExists(projectName), null).show();
             }
 
             @Override
@@ -228,7 +228,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             }
         });
     }
-
 
     /** {@inheritDoc} */
     @Override
@@ -309,26 +308,23 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                         protected void onSuccess(ResourcesDescriptor result) {
                             int workspaceMemory = Integer.valueOf(result.getTotalMemory());
                             if (workspaceMemory < finalRequiredMemorySize) {
-                                final Info warningWindow = new Info(locale.createProjectWarningTitle(),
-                                                                    locale.messagesWorkspaceRamLessRequiredRam(finalRequiredMemorySize,
-                                                                                                               workspaceMemory),
-                                                                    new InfoHandler() {
-                                                                        @Override
-                                                                        public void onOk() {
-                                                                            importProjectSuccessful(projectDescriptor, callback);
-                                                                        }
-                                                                    }
-                                );
-                                warningWindow.show();
+                                dialogFactory.createMessageDialog(
+                                        locale.createProjectWarningTitle(),
+                                        locale.messagesWorkspaceRamLessRequiredRam(finalRequiredMemorySize, workspaceMemory),
+                                        new ConfirmCallback() {
+                                            @Override
+                                            public void accepted() {
+                                                importProjectSuccessful(projectDescriptor, callback);
+                                            }
+                                        }).show();
                             }
                         }
 
                         @Override
                         protected void onFailure(Throwable exception) {
                             importProjectSuccessful(projectDescriptor, callback);
-
-                            Info infoWindow = new Info(locale.createProjectWarningTitle(), locale.messagesGetResourcesFailed());
-                            infoWindow.show();
+                            dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
+                                                              locale.messagesGetResourcesFailed(), null).show();
                             Log.error(getClass(), exception.getMessage());
                         }
                     }

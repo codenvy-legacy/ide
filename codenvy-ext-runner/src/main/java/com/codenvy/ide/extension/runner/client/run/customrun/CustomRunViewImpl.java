@@ -22,7 +22,7 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.wizard.RunnersDataAdapter;
 import com.codenvy.ide.extension.runner.client.wizard.RunnersRenderer;
-import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.ui.window.Window;
@@ -57,6 +57,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     final         RunnerResources            resources;
     @UiField(provided = true)
     final         RunnerLocalizationConstant locale;
+    private       DialogFactory              dialogFactory;
     private final RunnerEnvironmentTree      rootNode;
     @UiField
     Label           noEnvLabel;
@@ -88,9 +89,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
     /** Create view. */
     @Inject
     protected CustomRunViewImpl(com.codenvy.ide.Resources resources, RunnerResources runnerResources, RunnerLocalizationConstant constant,
-                                CustomRunViewImplUiBinder uiBinder, RunnersRenderer runnersRenderer, DtoFactory dtoFactory) {
+                                CustomRunViewImplUiBinder uiBinder, RunnersRenderer runnersRenderer, DtoFactory dtoFactory,
+                                DialogFactory dialogFactory) {
         this.resources = runnerResources;
         this.locale = constant;
+        this.dialogFactory = dialogFactory;
         setTitle(constant.runConfigurationViewTitle());
         setWidget(uiBinder.createAndBindUi(this));
         ensureDebugId("customRun-window");
@@ -352,8 +355,7 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
 
     @Override
     public void showWarning(String warning) {
-        Info warningWindow = new Info("Warning", warning);
-        warningWindow.show();
+        dialogFactory.createMessageDialog("Warning", warning, null).show();
     }
 
     interface CustomRunViewImplUiBinder extends UiBinder<Widget, CustomRunViewImpl> {
