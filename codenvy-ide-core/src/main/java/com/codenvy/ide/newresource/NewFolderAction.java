@@ -23,8 +23,8 @@ import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -38,6 +38,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class NewFolderAction extends DefaultNewResourceAction {
     private CoreLocalizationConstant localizationConstant;
+    private DialogFactory            dialogFactory;
 
     @Inject
     public NewFolderAction(AppContext appContext,
@@ -47,7 +48,8 @@ public class NewFolderAction extends DefaultNewResourceAction {
                            ProjectServiceClient projectServiceClient,
                            EventBus eventBus,
                            AnalyticsEventLogger eventLogger,
-                           DtoUnmarshallerFactory unmarshallerFactory) {
+                           DtoUnmarshallerFactory unmarshallerFactory,
+                           DialogFactory dialogFactory) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
@@ -58,32 +60,35 @@ public class NewFolderAction extends DefaultNewResourceAction {
               projectServiceClient,
               eventBus,
               eventLogger,
-              unmarshallerFactory);
+              unmarshallerFactory,
+              dialogFactory);
         this.localizationConstant = localizationConstant;
+        this.dialogFactory = dialogFactory;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
 
-        new AskValueDialog(localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
-                           localizationConstant.newResourceLabel(), new AskValueCallback() {
-            @Override
-            public void onOk(String value) {
-                final StorableNode parent = getParent();
-                projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<ItemReference>() {
+        dialogFactory.createInputDialog(
+                localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
+                localizationConstant.newResourceLabel(), "",
+                new InputCallback() {
                     @Override
-                    protected void onSuccess(ItemReference result) {
-                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
-                    }
+                    public void accepted(String value) {
+                        final StorableNode parent = getParent();
+                        projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<ItemReference>() {
+                            @Override
+                            protected void onSuccess(ItemReference result) {
+                                eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
+                            }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        Log.error(NewFolderAction.class, exception);
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(NewFolderAction.class, exception);
+                            }
+                        });
                     }
-                });
-            }
-        }
-        ).show();
+                }, null).show();
     }
 }
