@@ -77,6 +77,14 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
         String editorFullScreen();
 
         String editorFullScreenSvgDown();
+
+        String privacy();
+
+        String privacyTooltip();
+
+        String privateProjectSvg();
+
+        String publicProjectSvg();
     }
 
     @Source({"Core.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
