@@ -16,6 +16,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.BaseTest;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
@@ -50,6 +51,8 @@ public class CustomEnvironmentsPresenterTest extends BaseTest {
     @Mock
     private EnvironmentActionsManager   environmentActionsManager;
     @Mock
+    private DialogFactory               dialogFactory;
+    @Mock
     private ProjectServiceClient        projectServiceClient;
     @Mock
     private ProjectDescriptor           currentProjectDescriptor;
@@ -66,7 +69,8 @@ public class CustomEnvironmentsPresenterTest extends BaseTest {
         scriptsArray = Collections.createArray();
 
         presenter = new CustomEnvironmentsPresenter(ENV_FOLDER_PATH, view, eventBus, appContext, environmentActionsManager,
-                                                    projectServiceClient, dtoUnmarshallerFactory, notificationManager, constant);
+                                                    projectServiceClient, dtoUnmarshallerFactory, notificationManager, constant,
+                                                    dialogFactory);
     }
 
     @Test
