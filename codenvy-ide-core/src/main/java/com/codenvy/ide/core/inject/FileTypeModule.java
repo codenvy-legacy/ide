@@ -46,6 +46,13 @@ public class FileTypeModule extends AbstractGinModule {
 
     @Provides
     @Singleton
+    @Named("MDFileType")
+    protected FileType provideMDFile(Resources resources) {
+        return new FileType("MD File", resources.mdFile(), MimeType.TEXT_MARKDOWN, "md");
+    }
+
+    @Provides
+    @Singleton
     @Named("PNGFileType")
     protected FileType providePNGFile(Resources resources) {
         return new FileType("PNG Image", resources.defaultImage(), MimeType.IMAGE_PNG, "png");

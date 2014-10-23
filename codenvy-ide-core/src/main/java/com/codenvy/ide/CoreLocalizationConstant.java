@@ -338,7 +338,7 @@ public interface CoreLocalizationConstant extends Messages {
     String newResourceTitle(String title);
 
     @Key("newResource.label")
-    String newResourceLabel();
+    String newResourceLabel(String title);
 
     /* Messages */
     @Key("messages.changesMayBeLost")
