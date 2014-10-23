@@ -39,13 +39,26 @@ public class InputDialogPresenter implements InputDialog, InputDialogView.Action
     public InputDialogPresenter(final @Nonnull InputDialogView view,
                                 final @Nonnull @Assisted("title") String title,
                                 final @Nonnull @Assisted("label") String label,
+                                final @Nullable @Assisted InputCallback inputCallback,
+                                final @Nullable @Assisted CancelCallback cancelCallback) {
+        this(view, title, label, "", 0, 0, inputCallback, cancelCallback);
+    }
+
+    @AssistedInject
+    public InputDialogPresenter(final @Nonnull InputDialogView view,
+                                final @Nonnull @Assisted("title") String title,
+                                final @Nonnull @Assisted("label") String label,
                                 final @Nonnull @Assisted("initialValue") String initialValue,
+                                final @Nonnull @Assisted("selectionStartIndex") Integer selectionStartIndex,
+                                final @Nonnull @Assisted("selectionLength") Integer selectionLength,
                                 final @Nullable @Assisted InputCallback inputCallback,
                                 final @Nullable @Assisted CancelCallback cancelCallback) {
         this.view = view;
         this.view.setContent(label);
         this.view.setTitle(title);
         this.view.setValue(initialValue);
+        this.view.setSelectionStartIndex(selectionStartIndex);
+        this.view.setSelectionLength(selectionLength);
         this.inputCallback = inputCallback;
         this.cancelCallback = cancelCallback;
         this.view.setDelegate(this);

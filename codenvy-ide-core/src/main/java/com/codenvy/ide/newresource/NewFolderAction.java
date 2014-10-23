@@ -72,7 +72,7 @@ public class NewFolderAction extends DefaultNewResourceAction {
 
         dialogFactory.createInputDialog(
                 localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
-                localizationConstant.newResourceLabel(), "",
+                localizationConstant.newResourceLabel(),
                 new InputCallback() {
                     @Override
                     public void accepted(String value) {

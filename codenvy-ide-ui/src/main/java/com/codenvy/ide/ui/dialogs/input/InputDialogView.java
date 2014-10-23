@@ -36,7 +36,14 @@ public interface InputDialogView {
     /** Sets the window title. */
     void setTitle(String title);
 
+    /** Returns the input value. */
     String getValue();
+
+    /** Sets the beginning index to select the value in the input, inclusive. */
+    void setSelectionStartIndex(int selectionStartIndex);
+
+    /** Sets the number of characters to be selected in the input. */
+    void setSelectionLength(int selectionEndIndex);
 
     /** The interface for the action delegate. */
     public interface ActionDelegate {

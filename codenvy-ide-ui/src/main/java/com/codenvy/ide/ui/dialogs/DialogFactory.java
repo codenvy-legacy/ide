@@ -16,8 +16,8 @@ import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.assistedinject.Assisted;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 /**
  * Factory for {@link MessageDialog}, {@link ConfirmDialog} and {@link InputDialog} components.
@@ -38,8 +38,8 @@ public interface DialogFactory {
      *         the callback used on OK
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
-    MessageDialog createMessageDialog(@NotNull @Assisted("title") String title,
-                                      @NotNull @Assisted("message") String content,
+    MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
+                                      @Nonnull @Assisted("message") String content,
                                       @Nullable ConfirmCallback confirmCallback);
 
     /**
@@ -53,8 +53,8 @@ public interface DialogFactory {
      *         the callback used on OK
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
-    MessageDialog createMessageDialog(@NotNull String title,
-                                      @NotNull IsWidget content,
+    MessageDialog createMessageDialog(@Nonnull String title,
+                                      @Nonnull IsWidget content,
                                       @Nullable ConfirmCallback confirmCallback);
 
     /**
@@ -70,8 +70,8 @@ public interface DialogFactory {
      *         the callback used on cancel
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
-    ConfirmDialog createConfirmDialog(@NotNull @Assisted("title") String title,
-                                      @NotNull @Assisted("message") String content,
+    ConfirmDialog createConfirmDialog(@Nonnull @Assisted("title") String title,
+                                      @Nonnull @Assisted("message") String content,
                                       @Nullable ConfirmCallback confirmCallback,
                                       @Nullable CancelCallback cancelCallback);
 
@@ -88,8 +88,8 @@ public interface DialogFactory {
      *         the callback used on cancel
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
-    ConfirmDialog createConfirmDialog(@NotNull String title,
-                                      @NotNull IsWidget content,
+    ConfirmDialog createConfirmDialog(@Nonnull String title,
+                                      @Nonnull IsWidget content,
                                       @Nullable ConfirmCallback confirmCallback,
                                       @Nullable CancelCallback cancelCallback);
 
@@ -100,17 +100,45 @@ public interface DialogFactory {
      *         the window title
      * @param label
      *         the label of the input field
-     * @param initialValue
-     *         the value used to initialize the input
      * @param inputCallback
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return a {@link com.codenvy.ide.ui.dialogs.input.InputDialog} instance
+     * @return an {@link com.codenvy.ide.ui.dialogs.input.InputDialog} instance
      */
-    InputDialog createInputDialog(@NotNull @Assisted("title") String title,
-                                  @NotNull @Assisted("label") String label,
-                                  @NotNull @Assisted("initialValue") String initialValue,
+    InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
+                                  @Nonnull @Assisted("label") String label,
+                                  @Nullable InputCallback inputCallback,
+                                  @Nullable CancelCallback cancelCallback);
+
+    /**
+     * Create an input dialog with the specified initial value.
+     * <p/>
+     * The {@code initialValue} may be pre-selected. Selection begins
+     * at the specified {@code selectionStartIndex} and extends to the
+     * character at index {@code selectionLength}.
+     *
+     * @param title
+     *         the window title
+     * @param label
+     *         the label of the input field
+     * @param initialValue
+     *         the value used to initialize the input
+     * @param selectionStartIndex
+     *         the beginning index of the {@code initialValue} to select, inclusive
+     * @param selectionLength
+     *         the number of characters of the {@code initialValue} to be selected
+     * @param inputCallback
+     *         the callback used on OK
+     * @param cancelCallback
+     *         the callback used on cancel
+     * @return an {@link com.codenvy.ide.ui.dialogs.input.InputDialog} instance
+     */
+    InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
+                                  @Nonnull @Assisted("label") String label,
+                                  @Nonnull @Assisted("initialValue") String initialValue,
+                                  @Nonnull @Assisted("selectionStartIndex") Integer selectionStartIndex,
+                                  @Nonnull @Assisted("selectionLength") Integer selectionLength,
                                   @Nullable InputCallback inputCallback,
                                   @Nullable CancelCallback cancelCallback);
 }

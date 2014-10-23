@@ -12,8 +12,10 @@ package com.codenvy.ide.ui.dialogs.input;
 
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -39,6 +41,8 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     @UiField
     TextBox value;
     private ActionDelegate delegate;
+    private int            selectionStartIndex;
+    private int            selectionLength;
 
     @Inject
     public InputDialogViewImpl(final @Nonnull InputDialogFooter footer) {
@@ -54,13 +58,15 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
 
     @Override
     public void show() {
+        super.show();
+        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+        value.setSelectionRange(selectionStartIndex, selectionLength);
         new Timer() {
             @Override
             public void run() {
                 value.setFocus(true);
             }
         }.schedule(300);
-        super.show();
     }
 
     @Override
@@ -75,7 +81,9 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
 
     @Override
     protected void onEnterClicked() {
-        delegate.accepted();
+        if (!value.getValue().trim().isEmpty()) {
+            delegate.accepted();
+        }
     }
 
     @Override
@@ -101,6 +109,21 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     @Override
     public String getValue() {
         return value.getValue();
+    }
+
+    @Override
+    public void setSelectionStartIndex(int selectionStartIndex) {
+        this.selectionStartIndex = selectionStartIndex;
+    }
+
+    @Override
+    public void setSelectionLength(int selectionLength) {
+        this.selectionLength = selectionLength;
+    }
+
+    @UiHandler("value")
+    void onKeyUp(KeyUpEvent event) {
+        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
     }
 
     /** The UI binder interface for this components. */
