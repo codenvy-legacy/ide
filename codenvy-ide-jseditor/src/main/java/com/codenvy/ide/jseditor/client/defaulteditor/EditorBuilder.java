@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.defaulteditor;
 
-import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 
 public interface EditorBuilder {
 
-    EditorPartPresenter buildEditor();
+    TextEditor buildEditor();
 
 }

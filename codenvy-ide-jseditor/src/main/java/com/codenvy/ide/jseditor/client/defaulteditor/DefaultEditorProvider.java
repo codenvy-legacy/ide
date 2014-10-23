@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.defaulteditor;
 
-import com.codenvy.ide.api.editor.EditorPartPresenter;
+import javax.inject.Named;
+
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
-
-import javax.inject.Named;
 
 
 public class DefaultEditorProvider implements EditorProvider {
@@ -48,7 +48,7 @@ public class DefaultEditorProvider implements EditorProvider {
     }
 
     @Override
-    public EditorPartPresenter getEditor() {
+    public TextEditor getEditor() {
         final EditorType editorType = this.defaultEditorTypePrefReader.readPref();
         Log.debug(DefaultEditorProvider.class, "Editor type used: " + editorType);
         EditorBuilder provider = this.editorTypeRegistry.getRegisteredBuilder(editorType);
