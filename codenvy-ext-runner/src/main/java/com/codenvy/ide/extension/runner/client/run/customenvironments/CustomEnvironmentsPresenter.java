@@ -24,8 +24,8 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
 import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
@@ -36,7 +36,6 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-
 import java.util.HashMap;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
@@ -51,6 +50,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private final String                     envFolderPath;
     private       NotificationManager        notificationManager;
     private       RunnerLocalizationConstant constants;
+    private       DialogFactory              dialogFactory;
     private       ProjectServiceClient       projectServiceClient;
     private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private       EventBus                   eventBus;
@@ -66,7 +66,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                           AppContext appContext, EnvironmentActionsManager environmentActionsManager,
                                           ProjectServiceClient projectServiceClient,
                                           DtoUnmarshallerFactory dtoUnmarshallerFactory, NotificationManager notificationManager,
-                                          RunnerLocalizationConstant constants) {
+                                          RunnerLocalizationConstant constants,
+                                          DialogFactory dialogFactory) {
         this.envFolderPath = envFolderPath;
         this.view = view;
         this.eventBus = eventBus;
@@ -76,6 +77,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.constants = constants;
+        this.dialogFactory = dialogFactory;
         this.view.setDelegate(this);
 
         updateView();
@@ -137,14 +139,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
-        new Ask(constants.customEnvironmentsViewRemoveEnvTitle(),
-                constants.customEnvironmentsViewRemoveEnvMessage(selectedEnvironment.getName()),
-                new AskHandler() {
-                    @Override
-                    public void onOk() {
-                        removeSelectedEnvironment();
-                    }
-                }).show();
+        dialogFactory.createConfirmDialog(constants.customEnvironmentsViewRemoveEnvTitle(),
+                                          constants.customEnvironmentsViewRemoveEnvMessage(selectedEnvironment.getName()),
+                                          new ConfirmCallback() {
+                                              @Override
+                                              public void accepted() {
+                                                  removeSelectedEnvironment();
+                                              }
+                                          }, null).show();
     }
 
     private void removeSelectedEnvironment() {

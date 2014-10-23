@@ -35,8 +35,9 @@ import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.debug.BreakpointGutterManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.outline.OutlineImpl;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,7 +47,6 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-
 
 /** @author Evgen Vidolob */
 public class TextEditorPresenter extends AbstractTextEditorPresenter
@@ -61,6 +61,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
     private   WorkspaceAgent           workspaceAgent;
     private   EditorState              errorState;
     private   CoreLocalizationConstant constant;
+    private   DialogFactory            dialogFactory;
 
     @Inject
     public TextEditorPresenter(Resources resources,
@@ -69,13 +70,15 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
                                DtoFactory dtoFactory,
                                WorkspaceAgent workspaceAgent,
                                CoreLocalizationConstant constant,
-                               EventBus eventBus) {
+                               EventBus eventBus,
+                               DialogFactory dialogFactory) {
         this.resources = resources;
         this.userActivityManager = userActivityManager;
         this.breakpointGutterManager = breakpointGutterManager;
         this.dtoFactory = dtoFactory;
         this.workspaceAgent = workspaceAgent;
         this.constant = constant;
+        this.dialogFactory = dialogFactory;
 
         eventBus.addHandler(FileEvent.TYPE, this);
     }
@@ -241,21 +244,23 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
     @Override
     public void onClose(@Nonnull final AsyncCallback<Void> callback) {
         if (isDirty()) {
-            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.messagesSaveChanges(getEditorInput().getName()), new AskHandler() {
-                @Override
-                public void onOk() {
-                    doSave();
-                    handleClose();
-                    callback.onSuccess(null);
-                }
-
-                @Override
-                public void onCancel() {
-                    handleClose();
-                    callback.onSuccess(null);
-                }
-            });
-            ask.show();
+            dialogFactory.createConfirmDialog(
+                    constant.askWindowCloseTitle(),
+                    constant.messagesSaveChanges(getEditorInput().getName()),
+                    new ConfirmCallback() {
+                        @Override
+                        public void accepted() {
+                            doSave();
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    }, new CancelCallback() {
+                        @Override
+                        public void cancelled() {
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    }).show();
         } else {
             handleClose();
             callback.onSuccess(null);
