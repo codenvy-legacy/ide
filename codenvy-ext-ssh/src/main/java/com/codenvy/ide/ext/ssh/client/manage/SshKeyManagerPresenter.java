@@ -20,9 +20,9 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
-import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -56,7 +56,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     private EventBus                eventBus;
     private UserServiceClient       userService;
     private AsyncRequestLoader      loader;
-    private SshKeyPresenter         sshKeyPresenter;
     private UploadSshKeyPresenter   uploadSshKeyPresenter;
     private NotificationManager     notificationManager;
 
@@ -69,7 +68,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   EventBus eventBus,
                                   AsyncRequestLoader loader,
                                   UserServiceClient userService,
-                                  SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -85,15 +83,28 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
         this.eventBus = eventBus;
         this.userService = userService;
         this.loader = loader;
-        this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onViewClicked(@Nonnull KeyItem key) {
-        sshKeyPresenter.showDialog(key);
+    public void onViewClicked(@Nonnull final KeyItem key) {
+        service.getPublicKey(key, new AsyncRequestCallback<PublicKey>(dtoUnmarshallerFactory.newUnmarshaller(PublicKey.class)) {
+            @Override
+            public void onSuccess(PublicKey result) {
+                loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
+                dialogFactory.createMessageDialog(constant.publicSshKeyField() + key.getHost(), result.getKey(), null).show();
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
     }
 
     /** {@inheritDoc} */
