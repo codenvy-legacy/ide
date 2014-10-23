@@ -13,6 +13,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
@@ -21,6 +22,9 @@ import com.codenvy.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.GutterAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.InlineAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent;
+import com.codenvy.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChange;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChangeInterceptor;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
@@ -36,6 +40,8 @@ import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.events.TextChangeEvent;
+import com.codenvy.ide.jseditor.client.events.TextChangeHandler;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
@@ -46,6 +52,7 @@ import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.web.bindery.event.shared.EventBus;
 
 import elemental.events.KeyboardEvent.KeyCode;
@@ -98,6 +105,7 @@ public class TextEditorInit {
                 configureAnnotationModel(documentHandle);
                 configureCodeAssist(documentHandle);
                 configureQuickAssist(documentHandle);
+                configureChangeInterceptors(documentHandle);
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -259,6 +267,51 @@ public class TextEditorInit {
                         quickAssist.showPossibleQuickAssists(event.getLineNumber(),
                                                              originalEvent.getClientX(),
                                                              originalEvent.getClientY());
+                    }
+                }
+            });
+        }
+    }
+
+    private void configureChangeInterceptors(final DocumentHandle documentHandle) {
+        final ChangeInterceptorProvider interceptors = configuration.getChangeInterceptorProvider();
+        if (interceptors != null) {
+            documentHandle.getDocEventBus().addHandler(TextChangeEvent.TYPE, new TextChangeHandler() {
+                @Override
+                public void onTextChange(final TextChangeEvent event) {
+                    final TextChange change = event.getChange();
+                    if (change == null) {
+                        return;
+                    }
+                    final TextPosition from = change.getFrom();
+                    if (from == null) {
+                        return;
+                    }
+                    final int startOffset = documentHandle.getDocument().getIndexFromPosition(from);
+                    final TypedRegion region = configuration.getPartitioner().getPartition(startOffset);
+                    if (region == null) {
+                        return;
+                    }
+                    final List<TextChangeInterceptor> filteredInterceptors = interceptors.getInterceptors(region.getType());
+                    if (filteredInterceptors == null || filteredInterceptors.isEmpty()) {
+                        return;
+                    }
+                    // don't apply the interceptors if the range end doesn't belong to the same partition
+                    final TextPosition to = change.getTo();
+                    if (to != null && ! from.equals(to)) {
+                        final int endOffset = documentHandle.getDocument().getIndexFromPosition(to);
+                        if (endOffset < region.getOffset() || endOffset > region.getOffset() + region.getLength()) {
+                            return;
+                        }
+                    }
+                    // stop as soon as one interceptors has modified the content
+                    for (final TextChangeInterceptor interceptor: filteredInterceptors) {
+                        final TextChange result = interceptor.processChange(change,
+                                                                            documentHandle.getDocument().getReadOnlyDocument());
+                        if (result != null) {
+                            event.update(result);
+                            break;
+                        }
                     }
                 }
             });
