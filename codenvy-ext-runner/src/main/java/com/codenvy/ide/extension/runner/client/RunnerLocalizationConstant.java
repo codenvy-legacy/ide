@@ -199,9 +199,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.overrideMemory")
     String messagesOverrideMemory();
 
-    @Key("messages.defaultMemory")
-    String messagesDefaultMemory(int requiredRam);
-
     @Key("appWillBeStopped")
     String appWillBeStopped(String appName);
 
@@ -221,7 +218,7 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("titles.warning")
     String titlesWarning();
 
-    @Key("runner.pannel.starts-after-launch")
+    @Key("runner.panel.starts-after-launch")
     String startsAfterLaunch();
 
     @Key("titles.ram-manager")
@@ -272,12 +269,6 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("view.selectRunnerPage.memoryRecommendedLabel")
     String selectRunnerPageViewMemoryRecommendedLabel();
-
-    @Key("view.selectRunnerPage.environmentTypeLabel")
-    String selectRunnerPageViewEnvironmentTypeLabel();
-
-    @Key("view.selectRunnerPage.environmentLabel")
-    String selectRunnerPageViewEnvironmentLabel();
 
     /* RunnerConsoleView */
     @Key("view.runnerConsole.title")
