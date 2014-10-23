@@ -37,10 +37,13 @@ import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
-import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
+import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
@@ -363,5 +366,41 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     public BreakpointRenderer getBreakpointRenderer() {
         return this.editor.getBreakpointRenderer();
+    }
+
+    @Override
+    public EmbeddedDocument getDocument() {
+        return this.getView().getEmbeddedDocument();
+    }
+
+    @Override
+    public String getContentType() {
+        return this.getView().getContentType();
+    }
+
+    @Override
+    public TextRange getSelectedTextRange() {
+        return getDocument().getSelectedTextRange();
+    }
+
+    @Override
+    public LinearRange getSelectedLinearRange() {
+        return getDocument().getSelectedLinearRange();
+    }
+
+    @Override
+    public void showMessage(final String message) {
+        getView().showMessage(message);
+    }
+
+    @Override
+    public TextPosition getCursorPosition() {
+        return getDocument().getCursorPosition();
+    }
+
+    @Override
+    public int getCursorOffset() {
+        final TextPosition textPosition = getDocument().getCursorPosition();
+        return getDocument().getIndexFromPosition(textPosition);
     }
 }
