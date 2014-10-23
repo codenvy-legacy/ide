@@ -14,6 +14,7 @@ import com.codenvy.ide.api.texteditor.ContentFormatter;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
+import com.codenvy.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.partition.ConstantPartitioner;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
@@ -68,6 +69,11 @@ public class DefaultTextEditorConfiguration implements TextEditorConfiguration {
 
     @Override
     public QuickAssistProcessor getQuickAssistProcessor() {
+        return null;
+    }
+
+    @Override
+    public ChangeInterceptorProvider getChangeInterceptorProvider() {
         return null;
     }
 }
