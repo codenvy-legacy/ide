@@ -53,7 +53,9 @@ public class InputDialogFooter extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
 
         okButton.addStyleName(resources.centerPanelCss().blueButton());
+        okButton.getElement().setId("askValue-dialog-ok");
         cancelButton.addStyleName(resources.centerPanelCss().button());
+        cancelButton.getElement().setId("askValue-dialog-cancel");
     }
 
     /**

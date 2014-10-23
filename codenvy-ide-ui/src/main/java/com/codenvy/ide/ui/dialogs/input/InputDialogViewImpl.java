@@ -47,6 +47,9 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
 
         this.footer = footer;
         getFooter().add(this.footer);
+
+        this.ensureDebugId("askValueDialog-window");
+        this.value.ensureDebugId("askValueDialog-textBox");
     }
 
     @Override

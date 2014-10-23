@@ -48,6 +48,7 @@ public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
                                   final @Nonnull @Assisted String title,
                                   final @Nonnull @Assisted IsWidget content,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback) {
+        content.asWidget().ensureDebugId("info-window-message");
         this.view = view;
         this.view.setContent(content);
         this.view.setTitle(title);

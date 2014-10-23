@@ -53,7 +53,9 @@ public class ConfirmDialogFooter extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
 
         okButton.addStyleName(resources.centerPanelCss().blueButton());
+        okButton.getElement().setId("ask-dialog-ok");
         cancelButton.addStyleName(resources.centerPanelCss().button());
+        cancelButton.getElement().setId("ask-dialog-cancel");
     }
 
     /**

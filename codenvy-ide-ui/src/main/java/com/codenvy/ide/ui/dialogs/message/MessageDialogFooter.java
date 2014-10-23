@@ -50,6 +50,7 @@ public class MessageDialogFooter extends Composite {
         this.messages = messages;
         initWidget(uiBinder.createAndBindUi(this));
         okButton.addStyleName(resources.centerPanelCss().button());
+        okButton.getElement().setId("info-window");
     }
 
     /**
