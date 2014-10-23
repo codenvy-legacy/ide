@@ -66,8 +66,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     SimplePanel consoleButton;
     @UiField
     SimplePanel terminalButton;
-    @UiField
-    SimplePanel appPreviewButton;
+//    @UiField
+//    SimplePanel appPreviewButton;
 
     @UiField
     ScrollPanel scrollPanel;
@@ -79,10 +79,10 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     Frame     terminalFrame;
 
-    @UiField
-    DeckPanel appPreviewPanel;
-    @UiField
-    Frame     appPreviewFrame;
+//    @UiField
+//    DeckPanel appPreviewPanel;
+//    @UiField
+//    Frame     appPreviewFrame;
 
     private SimplePanel activeTabButton;
 
@@ -106,20 +106,24 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         setActiveTab(0); // show Console panel
         hideTerminal();
-        hideAppPreview();
+//        hideAppPreview();
 
         terminalFrame.addLoadHandler(new LoadHandler() {
             @Override
             public void onLoad(LoadEvent event) {
-                delegate.onTerminalLoaded();
+                if (terminalFrame.getUrl() != null && !terminalFrame.getUrl().isEmpty()) {
+                    delegate.onTerminalLoaded();
+                }
             }
         });
-        appPreviewFrame.addLoadHandler(new LoadHandler() {
-            @Override
-            public void onLoad(LoadEvent event) {
-                delegate.onAppPreviewLoaded();
-            }
-        });
+//        appPreviewFrame.addLoadHandler(new LoadHandler() {
+//            @Override
+//            public void onLoad(LoadEvent event) {
+//                if (appPreviewFrame.getUrl() != null && !appPreviewFrame.getUrl().isEmpty()) {
+//                    delegate.onAppPreviewLoaded();
+//                }
+//            }
+//        });
 
         consoleButton.addDomHandler(new ClickHandler() {
             @Override
@@ -135,13 +139,13 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 delegate.onTerminalTabOpened();
             }
         }, ClickEvent.getType());
-        appPreviewButton.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                setActiveTab(2);
-                delegate.onAppTabOpened();
-            }
-        }, ClickEvent.getType());
+//        appPreviewButton.addDomHandler(new ClickHandler() {
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                setActiveTab(2);
+//                delegate.onAppTabOpened();
+//            }
+//        }, ClickEvent.getType());
     }
 
     /** {@inheritDoc} */
@@ -164,9 +168,10 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             activeTabButton = consoleButton;
         } else if (index == 1) {
             activeTabButton = terminalButton;
-        } else if (index == 2) {
-            activeTabButton = appPreviewButton;
         }
+//        else if (index == 2) {
+//            activeTabButton = appPreviewButton;
+//        }
         activeTabButton.addStyleName(runnerResources.runner().tabSelected());
 
         tabPanel.showWidget(index);
@@ -179,12 +184,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         terminalFrame.setUrl(url);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void reloadAppPreviewFrame(String url) {
-        appPreviewPanel.showWidget(1);
-        appPreviewFrame.setUrl(url);
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public void reloadAppPreviewFrame(String url) {
+//        appPreviewPanel.showWidget(1);
+//        appPreviewFrame.setUrl(url);
+//    }
 
     /** {@inheritDoc} */
     @Override
@@ -193,10 +198,10 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     }
 
     /** {@inheritDoc} */
-    @Override
-    public void hideAppPreview() {
-        appPreviewPanel.showWidget(0);
-    }
+//    @Override
+//    public void hideAppPreview() {
+//        appPreviewPanel.showWidget(0);
+//    }
 
     /** {@inheritDoc} */
     @Override

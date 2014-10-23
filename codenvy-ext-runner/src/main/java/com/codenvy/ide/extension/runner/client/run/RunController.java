@@ -990,6 +990,9 @@ public class RunController implements Notification.OpenNotificationHandler {
         if (clientStartTime == 0) {
             return null;
         }
+        if (!isAnyAppLaunched) {
+            return totalActiveTimeMetric;
+        }
         String humanReadable = StringUtils.timeSecToHumanReadable((System.currentTimeMillis() - clientStartTime) / 1000);
         totalActiveTimeMetric.setValue(humanReadable);
         return totalActiveTimeMetric;

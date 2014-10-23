@@ -427,4 +427,17 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("outline.noFileOpened.message")
     String outlineNoFileOpenedMessage();
+
+    /* Privacy */
+    @Key("privacy.tooltip.publicHeader")
+    String privacyTooltipPublicHeader();
+
+    @Key("privacy.tooltip.publicMessage")
+    String privacyTooltipPublicMessage();
+
+    @Key("privacy.tooltip.privateHeader")
+    String privacyTooltipPrivateHeader();
+
+    @Key("privacy.tooltip.privateMessage")
+    String privacyTooltipPrivateMessage();
 }
