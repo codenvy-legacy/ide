@@ -41,9 +41,23 @@ import java.nio.file.Files;
  */
 public class SetupPomAndGWTModule {
 
-    public static String GEN_START = "<!-- START OF AUTO GENERATED BLOCK -->\n";
+    public static final String GEN_START = "<!-- START OF AUTO GENERATED BLOCK -->\n";
 
-    public static String GEN_END = "<!-- END OF AUTO GENERATED BLOCK -->\n";
+    public static final String GEN_END = "<!-- END OF AUTO GENERATED BLOCK -->\n";
+
+    public static final String ROOT_POM = "pom.xml";
+
+    public static final String DEP_MANAGE_END_TAG = "</dependencyManagement>";
+
+    public static final String MODULE_CLEINT = "<module>codenvy-ide-client</module>";
+
+    public static final String DEP_END_TAG = "</dependencies>";
+
+    public static final String CLIENT_POM = "codenvy-ide-client/pom.xml";
+
+    public static final String IDE_GWT_MODULE = "codenvy-ide-client/src/main/resources/com/codenvy/ide/IDE.gwt.xml";
+
+    public static final String IDE_GWT_ENTRY_TAG = "<entry-point class='com.codenvy.ide.client.IDE' />";
 
     // =======================================================================================================
 
@@ -59,11 +73,6 @@ public class SetupPomAndGWTModule {
 
     // =======================================================================================================
 
-    public static String ROOT_POM = "pom.xml";
-
-    public static String DEP_MANAGE_END_TAG = "</dependencyManagement>";
-
-    public static String MODULE_CLEINT = "<module>codenvy-ide-client</module>";
 
     /**
      * Collect extension description and process project settings
@@ -164,10 +173,6 @@ public class SetupPomAndGWTModule {
 
     // =======================================================================================================
 
-    public static String DEP_END_TAG = "</dependencies>";
-
-    public static String CLIENT_POM = "codenvy-ide-client/pom.xml";
-
     /** Insert dependency at the end of "dependencies" section. */
     protected void processClientPom() throws IOException {
         File pom = new File(projectRoot, CLIENT_POM);
@@ -191,9 +196,6 @@ public class SetupPomAndGWTModule {
 
     // =======================================================================================================
 
-    public static String IDE_GWT_MODULE = "codenvy-ide-client/src/main/resources/com/codenvy/ide/IDE.gwt.xml";
-
-    public static String IDE_GWT_ENTRY_TAG = "<entry-point class='com.codenvy.ide.client.IDE' />";
 
     /** Insert "inherits" tag before "entry-point". */
     protected void processClientGwtModuleXML() throws IOException {
