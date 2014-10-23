@@ -24,9 +24,11 @@
         }
 
         .content {
-            width: 100%;
+            width: 96%;
             height: 100%;
             padding: 1em;
+            word-wrap: break-word;
+            -webkit-user-select: initial;
         }
 
     </ui:style>
