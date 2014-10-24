@@ -19,16 +19,19 @@ import javax.annotation.Nullable;
  */
 public interface InputValidator {
     /**
-     * Validate {@code value}.
+     * Validate the {@code value}.
      *
      * @param value
      *         value to validate
-     * @return message about constraint violations or {@code null}
+     * @return {@link Violation} instance if {@code value} isn't valid or {@code null} otherwise
      */
     @Nullable
-    ConstraintViolation validate(String value);
+    Violation validate(String value);
 
-    interface ConstraintViolation {
+    /** Describes a violation of validation constraint. */
+    interface Violation {
+        /** Returns error message for violation of validation constraints. */
+        @Nullable
         String getMessage();
     }
 }

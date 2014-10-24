@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs.input;
 
+import com.codenvy.ide.ui.UILocalizationConstant;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -42,13 +43,15 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     TextBox value;
     @UiField
     Label   errorHint;
-    private ActionDelegate delegate;
-    private int            selectionStartIndex;
-    private int            selectionLength;
-    private InputValidator validator;
+    private ActionDelegate         delegate;
+    private int                    selectionStartIndex;
+    private int                    selectionLength;
+    private InputValidator         validator;
+    private UILocalizationConstant localizationConstant;
 
     @Inject
-    public InputDialogViewImpl(final @Nonnull InputDialogFooter footer) {
+    public InputDialogViewImpl(final @Nonnull InputDialogFooter footer, UILocalizationConstant localizationConstant) {
+        this.localizationConstant = localizationConstant;
         Widget widget = uiBinder.createAndBindUi(this);
         setWidget(widget);
 
@@ -62,7 +65,7 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     @Override
     public void show() {
         super.show();
-//        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+        footer.okButton.setEnabled(isInputValid());
         value.setSelectionRange(selectionStartIndex, selectionLength);
         new Timer() {
             @Override
@@ -84,7 +87,7 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
 
     @Override
     protected void onEnterClicked() {
-        if (!value.getValue().trim().isEmpty()) {
+        if (isInputValid()) {
             delegate.accepted();
         }
     }
@@ -141,23 +144,35 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
 
     @UiHandler("value")
     void onKeyUp(KeyUpEvent event) {
-        if (validator != null) {
-            final InputValidator.ConstraintViolation constraintViolation = validator.validate(value.getValue());
-            if (constraintViolation != null) {
-                footer.okButton.setEnabled(false);
-                if (constraintViolation.getMessage() != null && !constraintViolation.getMessage().isEmpty()) {
-                    showErrorHint(constraintViolation.getMessage());
-                } else {
-                    // TODO: move message to 'defaultErrorMessage' localization constant
-                    showErrorHint("Value is not valid");
-                }
+        final boolean inputValid = isInputValid();
+        footer.okButton.setEnabled(inputValid);
+
+        if (!inputValid) {
+            if (validator == null) {
+                showErrorHint(localizationConstant.validationErrorMessage());
             } else {
-                footer.okButton.setEnabled(true);
-                hideErrorHint();
+                final InputValidator.Violation violation = validator.validate(value.getValue());
+                if (violation != null) {
+                    final String message = violation.getMessage();
+                    showErrorHint(message != null ? message : localizationConstant.validationErrorMessage());
+                } else {
+                    showErrorHint(localizationConstant.validationErrorMessage());
+                }
             }
         } else {
-//            footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+            hideErrorHint();
         }
+    }
+
+    private boolean isInputValid() {
+        if (value.getValue().trim().isEmpty()) {
+            return false;
+        }
+        if (validator != null) {
+            final InputValidator.Violation violation = validator.validate(value.getValue());
+            return violation == null;
+        }
+        return true;
     }
 
     /** The UI binder interface for this components. */

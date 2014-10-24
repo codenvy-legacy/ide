@@ -274,12 +274,12 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private class EnvironmentNameValidator implements InputValidator {
         @Nullable
         @Override
-        public ConstraintViolation validate(String value) {
+        public Violation validate(String value) {
             if (value.indexOf(' ') >= 0) {
-                return new ConstraintViolation() {
+                return new Violation() {
                     @Override
                     public String getMessage() {
-                        return "Spaces are not allowed";
+                        return constants.customEnvironmentsViewNotValidEnvNameMessage();
                     }
                 };
             }

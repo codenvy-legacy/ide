@@ -25,4 +25,7 @@ public interface UILocalizationConstant extends Messages {
 
     @DefaultMessage("Cancel")
     String cancelButtonText();
+
+    @DefaultMessage("Value is not valid")
+    String validationErrorMessage();
 }

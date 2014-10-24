@@ -45,10 +45,22 @@ public interface InputDialogView {
     /** Sets the number of characters to be selected in the input. */
     void setSelectionLength(int selectionEndIndex);
 
+    /**
+     * Sets the {@link InputValidator} for validating the user's input.
+     *
+     * @param inputValidator
+     *         validator to use
+     */
     void setValidator(InputValidator inputValidator);
 
-    void showErrorHint(String text);
+    /**
+     * Show the validation error message.
+     *
+     * @param message
+     */
+    void showErrorHint(String message);
 
+    /** Hide the validation error message. */
     void hideErrorHint();
 
     /** The interface for the action delegate. */
