@@ -149,6 +149,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.setName(project.getName());
             view.setDescription(project.getDescription());
             projectNameChanged(project.getName());
+            projectDescriptionChanged(project.getDescription());
         } else if (defaultProjectTypeDescriptor != null) {
             // if no project type, pre select maven
             view.selectProjectType(defaultProjectTypeDescriptor.getType());
