@@ -45,8 +45,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private final ToolbarPresenter           consoleToolbar;
     private final RunnerResources            runnerResources;
     private final RunnerLocalizationConstant runnerLocalizationConstant;
-    private       String                     appURL;
+
+    /* private       String                     appURL; */
+
     private       String                     shellURL;
+
     private       boolean                    isUnread;
 
     private       RunnerStatus               currentRunnerStatus;
@@ -197,24 +200,32 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         view.clearConsole();
     }
 
+    /** Set URL to preview an app. */
+    public void setAppURL(String url) {
+        /* this.appURL = url;
+        view.setAppURL(url); */
+    }
+
     /** Set shell URL. */
     public void setShellURL(String url) {
         this.shellURL = url;
+        view.setTerminalURL(shellURL);
     }
 
     /** Should be called when current app is stopped. */
     public void onAppStopped() {
         shellURL = null;
-        appURL = null;
         view.setTerminalURL(null);
-        view.setAppURL(null);
+
+//        appURL = null;
+//        view.setAppURL(null);
     }
 
     /** Should be called when current app is started. */
     public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
-        appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor,
-                                                        Constants.LINK_REL_WEB_URL).getHref() : null;
-        view.setAppURL(appURL);
+//        appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor,
+//                                                        Constants.LINK_REL_WEB_URL).getHref() : null;
+//        view.setAppURL(appURL);
     }
 
     /** Should be called when current app is stopped. */
@@ -222,12 +233,6 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor,
                                                           Constants.LINK_REL_SHELL_URL).getHref() : null;
         view.setTerminalURL(shellURL);
-    }
-
-    /** Set URL to preview an app. */
-    public void setAppURL(String url) {
-        this.appURL = url;
-        view.setAppURL(url);
     }
 
 }

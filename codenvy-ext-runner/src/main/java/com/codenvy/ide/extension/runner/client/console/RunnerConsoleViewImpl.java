@@ -44,6 +44,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private static final String WARN         = "[WARNING]";
     private static final String DOCKER       = "[DOCKER]";
     private static final String DOCKER_ERROR = "[DOCKER] [ERROR]";
+    private static final String STDERR       = "[STDERR]";
 
     private static final String PRE_STYLE          = "style='margin:0px; font-weight:700;'";
     private static final String INFO_COLOR         = "lightgreen'";
@@ -51,6 +52,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private static final String ERROR_COLOR        = "#F62217'";
     private static final String DOCKER_COLOR       = "#00B7EC'";
     private static final String DOCKER_ERROR_COLOR = "#F62217'";
+    private static final String STDERR_COLOR       = "#F62217'";
     private RunnerResources runnerResources;
 
     @UiField
@@ -62,16 +64,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     SimplePanel     toolbarPanel;
 
-    @UiField
-    SimplePanel consoleButton;
-    @UiField
-    SimplePanel terminalButton;
-    @UiField
-    SimplePanel appPreviewButton;
-
     /**
      * Tab Console
      */
+    @UiField
+    SimplePanel consoleButton;
     @UiField
     ScrollPanel consolePanel;
     @UiField
@@ -80,6 +77,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /**
      * Tab Terminal
      */
+    @UiField
+    SimplePanel terminalButton;
     @UiField
     FlowPanel terminalPanel;
     @UiField
@@ -90,12 +89,14 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /**
      * Tab App
      */
+    /* @UiField
+    SimplePanel appPreviewButton;
     @UiField
     FlowPanel appPreviewPanel;
     @UiField
     Label     appPreviewUnavailablePanel;
     @UiField
-    Frame     appPreviewFrame;
+    Frame     appPreviewFrame; */
 
     /**
      * Terminal URL
@@ -105,11 +106,10 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /**
      * Preview application URL
      */
-    private String appURL;
+    /* private String appURL; */
 
 
-    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
-    }
+    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {}
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources, RunnerConsoleViewImplUiBinder uiBinder) {
@@ -119,12 +119,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
-        appPreviewFrame.removeStyleName("gwt-Frame");
+        /* appPreviewFrame.removeStyleName("gwt-Frame"); */
 
         terminalUnavailableLabel.setVisible(true);
         terminalFrame.setVisible(false);
-        appPreviewUnavailablePanel.setVisible(true);
-        appPreviewFrame.setVisible(false);
+        /* appPreviewUnavailablePanel.setVisible(true);
+        appPreviewFrame.setVisible(false); */
 
         // this hack used for adding box shadow effect to top panel (tabs+toolbar)
         topPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
@@ -148,12 +148,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             }
         }, ClickEvent.getType());
 
-        appPreviewButton.addDomHandler(new ClickHandler() {
+        /* appPreviewButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 activateApp();
             }
-        }, ClickEvent.getType());
+        }, ClickEvent.getType()); */
     }
 
     /** {@inheritDoc} */
@@ -183,7 +183,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
     }
 
-    @Override
+    /* @Override
     public void setAppURL(String appURL) {
         this.appURL = appURL;
 
@@ -196,7 +196,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             appPreviewFrame.setUrl(appURL);
             appPreviewFrame.setVisible(true);
         }
-    }
+    } */
 
     @Override
     public void activateConsole() {
@@ -208,7 +208,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         consoleButton.addStyleName(runnerResources.runner().tabSelected());
         terminalButton.removeStyleName(runnerResources.runner().tabSelected());
-        appPreviewButton.removeStyleName(runnerResources.runner().tabSelected());
+        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
 
         scrollBottom();
     }
@@ -223,7 +223,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         consoleButton.removeStyleName(runnerResources.runner().tabSelected());
         terminalButton.addStyleName(runnerResources.runner().tabSelected());
-        appPreviewButton.removeStyleName(runnerResources.runner().tabSelected());
+        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
 
         if (terminalURL == null && !terminalFrame.getUrl().isEmpty()) {
             terminalUnavailableLabel.setVisible(true);
@@ -236,7 +236,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
     }
 
-    @Override
+    /* @Override
     public void activateApp() {
         if (tabPanel.getVisibleWidget() == 2) {
             return;
@@ -257,7 +257,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             appPreviewFrame.setUrl(appURL);
             appPreviewFrame.setVisible(true);
         }
-    }
+    } */
 
     /** {@inheritDoc} */
     @Override
@@ -278,19 +278,28 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
                          message.substring(INFO.length()) + "</pre>");
+
         } else if (message.startsWith(ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
                          message.substring(ERROR.length()) + "</pre>");
+
         } else if (message.startsWith(WARN)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
                          message.substring(WARN.length()) + "</pre>");
+
         } else if (message.startsWith(DOCKER_ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
                          message.substring(DOCKER_ERROR.length()) + "</pre>");
+
         } else if (message.startsWith(DOCKER)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          message.substring(DOCKER.length()) + "</pre>");
+
+        } else if (message.startsWith(STDERR)) {
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + STDERR_COLOR + ";'><b>STDERR</b></span>]" +
+                         message.substring(STDERR.length()) + "</pre>");
+
         } else {
             html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
         }

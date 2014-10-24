@@ -39,7 +39,7 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     void setTerminalURL(String terminalURL);
 
     /** Sets new App frame URL. */
-    void setAppURL(String appURL);
+    /* void setAppURL(String appURL); */
 
     /**
      * Activate Console tab
@@ -54,7 +54,7 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     /**
      * Activate App preview tab
      */
-    void activateApp();
+    /* void activateApp(); */
 
     /** Clear console. Remove all messages. */
     void clearConsole();
