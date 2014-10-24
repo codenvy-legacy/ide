@@ -169,7 +169,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();
-        view.enableInput();
     }
 
     @Override

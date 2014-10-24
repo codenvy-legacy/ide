@@ -24,4 +24,5 @@ input.inputError {
     font-size: 12px;
     padding-left: 8px;
     height: 20px;
+    resize: none;
 }

@@ -37,10 +37,6 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     void setConfigOptions(List<String> options);
 
-    void enableInput();
-
-    void disableInput();
-
     void setName(String name);
 
     void setDescription(String description);

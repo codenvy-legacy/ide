@@ -25,6 +25,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -133,7 +135,8 @@ public class MainPageViewImpl implements MainPageView {
         rootElement = ourUiBinder.createAndBindUi(this);
         reset();
         projectName.getElement().setAttribute("placeholder", "Define the name of your project...");
-        projectName.getElement().setAttribute("maxlength", "32");
+        projectName.getElement().setAttribute("maxlength", "128");
+        projectName.getElement().setAttribute("spellcheck", "false");
         projectDescription.getElement().setAttribute("placeholder", "Add a description to your project...");
         projectDescription.getElement().setAttribute("maxlength", "256");
         setConfigOptions(null);
@@ -141,6 +144,14 @@ public class MainPageViewImpl implements MainPageView {
 
     @UiHandler("projectName")
     void onProjectNameChanged(KeyUpEvent event) {
+        if (projectName.getValue() != null && projectName.getValue().indexOf(" ") >= 0) {
+            String tmp = projectName.getValue();
+            while (tmp.indexOf(" ") >= 0) {
+                tmp = tmp.replaceAll(" ", "-");
+            }
+            projectName.setValue(tmp);
+        }
+
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             return;
         }
@@ -250,16 +261,6 @@ public class MainPageViewImpl implements MainPageView {
         projectPublic.setValue(true);
         projectPrivate.setValue(false);
         changeEnabledState(true);
-    }
-
-    @Override
-    public void enableInput() {
-        changeEnabledState(true);
-    }
-
-    @Override
-    public void disableInput() {
-        changeEnabledState(false);
     }
 
     @Override
