@@ -114,6 +114,7 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
+import com.codenvy.ide.privacy.PrivacyPresenter;
 import com.codenvy.ide.projectimporter.ZipProjectImporter;
 import com.codenvy.ide.projectimporter.importerpage.ZipImporterPagePresenter;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
@@ -280,6 +281,8 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionManagerView.class).to(ExtensionManagerViewImpl.class).in(Singleton.class);
         bind(AppearanceView.class).to(AppearanceViewImpl.class).in(Singleton.class);
         bind(FindActionView.class).to(FindActionViewImpl.class).in(Singleton.class);
+
+        bind(PrivacyPresenter.class).asEagerSingleton();
     }
 
     /** Configures binding for Editor API */
