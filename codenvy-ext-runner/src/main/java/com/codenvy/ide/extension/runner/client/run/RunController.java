@@ -44,10 +44,11 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -92,6 +93,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final DtoFactory             dtoFactory;
     private final AppContext             appContext;
+    private final DialogFactory          dialogFactory;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning  = false;
     protected boolean isAnyAppLaunched = false;
@@ -131,7 +133,8 @@ public class RunController implements Notification.OpenNotificationHandler {
                          final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          MessageBus messageBus,
                          ThemeAgent themeAgent,
-                         final AppContext appContext) {
+                         final AppContext appContext,
+                         DialogFactory dialogFactory) {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -143,6 +146,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
         this.appContext = appContext;
+        this.dialogFactory = dialogFactory;
         theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -239,9 +243,9 @@ public class RunController implements Notification.OpenNotificationHandler {
             isAnyAppLaunched = true;
             checkRamAndRunProject(runOptions, isUserAction);
         } else {
-            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+            dialogFactory.createConfirmDialog(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new ConfirmCallback() {
                 @Override
-                public void onOk() {
+                public void accepted() {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
@@ -255,14 +259,14 @@ public class RunController implements Notification.OpenNotificationHandler {
                             checkRamAndRunProject(runOptions, isUserAction);
                         }
                     });
-                }
 
+                }
+            }, new CancelCallback() {
                 @Override
-                public void onCancel() {
+                public void cancelled() {
                     checkRamAndRunProject(runOptions, isUserAction);
                 }
-            });
-            askWindow.show();
+            }).show();
         }
     }
 
@@ -333,26 +337,27 @@ public class RunController implements Notification.OpenNotificationHandler {
                         * Else we should terminate the Runner process.
                         */
                                 final int finalRequiredMemory = requiredMemory;
-                                Info warningWindow =
-                                        new Info(constant.titlesWarning(),
-                                                 constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
-                                                 new InfoHandler() {
-                                                     @Override
-                                                     public void onOk() {
-                                                         Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
-                                                                           new AskHandler() {
-                                                                               @Override
-                                                                               public void onOk() {
-                                                                                   runnerMemory = finalRequiredMemory;
-                                                                                   runProject(runOptions, isUserAction);
-                                                                               }
-                                                                           }
-                                                         );
-                                                         ask.show();
-                                                     }
-                                                 }
-                                        );
-                                warningWindow.show();
+                                final ConfirmDialog confirmDialog = dialogFactory.createConfirmDialog(
+                                        constant.titlesWarning(),
+                                        constant.messagesOverrideMemory(), new ConfirmCallback() {
+                                            @Override
+                                            public void accepted() {
+                                                runnerMemory = finalRequiredMemory;
+                                                runProject(runOptions, isUserAction);
+                                            }
+                                        }, null);
+
+                                final MessageDialog messageDialog = dialogFactory.createMessageDialog(
+                                        constant.titlesWarning(),
+                                        constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory), new ConfirmCallback() {
+                                            @Override
+                                            public void accepted() {
+                                                confirmDialog.show();
+
+                                            }
+                                        });
+
+                                messageDialog.show();
                                 return;
                             }
                             runnerMemory = overrideMemory;
@@ -902,8 +907,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void showWarning(String warning) {
-        Info warningWindow = new Info(constant.titlesWarning(), warning);
-        warningWindow.show();
+        dialogFactory.createMessageDialog(constant.titlesWarning(), warning, null).show();
     }
 
     /** Returns URL of the application which is currently running. */

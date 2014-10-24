@@ -135,6 +135,22 @@ import com.codenvy.ide.toolbar.ToolbarMainPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogFooter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogPresenter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogView;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
+import com.codenvy.ide.ui.dialogs.input.InputDialogFooter;
+import com.codenvy.ide.ui.dialogs.input.InputDialogPresenter;
+import com.codenvy.ide.ui.dialogs.input.InputDialogView;
+import com.codenvy.ide.ui.dialogs.input.InputDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogFooter;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogPresenter;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogView;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
@@ -270,6 +286,17 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+
+        bind(MessageDialogFooter.class);
+        bind(MessageDialogView.class).to(MessageDialogViewImpl.class);
+        bind(ConfirmDialogFooter.class);
+        bind(ConfirmDialogView.class).to(ConfirmDialogViewImpl.class);
+        bind(InputDialogFooter.class);
+        bind(InputDialogView.class).to(InputDialogViewImpl.class);
+        install(new GinFactoryModuleBuilder().implement(MessageDialog.class, MessageDialogPresenter.class)
+                                             .implement(ConfirmDialog.class, ConfirmDialogPresenter.class)
+                                             .implement(InputDialog.class, InputDialogPresenter.class)
+                                             .build(DialogFactory.class));
 
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(UploadFileView.class).to(UploadFileViewImpl.class);

@@ -16,8 +16,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.collections.Jso;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -28,29 +28,27 @@ import com.google.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 @Singleton
 public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter implements ExtensionManagerView.ActionDelegate {
-
 
     private ExtensionManagerView       view;
     private ExtensionRegistry          extensionRegistry;
     private PreferencesManager         preferencesManager;
+    private DialogFactory              dialogFactory;
     private boolean                    isDirty;
     private List<ExtensionDescription> extensions;
 
     @Inject
     public ExtensionManagerPresenter(Resources resources, CoreLocalizationConstant constant, ExtensionManagerView view,
-                                     ExtensionRegistry extensionRegistry, PreferencesManager preferencesManager) {
+                                     ExtensionRegistry extensionRegistry, PreferencesManager preferencesManager,
+                                     DialogFactory dialogFactory) {
         super(constant.extensionTitle(), constant.extensionCategory(), resources.extension());
         this.view = view;
         this.extensionRegistry = extensionRegistry;
         this.preferencesManager = preferencesManager;
+        this.dialogFactory = dialogFactory;
         view.setDelegate(this);
-
     }
 
     /** {@inheritDoc} */
@@ -69,14 +67,13 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
 
             @Override
             public void onSuccess(ProfileDescriptor result) {
-                Ask ask = new Ask("Restart", "Restart Codenvy to activate changes in Extensions?", new AskHandler() {
-                    @Override
-                    public void onOk() {
-                        Window.Location.reload();
-
-                    }
-                });
-                ask.show();
+                dialogFactory.createConfirmDialog("Restart", "Restart Codenvy to activate changes in Extensions?",
+                                                  new ConfirmCallback() {
+                                                      @Override
+                                                      public void accepted() {
+                                                          Window.Location.reload();
+                                                      }
+                                                  }, null).show();
             }
         });
     }
@@ -91,7 +88,7 @@ public class ExtensionManagerPresenter extends AbstractPreferencesPagePresenter 
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-        extensions = new ArrayList<ExtensionDescription>();
+        extensions = new ArrayList<>();
         for (ExtensionDescription ed : extensionRegistry.getExtensionDescriptions().getValues().asIterable()) {
             extensions.add(ed);
         }

@@ -39,9 +39,8 @@ import com.codenvy.ide.part.projectexplorer.ProjectListStructure;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
-import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -66,6 +65,7 @@ public class RenameItemAction extends Action {
     private final ProjectServiceClient     projectServiceClient;
     private final RunnerServiceClient      runnerServiceClient;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final DialogFactory            dialogFactory;
     private final SelectionAgent           selectionAgent;
 
     @Inject
@@ -77,7 +77,8 @@ public class RenameItemAction extends Action {
                             CoreLocalizationConstant localization,
                             ProjectServiceClient projectServiceClient,
                             RunnerServiceClient runnerServiceClient,
-                            DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                            DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                            DialogFactory dialogFactory) {
         super(localization.renameItemActionText(), localization.renameItemActionDescription(), null, resources.rename());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
@@ -87,6 +88,7 @@ public class RenameItemAction extends Action {
         this.projectServiceClient = projectServiceClient;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dialogFactory = dialogFactory;
     }
 
     /** {@inheritDoc} */
@@ -99,14 +101,13 @@ public class RenameItemAction extends Action {
             final StorableNode selectedNode = (StorableNode)selection.getFirstElement();
 
             if (selectedNode instanceof ProjectNode) {
-                // TODO: implement renaming for ProjectNode
-                new Info(localization.closeProjectBeforeRenaming()).show();
+                dialogFactory.createMessageDialog("", localization.closeProjectBeforeRenaming(), null).show();
             } else if (selectedNode instanceof ProjectListStructure.ProjectNode) {
                 checkRunningProcessesForProject(selectedNode, new AsyncCallback<Boolean>() {
                     @Override
                     public void onSuccess(Boolean hasRunningProcesses) {
                         if (hasRunningProcesses) {
-                            new Info(localization.stopProcessesBeforeRenamingProject()).show();
+                            dialogFactory.createMessageDialog("", localization.stopProcessesBeforeRenamingProject(), null).show();
                         } else {
                             askForRenamingNode(selectedNode);
                         }
@@ -136,36 +137,36 @@ public class RenameItemAction extends Action {
     }
 
     private void askForRenamingNode(final StorableNode nodeToRename) {
-        new AskValueDialog(getDialogTitle(nodeToRename),
-                           localization.renameDialogNewNameLabel(),
-                           nodeToRename.getName(),
-                           0,
-                           nodeToRename.getName().indexOf('.') >= 0 ?
-                           nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(), false,
-                           new AskValueCallback() {
-                               @Override
-                               public void onOk(final String newName) {
-                                   ItemReference itemReferenceBeforeRenaming = null;
-                                   if (nodeToRename instanceof ItemNode) {
-                                       itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
-                                   }
+        dialogFactory.createInputDialog(
+                getDialogTitle(nodeToRename),
+                localization.renameDialogNewNameLabel(),
+                nodeToRename.getName(),
+                0,
+                nodeToRename.getName().indexOf('.') >= 0 ? nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(),
+                new InputCallback() {
+                    @Override
+                    public void accepted(final String value) {
+                        ItemReference itemReferenceBeforeRenaming = null;
+                        if (nodeToRename instanceof ItemNode) {
+                            itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
+                        }
 
-                                   final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
-                                   nodeToRename.rename(newName, new RenameCallback() {
-                                       @Override
-                                       public void onRenamed() {
-                                           if (finalItemReferenceBeforeRenaming != null) {
-                                               checkOpenedFiles(finalItemReferenceBeforeRenaming, newName);
-                                           }
-                                       }
+                        final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
+                        nodeToRename.rename(value, new RenameCallback() {
+                            @Override
+                            public void onRenamed() {
+                                if (finalItemReferenceBeforeRenaming != null) {
+                                    checkOpenedFiles(finalItemReferenceBeforeRenaming, value);
+                                }
+                            }
 
-                                       @Override
-                                       public void onFailure(Throwable caught) {
-                                           notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
-                                       }
-                                   });
-                               }
-                           }).show();
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+                            }
+                        });
+                    }
+                }, null).show();
     }
 
     /**

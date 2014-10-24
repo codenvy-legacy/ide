@@ -8,26 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.ask;
+package com.codenvy.ide.ui;
+
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * Handler for user interaction in Ask dialog window
+ * I18n messages interface for the 'CodenvyUI' module.
  *
  * @author Vitaly Parfonov
+ * @author Artem Zatsarynnyy
  */
-public abstract class AskHandler {
+public interface UILocalizationConstant extends Messages {
 
-    /**
-     * Call if user click Ok button
-     */
-    public abstract void onOk();
+    @DefaultMessage("OK")
+    String okButtonText();
 
-    /**
-     * Call if user click cancel button.
-     * By default nothing todo.
-     * If need custom interaction override it.
-     */
-    public void onCancel() {
-        //by default nothing todo
-    }
+    @DefaultMessage("Cancel")
+    String cancelButtonText();
+
+    @DefaultMessage("Value is not valid")
+    String validationErrorMessage();
 }

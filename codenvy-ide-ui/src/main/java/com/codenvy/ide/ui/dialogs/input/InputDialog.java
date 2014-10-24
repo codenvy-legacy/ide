@@ -8,17 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.info;
+package com.codenvy.ide.ui.dialogs.input;
 
 /**
- * Handler for user interaction in Info dialog window
+ * Interface to the input dialog component.
  *
- * @author Roman Nikitenko
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public abstract class InfoHandler {
+public interface InputDialog {
 
-    /**
-     * Call if user click Ok button
-     */
-    public abstract void onOk();
+    /** Operate the input dialog: show it and manage user actions. */
+    void show();
+
+    InputDialog withValidator(InputValidator inputValidator);
 }

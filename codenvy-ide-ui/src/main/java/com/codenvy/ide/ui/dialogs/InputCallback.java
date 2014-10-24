@@ -8,28 +8,20 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.askValue;
+package com.codenvy.ide.ui.dialogs;
 
 /**
- * Handler for user interaction in {@link AskValueDialog}.
+ * Callback called when the user clicks on "OK" in the input dialog.
  *
- * @author Vitaly Parfonov
  * @author Artem Zatsarynnyy
  */
-public abstract class AskValueCallback {
+public interface InputCallback {
 
     /**
-     * Call if user click Ok button.
+     * Action called when the user clicks on OK.
      *
      * @param value
-     *         entered value
+     *         the string typed into input dialog
      */
-    public abstract void onOk(String value);
-
-    /**
-     * Call if user click cancel button.
-     * If need custom interaction override it.
-     */
-    public void onCancel() {
-    }
+    void accepted(String value);
 }

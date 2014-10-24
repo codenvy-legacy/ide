@@ -23,9 +23,8 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,16 +46,19 @@ public class DeleteNodeHandler {
     private CoreLocalizationConstant localization;
     private RunnerServiceClient      runnerServiceClient;
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private DialogFactory            dialogFactory;
 
     @Inject
     public DeleteNodeHandler(NotificationManager notificationManager,
                              CoreLocalizationConstant localization,
                              RunnerServiceClient runnerServiceClient,
-                             DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                             DialogFactory dialogFactory) {
         this.notificationManager = notificationManager;
         this.localization = localization;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dialogFactory = dialogFactory;
     }
 
     /**
@@ -71,7 +73,7 @@ public class DeleteNodeHandler {
                 @Override
                 public void onSuccess(Boolean hasRunningProcesses) {
                     if (hasRunningProcesses) {
-                        new Info(localization.stopProcessesBeforeDeletingProject()).show();
+                        dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
                     } else {
                         askForDeletingNode(nodeToDelete);
                     }
@@ -93,9 +95,9 @@ public class DeleteNodeHandler {
      * @param nodeToDelete
      */
     private void askForDeletingNode(final StorableNode nodeToDelete) {
-        new Ask(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new AskHandler() {
+        dialogFactory.createConfirmDialog(getDialogTitle(nodeToDelete), getDialogQuestion(nodeToDelete), new ConfirmCallback() {
             @Override
-            public void onOk() {
+            public void accepted() {
                 nodeToDelete.delete(new DeleteCallback() {
                     @Override
                     public void onDeleted() {
@@ -106,8 +108,9 @@ public class DeleteNodeHandler {
                         notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
                     }
                 });
+
             }
-        }).show();
+        }, null).show();
     }
 
     /**

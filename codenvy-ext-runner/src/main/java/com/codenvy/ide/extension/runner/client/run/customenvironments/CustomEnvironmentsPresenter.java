@@ -24,10 +24,10 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputValidator;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -36,8 +36,7 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-
-import java.util.HashMap;
+import javax.annotation.Nullable;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -51,6 +50,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private final String                     envFolderPath;
     private       NotificationManager        notificationManager;
     private       RunnerLocalizationConstant constants;
+    private       DialogFactory              dialogFactory;
     private       ProjectServiceClient       projectServiceClient;
     private       DtoUnmarshallerFactory     dtoUnmarshallerFactory;
     private       EventBus                   eventBus;
@@ -58,6 +58,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private       EnvironmentActionsManager  environmentActionsManager;
     private       CustomEnvironmentsView     view;
     private       CustomEnvironment          selectedEnvironment;
+    private       InputValidator             nameValidator;
 
     /** Create presenter. */
     @Inject
@@ -66,7 +67,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                           AppContext appContext, EnvironmentActionsManager environmentActionsManager,
                                           ProjectServiceClient projectServiceClient,
                                           DtoUnmarshallerFactory dtoUnmarshallerFactory, NotificationManager notificationManager,
-                                          RunnerLocalizationConstant constants) {
+                                          RunnerLocalizationConstant constants,
+                                          DialogFactory dialogFactory) {
         this.envFolderPath = envFolderPath;
         this.view = view;
         this.eventBus = eventBus;
@@ -76,7 +78,9 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.notificationManager = notificationManager;
         this.constants = constants;
+        this.dialogFactory = dialogFactory;
         this.view.setDelegate(this);
+        this.nameValidator = new EnvironmentNameValidator();
 
         updateView();
     }
@@ -84,18 +88,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        HashMap<String, String> autoReplace = new HashMap<String, String>();
-        autoReplace.put(" ", "-");
-
-        new AskValueDialog(constants.customEnvironmentsViewAddNewEnvTitle(),
-                           constants.customEnvironmentsViewAddNewEnvMessage(),
-                           null, 0, 0, false, autoReplace,
-                           new AskValueCallback() {
-                               @Override
-                               public void onOk(final String value) {
-                                   createEnvironment(value);
-                               }
-                           }).show();
+        dialogFactory.createInputDialog(constants.customEnvironmentsViewAddNewEnvTitle(),
+                                        constants.customEnvironmentsViewAddNewEnvMessage(),
+                                        new InputCallback() {
+                                            @Override
+                                            public void accepted(String value) {
+                                                createEnvironment(value);
+                                            }
+                                        }, null).withValidator(nameValidator).show();
     }
 
     private void createEnvironment(String name) {
@@ -137,14 +137,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     /** {@inheritDoc} */
     @Override
     public void onRemoveClicked() {
-        new Ask(constants.customEnvironmentsViewRemoveEnvTitle(),
-                constants.customEnvironmentsViewRemoveEnvMessage(selectedEnvironment.getName()),
-                new AskHandler() {
-                    @Override
-                    public void onOk() {
-                        removeSelectedEnvironment();
-                    }
-                }).show();
+        dialogFactory.createConfirmDialog(constants.customEnvironmentsViewRemoveEnvTitle(),
+                                          constants.customEnvironmentsViewRemoveEnvMessage(selectedEnvironment.getName()),
+                                          new ConfirmCallback() {
+                                              @Override
+                                              public void accepted() {
+                                                  removeSelectedEnvironment();
+                                              }
+                                          }, null).show();
     }
 
     private void removeSelectedEnvironment() {
@@ -274,6 +274,22 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         @Override
         public String getDisplayName() {
             return '[' + environmentName + "] " + data.getName();
+        }
+    }
+
+    private class EnvironmentNameValidator implements InputValidator {
+        @Nullable
+        @Override
+        public Violation validate(String value) {
+            if (value.indexOf(' ') >= 0) {
+                return new Violation() {
+                    @Override
+                    public String getMessage() {
+                        return constants.customEnvironmentsViewNotValidEnvNameMessage();
+                    }
+                };
+            }
+            return null;
         }
     }
 }
