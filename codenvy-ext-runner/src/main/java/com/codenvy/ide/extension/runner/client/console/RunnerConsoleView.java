@@ -27,11 +27,11 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
         /** Called when Terminal loaded into frame. */
         void onTerminalLoaded();
 
-        /** Called when tab for app preview is opened. */
-        void onAppTabOpened();
-
-        /** Called when app preview loaded into frame. */
-        void onAppPreviewLoaded();
+//        /** Called when tab for app preview is opened. */
+//        void onAppTabOpened();
+//
+//        /** Called when app preview loaded into frame. */
+//        void onAppPreviewLoaded();
 
         /** Called when console tab opened. */
         void onConsoleTabOpened();
@@ -51,14 +51,14 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     /** (Re)load Terminal frame. */
     void reloadTerminalFrame(String url);
 
-    /** (Re)load frame for previewing an app. */
-    void reloadAppPreviewFrame(String url);
+//    /** (Re)load frame for previewing an app. */
+//    void reloadAppPreviewFrame(String url);
 
     /** Hide Terminal panel and show special empty panel instead. */
     void hideTerminal();
 
-    /** Hide panel for previewing an app and show special empty panel instead. */
-    void hideAppPreview();
+//    /** Hide panel for previewing an app and show special empty panel instead. */
+//    void hideAppPreview();
 
     /** Clear console. Remove all messages. */
     void clearConsole();

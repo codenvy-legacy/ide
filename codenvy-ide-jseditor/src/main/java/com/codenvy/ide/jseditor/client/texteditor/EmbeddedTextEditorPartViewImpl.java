@@ -11,7 +11,9 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 
-import java.util.Collections;
+import static com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenter.DEFAULT_CONTENT_TYPE;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -103,19 +105,35 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Override
     public void configure(final TextEditorConfiguration configuration, final FileNode file) {
+        this.editorModes = detectFileType(file);
+
+        this.tabSize = configuration.getTabWidth();
+    }
+
+    private List<String> detectFileType(final FileNode file) {
+        final List<String> result = new ArrayList<>();
         if (file != null) {
+            // use the identification patterns
             final List<String> types = this.fileTypeIdentifier.identifyType(file);
             if (types != null && !types.isEmpty()) {
-                this.editorModes = types;
+                result.addAll(types);
+            }
+            // use the registered media type if there is one
+            if (file.getData() != null) {
+                final String storedContentType = file.getData().getMediaType();
+                if (storedContentType != null
+                    && ! storedContentType.isEmpty()
+                    // give another chance at detection
+                    && ! DEFAULT_CONTENT_TYPE.equals(storedContentType)) {
+                    result.add(storedContentType);
+                }
             }
         }
 
         // ultimate fallback - can't make more generic for text
-        if (this.editorModes == null) {
-            this.editorModes = Collections.singletonList(EmbeddedTextEditorPresenter.DEFAULT_CONTENT_TYPE);
-        }
+        result.add(DEFAULT_CONTENT_TYPE);
 
-        this.tabSize = configuration.getTabWidth();
+        return result;
     }
 
     @Override

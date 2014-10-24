@@ -107,8 +107,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                 final CustomEnvironment env = new CustomEnvironment(result.getName());
                 createScriptFilesForEnvironment(env);
                 environmentActionsManager.addActionForEnvironment(env);
-                refreshEnvironmentsList();
-                updateView();
+                view.closeDialog();
+                editEnvironment(env);
             }
 
             @Override
@@ -170,9 +170,12 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     @Override
     public void onEditClicked() {
         view.closeDialog();
+        editEnvironment(selectedEnvironment);
+    }
 
+    private void editEnvironment(final CustomEnvironment environment) {
         final String path = appContext.getCurrentProject().getProjectDescription().getPath() + '/' + envFolderPath + '/' +
-                            selectedEnvironment.getName();
+                environment.getName();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
@@ -180,8 +183,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                 result.reverse(); // small hack: reverse array to open Dockerfile as second (active) editor
                 for (ItemReference item : result.asIterable()) {
                     eventBus.fireEvent(new FileEvent(new EnvironmentScript(null, item, eventBus, projectServiceClient,
-                                                                           dtoUnmarshallerFactory, selectedEnvironment.getName()),
-                                                     FileEvent.FileOperation.OPEN));
+                            dtoUnmarshallerFactory, environment.getName()),
+                            FileEvent.FileOperation.OPEN));
                 }
             }
 
@@ -226,6 +229,9 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                     @Override
                     public void onSuccess(Array<CustomEnvironment> result) {
                         view.setEnvironments(result);
+                        if (result.size() > 0) {
+                            view.selectEnvironment(result.get(0));
+                        }
                     }
 
                     @Override

@@ -59,10 +59,8 @@ public class RunAction extends Action {
     @Override
     public void update(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            e.getPresentation().setEnabledAndVisible(currentProject.getIsRunningEnabled() && !runController.isAnyAppLaunched());
-        } else {
-            e.getPresentation().setEnabledAndVisible(false);
-        }
+        // Project launch set isRunningEnabled to false, but you still want to see the Run button.
+        e.getPresentation().setVisible(runController.isAnyAppLaunched() || currentProject != null && currentProject.getIsRunningEnabled());
+        e.getPresentation().setEnabled(!runController.isAnyAppLaunched());
     }
 }

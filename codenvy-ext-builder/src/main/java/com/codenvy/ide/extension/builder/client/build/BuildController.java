@@ -353,7 +353,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 return downloadResultLink.getHref();
             if (lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_PROGRESS) ||
                 lastBuildTaskDescriptor.getStatus().equals(BuildStatus.IN_QUEUE))
-                return constant.atifactNotReady();
+                return constant.artifactNotReady();
         }
         return null;
     }

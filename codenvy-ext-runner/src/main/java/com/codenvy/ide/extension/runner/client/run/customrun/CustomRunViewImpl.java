@@ -222,6 +222,11 @@ public class CustomRunViewImpl extends Window implements CustomRunView {
         otherValueMemory.setText("");
     }
 
+    @UiHandler("radioButOther")
+    void otherValueHandler(ValueChangeEvent<Boolean> event) {
+        otherValueMemory.setFocus(true);
+    }
+
     @UiHandler({"otherValueMemory"})
     void otherMemoryHandler(KeyUpEvent event) {
         clearStandardMemoryFields();

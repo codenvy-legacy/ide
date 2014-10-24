@@ -44,6 +44,13 @@ public interface CustomEnvironmentsView extends View<CustomEnvironmentsView.Acti
      */
     void setEnvironments(Array<CustomEnvironment> environments);
 
+    /**
+     * Select environment.
+     *
+     * @param environment environment to select
+     */
+    void selectEnvironment(CustomEnvironment environment);
+
     /** Close the dialog. */
     void closeDialog();
 

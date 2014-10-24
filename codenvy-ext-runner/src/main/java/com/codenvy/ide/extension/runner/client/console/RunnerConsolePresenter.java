@@ -48,11 +48,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private       String                     shellURL;
     private       boolean                    isUnread;
     private       boolean                    isTerminalFrameAlreadyLoaded;
-    private       boolean                    isAppPreviewFrameAlreadyLoaded;
+//    private       boolean                    isAppPreviewFrameAlreadyLoaded;
     private       RunnerStatus               currentRunnerStatus;
 
     private enum Tab {
-        CONSOLE, TERMINAL, APP
+        CONSOLE, TERMINAL //, APP
     }
 
     private Tab activeTab = Tab.CONSOLE;
@@ -213,9 +213,9 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         shellURL = null;
         appURL = null;
         isTerminalFrameAlreadyLoaded = false;
-        isAppPreviewFrameAlreadyLoaded = false;
+//        isAppPreviewFrameAlreadyLoaded = false;
         view.hideTerminal();
-        view.hideAppPreview();
+//        view.hideAppPreview();
     }
 
     /** Should be called when current app is started. */
@@ -224,8 +224,8 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
                                                                                                                   Constants
                                                                                                                           .LINK_REL_WEB_URL)
                                                                                                          .getHref() : null;
-        if (appURL != null && activeTab == Tab.APP)
-            view.reloadAppPreviewFrame(appURL);
+//        if (appURL != null && activeTab == Tab.APP)
+//            view.reloadAppPreviewFrame(appURL);
     }
 
 
@@ -261,22 +261,22 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         isTerminalFrameAlreadyLoaded = true;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onAppTabOpened() {
-        // Note: in order to avoid some troubles of loading app page into IFrame,
-        // page should be loaded into view when tab becomes visible.
-        activeTab = Tab.APP;
-        if (appURL != null && !isAppPreviewFrameAlreadyLoaded) {
-            view.reloadAppPreviewFrame(appURL);
-        }
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public void onAppTabOpened() {
+//        // Note: in order to avoid some troubles of loading app page into IFrame,
+//        // page should be loaded into view when tab becomes visible.
+//        activeTab = Tab.APP;
+//        if (appURL != null && !isAppPreviewFrameAlreadyLoaded) {
+//            view.reloadAppPreviewFrame(appURL);
+//        }
+//    }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onAppPreviewLoaded() {
-        isAppPreviewFrameAlreadyLoaded = true;
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public void onAppPreviewLoaded() {
+//        isAppPreviewFrameAlreadyLoaded = true;
+//    }
 
 
     @Override

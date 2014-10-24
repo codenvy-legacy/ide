@@ -146,7 +146,7 @@ public class DefaultNewResourceAction extends Action {
             eventLogger.log(this);
         }
 
-        dialogFactory.createInputDialog("New " + title, "Name:", new InputCallback() {
+        dialogFactory.createInputDialog("New " + title, "Enter a new " + title.toLowerCase() + " name:", new InputCallback() {
             @Override
             public void accepted(String value) {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
