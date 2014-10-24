@@ -14,7 +14,6 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
  */
 public interface SshLocalizationConstant extends Messages {
     @Key("cancelButton")
@@ -62,22 +61,11 @@ public interface SshLocalizationConstant extends Messages {
     @Key("delete.sshkey.question")
     String deleteSshKeyQuestion(String host);
 
-
     @Key("delete.sshkey.title")
     String deleteSshKeyTitle();
 
-
     @Key("delete.sshkey.failed")
     String deleteSshKeyFailed();
-
-    @Key("get.sshkey.failed")
-    String getSshKeyFailed();
-
-    @Key("login.oauth.title")
-    String loginOAuthTitle();
-
-    @Key("login.oauth.label")
-    String loginOAuthLabel();
 
     @Key("sshkeys.provider.not.found")
     String sshKeysProviderNotFound(String host);

@@ -138,7 +138,7 @@ public class DefaultNewResourceAction extends Action {
             eventLogger.log(this);
         }
 
-        new AskValueDialog("New " + title, "Name:", new AskValueCallback() {
+        new AskValueDialog("New " + title, "Enter a new " + title.toLowerCase() + " name:", new AskValueCallback() {
             @Override
             public void onOk(String value) {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();

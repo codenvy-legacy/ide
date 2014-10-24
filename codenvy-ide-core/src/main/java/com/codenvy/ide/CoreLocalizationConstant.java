@@ -17,9 +17,6 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.nameField")
     String createProjectFromTemplateName();
 
-    @Key("createProjectFromTemplate.selectTemplate")
-    String createProjectFromTemplateSelectTemplate();
-
     @Key("createProject.warningTitle")
     String createProjectWarningTitle();
 
@@ -40,9 +37,6 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("checkingProjectsList")
     String checkingProjectsList();
-
-    @Key("choosePaas")
-    String choosePaaS();
 
     @Key("noTechnologyTitle")
     String noTechnologyTitle();
@@ -163,14 +157,8 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("createProjectFromTemplate.public")
     String createProjectFromTemplatePublic();
 
-    @Key("createProjectFromTemplate.publicDescription")
-    String createProjectFromTemplatePublicDescription();
-
     @Key("createProjectFromTemplate.private")
     String createProjectFromTemplatePrivate();
-
-    @Key("createProjectFromTemplate.privateDescription")
-    String createProjectFromTemplatePrivateDescription();
 
     @Key("projectWizard.linkGetMoreRAM")
     String projectWizardLinkGetMoreRAM();
@@ -350,7 +338,7 @@ public interface CoreLocalizationConstant extends Messages {
     String newResourceTitle(String title);
 
     @Key("newResource.label")
-    String newResourceLabel();
+    String newResourceLabel(String title);
 
     /* Messages */
     @Key("messages.changesMayBeLost")
@@ -361,15 +349,6 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("messages.someFilesCanNotBeSaved")
     String someFilesCanNotBeSaved();
-
-    @Key("messages.importProject.enteredWrongUri")
-    String importProjectEnteredWrongUri();
-
-    @Key("messages.unable-open-not-file")
-    String unableOpenNotFile(String path);
-
-    @Key("messages.unable-open-file")
-    String unableOpenFile(String path);
 
     @Key("messages.appWillBeStopped")
     String appWillBeStopped(String appName);
@@ -448,4 +427,17 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("outline.noFileOpened.message")
     String outlineNoFileOpenedMessage();
+
+    /* Privacy */
+    @Key("privacy.tooltip.publicHeader")
+    String privacyTooltipPublicHeader();
+
+    @Key("privacy.tooltip.publicMessage")
+    String privacyTooltipPublicMessage();
+
+    @Key("privacy.tooltip.privateHeader")
+    String privacyTooltipPrivateHeader();
+
+    @Key("privacy.tooltip.privateMessage")
+    String privacyTooltipPrivateMessage();
 }

@@ -530,3 +530,76 @@ class for the document-level scrollbars. */
     box-shadow: 0 0 1px 0 socialButtonColor;
     cursor: pointer;
 }
+
+.privacy {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+}
+
+.privacy svg {
+    width: 100%;
+    height: 100%;
+}
+
+.privacy:hover .privacyTooltip {
+    display: block;
+}
+
+.privacy .privacyTooltip:hover {
+    pointer-events: none;
+}
+
+.privacyTooltip {
+    font-family: mainFontFamily;
+    font-size: 8pt;
+    position: fixed;
+    z-index: 7;
+    border-top: 1px solid #2D2D2D;
+    display: none;
+    cursor: default;
+}
+
+.privacyTooltip:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid;
+    border-color: transparent transparent #2D2D2D transparent;
+    top: -20px;
+    right: 45px;
+}
+
+.privacyTooltip div:first-child {
+    font-size: 9pt;
+    font-weight: bold;
+    background: #2D2D2D;
+    border-bottom: 1px solid #595959;
+    border-top: 1px solid #2D2D2D;
+    padding: 3px 20px;
+}
+
+.privacyTooltip div:first-child svg {
+    width: 15px;
+    height: 15px;
+    fill: #DBDBDB;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.privacyTooltip div:first-child span {
+    vertical-align: middle;
+}
+
+.privacyTooltip div:last-child {
+    background: #202020;
+    padding: 10px 20px;
+}
+
+.privateProjectSvg {
+    fill: #EDC047;
+}
+
+.publicProjectSvg {
+    fill: #4C9AFF;
+}

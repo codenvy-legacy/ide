@@ -21,7 +21,6 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;

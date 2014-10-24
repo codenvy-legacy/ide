@@ -187,6 +187,14 @@ public class StandardComponentInitializer {
     private FileType xmlFile;
 
     @Inject
+    @Named("TXTFileType")
+    private FileType txtFile;
+
+    @Inject
+    @Named("MDFileType")
+    private FileType mdFile;
+
+    @Inject
     @Named("PNGFileType")
     private FileType pngFile;
 
@@ -229,6 +237,10 @@ public class StandardComponentInitializer {
 
     public void initialize() {
         fileTypeRegistry.registerFileType(xmlFile);
+
+        fileTypeRegistry.registerFileType(txtFile);
+
+        fileTypeRegistry.registerFileType(mdFile);
 
         fileTypeRegistry.registerFileType(pngFile);
         editorRegistry.registerDefaultEditor(pngFile, imageViewerProvider);
