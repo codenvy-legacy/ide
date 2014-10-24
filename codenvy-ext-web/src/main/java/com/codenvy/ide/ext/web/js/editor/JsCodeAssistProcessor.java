@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js.editor;
 
-import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
+
 
 /**
  * @author Florent Benoit

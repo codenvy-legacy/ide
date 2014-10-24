@@ -10,25 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
+import com.codenvy.ide.jseditor.client.texteditor.ConfigurableTextEditor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
 /**
- * EditorProvider for HTML css type
- *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * {@link EditorProvider} for HTML files.
  */
 public class HtmlEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final NotificationManager         notificationManager;
+
+    private final DefaultEditorProvider editorProvider;
+    private final NotificationManager notificationManager;
 
     /**
      * HTML editor configuration.
@@ -37,12 +34,9 @@ public class HtmlEditorProvider implements EditorProvider {
 
     /** @param documentProvider */
     @Inject
-    public HtmlEditorProvider(DocumentProvider documentProvider,
-                              Provider<CodenvyTextEditor> editorProvider,
-                              NotificationManager notificationManager,
-                              Provider<HtmlEditorConfiguration> htmlEditorConfigurationProvider) {
-        super();
-        this.documentProvider = documentProvider;
+    public HtmlEditorProvider(final DefaultEditorProvider editorProvider,
+                              final NotificationManager notificationManager,
+                              final Provider<HtmlEditorConfiguration> htmlEditorConfigurationProvider) {
         this.editorProvider = editorProvider;
         this.notificationManager = notificationManager;
         this.htmlEditorConfigurationProvider = htmlEditorConfigurationProvider;
@@ -61,8 +55,9 @@ public class HtmlEditorProvider implements EditorProvider {
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
-        CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(htmlEditorConfigurationProvider.get(), documentProvider, notificationManager);
+        ConfigurableTextEditor textEditor = editorProvider.getEditor();
+        HtmlEditorConfiguration configuration = this.htmlEditorConfigurationProvider.get();
+        textEditor.initialize(configuration, notificationManager);
         return textEditor;
     }
 }
