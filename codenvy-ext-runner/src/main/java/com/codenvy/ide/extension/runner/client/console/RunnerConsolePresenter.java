@@ -21,6 +21,7 @@ import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunnerStatus;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -37,6 +38,7 @@ import javax.annotation.Nonnull;
  * Runner console.
  *
  * @author Artem Zatsarynnyy
+ * @author Vitaliy Guliy
  */
 @Singleton
 public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
@@ -47,15 +49,8 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private       String                     appURL;
     private       String                     shellURL;
     private       boolean                    isUnread;
-    private       boolean                    isTerminalFrameAlreadyLoaded;
-    private       boolean                    isAppPreviewFrameAlreadyLoaded;
+
     private       RunnerStatus               currentRunnerStatus;
-
-    private enum Tab {
-        CONSOLE, TERMINAL, APP
-    }
-
-    private Tab activeTab = Tab.CONSOLE;
 
     @Inject
     public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
@@ -212,75 +207,28 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     public void onAppStopped() {
         shellURL = null;
         appURL = null;
-        isTerminalFrameAlreadyLoaded = false;
-        isAppPreviewFrameAlreadyLoaded = false;
-        view.hideTerminal();
-        view.hideAppPreview();
+        view.setTerminalURL(null);
+        view.setAppURL(null);
     }
 
     /** Should be called when current app is started. */
     public void onAppStarted(ApplicationProcessDescriptor processDescriptor) {
         appURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_WEB_URL) != null ? RunnerUtils.getLink(processDescriptor,
-                                                                                                                  Constants
-                                                                                                                          .LINK_REL_WEB_URL)
-                                                                                                         .getHref() : null;
-        if (appURL != null && activeTab == Tab.APP)
-            view.reloadAppPreviewFrame(appURL);
+                                                        Constants.LINK_REL_WEB_URL).getHref() : null;
+        view.setAppURL(appURL);
     }
-
 
     /** Should be called when current app is stopped. */
     public void onShellStarted(ApplicationProcessDescriptor processDescriptor) {
         shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor,
-                                                                                                                      Constants
-                                                                                                                              .LINK_REL_SHELL_URL)
-                                                                                                             .getHref() : null;
-        if (shellURL != null && activeTab == Tab.TERMINAL)
-            view.reloadTerminalFrame(shellURL);
+                                                          Constants.LINK_REL_SHELL_URL).getHref() : null;
+        view.setTerminalURL(shellURL);
     }
 
     /** Set URL to preview an app. */
     public void setAppURL(String url) {
         this.appURL = url;
+        view.setAppURL(url);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onTerminalTabOpened() {
-        // Note: in order to avoid some troubles of loading shell page into IFrame,
-        // page should be loaded into view when tab becomes visible.
-        activeTab = Tab.TERMINAL;
-        if (shellURL != null && !isTerminalFrameAlreadyLoaded) {
-            view.reloadTerminalFrame(shellURL);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onTerminalLoaded() {
-        isTerminalFrameAlreadyLoaded = true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onAppTabOpened() {
-        // Note: in order to avoid some troubles of loading app page into IFrame,
-        // page should be loaded into view when tab becomes visible.
-        activeTab = Tab.APP;
-        if (appURL != null && !isAppPreviewFrameAlreadyLoaded) {
-            view.reloadAppPreviewFrame(appURL);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onAppPreviewLoaded() {
-        isAppPreviewFrameAlreadyLoaded = true;
-    }
-
-
-    @Override
-    public void onConsoleTabOpened() {
-        activeTab = Tab.CONSOLE;
-    }
 }

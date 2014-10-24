@@ -18,23 +18,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * View of {@link RunnerConsolePresenter}.
  *
  * @author Artem Zatsarynnyy
+ * @author Vitaliy Guliy
  */
 public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate> {
+
     public interface ActionDelegate extends BaseActionDelegate {
-        /** Called when Terminal tab opened. */
-        void onTerminalTabOpened();
-
-        /** Called when Terminal loaded into frame. */
-        void onTerminalLoaded();
-
-        /** Called when tab for app preview is opened. */
-        void onAppTabOpened();
-
-        /** Called when app preview loaded into frame. */
-        void onAppPreviewLoaded();
-
-        /** Called when console tab opened. */
-        void onConsoleTabOpened();
     }
 
     /** @return toolbar panel */
@@ -42,23 +30,31 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
 
     /**
      * Set title of console part.
-     *
-     * @param title
-     *         title to set
+     * @param title title to set
      */
     void setTitle(String title);
 
-    /** (Re)load Terminal frame. */
-    void reloadTerminalFrame(String url);
 
-    /** (Re)load frame for previewing an app. */
-    void reloadAppPreviewFrame(String url);
+    /** Sets new Terminal frame URL. */
+    void setTerminalURL(String terminalURL);
 
-    /** Hide Terminal panel and show special empty panel instead. */
-    void hideTerminal();
+    /** Sets new App frame URL. */
+    void setAppURL(String appURL);
 
-    /** Hide panel for previewing an app and show special empty panel instead. */
-    void hideAppPreview();
+    /**
+     * Activate Console tab
+     */
+    void activateConsole();
+
+    /**
+     * Activate Terminal tab
+     */
+    void activateTerminal();
+
+    /**
+     * Activate App preview tab
+     */
+    void activateApp();
 
     /** Clear console. Remove all messages. */
     void clearConsole();
@@ -68,9 +64,7 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
 
     /**
      * Print text in console area.
-     *
-     * @param text
-     *         text that need to be shown
+     * @param text text that need to be shown
      */
     void print(String text);
 }

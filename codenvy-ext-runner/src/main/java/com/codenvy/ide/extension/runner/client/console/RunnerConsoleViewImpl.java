@@ -16,8 +16,6 @@ import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -26,6 +24,7 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,6 +35,7 @@ import com.google.inject.Singleton;
  * Implements {@link RunnerConsoleView}.
  *
  * @author Artem Zatsarynnyy
+ * @author Vitaliy Guliy
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
@@ -69,22 +69,44 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     SimplePanel appPreviewButton;
 
+    /**
+     * Tab Console
+     */
     @UiField
-    ScrollPanel scrollPanel;
+    ScrollPanel consolePanel;
     @UiField
     FlowPanel   consoleArea;
 
+    /**
+     * Tab Terminal
+     */
     @UiField
-    DeckPanel terminalPanel;
+    FlowPanel terminalPanel;
+    @UiField
+    Label     terminalUnavailableLabel;
     @UiField
     Frame     terminalFrame;
 
+    /**
+     * Tab App
+     */
     @UiField
-    DeckPanel appPreviewPanel;
+    FlowPanel appPreviewPanel;
+    @UiField
+    Label     appPreviewUnavailablePanel;
     @UiField
     Frame     appPreviewFrame;
 
-    private SimplePanel activeTabButton;
+    /**
+     * Terminal URL
+     */
+    private String terminalURL;
+
+    /**
+     * Preview application URL
+     */
+    private String appURL;
+
 
     interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
     }
@@ -97,6 +119,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
+        appPreviewFrame.removeStyleName("gwt-Frame");
+
+        terminalUnavailableLabel.setVisible(true);
+        terminalFrame.setVisible(false);
+        appPreviewUnavailablePanel.setVisible(true);
+        appPreviewFrame.setVisible(false);
 
         // this hack used for adding box shadow effect to top panel (tabs+toolbar)
         topPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
@@ -104,42 +132,26 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         tabsPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
 
-        setActiveTab(0); // show Console panel
-        hideTerminal();
-        hideAppPreview();
-
-        terminalFrame.addLoadHandler(new LoadHandler() {
-            @Override
-            public void onLoad(LoadEvent event) {
-                delegate.onTerminalLoaded();
-            }
-        });
-        appPreviewFrame.addLoadHandler(new LoadHandler() {
-            @Override
-            public void onLoad(LoadEvent event) {
-                delegate.onAppPreviewLoaded();
-            }
-        });
+        activateConsole();
 
         consoleButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setActiveTab(0);
-                delegate.onConsoleTabOpened();
+                activateConsole();
             }
         }, ClickEvent.getType());
+
         terminalButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setActiveTab(1);
-                delegate.onTerminalTabOpened();
+                activateTerminal();
             }
         }, ClickEvent.getType());
+
         appPreviewButton.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setActiveTab(2);
-                delegate.onAppTabOpened();
+                activateApp();
             }
         }, ClickEvent.getType());
     }
@@ -156,46 +168,95 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         return toolbarPanel;
     }
 
-    private void setActiveTab(int index) {
-        if (activeTabButton != null) {
-            activeTabButton.removeStyleName(runnerResources.runner().tabSelected());
+    @Override
+    public void setTerminalURL(String terminalURL) {
+        this.terminalURL = terminalURL;
+
+        if (terminalURL == null) {
+            terminalUnavailableLabel.setVisible(true);
+            terminalFrame.setVisible(false);
+            terminalFrame.getElement().removeAttribute("src");
+        } else if (terminalPanel.isVisible()) {
+            terminalUnavailableLabel.setVisible(false);
+            terminalFrame.setUrl(terminalURL);
+            terminalFrame.setVisible(true);
         }
-        if (index == 0) {
-            activeTabButton = consoleButton;
-        } else if (index == 1) {
-            activeTabButton = terminalButton;
-        } else if (index == 2) {
-            activeTabButton = appPreviewButton;
+    }
+
+    @Override
+    public void setAppURL(String appURL) {
+        this.appURL = appURL;
+
+        if (appURL == null) {
+            appPreviewUnavailablePanel.setVisible(true);
+            appPreviewFrame.setVisible(false);
+            appPreviewFrame.getElement().removeAttribute("src");
+        } else if (appPreviewPanel.isVisible()) {
+            appPreviewUnavailablePanel.setVisible(false);
+            appPreviewFrame.setUrl(appURL);
+            appPreviewFrame.setVisible(true);
         }
-        activeTabButton.addStyleName(runnerResources.runner().tabSelected());
-
-        tabPanel.showWidget(index);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void reloadTerminalFrame(String url) {
-        terminalPanel.showWidget(1);
-        terminalFrame.setUrl(url);
+    public void activateConsole() {
+        if (tabPanel.getVisibleWidget() == 0) {
+            return;
+        }
+
+        tabPanel.showWidget(0);
+
+        consoleButton.addStyleName(runnerResources.runner().tabSelected());
+        terminalButton.removeStyleName(runnerResources.runner().tabSelected());
+        appPreviewButton.removeStyleName(runnerResources.runner().tabSelected());
+
+        scrollBottom();
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void reloadAppPreviewFrame(String url) {
-        appPreviewPanel.showWidget(1);
-        appPreviewFrame.setUrl(url);
+    public void activateTerminal() {
+        if (tabPanel.getVisibleWidget() == 1) {
+            return;
+        }
+
+        tabPanel.showWidget(1);
+
+        consoleButton.removeStyleName(runnerResources.runner().tabSelected());
+        terminalButton.addStyleName(runnerResources.runner().tabSelected());
+        appPreviewButton.removeStyleName(runnerResources.runner().tabSelected());
+
+        if (terminalURL == null && !terminalFrame.getUrl().isEmpty()) {
+            terminalUnavailableLabel.setVisible(true);
+            terminalFrame.getElement().removeAttribute("src");
+            terminalFrame.setVisible(false);
+        } else if (terminalURL != null && terminalFrame.getUrl().isEmpty()) {
+            terminalUnavailableLabel.setVisible(false);
+            terminalFrame.setUrl(terminalURL);
+            terminalFrame.setVisible(true);
+        }
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void hideTerminal() {
-        terminalPanel.showWidget(0);
-    }
+    public void activateApp() {
+        if (tabPanel.getVisibleWidget() == 2) {
+            return;
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    public void hideAppPreview() {
-        appPreviewPanel.showWidget(0);
+        tabPanel.showWidget(2);
+
+        consoleButton.removeStyleName(runnerResources.runner().tabSelected());
+        terminalButton.removeStyleName(runnerResources.runner().tabSelected());
+        appPreviewButton.addStyleName(runnerResources.runner().tabSelected());
+
+        if (appURL == null && !appPreviewFrame.getUrl().isEmpty()) {
+            appPreviewUnavailablePanel.setVisible(true);
+            appPreviewFrame.getElement().removeAttribute("src");
+            appPreviewFrame.setVisible(false);
+        } else if (appURL != null && appPreviewFrame.getUrl().isEmpty()) {
+            appPreviewUnavailablePanel.setVisible(false);
+            appPreviewFrame.setUrl(appURL);
+            appPreviewFrame.setVisible(true);
+        }
     }
 
     /** {@inheritDoc} */
@@ -207,7 +268,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /** {@inheritDoc} */
     @Override
     public void scrollBottom() {
-        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+        consolePanel.getElement().setScrollTop(consolePanel.getElement().getScrollHeight());
     }
 
     /** {@inheritDoc} */
@@ -234,6 +295,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
+
         consoleArea.add(html);
     }
 }

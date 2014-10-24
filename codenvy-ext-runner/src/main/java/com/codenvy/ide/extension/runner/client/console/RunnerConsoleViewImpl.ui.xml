@@ -130,21 +130,19 @@
         </g:north>
         <g:center>
             <g:DeckPanel ui:field="tabPanel">
-                <g:ScrollPanel ui:field="scrollPanel" debugId="runnerConsolePart" addStyleNames="{style.console}">
+                <g:ScrollPanel ui:field="consolePanel" debugId="runnerConsolePanel" addStyleNames="{style.console}">
                     <g:FlowPanel width="100%" height="100%" ui:field="consoleArea"/>
                 </g:ScrollPanel>
-                <g:DeckPanel ui:field="terminalPanel">
-                    <g:Label text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}"/>
-                    <g:FlowPanel addStyleNames="{style.appPanel}">
-                        <g:Frame ui:field="terminalFrame" width="100%" height="100%" addStyleNames="{style.terminalFrame}"/>
-                    </g:FlowPanel>
-                </g:DeckPanel>
-                <g:DeckPanel ui:field="appPreviewPanel">
-                    <g:Label text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}"/>
-                    <g:FlowPanel addStyleNames="{style.appPanel}">
-                        <g:Frame ui:field="appPreviewFrame" width="100%" height="100%" addStyleNames="{style.appFrame}"/>
-                    </g:FlowPanel>
-                </g:DeckPanel>
+
+                <g:FlowPanel ui:field="terminalPanel" debugId="runnerTerminalPanel">
+                    <g:Label ui:field="terminalUnavailableLabel" text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}" width="100%" height="100%"/>
+                    <g:Frame ui:field="terminalFrame" width="100%" height="100%" addStyleNames="{style.terminalFrame}"/>
+                </g:FlowPanel>
+
+                <g:FlowPanel ui:field="appPreviewPanel" debugId="appPreviewPanel">
+                    <g:Label ui:field="appPreviewUnavailablePanel" text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}" width="100%" height="100%"/>
+                    <g:Frame ui:field="appPreviewFrame" width="100%" height="100%" addStyleNames="{style.appFrame}"/>
+                </g:FlowPanel>
             </g:DeckPanel>
         </g:center>
     </g:DockLayoutPanel>
