@@ -45,6 +45,12 @@ public interface InputDialogView {
     /** Sets the number of characters to be selected in the input. */
     void setSelectionLength(int selectionEndIndex);
 
+    void setValidator(InputValidator inputValidator);
+
+    void showErrorHint(String text);
+
+    void hideErrorHint();
+
     /** The interface for the action delegate. */
     public interface ActionDelegate {
 

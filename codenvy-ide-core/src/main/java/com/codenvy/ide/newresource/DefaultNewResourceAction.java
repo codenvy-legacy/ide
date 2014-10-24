@@ -27,7 +27,6 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.web.bindery.event.shared.EventBus;
@@ -37,9 +36,9 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import javax.annotation.Nullable;
 
 /**
- * Implementation of an {@link Action} that provides ability to create new file.
- * After performing this action, it asks user for the new file's name with {@link AskValueDialog}
- * and then creates new file in the user selected folder.
+ * Implementation of an {@link Action} that provides an ability to create new file/folder.
+ * After performing this action, it asks user for the resource's name
+ * and then creates resource in the selected folder.
  *
  * @author Artem Zatsarynnyy
  */

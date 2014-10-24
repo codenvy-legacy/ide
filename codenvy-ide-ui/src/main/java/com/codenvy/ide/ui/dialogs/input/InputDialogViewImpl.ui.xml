@@ -28,6 +28,10 @@
             -moz-box-sizing: border-box;
             width: 100%;
         }
+
+        .errorHint {
+            color: red;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="360px" height="70px" addStyleNames="{style.emptyBorder}">
         <g:center>
@@ -42,5 +46,8 @@
                 </g:row>
             </g:Grid>
         </g:center>
+        <g:south size="29">
+            <g:Label ui:field="errorHint" addStyleNames="{style.errorHint}"/>
+        </g:south>
     </g:DockLayoutPanel>
 </ui:UiBinder>

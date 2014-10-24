@@ -40,9 +40,12 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     Label   label;
     @UiField
     TextBox value;
+    @UiField
+    Label   errorHint;
     private ActionDelegate delegate;
     private int            selectionStartIndex;
     private int            selectionLength;
+    private InputValidator validator;
 
     @Inject
     public InputDialogViewImpl(final @Nonnull InputDialogFooter footer) {
@@ -59,7 +62,7 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     @Override
     public void show() {
         super.show();
-        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+//        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
         value.setSelectionRange(selectionStartIndex, selectionLength);
         new Timer() {
             @Override
@@ -121,9 +124,40 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
         this.selectionLength = selectionLength;
     }
 
+    @Override
+    public void setValidator(InputValidator inputValidator) {
+        this.validator = inputValidator;
+    }
+
+    @Override
+    public void showErrorHint(String text) {
+        errorHint.setText(text);
+    }
+
+    @Override
+    public void hideErrorHint() {
+        errorHint.setText("");
+    }
+
     @UiHandler("value")
     void onKeyUp(KeyUpEvent event) {
-        footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+        if (validator != null) {
+            final InputValidator.ConstraintViolation constraintViolation = validator.validate(value.getValue());
+            if (constraintViolation != null) {
+                footer.okButton.setEnabled(false);
+                if (constraintViolation.getMessage() != null && !constraintViolation.getMessage().isEmpty()) {
+                    showErrorHint(constraintViolation.getMessage());
+                } else {
+                    // TODO: move message to 'defaultErrorMessage' localization constant
+                    showErrorHint("Value is not valid");
+                }
+            } else {
+                footer.okButton.setEnabled(true);
+                hideErrorHint();
+            }
+        } else {
+//            footer.okButton.setEnabled(!value.getValue().trim().isEmpty());
+        }
     }
 
     /** The UI binder interface for this components. */

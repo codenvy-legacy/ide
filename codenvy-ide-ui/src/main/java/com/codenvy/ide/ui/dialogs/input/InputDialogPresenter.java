@@ -84,4 +84,10 @@ public class InputDialogPresenter implements InputDialog, InputDialogView.Action
     public void show() {
         this.view.showDialog();
     }
+
+    @Override
+    public InputDialog withValidator(InputValidator inputValidator) {
+        this.view.setValidator(inputValidator);
+        return this;
+    }
 }

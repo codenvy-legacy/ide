@@ -20,4 +20,6 @@ public interface InputDialog {
 
     /** Operate the input dialog: show it and manage user actions. */
     void show();
+
+    InputDialog withValidator(InputValidator inputValidator);
 }

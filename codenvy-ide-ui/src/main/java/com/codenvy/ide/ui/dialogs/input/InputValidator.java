@@ -8,28 +8,27 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.askValue;
+package com.codenvy.ide.ui.dialogs.input;
+
+import javax.annotation.Nullable;
 
 /**
- * Handler for user interaction in {@link AskValueDialog}.
+ * Validator for {@link InputDialog}.
  *
- * @author Vitaly Parfonov
  * @author Artem Zatsarynnyy
  */
-public abstract class AskValueCallback {
-
+public interface InputValidator {
     /**
-     * Call if user click Ok button.
+     * Validate {@code value}.
      *
      * @param value
-     *         entered value
+     *         value to validate
+     * @return message about constraint violations or {@code null}
      */
-    public abstract void onOk(String value);
+    @Nullable
+    ConstraintViolation validate(String value);
 
-    /**
-     * Call if user click cancel button.
-     * If need custom interaction override it.
-     */
-    public void onCancel() {
+    interface ConstraintViolation {
+        String getMessage();
     }
 }

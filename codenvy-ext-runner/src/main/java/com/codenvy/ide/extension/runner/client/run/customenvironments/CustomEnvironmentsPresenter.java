@@ -26,8 +26,8 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputValidator;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -36,7 +36,7 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
+import javax.annotation.Nullable;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
@@ -58,6 +58,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     private       EnvironmentActionsManager  environmentActionsManager;
     private       CustomEnvironmentsView     view;
     private       CustomEnvironment          selectedEnvironment;
+    private       InputValidator             nameValidator;
 
     /** Create presenter. */
     @Inject
@@ -79,6 +80,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         this.constants = constants;
         this.dialogFactory = dialogFactory;
         this.view.setDelegate(this);
+        this.nameValidator = new EnvironmentNameValidator();
 
         updateView();
     }
@@ -86,18 +88,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
     /** {@inheritDoc} */
     @Override
     public void onAddClicked() {
-        HashMap<String, String> autoReplace = new HashMap<String, String>();
-        autoReplace.put(" ", "-");
-
-        new AskValueDialog(constants.customEnvironmentsViewAddNewEnvTitle(),
-                           constants.customEnvironmentsViewAddNewEnvMessage(),
-                           null, 0, 0, false, autoReplace,
-                           new AskValueCallback() {
-                               @Override
-                               public void onOk(final String value) {
-                                   createEnvironment(value);
-                               }
-                           }).show();
+        dialogFactory.createInputDialog(constants.customEnvironmentsViewAddNewEnvTitle(),
+                                        constants.customEnvironmentsViewAddNewEnvMessage(),
+                                        new InputCallback() {
+                                            @Override
+                                            public void accepted(String value) {
+                                                createEnvironment(value);
+                                            }
+                                        }, null).withValidator(nameValidator).show();
     }
 
     private void createEnvironment(String name) {
@@ -270,6 +268,22 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         @Override
         public String getDisplayName() {
             return '[' + environmentName + "] " + data.getName();
+        }
+    }
+
+    private class EnvironmentNameValidator implements InputValidator {
+        @Nullable
+        @Override
+        public ConstraintViolation validate(String value) {
+            if (value.indexOf(' ') >= 0) {
+                return new ConstraintViolation() {
+                    @Override
+                    public String getMessage() {
+                        return "Spaces are not allowed";
+                    }
+                };
+            }
+            return null;
         }
     }
 }
