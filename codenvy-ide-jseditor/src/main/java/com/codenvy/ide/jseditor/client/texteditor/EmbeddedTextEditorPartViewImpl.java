@@ -279,7 +279,9 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Override
     public void onResize() {
-        this.editor.onResize();
+        if (this.editor != null) {
+            this.editor.onResize();
+        }
     }
 
     @Override
