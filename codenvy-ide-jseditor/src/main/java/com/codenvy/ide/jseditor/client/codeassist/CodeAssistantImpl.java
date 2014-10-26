@@ -70,10 +70,10 @@ public class CodeAssistantImpl implements CodeAssistant {
     @Override
     public void computeCompletionProposals(final CodeAssistCallback callback) {
 
-        final LinearRange selection = textEditor.getSelectedLinearRange();
+        final LinearRange selection = textEditor.getDocument().getSelectedLinearRange();
         final int offset = selection.getStartOffset();
 
-        if (offset > 0) {
+        if (offset >= 0) {
             computeCompletionProposals(offset, callback);
         }
     }
