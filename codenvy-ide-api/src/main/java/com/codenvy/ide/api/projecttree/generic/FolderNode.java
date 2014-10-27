@@ -48,12 +48,12 @@ public class FolderNode extends ItemNode {
     }
 
     /** Tests if the specified item is a file. */
-    protected static boolean isFile(ItemReference item) {
+    public static boolean isFile(ItemReference item) {
         return "file".equals(item.getType());
     }
 
     /** Tests if the specified item is a folder. */
-    protected static boolean isFolder(ItemReference item) {
+    public static boolean isFolder(ItemReference item) {
         return "folder".equals(item.getType());
     }
 
