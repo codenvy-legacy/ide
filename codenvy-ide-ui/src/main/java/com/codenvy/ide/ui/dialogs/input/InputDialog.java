@@ -21,5 +21,14 @@ public interface InputDialog {
     /** Operate the input dialog: show it and manage user actions. */
     void show();
 
+    /**
+     * Set the {@link InputValidator} to be called whenever the text changes in the input field in the view.
+     * <p/>
+     * If validator finds the input invalid, the error message is displayed in the dialog's view.
+     *
+     * @param inputValidator
+     *         validator to use
+     * @return this {@link InputDialog}
+     */
     InputDialog withValidator(InputValidator inputValidator);
 }
