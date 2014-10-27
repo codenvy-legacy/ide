@@ -90,6 +90,10 @@ public class InputDialogFooter extends Composite {
         this.actionDelegate.cancelled();
     }
 
+    Button getOkButton() {
+        return okButton;
+    }
+
     /** The UI binder interface for this component. */
     interface ConfirmWindowFooterUiBinder extends UiBinder<Widget, InputDialogFooter> {
     }

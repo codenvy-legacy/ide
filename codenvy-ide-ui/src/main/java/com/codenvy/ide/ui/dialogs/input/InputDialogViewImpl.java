@@ -25,6 +25,8 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.ui.dialogs.input.InputValidator.Violation;
+
 /**
  * Implementation of the input dialog view.
  *
@@ -145,13 +147,13 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
     @UiHandler("value")
     void onKeyUp(KeyUpEvent event) {
         final boolean inputValid = isInputValid();
-        footer.okButton.setEnabled(inputValid);
+        footer.getOkButton().setEnabled(inputValid);
 
         if (!inputValid) {
             if (validator == null) {
                 showErrorHint(localizationConstant.validationErrorMessage());
             } else {
-                final InputValidator.Violation violation = validator.validate(value.getValue());
+                final Violation violation = validator.validate(value.getValue());
                 if (violation != null) {
                     final String message = violation.getMessage();
                     showErrorHint(message != null ? message : localizationConstant.validationErrorMessage());
@@ -169,7 +171,7 @@ public class InputDialogViewImpl extends Window implements InputDialogView {
             return false;
         }
         if (validator != null) {
-            final InputValidator.Violation violation = validator.validate(value.getValue());
+            final Violation violation = validator.validate(value.getValue());
             return violation == null;
         }
         return true;

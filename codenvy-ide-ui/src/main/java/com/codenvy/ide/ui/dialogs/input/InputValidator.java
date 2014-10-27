@@ -19,10 +19,13 @@ import javax.annotation.Nullable;
  */
 public interface InputValidator {
     /**
-     * Validate the {@code value}.
+     * Validates the given {@code value}.
+     * <p/>
+     * Returns {@link Violation} instance that may contains an error message or {@code null} if there is no validation error.
+     * Note that the empty message returned by {@link Violation#getMessage()} is treated that error state but with no message to display.
      *
      * @param value
-     *         value to validate
+     *         value to check for validity
      * @return {@link Violation} instance if {@code value} isn't valid or {@code null} otherwise
      */
     @Nullable
@@ -30,7 +33,7 @@ public interface InputValidator {
 
     /** Describes a violation of validation constraint. */
     interface Violation {
-        /** Returns error message for violation of validation constraints. */
+        /** Returns an error message for violation of validation constraints. */
         @Nullable
         String getMessage();
     }
