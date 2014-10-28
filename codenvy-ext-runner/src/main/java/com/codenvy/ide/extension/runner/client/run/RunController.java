@@ -85,40 +85,42 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 public class RunController implements Notification.OpenNotificationHandler {
 
     /** WebSocket channel to get application's status. */
-    public static final String STATUS_CHANNEL     = "runner:status:";
+    public static final String                                  STATUS_CHANNEL     = "runner:status:";
     /** WebSocket channel to get runner output. */
-    public static final String OUTPUT_CHANNEL     = "runner:output:";
+    public static final String                                  OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
-    public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final DtoFactory             dtoFactory;
-    private final AppContext             appContext;
-    private final DialogFactory          dialogFactory;
+    public static final String                                  APP_HEALTH_CHANNEL = "runner:app_health:";
+    private final DtoUnmarshallerFactory                        dtoUnmarshallerFactory;
+    private final DtoFactory                                    dtoFactory;
+    private final AppContext                                    appContext;
+    private final DialogFactory                                 dialogFactory;
     /** Whether any app is running now? */
-    protected boolean isAnyAppRunning  = false;
-    protected boolean isAnyAppLaunched = false;
+    protected boolean                                           isAnyAppRunning    = false;
+    protected boolean                                           isAnyAppLaunched   = false;
     protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
     protected SubscriptionHandler<String>                       runnerHealthHandler;
-    private   EditorAgent                                       editorAgent;
-    private   MessageBus                                        messageBus;
-    private   WorkspaceAgent                                    workspaceAgent;
-    private   RunnerConsolePresenter                            console;
-    private   RunnerServiceClient                               service;
-    private   RunnerLocalizationConstant                        constant;
-    private   NotificationManager                               notificationManager;
-    private   PreferencesManager                                preferencesManager;
-    private   Notification                                      notification;
-    private   ProjectRunCallback                                runCallback;
-    private   boolean                                           isLastAppHealthOk;
+    private EditorAgent                                         editorAgent;
+    private MessageBus                                          messageBus;
+    private WorkspaceAgent                                      workspaceAgent;
+    private RunnerConsolePresenter                              console;
+    private RunnerServiceClient                                 service;
+    private RunnerLocalizationConstant                          constant;
+    private NotificationManager                                 notificationManager;
+    private PreferencesManager                                  preferencesManager;
+    private Notification                                        notification;
+    private ProjectRunCallback                                  runCallback;
+    private boolean                                             isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
-    private   Timer                                             setAppHealthOkTimer;
-    //show time in "Total Time" indicator start immediately  after launch running process
-    private long clientStartTime = 0;
-    private RunnerMetric totalActiveTimeMetric; //calculate on client-side
-    private String       theme;
-    private int          runnerMemory;
+    private Timer                                               setAppHealthOkTimer;
+    // show time in "Total Time" indicator start immediately after launch running process
+    private long                                                clientStartTime    = 0;
+    // calculate on client-side
+    private RunnerMetric                                        totalActiveTimeMetric;
+    private String                                              theme;
+    private int                                                 runnerMemory;
+    private RunnerMetric                                        stopTimeMetric;
 
     @Inject
     public RunController(EventBus eventBus,
@@ -657,6 +659,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        stopTimeMetric = null;
         if (appContext.getCurrentProject() == null) {
             return; //MUST never happen
         }
@@ -727,6 +730,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onShellStarted(descriptor);
                 break;
             case STOPPED:
+                stopTimeMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -789,6 +793,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case CANCELLED:
+                stopTimeMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -977,12 +982,11 @@ public class RunController implements Notification.OpenNotificationHandler {
     /** Returns stopTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
-        RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
-        if (runnerMetric != null && runnerMetric.getValue() != null) {
-            double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
+        if (stopTimeMetric != null && stopTimeMetric.getValue() != null) {
+            double stopTimeMs = NumberFormat.getDecimalFormat().parse(stopTimeMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription())
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(stopTimeMetric.getDescription())
                              .withValue(stopDateFormatted);
         }
         return null;
