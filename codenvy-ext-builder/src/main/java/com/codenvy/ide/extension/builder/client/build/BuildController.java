@@ -155,7 +155,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
-                            Log.error(getClass(), JsonHelper.parsingJsonMessage(caught.getMessage()));
+                            Log.error(getClass(), JsonHelper.parseJsonMessage(caught.getMessage()));
                         }
 
                         @Override
@@ -224,7 +224,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
                               console.setCurrentBuilderStatus(BuilderStatus.FAILED);
-                              console.print(JsonHelper.parsingJsonMessage(exception.getMessage()));
+                              console.print(JsonHelper.parseJsonMessage(exception.getMessage()));
                               buildContext.setBuilding(false);
                           }
                       }

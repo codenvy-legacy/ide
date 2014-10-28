@@ -487,7 +487,7 @@ public final class Notification {
     @Nonnull
     public String getMessage() {
         if (isError()) {
-            return JsonHelper.parsingJsonMessage(message);
+            return JsonHelper.parseJsonMessage(message);
         }
         return message;
     }

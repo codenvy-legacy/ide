@@ -209,7 +209,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                dialogFactory.createMessageDialog("", JsonHelper.parsingJsonMessage(exception.getMessage()), null).show();
+                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
             }
         };
 
