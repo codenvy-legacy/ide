@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.api.account.gwt.client.AccountServiceClient;
+import com.codenvy.api.account.gwt.client.AccountServiceClientImpl;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
@@ -25,6 +27,8 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.gwt.client.UserServiceClientImpl;
+import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
+import com.codenvy.api.vfs.gwt.client.VfsServiceClientImpl;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClientImpl;
 import com.codenvy.ide.Resources;
@@ -225,8 +229,10 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configure GWT-clients for Codenvy Platform API services */
     private void configurePlatformApiGwtClients() {
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
-        bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
+        bind(AccountServiceClient.class).to(AccountServiceClientImpl.class).in(Singleton.class);
+        bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
+        bind(VfsServiceClient.class).to(VfsServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
