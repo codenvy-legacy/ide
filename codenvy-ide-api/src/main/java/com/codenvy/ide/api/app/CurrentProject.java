@@ -135,4 +135,14 @@ public class CurrentProject {
     public List<String> getAttributeValues(String attributeName) {
         return projectDescription.getAttributes().get(attributeName);
     }
+
+    /**
+     * Indicate that current user has only read rights.
+     *
+     * @return true if user can only read this project, false otherwise.
+     */
+    public boolean isReadOnly() {
+        return projectDescription.getPermissions() != null && !projectDescription.getPermissions().isEmpty() &&
+               projectDescription.getPermissions().size() == 1 && "read".equalsIgnoreCase(projectDescription.getPermissions().get(0));
+    }
 }
