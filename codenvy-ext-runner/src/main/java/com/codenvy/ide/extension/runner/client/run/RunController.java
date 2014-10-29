@@ -44,10 +44,11 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -84,39 +85,42 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 public class RunController implements Notification.OpenNotificationHandler {
 
     /** WebSocket channel to get application's status. */
-    public static final String STATUS_CHANNEL     = "runner:status:";
+    public static final String                                  STATUS_CHANNEL     = "runner:status:";
     /** WebSocket channel to get runner output. */
-    public static final String OUTPUT_CHANNEL     = "runner:output:";
+    public static final String                                  OUTPUT_CHANNEL     = "runner:output:";
     /** WebSocket channel to check application's health. */
-    public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final DtoFactory             dtoFactory;
-    private final AppContext             appContext;
+    public static final String                                  APP_HEALTH_CHANNEL = "runner:app_health:";
+    private final DtoUnmarshallerFactory                        dtoUnmarshallerFactory;
+    private final DtoFactory                                    dtoFactory;
+    private final AppContext                                    appContext;
+    private final DialogFactory                                 dialogFactory;
     /** Whether any app is running now? */
-    protected boolean isAnyAppRunning  = false;
-    protected boolean isAnyAppLaunched = false;
+    protected boolean                                           isAnyAppRunning    = false;
+    protected boolean                                           isAnyAppLaunched   = false;
     protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
     protected SubscriptionHandler<String>                       runnerHealthHandler;
-    private   EditorAgent                                       editorAgent;
-    private   MessageBus                                        messageBus;
-    private   WorkspaceAgent                                    workspaceAgent;
-    private   RunnerConsolePresenter                            console;
-    private   RunnerServiceClient                               service;
-    private   RunnerLocalizationConstant                        constant;
-    private   NotificationManager                               notificationManager;
-    private   PreferencesManager                                preferencesManager;
-    private   Notification                                      notification;
-    private   ProjectRunCallback                                runCallback;
-    private   boolean                                           isLastAppHealthOk;
+    private EditorAgent                                         editorAgent;
+    private MessageBus                                          messageBus;
+    private WorkspaceAgent                                      workspaceAgent;
+    private RunnerConsolePresenter                              console;
+    private RunnerServiceClient                                 service;
+    private RunnerLocalizationConstant                          constant;
+    private NotificationManager                                 notificationManager;
+    private PreferencesManager                                  preferencesManager;
+    private Notification                                        notification;
+    private ProjectRunCallback                                  runCallback;
+    private boolean                                             isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
     // so we're waiting for some time (about 30 sec.) and assume that app health is OK.
-    private   Timer                                             setAppHealthOkTimer;
-    //show time in "Total Time" indicator start immediately  after launch running process
-    private long clientStartTime = 0;
-    private RunnerMetric totalActiveTimeMetric; //calculate on client-side
-    private String       theme;
-    private int          runnerMemory;
+    private Timer                                               setAppHealthOkTimer;
+    // show time in "Total Time" indicator start immediately after launch running process
+    private long                                                clientStartTime    = 0;
+    // calculate on client-side
+    private RunnerMetric                                        totalActiveTimeMetric;
+    private String                                              theme;
+    private int                                                 runnerMemory;
+    private RunnerMetric                                        stopTimeMetric;
 
     @Inject
     public RunController(EventBus eventBus,
@@ -131,7 +135,8 @@ public class RunController implements Notification.OpenNotificationHandler {
                          final DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          MessageBus messageBus,
                          ThemeAgent themeAgent,
-                         final AppContext appContext) {
+                         final AppContext appContext,
+                         DialogFactory dialogFactory) {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -143,6 +148,7 @@ public class RunController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
         this.appContext = appContext;
+        this.dialogFactory = dialogFactory;
         theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
@@ -239,9 +245,9 @@ public class RunController implements Notification.OpenNotificationHandler {
             isAnyAppLaunched = true;
             checkRamAndRunProject(runOptions, isUserAction);
         } else {
-            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+            dialogFactory.createConfirmDialog(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new ConfirmCallback() {
                 @Override
-                public void onOk() {
+                public void accepted() {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
@@ -255,14 +261,14 @@ public class RunController implements Notification.OpenNotificationHandler {
                             checkRamAndRunProject(runOptions, isUserAction);
                         }
                     });
-                }
 
+                }
+            }, new CancelCallback() {
                 @Override
-                public void onCancel() {
+                public void cancelled() {
                     checkRamAndRunProject(runOptions, isUserAction);
                 }
-            });
-            askWindow.show();
+            }).show();
         }
     }
 
@@ -333,26 +339,27 @@ public class RunController implements Notification.OpenNotificationHandler {
                         * Else we should terminate the Runner process.
                         */
                                 final int finalRequiredMemory = requiredMemory;
-                                Info warningWindow =
-                                        new Info(constant.titlesWarning(),
-                                                 constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory),
-                                                 new InfoHandler() {
-                                                     @Override
-                                                     public void onOk() {
-                                                         Ask ask = new Ask(constant.titlesWarning(), constant.messagesOverrideMemory(),
-                                                                           new AskHandler() {
-                                                                               @Override
-                                                                               public void onOk() {
-                                                                                   runnerMemory = finalRequiredMemory;
-                                                                                   runProject(runOptions, isUserAction);
-                                                                               }
-                                                                           }
-                                                         );
-                                                         ask.show();
-                                                     }
-                                                 }
-                                        );
-                                warningWindow.show();
+                                final ConfirmDialog confirmDialog = dialogFactory.createConfirmDialog(
+                                        constant.titlesWarning(),
+                                        constant.messagesOverrideMemory(), new ConfirmCallback() {
+                                            @Override
+                                            public void accepted() {
+                                                runnerMemory = finalRequiredMemory;
+                                                runProject(runOptions, isUserAction);
+                                            }
+                                        }, null);
+
+                                final MessageDialog messageDialog = dialogFactory.createMessageDialog(
+                                        constant.titlesWarning(),
+                                        constant.messagesOverrideLessRequiredMemory(overrideMemory, requiredMemory), new ConfirmCallback() {
+                                            @Override
+                                            public void accepted() {
+                                                confirmDialog.show();
+
+                                            }
+                                        });
+
+                                messageDialog.show();
                                 return;
                             }
                             runnerMemory = overrideMemory;
@@ -652,6 +659,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void onAppLaunched(ApplicationProcessDescriptor applicationProcessDescriptor) {
+        stopTimeMetric = null;
         if (appContext.getCurrentProject() == null) {
             return; //MUST never happen
         }
@@ -722,6 +730,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onShellStarted(descriptor);
                 break;
             case STOPPED:
+                stopTimeMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -784,6 +793,7 @@ public class RunController implements Notification.OpenNotificationHandler {
                 console.onAppStopped();
                 break;
             case CANCELLED:
+                stopTimeMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
@@ -902,8 +912,7 @@ public class RunController implements Notification.OpenNotificationHandler {
     }
 
     private void showWarning(String warning) {
-        Info warningWindow = new Info(constant.titlesWarning(), warning);
-        warningWindow.show();
+        dialogFactory.createMessageDialog(constant.titlesWarning(), warning, null).show();
     }
 
     /** Returns URL of the application which is currently running. */
@@ -973,12 +982,11 @@ public class RunController implements Notification.OpenNotificationHandler {
     /** Returns stopTime {@link RunnerMetric}. */
     @Nullable
     public RunnerMetric getCurrentAppStopTime() {
-        RunnerMetric runnerMetric = getRunnerMetric(RunnerMetric.STOP_TIME);
-        if (runnerMetric != null && runnerMetric.getValue() != null) {
-            double stopTimeMs = NumberFormat.getDecimalFormat().parse(runnerMetric.getValue());
+        if (stopTimeMetric != null && stopTimeMetric.getValue() != null) {
+            double stopTimeMs = NumberFormat.getDecimalFormat().parse(stopTimeMetric.getValue());
             Date startDate = new Date((long)stopTimeMs);
             String stopDateFormatted = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss").format(startDate);
-            return dtoFactory.createDto(RunnerMetric.class).withDescription(runnerMetric.getDescription())
+            return dtoFactory.createDto(RunnerMetric.class).withDescription(stopTimeMetric.getDescription())
                              .withValue(stopDateFormatted);
         }
         return null;

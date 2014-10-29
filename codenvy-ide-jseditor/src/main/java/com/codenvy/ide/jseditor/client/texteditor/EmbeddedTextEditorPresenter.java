@@ -30,8 +30,9 @@ import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -49,9 +50,7 @@ import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
-/**
- * Presenter part for the embedded variety of editor implementations.
- */
+/** Presenter part for the embedded variety of editor implementations. */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
                                                                                     UndoableEditor,
                                                                                     Delegate {
@@ -66,6 +65,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     private final DocumentStorage      documentStorage;
     private final EventBus             generalEventBus;
+    private final DialogFactory        dialogFactory;
     private final CodeAssistantFactory codeAssistantFactory;
 
     private TextEditorConfiguration    configuration;
@@ -83,7 +83,8 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                                        final DocumentStorage documentStorage,
                                        final CodeAssistantFactory codeAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
-                                       EditorPrefLocalizationConstant constant) {
+                                       EditorPrefLocalizationConstant constant,
+                                       DialogFactory dialogFactory) {
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
@@ -92,6 +93,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         this.constant = constant;
 
         this.generalEventBus = eventBus;
+        this.dialogFactory = dialogFactory;
         eventBus.addHandler(FileEvent.TYPE, this);
     }
 
@@ -181,23 +183,24 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     public void onClose(@Nonnull final AsyncCallback<Void> callback) {
         if (isDirty()) {
-            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.askWindowSaveChangesMessage(getEditorInput().getName()),
-                              new AskHandler() {
-                                  @Override
-                                  public void onOk() {
-                                      doSave();
-                                      handleClose();
-                                      callback.onSuccess(null);
-                                  }
-
-                                  @Override
-                                  public void onCancel() {
-                                      handleClose();
-                                      callback.onSuccess(null);
-                                  }
-                              }
-            );
-            ask.show();
+            dialogFactory.createConfirmDialog(
+                    constant.askWindowCloseTitle(),
+                    constant.askWindowSaveChangesMessage(getEditorInput().getName()),
+                    new ConfirmCallback() {
+                        @Override
+                        public void accepted() {
+                            doSave();
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    },
+                    new CancelCallback() {
+                        @Override
+                        public void cancelled() {
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    }).show();
         } else {
             handleClose();
             callback.onSuccess(null);
@@ -268,6 +271,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
             public void onSuccess(final EditorInput result) {
                 // do nothing
             }
+
             @Override
             public void onFailure(final Throwable caught) {
                 // do nothing

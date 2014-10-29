@@ -15,35 +15,33 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.theme.ThemeAgent;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- * @author Evgen Vidolob
- */
+/** @author Evgen Vidolob */
 @Singleton
 public class AppearancePresenter extends AbstractPreferencesPagePresenter implements AppearanceView.ActionDelegate {
-
 
     private AppearanceView     view;
     private ThemeAgent         themeAgent;
     private PreferencesManager preferencesManager;
-
+    private DialogFactory      dialogFactory;
     private boolean dirty = false;
     private String themeId;
 
     @Inject
     public AppearancePresenter(AppearanceView view, CoreLocalizationConstant constant, ThemeAgent themeAgent,
-                               PreferencesManager preferencesManager) {
+                               PreferencesManager preferencesManager, DialogFactory dialogFactory) {
         super(constant.appearanceTitle(), constant.appearanceCategory(), null);
         this.view = view;
         this.themeAgent = themeAgent;
         this.preferencesManager = preferencesManager;
+        this.dialogFactory = dialogFactory;
         view.setDelegate(this);
     }
 
@@ -53,20 +51,19 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
             preferencesManager.setPreference("Theme", themeId);
             preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
                 @Override
-                public void onFailure(Throwable caught) {
-                    // ignore
+                public void onFailure(Throwable ignore) {
                 }
 
                 @Override
                 public void onSuccess(ProfileDescriptor result) {
-                    Ask ask = new Ask("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?", new AskHandler() {
-                        @Override
-                        public void onOk() {
-                            themeAgent.setCurrentThemeId(themeId);
-                            Window.Location.reload();
-                        }
-                    });
-                    ask.show();
+                    dialogFactory.createConfirmDialog("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?",
+                                                      new ConfirmCallback() {
+                                                          @Override
+                                                          public void accepted() {
+                                                              themeAgent.setCurrentThemeId(themeId);
+                                                              Window.Location.reload();
+                                                          }
+                                                      }, null).show();
                 }
             });
         }

@@ -57,16 +57,6 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
 
-    /** Tests if the specified item is a file. */
-    protected static boolean isFile(ItemReference item) {
-        return "file".equals(item.getType());
-    }
-
-    /** Tests if the specified item is a folder. */
-    protected static boolean isFolder(ItemReference item) {
-        return "folder".equals(item.getType());
-    }
-
     /** {@inheritDoc} */
     @Override
     public String getName() {
@@ -242,9 +232,9 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      */
     @Nullable
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
-        if (isFile(item)) {
+        if ("file".equals(item.getType())) {
             return treeStructure.newFileNode(ProjectNode.this, item);
-        } else if (isFolder(item)) {
+        } else if ("folder".equals(item.getType())) {
             return treeStructure.newFolderNode(ProjectNode.this, item);
         }
         return null;

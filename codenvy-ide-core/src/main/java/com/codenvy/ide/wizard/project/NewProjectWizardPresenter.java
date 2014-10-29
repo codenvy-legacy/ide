@@ -22,6 +22,9 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
+import com.codenvy.api.project.shared.dto.RunnerEnvironment;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
+import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
@@ -42,8 +45,8 @@ import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.info.Info;
-import com.codenvy.ide.ui.dialogs.info.InfoHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
@@ -54,6 +57,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,11 +74,12 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       ProjectTypeWizardRegistry wizardRegistry;
     private       String                    workspaceId;
     private       AppContext                appContext;
-    private DtoFactory        dtoFactory;
-    private EventBus          eventBus;
-    private WizardPage        currentPage;
-    private ProjectWizardView view;
-    private MainPagePresenter mainPage;
+    private       DtoFactory                dtoFactory;
+    private       EventBus                  eventBus;
+    private final DialogFactory             dialogFactory;
+    private       WizardPage                currentPage;
+    private       ProjectWizardView         view;
+    private       MainPagePresenter         mainPage;
     private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -86,7 +91,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private WizardContext wizardContext;
     private ProjectWizard wizard;
     private int           workspaceMemory;
-
 
     @Inject
     public NewProjectWizardPresenter(ProjectWizardView view,
@@ -100,7 +104,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      @Named("workspaceId") String workspaceId,
                                      AppContext appContext,
                                      DtoFactory dtoFactory,
-                                     EventBus eventBus) {
+                                     EventBus eventBus,
+                                     DialogFactory dialogFactory) {
         this.view = view;
         this.mainPage = mainPage;
         this.projectService = projectService;
@@ -111,12 +116,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.appContext = appContext;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
+        this.dialogFactory = dialogFactory;
         mainPage.setUpdateDelegate(this);
         view.setDelegate(this);
         wizardContext = new WizardContext();
         this.runnerServiceClient = runnerServiceClient;
         this.builderServiceClient = builderServiceClient;
         requestBuildersDescriptor();
+        requestRunnersDescriptor();
     }
 
     private void requestBuildersDescriptor() {
@@ -124,23 +131,55 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 dtoUnmarshallerFactory.newArrayUnmarshaller(BuilderDescriptor.class)) {
             @Override
             protected void onSuccess(Array<BuilderDescriptor> results) {
-                for (BuilderDescriptor builderDescriptor : results.asIterable()) {
-                    StringBuilder builderDescriptionStr = new StringBuilder();
-                    for (BuilderEnvironment environment : builderDescriptor.getEnvironments().values()) {
-                        if (environment.getDisplayName() != null) {
-                            builderDescriptionStr.append(environment.getDisplayName());
+                for (BuilderDescriptor builderDes : results.asIterable()) {
+                    if (builderDes == null || builderDes.getEnvironments() == null) {
+                        continue;
+                    }
+                    for (BuilderEnvironment builderEnv : builderDes.getEnvironments().values()) {
+                        if (builderEnv != null && builderEnv.getDisplayName() != null) {
+                            builderDescriptionMap.put(builderEnv.getId(), builderEnv.getDisplayName());
                         }
                     }
-                    if (builderDescriptionStr.length() == 0) {
-                        builderDescriptionStr.append("undefined");
-                    }
-                    builderDescriptionMap.put(builderDescriptor.getName(), builderDescriptionStr.toString());
                 }
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
+                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
+            }
+        });
+    }
+
+    private void fillRunnersDescriptions(RunnerEnvironmentTree tree) {
+        final List<RunnerEnvironmentTree> runnerEnvTrees = tree.getNodes();
+        for (RunnerEnvironmentTree runnerEnvTree : runnerEnvTrees) {
+            if (runnerEnvTree == null || runnerEnvTree.getLeaves() == null) {
+                continue;
+            }
+            for (RunnerEnvironmentLeaf leaf : runnerEnvTree.getLeaves()) {
+                if (leaf == null) {
+                    continue;
+                }
+                final RunnerEnvironment runnerEnv = leaf.getEnvironment();
+                if (runnerEnv != null && runnerEnv.getDescription() != null) {
+                    runnersDescriptionMap.put(runnerEnv.getId(), runnerEnv.getDescription());
+                }
+            }
+            fillRunnersDescriptions(runnerEnvTree);
+        }
+    }
+
+    private void requestRunnersDescriptor() {
+        runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(
+                dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class)) {
+            @Override
+            protected void onSuccess(RunnerEnvironmentTree result) {
+                fillRunnersDescriptions(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
             }
         });
     }
@@ -154,7 +193,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             wizardPage = wizard.flipToNext();
             setPage(wizardPage);
             currentPage.focusComponent();
-
         }
     }
 
@@ -184,8 +222,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             public void onFailure(@Nonnull Throwable exception) {
-                Info info = new Info(JsonHelper.parsingJsonMessage(exception.getMessage()));
-                info.show();
+                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
             }
         };
 
@@ -201,9 +238,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 //Project with the same name already exists
-                Info info =
-                        new Info(constant.createProjectWarningTitle(), constant.createProjectFromTemplateProjectExists(projectName));
-                info.show();
+                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                                  constant.createProjectFromTemplateProjectExists(projectName), null).show();
             }
 
             @Override
@@ -232,17 +268,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         int requiredMemorySize = getRequiredMemorySize();
 
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
-            final Info warningWindow =
-                    new Info(constant.createProjectWarningTitle(),
-                             constant.messagesWorkspaceRamLessRequiredRam(requiredMemorySize, workspaceMemory),
-                             new InfoHandler() {
-                                 @Override
-                                 public void onOk() {
-                                     createProject(callback);
-                                 }
-                             }
-                    );
-            warningWindow.show();
+            dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                              constant.messagesWorkspaceRamLessRequiredRam(requiredMemorySize, workspaceMemory),
+                                              new ConfirmCallback() {
+                                                  @Override
+                                                  public void accepted() {
+                                                      createProject(callback);
+                                                  }
+                                              }).show();
             return;
         }
         createProject(callback);
@@ -250,19 +283,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     private void checkRamAndUpdateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
         int requiredMemorySize = getRequiredMemorySize();
-
         if (requiredMemorySize > 0 && requiredMemorySize > workspaceMemory) {
-            final Info warningWindow =
-                    new Info(constant.createProjectWarningTitle(),
-                             constant.messagesUpdateProjectWorkspaceRamLessRequired(requiredMemorySize, workspaceMemory),
-                             new InfoHandler() {
-                                 @Override
-                                 public void onOk() {
-                                     updateProject(project, callback);
-                                 }
-                             }
-                    );
-            warningWindow.show();
+            dialogFactory.createMessageDialog(constant.createProjectWarningTitle(),
+                                              constant.messagesUpdateProjectWorkspaceRamLessRequired(requiredMemorySize, workspaceMemory),
+                                              new ConfirmCallback() {
+                                                  @Override
+                                                  public void accepted() {
+                                                      updateProject(project, callback);
+                                                  }
+                                              }).show();
             return;
         }
         updateProject(project, callback);
@@ -422,7 +451,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         view.setLoaderVisible(true);
-        ImportProject importProject = dtoFactory.createDto(ImportProject.class).withSource(dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()));
+        ImportProject importProject = dtoFactory.createDto(ImportProject.class)
+                                                .withSource(dtoFactory.createDto(Source.class).withProject(templateDescriptor.getSource()));
         projectService.importProject(projectName, false,
                                      importProject,
                                      new AsyncRequestCallback<ProjectDescriptor>(
@@ -514,31 +544,21 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                     (descriptor != null && descriptor.getType().equals(
                                             com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
-        String memorySize = "undefined";
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
             final BuildersDescriptor builders = templateDescriptor.getBuilders();
-            if (builders != null) {
-                view.setBuilderEnvironmentConfig(builderDescriptionMap.get(builders.getDefault()));
-            }
+            view.setBuilderEnvironmentConfig(builderDescriptionMap.get(builders == null ? null : builders.getDefault()));
             final RunnersDescriptor runners = templateDescriptor.getRunners();
-            if (runners != null) {
-                view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(runners.getDefault()));
-                final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
-                if (runnerConfiguration != null) {
-                    int ram = runnerConfiguration.getRam();
-                    if (ram > 0) {
-                        memorySize = String.valueOf(ram).concat("MB");
-                    }
-                }
-            }
-            view.setRAMRequired(memorySize);
+            view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(runners == null ? null : runners.getDefault()));
+            view.setRAMRequired(getRequiredRam(runners));
             //set info visible
             view.setInfoVisible(true);
         } else if (descriptor != null) {
-// TODO (andrew00x)           view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(descriptor.getRunner()));
-//            view.setBuilderEnvironmentConfig(builderDescriptionMap.get(descriptor.getBuilder()));
-//            view.setRAMRequired(requiredMemorySize);
+            view.setRunnerEnvironmentConfig(
+                    runnersDescriptionMap.get(descriptor.getRunners() == null ? null : descriptor.getRunners().getDefault()));
+            view.setBuilderEnvironmentConfig(
+                    builderDescriptionMap.get(descriptor.getBuilders() == null ? null : descriptor.getBuilders().getDefault()));
+            view.setRAMRequired(getRequiredRam(descriptor.getRunners()));
             view.setInfoVisible(true);
         } else {
             view.setInfoVisible(false);
@@ -577,9 +597,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
             @Override
             protected void onFailure(Throwable exception) {
-                Info infoWindow = new Info(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed());
-                infoWindow.show();
-                Log.error(getClass(), JsonHelper.parsingJsonMessage(exception.getMessage()));
+                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed(), null).show();
+                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
             }
         });
     }
@@ -682,6 +701,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 //        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
 //    }
 
+
+    private String getRequiredRam(RunnersDescriptor runners) {
+        if (runners != null) {
+            final RunnerConfiguration runnerConfiguration = runners.getConfigs().get("recommend");
+            if (runnerConfiguration != null) {
+                int ram = runnerConfiguration.getRam();
+                if (ram > 0) {
+                    return String.valueOf(ram).concat("MB");
+                }
+            }
+        }
+        return "undefined";
+    }
 
     private String getAvailableRam(String usedMemory) {
         if (workspaceMemory > 0) {

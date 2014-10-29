@@ -8,26 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.ask;
+package com.codenvy.ide.ui.dialogs;
 
 /**
- * Handler for user interaction in Ask dialog window
+ * Callback called when the user clicks on "Cancel" in the confirmation/input dialog.
  *
- * @author Vitaly Parfonov
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public abstract class AskHandler {
+public interface CancelCallback {
 
-    /**
-     * Call if user click Ok button
-     */
-    public abstract void onOk();
-
-    /**
-     * Call if user click cancel button.
-     * By default nothing todo.
-     * If need custom interaction override it.
-     */
-    public void onCancel() {
-        //by default nothing todo
-    }
+    /** Action called when the user clicks on Cancel. */
+    void cancelled();
 }

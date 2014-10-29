@@ -8,28 +8,24 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.askValue;
+package com.codenvy.ide.ui;
+
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * Handler for user interaction in {@link AskValueDialog}.
+ * I18n messages interface for the 'CodenvyUI' module.
  *
  * @author Vitaly Parfonov
  * @author Artem Zatsarynnyy
  */
-public abstract class AskValueCallback {
+public interface UILocalizationConstant extends Messages {
 
-    /**
-     * Call if user click Ok button.
-     *
-     * @param value
-     *         entered value
-     */
-    public abstract void onOk(String value);
+    @DefaultMessage("OK")
+    String okButtonText();
 
-    /**
-     * Call if user click cancel button.
-     * If need custom interaction override it.
-     */
-    public void onCancel() {
-    }
+    @DefaultMessage("Cancel")
+    String cancelButtonText();
+
+    @DefaultMessage("Value is not valid")
+    String validationErrorMessage();
 }

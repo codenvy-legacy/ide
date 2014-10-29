@@ -69,12 +69,12 @@
             </g:FlowPanel>
         </g:south>
         <g:center>
-            <g:FlowPanel addStyleNames="{style.emptyBorder}">
+            <g:ScrollPanel addStyleNames="{style.emptyBorder}">
                 <g:SimplePanel>
                     <p1:CellTable width="100%" ui:field="keys" focus="false"
                                   debugId="window-preferences-sshKeys-cellTable-keys"/>
                 </g:SimplePanel>
-            </g:FlowPanel>
+            </g:ScrollPanel>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

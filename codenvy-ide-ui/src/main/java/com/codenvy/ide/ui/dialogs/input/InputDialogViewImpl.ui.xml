@@ -27,13 +27,17 @@
             -moz-box-sizing: border-box;
             width: 100%;
         }
+
+        .errorHint {
+            color: red;
+        }
     </ui:style>
     <g:DockLayoutPanel unit="PX" width="360px" height="70px" addStyleNames="{style.emptyBorder}">
         <g:center>
             <g:Grid width="100%" height="100%">
                 <g:row>
                     <g:customCell verticalAlignment="ALIGN_MIDDLE">
-                        <g:Label ui:field="message" addStyleNames="{style.label}"/>
+                        <g:Label ui:field="label" addStyleNames="{style.label}"/>
                     </g:customCell>
                     <g:customCell verticalAlignment="ALIGN_MIDDLE">
                         <g:TextBox ui:field="value" addStyleNames="{style.input}"/>
@@ -41,5 +45,8 @@
                 </g:row>
             </g:Grid>
         </g:center>
+        <g:south size="29">
+            <g:Label ui:field="errorHint" addStyleNames="{style.errorHint}"/>
+        </g:south>
     </g:DockLayoutPanel>
 </ui:UiBinder>

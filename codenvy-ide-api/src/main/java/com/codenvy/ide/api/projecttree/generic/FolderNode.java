@@ -47,16 +47,6 @@ public class FolderNode extends ItemNode {
         this.editorAgent = editorAgent;
     }
 
-    /** Tests if the specified item is a file. */
-    protected static boolean isFile(ItemReference item) {
-        return "file".equals(item.getType());
-    }
-
-    /** Tests if the specified item is a folder. */
-    protected static boolean isFolder(ItemReference item) {
-        return "folder".equals(item.getType());
-    }
-
     /** {@inheritDoc} */
     @Override
     public boolean isLeaf() {
@@ -154,9 +144,9 @@ public class FolderNode extends ItemNode {
      */
     @Nullable
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
-        if (isFile(item)) {
+        if ("file".equals(item.getType())) {
             return treeStructure.newFileNode(this, item);
-        } else if (isFolder(item)) {
+        } else if ("folder".equals(item.getType())) {
             return treeStructure.newFolderNode(this, item);
         }
         return null;

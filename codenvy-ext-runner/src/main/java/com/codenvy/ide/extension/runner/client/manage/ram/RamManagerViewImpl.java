@@ -12,7 +12,7 @@ package com.codenvy.ide.extension.runner.client.manage.ram;
 
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.ui.dialogs.info.Info;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,12 +23,11 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-/**
- * @author Vitaly Parfonov
- */
+/** @author Vitaly Parfonov */
 public class RamManagerViewImpl extends Composite implements RamManagerView {
     private RunnerResources            resources;
     private RunnerLocalizationConstant locale;
+    private DialogFactory              dialogFactory;
 
     private ActionDelegate delegate;
 
@@ -40,23 +39,23 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
 
     private static RamManagerViewImplUiBinder ourUiBinder = GWT.create(RamManagerViewImplUiBinder.class);
 
-
     /**
      * Create view.
      *
      * @param resources
      * @param locale
+     * @param dialogFactory
      */
     @Inject
-    protected RamManagerViewImpl(RunnerResources resources, RunnerLocalizationConstant locale) {
+    protected RamManagerViewImpl(RunnerResources resources, RunnerLocalizationConstant locale, DialogFactory dialogFactory) {
         this.resources = resources;
         this.locale = locale;
+        this.dialogFactory = dialogFactory;
         initWidget(ourUiBinder.createAndBindUi(this));
         memoryField.getElement().setAttribute("type", "number");
         memoryField.getElement().setAttribute("step", "128");
         memoryField.getElement().setAttribute("min", "0");
     }
-
 
     @Override
     public String getRam() {
@@ -66,15 +65,12 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
     @Override
     public void showRam(String ram) {
         memoryField.setText(ram);
-
     }
 
     @Override
     public void showWarnMessage(String warning) {
-        Info warningWindow = new Info("Warning", warning);
-        warningWindow.show();
+        dialogFactory.createMessageDialog("Warning", warning, null).show();
     }
-
 
     @UiHandler("memoryField")
     public void onRamFieldsChanged(ValueChangeEvent<String> valueChangeEvent) {

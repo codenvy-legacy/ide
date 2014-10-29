@@ -16,6 +16,7 @@ import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -52,13 +53,17 @@ public class ExtensionInitializer {
             @Override
             public void onIteration(String extensionFqn, Provider extensionProvider) {
                 boolean enabled = !jso.hasOwnProperty(extensionFqn) || jso.getBooleanField(extensionFqn);
-                if (enabled) {
-                    // this will instantiate extension so it's get enabled
-                    // Order of startup is managed by GIN dependency injection framework
-                    extensionProvider.get();
+                try {
+                    if (enabled) {
+                        // this will instantiate extension so it's get enabled
+                        // Order of startup is managed by GIN dependency injection framework
+                        extensionProvider.get();
+                    }
+                    // extension has been enabled
+                    extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(enabled);
+                } catch (Throwable e) {
+                    Log.error(ExtensionInitializer.class, "Can't initialize extension: " + extensionFqn, e);
                 }
-                // extension has been enabled
-                extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(enabled);
             }
         });
     }

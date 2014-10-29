@@ -35,8 +35,9 @@ import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -80,13 +81,14 @@ public class BuildController implements Notification.OpenNotificationHandler {
     protected       LogMessagesHandler                       buildOutputHandler;
     /** Whether any build is performed now? */
     protected boolean isBuildInProgress = false;
-    protected ProjectDescriptor   activeProject;
-    protected Notification        notification;
-    private   BuildContext        buildContext;
+    protected     ProjectDescriptor   activeProject;
+    protected     Notification        notification;
+    private       BuildContext        buildContext;
+    private final DialogFactory       dialogFactory;
     /** Descriptor of the last build task. */
-    private   BuildTaskDescriptor lastBuildTaskDescriptor;
-    private   BuilderMetric       lastWaitingTimeLimit;
-    private   EditorAgent         editorAgent;
+    private       BuildTaskDescriptor lastBuildTaskDescriptor;
+    private       BuilderMetric       lastWaitingTimeLimit;
+    private       EditorAgent         editorAgent;
 
     @Inject
     protected BuildController(EventBus eventBus,
@@ -100,7 +102,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               EditorAgent editorAgent,
                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
                               MessageBus messageBus,
-                              BuildContext buildContext) {
+                              BuildContext buildContext,
+                              DialogFactory dialogFactory) {
         this.workspaceAgent = workspaceAgent;
         this.appContext = appContext;
         this.console = console;
@@ -112,6 +115,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.messageBus = messageBus;
         this.buildContext = buildContext;
+        this.dialogFactory = dialogFactory;
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -145,13 +149,13 @@ public class BuildController implements Notification.OpenNotificationHandler {
         if (dirtyEditors.isEmpty()) {
             buildActiveProject(null, isUserAction);
         } else {
-            Ask askWindow = new Ask(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new AskHandler() {
+            dialogFactory.createConfirmDialog(constant.titlePromptSaveFiles(), constant.messagePromptSaveFiles(), new ConfirmCallback() {
                 @Override
-                public void onOk() {
+                public void accepted() {
                     editorAgent.saveAll(new AsyncCallback() {
                         @Override
                         public void onFailure(Throwable caught) {
-                            Log.error(getClass(), JsonHelper.parsingJsonMessage(caught.getMessage()));
+                            Log.error(getClass(), JsonHelper.parseJsonMessage(caught.getMessage()));
                         }
 
                         @Override
@@ -159,14 +163,14 @@ public class BuildController implements Notification.OpenNotificationHandler {
                             buildActiveProject(null, isUserAction);
                         }
                     });
-                }
 
+                }
+            }, new CancelCallback() {
                 @Override
-                public void onCancel() {
+                public void cancelled() {
                     buildActiveProject(null, isUserAction);
                 }
-            });
-            askWindow.show();
+            }).show();
         }
     }
 
@@ -220,7 +224,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               notification.setType(ERROR);
                               notification.setMessage(constant.buildFailed());
                               console.setCurrentBuilderStatus(BuilderStatus.FAILED);
-                              console.print(JsonHelper.parsingJsonMessage(exception.getMessage()));
+                              console.print(JsonHelper.parseJsonMessage(exception.getMessage()));
                               buildContext.setBuilding(false);
                           }
                       }

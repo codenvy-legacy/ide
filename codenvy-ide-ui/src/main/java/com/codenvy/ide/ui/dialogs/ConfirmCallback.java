@@ -8,21 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui;
-
-import com.google.gwt.i18n.client.Messages;
+package com.codenvy.ide.ui.dialogs;
 
 /**
- * @author Vitaly Parfonov
+ * Callback called when the user clicks on "OK" in the confirmation dialog.
+ *
+ * @author Mickaël Leduque
+ * @author Artem Zatsarynnyy
  */
-public interface Locale extends Messages {
+public interface ConfirmCallback {
 
-    @Key("ok")
-    @DefaultMessage("OK")
-    String ok();
-
-    @Key("cancel")
-    @DefaultMessage("Cancel")
-    String cancel();
-
+    /** Action called when the user click on OK. */
+    void accepted();
 }

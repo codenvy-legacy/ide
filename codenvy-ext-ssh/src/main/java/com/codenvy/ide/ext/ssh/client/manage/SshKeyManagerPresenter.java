@@ -20,14 +20,14 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshLocalizationConstant;
 import com.codenvy.ide.ext.ssh.client.SshResources;
-import com.codenvy.ide.ext.ssh.client.key.SshKeyPresenter;
 import com.codenvy.ide.ext.ssh.client.upload.UploadSshKeyPresenter;
 import com.codenvy.ide.ext.ssh.dto.KeyItem;
+import com.codenvy.ide.ext.ssh.dto.PublicKey;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -43,33 +43,23 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 /**
  * The presenter for managing ssh keys.
  *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  */
 @Singleton
 public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
     public static final String GITHUB_HOST = "github.com";
-    private final DtoUnmarshallerFactory  dtoUnmarshallerFactory;
-    private       SshKeyManagerView       view;
-    private       SshKeyService           service;
-    private       SshLocalizationConstant constant;
-    private       EventBus                eventBus;
-    private       UserServiceClient       userService;
-    private       AsyncRequestLoader      loader;
-    private       SshKeyPresenter         sshKeyPresenter;
-    private       UploadSshKeyPresenter   uploadSshKeyPresenter;
-    private       NotificationManager     notificationManager;
+    private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
+    private DialogFactory           dialogFactory;
+    private SshKeyManagerView       view;
+    private SshKeyService           service;
+    private SshLocalizationConstant constant;
+    private EventBus                eventBus;
+    private UserServiceClient       userService;
+    private AsyncRequestLoader      loader;
+    private UploadSshKeyPresenter   uploadSshKeyPresenter;
+    private NotificationManager     notificationManager;
 
-    /**
-     * Create presenter.
-     *
-     * @param view
-     * @param service
-     * @param resources
-     * @param constant
-     * @param eventBus
-     * @param userService
-     * @param notificationManager
-     */
+    /** Create presenter. */
     @Inject
     public SshKeyManagerPresenter(SshKeyManagerView view,
                                   SshKeyService service,
@@ -78,41 +68,55 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
                                   EventBus eventBus,
                                   AsyncRequestLoader loader,
                                   UserServiceClient userService,
-                                  SshKeyPresenter sshKeyPresenter,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
-                                  DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                  DialogFactory dialogFactory) {
         super(constant.sshManagerTitle(), constant.sshManagerCategory(), resources.sshKeyManager());
 
         this.view = view;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dialogFactory = dialogFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
         this.eventBus = eventBus;
         this.userService = userService;
         this.loader = loader;
-        this.sshKeyPresenter = sshKeyPresenter;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onViewClicked(@Nonnull KeyItem key) {
-        sshKeyPresenter.showDialog(key);
+    public void onViewClicked(@Nonnull final KeyItem key) {
+        service.getPublicKey(key, new AsyncRequestCallback<PublicKey>(dtoUnmarshallerFactory.newUnmarshaller(PublicKey.class)) {
+            @Override
+            public void onSuccess(PublicKey result) {
+                loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
+                dialogFactory.createMessageDialog(constant.publicSshKeyField() + key.getHost(), result.getKey(), null).show();
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
+                Notification notification = new Notification(exception.getMessage(), ERROR);
+                notificationManager.showNotification(notification);
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(@Nonnull final KeyItem key) {
-        Ask ask = new Ask(constant.deleteSshKeyTitle(), constant.deleteSshKeyQuestion(key.getHost()), new AskHandler() {
-            @Override
-            public void onOk() {
-                deleteKey(key);
-            }
-        });
-        ask.show();
+        dialogFactory.createConfirmDialog(constant.deleteSshKeyTitle(), constant.deleteSshKeyQuestion(key.getHost()),
+                                          new ConfirmCallback() {
+                                              @Override
+                                              public void accepted() {
+                                                  deleteKey(key);
+                                              }
+                                          }, null).show();
     }
 
     private void deleteKey(final KeyItem key) {
@@ -158,7 +162,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     @Override
     public void onUploadClicked() {
         uploadSshKeyPresenter.showDialog(new AsyncCallback<Void>() {
-
             @Override
             public void onSuccess(Void result) {
                 refreshKeys();

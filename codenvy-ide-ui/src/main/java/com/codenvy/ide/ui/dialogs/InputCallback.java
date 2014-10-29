@@ -8,17 +8,20 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.ui.dialogs.info;
+package com.codenvy.ide.ui.dialogs;
 
 /**
- * Handler for user interaction in Info dialog window
+ * Callback called when the user clicks on "OK" in the input dialog.
  *
- * @author Roman Nikitenko
+ * @author Artem Zatsarynnyy
  */
-public abstract class InfoHandler {
+public interface InputCallback {
 
     /**
-     * Call if user click Ok button
+     * Action called when the user clicks on OK.
+     *
+     * @param value
+     *         the string typed into input dialog
      */
-    public abstract void onOk();
+    void accepted(String value);
 }

@@ -25,8 +25,8 @@ import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueCallback;
-import com.codenvy.ide.ui.dialogs.askValue.AskValueDialog;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.web.bindery.event.shared.EventBus;
@@ -36,9 +36,9 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import javax.annotation.Nullable;
 
 /**
- * Implementation of an {@link Action} that provides ability to create new file.
- * After performing this action, it asks user for the new file's name with {@link AskValueDialog}
- * and then creates new file in the user selected folder.
+ * Implementation of an {@link Action} that provides an ability to create new file/folder.
+ * After performing this action, it asks user for the resource's name
+ * and then creates resource in the selected folder.
  *
  * @author Artem Zatsarynnyy
  */
@@ -51,6 +51,7 @@ public class DefaultNewResourceAction extends Action {
     protected EventBus               eventBus;
     protected AnalyticsEventLogger   eventLogger;
     private   DtoUnmarshallerFactory unmarshallerFactory;
+    private   DialogFactory          dialogFactory;
 
     /**
      * Creates new action.
@@ -72,6 +73,8 @@ public class DefaultNewResourceAction extends Action {
      * @param projectServiceClient
      *         {@link com.codenvy.api.project.gwt.client.ProjectServiceClient} instance
      * @param eventBus
+     * @param unmarshallerFactory
+     * @param dialogFactory
      */
     public DefaultNewResourceAction(String title,
                                     String description,
@@ -82,9 +85,10 @@ public class DefaultNewResourceAction extends Action {
                                     @Nullable EditorAgent editorAgent,
                                     ProjectServiceClient projectServiceClient,
                                     EventBus eventBus,
-                                    DtoUnmarshallerFactory unmarshallerFactory) {
+                                    DtoUnmarshallerFactory unmarshallerFactory,
+                                    DialogFactory dialogFactory) {
         this(title, description, icon, svgIcon, appContext, selectionAgent, editorAgent, projectServiceClient, eventBus, null,
-             unmarshallerFactory);
+             unmarshallerFactory, dialogFactory);
     }
 
     /**
@@ -109,6 +113,8 @@ public class DefaultNewResourceAction extends Action {
      * @param eventBus
      * @param eventLogger
      *         {@link com.codenvy.api.analytics.logger.AnalyticsEventLogger} instance
+     * @param unmarshallerFactory
+     * @param dialogFactory
      */
     public DefaultNewResourceAction(String title,
                                     String description,
@@ -120,7 +126,8 @@ public class DefaultNewResourceAction extends Action {
                                     ProjectServiceClient projectServiceClient,
                                     EventBus eventBus,
                                     AnalyticsEventLogger eventLogger,
-                                    DtoUnmarshallerFactory unmarshallerFactory) {
+                                    DtoUnmarshallerFactory unmarshallerFactory,
+                                    DialogFactory dialogFactory) {
         super(title, description, icon, svgIcon);
         this.title = title;
         this.appContext = appContext;
@@ -130,6 +137,7 @@ public class DefaultNewResourceAction extends Action {
         this.eventBus = eventBus;
         this.eventLogger = eventLogger;
         this.unmarshallerFactory = unmarshallerFactory;
+        this.dialogFactory = dialogFactory;
     }
 
     @Override
@@ -138,32 +146,30 @@ public class DefaultNewResourceAction extends Action {
             eventLogger.log(this);
         }
 
-        new AskValueDialog("New " + title, "Enter a new " + title.toLowerCase() + " name:", new AskValueCallback() {
+        dialogFactory.createInputDialog("New " + title, "Enter a new " + title.toLowerCase() + " name:", new InputCallback() {
             @Override
-            public void onOk(String value) {
+            public void accepted(String value) {
                 final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
                 final StorableNode parent = getParent();
-                projectServiceClient.createFile(parent.getPath(), name, getDefaultContent(), getMimeType(),
-                                                new AsyncRequestCallback<ItemReference>(
-                                                        unmarshallerFactory.newUnmarshaller(ItemReference.class)) {
-                                                    @Override
-                                                    protected void onSuccess(ItemReference result) {
-                                                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent(
-                                                                (AbstractTreeNode<?>)parent));
-                                                        if ("file".equals(result.getType())) {
-                                                            FileNode file =
-                                                                    new FileNode(null, result, eventBus, projectServiceClient, null);
-                                                            editorAgent.openEditor(file);
-                                                        }
-                                                    }
+                projectServiceClient.createFile(
+                        parent.getPath(), name, getDefaultContent(), getMimeType(),
+                        new AsyncRequestCallback<ItemReference>(unmarshallerFactory.newUnmarshaller(ItemReference.class)) {
+                            @Override
+                            protected void onSuccess(ItemReference result) {
+                                eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
+                                if ("file".equals(result.getType())) {
+                                    FileNode file = new FileNode(null, result, eventBus, projectServiceClient, null);
+                                    editorAgent.openEditor(file);
+                                }
+                            }
 
-                                                    @Override
-                                                    protected void onFailure(Throwable exception) {
-                                                        Log.error(DefaultNewResourceAction.class, exception);
-                                                    }
-                                                });
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                Log.error(DefaultNewResourceAction.class, exception);
+                            }
+                        });
             }
-        }).show();
+        }, null).show();
     }
 
     @Override

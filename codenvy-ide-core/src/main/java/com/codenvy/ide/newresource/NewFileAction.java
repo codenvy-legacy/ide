@@ -18,6 +18,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -38,7 +39,8 @@ public class NewFileAction extends DefaultNewResourceAction {
                          ProjectServiceClient projectServiceClient,
                          EventBus eventBus,
                          AnalyticsEventLogger eventLogger,
-                         DtoUnmarshallerFactory unmarshallerFactory) {
+                         DtoUnmarshallerFactory unmarshallerFactory,
+                         DialogFactory dialogFactory) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
               null,
@@ -49,6 +51,7 @@ public class NewFileAction extends DefaultNewResourceAction {
               projectServiceClient,
               eventBus,
               eventLogger,
-              unmarshallerFactory);
+              unmarshallerFactory,
+              dialogFactory);
     }
 }

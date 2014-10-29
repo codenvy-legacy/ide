@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.api.account.gwt.client.AccountServiceClient;
+import com.codenvy.api.account.gwt.client.AccountServiceClientImpl;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
@@ -25,6 +27,8 @@ import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClientImpl;
 import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.gwt.client.UserServiceClientImpl;
+import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
+import com.codenvy.api.vfs.gwt.client.VfsServiceClientImpl;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClientImpl;
 import com.codenvy.ide.Resources;
@@ -135,6 +139,22 @@ import com.codenvy.ide.toolbar.ToolbarMainPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogFooter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogPresenter;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogView;
+import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
+import com.codenvy.ide.ui.dialogs.input.InputDialogFooter;
+import com.codenvy.ide.ui.dialogs.input.InputDialogPresenter;
+import com.codenvy.ide.ui.dialogs.input.InputDialogView;
+import com.codenvy.ide.ui.dialogs.input.InputDialogViewImpl;
+import com.codenvy.ide.ui.dialogs.message.MessageDialog;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogFooter;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogPresenter;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogView;
+import com.codenvy.ide.ui.dialogs.message.MessageDialogViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
@@ -209,8 +229,10 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configure GWT-clients for Codenvy Platform API services */
     private void configurePlatformApiGwtClients() {
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
-        bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
+        bind(AccountServiceClient.class).to(AccountServiceClientImpl.class).in(Singleton.class);
+        bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
+        bind(VfsServiceClient.class).to(VfsServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
@@ -270,6 +292,17 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+
+        bind(MessageDialogFooter.class);
+        bind(MessageDialogView.class).to(MessageDialogViewImpl.class);
+        bind(ConfirmDialogFooter.class);
+        bind(ConfirmDialogView.class).to(ConfirmDialogViewImpl.class);
+        bind(InputDialogFooter.class);
+        bind(InputDialogView.class).to(InputDialogViewImpl.class);
+        install(new GinFactoryModuleBuilder().implement(MessageDialog.class, MessageDialogPresenter.class)
+                                             .implement(ConfirmDialog.class, ConfirmDialogPresenter.class)
+                                             .implement(InputDialog.class, InputDialogPresenter.class)
+                                             .build(DialogFactory.class));
 
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(UploadFileView.class).to(UploadFileViewImpl.class);

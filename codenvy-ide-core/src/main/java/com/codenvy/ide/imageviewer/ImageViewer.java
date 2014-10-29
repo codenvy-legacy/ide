@@ -15,8 +15,9 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.ui.dialogs.ask.Ask;
-import com.codenvy.ide.ui.dialogs.ask.AskHandler;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -39,17 +40,17 @@ import javax.annotation.Nonnull;
  */
 public class ImageViewer extends AbstractEditorPresenter {
 
-    private Resources resources;
+    private Resources                resources;
     private CoreLocalizationConstant constant;
+    private DialogFactory            dialogFactory;
 
-    /**
-     *
-     */
     @Inject
     public ImageViewer(Resources resources,
-                       CoreLocalizationConstant constant) {
+                       CoreLocalizationConstant constant,
+                       DialogFactory dialogFactory) {
         this.resources = resources;
         this.constant = constant;
+        this.dialogFactory = dialogFactory;
     }
 
     /** {@inheritDoc} */
@@ -59,7 +60,6 @@ public class ImageViewer extends AbstractEditorPresenter {
 
     @Override
     public void doSave(AsyncCallback<EditorInput> callback) {
-
     }
 
     /** {@inheritDoc} */
@@ -101,21 +101,24 @@ public class ImageViewer extends AbstractEditorPresenter {
     @Override
     public void onClose(@Nonnull final AsyncCallback<Void> callback) {
         if (isDirty()) {
-            Ask ask = new Ask(constant.askWindowCloseTitle(), constant.messagesSaveChanges(getEditorInput().getName()), new AskHandler() {
-                @Override
-                public void onOk() {
-                    doSave();
-                    handleClose();
-                    callback.onSuccess(null);
-                }
-
-                @Override
-                public void onCancel() {
-                    handleClose();
-                    callback.onSuccess(null);
-                }
-            });
-            ask.show();
+            dialogFactory.createConfirmDialog(
+                    constant.askWindowCloseTitle(),
+                    constant.messagesSaveChanges(getEditorInput().getName()),
+                    new ConfirmCallback() {
+                        @Override
+                        public void accepted() {
+                            doSave();
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    },
+                    new CancelCallback() {
+                        @Override
+                        public void cancelled() {
+                            handleClose();
+                            callback.onSuccess(null);
+                        }
+                    }).show();
         } else {
             handleClose();
             callback.onSuccess(null);
@@ -156,5 +159,4 @@ public class ImageViewer extends AbstractEditorPresenter {
     @Override
     protected void initializeEditor() {
     }
-
 }
