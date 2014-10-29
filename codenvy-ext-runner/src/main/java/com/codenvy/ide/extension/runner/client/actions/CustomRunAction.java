@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class CustomRunAction extends Action {
+public class CustomRunAction extends ProjectAction {
 
     private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
@@ -44,7 +44,7 @@ public class CustomRunAction extends Action {
                            AnalyticsEventLogger eventLogger) {
         super(localizationConstants.customRunAppActionText(),
               localizationConstants.customRunAppActionDescription(),
-              null, resources.launchApp());
+              resources.launchApp());
         this.runController = runController;
         this.customRunPresenter = customRunPresenter;
         this.appContext = appContext;
@@ -58,9 +58,8 @@ public class CustomRunAction extends Action {
         customRunPresenter.showDialog();
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
+    protected void updateProjectAction(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             e.getPresentation().setEnabledAndVisible(currentProject.getIsRunningEnabled() && !runController.isAnyAppLaunched());

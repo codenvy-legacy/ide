@@ -13,6 +13,7 @@ package com.codenvy.ide.extension.builder.client.console;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -80,15 +81,15 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         final String capMessage = message.toUpperCase();
         if (capMessage.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                         message.substring(INFO.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(INFO.length())).asString() + "</pre>");
         } else if (capMessage.startsWith(ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(ERROR.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(ERROR.length())).asString() + "</pre>");
         } else if (capMessage.startsWith(WARN)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
-                         message.substring(WARN.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(WARN.length())).asString() + "</pre>");
         } else {
-            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
+            html.setHTML("<pre " + PRE_STYLE + ">" + SafeHtmlUtils.fromString(message).asString() + "</pre>");
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);

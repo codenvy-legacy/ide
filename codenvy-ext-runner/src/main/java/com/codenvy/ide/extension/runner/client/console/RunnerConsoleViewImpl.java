@@ -17,7 +17,7 @@ import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,9 +32,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Implements {@link RunnerConsoleView}.
@@ -127,17 +124,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
     }
 
-    interface Style extends CssResource {
-
-        String consoleOutput();
-
-        String consoleOutputMessage();
-
-    }
-
-    @UiField
-    Style style;
-
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
                                  RunnerConsoleViewImplUiBinder uiBinder) {
@@ -146,7 +132,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         this.runnerResources = runnerResources;
 
         container.add(uiBinder.createAndBindUi(this));
-        style.ensureInjected();
 
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
@@ -208,6 +193,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             terminalUnavailableLabel.setVisible(true);
             terminalFrame.setVisible(false);
             terminalFrame.getElement().removeAttribute("src");
+
         } else if (terminalPanel.isVisible()) {
             terminalUnavailableLabel.setVisible(false);
             terminalFrame.setUrl(terminalURL);
@@ -261,6 +247,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             terminalUnavailableLabel.setVisible(true);
             terminalFrame.getElement().removeAttribute("src");
             terminalFrame.setVisible(false);
+
         } else if (terminalURL != null && terminalFrame.getUrl().isEmpty()) {
             terminalUnavailableLabel.setVisible(false);
             terminalFrame.setUrl(terminalURL);
@@ -308,31 +295,25 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                         message.substring(INFO.length()) + "</pre>");
-
+                        SafeHtmlUtils.fromString(message.substring(INFO.length())).asString() + "</pre>");
         } else if (message.startsWith(ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(ERROR.length()) + "</pre>");
-
+                         SafeHtmlUtils.fromString(message.substring(ERROR.length())).asString() + "</pre>");
         } else if (message.startsWith(WARN)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
-                         message.substring(WARN.length()) + "</pre>");
-
+                         SafeHtmlUtils.fromString(message.substring(WARN.length())).asString() + "</pre>");
         } else if (message.startsWith(DOCKER_ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(DOCKER_ERROR.length()) + "</pre>");
-
+                         SafeHtmlUtils.fromString(message.substring(DOCKER_ERROR.length())).asString() + "</pre>");
         } else if (message.startsWith(DOCKER)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
-                         message.substring(DOCKER.length()) + "</pre>");
-
+                         SafeHtmlUtils.fromString(message.substring(DOCKER.length())).asString() + "</pre>");
         } else if (message.startsWith(STDERR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + STDERR_COLOR + ";'><b>STDERR</b></span>]" +
-                         message.substring(STDERR.length()) + "</pre>");
-
+                         SafeHtmlUtils.fromString(message.substring(STDERR.length())).asString() + "</pre>");
         } else {
-            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
+            html.setHTML("<pre " + PRE_STYLE + ">" + SafeHtmlUtils.fromString(message).asString() + "</pre>");
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
 

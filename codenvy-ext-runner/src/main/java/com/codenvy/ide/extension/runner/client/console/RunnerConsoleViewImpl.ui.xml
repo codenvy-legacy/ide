@@ -15,9 +15,7 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:with field='locale' type='com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant'/>
 
-    <ui:style
-              type="com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl.Style"  >
-
+    <ui:style>
         @eval backgroundColor com.codenvy.ide.api.theme.Style.getPartBackground();
         @eval outputFontColor com.codenvy.ide.api.theme.Style.getOutputFontColor();
         @eval tabsPanelBackground com.codenvy.ide.api.theme.Style.getTabsPanelBackground();
