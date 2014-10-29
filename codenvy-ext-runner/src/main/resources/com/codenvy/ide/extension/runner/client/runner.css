@@ -93,3 +93,13 @@ svg.partIcon {
     pointer-events: none; /* do not allow SVG element to intercept pointer events */
     fill: mainFontColor;
 }
+
+.grid {
+    font-family: mainFontFamily;
+    font-size: fontSize;
+    background-color: red;
+}
+
+.grid[selected] {
+    background-color: green;
+}

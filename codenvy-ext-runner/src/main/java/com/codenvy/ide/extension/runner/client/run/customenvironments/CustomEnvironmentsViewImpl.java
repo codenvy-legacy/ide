@@ -10,25 +10,28 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
-import elemental.dom.Element;
-import elemental.html.TableCellElement;
-import elemental.html.TableElement;
+import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.RowStyles;
+import com.google.gwt.user.client.ui.*;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
-import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.window.Window;
-import com.codenvy.ide.util.dom.Elements;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.vectomatic.dom.svg.ui.SVGImage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The implementation of {@link CustomEnvironmentsView}.
@@ -44,75 +47,89 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
     private Button                        btnEdit;
     private ActionDelegate                delegate;
     private RunnerLocalizationConstant    localizationConstants;
-    private SimpleList<CustomEnvironment> list;
+    private CellTable<CustomEnvironment>  grid;
+    private RunnerResources               runnerResources;
 
     @Inject
-    protected CustomEnvironmentsViewImpl(com.codenvy.ide.Resources resources, RunnerLocalizationConstant localizationConstants,
+    protected CustomEnvironmentsViewImpl(final com.codenvy.ide.Resources resources, final RunnerResources runnerResources, RunnerLocalizationConstant localizationConstants,
                                          EditImagesViewImplUiBinder uiBinder) {
         this.localizationConstants = localizationConstants;
+        this.runnerResources = runnerResources;
         this.setTitle(localizationConstants.customEnvironmentsViewTitle());
         Widget widget = uiBinder.createAndBindUi(this);
         this.setWidget(widget);
         createButtons();
 
-        final SimpleList.ListEventDelegate<CustomEnvironment> eventDelegate = new SimpleList.ListEventDelegate<CustomEnvironment>() {
-            @Override
-            public void onListItemClicked(Element itemElement, CustomEnvironment itemData) {
-                list.getSelectionModel().setSelectedItem(itemData);
-                delegate.onEnvironmentSelected(itemData);
-            }
+        grid = new CellTable<CustomEnvironment>(15, resources);
 
+        // Create files column:
+        Column<CustomEnvironment, String> nameColumn = new Column<CustomEnvironment, String>(new TextCell()) {
             @Override
-            public void onListItemDoubleClicked(Element listItemBase, CustomEnvironment itemData) {
-                list.getSelectionModel().setSelectedItem(itemData);
-                delegate.onEnvironmentSelected(itemData);
-                delegate.onEditClicked();
+            public String getValue(CustomEnvironment environment) {
+                return environment.getName();
             }
         };
 
-        final SimpleList.ListItemRenderer<CustomEnvironment> itemRenderer = new SimpleList.ListItemRenderer<CustomEnvironment>() {
+        nameColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        grid.addColumn(nameColumn);
+
+        final SingleSelectionModel<CustomEnvironment> selectionModel = new SingleSelectionModel<CustomEnvironment>();
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
-            public void render(Element itemElement, CustomEnvironment itemData) {
-                TableCellElement label = Elements.createTDElement();
-                label.setInnerHTML(itemData.getName());
-                itemElement.appendChild(label);
-                UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "customEnvironments-openFile-" + itemData);
+            public void onSelectionChange(SelectionChangeEvent event) {
+                delegate.onEnvironmentSelected(selectionModel.getSelectedObject());
             }
+        });
+        grid.setSelectionModel(selectionModel);
 
+        grid.addDomHandler(new DoubleClickHandler() {
             @Override
-            public Element createElement() {
-                return Elements.createTRElement();
+            public void onDoubleClick(DoubleClickEvent event) {
+                if (selectionModel.getSelectedObject() != null) {
+                    delegate.onEditClicked();
+                }
             }
-        };
+        }, DoubleClickEvent.getType());
 
-        TableElement tableElement = Elements.createTableElement();
-        tableElement.setAttribute("style", "width: 100%");
+        grid.addDomHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (KeyCodes.KEY_ENTER == event.getNativeKeyCode() && selectionModel.getSelectedObject() != null) {
+                    delegate.onEditClicked();
+                }
+            }
+        }, KeyUpEvent.getType());
 
-        list = SimpleList.create((SimpleList.View)tableElement, resources.defaultSimpleListCss(), itemRenderer, eventDelegate);
-        listPanel.add(list);
+        grid.setEmptyTableWidget(new Label(localizationConstants.customEnvironmentsEmptyGridMessage()));
+        grid.setWidth("100%");
+        listPanel.add(grid);
     }
 
     private void createButtons() {
-        Button btnAdd = createButton(localizationConstants.buttonAdd(), "customEnvironments-add", new ClickHandler() {
+        Button btnAdd = createButton(localizationConstants.buttonAdd(), new SVGImage(runnerResources.addEnvironment()), "customEnvironments-add", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onAddClicked();
             }
         });
+        btnAdd.getElement().getStyle().setFloat(Style.Float.LEFT);
+        btnAdd.getElement().getStyle().setMarginLeft(12, Style.Unit.PX);
 
-        btnRemove = createButton(localizationConstants.buttonRemove(), "customEnvironments-remove", new ClickHandler() {
+        btnRemove = createButton(localizationConstants.buttonRemove(), new SVGImage(runnerResources.removeEnvironment()), "customEnvironments-remove", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onRemoveClicked();
             }
         });
+        btnRemove.getElement().getStyle().setFloat(Style.Float.LEFT);
 
-        btnEdit = createButton(localizationConstants.buttonEdit(), "customEnvironments-edit", new ClickHandler() {
+        btnEdit = createButton(localizationConstants.buttonEdit(), new SVGImage(runnerResources.editEnvironment()), "customEnvironments-edit", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 delegate.onEditClicked();
             }
         });
+        btnEdit.getElement().getStyle().setFloat(Style.Float.LEFT);
 
         final Button btnClose = createButton(localizationConstants.buttonClose(), "customEnvironments-close", new ClickHandler() {
             @Override
@@ -120,11 +137,14 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
                 delegate.onCloseClicked();
             }
         });
+        btnClose.addStyleName(resources.centerPanelCss().blueButton());
+        btnClose.getElement().getStyle().setMarginRight(10, Style.Unit.PX);
 
-        getFooter().add(btnClose);
+
+        getFooter().add(btnAdd);
         getFooter().add(btnEdit);
         getFooter().add(btnRemove);
-        getFooter().add(btnAdd);
+        getFooter().add(btnClose);
     }
 
     @Override
@@ -153,12 +173,16 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
     /** {@inheritDoc} */
     @Override
     public void setEnvironments(Array<CustomEnvironment> environments) {
-        list.render(environments);
+        List<CustomEnvironment> environmentList = new ArrayList<CustomEnvironment>();
+        for (CustomEnvironment environment : environments.asIterable()) {
+            environmentList.add(environment);
+        }
+        grid.setRowData(environmentList);
     }
 
     @Override
     public void selectEnvironment(CustomEnvironment environment) {
-        list.getSelectionModel().setSelectedItem(environment);
+        grid.getSelectionModel().setSelected(environment, true);
         delegate.onEnvironmentSelected(environment);
     }
 

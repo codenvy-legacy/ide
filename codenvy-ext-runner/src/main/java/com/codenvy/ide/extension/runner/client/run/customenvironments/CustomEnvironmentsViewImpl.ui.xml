@@ -19,7 +19,7 @@
             padding: 6px;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="320px" height="320px">
+    <g:DockLayoutPanel unit="PX" width="320px" height="220px">
         <g:center>
             <g:ScrollPanel ui:field="listPanel" addStyleNames="{style.border}"
                            debugId="file-editImages-listPanel"/>

@@ -276,4 +276,7 @@ public interface RunnerLocalizationConstant extends Messages {
     /* RunnerConsoleView */
     @Key("view.runnerConsole.title")
     String runnerConsoleViewTitle();
+
+    @Key("view.customEnvironments.empty.grid")
+    String customEnvironmentsEmptyGridMessage();
 }
