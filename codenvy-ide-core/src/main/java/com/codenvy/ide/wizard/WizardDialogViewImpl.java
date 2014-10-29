@@ -16,6 +16,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -153,13 +154,13 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
     /** {@inheritDoc} */
     @Override
     public void setCaption(@NotNull String caption) {
-        this.caption.setHTML(caption);
+        this.caption.setHTML(SafeHtmlUtils.fromString(caption).asString());
     }
 
     /** {@inheritDoc} */
     @Override
     public void setNotice(@Nullable String notice) {
-        this.notice.setHTML(notice);
+        this.notice.setHTML(SafeHtmlUtils.fromString(notice).asString());
     }
 
     /** {@inheritDoc} */

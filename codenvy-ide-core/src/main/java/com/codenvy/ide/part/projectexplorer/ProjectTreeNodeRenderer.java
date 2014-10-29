@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.part.projectexplorer;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
 
@@ -93,7 +94,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
             Elements.addClassName(css.defaultFont(), root);
         }
 
-        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + node.getDisplayName());
+        root.setInnerHTML(root.getInnerHTML() + "&nbsp;" + SafeHtmlUtils.fromString(node.getDisplayName()).asString());
 
         // set 'id' property for rendered element (it's need for testing purpose)
         setIdProperty((com.google.gwt.dom.client.Element)root, node);
