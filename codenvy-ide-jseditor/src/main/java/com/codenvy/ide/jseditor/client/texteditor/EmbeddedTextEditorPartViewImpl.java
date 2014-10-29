@@ -24,6 +24,8 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.debug.BreakpointRenderer;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInfoCallback;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInformationWidget;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
@@ -37,6 +39,7 @@ import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
+import com.codenvy.ide.jseditor.client.popup.PopupResources;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -47,6 +50,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
+
+import elemental.dom.Element;
 
 /**
  * Implementation of the View part of the editors of the embedded kind.
@@ -92,6 +97,8 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
             return EmbeddedTextEditorPartViewImpl.this;
         }
     };
+
+    private PopupResources popupResources;
 
     @Inject
     public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
@@ -317,7 +324,16 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Override
     public void showCompletionProposals(final CompletionsSource source) {
-        this.editor.showCompletionProposals(source);
+        this.editor.showCompletionProposals(source, new AdditionalInfoCallback() {
+            
+            @Override
+            public Element onAdditionalInfoNeeded(final float pixelX, final float pixelY, final Element infoWidget) {
+                final AdditionalInformationWidget popup = new AdditionalInformationWidget(popupResources);
+                popup.addItem(infoWidget);
+                popup.show(pixelX, pixelY);
+                return popup.asElement();
+            }
+        });
     }
 
     @Override
@@ -356,6 +372,11 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Inject
     public void setBreakpointRendererFactory(final BreakpointRendererFactory breakpointRendererFactory) {
         this.breakpointRendererFactory = breakpointRendererFactory;
+    }
+
+    @Inject
+    public void setPopupResource(final PopupResources popupResources) {
+        this.popupResources = popupResources;
     }
 
     /**
