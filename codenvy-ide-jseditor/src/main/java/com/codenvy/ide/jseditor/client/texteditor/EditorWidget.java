@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInfoCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
@@ -182,4 +183,6 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      * Display the default completion proposals.
      */
     void showCompletionProposals();
+
+    void showCompletionProposals(CompletionsSource completionsSource, AdditionalInfoCallback additionalInfoCallback);
 }

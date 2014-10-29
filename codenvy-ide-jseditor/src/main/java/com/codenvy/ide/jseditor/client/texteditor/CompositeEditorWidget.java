@@ -13,6 +13,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import java.util.List;
 
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInfoCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
@@ -54,5 +55,11 @@ public abstract class CompositeEditorWidget extends Composite implements EditorW
     @Override
     public void showCompletionProposals() {
         // does nothing by default
+    }
+
+    @Override
+    public void showCompletionProposals(final CompletionsSource completionsSource,
+                                        final AdditionalInfoCallback additionalInfoCallback) {
+        showCompletionProposals(completionsSource);
     }
 }
