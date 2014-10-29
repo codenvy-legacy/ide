@@ -14,6 +14,7 @@
 
 package com.codenvy.ide.texteditor.codeassistant;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Element;
 import elemental.dom.Node;
@@ -68,7 +69,7 @@ public class AutocompleteUiController implements AutocompleteBox {
                     } else if (itemData.getIcon() != null && itemData.getIcon().getImage() != null) {
                         icon.appendChild((Node)itemData.getIcon().getImage().getElement());
                     }
-                    label.setInnerHTML(itemData.getDisplayString());
+                    label.setInnerHTML(SafeHtmlUtils.fromString(itemData.getDisplayString()).asString());
                     itemElement.appendChild(icon);
                     itemElement.appendChild(label);
                     itemElement.appendChild(group);
