@@ -19,6 +19,8 @@ import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
+import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
@@ -69,7 +71,8 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private       NewProjectWizardPresenter   newProjectWizardPresenter;
     private       MainPagePresenter           mainPage;
     private final DialogFactory               dialogFactory;
-    private final EventBus                    eventBus;
+    private final VfsServiceClient            vfsServiceClient;
+    private final EventBus eventBus;
     private Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
@@ -86,6 +89,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         ProjectImporterRegistry projectImporterRegistry,
                                         MainPagePresenter mainPage,
                                         ProjectServiceClient projectService,
+                                        VfsServiceClient vfsServiceClient,
                                         RunnerServiceClient runnerService,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                         CoreLocalizationConstant locale,
@@ -97,6 +101,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         DialogFactory dialogFactory) {
         this.view = view;
         this.projectImporterRegistry = projectImporterRegistry;
+        this.vfsServiceClient = vfsServiceClient;
         this.eventBus = eventBus;
         this.wizardRegistry = wizardRegistry;
         this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
@@ -213,10 +218,11 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
             }
         };
 
-        // check whether project with the same name already exists
-        projectService.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>() {
+        // Check whether project with the same name already exists.
+        // Check on VFS directly because need to check ide-2 projects also.
+        vfsServiceClient.getItemByPath(projectName, new AsyncRequestCallback<Item>() {
             @Override
-            protected void onSuccess(ProjectDescriptor result) {
+            protected void onSuccess(Item result) {
                 // Project with the same name already exists
                 dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
                                                   locale.createProjectFromTemplateProjectExists(projectName), null).show();

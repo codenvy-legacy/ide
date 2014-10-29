@@ -16,10 +16,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.RowStyles;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import elemental.dom.Element;
+import elemental.html.TableCellElement;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -66,7 +68,7 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
         Column<CustomEnvironment, String> nameColumn = new Column<CustomEnvironment, String>(new TextCell()) {
             @Override
             public String getValue(CustomEnvironment environment) {
-                return environment.getName();
+                return SafeHtmlUtils.fromString(environment.getName()).asString();
             }
         };
 

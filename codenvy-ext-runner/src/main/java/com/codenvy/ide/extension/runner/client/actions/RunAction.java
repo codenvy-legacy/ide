@@ -11,8 +11,8 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -27,7 +27,7 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class RunAction extends Action {
+public class RunAction extends ProjectAction {
 
     private final RunController        runController;
     private final AppContext           appContext;
@@ -41,7 +41,6 @@ public class RunAction extends Action {
                      AnalyticsEventLogger eventLogger) {
         super(localizationConstants.runAppActionText(),
               localizationConstants.runAppActionDescription(),
-              null,
               resources.launchApp());
         this.runController = runController;
         this.appContext = appContext;
@@ -55,9 +54,8 @@ public class RunAction extends Action {
         runController.runActiveProject(null, null, true);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
+    protected void updateProjectAction(ActionEvent e) {
         CurrentProject currentProject = appContext.getCurrentProject();
         // Project launch set isRunningEnabled to false, but you still want to see the Run button.
         e.getPresentation().setVisible(runController.isAnyAppLaunched() || currentProject != null && currentProject.getIsRunningEnabled());
