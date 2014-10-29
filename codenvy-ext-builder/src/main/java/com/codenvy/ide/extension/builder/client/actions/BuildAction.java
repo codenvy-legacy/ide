@@ -11,9 +11,8 @@
 package com.codenvy.ide.extension.builder.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
 import com.codenvy.ide.extension.builder.client.BuilderResources;
@@ -27,21 +26,19 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuildAction extends Action {
+public class BuildAction extends ProjectAction {
 
-    private final AppContext           appContext;
     private final BuildController      buildController;
     private final AnalyticsEventLogger eventLogger;
     private       BuildContext         buildContext;
 
     @Inject
     public BuildAction(BuildController buildController, BuilderResources resources,
-                       BuilderLocalizationConstant localizationConstant, AppContext appContext,
+                       BuilderLocalizationConstant localizationConstant,
                        AnalyticsEventLogger eventLogger, BuildContext buildContext) {
         super(localizationConstant.buildProjectControlTitle(),
-              localizationConstant.buildProjectControlDescription(), null, resources.build());
+              localizationConstant.buildProjectControlDescription(), resources.build());
         this.buildController = buildController;
-        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
     }
@@ -53,14 +50,11 @@ public class BuildAction extends Action {
         buildController.buildActiveProject(true);
     }
 
-    /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
+    protected void updateProjectAction(ActionEvent e) {
         if (buildContext.isBuilding()) {
             e.getPresentation().setEnabled(false);
             e.getPresentation().setVisible(true);
-            return;
         }
-        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject() != null);
     }
 }
