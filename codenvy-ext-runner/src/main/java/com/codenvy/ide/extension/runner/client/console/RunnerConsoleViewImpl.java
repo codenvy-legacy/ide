@@ -10,12 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.api.project.server.ProjectTypeResolver;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -31,6 +33,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Implements {@link RunnerConsoleView}.
  *
@@ -39,20 +44,30 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
-    private static final String INFO         = "[INFO]";
-    private static final String ERROR        = "[ERROR]";
-    private static final String WARN         = "[WARNING]";
-    private static final String DOCKER       = "[DOCKER]";
-    private static final String DOCKER_ERROR = "[DOCKER] [ERROR]";
-    private static final String STDERR       = "[STDERR]";
 
-    private static final String PRE_STYLE          = "style='margin:0px; font-weight:700;'";
-    private static final String INFO_COLOR         = "lightgreen'";
-    private static final String WARN_COLOR         = "#FFBA00'";
-    private static final String ERROR_COLOR        = "#F62217'";
-    private static final String DOCKER_COLOR       = "#00B7EC'";
-    private static final String DOCKER_ERROR_COLOR = "#F62217'";
-    private static final String STDERR_COLOR       = "#F62217'";
+    private static final String PRE_STYLE           = "style='margin:0px; font-weight:700;'";
+
+    private static final String INFO                = "[INFO]";
+    private static final String INFO_COLOR          = "lightgreen'";
+
+    private static final String WARN                = "[WARNING]";
+    private static final String WARN_COLOR          = "#FFBA00'";
+
+    private static final String ERROR               = "[ERROR]";
+    private static final String ERROR_COLOR         = "#F62217'";
+
+    private static final String DOCKER              = "[DOCKER]";
+    private static final String DOCKER_COLOR        = "#00B7EC'";
+
+    private static final String DOCKER_ERROR        = "[DOCKER] [ERROR]";
+    private static final String DOCKER_ERROR_COLOR  = "#F62217'";
+
+    private static final String STDOUT              = "[STDOUT]";
+    private static final String STDOUT_COLOR        = "lightgreen";
+
+    private static final String STDERR              = "[STDERR]";
+    private static final String STDERR_COLOR        = "#F62217'";
+
     private RunnerResources runnerResources;
 
     @UiField
@@ -72,7 +87,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     ScrollPanel consolePanel;
     @UiField
-    FlowPanel   consoleArea;
+    FlowPanel   consoleOutput;
 
     /**
      * Tab Terminal
@@ -80,11 +95,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     @UiField
     SimplePanel terminalButton;
     @UiField
-    FlowPanel terminalPanel;
+    FlowPanel   terminalPanel;
     @UiField
-    Label     terminalUnavailableLabel;
+    Label       terminalUnavailableLabel;
     @UiField
-    Frame     terminalFrame;
+    Frame       terminalFrame;
 
     /**
      * Tab App
@@ -109,13 +124,30 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /* private String appURL; */
 
 
-    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {}
+    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
+    }
+
+    interface Style extends CssResource {
+
+        String consoleOutput();
+
+        String consoleOutputMessage();
+
+    }
+
+    @UiField
+    Style style;
 
     @Inject
-    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources, RunnerConsoleViewImplUiBinder uiBinder) {
+    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
+                                 RunnerConsoleViewImplUiBinder uiBinder) {
         super(resources);
+
         this.runnerResources = runnerResources;
+
         container.add(uiBinder.createAndBindUi(this));
+        style.ensureInjected();
+
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
@@ -262,7 +294,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /** {@inheritDoc} */
     @Override
     public void clearConsole() {
-        consoleArea.clear();
+        consoleOutput.clear();
     }
 
     /** {@inheritDoc} */
@@ -271,10 +303,9 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         consolePanel.getElement().setScrollTop(consolePanel.getElement().getScrollHeight());
     }
 
-    /** {@inheritDoc} */
-    @Override
     public void print(String message) {
         HTML html = new HTML();
+
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
                          message.substring(INFO.length()) + "</pre>");
@@ -305,6 +336,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
 
-        consoleArea.add(html);
+        consoleOutput.add(html);
     }
 }
