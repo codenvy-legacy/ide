@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -238,7 +239,7 @@ public class MainPageViewImpl implements MainPageView {
             for (String option : options) {
                 if (option != null && option.length() > 0) {
                     optionsHTMLBuilder.append("<p>");
-                    optionsHTMLBuilder.append("- " + option);
+                    optionsHTMLBuilder.append("- " + SafeHtmlUtils.fromString(option).asString());
                     optionsHTMLBuilder.append("</p>\n");
                 }
             }

@@ -11,6 +11,7 @@
 
 package com.codenvy.ide.extension.runner.client.wizard;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
 
@@ -46,13 +47,14 @@ public class RunnersRenderer implements NodeRenderer<Object> {
     public SpanElement renderNodeContents(Object data) {
         SpanElement rootElement = Elements.createSpanElement();
         if (data instanceof RunnerEnvironmentTree) {
-            rootElement.setInnerHTML(((RunnerEnvironmentTree)data).getDisplayName());
+            rootElement.setInnerHTML(SafeHtmlUtils.fromString(((RunnerEnvironmentTree) data).getDisplayName()).asString());
         } else if (data instanceof RunnerEnvironmentLeaf) {
             SVGResource environment = resources.environment();
             SVGImage image = new SVGImage(environment);
             image.getElement().setAttribute("class", resources.runner().treeIcon());
             rootElement.appendChild((elemental.dom.Node)image.getElement());
-            rootElement.setInnerHTML(rootElement.getInnerHTML() + "&nbsp;" + ((RunnerEnvironmentLeaf)data).getDisplayName());
+            rootElement.setInnerHTML(rootElement.getInnerHTML() + "&nbsp;" +
+                    SafeHtmlUtils.fromString(((RunnerEnvironmentLeaf) data).getDisplayName()).asString());
         }
 
         return rootElement;

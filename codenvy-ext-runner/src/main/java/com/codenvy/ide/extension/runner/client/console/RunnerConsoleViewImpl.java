@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -221,22 +222,22 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         HTML html = new HTML();
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                         message.substring(INFO.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(INFO.length())).asString() + "</pre>");
         } else if (message.startsWith(ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(ERROR.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(ERROR.length())).asString() + "</pre>");
         } else if (message.startsWith(WARN)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
-                         message.substring(WARN.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(WARN.length())).asString() + "</pre>");
         } else if (message.startsWith(DOCKER_ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(DOCKER_ERROR.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(DOCKER_ERROR.length())).asString() + "</pre>");
         } else if (message.startsWith(DOCKER)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
-                         message.substring(DOCKER.length()) + "</pre>");
+                    SafeHtmlUtils.fromString(message.substring(DOCKER.length())).asString() + "</pre>");
         } else {
-            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
+            html.setHTML("<pre " + PRE_STYLE + ">" + SafeHtmlUtils.fromString(message).asString() + "</pre>");
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
