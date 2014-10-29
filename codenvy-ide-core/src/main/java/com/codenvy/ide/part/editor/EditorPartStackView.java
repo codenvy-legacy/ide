@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -280,7 +281,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 tabItem.add(icon);
             }
             tabItemTittle = new InlineLabel("");
-            tabItemTittle.getElement().setInnerHTML(title);
+            tabItemTittle.getElement().setInnerHTML(SafeHtmlUtils.fromString(title).asString());
             tabItem.add(tabItemTittle);
             if (closable) {
                 image = new Image(partStackUIResources.close());

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions.find;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.dom.Node;
 import elemental.html.TableCellElement;
@@ -98,13 +99,13 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
                         hotKey =
                                 "<nobr>&nbsp;[" + hotKey + "]&nbsp;</nobr>";
                     }
-                    label.setInnerHTML(presentation.getText() + hotKey);
+                    label.setInnerHTML(SafeHtmlUtils.fromString(presentation.getText()).asString() + hotKey);
                     if (!presentation.isEnabled() || !presentation.isVisible()) {
                         itemElement.getStyle().setProperty("opacity", "0.6");
                     }
                     String groupName = actions.get(itemData);
                     if (groupName != null) {
-                        group.setInnerHTML(groupName);
+                        group.setInnerHTML(SafeHtmlUtils.fromString(groupName).asString());
                     }
                     itemElement.appendChild(icon);
                     itemElement.appendChild(label);

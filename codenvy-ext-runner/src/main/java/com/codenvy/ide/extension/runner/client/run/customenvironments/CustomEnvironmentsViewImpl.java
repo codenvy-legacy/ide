@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.run.customenvironments;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
@@ -74,7 +75,7 @@ public class CustomEnvironmentsViewImpl extends Window implements CustomEnvironm
             @Override
             public void render(Element itemElement, CustomEnvironment itemData) {
                 TableCellElement label = Elements.createTDElement();
-                label.setInnerHTML(itemData.getName());
+                label.setInnerHTML(SafeHtmlUtils.fromString(itemData.getName()).asString());
                 itemElement.appendChild(label);
                 UIObject.ensureDebugId((com.google.gwt.dom.client.Element)itemElement, "customEnvironments-openFile-" + itemData);
             }
