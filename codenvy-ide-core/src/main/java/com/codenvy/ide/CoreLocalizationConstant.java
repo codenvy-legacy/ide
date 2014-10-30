@@ -362,6 +362,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.getResourcesFailed")
     String messagesGetResourcesFailed();
 
+    @Key("messages.getProjectTypesFailed")
+    String messagesGetProjectTypesFailed();
+
     @Key("messages.saveChanges")
     String messagesSaveChanges(String name);
 
