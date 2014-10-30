@@ -11,6 +11,9 @@
 package com.codenvy.ide.jseditor.client.document;
 
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.text.RegionImpl;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.text.TextRange;
 
 /** An abstract implementation of {@link EmbeddedDocument}. */
 public abstract class AbstractEmbeddedDocument implements EmbeddedDocument, DocumentHandle {
@@ -51,7 +54,33 @@ public abstract class AbstractEmbeddedDocument implements EmbeddedDocument, Docu
     }
 
     @Override
+    public void replace(final int offset, final int length, String text) {
+        replace(new RegionImpl(offset, length), text);
+    }
+
+    @Override
     public ReadOnlyDocument getReadOnlyDocument() {
         return this;
     }
+
+    @Override
+    public void setSelectedRange(final TextRange range) {
+        setSelectedRange(range, false);
+    }
+
+    @Override
+    public void setSelectedRange(final TextRange range, final boolean show) {
+        // does nothing by default
+    }
+
+    @Override
+    public void setSelectedRange(final LinearRange range) {
+        setSelectedRange(range, false);
+    }
+    
+    @Override
+    public void setSelectedRange(final LinearRange range, final boolean show) {
+     // does nothing by default
+    }
+
 }
