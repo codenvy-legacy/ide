@@ -85,18 +85,18 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         String TEXT = text.toUpperCase();
         if (TEXT.startsWith("[INFO]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>] " +
-                    SafeHtmlUtils.fromString(text.substring(6)).asString() + "</pre>");
+                    text.substring(6) + "</pre>");
 
         } else if (TEXT.startsWith("[ERROR]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>] " +
-                    SafeHtmlUtils.fromString(text.substring(7)).asString() + "</pre>");
+                    text.substring(7) + "</pre>");
 
         } else if (TEXT.startsWith("[WARNING]")) {
             html.setHTML("<pre" + preStyle + ">[<span style='color:" + WARNING_COLOR + ";'><b>WARNING</b></span>] " +
-                    SafeHtmlUtils.fromString(text.substring(9)).asString() + "</pre>");
+                    text.substring(9) + "</pre>");
 
         } else {
-            html.setHTML("<pre" + preStyle + ">" + SafeHtmlUtils.fromString(text).asString() + "</pre>");
+            html.setHTML("<pre" + preStyle + ">" + text + "</pre>");
         }
 
         html.getElement().setAttribute("style", "padding-left: 2px;");
@@ -108,8 +108,7 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
         String preStyle = " style='margin:0px; font-size: 12px;' ";
 
         HTML html = new HTML();
-        html.setHTML("<pre" + preStyle + "><span style='color:" + SafeHtmlUtils.fromString(color).asString() +
-                ";'>" + SafeHtmlUtils.fromString(text).asString() + "</span></pre>");
+        html.setHTML("<pre" + preStyle + "><span style='color:" + color + ";'>" + text + "</span></pre>");
 
         html.getElement().setAttribute("style", "padding-left: 2px;");
         consoleArea.add(html);
