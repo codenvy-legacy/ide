@@ -69,7 +69,7 @@ public class AutocompleteUiController implements AutocompleteBox {
                     } else if (itemData.getIcon() != null && itemData.getIcon().getImage() != null) {
                         icon.appendChild((Node)itemData.getIcon().getImage().getElement());
                     }
-                    label.setInnerHTML(SafeHtmlUtils.fromString(itemData.getDisplayString()).asString());
+                    label.setInnerHTML(itemData.getDisplayString());
                     itemElement.appendChild(icon);
                     itemElement.appendChild(label);
                     itemElement.appendChild(group);

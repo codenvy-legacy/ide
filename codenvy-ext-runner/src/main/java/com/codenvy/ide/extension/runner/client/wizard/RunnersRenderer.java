@@ -47,14 +47,14 @@ public class RunnersRenderer implements NodeRenderer<Object> {
     public SpanElement renderNodeContents(Object data) {
         SpanElement rootElement = Elements.createSpanElement();
         if (data instanceof RunnerEnvironmentTree) {
-            rootElement.setInnerHTML(SafeHtmlUtils.fromString(((RunnerEnvironmentTree) data).getDisplayName()).asString());
+            rootElement.setInnerHTML(((RunnerEnvironmentTree) data).getDisplayName());
         } else if (data instanceof RunnerEnvironmentLeaf) {
             SVGResource environment = resources.environment();
             SVGImage image = new SVGImage(environment);
             image.getElement().setAttribute("class", resources.runner().treeIcon());
             rootElement.appendChild((elemental.dom.Node)image.getElement());
             rootElement.setInnerHTML(rootElement.getInnerHTML() + "&nbsp;" +
-                    SafeHtmlUtils.fromString(((RunnerEnvironmentLeaf) data).getDisplayName()).asString());
+                    ((RunnerEnvironmentLeaf) data).getDisplayName());
         }
 
         return rootElement;

@@ -281,7 +281,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 tabItem.add(icon);
             }
             tabItemTittle = new InlineLabel("");
-            tabItemTittle.getElement().setInnerHTML(SafeHtmlUtils.fromString(title).asString());
+            tabItemTittle.getElement().setInnerHTML(title);
             tabItem.add(tabItemTittle);
             if (closable) {
                 image = new Image(partStackUIResources.close());

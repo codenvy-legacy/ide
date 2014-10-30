@@ -239,7 +239,7 @@ public class MainPageViewImpl implements MainPageView {
             for (String option : options) {
                 if (option != null && option.length() > 0) {
                     optionsHTMLBuilder.append("<p>");
-                    optionsHTMLBuilder.append("- " + SafeHtmlUtils.fromString(option).asString());
+                    optionsHTMLBuilder.append("- " + option);
                     optionsHTMLBuilder.append("</p>\n");
                 }
             }

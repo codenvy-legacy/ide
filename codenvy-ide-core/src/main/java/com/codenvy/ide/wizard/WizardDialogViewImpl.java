@@ -154,13 +154,13 @@ public class WizardDialogViewImpl extends Window implements WizardDialogView {
     /** {@inheritDoc} */
     @Override
     public void setCaption(@NotNull String caption) {
-        this.caption.setHTML(SafeHtmlUtils.fromString(caption).asString());
+        this.caption.setHTML(caption);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setNotice(@Nullable String notice) {
-        this.notice.setHTML(SafeHtmlUtils.fromString(notice).asString());
+        this.notice.setHTML(notice);
     }
 
     /** {@inheritDoc} */

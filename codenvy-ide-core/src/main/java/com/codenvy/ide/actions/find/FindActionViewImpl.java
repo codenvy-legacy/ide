@@ -99,13 +99,13 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
                         hotKey =
                                 "<nobr>&nbsp;[" + hotKey + "]&nbsp;</nobr>";
                     }
-                    label.setInnerHTML(SafeHtmlUtils.fromString(presentation.getText()).asString() + hotKey);
+                    label.setInnerHTML(presentation.getText() + hotKey);
                     if (!presentation.isEnabled() || !presentation.isVisible()) {
                         itemElement.getStyle().setProperty("opacity", "0.6");
                     }
                     String groupName = actions.get(itemData);
                     if (groupName != null) {
-                        group.setInnerHTML(SafeHtmlUtils.fromString(groupName).asString());
+                        group.setInnerHTML(groupName);
                     }
                     itemElement.appendChild(icon);
                     itemElement.appendChild(label);
