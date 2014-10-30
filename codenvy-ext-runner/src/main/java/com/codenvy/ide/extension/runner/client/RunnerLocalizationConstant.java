@@ -270,6 +270,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.customEnvironments.notValidEnvName.message")
     String customEnvironmentsViewNotValidEnvNameMessage();
 
+    @Key("view.customEnvironments.spacesNotAllowed.message")
+    String customEnvironmentsViewSpacesNotAllowedMessage();
+
     @Key("view.selectRunnerPage.memoryRecommendedLabel")
     String selectRunnerPageViewMemoryRecommendedLabel();
 
