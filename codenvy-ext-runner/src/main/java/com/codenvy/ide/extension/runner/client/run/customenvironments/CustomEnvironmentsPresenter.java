@@ -28,6 +28,7 @@ import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.ui.dialogs.input.InputValidator;
+import com.codenvy.ide.util.NameUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -175,7 +176,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
 
     private void editEnvironment(final CustomEnvironment environment) {
         final String path = appContext.getCurrentProject().getProjectDescription().getPath() + '/' + envFolderPath + '/' +
-                environment.getName();
+                            environment.getName();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
@@ -183,8 +184,8 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                 result.reverse(); // small hack: reverse array to open Dockerfile as second (active) editor
                 for (ItemReference item : result.asIterable()) {
                     eventBus.fireEvent(new FileEvent(new EnvironmentScript(null, item, eventBus, projectServiceClient,
-                            dtoUnmarshallerFactory, environment.getName()),
-                            FileEvent.FileOperation.OPEN));
+                                                                           dtoUnmarshallerFactory, environment.getName()),
+                                                     FileEvent.FileOperation.OPEN));
                 }
             }
 
@@ -283,6 +284,15 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         public Violation validate(String value) {
             if (value.indexOf(' ') >= 0) {
                 return new Violation() {
+                    @Nullable
+                    @Override
+                    public String getMessage() {
+                        return constants.customEnvironmentsViewSpacesNotAllowedMessage();
+                    }
+                };
+            } else if (!NameUtils.checkFolderName(value)) {
+                return new Violation() {
+                    @Nullable
                     @Override
                     public String getMessage() {
                         return constants.customEnvironmentsViewNotValidEnvNameMessage();

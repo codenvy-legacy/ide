@@ -10,19 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
-import com.codenvy.ide.newresource.DefaultNewResourceAction;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new JavaScript file.
@@ -30,31 +22,14 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewJavaScriptFileAction extends DefaultNewResourceAction {
+public class NewJavaScriptFileAction extends AbstractNewResourceAction {
 
     @Inject
-    public NewJavaScriptFileAction(AppContext appContext,
-                                   WebExtensionResource webExtensionResource,
-                                   WebLocalizationConstant localizationConstant,
-                                   SelectionAgent selectionAgent,
-                                   EditorAgent editorAgent,
-                                   ProjectServiceClient projectServiceClient,
-                                   EventBus eventBus,
-                                   AnalyticsEventLogger eventLogger,
-                                   DtoUnmarshallerFactory unmarshallerFactory,
-                                   DialogFactory dialogFactory) {
+    public NewJavaScriptFileAction(WebExtensionResource webExtensionResource, WebLocalizationConstant localizationConstant) {
         super(localizationConstant.newJavaScriptFileActionTitle(),
               localizationConstant.newJavaScriptFileActionDescription(),
               webExtensionResource.js(),
-              null,
-              appContext,
-              selectionAgent,
-              editorAgent,
-              projectServiceClient,
-              eventBus,
-              eventLogger,
-              unmarshallerFactory,
-              dialogFactory);
+              null);
     }
 
     @Override
