@@ -265,6 +265,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.importer.info")
     String importProjectImporterInfo();
 
+    @Key("importProject.project.info")
+    String importProjectInfo();
+
     @Key("importProject.name.prompt")
     String importProjectNamePrompt();
 

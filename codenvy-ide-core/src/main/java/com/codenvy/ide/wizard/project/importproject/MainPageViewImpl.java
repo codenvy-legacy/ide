@@ -56,9 +56,7 @@ public class MainPageViewImpl implements MainPageView {
     private final CategoryRenderer<ProjectImporterDescriptor> projectImporterRenderer = new CategoryRenderer<ProjectImporterDescriptor>() {
         @Override
         public void renderElement(Element element, ProjectImporterDescriptor data) {
-            String str = data.getId();
-            str = str.length() > 1 ? Character.toUpperCase(str.charAt(0)) + str.substring(1) : str.toUpperCase();
-            element.setInnerText(str);
+            element.setInnerText(data.getId().toUpperCase());
         }
 
         @Override
