@@ -33,15 +33,22 @@ import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestHandler;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
+import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.KeyBindingAction;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 import com.google.web.bindery.event.shared.EventBus;
 
 import elemental.events.KeyboardEvent.KeyCode;
+import elemental.events.MouseEvent;
 
 /**
  * Initialization controller for the text editor.
@@ -56,6 +63,7 @@ public class TextEditorInit {
     private final EventBus generalEventBus;
     private final EditorHandle editorHandle;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final QuickAssistantFactory quickAssistantFactory;
     private final TextEditor textEditor;
 
 
@@ -63,11 +71,14 @@ public class TextEditorInit {
                           final EventBus generalEventBus,
                           final EditorHandle editorHandle,
                           final CodeAssistantFactory codeAssistantFactory,
+                          final QuickAssistantFactory quickAssistantFactory,
                           final TextEditor textEditor) {
+
         this.configuration = configuration;
         this.generalEventBus = generalEventBus;
         this.editorHandle = editorHandle;
         this.codeAssistantFactory = codeAssistantFactory;
+        this.quickAssistantFactory = quickAssistantFactory;
         this.textEditor = textEditor;
     }
 
@@ -80,11 +91,12 @@ public class TextEditorInit {
         final DocReadyInit<TextEditorInit> init = new DocReadyInit<TextEditorInit>() {
 
             @Override
-            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {	
+            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {
                 configurePartitioner(documentHandle);
                 configureReconciler(documentHandle);
                 configureAnnotationModel(documentHandle);
                 configureCodeAssist(documentHandle);
+                configureQuickAssist(documentHandle);
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -224,5 +236,28 @@ public class TextEditorInit {
     /** Show the available completions. */
     private void showCompletion() {
         editorHandle.getEditor().showCompletionProposals();
+    }
+
+    /**
+     * Sets up the quick assist assistant.
+     * @param documentHandle the handle to the document
+     */
+    private void configureQuickAssist(final DocumentHandle documentHandle) {
+        final QuickAssistProcessor processor = configuration.getQuickAssistProcessor();
+        if (this.quickAssistantFactory != null && processor != null) {
+            final QuickAssistAssistant quickAssist = quickAssistantFactory.createQuickAssistant(this.textEditor);
+            quickAssist.setQuickAssistProcessor(processor);
+            documentHandle.getDocEventBus().addHandler(GutterClickEvent.TYPE, new GutterClickHandler() {
+                @Override
+                public void onGutterClick(final GutterClickEvent event) {
+                    if (Gutters.ANNOTATION_GUTTER.equals(event.getGutterId())) {
+                        final MouseEvent originalEvent = event.getEvent();
+                        quickAssist.showPossibleQuickAssists(event.getLineNumber(),
+                                                             originalEvent.getClientX(),
+                                                             originalEvent.getClientY());
+                    }
+                }
+            });
+        }
     }
 }

@@ -41,6 +41,7 @@ import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.text.TextRange;
@@ -80,6 +81,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final EventBus             generalEventBus;
     private final DialogFactory        dialogFactory;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final QuickAssistantFactory quickAssistantFactory;
     private final BreakpointManager    breakpointManager;
 
     private TextEditorConfiguration    configuration;
@@ -98,6 +100,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                                        final EditorPrefLocalizationConstant constant,
                                        final DocumentStorage documentStorage,
                                        final CodeAssistantFactory codeAssistantFactory,
+                                       final QuickAssistantFactory quickAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
                                        DialogFactory dialogFactory) {
         this.breakpointManager = breakpointManager;
@@ -107,6 +110,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
         this.codeAssistantFactory = codeAssistantFactory;
+        this.quickAssistantFactory = quickAssistantFactory;
 
         this.generalEventBus = eventBus;
         this.dialogFactory = dialogFactory;
@@ -120,6 +124,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                            generalEventBus,
                            this.editor.getEditorHandle(),
                            this.codeAssistantFactory,
+                           this.quickAssistantFactory,
                            this).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
