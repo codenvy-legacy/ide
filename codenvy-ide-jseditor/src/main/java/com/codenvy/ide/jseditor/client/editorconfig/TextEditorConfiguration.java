@@ -20,20 +20,21 @@ import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 
 public interface TextEditorConfiguration {
 
     /**
      * Returns the visual width of the tab character. This implementation always returns 3.
-     * 
+     *
      * @return the tab width
      */
     public int getTabWidth();
 
     /**
      * Returns the outline model. This implementation always returns <code>null</code>.
-     * 
+     *
      * @return a model that used to build outline tree.
      */
     @Nullable
@@ -41,7 +42,7 @@ public interface TextEditorConfiguration {
 
     /**
      * Returns the content formatter.
-     * 
+     *
      * @return the content formatter
      */
     @Nullable
@@ -49,7 +50,7 @@ public interface TextEditorConfiguration {
 
     /**
      * Returns the content assistant (completion) processors.
-     * 
+     *
      * @return the code assist processors
      */
     @Nullable
@@ -57,7 +58,7 @@ public interface TextEditorConfiguration {
 
     /**
      * Returns the reconciler.
-     * 
+     *
      * @return the reconciler
      */
     @Nullable
@@ -65,7 +66,7 @@ public interface TextEditorConfiguration {
 
     /**
      * Returns the document partitioner.
-     * 
+     *
      * @return the document partitioner
      */
     @Nonnull
@@ -73,7 +74,7 @@ public interface TextEditorConfiguration {
 
     /**
      * Return the document position model.
-     * 
+     *
      * @return the position model
      */
     @Nullable
@@ -81,9 +82,17 @@ public interface TextEditorConfiguration {
 
     /**
      * Return the annotation model.
-     * 
+     *
      * @return the annotation model
      */
     @Nullable
     public AnnotationModel getAnnotationModel();
+
+    /**
+     * Return the Quickassist assistant processor.
+     *
+     * @return the quickassist assistant processor
+     */
+    @Nullable
+    public QuickAssistProcessor getQuickAssistProcessor();
 }

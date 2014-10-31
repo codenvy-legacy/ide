@@ -18,6 +18,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.partition.ConstantPartitioner;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 
 /**
@@ -62,6 +63,11 @@ public class DefaultTextEditorConfiguration implements TextEditorConfiguration {
 
     @Override
     public DocumentPositionMap getDocumentPositionMap() {
+        return null;
+    }
+
+    @Override
+    public QuickAssistProcessor getQuickAssistProcessor() {
         return null;
     }
 }
