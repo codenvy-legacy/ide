@@ -182,6 +182,7 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         if (activePart == null || !activePart.equals(this)) {
             isUnread = true;
         }
+        view.activateConsole();
         view.print(message);
         view.scrollBottom();
         firePropertyChange(TITLE_PROPERTY);
