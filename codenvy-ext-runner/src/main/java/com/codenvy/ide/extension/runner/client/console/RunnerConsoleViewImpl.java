@@ -45,25 +45,25 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private static final String PRE_STYLE           = "style='margin:0px; font-weight:700;'";
 
     private static final String INFO                = "[INFO]";
-    private static final String INFO_COLOR          = "lightgreen'";
+    private static final String INFO_COLOR          = "lightgreen";
 
     private static final String WARN                = "[WARNING]";
-    private static final String WARN_COLOR          = "#FFBA00'";
+    private static final String WARN_COLOR          = "#FFBA00";
 
     private static final String ERROR               = "[ERROR]";
-    private static final String ERROR_COLOR         = "#F62217'";
+    private static final String ERROR_COLOR         = "#F62217";
 
     private static final String DOCKER              = "[DOCKER]";
-    private static final String DOCKER_COLOR        = "#00B7EC'";
+    private static final String DOCKER_COLOR        = "#00B7EC";
 
     private static final String DOCKER_ERROR        = "[DOCKER] [ERROR]";
-    private static final String DOCKER_ERROR_COLOR  = "#F62217'";
+    private static final String DOCKER_ERROR_COLOR  = "#F62217";
 
     private static final String STDOUT              = "[STDOUT]";
     private static final String STDOUT_COLOR        = "lightgreen";
 
     private static final String STDERR              = "[STDERR]";
-    private static final String STDERR_COLOR        = "#F62217'";
+    private static final String STDERR_COLOR        = "#F62217";
 
     private RunnerResources runnerResources;
 

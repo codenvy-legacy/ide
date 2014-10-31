@@ -67,10 +67,7 @@
         .consoleOutput {
         }
 
-        .consoleOutputMessage {
-        }
-
-        .console pre {
+        .consoleOutput pre {
             font-family: "Droid Sans Mono", monospace;
             font-size: 11px;
         }
