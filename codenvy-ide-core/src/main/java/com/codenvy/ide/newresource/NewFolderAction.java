@@ -17,9 +17,9 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
-import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -60,7 +60,7 @@ public class NewFolderAction extends AbstractNewResourceAction {
 
                             @Override
                             protected void onFailure(Throwable exception) {
-                                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                                Log.error(NewFolderAction.class, exception);
                             }
                         });
                     }
