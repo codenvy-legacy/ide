@@ -10,48 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
- * Action to create new folder.
+ * Action to create new file.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewFileAction extends DefaultNewResourceAction {
+public class NewFileAction extends AbstractNewResourceAction {
     @Inject
-    public NewFileAction(AppContext appContext,
-                         CoreLocalizationConstant localizationConstant,
-                         SelectionAgent selectionAgent,
-                         EditorAgent editorAgent,
-                         Resources resources,
-                         ProjectServiceClient projectServiceClient,
-                         EventBus eventBus,
-                         AnalyticsEventLogger eventLogger,
-                         DtoUnmarshallerFactory unmarshallerFactory,
-                         DialogFactory dialogFactory) {
+    public NewFileAction(CoreLocalizationConstant localizationConstant, Resources resources) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
               null,
-              resources.defaultFile(),
-              appContext,
-              selectionAgent,
-              editorAgent,
-              projectServiceClient,
-              eventBus,
-              eventLogger,
-              unmarshallerFactory,
-              dialogFactory);
+              resources.defaultFile());
     }
 }

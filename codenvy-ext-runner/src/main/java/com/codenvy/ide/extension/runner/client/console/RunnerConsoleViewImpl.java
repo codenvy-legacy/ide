@@ -295,25 +295,25 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         if (message.startsWith(INFO)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                        SafeHtmlUtils.fromString(message.substring(INFO.length())).asString() + "</pre>");
+                        message.substring(INFO.length()) + "</pre>");
         } else if (message.startsWith(ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         SafeHtmlUtils.fromString(message.substring(ERROR.length())).asString() + "</pre>");
+                         message.substring(ERROR.length()) + "</pre>");
         } else if (message.startsWith(WARN)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
-                         SafeHtmlUtils.fromString(message.substring(WARN.length())).asString() + "</pre>");
+                         message.substring(WARN.length()) + "</pre>");
         } else if (message.startsWith(DOCKER_ERROR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
                          " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         SafeHtmlUtils.fromString(message.substring(DOCKER_ERROR.length())).asString() + "</pre>");
+                         message.substring(DOCKER_ERROR.length()) + "</pre>");
         } else if (message.startsWith(DOCKER)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
-                         SafeHtmlUtils.fromString(message.substring(DOCKER.length())).asString() + "</pre>");
+                         message.substring(DOCKER.length()) + "</pre>");
         } else if (message.startsWith(STDERR)) {
             html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + STDERR_COLOR + ";'><b>STDERR</b></span>]" +
-                         SafeHtmlUtils.fromString(message.substring(STDERR.length())).asString() + "</pre>");
+                         message.substring(STDERR.length()) + "</pre>");
         } else {
-            html.setHTML("<pre " + PRE_STYLE + ">" + SafeHtmlUtils.fromString(message).asString() + "</pre>");
+            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
         }
         html.getElement().setAttribute("style", "padding-left: 2px;");
 

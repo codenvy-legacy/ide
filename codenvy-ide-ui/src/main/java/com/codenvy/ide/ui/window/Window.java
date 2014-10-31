@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nullable;
 
@@ -130,6 +131,20 @@ public abstract class Window implements IsWidget {
         button.ensureDebugId(debugId);
         button.getElement().setId(debugId);
         button.addStyleName(resources.centerPanelCss().alignBtn());
+        button.addStyleName(resources.centerPanelCss().button());
+        button.addClickHandler(clickHandler);
+        return button;
+    }
+
+    protected Button createButton(String tooltip, SVGImage image, String debugId, ClickHandler clickHandler) {
+        Button button = new Button();
+        button.setTitle(tooltip);
+        button.ensureDebugId(debugId);
+        button.getElement().setId(debugId);
+        if (image != null) {
+            button.getElement().appendChild(image.getElement());
+        }
+        button.addStyleName(resources.centerPanelCss().iconButton());
         button.addStyleName(resources.centerPanelCss().button());
         button.addClickHandler(clickHandler);
         return button;
@@ -287,6 +302,8 @@ public abstract class Window implements IsWidget {
         String label();
 
         String image();
+
+        String iconButton();
     }
 
     /**

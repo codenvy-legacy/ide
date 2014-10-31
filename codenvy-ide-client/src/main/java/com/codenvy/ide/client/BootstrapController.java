@@ -15,8 +15,6 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
-import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
@@ -32,14 +30,11 @@ import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.theme.Style;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -78,8 +73,6 @@ public class BootstrapController {
     private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
     private       AppContext                    appContext;
-    private final ProjectTypeServiceClient      projectTypeDescriptionServiceClient;
-    private final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry;
     private final IconRegistry                  iconRegistry;
     private final ThemeAgent                    themeAgent;
     private final Provider<ComponentRegistry>   componentRegistry;
@@ -108,10 +101,7 @@ public class BootstrapController {
                                AnalyticsEventLoggerExt analyticsEventLoggerExt,
                                Resources resources,
                                EventBus eventBus,
-                               DtoFactory dtoFactory,
                                AppContext appContext,
-                               final ProjectTypeServiceClient projectTypeDescriptionServiceClient,
-                               final ProjectTypeDescriptorRegistry projectTypeDescriptorRegistry,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager) {
@@ -125,8 +115,6 @@ public class BootstrapController {
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.eventBus = eventBus;
         this.appContext = appContext;
-        this.projectTypeDescriptionServiceClient = projectTypeDescriptionServiceClient;
-        this.projectTypeDescriptorRegistry = projectTypeDescriptorRegistry;
         this.iconRegistry = iconRegistry;
         this.themeAgent = themeAgent;
         this.actionManager = actionManager;
@@ -241,28 +229,6 @@ public class BootstrapController {
                 // Instantiate extensions
                 extensionInitializer.startExtensions();
 
-                // Register project types
-                registerProjectTypes();
-            }
-
-            @Override
-            public void onFailure(ComponentException caught) {
-                Log.error(BootstrapController.class, "Unable to start component " + caught.getComponent(), caught);
-                initializationFailed("Unable to start component " + caught.getComponent());
-            }
-        });
-    }
-
-    /** Register project types */
-    private void registerProjectTypes() {
-        projectTypeDescriptionServiceClient.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class)) {
-            @Override
-            protected void onSuccess(Array<ProjectTypeDescriptor> result) {
-                for (int i = 0; i < result.size(); i++) {
-                    projectTypeDescriptorRegistry.registerDescriptor(result.get(i));
-                }
-
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -272,9 +238,9 @@ public class BootstrapController {
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(BootstrapController.class, "Unable to get list of project types", exception);
-                initializationFailed("Unable to get list of project types");
+            public void onFailure(ComponentException caught) {
+                Log.error(BootstrapController.class, "Unable to start component " + caught.getComponent(), caught);
+                initializationFailed("Unable to start component " + caught.getComponent());
             }
         });
     }
@@ -416,7 +382,6 @@ public class BootstrapController {
             console.log(e.message);
         }
     }-*/;
-
 
     private static class AnalyticsSessions {
         private String id;

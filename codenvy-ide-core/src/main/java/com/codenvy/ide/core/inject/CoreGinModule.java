@@ -65,7 +65,6 @@ import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptorRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -122,7 +121,6 @@ import com.codenvy.ide.privacy.PrivacyPresenter;
 import com.codenvy.ide.projectimporter.ZipProjectImporter;
 import com.codenvy.ide.projectimporter.importerpage.ZipImporterPagePresenter;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
-import com.codenvy.ide.projecttype.ProjectTypeDescriptorRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactoryImpl;
@@ -247,7 +245,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
         bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-        bind(ProjectTypeDescriptorRegistry.class).to(ProjectTypeDescriptorRegistryImpl.class).in(Singleton.class);
         bind(IconRegistry.class).to(IconRegistryImpl.class).in(Singleton.class);
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);

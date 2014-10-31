@@ -74,7 +74,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML(SafeHtmlUtils.fromString(notification.getMessage()));
+        title = new HTML(notification.getMessage());
 
         Image closeIcon = new Image(resources.close());
         closeIcon.addStyleName(resources.notificationCss().close());
@@ -131,7 +131,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
     public void onValueChanged() {
         if (!prevState.equals(notification)) {
             if (!prevState.getMessage().equals(notification.getMessage())) {
-                title.setHTML(SafeHtmlUtils.fromString(notification.getMessage()));
+                title.setHTML(notification.getMessage());
             }
 
             if (!notification.isFinished()) {

@@ -10,19 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
-import com.codenvy.ide.newresource.DefaultNewResourceAction;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new Less file.
@@ -30,32 +22,15 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewLessFileAction extends DefaultNewResourceAction {
+public class NewLessFileAction extends AbstractNewResourceAction {
     private static final String DEFAULT_CONTENT = "@CHARSET \"UTF-8\"\n;";
 
     @Inject
-    public NewLessFileAction(AppContext appContext,
-                             WebExtensionResource webExtensionResource,
-                             WebLocalizationConstant localizationConstant,
-                             SelectionAgent selectionAgent,
-                             EditorAgent editorAgent,
-                             ProjectServiceClient projectServiceClient,
-                             EventBus eventBus,
-                             AnalyticsEventLogger eventLogger,
-                             DtoUnmarshallerFactory unmarshallerFactory,
-                             DialogFactory dialogFactory) {
+    public NewLessFileAction(WebExtensionResource webExtensionResource, WebLocalizationConstant localizationConstant) {
         super(localizationConstant.newLessFileActionTitle(),
               localizationConstant.newLessFileActionDescription(),
               webExtensionResource.css(),
-              null,
-              appContext,
-              selectionAgent,
-              editorAgent,
-              projectServiceClient,
-              eventBus,
-              eventLogger,
-              unmarshallerFactory,
-              dialogFactory);
+              null);
     }
 
     @Override

@@ -44,6 +44,10 @@
             margin-top: 5px;
         }
 
+        .marginTop10 {
+            margin-top: 10px;
+        }
+
         .projectName, .projectDescription {
             margin-top: 4px;
             float: right;
@@ -58,13 +62,15 @@
 
         .labelErrorPosition {
             margin-right: 9px;
-            margin-left: 90px;
+            margin-left: 30px;
+            margin-top: 5px;
             position: relative;
             font-weight: lighter;
             font-size: 12px;
             text-align: center;
             color: firebrick;
             display: block;
+            float: left;
         }
 
         .labelPosition {
@@ -112,27 +118,28 @@
                     <g:HTMLPanel debugId="importProject-descriptionArea" ui:field="descriptionArea"
                                  addStyleNames="{style.description}"/>
                 </g:FlowPanel>
-                <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
+                <g:FlowPanel height="45px" addStyleNames="{style.namePanel}">
                     <g:Label text="{locale.importProjectUriFieldTitle}"
                              addStyleNames="{style.labelPosition}"/>
                     <g:TextBox width="290px" height="14px" ui:field="projectUrl" addStyleNames="{style.projectName}" tabIndex="3"
                                debugId="file-importProject-projectUrl"/>
-                </g:FlowPanel>
-                <g:SimplePanel width="100%" addStyleNames="{style.namePanel}">
                     <g:Label ui:field="labelUrlError" width="290px" wordWrap="true" addStyleNames="{style.labelErrorPosition}"/>
-                </g:SimplePanel>
-
+                </g:FlowPanel>
+                <g:FlowPanel height="20px" addStyleNames="{style.namePanel} {style.marginTop10}">
+                    <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>
+                    <g:Label text="{locale.importProjectInfo}" addStyleNames="{style.label}"/>
+                </g:FlowPanel>
                 <g:FlowPanel height="25px" addStyleNames="{style.namePanel}">
                     <g:Label text="{locale.createProjectFromTemplateName}"
                              addStyleNames="{style.labelPosition}"/>
-                    <g:TextBox width="290px" height="14px" ui:field="projectName" maxLength="32" addStyleNames="{style.projectName}" tabIndex="1"
+                    <g:TextBox width="290px" height="14px" ui:field="projectName" maxLength="32" addStyleNames="{style.projectName}" tabIndex="4"
                                debugId="file-importProject-projectName" title="{locale.importProjectNamePrompt}"/>
                 </g:FlowPanel>
                 <g:FlowPanel height="60px" addStyleNames="{style.namePanel}">
                     <g:Label text="{locale.createProjectFromTemplateDescription}"
                              addStyleNames="{style.labelPosition}"/>
                     <g:TextArea width="290px" height="42px" ui:field="projectDescription" addStyleNames="{style.projectDescription}"
-                                debugId="file-importProject-projectDescription" title="{locale.importProjectDescriptionPrompt}" tabIndex="2"/>
+                                debugId="file-importProject-projectDescription" title="{locale.importProjectDescriptionPrompt}" tabIndex="5"/>
                 </g:FlowPanel>
                 <g:FlowPanel height="30px" addStyleNames="{style.namePanel}">
                     <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}" addStyleNames="{style.labelPosition}"/>

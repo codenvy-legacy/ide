@@ -10,19 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.xml;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.newresource.DefaultNewResourceAction;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new XML file.
@@ -30,32 +22,15 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewXmlFileAction extends DefaultNewResourceAction {
+public class NewXmlFileAction extends AbstractNewResourceAction {
     private static final String DEFAULT_CONTENT = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
     @Inject
-    public NewXmlFileAction(AppContext appContext,
-                            CoreLocalizationConstant localizationConstant,
-                            SelectionAgent selectionAgent,
-                            EditorAgent editorAgent,
-                            Resources resources,
-                            ProjectServiceClient projectServiceClient,
-                            EventBus eventBus,
-                            AnalyticsEventLogger eventLogger,
-                            DtoUnmarshallerFactory unmarshallerFactory,
-                            DialogFactory dialogFactory) {
+    public NewXmlFileAction(CoreLocalizationConstant localizationConstant, Resources resources) {
         super(localizationConstant.actionNewXmlFileTitle(),
               localizationConstant.actionNewXmlFileDescription(),
               null,
-              resources.defaultFile(),
-              appContext,
-              selectionAgent,
-              editorAgent,
-              projectServiceClient,
-              eventBus,
-              eventLogger,
-              unmarshallerFactory,
-              dialogFactory);
+              resources.defaultFile());
     }
 
     @Override
@@ -67,9 +42,4 @@ public class NewXmlFileAction extends DefaultNewResourceAction {
     protected String getDefaultContent() {
         return DEFAULT_CONTENT;
     }
-
-//    @Override
-//    protected String getMimeType() {
-//        return com.codenvy.ide.MimeType.TEXT_XML;
-//    }
 }

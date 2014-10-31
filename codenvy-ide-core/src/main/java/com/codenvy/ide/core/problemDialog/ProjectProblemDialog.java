@@ -51,7 +51,7 @@ public class ProjectProblemDialog extends Window {
         Widget widget = uiBinder.createAndBindUi(this);
         setWidget(widget);
         message.addStyleName(resources.centerPanelCss().label());
-        message.getElement().setInnerHTML(SafeHtmlUtils.fromString(question).asString());
+        message.getElement().setInnerHTML(question);
         questionImage.getElement().setAttribute("class", resources.centerPanelCss().image());
 
         Button deleteButton = createButton("Delete", "problem-dialog-delete", new ClickHandler() {

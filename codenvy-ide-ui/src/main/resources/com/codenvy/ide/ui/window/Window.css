@@ -128,6 +128,15 @@
     margin-top: 9px;
 }
 
+.iconButton {
+    min-width: 30px !important;
+    padding: 5px !important;
+}
+
+.iconButton svg {
+    fill : mainFontColor;
+}
+
 .headerTitleWrapper {
     display: table;
     height: 100%;
@@ -191,6 +200,10 @@
 .button[disabled], .button[disabled]:HOVER {
     background: rgba(81, 81, 81, 0.35);
     color: rgba(255, 255, 255, 0.35);
+}
+
+.button[disabled] svg, .button[disabled]:HOVER svg{
+    opacity : 0.5;
 }
 
 /* Blue button styles */

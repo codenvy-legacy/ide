@@ -68,6 +68,15 @@ public interface RunnerResources extends ClientBundle {
     @Source("timeout.svg")
     SVGResource timeout();
 
+    @Source("addEnvironment.svg")
+    SVGResource addEnvironment();
+
+    @Source("editEnvironment.svg")
+    SVGResource editEnvironment();
+
+    @Source("removeEnvironment.svg")
+    SVGResource removeEnvironment();
+
     public interface Css extends CssResource {
         @ClassName("info-panel")
         String infoPanel();
@@ -110,6 +119,9 @@ public interface RunnerResources extends ClientBundle {
 
         @ClassName("tree-icon")
         String treeIcon();
+
+        @ClassName("grid")
+        String grid();
     }
 
     @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})

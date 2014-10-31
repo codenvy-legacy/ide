@@ -41,10 +41,15 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
+import com.codenvy.ide.ui.dialogs.input.InputValidator;
+import com.codenvy.ide.util.NameUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.annotation.Nullable;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -67,6 +72,9 @@ public class RenameItemAction extends Action {
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final DialogFactory            dialogFactory;
     private final SelectionAgent           selectionAgent;
+    private final InputValidator           fileNameValidator;
+    private final InputValidator           folderNameValidator;
+    private final InputValidator           projectNameValidator;
 
     @Inject
     public RenameItemAction(Resources resources,
@@ -89,6 +97,9 @@ public class RenameItemAction extends Action {
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
+        this.fileNameValidator = new FileNameValidator();
+        this.folderNameValidator = new FolderNameValidator();
+        this.projectNameValidator = new ProjectNameValidator();
     }
 
     /** {@inheritDoc} */
@@ -127,49 +138,63 @@ public class RenameItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        boolean isEnabled = false;
+        boolean enabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {
-            isEnabled =
-                    ((AbstractTreeNode)selection.getFirstElement()).isRenamable() && selection.getFirstElement() instanceof StorableNode;
+            enabled = selection.getFirstElement() instanceof StorableNode
+                      && ((AbstractTreeNode)selection.getFirstElement()).isRenamable();
         }
-        e.getPresentation().setEnabled(isEnabled);
+        e.getPresentation().setEnabled(enabled);
     }
 
     private void askForRenamingNode(final StorableNode nodeToRename) {
-        dialogFactory.createInputDialog(
-                getDialogTitle(nodeToRename),
-                localization.renameDialogNewNameLabel(),
-                nodeToRename.getName(),
-                0,
-                nodeToRename.getName().indexOf('.') >= 0 ? nodeToRename.getName().lastIndexOf('.') : nodeToRename.getName().length(),
-                new InputCallback() {
+        final InputCallback inputCallback = new InputCallback() {
+            @Override
+            public void accepted(final String value) {
+                ItemReference itemReferenceBeforeRenaming = null;
+                if (nodeToRename instanceof ItemNode) {
+                    itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
+                }
+
+                final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
+                nodeToRename.rename(value, new RenameCallback() {
                     @Override
-                    public void accepted(final String value) {
-                        ItemReference itemReferenceBeforeRenaming = null;
-                        if (nodeToRename instanceof ItemNode) {
-                            itemReferenceBeforeRenaming = ((ItemNode)nodeToRename).getData();
+                    public void onRenamed() {
+                        if (finalItemReferenceBeforeRenaming != null) {
+                            checkOpenedFiles(finalItemReferenceBeforeRenaming, value);
                         }
-
-                        final ItemReference finalItemReferenceBeforeRenaming = itemReferenceBeforeRenaming;
-                        nodeToRename.rename(value, new RenameCallback() {
-                            @Override
-                            public void onRenamed() {
-                                if (finalItemReferenceBeforeRenaming != null) {
-                                    checkOpenedFiles(finalItemReferenceBeforeRenaming, value);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
-                            }
-                        });
                     }
-                }, null).show();
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+                    }
+                });
+            }
+        };
+
+        final int selectionLength = nodeToRename.getName().indexOf('.') >= 0
+                                    ? nodeToRename.getName().lastIndexOf('.')
+                                    : nodeToRename.getName().length();
+
+        InputDialog inputDialog = dialogFactory.createInputDialog(getDialogTitle(nodeToRename),
+                                                                  localization.renameDialogNewNameLabel(),
+                                                                  nodeToRename.getName(), 0, selectionLength, inputCallback, null);
+        if (nodeToRename instanceof FileNode) {
+            inputDialog.withValidator(fileNameValidator);
+        } else if (nodeToRename instanceof FolderNode) {
+            inputDialog.withValidator(folderNameValidator);
+        } else if (nodeToRename instanceof ProjectNode || nodeToRename instanceof ProjectListStructure.ProjectNode) {
+            inputDialog.withValidator(projectNameValidator);
+        }
+        inputDialog.show();
     }
 
     /**
+     * Check whether project has any running processes.
+     *
+     * @param projectNode
+     *         project to check
      * @param callback
      *         callback returns true if project has any running processes and false - otherwise
      */
@@ -251,5 +276,53 @@ public class RenameItemAction extends Action {
             return localization.renameProjectDialogTitle();
         }
         return localization.renameNodeDialogTitle();
+    }
+
+    private class FileNameValidator implements InputValidator {
+        @Nullable
+        @Override
+        public Violation validate(String value) {
+            if (!NameUtils.checkFileName(value)) {
+                return new Violation() {
+                    @Override
+                    public String getMessage() {
+                        return localization.invalidName();
+                    }
+                };
+            }
+            return null;
+        }
+    }
+
+    private class FolderNameValidator implements InputValidator {
+        @Nullable
+        @Override
+        public Violation validate(String value) {
+            if (!NameUtils.checkFolderName(value)) {
+                return new Violation() {
+                    @Override
+                    public String getMessage() {
+                        return localization.invalidName();
+                    }
+                };
+            }
+            return null;
+        }
+    }
+
+    private class ProjectNameValidator implements InputValidator {
+        @Nullable
+        @Override
+        public Violation validate(String value) {
+            if (!NameUtils.checkProjectName(value)) {
+                return new Violation() {
+                    @Override
+                    public String getMessage() {
+                        return localization.invalidName();
+                    }
+                };
+            }
+            return null;
+        }
     }
 }

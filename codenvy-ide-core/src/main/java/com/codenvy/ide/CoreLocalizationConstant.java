@@ -265,6 +265,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.importer.info")
     String importProjectImporterInfo();
 
+    @Key("importProject.project.info")
+    String importProjectInfo();
+
     @Key("importProject.name.prompt")
     String importProjectNamePrompt();
 
@@ -340,6 +343,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("newResource.label")
     String newResourceLabel(String title);
 
+    @Key("newResource.invalidName")
+    String invalidName();
+
     /* Messages */
     @Key("messages.changesMayBeLost")
     String changesMayBeLost();
@@ -361,6 +367,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("messages.getResourcesFailed")
     String messagesGetResourcesFailed();
+
+    @Key("messages.getProjectTypesFailed")
+    String messagesGetProjectTypesFailed();
 
     @Key("messages.saveChanges")
     String messagesSaveChanges(String name);
