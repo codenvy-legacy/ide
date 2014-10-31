@@ -107,7 +107,7 @@ public abstract class AbstractNewResourceAction extends Action {
                                     protected void onSuccess(ItemReference result) {
                                         eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
                                         if ("file".equals(result.getType())) {
-                                            FileNode file = new FileNode(null, result, eventBus, projectServiceClient, null);
+                                            FileNode file = new FileNode(parent, result, eventBus, projectServiceClient, null);
                                             editorAgent.openEditor(file);
                                         }
                                     }

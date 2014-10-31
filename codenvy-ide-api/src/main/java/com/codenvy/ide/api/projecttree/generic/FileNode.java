@@ -102,4 +102,24 @@ public class FileNode extends ItemNode {
             }
         });
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FileNode)) {
+            return false;
+        }
+        final FileNode other = (FileNode)o;
+        return data.equals(other.data);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((data == null) ? 0 : data.hashCode());
+        return result;
+    }
 }
