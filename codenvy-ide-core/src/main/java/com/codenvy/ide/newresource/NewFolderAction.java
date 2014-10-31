@@ -10,18 +10,25 @@
  *******************************************************************************/
 package com.codenvy.ide.newresource;
 
+import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
+import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Action to create new folder.
@@ -29,16 +36,34 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class NewFolderAction extends AbstractNewResourceAction {
+public class NewFolderAction extends DefaultNewResourceAction {
     private CoreLocalizationConstant localizationConstant;
+    private DialogFactory            dialogFactory;
 
     @Inject
-    public NewFolderAction(CoreLocalizationConstant localizationConstant, Resources resources) {
+    public NewFolderAction(AppContext appContext,
+                           CoreLocalizationConstant localizationConstant,
+                           SelectionAgent selectionAgent,
+                           Resources resources,
+                           ProjectServiceClient projectServiceClient,
+                           EventBus eventBus,
+                           AnalyticsEventLogger eventLogger,
+                           DtoUnmarshallerFactory unmarshallerFactory,
+                           DialogFactory dialogFactory) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
               null,
-              resources.defaultFolder());
+              resources.defaultFolder(),
+              appContext,
+              selectionAgent,
+              null,
+              projectServiceClient,
+              eventBus,
+              eventLogger,
+              unmarshallerFactory,
+              dialogFactory);
         this.localizationConstant = localizationConstant;
+        this.dialogFactory = dialogFactory;
     }
 
     @Override
@@ -64,6 +89,6 @@ public class NewFolderAction extends AbstractNewResourceAction {
                             }
                         });
                     }
-                }, null).withValidator(folderNameValidator).show();
+                }, null).show();
     }
 }

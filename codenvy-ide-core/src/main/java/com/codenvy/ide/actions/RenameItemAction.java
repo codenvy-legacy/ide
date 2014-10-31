@@ -41,14 +41,10 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
-import com.codenvy.ide.ui.dialogs.input.InputValidator;
-import com.codenvy.ide.util.NameUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import javax.annotation.Nullable;
 
 import static com.codenvy.api.runner.ApplicationStatus.NEW;
 import static com.codenvy.api.runner.ApplicationStatus.RUNNING;
@@ -71,7 +67,6 @@ public class RenameItemAction extends Action {
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final DialogFactory            dialogFactory;
     private final SelectionAgent           selectionAgent;
-    private final InputValidator           nameValidator;
 
     @Inject
     public RenameItemAction(Resources resources,
@@ -94,7 +89,6 @@ public class RenameItemAction extends Action {
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
-        this.nameValidator = new ItemNameValidator();
     }
 
     /** {@inheritDoc} */
@@ -172,7 +166,7 @@ public class RenameItemAction extends Action {
                             }
                         });
                     }
-                }, null).withValidator(nameValidator).show();
+                }, null).show();
     }
 
     /**
@@ -257,21 +251,5 @@ public class RenameItemAction extends Action {
             return localization.renameProjectDialogTitle();
         }
         return localization.renameNodeDialogTitle();
-    }
-
-    private class ItemNameValidator implements InputValidator {
-        @Nullable
-        @Override
-        public Violation validate(String value) {
-            if (!NameUtils.checkFileName(value)) {
-                return new Violation() {
-                    @Override
-                    public String getMessage() {
-                        return localization.invalidName();
-                    }
-                };
-            }
-            return null;
-        }
     }
 }
