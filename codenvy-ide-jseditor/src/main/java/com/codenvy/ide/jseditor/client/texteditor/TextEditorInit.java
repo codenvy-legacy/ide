@@ -56,16 +56,19 @@ public class TextEditorInit {
     private final EventBus generalEventBus;
     private final EditorHandle editorHandle;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final TextEditor textEditor;
 
 
     public TextEditorInit(final TextEditorConfiguration configuration,
                           final EventBus generalEventBus,
                           final EditorHandle editorHandle,
-                          final CodeAssistantFactory codeAssistantFactory) {
+                          final CodeAssistantFactory codeAssistantFactory,
+                          final TextEditor textEditor) {
         this.configuration = configuration;
         this.generalEventBus = generalEventBus;
         this.editorHandle = editorHandle;
         this.codeAssistantFactory = codeAssistantFactory;
+        this.textEditor = textEditor;
     }
 
     /**
@@ -155,7 +158,7 @@ public class TextEditorInit {
         if (processors != null) {
             LOG.info("Creating code assistant.");
 
-            final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.editorHandle,
+            final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.textEditor,
                                                                                  this.configuration.getPartitioner());
             processors.iterate(new IterationCallback<CodeAssistProcessor>() {
                 @Override

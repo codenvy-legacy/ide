@@ -10,20 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
-import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
+import elemental.dom.Element;
 
 /**
- * Factory for {@link CodeAssistant} objects.
+ * Action triggered when completion proposal additional info must be displayed.
  */
-public interface CodeAssistantFactory {
+public interface AdditionalInfoCallback {
 
     /**
-     * Create a {@link CodeAssistant} for the given editor.
-     * 
-     * @param textEditor  the editor
-     * @param partitioner the partitioner
-     * @return a {@link CodeAssistant}
+     * Display the proposal additional info.
+     * @param pixelX the x coordinate
+     * @param pixelY the y coordinate
+     * @param info the info message to show
+     * @return the element used to display the information
      */
-    CodeAssistant create(TextEditor textEditor, DocumentPartitioner partitioner);
+    Element onAdditionalInfoNeeded(float pixelX, float pixelY, Element infoWidget);
 }

@@ -10,12 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
-import com.codenvy.ide.jseditor.client.texteditor.EditorHandle;
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.assistedinject.Assisted;
@@ -28,7 +27,7 @@ public class CodeAssistantImpl implements CodeAssistant {
 
     private final StringMap<CodeAssistProcessor> processors;
 
-    private final EmbeddedTextEditorPartView textEditor;
+    private final TextEditor textEditor;
 
     private String lastErrorMessage;
 
@@ -39,13 +38,13 @@ public class CodeAssistantImpl implements CodeAssistant {
 
     @AssistedInject
     public CodeAssistantImpl(@Assisted final DocumentPartitioner partitioner,
-                             @Assisted EditorHandle editorHandle) {
+                             @Assisted TextEditor textEditor) {
         processors = Collections.createStringMap();
         res.defaultSimpleListCss().ensureInjected();
         res.autocompleteComponentCss().ensureInjected();
         res.popupCss().ensureInjected();
         this.partitioner = partitioner;
-        this.textEditor = editorHandle.getEditor();
+        this.textEditor = textEditor;
     }
 
     /**
@@ -71,8 +70,8 @@ public class CodeAssistantImpl implements CodeAssistant {
     @Override
     public void computeCompletionProposals(final CodeAssistCallback callback) {
 
-        final Region region = textEditor.getSelectedRegion();
-        final int offset = region.getOffset();
+        final LinearRange selection = textEditor.getSelectedLinearRange();
+        final int offset = selection.getStartOffset();
 
         if (offset > 0) {
             computeCompletionProposals(offset, callback);
@@ -86,8 +85,8 @@ public class CodeAssistantImpl implements CodeAssistant {
      * @param offset a offset within the document
      * @return a code-assist processor or <code>null</code> if none exists
      */
-    private CodeAssistProcessor getProcessor(final EmbeddedTextEditorPartView view, final int offset) {
-        final String contentType = view.getContentType();
+    private CodeAssistProcessor getProcessor(final TextEditor textEditor, final int offset) {
+        final String contentType = textEditor.getContentType();
         if (contentType == null) {
             return null;
         }

@@ -116,8 +116,11 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     protected void initializeEditor() {
         editor.configure(getConfiguration(), getEditorInput().getFile());
-        new TextEditorInit(configuration, generalEventBus,
-                           this.editor.getEditorHandle(), this.codeAssistantFactory).init();
+        new TextEditorInit(configuration, 
+                           generalEventBus,
+                           this.editor.getEditorHandle(),
+                           this.codeAssistantFactory,
+                           this).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
