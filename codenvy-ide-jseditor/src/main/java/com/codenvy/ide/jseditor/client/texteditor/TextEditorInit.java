@@ -180,7 +180,7 @@ public class TextEditorInit {
         }
         final StringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors();
 
-        if (processors != null) {
+        if (processors != null && !processors.isEmpty()) {
             LOG.info("Creating code assistant.");
 
             final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.textEditor,
@@ -233,17 +233,26 @@ public class TextEditorInit {
      * @param codeAssistant the code assistant
      */
     private void showCompletion(final CodeAssistant codeAssistant) {
-        this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
-            @Override
-            public void computeCompletions(final CompletionReadyCallback callback) {
-                codeAssistant.computeCompletionProposals(new CodeAssistCallback() {
-                    @Override
-                    public void proposalComputed(final List<CompletionProposal> proposals) {
-                        callback.onCompletionReady(proposals);
-                    }
-                });
-            }
-        });
+        final int cursor = textEditor.getCursorOffset();
+        if (cursor < 0) {
+            return;
+        }
+        final CodeAssistProcessor processor = codeAssistant.getProcessor(cursor);
+        if (processor != null) {
+            this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
+                @Override
+                public void computeCompletions(final CompletionReadyCallback callback) {
+                    codeAssistant.computeCompletionProposals(cursor, new CodeAssistCallback() {
+                        @Override
+                        public void proposalComputed(final List<CompletionProposal> proposals) {
+                            callback.onCompletionReady(proposals);
+                        }
+                    });
+                }
+            });
+        } else {
+            showCompletion();
+        }
     }
 
     /** Show the available completions. */
