@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
-import com.codenvy.api.project.server.ProjectTypeResolver;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -41,8 +43,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
-
-    private static final String PRE_STYLE           = "style='margin:0px; font-weight:700;'";
+    private static final String PRE_STYLE           = "style='margin:0px;'";
 
     private static final String INFO                = "[INFO]";
     private static final String INFO_COLOR          = "lightgreen";
@@ -55,9 +56,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     private static final String DOCKER              = "[DOCKER]";
     private static final String DOCKER_COLOR        = "#00B7EC";
-
-    private static final String DOCKER_ERROR        = "[DOCKER] [ERROR]";
-    private static final String DOCKER_ERROR_COLOR  = "#F62217";
 
     private static final String STDOUT              = "[STDOUT]";
     private static final String STDOUT_COLOR        = "lightgreen";
@@ -292,31 +290,80 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     public void print(String message) {
         HTML html = new HTML();
-
         if (message.startsWith(INFO)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                        message.substring(INFO.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
         } else if (message.startsWith(ERROR)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(ERROR.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
         } else if (message.startsWith(WARN)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + WARN_COLOR + ";'><b>WARNING</b></span>]" +
-                         message.substring(WARN.length()) + "</pre>");
-        } else if (message.startsWith(DOCKER_ERROR)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
-                         " [<span style='color:" + DOCKER_ERROR_COLOR + ";'><b>ERROR</b></span>]" +
-                         message.substring(DOCKER_ERROR.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(WARN, WARN_COLOR, message));
+        } else if (message.startsWith(DOCKER + " " + ERROR)) {
+            html.setHTML(buildSafeHtmlMessage(DOCKER, DOCKER_COLOR, ERROR , ERROR_COLOR, message));
         } else if (message.startsWith(DOCKER)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + DOCKER_COLOR + ";'><b>DOCKER</b></span>]" +
-                         message.substring(DOCKER.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(DOCKER, DOCKER_COLOR, message));
+        } else if (message.startsWith(STDOUT)) {
+            html.setHTML(buildSafeHtmlMessage(STDOUT, STDOUT_COLOR, message));
         } else if (message.startsWith(STDERR)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + STDERR_COLOR + ";'><b>STDERR</b></span>]" +
-                         message.substring(STDERR.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(STDERR, STDERR_COLOR, message));
         } else {
-            html.setHTML("<pre " + PRE_STYLE + ">" + message + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(message));
         }
-        html.getElement().setAttribute("style", "padding-left: 2px;");
-
+        html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
         consoleOutput.add(html);
+    }
+
+    /**
+     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml.
+     * @param type message type (e.g. INFO, ERROR etc.)
+     * @param color color constant
+     * @param message message to print
+     * @return message in SafeHtml
+     */
+    private SafeHtml buildSafeHtmlMessage(String type, String color, String message) {
+        return new SafeHtmlBuilder()
+                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
+                .appendHtmlConstant("[<span style='color:" + color + ";'>")
+                .appendHtmlConstant("<b>" + type.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring((type).length())))
+                .appendHtmlConstant("</pre>")
+                .toSafeHtml();
+    }
+
+    /**
+     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml. Use for two-words message types,
+     * e.g. [DOCKER] [ERROR].
+     * @param type message type (e.g. DOCKER)
+     * @param color color constant
+     * @param subtype message subtype (e.g. ERROR)
+     * @param subcolor color constant
+     * @param message message to print
+     * @return message in SafeHtml
+     */
+    private SafeHtml buildSafeHtmlMessage(String type,
+                                          String color,
+                                          String subtype,
+                                          String subcolor,
+                                          String message) {
+        return new SafeHtmlBuilder()
+                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
+                .appendHtmlConstant("[<span style='color:" + color + ";'>")
+                .appendHtmlConstant("<b>" + type.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .appendHtmlConstant(" [<span style='color:" + subcolor + ";'>")
+                .appendHtmlConstant("<b>" + subtype.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring((type + " " + subtype).length())))
+                .appendHtmlConstant("</pre>")
+                .toSafeHtml();
+    }
+
+    /**
+     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml
+     * @param message message to print
+     * @return message in SafeHtml
+     */
+    private SafeHtml buildSafeHtmlMessage(String message) {
+        return new SafeHtmlBuilder()
+                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(message))
+                .appendHtmlConstant("</pre>")
+                .toSafeHtml();
     }
 }

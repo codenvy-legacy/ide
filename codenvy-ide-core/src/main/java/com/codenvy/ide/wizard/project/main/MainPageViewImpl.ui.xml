@@ -41,10 +41,10 @@
                             <g:Label text="{locale.createProjectFromTemplateProjectPrivacy}" addStyleNames="{style.labelPosition}"/>
                             <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePublic}"
                                            addStyleNames="{style.radioButtonPosition}" checked="true"
-                                           ui:field="projectPublic" debugId="file-newProject-public"/>
+                                           ui:field="projectPublic" debugId="file-newProject-public" tabIndex="4"/>
                             <g:RadioButton name="privacy" text="{locale.createProjectFromTemplatePrivate}"
                                            addStyleNames="{style.radioButtonPosition}"
-                                           ui:field="projectPrivate" debugId="file-newProject-private"/>
+                                           ui:field="projectPrivate" debugId="file-newProject-private" tabIndex="3"/>
                         </g:FlowPanel>
                         <g:FlowPanel height="20px" addStyleNames="{style.namePanel}">
                             <g:HTMLPanel addStyleNames="{style.horizontalLine}"/>

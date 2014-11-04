@@ -64,20 +64,23 @@
             box-sizing: border-box;
         }
 
+        .consoleOutput {
+        }
+
+        .consoleOutputMessage {
+        }
+
         .consoleScrollPanel pre {
             font-family: "Droid Sans Mono", monospace;
             font-size: 11px;
         }
 
-        .consoleOutput {
-        }
-
-        /* .appPanel {
+        .appPanel {
             position: relative;
             width: 100%;
             height: 100%;
             overflow: hidden;
-        } */
+        }
 
         .terminalFrame {
             position: absolute;

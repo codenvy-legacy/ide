@@ -68,14 +68,16 @@ textarea {
     display: inline-block;
     cursor: pointer;
     position: relative;
-    padding-left: 23px;
     margin-right: 15px;
     height: 18px;
     font-weight: bold;
 }
 
 .gwt-RadioButton input[type=radio] {
-    display: none;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    position: absolute;
 }
 
 .gwt-RadioButton label:before {
@@ -84,10 +86,9 @@ textarea {
 
     width: 13px;
     height: 13px;
-
-    margin-right: 10px;
-    position: absolute;
-    left: 0;
+    top: 2px;
+    margin-right: 7px;
+    position: relative;
     background-color: radioButtonBackgroundColor;
 }
 
