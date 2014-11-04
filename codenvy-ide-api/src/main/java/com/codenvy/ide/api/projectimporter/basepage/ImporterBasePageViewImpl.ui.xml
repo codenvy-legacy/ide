@@ -86,7 +86,7 @@
             position: relative;
             float: right;
             padding-left: 5px;
-            top: 7px;
+            top: 8px;
             right: 65px;
         }
 
