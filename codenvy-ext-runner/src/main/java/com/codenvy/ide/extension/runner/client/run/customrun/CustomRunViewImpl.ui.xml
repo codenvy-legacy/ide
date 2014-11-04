@@ -46,6 +46,7 @@
         .radioButton label {
             padding-top: 2px;
             height: 17px;
+            line-height: 17px;
         }
 
         .radioButton label::before {
