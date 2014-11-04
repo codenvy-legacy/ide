@@ -51,13 +51,13 @@
     pointer-events: none; /* do not allow SVG element to intercept pointer events */
 }
 
-@sprite .projectProblem {
-    gwt-image: "squiggle";
-    background-position: bottom;
-    background-repeat: repeat-x;
-    height: auto;
-    width: auto;
-}
+/*@sprite .projectProblem {*/
+    /*gwt-image: "projectProblem";*/
+    /*background-position: bottom;*/
+    /*background-repeat: repeat-x;*/
+    /*height: auto;*/
+    /*width: auto;*/
+/*}*/
 
 .folderFont {
     font-family: fileTreeFontFamily;
