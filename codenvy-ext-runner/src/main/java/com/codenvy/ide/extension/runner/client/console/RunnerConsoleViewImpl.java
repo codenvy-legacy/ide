@@ -43,27 +43,24 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
-    private static final String PRE_STYLE           = "style='margin:0px; font-weight:700;'";
+    private static final String PRE_STYLE           = "style='margin:0px;'";
 
-    private static final String INFO                = "INFO";
+    private static final String INFO                = "[INFO]";
     private static final String INFO_COLOR          = "lightgreen";
 
-    private static final String WARN                = "WARNING";
+    private static final String WARN                = "[WARNING]";
     private static final String WARN_COLOR          = "#FFBA00";
 
-    private static final String ERROR               = "ERROR";
+    private static final String ERROR               = "[ERROR]";
     private static final String ERROR_COLOR         = "#F62217";
 
-    private static final String DOCKER              = "DOCKER";
+    private static final String DOCKER              = "[DOCKER]";
     private static final String DOCKER_COLOR        = "#00B7EC";
 
-    private static final String DOCKER_ERROR        = "DOCKER ERROR";
-    private static final String DOCKER_ERROR_COLOR  = "#F62217";
-
-    private static final String STDOUT              = "STDOUT";
+    private static final String STDOUT              = "[STDOUT]";
     private static final String STDOUT_COLOR        = "lightgreen";
 
-    private static final String STDERR              = "STDERR";
+    private static final String STDERR              = "[STDERR]";
     private static final String STDERR_COLOR        = "#F62217";
 
     private RunnerResources runnerResources;
@@ -293,19 +290,19 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     public void print(String message) {
         HTML html = new HTML();
-        if (message.startsWith("["+INFO+"]")) {
+        if (message.startsWith(INFO)) {
             html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
-        } else if (message.startsWith("["+ERROR+"]")) {
+        } else if (message.startsWith(ERROR)) {
             html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
-        } else if (message.startsWith("["+WARN+"]")) {
+        } else if (message.startsWith(WARN)) {
             html.setHTML(buildSafeHtmlMessage(WARN, WARN_COLOR, message));
-        } else if (message.startsWith("["+DOCKER_ERROR+"]")) {
-            html.setHTML(buildSafeHtmlMessage(DOCKER_ERROR, DOCKER_ERROR_COLOR, message));
-        } else if (message.startsWith("["+DOCKER+"]")) {
+        } else if (message.startsWith(DOCKER + " " + ERROR)) {
+            html.setHTML(buildSafeHtmlMessage(DOCKER, DOCKER_COLOR, ERROR , ERROR_COLOR, message));
+        } else if (message.startsWith(DOCKER)) {
             html.setHTML(buildSafeHtmlMessage(DOCKER, DOCKER_COLOR, message));
-        } else if (message.startsWith("["+STDOUT+"]")) {
+        } else if (message.startsWith(STDOUT)) {
             html.setHTML(buildSafeHtmlMessage(STDOUT, STDOUT_COLOR, message));
-        } else if (message.startsWith("["+STDERR+"]")) {
+        } else if (message.startsWith(STDERR)) {
             html.setHTML(buildSafeHtmlMessage(STDERR, STDERR_COLOR, message));
         } else {
             html.setHTML(buildSafeHtmlMessage(message));
@@ -316,7 +313,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     /**
      * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml.
-     * @param type message type (info, error etc.)
+     * @param type message type (e.g. INFO, ERROR etc.)
      * @param color color constant
      * @param message message to print
      * @return message in SafeHtml
@@ -324,8 +321,35 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private SafeHtml buildSafeHtmlMessage(String type, String color, String message) {
         return new SafeHtmlBuilder()
                 .appendHtmlConstant("<pre " + PRE_STYLE + ">")
-                .appendHtmlConstant("[<span style='color:" + color + ";'><b>" + type + "</b></span>]")
-                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring(("[" + type + "]").length())))
+                .appendHtmlConstant("[<span style='color:" + color + ";'>")
+                .appendHtmlConstant("<b>" + type.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring((type).length())))
+                .appendHtmlConstant("</pre>")
+                .toSafeHtml();
+    }
+
+    /**
+     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml. Use for two-words message types,
+     * e.g. [DOCKER] [ERROR].
+     * @param type message type (e.g. DOCKER)
+     * @param color color constant
+     * @param subtype message subtype (e.g. ERROR)
+     * @param subcolor color constant
+     * @param message message to print
+     * @return message in SafeHtml
+     */
+    private SafeHtml buildSafeHtmlMessage(String type,
+                                          String color,
+                                          String subtype,
+                                          String subcolor,
+                                          String message) {
+        return new SafeHtmlBuilder()
+                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
+                .appendHtmlConstant("[<span style='color:" + color + ";'>")
+                .appendHtmlConstant("<b>" + type.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .appendHtmlConstant(" [<span style='color:" + subcolor + ";'>")
+                .appendHtmlConstant("<b>" + subtype.replaceAll("[\\[\\]]", "") + "</b></span>]")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring((type + " " + subtype).length())))
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }
