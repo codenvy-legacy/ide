@@ -17,7 +17,9 @@ import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -181,9 +183,11 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
-                result.reverse(); // small hack: reverse array to open Dockerfile as second (active) editor
                 for (ItemReference item : result.asIterable()) {
-                    eventBus.fireEvent(new FileEvent(new EnvironmentScript(null, item, eventBus, projectServiceClient,
+                    final ProjectNode project = new ProjectNode(null, appContext.getCurrentProject().getProjectDescription(), null,
+                                                                TreeSettings.DEFAULT, eventBus, projectServiceClient,
+                                                                dtoUnmarshallerFactory);
+                    eventBus.fireEvent(new FileEvent(new EnvironmentScript(project, item, eventBus, projectServiceClient,
                                                                            dtoUnmarshallerFactory, environment.getName()),
                                                      FileEvent.FileOperation.OPEN));
                 }
