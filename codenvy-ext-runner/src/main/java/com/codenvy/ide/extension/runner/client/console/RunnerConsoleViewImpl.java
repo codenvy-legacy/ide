@@ -63,7 +63,9 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private static final String STDERR              = "[STDERR]";
     private static final String STDERR_COLOR        = "#F62217";
 
-    private RunnerResources runnerResources;
+    private static final int    MAX_CONSOLE_LINES  = 1000;
+
+    private RunnerResources     runnerResources;
 
     @UiField
     DockLayoutPanel topPanel;
@@ -290,9 +292,21 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     }
 
     public void print(String message) {
+        if (consoleOutput.getWidgetCount() >= MAX_CONSOLE_LINES) {
+            // remove first 10% of current lines on screen
+            for (int i = 0; i < MAX_CONSOLE_LINES * 0.1; i++) {
+                consoleOutput.remove(0);
+            }
+        }
+        Widget html = messageToHTML(message);
+        consoleOutput.add(html);
+    }
+
+    private Widget messageToHTML(String message) {
         HTML html = new HTML();
         if (message.startsWith(INFO)) {
-            html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
+            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
+                         message.substring(INFO.length()) + "</pre>");
         } else if (message.startsWith(ERROR)) {
             html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
         } else if (message.startsWith(WARN)) {
@@ -308,8 +322,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         } else {
             html.setHTML(buildSafeHtmlMessage(message));
         }
-        html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-        consoleOutput.add(html);
+        html.getElement().setAttribute("style", "padding-left: 2px;");
+        return html;
     }
 
     /**
