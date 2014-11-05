@@ -52,9 +52,7 @@ public class BuildAction extends ProjectAction {
 
     @Override
     protected void updateProjectAction(ActionEvent e) {
-        if (buildContext.isBuilding()) {
-            e.getPresentation().setEnabled(false);
-            e.getPresentation().setVisible(true);
-        }
+        e.getPresentation().setVisible(true);
+        e.getPresentation().setEnabled(!buildContext.isBuilding());
     }
 }

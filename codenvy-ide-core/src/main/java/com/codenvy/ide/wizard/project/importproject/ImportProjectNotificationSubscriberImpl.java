@@ -48,7 +48,7 @@ public class ImportProjectNotificationSubscriberImpl implements ImportProjectNot
 
     @Override
     public void subscribe(String projectName) {
-        notification = new Notification(locale.importingProject(), Notification.Status.PROGRESS);
+        notification = new Notification(locale.importingProject(), Notification.Status.PROGRESS, true);
         subscribe(projectName, notification);
         notificationManager.showNotification(notification);
     }
