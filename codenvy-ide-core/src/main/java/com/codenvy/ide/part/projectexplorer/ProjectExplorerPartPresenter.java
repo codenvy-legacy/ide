@@ -142,8 +142,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (appContext.getCurrentProject() == null) {
-                    // this is case when some project is opening while previously opened project is closing
+                // this isn't case when some project going to open while previously opened project is closing
+                if (!event.isCloseBeforeOpening()) {
                     setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
                     view.hideProjectHeader();
                 }
@@ -222,7 +222,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     private void updateAppContext(TreeNode<?> node) {
-        if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
+        if (node instanceof StorableNode && appContext.getCurrentProject() != null && node.getProject() != null) {
             appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
         }
     }

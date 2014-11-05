@@ -32,6 +32,7 @@ import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.core.problemDialog.ProjectProblemDialog;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -41,7 +42,6 @@ import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -105,27 +105,12 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
 
     @Override
     public void onOpenProject(final OpenProjectEvent event) {
-        if (appContext.getCurrentProject() == null) {
-            tryOpenProject(event.getProjectName());
-        } else {
-            // previously opened project should be closed correctly
-            checkRunnerAndCloseCurrentProject(new CloseCallback() {
-                @Override
-                public void onClosed() {
-                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            tryOpenProject(event.getProjectName());
-                        }
-                    });
-                }
-            });
-        }
+        tryOpenProject(event.getProjectName());
     }
 
     @Override
     public void onCloseCurrentProject(CloseCurrentProjectEvent event) {
-        checkRunnerAndCloseCurrentProject(null);
+        checkRunnerAndCloseCurrentProject(null, false);
     }
 
     @Override
@@ -136,7 +121,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         }
     }
 
-    private void checkRunnerAndCloseCurrentProject(CloseCallback closeCallback) {
+    private void checkRunnerAndCloseCurrentProject(CloseCallback closeCallback, boolean closingBeforeOpening) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject == null) {
             return;
@@ -154,18 +139,57 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         }
 
         if (appProcess == null || alwaysOn) {
-            closeCurrentProject();
+            closeCurrentProject(closingBeforeOpening);
             if (closeCallback != null) {
                 closeCallback.onClosed();
             }
         } else {
             dialogFactory.createConfirmDialog(constant.closeProjectTitle(),
                                               constant.appWillBeStopped(currentProject.getProjectDescription().getName()),
-                                              new ConfirmStoppingAppCallback(closeCallback), null).show();
+                                              new ConfirmStoppingAppCallback(closeCallback, closingBeforeOpening), null).show();
         }
     }
 
-    private void closeCurrentProject() {
+    private void tryOpenProject(String projectName) {
+        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+            @Override
+            protected void onSuccess(final ProjectDescriptor project) {
+                if (hasProblems(project)) {
+                    if (appContext.getCurrentProject() != null) {
+                        checkRunnerAndCloseCurrentProject(new CloseCallback() {
+                            @Override
+                            public void onClosed() {
+                                openProblemProject(project);
+                            }
+                        }, false);
+                    }
+                } else {
+                    if (appContext.getCurrentProject() != null) {
+                        checkRunnerAndCloseCurrentProject(new CloseCallback() {
+                            @Override
+                            public void onClosed() {
+                                openProject(project);
+                            }
+                        }, true);
+                    } else {
+                        openProject(project);
+                    }
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable) {
+                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(throwable.getMessage()), null).show();
+            }
+        });
+    }
+
+    private boolean hasProblems(ProjectDescriptor project) {
+        return !project.getProblems().isEmpty();
+    }
+
+    private void closeCurrentProject(boolean closingBeforeOpening) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             ProjectDescriptor closedProject = currentProject.getRootProject();
@@ -175,31 +199,8 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
             rewriteBrowserHistory(null);
 
             // notify all listeners about current project has been closed
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject));
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject, closingBeforeOpening));
         }
-    }
-
-    private boolean hasProblems(ProjectDescriptor project) {
-        return !project.getProblems().isEmpty();
-    }
-
-    private void tryOpenProject(String projectName) {
-        Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.getProject(projectName, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ProjectDescriptor project) {
-                if (hasProblems(project)) {
-                    openProblemProject(project);
-                } else {
-                    openProject(project);
-                }
-            }
-
-            @Override
-            protected void onFailure(Throwable throwable) {
-                Log.error(ProjectStateHandler.class, throwable);
-            }
-        });
     }
 
     private void openProject(ProjectDescriptor project) {
@@ -263,9 +264,11 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
 
     private class ConfirmStoppingAppCallback implements ConfirmCallback {
         final ProjectStateHandler.CloseCallback closeCallback;
+        final boolean                           closingBeforeOpening;
 
-        ConfirmStoppingAppCallback(CloseCallback closeCallback) {
+        ConfirmStoppingAppCallback(CloseCallback closeCallback, boolean closingBeforeOpening) {
             this.closeCallback = closeCallback;
+            this.closingBeforeOpening = closingBeforeOpening;
         }
 
         @Override
@@ -275,7 +278,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                 runnerServiceClient.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>() {
                     @Override
                     protected void onSuccess(ApplicationProcessDescriptor applicationProcessDescriptor) {
-                        closeCurrentProject();
+                        closeCurrentProject(closingBeforeOpening);
                         if (closeCallback != null) {
                             closeCallback.onClosed();
                         }

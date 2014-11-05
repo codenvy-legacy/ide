@@ -117,10 +117,11 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
     // show time in "Total Time" indicator start immediately after launch running process
     private long clientStartTime = 0;
     // calculate on client-side
-    private RunnerMetric totalActiveTimeMetric;
-    private String       theme;
-    private int          runnerMemory;
-    private RunnerMetric stopTimeMetric;
+    private RunnerMetric                 totalActiveTimeMetric;
+    private String                       theme;
+    private int                          runnerMemory;
+    private RunnerMetric                 stopTimeMetric;
+    private ApplicationProcessDescriptor currentAppProcess;
 
     @Inject
     public RunController(EventBus eventBus,
@@ -191,6 +192,16 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
     public void onProjectClosed(ProjectActionEvent event) {
         console.clear();
         console.setCurrentRunnerStatus(RunnerStatus.IDLE);
+
+        if (isAnyAppLaunched) {
+            isAnyAppLaunched = false;
+            isAnyAppRunning = false;
+            isLastAppHealthOk = false;
+            stopCheckingAppStatus(currentAppProcess);
+            stopCheckingAppHealth(currentAppProcess);
+            stopCheckingAppOutput(currentAppProcess);
+            console.onAppStopped();
+        }
     }
 
     @Override
@@ -662,6 +673,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
         if (appContext.getCurrentProject() == null) {
             return; //MUST never happen
         }
+        currentAppProcess = applicationProcessDescriptor;
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
 
         String notificationMessage = constant.environmentCooking(projectName);
@@ -685,18 +697,6 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
 
     /** Process changing application status. */
     private void onApplicationStatusUpdated(ApplicationProcessDescriptor descriptor) {
-        //app was stopped in CloseProjectAction
-        if (appContext.getCurrentProject() == null) {
-            isAnyAppLaunched = false;
-            isAnyAppRunning = false;
-            isLastAppHealthOk = false;
-
-            stopCheckingAppStatus(descriptor);
-            stopCheckingAppHealth(descriptor);
-            stopCheckingAppOutput(descriptor);
-            console.onAppStopped();
-            return;
-        }
         String projectName = appContext.getCurrentProject().getProjectDescription().getName();
         appContext.getCurrentProject().setProcessDescriptor(descriptor);
 
@@ -733,6 +733,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
+                currentAppProcess = null;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 appContext.getCurrentProject().setProcessDescriptor(null);
                 stopCheckingAppStatus(descriptor);
@@ -796,6 +797,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
                 isLastAppHealthOk = false;
+                currentAppProcess = null;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 appContext.getCurrentProject().setProcessDescriptor(null);
                 stopCheckingAppStatus(descriptor);
@@ -894,6 +896,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
             protected void onFailure(Throwable exception) {
                 isAnyAppLaunched = false;
                 isAnyAppRunning = false;
+                currentAppProcess = null;
                 appContext.getCurrentProject().setIsRunningEnabled(true);
                 appContext.getCurrentProject().setProcessDescriptor(null);
                 onFail(constant.stopApplicationFailed(appContext.getCurrentProject().getProjectDescription().getName()), exception);
