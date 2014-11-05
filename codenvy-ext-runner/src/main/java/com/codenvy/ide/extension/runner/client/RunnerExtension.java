@@ -31,7 +31,6 @@ import com.codenvy.ide.extension.runner.client.console.ClearConsoleAction;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.indicators.ApplicationURLIndicator;
-import com.codenvy.ide.extension.runner.client.console.indicators.LogMessagesURLIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerFinishedIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerStartedIndicator;
 import com.codenvy.ide.extension.runner.client.console.indicators.RunnerTimeoutThresholdIndicator;
@@ -125,7 +124,6 @@ public class RunnerExtension {
                                       ShutdownAction shutdownAction,
                                       ClearConsoleAction clearConsoleAction,
                                       ViewRecipeAction viewRecipeAction,
-                                      LogMessagesURLIndicator logMessagesURLIndicator,
                                       ApplicationURLIndicator applicationURLIndicator,
                                       RunnerStartedIndicator runnerStartedIndicator,
                                       RunnerTimeoutThresholdIndicator runnerTimeoutThresholdIndicator,
@@ -153,8 +151,6 @@ public class RunnerExtension {
         consoleToolbarActionGroup.add(runnerTimeoutThresholdIndicator);
         consoleToolbarActionGroup.addSeparator();
         consoleToolbarActionGroup.add(runnerTotalTimeIndicator);
-        consoleToolbarActionGroup.addSeparator();
-        consoleToolbarActionGroup.add(logMessagesURLIndicator);
         runnerConsoleToolbar.bindMainGroup(consoleToolbarActionGroup);
     }
 }

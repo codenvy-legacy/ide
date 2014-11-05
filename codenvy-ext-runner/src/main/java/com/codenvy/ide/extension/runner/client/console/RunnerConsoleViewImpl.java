@@ -10,10 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
+import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,7 +27,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -65,6 +72,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     private static final int    MAX_CONSOLE_LINES  = 1000;
 
+    private final AppContext    appContext;
     private RunnerResources     runnerResources;
 
     @UiField
@@ -126,10 +134,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
-                                 RunnerConsoleViewImplUiBinder uiBinder) {
+                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext) {
         super(resources);
 
         this.runnerResources = runnerResources;
+        this.appContext = appContext;
 
         container.add(uiBinder.createAndBindUi(this));
 
@@ -296,6 +305,30 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             // remove first 10% of current lines on screen
             for (int i = 0; i < MAX_CONSOLE_LINES * 0.1; i++) {
                 consoleOutput.remove(0);
+            }
+            // print link to full logs in top of console
+            CurrentProject currentProject = appContext.getCurrentProject();
+            if (currentProject != null && currentProject.getProcessDescriptor() != null) {
+                final Link viewLogsLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
+                                                              Constants.LINK_REL_VIEW_LOG);
+                if (viewLogsLink != null) {
+                    HTML html = new HTML();
+                    html.getElement().getStyle().setProperty("fontFamily", "\"Droid Sans Mono\", monospace");
+                    html.getElement().getStyle().setProperty("fontSize", "11px");
+                    html.getElement().getStyle().setProperty("paddingLeft", "2px");
+
+                    Element text = DOM.createSpan();
+                    text.setInnerHTML("Full logtrace can be found at ");
+                    html.getElement().appendChild(text);
+
+                    Anchor link = new Anchor();
+                    link.setHref(viewLogsLink.getHref());
+                    link.getElement().setInnerHTML(link.getHref());
+                    link.getElement().getStyle().setProperty("color", "#61b7ef");
+                    html.getElement().appendChild(link.getElement());
+
+                    consoleOutput.insert(html, 0);
+                }
             }
         }
         Widget html = messageToHTML(message);
