@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
@@ -35,6 +36,8 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 
 /**
  * {@link NodeRenderer} to renderer {@code TreeNode}.
@@ -42,18 +45,23 @@ import org.vectomatic.dom.svg.ui.SVGImage;
  * @author Artem Zatsarynnyy
  */
 public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
-    private final Css              css;
-    private final Resources        resources;
-    private       IconRegistry     iconRegistry;
-    private       FileTypeRegistry fileTypeRegistry;
-    private       AppContext       appContext;
+    private final Css                      css;
+    private final Resources                resources;
+    private       IconRegistry             iconRegistry;
+    private       FileTypeRegistry         fileTypeRegistry;
+    private       CoreLocalizationConstant constant;
+    private AppContext appContext;
 
     @Inject
-    public ProjectTreeNodeRenderer(Resources resources, IconRegistry iconRegistry, FileTypeRegistry fileTypeRegistry,
+    public ProjectTreeNodeRenderer(Resources resources,
+                                   IconRegistry iconRegistry,
+                                   FileTypeRegistry fileTypeRegistry,
+                                   CoreLocalizationConstant constant,
                                    AppContext appContext) {
         this.resources = resources;
         this.iconRegistry = iconRegistry;
         this.fileTypeRegistry = fileTypeRegistry;
+        this.constant = constant;
         this.appContext = appContext;
         this.css = resources.workspaceNavigationFileTreeNodeRendererCss();
     }
@@ -84,7 +92,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         if (node instanceof ProjectListStructure.ProjectNode) {
             if (hasProblems((ProjectListStructure.ProjectNode)node)) {
-                Elements.addClassName(css.projectProblem(), root);
+                root.setTitle(constant.projectExplorerProblemProjetTitle());
             }
         } else if (node instanceof FileNode) {
             Elements.addClassName(css.fileFont(), root);
@@ -105,6 +113,12 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         SVGImage nodeIcon = node.getDisplayIcon();
         if (nodeIcon != null) {
             return nodeIcon;
+        }
+
+        if (node instanceof ProjectListStructure.ProjectNode) {
+            if (hasProblems((ProjectListStructure.ProjectNode)node)) {
+                return new SVGImage(resources.projectProblem());
+            }
         }
 
         CurrentProject project = appContext.getCurrentProject();
@@ -208,8 +222,6 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
 
         String label();
 
-        String projectProblem();
-
         String folderFont();
 
         String fileFont();
@@ -228,8 +240,8 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
         @Source({"FileTreeNodeRenderer.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceNavigationFileTreeNodeRendererCss();
 
-        @Source("squiggle.gif")
-        ImageResource squiggle();
+        @Source("toConfigure.svg")
+        SVGResource projectProblem();
 
         @Source("file.png")
         ImageResource file();
