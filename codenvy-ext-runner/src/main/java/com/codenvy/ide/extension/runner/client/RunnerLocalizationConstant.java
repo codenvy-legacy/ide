@@ -211,6 +211,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("retrievingImagesFailed")
     String retrievingImagesFailed(String message);
 
+    @Key("fullLogTraceConsoleLink")
+    String fullLogTraceConsoleLink();
+
     /* Titles */
     @Key("titles.promptSaveFiles")
     String titlePromptSaveFiles();

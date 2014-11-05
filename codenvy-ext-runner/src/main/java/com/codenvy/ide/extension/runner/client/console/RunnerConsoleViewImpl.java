@@ -17,6 +17,7 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -50,30 +51,31 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
-    private static final String PRE_STYLE           = "style='margin:0px;'";
+    private static final String              PRE_STYLE         = "style='margin:0px;'";
 
-    private static final String INFO                = "[INFO]";
-    private static final String INFO_COLOR          = "lightgreen";
+    private static final String              INFO              = "[INFO]";
+    private static final String              INFO_COLOR        = "lightgreen";
 
-    private static final String WARN                = "[WARNING]";
-    private static final String WARN_COLOR          = "#FFBA00";
+    private static final String              WARN              = "[WARNING]";
+    private static final String              WARN_COLOR        = "#FFBA00";
 
-    private static final String ERROR               = "[ERROR]";
-    private static final String ERROR_COLOR         = "#F62217";
+    private static final String              ERROR             = "[ERROR]";
+    private static final String              ERROR_COLOR       = "#F62217";
 
-    private static final String DOCKER              = "[DOCKER]";
-    private static final String DOCKER_COLOR        = "#00B7EC";
+    private static final String              DOCKER            = "[DOCKER]";
+    private static final String              DOCKER_COLOR      = "#00B7EC";
 
-    private static final String STDOUT              = "[STDOUT]";
-    private static final String STDOUT_COLOR        = "lightgreen";
+    private static final String              STDOUT            = "[STDOUT]";
+    private static final String              STDOUT_COLOR      = "lightgreen";
 
-    private static final String STDERR              = "[STDERR]";
-    private static final String STDERR_COLOR        = "#F62217";
+    private static final String              STDERR            = "[STDERR]";
+    private static final String              STDERR_COLOR      = "#F62217";
 
-    private static final int    MAX_CONSOLE_LINES  = 1000;
+    private static final int                 MAX_CONSOLE_LINES = 1000;
 
-    private final AppContext    appContext;
-    private RunnerResources     runnerResources;
+    private final AppContext                 appContext;
+    private final RunnerLocalizationConstant localizationConstant;
+    private RunnerResources                  runnerResources;
 
     @UiField
     DockLayoutPanel topPanel;
@@ -134,11 +136,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
-                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext) {
+                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext, RunnerLocalizationConstant localizationConstant) {
         super(resources);
 
         this.runnerResources = runnerResources;
         this.appContext = appContext;
+        this.localizationConstant = localizationConstant;
 
         container.add(uiBinder.createAndBindUi(this));
 
@@ -312,18 +315,20 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 final Link viewLogsLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
                                                               Constants.LINK_REL_VIEW_LOG);
                 if (viewLogsLink != null) {
+                    String href = viewLogsLink.getHref();
                     HTML html = new HTML();
                     html.getElement().getStyle().setProperty("fontFamily", "\"Droid Sans Mono\", monospace");
                     html.getElement().getStyle().setProperty("fontSize", "11px");
                     html.getElement().getStyle().setProperty("paddingLeft", "2px");
 
                     Element text = DOM.createSpan();
-                    text.setInnerHTML("Full logtrace can be found at ");
+                    text.setInnerHTML(localizationConstant.fullLogTraceConsoleLink());
                     html.getElement().appendChild(text);
 
                     Anchor link = new Anchor();
-                    link.setHref(viewLogsLink.getHref());
-                    link.getElement().setInnerHTML(link.getHref());
+                    link.setHref(href);
+                    link.setText(href);
+                    link.setTitle(href);
                     link.getElement().getStyle().setProperty("color", "#61b7ef");
                     html.getElement().appendChild(link.getElement());
 
