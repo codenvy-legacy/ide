@@ -163,6 +163,8 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                                 openProblemProject(project);
                             }
                         }, false);
+                    } else {
+                        openProblemProject(project);
                     }
                 } else {
                     if (appContext.getCurrentProject() != null) {
