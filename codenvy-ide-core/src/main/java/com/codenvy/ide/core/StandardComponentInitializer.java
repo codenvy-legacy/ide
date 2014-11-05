@@ -275,6 +275,7 @@ public class StandardComponentInitializer {
 
         // Compose New group
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
+        newGroup.getTemplatePresentation().setDescription("Create...");
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         actionManager.registerAction(GROUP_FILE_NEW, newGroup);
         actionManager.registerAction("newProject", newProjectWizardAction);
