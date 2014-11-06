@@ -12,11 +12,14 @@ package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectProblem;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
+import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
@@ -43,6 +46,7 @@ import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -181,14 +185,97 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        showProcessing(false);
+        view.close();
+    }
 
     /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        // Check whether project with the same name already exists.
+        // Check on VFS directly because need to check ide-2 projects also.
+        vfsServiceClient.getItemByPath(projectName, new AsyncRequestCallback<Item>() {
+            @Override
+            protected void onSuccess(Item result) {
+                // Project with the same name already exists
+                dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
+                                                  locale.createProjectFromTemplateProjectExists(projectName), null).show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                importProject();
+            }
+        });
+    }
+
+    private void importProject() {
         final ProjectImporterDescriptor importer = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
+        final String importerId = importer.getId();
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
         final String url = wizardContext.getData(ImportProjectWizard.PROJECT_URL);
-        final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
+
+        importedProject = null;
+        importProjectNotificationSubscriber.subscribe(projectName);
+
+        showProcessing(true);
+
+        ImportSourceDescriptor importSourceDescriptor = dtoFactory.createDto(ImportSourceDescriptor.class)
+                                                                  .withType(importerId)
+                                                                  .withLocation(url);
+
+        if (importer.getAttributes() != null && !importer.getAttributes().isEmpty()) {
+            importSourceDescriptor.setParameters(importer.getAttributes());
+        }
+
+        ImportProject importProject = dtoFactory.createDto(ImportProject.class)
+                                                .withSource(dtoFactory.createDto(Source.class)
+                                                                      .withProject(importSourceDescriptor));
+
+        ProjectImporter projectImporter = projectImporterRegistry.getImporter(importerId);
+        projectImporter.importSources(projectName, importProject, setImportProjectCallback());
+    }
+
+    private AsyncCallback<ProjectDescriptor> setImportProjectCallback() {
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        return new AsyncCallback<ProjectDescriptor>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                showProcessing(false);
+                String errorMessage;
+                if (exception instanceof UnauthorizedException) {
+                    ServiceError serverError =
+                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
+                                                                                           .getText(),
+                                                         ServiceError.class
+                                                        );
+                    errorMessage = serverError.getMessage();
+                } else if (exception instanceof JobNotFoundException) {
+                    errorMessage = "Project import failed";
+                } else {
+                    Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
+                    errorMessage = exception.getMessage();
+                }
+                importProjectNotificationSubscriber.onFailure(errorMessage);
+                deleteFolder(projectName);
+            }
+
+            @Override
+            public void onSuccess(ProjectDescriptor projectDescriptor) {
+                importProjectNotificationSubscriber.onSuccess();
+                importedProject = projectDescriptor;
+                showProcessing(false);
+                checkRam(projectDescriptor, setCommitCallback());
+            }
+        };
+    }
+
+    private WizardPage.CommitCallback setCommitCallback() {
+        return new WizardPage.CommitCallback() {
             @Override
             public void onSuccess() {
                 view.close();
@@ -217,83 +304,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
             }
         };
-
-        // Check whether project with the same name already exists.
-        // Check on VFS directly because need to check ide-2 projects also.
-        vfsServiceClient.getItemByPath(projectName, new AsyncRequestCallback<Item>() {
-            @Override
-            protected void onSuccess(Item result) {
-                // Project with the same name already exists
-                dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
-                                                  locale.createProjectFromTemplateProjectExists(projectName), null).show();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                importProject(importer, url, projectName, callback);
-            }
-        });
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onCancelClicked() {
-        showProcessing(false);
-        view.close();
-    }
-
-    /**
-     * Import project with the pointed importer, location.
-     *
-     * @param importer
-     *         project's importer
-     * @param url
-     *         project's location
-     * @param projectName
-     *         name of the project
-     * @param callback
-     *         wizard callback
-     */
-    private void importProject(ProjectImporterDescriptor importer,
-                               String url,
-                               final String projectName,
-                               final WizardPage.CommitCallback callback) {
-        importedProject = null;
-        importProjectNotificationSubscriber.subscribe(projectName);
-
-        showProcessing(true);
-
-        ProjectImporter projectImporter = projectImporterRegistry.getImporter(importer.getId());
-        projectImporter.importSources(url, projectName, new ProjectImporter.ImportCallback() {
-            @Override
-            public void onSuccess(ProjectDescriptor projectDescriptor) {
-                importProjectNotificationSubscriber.onSuccess();
-                importedProject = projectDescriptor;
-                showProcessing(false);
-                checkRam(projectDescriptor, callback);
-            }
-
-            @Override
-            public void onFailure(@Nonnull Throwable exception) {
-                showProcessing(false);
-                String errorMessage;
-                if (exception instanceof UnauthorizedException) {
-                    ServiceError serverError =
-                            dtoFactory.createDtoFromJson(((UnauthorizedException)exception).getResponse()
-                                                                                           .getText(),
-                                                         ServiceError.class
-                                                        );
-                    errorMessage = serverError.getMessage();
-                } else if (exception instanceof JobNotFoundException) {
-                    errorMessage = "Project import failed";
-                } else {
-                    Log.error(ImportProjectWizardPresenter.class, locale.importProjectError() + exception);
-                    errorMessage = exception.getMessage();
-                }
-                importProjectNotificationSubscriber.onFailure(errorMessage);
-                deleteFolder(projectName);
-            }
-        });
     }
 
     private void checkRam(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
@@ -333,8 +343,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                               locale.messagesGetResourcesFailed(), null).show();
                             Log.error(getClass(), exception.getMessage());
                         }
-                    }
-                                      );
+                    });
             return;
         }
         importProjectSuccessful(projectDescriptor, callback);

@@ -18,5 +18,14 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(ZipImporterPageViewImpl.class)
 public interface ZipImporterPageView extends ImporterBasePageView {
+    public interface ActionDelegate extends ImporterBasePageView.ActionDelegate{
+        /** Performs any actions appropriate in response to the user having selected a skip first level.*/
+        void skipFirstLevelChanged(Boolean isSkipFirstLevel);
+    }
 
+    /** Sets the delegate to receive events from this view. */
+    void setDelegate(ActionDelegate delegate);
+
+    /** Performs when user select skip first level. */
+    boolean isSkipFirstLevelSelected();
 }
