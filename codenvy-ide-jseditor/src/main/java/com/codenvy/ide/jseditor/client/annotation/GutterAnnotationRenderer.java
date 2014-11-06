@@ -12,6 +12,7 @@ package com.codenvy.ide.jseditor.client.annotation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.api.text.annotation.Annotation;
@@ -34,6 +35,9 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
     /** Logical identifer for the annotation gutter. */
     private static final String ANNOTATION_GUTTER = "annotation";
 
+    /** The logger. */
+    private static Logger LOG = Logger.getLogger(GutterAnnotationRenderer.class.getName());
+
     /** The component responsible for gutter handling. */
     private HasGutter hasGutter;
 
@@ -53,20 +57,20 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
     public void onAnnotationModel(final AnnotationModelEvent event) {
         // remove removed and changed annotations
         for (final Annotation annotation : event.getRemovedAnnotations()) {
-            Log.info(GutterAnnotationRenderer.class, "Remove annotation: " + annotation);
+            LOG.fine("Remove annotation: " + annotation);
             removeAnnotationItem(event, annotation);
         }
         for (final Annotation annotation : event.getChangedAnnotations()) {
-            Log.info(GutterAnnotationRenderer.class, "Remove changed annotation: " + annotation);
+            LOG.fine("Remove changed annotation: " + annotation);
             removeAnnotationItem(event, annotation);
         }
         // add new and changed (new version) annotation
         for (final Annotation annotation : event.getAddedAnnotations()) {
-            Log.info(GutterAnnotationRenderer.class, "Add annotation: " + annotation);
+            LOG.fine("Add annotation: " + annotation);
             addAnnotationItem(event.getAnnotationModel(), annotation);
         }
         for (final Annotation annotation : event.getChangedAnnotations()) {
-            Log.info(GutterAnnotationRenderer.class, "Add back changed annotation: " + annotation);
+            LOG.fine("Add back changed annotation: " + annotation);
             addAnnotationItem(event.getAnnotationModel(), annotation);
         }
     }
@@ -99,7 +103,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
 
         AnnotationGroup annotationGroup;
         if (!AnnotationGroupImpl.isAnnotation(annotationItem)) {
-            Log.info(GutterAnnotationRenderer.class, "Create new annotation group for line " + textPosition.getLine());
+            LOG.fine("Create new annotation group for line " + textPosition.getLine());
             final AnnotationGroup newGroup = AnnotationGroupImpl.create();
             newGroup.getElement().addEventListener(Event.MOUSEOVER, new EventListener() {
                 @Override
@@ -112,7 +116,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
                                                                  newGroup.getElement());
             annotationGroup = newGroup;
         } else {
-            Log.info(GutterAnnotationRenderer.class, "Reuse annotation group for line " + textPosition.getLine());
+            LOG.fine("Reuse annotation group for line " + textPosition.getLine());
             annotationGroup = AnnotationGroupImpl.create(annotationItem);
         }
         annotationGroup.addAnnotation(annotation, position.getOffset());

@@ -74,7 +74,7 @@ public class CodeAssistantImpl implements CodeAssistant {
         final Region region = textEditor.getSelectedRegion();
         final int offset = region.getOffset();
 
-        if (offset > 0) {
+        if (offset >= 0) {
             computeCompletionProposals(offset, callback);
         }
     }
