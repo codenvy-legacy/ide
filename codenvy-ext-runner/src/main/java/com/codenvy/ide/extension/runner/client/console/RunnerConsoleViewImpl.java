@@ -144,7 +144,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         this.runnerResources = runnerResources;
         this.appContext = appContext;
         this.localizationConstant = localizationConstant;
-counter = 0;
+        counter = 0;
         container.add(uiBinder.createAndBindUi(this));
 
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
@@ -332,6 +332,7 @@ counter = 0;
                     link.setHref(href);
                     link.setText(href);
                     link.setTitle(href);
+                    link.setTarget("_blank");
                     link.getElement().getStyle().setProperty("color", "#61b7ef");
                     html.getElement().appendChild(link.getElement());
 
