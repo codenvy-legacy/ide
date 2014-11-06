@@ -12,6 +12,9 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -36,6 +39,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
@@ -83,6 +87,8 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final CodeAssistantFactory codeAssistantFactory;
     private final QuickAssistantFactory quickAssistantFactory;
     private final BreakpointManager    breakpointManager;
+
+    private List<EditorUpdateAction> updateActions;
 
     private TextEditorConfiguration    configuration;
     private NotificationManager        notificationManager;
@@ -410,5 +416,25 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     public int getCursorOffset() {
         final TextPosition textPosition = getDocument().getCursorPosition();
         return getDocument().getIndexFromPosition(textPosition);
+    }
+
+    @Override
+    public void refreshEditor() {
+        if (this.updateActions != null) {
+            for (final EditorUpdateAction action : this.updateActions) {
+                action.doRefresh();
+            }
+        }
+    }
+
+    @Override
+    public void addEditorUpdateAction(final EditorUpdateAction action) {
+        if (action == null) {
+            return;
+        }
+        if (this.updateActions == null) {
+            this.updateActions = new ArrayList<>();
+        }
+        this.updateActions.add(action);
     }
 }

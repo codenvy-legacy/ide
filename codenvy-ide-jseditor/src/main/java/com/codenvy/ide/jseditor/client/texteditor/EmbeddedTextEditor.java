@@ -11,6 +11,7 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
+import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 
 public interface EmbeddedTextEditor extends TextEditor, HasOutline {
@@ -24,5 +25,14 @@ public interface EmbeddedTextEditor extends TextEditor, HasOutline {
      * @return the text editor configuration
      */
     TextEditorConfiguration getConfiguration();
+
+    /** Calls all editor update actions for thsi editor. */
+    void refreshEditor();
+
+    /**
+     *  Adds an editor update action for this editor.
+     *  @param action the action to add
+     */
+    void addEditorUpdateAction(EditorUpdateAction action);
 
 }
