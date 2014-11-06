@@ -77,6 +77,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private final AppContext                 appContext;
     private final RunnerLocalizationConstant localizationConstant;
     private RunnerResources                  runnerResources;
+    private int counter;
 
     @UiField
     DockLayoutPanel topPanel;
@@ -143,7 +144,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         this.runnerResources = runnerResources;
         this.appContext = appContext;
         this.localizationConstant = localizationConstant;
-
+counter = 0;
         container.add(uiBinder.createAndBindUi(this));
 
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
@@ -306,7 +307,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     public void print(String message) {
         if (consoleOutput.getWidgetCount() >= MAX_CONSOLE_LINES) {
-            Log.info(RunnerConsoleViewImpl.class, "MAX_CONSOLE_LINES ("+MAX_CONSOLE_LINES+") limit reached !");
+            Log.info(RunnerConsoleViewImpl.class, "MAX_CONSOLE_LINES ("+MAX_CONSOLE_LINES+") limit reached, "+(int)(MAX_CONSOLE_LINES * 0.1)+" lines will be freed | total counter = "+counter);
             // remove first 10% of current lines on screen
             for (int i = 0; i < MAX_CONSOLE_LINES * 0.1; i++) {
                 consoleOutput.remove(0);
@@ -340,6 +341,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
         Widget html = messageToHTML(message);
         consoleOutput.add(html);
+        counter++;
     }
 
     private Widget messageToHTML(String message) {
