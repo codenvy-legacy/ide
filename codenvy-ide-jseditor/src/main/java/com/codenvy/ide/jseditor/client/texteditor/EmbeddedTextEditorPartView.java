@@ -159,6 +159,11 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     HasKeybindings getHasKeybindings();
 
     /**
+     * Switch the implementation of the {@link HasKeybindings}.
+     */
+    void setFinalHasKeybinding();
+
+    /**
      * Invoke the code complete dialog.
      *
      * @param completionsSource the completion source

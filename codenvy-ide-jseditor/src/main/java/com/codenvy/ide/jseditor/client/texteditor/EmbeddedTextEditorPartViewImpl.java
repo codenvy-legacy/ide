@@ -89,6 +89,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private boolean codeAssistEnabled = false;
 
     private BreakpointRendererFactory breakpointRendererFactory;
+    private HasKeybindings keyBindingsManager = new TemporaryKeybindingsManager();
 
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
@@ -319,7 +320,12 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Override
     public HasKeybindings getHasKeybindings() {
-        return this.editor;
+        return this.keyBindingsManager;
+    }
+
+    @Override
+    public void setFinalHasKeybinding() {
+        this.keyBindingsManager = this.editor;
     }
 
     @Override

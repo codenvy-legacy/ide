@@ -72,7 +72,7 @@ public class TextEditorInit {
     private final EditorHandle editorHandle;
     private final CodeAssistantFactory codeAssistantFactory;
     private final QuickAssistantFactory quickAssistantFactory;
-    private final TextEditor textEditor;
+    private final EmbeddedTextEditorPresenter textEditor;
 
 
     public TextEditorInit(final TextEditorConfiguration configuration,
@@ -80,7 +80,7 @@ public class TextEditorInit {
                           final EditorHandle editorHandle,
                           final CodeAssistantFactory codeAssistantFactory,
                           final QuickAssistantFactory quickAssistantFactory,
-                          final TextEditor textEditor) {
+                          final EmbeddedTextEditorPresenter textEditor) {
 
         this.configuration = configuration;
         this.generalEventBus = generalEventBus;
@@ -106,6 +106,7 @@ public class TextEditorInit {
                 configureCodeAssist(documentHandle);
                 configureQuickAssist(documentHandle);
                 configureChangeInterceptors(documentHandle);
+                configureKeybindings();
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -315,6 +316,19 @@ public class TextEditorInit {
                     }
                 }
             });
+        }
+    }
+
+    private void configureKeybindings() {
+        final HasKeybindings current = this.textEditor.getView().getHasKeybindings();
+        if (! (current instanceof TemporaryKeybindingsManager)) {
+            return;
+        }
+        // change the key binding instance and add all bindings to the new one
+        this.textEditor.getView().setFinalHasKeybinding();
+        final List<Keybinding> bindings = ((TemporaryKeybindingsManager)current).getbindings();
+        for (final Keybinding binding : bindings) {
+            this.textEditor.getView().getHasKeybindings().addKeybinding(binding);
         }
     }
 }
