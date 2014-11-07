@@ -30,9 +30,6 @@ public interface ImporterBasePageView extends IsWidget {
 
         /** Performs any actions appropriate in response to the user having changed the project's visibility. */
         void projectVisibilityChanged(Boolean aPublic);
-
-        /** Performs any actions appropriate in response to the user having clicked the Enter key. */
-        void onEnterClicked();
     }
 
     /**
@@ -43,29 +40,19 @@ public interface ImporterBasePageView extends IsWidget {
      */
     void setProjectUrl(String url);
 
-    /**
-     * Reset the page.
-     */
+    /** Reset the page. */
     void reset();
 
-    /**
-     * Show the name error.
-     */
+    /** Show the name error. */
     void showNameError();
 
-    /**
-     * Hide the name error.
-     */
+    /** Hide the name error. */
     void hideNameError();
 
-    /**
-     * Show URL error.
-     */
+    /** Show URL error. */
     void showUrlError(String message);
 
-    /**
-     * Hide URL error.
-     */
+    /** Hide URL error. */
     void hideUrlError();
 
     /**
@@ -91,9 +78,7 @@ public interface ImporterBasePageView extends IsWidget {
      */
     void setProjectName(String projectName);
 
-    /**
-     * Give focus to project's URL input.
-     */
+    /** Give focus to project's URL input. */
     void focusInUrlInput();
 
     /**

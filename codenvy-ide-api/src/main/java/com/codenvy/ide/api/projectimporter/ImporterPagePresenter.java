@@ -19,25 +19,26 @@ import com.codenvy.ide.api.wizard.WizardContext;
  */
 public interface ImporterPagePresenter extends Presenter{
 
-    /**
-     * @return unique id of importer e.g git, zip, github
-     */
+    /** @return unique id of importer e.g git, zip, github */
     String getId();
 
-    /**
-     * Disable all page inputs.
-     */
+    /** Disable all page inputs. */
     public void disableInputs();
 
-    /**
-     * Enable all page inputs.
-     */
+    /** Enable all page inputs. */
     public void enableInputs();
 
+    /**
+     * Set wizard context for current page.
+     *
+     * @param wizardContext
+     */
     public void setContext(WizardContext wizardContext);
 
+    /** Sets the delegate to receive events from current page. */
     public void setProjectWizardDelegate(Wizard.UpdateDelegate updateDelegate);
 
+    /** Reset the page. */
     public void clear();
 
 }

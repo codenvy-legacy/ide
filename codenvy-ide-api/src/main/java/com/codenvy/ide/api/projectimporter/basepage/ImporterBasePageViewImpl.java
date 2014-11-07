@@ -10,11 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projectimporter.basepage;
 
-import elemental.events.KeyboardEvent;
-
 import com.codenvy.ide.api.projectimporter.ProjectImporterResource;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -38,7 +35,7 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
     interface ImporterPageViewImplUiBinder extends UiBinder<DockLayoutPanel, ImporterBasePageViewImpl> {
     }
 
-    Style       style;
+    Style style;
     @UiField
     protected FlowPanel   importerPanel;
     @UiField
@@ -92,24 +89,19 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         delegate.projectDescriptionChanged(projectDescription.getValue());
     }
 
-    @UiHandler({"projectDescription", "projectUrl", "projectName"})
-    void onEnterClicked(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyboardEvent.KeyCode.ENTER) {
-            delegate.onEnterClicked();
-        }
-    }
-
     @UiHandler({"projectPublic", "projectPrivate"})
     void visibilityHandler(ValueChangeEvent<Boolean> event) {
         delegate.projectVisibilityChanged(projectPublic.getValue());
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setProjectUrl(String url) {
         projectUrl.setText(url);
         delegate.projectUrlChanged(url);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void reset() {
         projectName.setText("");
@@ -122,6 +114,7 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         hideNameError();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Widget asWidget() {
         return rootElement;
@@ -186,6 +179,7 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         projectUrl.setEnabled(isEnabled);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;

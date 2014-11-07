@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projectimporter;
 
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-
-import javax.validation.constraints.NotNull;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Provide possibility for importing source from some resource.
@@ -20,33 +20,20 @@ import javax.validation.constraints.NotNull;
  * @author Roman Nikitenko
  */
 public interface ProjectImporter {
-    public interface ImportCallback {
-        /** Call when import operation complete successfully. */
-        void onSuccess(ProjectDescriptor result);
-
-        /**
-         * Call when import operation complete failure.
-         *
-         * @param exception
-         *         exception that happened
-         */
-        void onFailure(@NotNull Throwable exception);
-    }
-
     /**
      * @return unique id of importer e.g git, zip
      */
     String getId();
 
     /**
-     * Imports source from the given {@code url}.
+     * Imports source for the given {@code project}.
      *
-     * @param url
-     *         project's location
      * @param projectName
      *         name of the project
+     * @param project
+     *         the project for import
      * @param callback
      *         callback
      */
-    void importSources(String url, String projectName,  ProjectImporter.ImportCallback callback);
+    void importSources(String projectName, ImportProject project, AsyncCallback<ProjectDescriptor> callback);
 }
