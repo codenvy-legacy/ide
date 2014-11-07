@@ -51,6 +51,8 @@
 
     .proposalIcon {
         max-width: 16px;
+        flex-shrink: 0;
+        flex-grow: 0;
     }
     
     .proposalIcon img {
@@ -87,5 +89,5 @@
         padding-left: 5px;
         color: grey;
         text-align: right;
-        max-width: 250px;
+        max-width: 35em;
     }
