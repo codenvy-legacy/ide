@@ -10,10 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.console;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
+import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
+import com.codenvy.api.runner.internal.Constants;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,7 +29,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -43,27 +52,31 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
-    private static final String PRE_STYLE           = "style='margin:0px;'";
+    private static final String              PRE_STYLE         = "style='margin:0px;'";
 
-    private static final String INFO                = "[INFO]";
-    private static final String INFO_COLOR          = "lightgreen";
+    private static final String              INFO              = "[INFO]";
+    private static final String              INFO_COLOR        = "lightgreen";
 
-    private static final String WARN                = "[WARNING]";
-    private static final String WARN_COLOR          = "#FFBA00";
+    private static final String              WARN              = "[WARNING]";
+    private static final String              WARN_COLOR        = "#FFBA00";
 
-    private static final String ERROR               = "[ERROR]";
-    private static final String ERROR_COLOR         = "#F62217";
+    private static final String              ERROR             = "[ERROR]";
+    private static final String              ERROR_COLOR       = "#F62217";
 
-    private static final String DOCKER              = "[DOCKER]";
-    private static final String DOCKER_COLOR        = "#00B7EC";
+    private static final String              DOCKER            = "[DOCKER]";
+    private static final String              DOCKER_COLOR      = "#00B7EC";
 
-    private static final String STDOUT              = "[STDOUT]";
-    private static final String STDOUT_COLOR        = "lightgreen";
+    private static final String              STDOUT            = "[STDOUT]";
+    private static final String              STDOUT_COLOR      = "lightgreen";
 
-    private static final String STDERR              = "[STDERR]";
-    private static final String STDERR_COLOR        = "#F62217";
+    private static final String              STDERR            = "[STDERR]";
+    private static final String              STDERR_COLOR      = "#F62217";
 
-    private RunnerResources runnerResources;
+    private static final int                 MAX_CONSOLE_LINES = 1000;
+
+    private final AppContext                 appContext;
+    private final RunnerLocalizationConstant localizationConstant;
+    private RunnerResources                  runnerResources;
 
     @UiField
     DockLayoutPanel topPanel;
@@ -124,10 +137,12 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
     @Inject
     public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
-                                 RunnerConsoleViewImplUiBinder uiBinder) {
+                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext, RunnerLocalizationConstant localizationConstant) {
         super(resources);
 
         this.runnerResources = runnerResources;
+        this.appContext = appContext;
+        this.localizationConstant = localizationConstant;
 
         container.add(uiBinder.createAndBindUi(this));
 
@@ -290,6 +305,44 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     }
 
     public void print(String message) {
+        if (consoleOutput.getWidgetCount() >= MAX_CONSOLE_LINES) {
+            // remove first 10% of current lines on screen
+            for (int i = 0; i < MAX_CONSOLE_LINES * 0.1; i++) {
+                consoleOutput.remove(0);
+            }
+            // print link to full logs in top of console
+            CurrentProject currentProject = appContext.getCurrentProject();
+            if (currentProject != null && currentProject.getProcessDescriptor() != null) {
+                final Link viewLogsLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(),
+                                                              Constants.LINK_REL_VIEW_LOG);
+                if (viewLogsLink != null) {
+                    String href = viewLogsLink.getHref();
+                    HTML html = new HTML();
+                    html.getElement().getStyle().setProperty("fontFamily", "\"Droid Sans Mono\", monospace");
+                    html.getElement().getStyle().setProperty("fontSize", "11px");
+                    html.getElement().getStyle().setProperty("paddingLeft", "2px");
+
+                    Element text = DOM.createSpan();
+                    text.setInnerHTML(localizationConstant.fullLogTraceConsoleLink());
+                    html.getElement().appendChild(text);
+
+                    Anchor link = new Anchor();
+                    link.setHref(href);
+                    link.setText(href);
+                    link.setTitle(href);
+                    link.setTarget("_blank");
+                    link.getElement().getStyle().setProperty("color", "#61b7ef");
+                    html.getElement().appendChild(link.getElement());
+
+                    consoleOutput.insert(html, 0);
+                }
+            }
+        }
+        Widget html = messageToHTML(message);
+        consoleOutput.add(html);
+    }
+
+    private Widget messageToHTML(String message) {
         HTML html = new HTML();
         if (message.startsWith(INFO)) {
             html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
@@ -309,7 +362,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             html.setHTML(buildSafeHtmlMessage(message));
         }
         html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-        consoleOutput.add(html);
+        return html;
     }
 
     /**
