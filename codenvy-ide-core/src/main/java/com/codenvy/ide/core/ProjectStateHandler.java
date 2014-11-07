@@ -32,7 +32,6 @@ import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.core.problemDialog.ProjectProblemDialog;
-import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -182,7 +181,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
 
             @Override
             protected void onFailure(Throwable throwable) {
-                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(throwable.getMessage()), null).show();
+                Log.error(AppContext.class, throwable);
             }
         });
     }
