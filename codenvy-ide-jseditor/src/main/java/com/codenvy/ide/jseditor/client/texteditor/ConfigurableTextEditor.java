@@ -12,11 +12,11 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import javax.annotation.Nonnull;
 
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 
-public interface ConfigurableTextEditor extends EditorPartPresenter {
+public interface ConfigurableTextEditor extends TextEditor {
 
     /**
      * Initializes this editor with the configuration and document provider/
@@ -36,4 +36,10 @@ public interface ConfigurableTextEditor extends EditorPartPresenter {
      * @return the text editor configuration
      */
     TextEditorConfiguration getConfiguration();
+
+    /**
+     * Add an editor-spcific key binding.
+     * @param keybinding the key binding
+     */
+    void addKeybinding(Keybinding keybinding);
 }

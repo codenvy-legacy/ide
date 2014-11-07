@@ -44,6 +44,7 @@ import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
+import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
@@ -436,5 +437,10 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
             this.updateActions = new ArrayList<>();
         }
         this.updateActions.add(action);
+	}
+
+    @Override
+    public void addKeybinding(final Keybinding keybinding) {
+        this.editor.getHasKeybindings().addKeybinding(keybinding);
     }
 }
