@@ -270,14 +270,14 @@ public class BootstrapController {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
-                onFocusOut(analyticsSessions, true);
+//                onCloseWindow(analyticsSessions);
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
-                onFocusOut(analyticsSessions, true);
+//                onCloseWindow(analyticsSessions);
             }
         });
 
@@ -308,6 +308,10 @@ public class BootstrapController {
             logSessionUsageEvent(analyticsSessions, force);
         }
     }
+
+//    private void onCloseWindow(AnalyticsSessions analyticsSessions) {
+//        logSessionUsageEvent(analyticsSessions, true);
+//    }
 
     private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
         logSessionUsageEvent(analyticsSessions, force);

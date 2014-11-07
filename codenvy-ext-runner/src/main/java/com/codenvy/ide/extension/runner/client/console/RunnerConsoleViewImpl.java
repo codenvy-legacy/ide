@@ -134,6 +134,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
+        terminalFrame.getElement().setAttribute("allowtransparency", "true");
         /* appPreviewFrame.removeStyleName("gwt-Frame"); */
 
         terminalUnavailableLabel.setVisible(true);
