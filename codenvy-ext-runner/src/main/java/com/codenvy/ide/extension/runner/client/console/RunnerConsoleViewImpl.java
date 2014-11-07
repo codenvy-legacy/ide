@@ -19,6 +19,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -344,8 +345,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     private Widget messageToHTML(String message) {
         HTML html = new HTML();
         if (message.startsWith(INFO)) {
-            html.setHTML("<pre " + PRE_STYLE + ">[<span style='color:" + INFO_COLOR + ";'><b>INFO</b></span>]" +
-                         message.substring(INFO.length()) + "</pre>");
+            html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
         } else if (message.startsWith(ERROR)) {
             html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
         } else if (message.startsWith(WARN)) {
@@ -361,7 +361,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         } else {
             html.setHTML(buildSafeHtmlMessage(message));
         }
-        html.getElement().setAttribute("style", "padding-left: 2px;");
+        html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
         return html;
     }
 
