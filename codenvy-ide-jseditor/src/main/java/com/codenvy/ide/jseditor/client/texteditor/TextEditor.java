@@ -10,12 +10,8 @@ package com.codenvy.ide.jseditor.client.texteditor;
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-import javax.annotation.Nonnull;
-
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.text.TextRange;
@@ -24,18 +20,6 @@ import com.codenvy.ide.jseditor.client.text.TextRange;
  * Public view on the editor component.
  */
 public interface TextEditor extends EditorPartPresenter {
-
-    /**
-     * Initializes this editor with the configuration and document provider/
-     *
-     * @param configuration
-     *         the configuration of this editor.
-     * @param notificationManager
-     *         the manager that provides showing notifications
-     */
-
-    void initialize(@Nonnull TextEditorConfiguration configuration,
-                    @Nonnull NotificationManager notificationManager);
 
     /**
      * Closes this text editor after optionally saving changes.

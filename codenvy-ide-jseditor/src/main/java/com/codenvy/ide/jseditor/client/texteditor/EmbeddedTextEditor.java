@@ -12,19 +12,13 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
-import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 
-public interface EmbeddedTextEditor extends TextEditor, HasOutline {
+public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, HasOutline {
 
     /**
      * @return the text editor view implementation //todo need to introduce more simple way to use TextEditorPartView interface
      */
     EmbeddedTextEditorPartView getView();
-
-    /**
-     * @return the text editor configuration
-     */
-    TextEditorConfiguration getConfiguration();
 
     /** Calls all editor update actions for thsi editor. */
     void refreshEditor();
