@@ -10,13 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 
 /**
- * An <code>CodeAssistant</code> provides support on interactive content completion. The content assistant is a
- * {@link EmbeddedTextEditorPartView} add-on.
+ * An <code>CodeAssistant</code> provides support on interactive content completion.
  * <p>
- * A content assistant has a list of {@link com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor} objects each of which is
+ * A content assistant has a list of {@link CodeAssistProcessor} objects each of which is
  * registered for a particular document content type. The content assistant uses the processors to react on the request of completing
  * documents or presenting context information.
  * </p>
