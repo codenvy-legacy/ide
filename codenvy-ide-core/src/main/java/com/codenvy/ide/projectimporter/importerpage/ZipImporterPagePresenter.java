@@ -13,6 +13,8 @@ package com.codenvy.ide.projectimporter.importerpage;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
+import com.codenvy.ide.api.projectimporter.basepage.ImporterBasePageListener;
+import com.codenvy.ide.api.projectimporter.basepage.ImporterBasePagePresenter;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -21,110 +23,140 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
+import java.util.HashMap;
+
 /**
  * @author Roman Nikitenko
  */
-public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate{
+public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate, ImporterBasePageListener {
 
     private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_-]*$");
-    private CoreLocalizationConstant locale;
-    private ZipImporterPageView      view;
-    private WizardContext            wizardContext;
-    private Wizard.UpdateDelegate    updateDelegate;
+    private static final RegExp URL_REGEX    = RegExp.compile("(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?");
+    private static final RegExp WHITESPACE   = RegExp.compile("^\\s");
+    private static final RegExp END_URL      = RegExp.compile(".zip$");
+
+    private CoreLocalizationConstant  locale;
+    private ZipImporterPageView       view;
+    private WizardContext             wizardContext;
+    private Wizard.UpdateDelegate     updateDelegate;
+    private ImporterBasePagePresenter basePagePresenter;
 
     @Inject
     public ZipImporterPagePresenter(ZipImporterPageView view,
-                                    CoreLocalizationConstant locale) {
+                                    CoreLocalizationConstant locale,
+                                    ImporterBasePagePresenter basePagePresenter) {
         this.view = view;
         this.view.setDelegate(this);
         this.locale = locale;
+        this.basePagePresenter = basePagePresenter;
+        this.basePagePresenter.go(view.getBasePagePanel());
+        this.basePagePresenter.setListener(this);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getId() {
         return "zip";
     }
 
+    /** {@inheritDoc} */
     @Override
     public void disableInputs() {
-        view.setInputsEnableState(false);
+        basePagePresenter.setInputsEnableState(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void enableInputs() {
-        view.setInputsEnableState(true);
+        basePagePresenter.setInputsEnableState(true);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setContext(WizardContext wizardContext) {
         this.wizardContext = wizardContext;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setProjectWizardDelegate(Wizard.UpdateDelegate updateDelegate) {
         this.updateDelegate = updateDelegate;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         view.reset();
+        basePagePresenter.reset();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void projectNameChanged(String name) {
         if (name == null || name.isEmpty()) {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
         } else if (NAME_PATTERN.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
-            view.hideNameError();
+            basePagePresenter.hideNameError();
         } else {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-            view.showNameError();
+            basePagePresenter.showNameError();
         }
         updateDelegate.updateControls();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void projectUrlChanged(String url) {
-        if (!isGitUrlCorrect(url)) {
+        if (!isUrlCorrect(url)) {
             wizardContext.removeData(ImportProjectWizard.PROJECT_URL);
         } else {
             wizardContext.putData(ImportProjectWizard.PROJECT_URL, url);
-            view.hideUrlError();
+            basePagePresenter.hideUrlError();
 
-            String projectName = view.getProjectName();
+            String projectName = basePagePresenter.getProjectName();
             if (projectName.isEmpty()) {
                 projectName = parseUri(url);
-                view.setProjectName(projectName);
+                basePagePresenter.setProjectName(projectName);
                 projectNameChanged(projectName);
             }
         }
         updateDelegate.updateControls();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void projectDescriptionChanged(String projectDescriptionValue) {
         wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void projectVisibilityChanged(Boolean aPublic) {
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void onEnterClicked() {
-
+    public void skipFirstLevelChanged(Boolean isSkipFirstLevel) {
+        ProjectImporterDescriptor projectImporter = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
+        if (projectImporter != null) {
+            if (projectImporter.getAttributes() == null) {
+                projectImporter.setAttributes(new HashMap<String, String>());
+            }
+            projectImporter.getAttributes().put("skipFirstLevel", isSkipFirstLevel.toString());
+        }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
         clear();
         ProjectImporterDescriptor projectImporter = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
-        view.setImporterDescription(projectImporter.getDescription());
-        view.setInputsEnableState(true);
-        container.setWidget(view);
-        view.focusInUrlInput();
+        basePagePresenter.setImporterDescription(projectImporter.getDescription());
+        basePagePresenter.setInputsEnableState(true);
+        container.setWidget(view.asWidget());
+        basePagePresenter.focusInUrlInput();
     }
 
     /** Gets project name from uri. */
@@ -142,50 +174,30 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
         return result;
     }
 
-    private boolean isGitUrlCorrect(String url) {
-        // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
-        RegExp scpLikeSyntax = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
-
-        // the transport protocol
-        RegExp protocol = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
-
-        // the address of the remote server between // and /
-        RegExp host1 = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
-
-        // the address of the remote server between @ and : or /
-        RegExp host2 = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
-
-        // the repository name
-        RegExp repoName = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
-
-        // start with white space
-        RegExp whiteSpace = RegExp.compile("^\\s");
-
-        if (whiteSpace.test(url)) {
-            view.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
+    /**
+     * Validate url
+     *
+     * @param url
+     *         url for validate
+     * @return <code>true</code> if url is correct
+     */
+    private boolean isUrlCorrect(String url) {
+        if (!END_URL.test(url)) {
+            basePagePresenter.showUrlError(locale.importProjectMessageUrlInvalid());
             return false;
         }
 
-        if (scpLikeSyntax.test(url) && repoName.test(url)) {
-            return true;
-        } else if (scpLikeSyntax.test(url) && !repoName.test(url)) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
+        if (WHITESPACE.test(url)) {
+            basePagePresenter.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
             return false;
         }
 
-        if (!protocol.test(url)) {
-            view.showUrlError(locale.importProjectMessageProtocolIncorrect());
+        if (!URL_REGEX.test(url)) {
+            basePagePresenter.showUrlError(locale.importProjectMessageUrlInvalid());
             return false;
         }
-        if (!(host1.test(url) || host2.test(url))) {
-            view.showUrlError(locale.importProjectMessageHostIncorrect());
-            return false;
-        }
-        if (!(repoName.test(url))) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
-            return false;
-        }
-        view.hideUrlError();
+
+        basePagePresenter.hideUrlError();
         return true;
     }
 
