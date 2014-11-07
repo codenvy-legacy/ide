@@ -174,7 +174,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void updateNode(TreeNode<?> oldNode, TreeNode<?> newNode) {
+    public void updateNode(@Nonnull TreeNode<?> oldNode, @Nonnull TreeNode<?> newNode) {
         // get currently selected node
         final JsoArray<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
         TreeNode<?> selectedNode = null;
@@ -193,7 +193,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void selectNode(TreeNode<?> node) {
+    public void selectNode(@Nonnull TreeNode<?> node) {
         tree.getSelectionModel().selectSingleNode(node);
         delegate.onNodeSelected(node);
     }
