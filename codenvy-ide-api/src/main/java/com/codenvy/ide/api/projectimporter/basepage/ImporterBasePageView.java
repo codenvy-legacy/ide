@@ -13,6 +13,8 @@ package com.codenvy.ide.api.projectimporter.basepage;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Roman Nikitenko
  */
@@ -20,19 +22,16 @@ import com.google.inject.ImplementedBy;
 public interface ImporterBasePageView extends IsWidget {
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having changed the project's name. */
-        void projectNameChanged(String name);
+        void projectNameChanged(@Nonnull String name);
 
         /** Performs any actions appropriate in response to the user having changed the project's URL. */
-        void projectUrlChanged(String url);
+        void projectUrlChanged(@Nonnull String url);
 
         /** Performs any actions appropriate in response to the user having changed the project's description. */
-        void projectDescriptionChanged(String projectDescriptionValue);
+        void projectDescriptionChanged(@Nonnull String projectDescriptionValue);
 
         /** Performs any actions appropriate in response to the user having changed the project's visibility. */
-        void projectVisibilityChanged(Boolean aPublic);
-
-        /** Performs any actions appropriate in response to the user having clicked the Enter key. */
-        void onEnterClicked();
+        void projectVisibilityChanged(boolean aPublic);
     }
 
     /**
@@ -41,31 +40,21 @@ public interface ImporterBasePageView extends IsWidget {
      * @param url
      *         the project's URL to set
      */
-    void setProjectUrl(String url);
+    void setProjectUrl(@Nonnull String url);
 
-    /**
-     * Reset the page.
-     */
+    /** Reset the page. */
     void reset();
 
-    /**
-     * Show the name error.
-     */
+    /** Show the name error. */
     void showNameError();
 
-    /**
-     * Hide the name error.
-     */
+    /** Hide the name error. */
     void hideNameError();
 
-    /**
-     * Show URL error.
-     */
-    void showUrlError(String message);
+    /** Show URL error. */
+    void showUrlError(@Nonnull String message);
 
-    /**
-     * Hide URL error.
-     */
+    /** Hide URL error. */
     void hideUrlError();
 
     /**
@@ -74,13 +63,14 @@ public interface ImporterBasePageView extends IsWidget {
      * @param text
      *         description
      */
-    void setImporterDescription(String text);
+    void setImporterDescription(@Nonnull String text);
 
     /**
      * Get the project's name value.
      *
      * @return {@link String} project's name
      */
+    @Nonnull
     String getProjectName();
 
     /**
@@ -89,11 +79,9 @@ public interface ImporterBasePageView extends IsWidget {
      * @param projectName
      *         project's name to set
      */
-    void setProjectName(String projectName);
+    void setProjectName(@Nonnull String projectName);
 
-    /**
-     * Give focus to project's URL input.
-     */
+    /** Give focus to project's URL input. */
     void focusInUrlInput();
 
     /**
@@ -105,6 +93,6 @@ public interface ImporterBasePageView extends IsWidget {
     void setInputsEnableState(boolean isEnabled);
 
     /** Sets the delegate to receive events from this view. */
-    void setDelegate(ActionDelegate delegate);
+    void setDelegate(@Nonnull ActionDelegate delegate);
 
 }

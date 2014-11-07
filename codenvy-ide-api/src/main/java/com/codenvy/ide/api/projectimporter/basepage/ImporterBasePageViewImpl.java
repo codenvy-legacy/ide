@@ -10,17 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projectimporter.basepage;
 
-import elemental.events.KeyboardEvent;
-
 import com.codenvy.ide.api.projectimporter.ProjectImporterResource;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -28,17 +26,18 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Nikitenko
  */
-public class ImporterBasePageViewImpl implements ImporterBasePageView {
+public class ImporterBasePageViewImpl extends Composite implements ImporterBasePageView {
     interface ImporterPageViewImplUiBinder extends UiBinder<DockLayoutPanel, ImporterBasePageViewImpl> {
     }
 
-    Style       style;
+    Style style;
     @UiField
     protected FlowPanel   importerPanel;
     @UiField
@@ -59,13 +58,12 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
     ProjectImporterResource importerResources;
 
     private       ActionDelegate  delegate;
-    private final DockLayoutPanel rootElement;
 
     @Inject
     public ImporterBasePageViewImpl(ProjectImporterResource importerResources,
                                     ImporterPageViewImplUiBinder uiBinder) {
         this.importerResources = importerResources;
-        rootElement = uiBinder.createAndBindUi(this);
+        initWidget(uiBinder.createAndBindUi(this));
         projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("maxlength", "256");
         importerResources.css().ensureInjected();
@@ -92,24 +90,19 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         delegate.projectDescriptionChanged(projectDescription.getValue());
     }
 
-    @UiHandler({"projectDescription", "projectUrl", "projectName"})
-    void onEnterClicked(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyboardEvent.KeyCode.ENTER) {
-            delegate.onEnterClicked();
-        }
-    }
-
     @UiHandler({"projectPublic", "projectPrivate"})
     void visibilityHandler(ValueChangeEvent<Boolean> event) {
         delegate.projectVisibilityChanged(projectPublic.getValue());
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setProjectUrl(String url) {
+    public void setProjectUrl(@Nonnull String url) {
         projectUrl.setText(url);
         delegate.projectUrlChanged(url);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void reset() {
         projectName.setText("");
@@ -120,11 +113,6 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         descriptionArea.clear();
         hideUrlError();
         hideNameError();
-    }
-
-    @Override
-    public Widget asWidget() {
-        return rootElement;
     }
 
     /** {@inheritDoc} */
@@ -141,13 +129,13 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
 
     /** {@inheritDoc} */
     @Override
-    public void setImporterDescription(String text) {
+    public void setImporterDescription(@Nonnull String text) {
         descriptionArea.getElement().setInnerText(text);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showUrlError(String message) {
+    public void showUrlError(@Nonnull String message) {
         projectUrl.addStyleName(importerResources.css().inputError());
         labelUrlError.setText(message);
     }
@@ -160,6 +148,7 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getProjectName() {
         return projectName.getValue();
@@ -167,7 +156,7 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
 
     /** {@inheritDoc} */
     @Override
-    public void setProjectName(String projectName) {
+    public void setProjectName(@Nonnull String projectName) {
         this.projectName.setValue(projectName);
         delegate.projectNameChanged(projectName);
     }
@@ -186,8 +175,9 @@ public class ImporterBasePageViewImpl implements ImporterBasePageView {
         projectUrl.setEnabled(isEnabled);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setDelegate(ActionDelegate delegate) {
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
     }
 
