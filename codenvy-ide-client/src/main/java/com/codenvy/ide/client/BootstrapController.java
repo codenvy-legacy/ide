@@ -127,6 +127,9 @@ public class BootstrapController {
         // Register default icons
         registerDefaultIcons(resources);
 
+        // Inject ZeroClipboard script
+        injectScript("ZeroClipboard.min.js");
+
         // Inject CodeMirror scripts
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
                       .setCallback(new Callback<Void, Exception>() {
@@ -154,6 +157,26 @@ public class BootstrapController {
                               initializationFailed("Unable to inject CodeMirror");
                           }
                       }).inject();
+    }
+
+    /**
+     * Inject the script from base module by file name.
+     *
+     * @param fileName
+     */
+    private void injectScript(final String fileName) {
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + fileName).setWindow(ScriptInjector.TOP_WINDOW)
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onSuccess(Void result) {
+                          }
+
+                          @Override
+                          public void onFailure(Exception e) {
+                              Log.error(getClass(), "Unable to inject " + fileName, e);
+                          }
+                      }).inject();
+
     }
 
     /**
