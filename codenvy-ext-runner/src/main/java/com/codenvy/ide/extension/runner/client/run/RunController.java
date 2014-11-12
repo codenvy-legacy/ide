@@ -906,7 +906,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
 
     /** Returns <code>true</code> - if link to get runner recipe file is exist and <code>false</code> - otherwise. */
     public boolean isRecipeLinkExists() {
-        if (isAnyAppRunning() && appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
+        if (isAnyAppLaunched() && appContext.getCurrentProject() != null && appContext.getCurrentProject().getProcessDescriptor() != null) {
             Link recipeLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), Constants.LINK_REL_RUNNER_RECIPE);
             return recipeLink != null;
         }
