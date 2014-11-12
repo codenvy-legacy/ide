@@ -11,7 +11,8 @@
 package com.codenvy.ide.jseditor.client.codeassist;
 
 import com.codenvy.ide.api.icon.Icon;
-import com.google.gwt.user.client.ui.Widget;
+
+import elemental.dom.Element;
 
 
 /**
@@ -30,7 +31,7 @@ public interface CompletionProposal {
      *
      * @return the additional information or <code>null</code>
      */
-    Widget getAdditionalProposalInfo();
+    Element getAdditionalProposalInfo();
 
     /**
      * Returns the string to be displayed in the list of completion proposals.
@@ -46,24 +47,6 @@ public interface CompletionProposal {
      * @return the image to be shown or <code>null</code> if no image is desired
      */
     Icon getIcon();
-
-    /**
-     * Returns the characters which trigger the application of this completion proposal.
-     *
-     * @return the completion characters for this completion proposal or <code>null</code> if no completion other than the new line
-     *         character is possible
-     */
-    char[] getTriggerCharacters();
-
-    /**
-     * Returns <code>true</code> if the proposal may be automatically inserted, <code>false</code> otherwise. Automatic insertion
-     * can happen if the proposal is the only one being proposed, in which case the content assistant may decide to not prompt the
-     * user with a list of proposals, but simply insert the single proposal. A proposal may veto this behavior by returning
-     * <code>false</code> to a call to this method.
-     *
-     * @return <code>true</code> if the proposal may be inserted automatically, <code>false</code> if not
-     */
-    boolean isAutoInsertable();
 
     void getCompletion(CompletionCallback callback);
 

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionGroup;
@@ -24,6 +27,7 @@ import com.codenvy.ide.util.input.KeyMapUtil;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -32,7 +36,6 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -42,9 +45,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
-
-import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * PopupMenu is visual component represents all known Popup Menu.
@@ -171,12 +171,12 @@ public class PopupMenu extends Composite {
             return false;
         }
 
-        String index = DOM.getElementAttribute(tr, "item-index");
+        String index = tr.getAttribute("item-index");
         if (index == null || "".equals(index)) {
             return false;
         }
 
-        String enabled = DOM.getElementAttribute(tr, "item-enabled");
+        String enabled = tr.getAttribute("item-enabled");
         if (enabled == null || "".equals(enabled) || "false".equals(enabled)) {
             return false;
         }
@@ -209,7 +209,7 @@ public class PopupMenu extends Composite {
         table.setStyleName(POPUP_RESOURCES.popup().popupMenuTable());
         table.setCellPadding(0);
         table.setCellSpacing(0);
-        DOM.setElementAttribute(table.getElement(), "border", "0");
+        table.getElement().setAttribute("border", "0");
 
         for (int i = 0; i < list.size(); i++) {
             Action menuItem = list.get(i);
@@ -295,8 +295,8 @@ public class PopupMenu extends Composite {
 
                 work++;
 
-                DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-index", "" + i);
-                DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-enabled", "" + presentation.isEnabled());
+                table.getRowFormatter().getElement(i).setAttribute("item-index", Integer.toString(i));
+                table.getRowFormatter().getElement(i).setAttribute("item-enabled", Boolean.toString(presentation.isEnabled()));
 
                 String actionId = actionManager.getId(menuItem);
                 String debugId;
@@ -414,7 +414,7 @@ public class PopupMenu extends Composite {
         hoveredTR = tr;
         setStyleHovered(tr);
 
-        int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
+        int itemIndex = Integer.parseInt(tr.getAttribute("item-index"));
         Action menuItem = list.get(itemIndex);
         openSubPopupTimer.cancel();
         if (menuItem instanceof ActionGroup && !(((ActionGroup)menuItem).canBePerformed() &&
@@ -437,7 +437,7 @@ public class PopupMenu extends Composite {
             return;
         }
 
-        int itemIndex = Integer.parseInt(DOM.getElementAttribute(tr, "item-index"));
+        int itemIndex = Integer.parseInt(tr.getAttribute("item-index"));
         Action menuItem = list.get(itemIndex);
         if (menuItem instanceof ActionGroup && (!((ActionGroup)menuItem).canBePerformed() &&
                                                 Utils.hasVisibleChildren((ActionGroup)menuItem, presentationFactory, actionManager,
@@ -474,7 +474,7 @@ public class PopupMenu extends Composite {
         subPopupAnchor = tableRowElement;
         setStyleHovered(subPopupAnchor);
 
-        int itemIndex = Integer.parseInt(DOM.getElementAttribute(tableRowElement, "item-index"));
+        int itemIndex = Integer.parseInt(tableRowElement.getAttribute("item-index"));
         Action menuItem = list.get(itemIndex);
 
         String idPrefix = itemIdPrefix;
@@ -590,7 +590,7 @@ public class PopupMenu extends Composite {
             }
             Element tr = DOM.getParent(td);
 
-            String index = DOM.getElementAttribute(tr, "item-index");
+            String index = tr.getAttribute("item-index");
             if (index == null || "".equals(index)) {
                 return;
             }

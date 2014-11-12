@@ -23,16 +23,23 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
+import com.codenvy.ide.debug.BreakpointRenderer;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInfoCallback;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInformationWidget;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
+import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
+import com.codenvy.ide.jseditor.client.popup.PopupResources;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -44,12 +51,15 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
 
+import elemental.dom.Element;
+
 /**
  * Implementation of the View part of the editors of the embedded kind.
  * 
  * @author "Mickaël Leduque"
  */
 public class EmbeddedTextEditorPartViewImpl extends Composite implements EmbeddedTextEditorPartView,
+                                                                         HasGutterClickHandlers,
                                                                          EditorWithErrors {
 
     private final static EditorViewUiBinder uibinder = GWT.create(EditorViewUiBinder.class);
@@ -67,6 +77,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private EditorWidget editor;
     private CursorModelWithHandler cursorModel;
     private EmbeddedDocument embeddedDocument;
+    private BreakpointRenderer breakpointRenderer;
 
     /** The view delegate. */
     private Delegate delegate;
@@ -77,6 +88,9 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     private boolean delayedFocus = false;
     private boolean codeAssistEnabled = false;
 
+    private BreakpointRendererFactory breakpointRendererFactory;
+    private HasKeybindings keyBindingsManager = new TemporaryKeybindingsManager();
+
     /** The editor handle for this editor view. */
     private final EditorHandle handle = new EditorHandle() {
         @Override
@@ -84,6 +98,8 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
             return EmbeddedTextEditorPartViewImpl.this;
         }
     };
+
+    private PopupResources popupResources;
 
     @Inject
     public EmbeddedTextEditorPartViewImpl(final FileTypeIdentifier fileTypeIdentifier,
@@ -137,12 +153,13 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public void setContents(final String contents) {
+    public void setContents(final String contents, final FileNode file) {
 
         this.editor = editorWidgetFactory.createEditorWidget(this.editorModes.get(0));
         this.editorPanel.add(this.editor);
 
         this.embeddedDocument = this.editor.getDocument();
+        this.embeddedDocument.setFile(file);
         this.cursorModel = new EmbeddedEditorCursorModel(this.embeddedDocument);
 
         this.editor.setValue(contents);
@@ -270,7 +287,9 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
 
     @Override
     public void onResize() {
-        this.editor.onResize();
+        if (this.editor != null) {
+            this.editor.onResize();
+        }
     }
 
     @Override
@@ -290,18 +309,42 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
+    public LineStyler getLineStyler() {
+        return this.editor.getLineStyler();
+    }
+
+    @Override
     public HasTextMarkers getHasTextMarkers() {
         return this.editor;
     }
 
     @Override
     public HasKeybindings getHasKeybindings() {
-        return this.editor;
+        return this.keyBindingsManager;
+    }
+
+    @Override
+    public void setFinalHasKeybinding() {
+        this.keyBindingsManager = this.editor;
     }
 
     @Override
     public void showCompletionProposals(final CompletionsSource source) {
-        this.editor.showCompletionProposals(source);
+        this.editor.showCompletionProposals(source, new AdditionalInfoCallback() {
+            
+            @Override
+            public Element onAdditionalInfoNeeded(final float pixelX, final float pixelY, final Element infoWidget) {
+                final AdditionalInformationWidget popup = new AdditionalInformationWidget(popupResources);
+                popup.addItem(infoWidget);
+                popup.show(pixelX, pixelY);
+                return popup.asElement();
+            }
+        });
+    }
+
+    @Override
+    public void showCompletionProposals() {
+        this.editor.showCompletionProposals();
     }
 
 
@@ -325,8 +368,21 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     }
 
     @Override
-    public void setCodeAssistEnabled(boolean codeAssistEnabled) {
-        this.codeAssistEnabled = true;
+    public BreakpointRenderer getBreakpointRenderer() {
+        if (this.breakpointRenderer == null && this.editor != null) {
+            this.breakpointRenderer = this.breakpointRendererFactory.create(getEditorHandle());
+        }
+        return this.breakpointRenderer;
+    }
+
+    @Inject
+    public void setBreakpointRendererFactory(final BreakpointRendererFactory breakpointRendererFactory) {
+        this.breakpointRendererFactory = breakpointRendererFactory;
+    }
+
+    @Inject
+    public void setPopupResource(final PopupResources popupResources) {
+        this.popupResources = popupResources;
     }
 
     /**
@@ -340,5 +396,10 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
     @Override
     public void markClean() {
         this.editor.markClean();
+    }
+
+    @Override
+    public HandlerRegistration addGutterClickHandler(final GutterClickHandler handler) {
+        return this.editor.addGutterClickHandler(handler);
     }
 }

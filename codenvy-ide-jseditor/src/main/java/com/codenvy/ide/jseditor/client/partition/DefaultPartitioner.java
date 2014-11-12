@@ -30,9 +30,6 @@ import com.codenvy.ide.util.loging.Log;
  */
 public class DefaultPartitioner implements DocumentPartitioner {
 
-    /** The position category this partitioner uses to store the document's partitioning information. */
-    private static final String CONTENT_TYPES_CATEGORY = "__content_types_category";
-
     /** The identifier of the default partitioning. */
     public final static String DEFAULT_PARTITIONING = "__dftl_partitioning";
 
@@ -53,7 +50,7 @@ public class DefaultPartitioner implements DocumentPartitioner {
         this.legalContentTypes = new ArrayList<>(legalContentTypes);
         this.scanner = scanner;
         this.documentPositionMap = documentPositionMap;
-        this.positionCategory = CONTENT_TYPES_CATEGORY + hashCode();
+        this.positionCategory = DocumentPositionMap.Categories.DEFAULT_CATEGORY;
     }
 
     public void initialize() {

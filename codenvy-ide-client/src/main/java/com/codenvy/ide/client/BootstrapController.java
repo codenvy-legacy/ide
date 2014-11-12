@@ -251,6 +251,10 @@ public class BootstrapController {
         SimpleLayoutPanel mainPanel = new SimpleLayoutPanel();
 
         RootLayoutPanel.get().add(mainPanel);
+
+        // Make sure the root panel creates its own stacking context
+        RootLayoutPanel.get().getElement().getStyle().setZIndex(1);
+
         WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
         // Display 'Update extension' button if IDE is launched in SDK runner

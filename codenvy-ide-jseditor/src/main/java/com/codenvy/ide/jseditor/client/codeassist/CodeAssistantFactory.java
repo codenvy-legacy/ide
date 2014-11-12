@@ -11,7 +11,7 @@
 package com.codenvy.ide.jseditor.client.codeassist;
 
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
-import com.codenvy.ide.jseditor.client.texteditor.EditorHandle;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 
 /**
  * Factory for {@link CodeAssistant} objects.
@@ -21,9 +21,9 @@ public interface CodeAssistantFactory {
     /**
      * Create a {@link CodeAssistant} for the given editor.
      * 
-     * @param editorHandle a handle on the editor
+     * @param textEditor  the editor
      * @param partitioner the partitioner
      * @return a {@link CodeAssistant}
      */
-    CodeAssistant create(EditorHandle editorHandle, DocumentPartitioner partitioner);
+    CodeAssistant create(TextEditor textEditor, DocumentPartitioner partitioner);
 }

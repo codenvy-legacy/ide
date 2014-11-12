@@ -10,14 +10,25 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.inject;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
+import com.codenvy.ide.debug.BreakpointManager;
+import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.JsEditorExtension;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantImpl;
+import com.codenvy.ide.jseditor.client.debug.BreakpointManagerImpl;
+import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
+import com.codenvy.ide.jseditor.client.debug.BreakpointRendererImpl;
 import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
@@ -31,6 +42,10 @@ import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.KeymapPrefReader;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistantImpl;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistWidgetFactory;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
 import com.codenvy.ide.jseditor.client.reconciler.ReconcilerFactory;
 import com.codenvy.ide.jseditor.client.reconciler.ReconcilerImpl;
@@ -43,12 +58,6 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 @ExtensionGinModule
 public class JsEditorGinModule extends AbstractGinModule {
@@ -95,10 +104,23 @@ public class JsEditorGinModule extends AbstractGinModule {
                     .implement(Reconciler.class, ReconcilerImpl.class)
                     .build(ReconcilerFactory.class));
 
-        // bind the code assistant
+        // bind the code assistant and quick assistant
         install(new GinFactoryModuleBuilder()
                     .implement(CodeAssistant.class, CodeAssistantImpl.class)
                     .build(CodeAssistantFactory.class));
+        install(new GinFactoryModuleBuilder()
+                    .implement(QuickAssistAssistant.class, QuickAssistAssistantImpl.class)
+                    .build(QuickAssistantFactory.class));
+
+        // breakpoint renderer and manager
+        install(new GinFactoryModuleBuilder()
+                    .implement(BreakpointRenderer.class, BreakpointRendererImpl.class)
+                    .build(BreakpointRendererFactory.class));
+        bind(BreakpointManager.class).to(BreakpointManagerImpl.class).in(Singleton.class);
+
+        // bind the quick assist widget factory
+        install(new GinFactoryModuleBuilder()
+                    .build(QuickAssistWidgetFactory.class));
     }
 
     // no real need to make it a singleton, it's a simple instantiation

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.annotation;
 
-import static com.codenvy.ide.jseditor.client.partition.DocumentPositionMap.DEFAULT_CATEGORY;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -26,9 +24,12 @@ import com.codenvy.ide.api.text.TypedPosition;
 import com.codenvy.ide.api.text.annotation.Annotation;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
+import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent.AnnotationFilter;
+import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent.QueryCallback;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
@@ -133,14 +134,14 @@ public class AnnotationModelImpl implements AnnotationModel {
                                                       final int length,
                                                       final boolean canStartBefore,
                                                       final boolean canEndAfter) {
-        cleanup(true);
+        //cleanup(true);
 
         try {
-            final List<TypedPosition> annotationPos = this.documentPositionMap.getPositions(DEFAULT_CATEGORY, offset,
-                                                                                            length, canStartBefore, canEndAfter);
+            final List<TypedPosition> annotationPos = this.documentPositionMap.getPositions(offset, length, 
+                                                                                            canStartBefore, canEndAfter);
             return new AnnotationsIterator(annotationPos, this.positions);
         } catch (final BadPositionCategoryException e) {
-            Log.warn(AnnotationModelImpl.class, "Bad position category (on default category!): " + DEFAULT_CATEGORY);
+            Log.warn(AnnotationModelImpl.class, "Bad position category (on default category!)");
             return null;
         }
 
@@ -314,5 +315,30 @@ public class AnnotationModelImpl implements AnnotationModel {
         this.positions.clear();
         this.modelEvent = new AnnotationModelEvent(this);
         this.docHandle.getDocEventBus().fireEvent(new ClearAnnotationModelEvent(this));
+    }
+
+    @Override
+    public void onQueryAnnotations(final QueryAnnotationsEvent event) {
+        final QueryCallback callback = event.getCallback();
+        if (callback == null) {
+            return;
+        }
+        final LinearRange range = event.getRange();
+        Iterator<Annotation> iterator;
+        if (range == null) {
+            iterator = getAnnotationIterator();
+        } else {
+            iterator = getAnnotationIterator(range.getStartOffset(), range.getLength(), true, true);
+        }
+        final AnnotationFilter filter = event.getAdditionalFilter();
+
+        final Map<Annotation, Position> result = new HashMap<>();
+        while (iterator.hasNext()) {
+            final Annotation annotation = iterator.next();
+            if (filter.accept(annotation)) { 
+                result.put(annotation, this.annotations.get(annotation));
+            }
+        }
+        callback.respond(result);
     }
 }

@@ -21,9 +21,19 @@ import com.codenvy.ide.jseditor.client.events.DocumentChangeHandler;
 /**
  * This interface defines the model for managing annotations attached to a document. The model maintains a set of annotations for a given
  * document and notifies registered annotation model listeners about annotation model changes. It also provides methods for querying the
- * current position of an annotation managed by this model.
+ * current position of an annotation managed by this model.<br>
+ * The following events are produced:
+ * <ul>
+ * <li> {@link AnnotationModelEvent} when the {@link AnnotationModel} changes (the changes are batched)</li>
+ * <li> {@link ClearAnnotationModelEvent} when he {@link AnnotationModel} is cleared</li>
+ * </ul>
+ * The model handles the following events:
+ * <ul>
+ * <li> {@link QueryAnnotationsEvent} where a component requests a list of annotations in a given range and the model answers
+ * using the callback.</li>
+ * </ul>
  */
-public interface AnnotationModel extends UseDocumentHandle, DocumentChangeHandler {
+public interface AnnotationModel extends UseDocumentHandle, DocumentChangeHandler, QueryAnnotationsHandler {
 
 
     /**

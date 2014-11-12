@@ -10,13 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 
 /**
- * An <code>CodeAssistant</code> provides support on interactive content completion. The content assistant is a
- * {@link EmbeddedTextEditorPartView} add-on.
+ * An <code>CodeAssistant</code> provides support on interactive content completion.
  * <p>
- * A content assistant has a list of {@link com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor} objects each of which is
+ * A content assistant has a list of {@link CodeAssistProcessor} objects each of which is
  * registered for a particular document content type. The content assistant uses the processors to react on the request of completing
  * documents or presenting context information.
  * </p>
@@ -40,9 +38,20 @@ public interface CodeAssistant {
     void setCodeAssistantProcessor(String contentType, CodeAssistProcessor processor);
 
     /**
-     * Request to compute the proposals.
-     * @param callback what to do when the proposals are ready
+     * Returns the code assist processor for the content type of the specified document position.
+     * 
+     * @param offset a offset within the document
+     * @return a code-assist processor or <code>null</code> if none exists
      */
-    void computeCompletionProposals(CodeAssistCallback callback);
+    CodeAssistProcessor getProcessor(int offset);
+
+    /**
+     * Computes completion proposals computed based on the specified document position. The position is used to determine the
+     * appropriate content assist processor to invoke.
+     * 
+     * @param offset a document offset
+     * @param callback the callback to use once completions are ready
+     */
+    void computeCompletionProposals(int offset, CodeAssistCallback callback);
 
 }

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
 
 /**
  * Interface for completion objects.
@@ -38,5 +38,5 @@ public interface Completion {
      *         the document into which the proposed completion has been inserted
      * @return the new selection in absolute document coordinates
      */
-    Region getSelection(EmbeddedDocument document);
+    LinearRange getSelection(EmbeddedDocument document);
 }

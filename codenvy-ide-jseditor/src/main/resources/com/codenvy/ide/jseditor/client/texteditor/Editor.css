@@ -9,7 +9,7 @@
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
 
-@external .annotation;
+@external .annotation, .breakpoints;
 
 @sprite .lineWarning {
     gwt-image: "squiggleWarning";
@@ -33,6 +33,6 @@
     overflow: visible;
 }
 
-.annotation {
-    width: 1em;
+.debugLine {
+    background-color: rgba(255, 120, 100, 0.5) !important;
 }
