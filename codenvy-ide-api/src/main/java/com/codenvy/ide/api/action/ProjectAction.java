@@ -24,7 +24,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  */
 public abstract class ProjectAction extends Action {
 
-    private AppContext appContext;
+    protected AppContext appContext;
 
     protected ProjectAction() {
     }
