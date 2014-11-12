@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.openproject;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
@@ -33,12 +32,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
 /**
  * The implementation of {@link OpenProjectView}.
  * Provides selecting project what want to open.
  *
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class OpenProjectViewImpl extends Window implements OpenProjectView {

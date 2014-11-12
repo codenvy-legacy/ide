@@ -70,21 +70,21 @@ import java.util.Map;
  */
 public class BootstrapController {
 
-    private final DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private final AnalyticsEventLoggerExt       analyticsEventLoggerExt;
-    private       AppContext                    appContext;
-    private final IconRegistry                  iconRegistry;
-    private final ThemeAgent                    themeAgent;
-    private final Provider<ComponentRegistry>   componentRegistry;
-    private final Provider<WorkspacePresenter>  workspaceProvider;
-    private final ExtensionInitializer          extensionInitializer;
-    private final UserProfileServiceClient      userProfileService;
-    private final WorkspaceServiceClient        workspaceServiceClient;
-    private final PreferencesManagerImpl        preferencesManager;
-    private final StyleInjector                 styleInjector;
-    private final CoreLocalizationConstant      coreLocalizationConstant;
-    private final EventBus                      eventBus;
-    private final ActionManager                 actionManager;
+    private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
+    private final AnalyticsEventLoggerExt      analyticsEventLoggerExt;
+    private       AppContext                   appContext;
+    private final IconRegistry                 iconRegistry;
+    private final ThemeAgent                   themeAgent;
+    private final Provider<ComponentRegistry>  componentRegistry;
+    private final Provider<WorkspacePresenter> workspaceProvider;
+    private final ExtensionInitializer         extensionInitializer;
+    private final UserProfileServiceClient     userProfileService;
+    private final WorkspaceServiceClient       workspaceServiceClient;
+    private final PreferencesManagerImpl       preferencesManager;
+    private final StyleInjector                styleInjector;
+    private final CoreLocalizationConstant     coreLocalizationConstant;
+    private final EventBus                     eventBus;
+    private final ActionManager                actionManager;
 
     /** Create controller. */
     @Inject
@@ -270,14 +270,12 @@ public class BootstrapController {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
-//                onCloseWindow(analyticsSessions);
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
-//                onCloseWindow(analyticsSessions);
             }
         });
 
@@ -309,10 +307,6 @@ public class BootstrapController {
         }
     }
 
-//    private void onCloseWindow(AnalyticsSessions analyticsSessions) {
-//        logSessionUsageEvent(analyticsSessions, true);
-//    }
-
     private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
         logSessionUsageEvent(analyticsSessions, force);
     }
@@ -320,8 +314,6 @@ public class BootstrapController {
     private void logSessionUsageEvent(AnalyticsSessions analyticsSessions, boolean force) {
         if (force || analyticsSessions.getIdleTime() > 60000) { // 1 min, don't log frequently than once per minute
             Map<String, String> parameters = new HashMap<>();
-            parameters.put("START-TIME", Long.toString(analyticsSessions.getStartTime()));
-            parameters.put("USAGE-TIME", Long.toString(analyticsSessions.getUsageTime()));
             parameters.put("SESSION-ID", analyticsSessions.getId());
 
             analyticsEventLoggerExt.logEvent(EventLogger.SESSION_USAGE, parameters);
@@ -329,6 +321,8 @@ public class BootstrapController {
             if (Config.getCurrentWorkspace() != null && Config.getCurrentWorkspace().isTemporary()) {
                 analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
             }
+
+            analyticsSessions.updateLastLogTime();
         }
     }
 
@@ -389,8 +383,7 @@ public class BootstrapController {
 
     private static class AnalyticsSessions {
         private String id;
-        private long startTime;
-        private long lastRequestTime;
+        private long lastLogTime;
 
         private AnalyticsSessions() {
             makeNew();
@@ -400,23 +393,17 @@ public class BootstrapController {
             return id;
         }
 
-        public long getStartTime() {
-            return startTime;
-        }
-
-        public long getUsageTime() {
-            lastRequestTime = System.currentTimeMillis();
-            return lastRequestTime - startTime;
+        public void updateLastLogTime() {
+            lastLogTime = System.currentTimeMillis();
         }
 
         public void makeNew() {
             this.id = UUID.uuid();
-            this.startTime = System.currentTimeMillis();
-            this.lastRequestTime = startTime;
+            this.lastLogTime = System.currentTimeMillis();
         }
 
         public long getIdleTime() {
-            return System.currentTimeMillis() - lastRequestTime;
+            return System.currentTimeMillis() - lastLogTime;
         }
     }
 }

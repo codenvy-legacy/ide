@@ -31,7 +31,9 @@ import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.menu.ContextMenu;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -78,8 +80,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.coreLocalizationConstant = coreLocalizationConstant;
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
-        this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
         this.deleteNodeHandler = deleteNodeHandler;
+        this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
     }
@@ -93,8 +95,20 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onOpen() {
-        // show list of all projects
-        setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+        if (Config.getProjectName() == null) {
+            setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+        } else {
+            projectServiceClient.getProject(Config.getProjectName(), new AsyncRequestCallback<ProjectDescriptor>() {
+                @Override
+                protected void onSuccess(ProjectDescriptor result) {
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                }
+            });
+        }
     }
 
     /** {@inheritDoc} */
@@ -142,8 +156,8 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                if (appContext.getCurrentProject() == null) {
-                    // this is case when some project is opening and previously opened project is closing
+                // this isn't case when some project going to open while previously opened project is closing
+                if (!event.isCloseBeforeOpening()) {
                     setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
                     view.hideProjectHeader();
                 }
@@ -222,7 +236,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     }
 
     private void updateAppContext(TreeNode<?> node) {
-        if (node instanceof StorableNode && appContext.getCurrentProject() != null) {
+        if (node instanceof StorableNode && appContext.getCurrentProject() != null && node.getProject() != null) {
             appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
         }
     }

@@ -422,8 +422,8 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.expandEditor.title")
     String actionExpandEditorTitle();
 
-    @Key("closeProject.askWindow.title")
-    String closeProjectAskTitle();
+    @Key("closeProject.title")
+    String closeProjectTitle();
 
     @Key("askWindow.close.title")
     String askWindowCloseTitle();

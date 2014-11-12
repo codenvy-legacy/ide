@@ -14,7 +14,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
@@ -72,7 +71,6 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
     @Override
     public void selectedProject(ProjectReference projectName) {
         this.selectedProject = projectName;
-
         updateComponents();
     }
 
@@ -82,11 +80,7 @@ public class OpenProjectPresenter implements OpenProjectView.ActionDelegate {
                 new AsyncRequestCallback<Array<ProjectReference>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class)) {
                     @Override
                     protected void onSuccess(Array<ProjectReference> result) {
-                        Array<ProjectReference> array = Collections.createArray();
-                        for (ProjectReference projectReference : result.asIterable()) {
-                            array.add(projectReference);
-                        }
-                        view.setProjects(array);
+                        view.setProjects(result);
                         view.showDialog();
                     }
 
