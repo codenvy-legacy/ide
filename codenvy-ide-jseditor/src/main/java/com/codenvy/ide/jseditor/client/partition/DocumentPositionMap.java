@@ -21,8 +21,10 @@ import com.codenvy.ide.api.text.TypedPosition;
  */
 public interface DocumentPositionMap {
 
-    /** The identifier of the default position category. */
-    final static String DEFAULT_CATEGORY = "__dflt_position_category";
+    public static final class Categories {
+        /** The identifier of the default position category. */
+        public static final String DEFAULT_CATEGORY = "__dflt_position_category";
+    }
 
     /**
      * Add a position category.
@@ -86,6 +88,9 @@ public interface DocumentPositionMap {
     void addPosition(String category, TypedPosition position) throws BadLocationException, BadPositionCategoryException;
 
     List<TypedPosition> getPositions(String category, int offset, int length,
+                                     boolean canStartBefore, boolean canEndAfter) throws BadPositionCategoryException;
+
+    List<TypedPosition> getPositions(int offset, int length,
                                      boolean canStartBefore, boolean canEndAfter) throws BadPositionCategoryException;
 
     /**

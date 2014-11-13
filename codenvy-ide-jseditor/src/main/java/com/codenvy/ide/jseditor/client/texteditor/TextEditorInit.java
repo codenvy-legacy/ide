@@ -13,6 +13,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
 import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
@@ -20,6 +21,10 @@ import com.codenvy.ide.jseditor.client.annotation.AnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.GutterAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.InlineAnnotationRenderer;
+import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent;
+import com.codenvy.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChange;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChangeInterceptor;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistant;
@@ -33,15 +38,25 @@ import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestHandler;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.events.TextChangeEvent;
+import com.codenvy.ide.jseditor.client.events.TextChangeHandler;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
+import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.KeyBindingAction;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.reconciler.Reconciler;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.web.bindery.event.shared.EventBus;
 
 import elemental.events.KeyboardEvent.KeyCode;
+import elemental.events.MouseEvent;
 
 /**
  * Initialization controller for the text editor.
@@ -56,16 +71,23 @@ public class TextEditorInit {
     private final EventBus generalEventBus;
     private final EditorHandle editorHandle;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final QuickAssistantFactory quickAssistantFactory;
+    private final EmbeddedTextEditorPresenter textEditor;
 
 
     public TextEditorInit(final TextEditorConfiguration configuration,
                           final EventBus generalEventBus,
                           final EditorHandle editorHandle,
-                          final CodeAssistantFactory codeAssistantFactory) {
+                          final CodeAssistantFactory codeAssistantFactory,
+                          final QuickAssistantFactory quickAssistantFactory,
+                          final EmbeddedTextEditorPresenter textEditor) {
+
         this.configuration = configuration;
         this.generalEventBus = generalEventBus;
         this.editorHandle = editorHandle;
         this.codeAssistantFactory = codeAssistantFactory;
+        this.quickAssistantFactory = quickAssistantFactory;
+        this.textEditor = textEditor;
     }
 
     /**
@@ -77,11 +99,14 @@ public class TextEditorInit {
         final DocReadyInit<TextEditorInit> init = new DocReadyInit<TextEditorInit>() {
 
             @Override
-            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {	
+            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {
                 configurePartitioner(documentHandle);
                 configureReconciler(documentHandle);
                 configureAnnotationModel(documentHandle);
                 configureCodeAssist(documentHandle);
+                configureQuickAssist(documentHandle);
+                configureChangeInterceptors(documentHandle);
+                configureKeybindings();
             }
         };
         new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
@@ -140,6 +165,9 @@ public class TextEditorInit {
 
         annotationModel.setDocumentHandle(documentHandle);
         documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, annotationModel);
+
+        // the model listens to QueryAnnotation events
+        documentHandle.getDocEventBus().addHandler(QueryAnnotationsEvent.TYPE, annotationModel);
     }
 
     /**
@@ -152,11 +180,10 @@ public class TextEditorInit {
         }
         final StringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors();
 
-        if (processors != null) {
+        if (processors != null && !processors.isEmpty()) {
             LOG.info("Creating code assistant.");
-            this.editorHandle.getEditor().setCodeAssistEnabled(true);
 
-            final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.editorHandle,
+            final CodeAssistant codeAssistant = this.codeAssistantFactory.create(this.textEditor,
                                                                                  this.configuration.getPartitioner());
             processors.iterate(new IterationCallback<CodeAssistProcessor>() {
                 @Override
@@ -180,6 +207,23 @@ public class TextEditorInit {
                     showCompletion(codeAssistant);
                 }
             });
+        } else {
+            final KeyBindingAction action = new KeyBindingAction() {
+                @Override
+                public void action() {
+                    showCompletion();
+                }
+            };
+            final HasKeybindings hasKeybindings = this.editorHandle.getEditor().getHasKeybindings();
+            hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.SPACE, action));
+
+            // handle CompletionRequest events that come from text operations instead of simple key binding
+            documentHandle.getDocEventBus().addHandler(CompletionRequestEvent.TYPE, new CompletionRequestHandler() {
+                @Override
+                public void onCompletionRequest(final CompletionRequestEvent event) {
+                    showCompletion();
+                }
+            });
         }
     }
 
@@ -189,17 +233,111 @@ public class TextEditorInit {
      * @param codeAssistant the code assistant
      */
     private void showCompletion(final CodeAssistant codeAssistant) {
-        editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
+        final int cursor = textEditor.getCursorOffset();
+        if (cursor < 0) {
+            return;
+        }
+        final CodeAssistProcessor processor = codeAssistant.getProcessor(cursor);
+        if (processor != null) {
+            this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
+                @Override
+                public void computeCompletions(final CompletionReadyCallback callback) {
+                    codeAssistant.computeCompletionProposals(cursor, new CodeAssistCallback() {
+                        @Override
+                        public void proposalComputed(final List<CompletionProposal> proposals) {
+                            callback.onCompletionReady(proposals);
+                        }
+                    });
+                }
+            });
+        } else {
+            showCompletion();
+        }
+    }
 
-            @Override
-            public void computeCompletions(final CompletionReadyCallback callback) {
-                codeAssistant.computeCompletionProposals(new CodeAssistCallback() {
-                    @Override
-                    public void proposalComputed(final List<CompletionProposal> proposals) {
-                        callback.onCompletionReady(proposals);
+    /** Show the available completions. */
+    private void showCompletion() {
+        editorHandle.getEditor().showCompletionProposals();
+    }
+
+    /**
+     * Sets up the quick assist assistant.
+     * @param documentHandle the handle to the document
+     */
+    private void configureQuickAssist(final DocumentHandle documentHandle) {
+        final QuickAssistProcessor processor = configuration.getQuickAssistProcessor();
+        if (this.quickAssistantFactory != null && processor != null) {
+            final QuickAssistAssistant quickAssist = quickAssistantFactory.createQuickAssistant(this.textEditor);
+            quickAssist.setQuickAssistProcessor(processor);
+            documentHandle.getDocEventBus().addHandler(GutterClickEvent.TYPE, new GutterClickHandler() {
+                @Override
+                public void onGutterClick(final GutterClickEvent event) {
+                    if (Gutters.ANNOTATION_GUTTER.equals(event.getGutterId())) {
+                        final MouseEvent originalEvent = event.getEvent();
+                        quickAssist.showPossibleQuickAssists(event.getLineNumber(),
+                                                             originalEvent.getClientX(),
+                                                             originalEvent.getClientY());
                     }
-                });
-            }
-        });
+                }
+            });
+        }
+    }
+
+    private void configureChangeInterceptors(final DocumentHandle documentHandle) {
+        final ChangeInterceptorProvider interceptors = configuration.getChangeInterceptorProvider();
+        if (interceptors != null) {
+            documentHandle.getDocEventBus().addHandler(TextChangeEvent.TYPE, new TextChangeHandler() {
+                @Override
+                public void onTextChange(final TextChangeEvent event) {
+                    final TextChange change = event.getChange();
+                    if (change == null) {
+                        return;
+                    }
+                    final TextPosition from = change.getFrom();
+                    if (from == null) {
+                        return;
+                    }
+                    final int startOffset = documentHandle.getDocument().getIndexFromPosition(from);
+                    final TypedRegion region = configuration.getPartitioner().getPartition(startOffset);
+                    if (region == null) {
+                        return;
+                    }
+                    final List<TextChangeInterceptor> filteredInterceptors = interceptors.getInterceptors(region.getType());
+                    if (filteredInterceptors == null || filteredInterceptors.isEmpty()) {
+                        return;
+                    }
+                    // don't apply the interceptors if the range end doesn't belong to the same partition
+                    final TextPosition to = change.getTo();
+                    if (to != null && ! from.equals(to)) {
+                        final int endOffset = documentHandle.getDocument().getIndexFromPosition(to);
+                        if (endOffset < region.getOffset() || endOffset > region.getOffset() + region.getLength()) {
+                            return;
+                        }
+                    }
+                    // stop as soon as one interceptors has modified the content
+                    for (final TextChangeInterceptor interceptor: filteredInterceptors) {
+                        final TextChange result = interceptor.processChange(change,
+                                                                            documentHandle.getDocument().getReadOnlyDocument());
+                        if (result != null) {
+                            event.update(result);
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void configureKeybindings() {
+        final HasKeybindings current = this.textEditor.getView().getHasKeybindings();
+        if (! (current instanceof TemporaryKeybindingsManager)) {
+            return;
+        }
+        // change the key binding instance and add all bindings to the new one
+        this.textEditor.getView().setFinalHasKeybinding();
+        final List<Keybinding> bindings = ((TemporaryKeybindingsManager)current).getbindings();
+        for (final Keybinding binding : bindings) {
+            this.textEditor.getView().getHasKeybindings().addKeybinding(binding);
+        }
     }
 }

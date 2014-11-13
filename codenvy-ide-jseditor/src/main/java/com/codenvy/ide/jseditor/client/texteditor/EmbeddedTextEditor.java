@@ -10,63 +10,23 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
-import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 
-import javax.annotation.Nonnull;
-
-public interface EmbeddedTextEditor extends EditorPartPresenter, HasOutline {
-
-    /**
-     * Initializes this editor with the configuration and document provider/
-     *
-     * @param configuration
-     *         the configuration of this editor.
-     * @param notificationManager
-     *         the manager that provides showing notifications
-     */
-
-    void initialize(@Nonnull TextEditorConfiguration configuration,
-                    @Nonnull NotificationManager notificationManager);
+public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, HasOutline {
 
     /**
      * @return the text editor view implementation //todo need to introduce more simple way to use TextEditorPartView interface
      */
     EmbeddedTextEditorPartView getView();
 
-    /**
-     * @return the text editor configuration
-     */
-    TextEditorConfiguration getConfiguration();
+    /** Calls all editor update actions for thsi editor. */
+    void refreshEditor();
 
     /**
-     * Closes this text editor after optionally saving changes.
-     *
-     * @param save
-     *         <code>true</code> if unsaved changed should be saved, and <code>false</code> if unsaved changed should be discarded
+     *  Adds an editor update action for this editor.
+     *  @param action the action to add
      */
-    void close(boolean save);
+    void addEditorUpdateAction(EditorUpdateAction action);
 
-    /**
-     * Returns whether the text in this text editor can be changed by the user.
-     *
-     * @return <code>true</code> if it can be edited, and <code>false</code> if it is read-only
-     */
-    boolean isEditable();
-
-    /**
-     * Abandons all modifications applied to this text editor's input element's textual presentation since the last save operation.
-     */
-    void doRevertToSaved();
-
-    /**
-     * Returns the outline presenter.<br>
-     * If editor doesn't support Outline, returns <code>null</code>
-     *
-     * @return the outline presenter.
-     */
-    OutlinePresenter getOutline();
 }

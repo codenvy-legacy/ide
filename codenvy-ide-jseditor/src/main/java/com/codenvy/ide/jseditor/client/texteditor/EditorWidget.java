@@ -13,26 +13,31 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.jseditor.client.codeassist.AdditionalInfoCallback;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
+import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
+import com.codenvy.ide.jseditor.client.texteditor.LineStyler.HasLineStyler;
 import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 
-import javax.annotation.Nonnull;
-
 /** An interface for editor widget implementations. */
 public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
                                       HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
+                                      HasLineStyler,
+                                      HasGutterClickHandlers,
                                       RequiresResize, UndoableEditor {
 
     /**
@@ -173,4 +178,11 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
      * @param completionsSource the completion source
      */
     void showCompletionProposals(CompletionsSource completionsSource);
+    
+    /**
+     * Display the default completion proposals.
+     */
+    void showCompletionProposals();
+
+    void showCompletionProposals(CompletionsSource completionsSource, AdditionalInfoCallback additionalInfoCallback);
 }

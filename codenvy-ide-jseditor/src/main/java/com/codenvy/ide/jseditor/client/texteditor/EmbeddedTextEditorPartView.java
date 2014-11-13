@@ -16,12 +16,15 @@ import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.IsConfigurable;
-import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
+import com.codenvy.ide.debug.HasBreakpointRenderer;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 
@@ -32,7 +35,8 @@ import com.google.gwt.user.client.ui.RequiresResize;
  */
 public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
                                                     IsConfigurable<TextEditorConfiguration>, RequiresResize, IsWidget,
-                                                    HasChangeHandlers, UndoableEditor {
+                                                    HasChangeHandlers, UndoableEditor,
+                                                    HasBreakpointRenderer {
 
 
     /**
@@ -58,8 +62,9 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * Sets the editor contents.
      *
      * @param contents the new contents
+     * @param fileNode the file
      */
-    void setContents(String contents);
+    void setContents(String contents, FileNode fileNode);
 
     /**
      * Returns an object that describes the current selection (primary selection if the editor implementation supports multiple selection).
@@ -134,6 +139,12 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
      * @return the {@link HasGutter}
      */
     HasGutter getHasGutter();
+    
+    /**
+     * Returns a component handling line styling.
+     * @return the {@link LineStyler}
+     */
+    LineStyler getLineStyler();
 
     /**
      * Returns a component handling the text markers.
@@ -148,6 +159,11 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     HasKeybindings getHasKeybindings();
 
     /**
+     * Switch the implementation of the {@link HasKeybindings}.
+     */
+    void setFinalHasKeybinding();
+
+    /**
      * Invoke the code complete dialog.
      *
      * @param completionsSource the completion source
@@ -155,16 +171,22 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     void showCompletionProposals(CompletionsSource completionsSource);
 
     /**
-     * Mark the editor view as allowing code assist.
-     * @param codeAssistEnabled true to enable code assist
+     * Invoke the code complete dialog with default completion.
      */
-    void setCodeAssistEnabled(boolean codeAssistEnabled);
+    void showCompletionProposals();
 
     /**
      * Sets the view delegate.
      * @param delegate the delegate
      */
     void setDelegate(Delegate delegate);
+
+    /**
+     * Adds a handler for gutter click events.
+     * @param gutterClickHandler the handler
+     * @return 
+     */
+    HandlerRegistration addGutterClickHandler(GutterClickHandler handler);
 
     /** Delegate interface for theis view. */
     public interface Delegate extends EditorWithErrors {

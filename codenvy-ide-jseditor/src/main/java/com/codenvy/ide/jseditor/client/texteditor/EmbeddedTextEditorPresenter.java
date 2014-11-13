@@ -10,6 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -23,12 +32,24 @@ import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
+import com.codenvy.ide.debug.BreakpointManager;
+import com.codenvy.ide.debug.BreakpointRenderer;
+import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
+import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
+import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.gutter.Gutters;
+import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
+import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
@@ -44,15 +65,13 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
 
-import javax.annotation.Nonnull;
-
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
-/** Presenter part for the embedded variety of editor implementations. */
+/**
+ * Presenter part for the embedded variety of editor implementations.
+ */
 public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
                                                                                     UndoableEditor,
+                                                                                    HasBreakpointRenderer,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
@@ -67,6 +86,10 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private final EventBus             generalEventBus;
     private final DialogFactory        dialogFactory;
     private final CodeAssistantFactory codeAssistantFactory;
+    private final QuickAssistantFactory quickAssistantFactory;
+    private final BreakpointManager    breakpointManager;
+
+    private List<EditorUpdateAction> updateActions;
 
     private TextEditorConfiguration    configuration;
     private NotificationManager        notificationManager;
@@ -77,20 +100,24 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private EditorState errorState;
 
     @AssistedInject
-    public EmbeddedTextEditorPresenter(final Resources resources,
+    public EmbeddedTextEditorPresenter(final BreakpointManager breakpointManager,
+                                       final Resources resources,
                                        final WorkspaceAgent workspaceAgent,
                                        final EventBus eventBus,
+                                       final EditorPrefLocalizationConstant constant,
                                        final DocumentStorage documentStorage,
                                        final CodeAssistantFactory codeAssistantFactory,
+                                       final QuickAssistantFactory quickAssistantFactory,
                                        @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
-                                       EditorPrefLocalizationConstant constant,
                                        DialogFactory dialogFactory) {
+        this.breakpointManager = breakpointManager;
+        this.constant = constant;
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
         this.textEditorViewFactory = textEditorViewFactory;
         this.documentStorage = documentStorage;
         this.codeAssistantFactory = codeAssistantFactory;
-        this.constant = constant;
+        this.quickAssistantFactory = quickAssistantFactory;
 
         this.generalEventBus = eventBus;
         this.dialogFactory = dialogFactory;
@@ -100,8 +127,12 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     @Override
     protected void initializeEditor() {
         editor.configure(getConfiguration(), getEditorInput().getFile());
-        new TextEditorInit(configuration, generalEventBus,
-                           this.editor.getEditorHandle(), this.codeAssistantFactory).init();
+        new TextEditorInit(configuration, 
+                           generalEventBus,
+                           this.editor.getEditorHandle(),
+                           this.codeAssistantFactory,
+                           this.quickAssistantFactory,
+                           this).init();
 
         // Postpone setting a document to give the time for editor (TextEditorViewImpl) to fully construct itself.
         // Otherwise, the editor may not be ready to render the document.
@@ -111,17 +142,30 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                 documentStorage.getDocument(input.getFile(), new EmbeddedDocumentCallback() {
                     @Override
                     public void onDocumentReceived(final String contents) {
-                        editor.setContents(contents);
+                        editor.setContents(contents, input.getFile());
                         firePropertyChange(PROP_INPUT);
-                        editor.addChangeHandler(new ChangeHandler() {
 
-                            @Override
-                            public void onChange(ChangeEvent event) {
-                                handleDocumentChanged();
-                            }
-                        });
+                        setupEventHandlers();
                     }
                 });
+            }
+        });
+    }
+
+    private void setupEventHandlers() {
+        this.editor.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(final ChangeEvent event) {
+                handleDocumentChanged();
+            }
+        });
+        this.editor.addGutterClickHandler(new GutterClickHandler() {
+            @Override
+            public void onGutterClick(final GutterClickEvent event) {
+                if (Gutters.BREAKPOINTS_GUTTER.equals(event.getGutterId())
+                    ||Gutters.LINE_NUMBERS_GUTTER.equals(event.getGutterId())) {
+                    breakpointManager.changeBreakPointState(event.getLineNumber());
+                }
             }
         });
     }
@@ -332,5 +376,71 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     public void setErrorState(final EditorState errorState) {
         this.errorState = errorState;
         firePropertyChange(ERROR_STATE);
+    }
+
+    @Override
+    public BreakpointRenderer getBreakpointRenderer() {
+        return this.editor.getBreakpointRenderer();
+    }
+
+    @Override
+    public EmbeddedDocument getDocument() {
+        return this.getView().getEmbeddedDocument();
+    }
+
+    @Override
+    public String getContentType() {
+        return this.getView().getContentType();
+    }
+
+    @Override
+    public TextRange getSelectedTextRange() {
+        return getDocument().getSelectedTextRange();
+    }
+
+    @Override
+    public LinearRange getSelectedLinearRange() {
+        return getDocument().getSelectedLinearRange();
+    }
+
+    @Override
+    public void showMessage(final String message) {
+        getView().showMessage(message);
+    }
+
+    @Override
+    public TextPosition getCursorPosition() {
+        return getDocument().getCursorPosition();
+    }
+
+    @Override
+    public int getCursorOffset() {
+        final TextPosition textPosition = getDocument().getCursorPosition();
+        return getDocument().getIndexFromPosition(textPosition);
+    }
+
+    @Override
+    public void refreshEditor() {
+        if (this.updateActions != null) {
+            for (final EditorUpdateAction action : this.updateActions) {
+                action.doRefresh();
+            }
+        }
+    }
+
+    @Override
+    public void addEditorUpdateAction(final EditorUpdateAction action) {
+        if (action == null) {
+            return;
+        }
+        if (this.updateActions == null) {
+            this.updateActions = new ArrayList<>();
+        }
+        this.updateActions.add(action);
+	}
+
+    @Override
+    public void addKeybinding(final Keybinding keybinding) {
+        this.editor.getHasKeybindings().addKeybinding(keybinding);
     }
 }

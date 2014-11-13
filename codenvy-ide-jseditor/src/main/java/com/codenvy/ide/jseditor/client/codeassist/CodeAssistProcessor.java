@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
+import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
 
 /**
  * A code assist processor proposes completions for a particular content type.
@@ -31,21 +31,12 @@ public interface CodeAssistProcessor {
      * to the current cursor position within the text view.
      *
      * @param view
-     *         the view whose document is used to compute the proposals
+     *         the editor whose document is used to compute the proposals
      * @param offset
      *         an offset within the document for which completions should be computed
      * @return an array of completion proposals or <code>null</code> if no proposals are possible
      */
-    void computeCompletionProposals(EmbeddedTextEditorPartView view, int offset, CodeAssistCallback callback);
-
-    /**
-     * Returns the characters which when entered by the user should
-     * automatically trigger the presentation of possible completions.
-     *
-     * @return the auto activation characters for completion proposal or <code>null</code>
-     *         if no auto activation is desired
-     */
-    char[] getCompletionProposalAutoActivationCharacters();
+    void computeCompletionProposals(TextEditor editor, int offset, CodeAssistCallback callback);
 
     /**
      * Returns the reason why this content assist processor

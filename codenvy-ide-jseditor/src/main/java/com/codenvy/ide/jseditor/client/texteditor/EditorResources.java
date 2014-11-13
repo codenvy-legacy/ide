@@ -19,11 +19,14 @@ public interface EditorResources extends ClientBundle {
     /** CssResource for the editor. */
     public interface EditorCss extends CssResource {
 
+        /** Style added to warnings. */
         String lineWarning();
 
+        /** Style added to errors. */
         String lineError();
 
-        String annotation();
+        /** Style added to the current breakpoint line. */
+        String debugLine();
     }
 
     @Source({"Editor.css", "com/codenvy/ide/api/ui/style.css"})

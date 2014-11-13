@@ -11,9 +11,12 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
+import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
+import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
@@ -21,25 +24,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  *
  * @author "Mickaël Leduque"
  */
-public interface EmbeddedDocument {
-
-    /**
-     * Returns a line/character position for the given offset position.
-     *
-     * @param index
-     *         the position from the start in the document
-     * @return the line/character position
-     */
-    TextPosition getPositionFromIndex(int index);
-
-    /**
-     * Get linear position in the editor from a line/character position.
-     *
-     * @param position
-     *         the line/character position
-     * @return the offset from the document start
-     */
-    int getIndexFromPosition(TextPosition position);
+public interface EmbeddedDocument extends ReadOnlyDocument {
 
     /**
      * Changes the cursor position.
@@ -50,32 +35,30 @@ public interface EmbeddedDocument {
     void setCursorPosition(TextPosition position);
 
     /**
-     * Returns the curosr position in the editor.
-     *
-     * @return the cursor position
+     * Change the selected range.
+     * @param range the new selected range
      */
-    TextPosition getCursorPosition();
+    void setSelectedRange(TextRange range);
 
     /**
-     * Returns the number of lines in the document.
-     *
-     * @return the number of lines
+     * Change the selected range and optionally move the viewport to show the new selection.
+     * @param range the new selected range
+     * @param show true iff the viewport is moved to show the selection
      */
-    int getLineCount();
+    void setSelectedRange(TextRange range, boolean show);
 
     /**
-     * Returns the contents of the editor.
-     *
-     * @return the contents
+     * Change the selected range.
+     * @param range the new selected range
      */
-    String getContents();
+    void setSelectedRange(LinearRange range);
 
     /**
-     * Returns the document text size.
-     * @return the document size
+     * Change the selected range and optionally move the viewport to show the new selection.
+     * @param range the new selected range
+     * @param show true iff the viewport is moved to show the selection
      */
-    int getContentsCharCount();
-
+    void setSelectedRange(LinearRange range, boolean show);
 
     /**
      * Returns the document handle.
@@ -96,6 +79,26 @@ public interface EmbeddedDocument {
      * Replaces the text range with the given replacement contents.
      * @param region the original region to replace
      * @param text the replacement text
+     * @deprecated use {@link #replace(int, int, String)}
      */
+    @Deprecated
     void replace(Region region, String text);
+
+    /**
+     * Replaces the text range with the given replacement contents.
+     * @param offset start of the range
+     * @param length en of the range
+     * @param text the replacement text
+     */
+    void replace(int offset, int length, String text);
+
+    void setFile(FileNode file);
+
+    FileNode getFile();
+
+    /**
+     * Returns a {@link ReadOnlyDocument} that refers to the same document.
+     * @return a read-only document
+     */
+    ReadOnlyDocument getReadOnlyDocument();
 }

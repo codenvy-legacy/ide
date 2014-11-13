@@ -14,6 +14,7 @@ import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
+import com.codenvy.ide.jseditor.client.popup.PopupResources;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource;
 import com.codenvy.ide.jseditor.client.texteditor.EditorResources;
 import com.google.inject.Inject;
@@ -32,7 +33,8 @@ public class JsEditorExtension {
     public JsEditorExtension(final FileTypeRegistry fileTypeRegistry,
                              final @PlainTextFileType FileType plainText,
                              final EditorPreferenceResource editorPreferenceResource,
-                             final EditorResources editorResources) {
+                             final EditorResources editorResources,
+                             final PopupResources popupResources) {
 
         // register text/plain file type
         fileTypeRegistry.registerFileType(plainText);
@@ -40,5 +42,6 @@ public class JsEditorExtension {
         // ensure css injection
         editorPreferenceResource.cellStyle().ensureInjected();
         editorResources.editorCss().ensureInjected();
+        popupResources.popupStyle().ensureInjected();
     }
 }
