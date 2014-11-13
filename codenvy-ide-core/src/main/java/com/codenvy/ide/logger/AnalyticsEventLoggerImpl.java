@@ -23,13 +23,16 @@ import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.events.ConnectionOpenedHandler;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import static com.codenvy.ide.MimeType.APPLICATION_JSON;
 import static com.codenvy.ide.rest.HTTPHeader.CONTENTTYPE;
@@ -43,8 +46,9 @@ import static java.lang.Math.max;
  */
 @Singleton
 public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
-    private static final String IDE_EVENT          = "ide-usage";
-    private static final String API_ANALYTICS_PATH = "/analytics/log/";
+    private static final int    MAX_PENDING_MESSAGES = 1000;
+    private static final String IDE_EVENT            = "ide-usage";
+    private static final String API_ANALYTICS_PATH   = "/analytics/log/";
 
     protected static final String WS_PARAM           = "WS";
     protected static final String USER_PARAM         = "USER";
@@ -61,7 +65,10 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
     private final MessageBus             messageBus;
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    private String currentUser;
+    private final Queue<Message> pendingMessages;
+
+    private volatile boolean isOpenedMessageBus;
+    private          String  currentUser;
 
     @Inject
     public AnalyticsEventLoggerImpl(DtoFactory dtoFactory,
@@ -76,6 +83,25 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
 
         saveCurrentUser();
+
+        this.pendingMessages = new LinkedList<Message>() {
+            @Override
+            public boolean add(Message message) {
+                return size() < MAX_PENDING_MESSAGES && super.add(message);
+            }
+        };
+
+        this.messageBus.addOnOpenHandler(new ConnectionOpenedHandler() {
+            @Override
+            public void onOpen() {
+                isOpenedMessageBus = true;
+
+                Message message;
+                while ((message = pendingMessages.poll()) != null) {
+                    doSend(message);
+                }
+            }
+        });
     }
 
     @Override
@@ -224,8 +250,16 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         MessageBuilder builder = new MessageBuilder(POST, API_ANALYTICS_PATH + event);
         builder.data(json);
         builder.header(CONTENTTYPE, APPLICATION_JSON);
-        Message message = builder.build();
 
+        Message message = builder.build();
+        if (isOpenedMessageBus) {
+            doSend(message);
+        } else {
+            pendingMessages.offer(message);
+        }
+    }
+
+    private void doSend(final Message message) {
         try {
             messageBus.send(message, new RequestCallback() {
                 @Override
@@ -235,12 +269,10 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
                 @Override
                 protected void onFailure(Throwable exception) {
                     Log.error(getClass(), exception.getMessage());
-                    Log.info(getClass(), json);
                 }
             });
         } catch (Exception e) {
             Log.error(getClass(), e.getMessage());
-            Log.info(getClass(), json);
         }
     }
 }
