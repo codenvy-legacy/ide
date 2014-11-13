@@ -70,6 +70,13 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public String getId() {
+        return data.getName();
+    }
+
+    /** {@inheritDoc} */
     @Override
     public ProjectNode getProject() {
         return this;

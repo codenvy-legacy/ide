@@ -14,6 +14,7 @@ import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
+import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,6 +30,7 @@ public class CurrentProject {
     private boolean isRunningEnabled = true;
     private ApplicationProcessDescriptor processDescriptor;
     private ProjectDescriptor            rootProject;
+    private AbstractTreeStructure        tree;
 
     /**
      * By default:
@@ -144,5 +146,14 @@ public class CurrentProject {
     public boolean isReadOnly() {
         return projectDescription.getPermissions() != null && !projectDescription.getPermissions().isEmpty() &&
                projectDescription.getPermissions().size() == 1 && "read".equalsIgnoreCase(projectDescription.getPermissions().get(0));
+    }
+
+    /** Returns project's tree. */
+    public AbstractTreeStructure getCurrentTree() {
+        return tree;
+    }
+
+    public void setCurrentTree(AbstractTreeStructure tree) {
+        this.tree = tree;
     }
 }

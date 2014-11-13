@@ -10,15 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.navigation;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBuilder;
 import com.codenvy.ide.websocket.MessageBus;
@@ -47,7 +49,8 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     private final String                   SEARCH_URL;
     private       MessageBus               wsMessageBus;
     private       DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    private       ProjectServiceClient     projectServiceClient;
+    private       DialogFactory            dialogFactory;
+    private       CoreLocalizationConstant localizationConstant;
     private       NavigateToFileView       view;
     private       AppContext               appContext;
     private       EventBus                 eventBus;
@@ -60,13 +63,15 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
                                    MessageBus wsMessageBus,
                                    @Named("workspaceId") String workspaceId,
                                    DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                   ProjectServiceClient projectServiceClient) {
+                                   DialogFactory dialogFactory,
+                                   CoreLocalizationConstant localizationConstant) {
         this.view = view;
         this.appContext = appContext;
         this.eventBus = eventBus;
         this.wsMessageBus = wsMessageBus;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
-        this.projectServiceClient = projectServiceClient;
+        this.dialogFactory = dialogFactory;
+        this.localizationConstant = localizationConstant;
 
         resultMap = Collections.createStringMap();
 
@@ -110,8 +115,19 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
     public void onFileSelected() {
         view.close();
         ItemReference selectedItem = resultMap.get(view.getItemPath());
-        FileNode file = new FileNode(null, selectedItem, eventBus, projectServiceClient, dtoUnmarshallerFactory);
-        eventBus.fireEvent(new FileEvent(file, FileEvent.FileOperation.OPEN));
+        appContext.getCurrentProject().getCurrentTree().getNodeByPath(selectedItem.getPath(), new AsyncCallback<TreeNode<?>>() {
+            @Override
+            public void onSuccess(TreeNode<?> result) {
+                if (result instanceof FileNode) {
+                    eventBus.fireEvent(new FileEvent((FileNode)result, FileEvent.FileOperation.OPEN));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                dialogFactory.createMessageDialog("", localizationConstant.navigateToFileCanNotOpenFile(), null).show();
+            }
+        });
     }
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
