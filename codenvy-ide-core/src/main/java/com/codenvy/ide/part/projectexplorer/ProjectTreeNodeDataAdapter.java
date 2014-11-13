@@ -26,7 +26,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> 
     /** {@inheritDoc} */
     @Override
     public int compare(TreeNode<?> a, TreeNode<?> b) {
-        return a.getDisplayName().compareTo(b.getDisplayName());
+        return a.getId().compareTo(b.getId());
     }
 
     /** {@inheritDoc} */
@@ -44,7 +44,7 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> 
     /** {@inheritDoc} */
     @Override
     public String getNodeId(TreeNode<?> data) {
-        return data.getDisplayName();
+        return data.getId();
     }
 
     /** {@inheritDoc} */

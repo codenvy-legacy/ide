@@ -67,6 +67,10 @@ public class ProjectListStructure extends AbstractTreeStructure {
         });
     }
 
+    @Override
+    public void getNodeByPath(String path, AsyncCallback<TreeNode<?>> callback) {
+    }
+
     /** Node that represents project item. */
     public static class ProjectNode extends AbstractTreeNode<ProjectReference> implements StorableNode<ProjectReference> {
         private EventBus             eventBus;
@@ -118,6 +122,13 @@ public class ProjectListStructure extends AbstractTreeStructure {
         @Override
         public String getPath() {
             return data.getPath();
+        }
+
+        /** {@inheritDoc} */
+        @Nonnull
+        @Override
+        public String getId() {
+            return data.getName();
         }
 
         /** {@inheritDoc} */

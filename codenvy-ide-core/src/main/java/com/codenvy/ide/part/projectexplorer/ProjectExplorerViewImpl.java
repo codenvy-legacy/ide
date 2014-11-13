@@ -66,6 +66,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         rootNode = new AbstractTreeNode<Void>(null, null, null) {
             @Nonnull
             @Override
+            public String getId() {
+                return "ROOT";
+            }
+
+            @Nonnull
+            @Override
             public String getDisplayName() {
                 return "ROOT";
             }

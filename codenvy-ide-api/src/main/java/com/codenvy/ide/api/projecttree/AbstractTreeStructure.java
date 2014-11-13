@@ -40,4 +40,14 @@ public abstract class AbstractTreeStructure {
      *         callback to return root nodes
      */
     public abstract void getRoots(AsyncCallback<Array<TreeNode<?>>> callback);
+
+    /**
+     * Get node by it's full path.
+     *
+     * @param path
+     *         path to the node to get
+     * @param callback
+     *         callback to return node, may return {@code null} if node not found
+     */
+    public abstract void getNodeByPath(String path, AsyncCallback<TreeNode<?>> callback);
 }
