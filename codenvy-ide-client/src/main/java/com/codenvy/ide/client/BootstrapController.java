@@ -72,7 +72,6 @@ public class BootstrapController {
 
     private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
     private final AnalyticsEventLoggerExt      analyticsEventLoggerExt;
-    private       AppContext                   appContext;
     private final IconRegistry                 iconRegistry;
     private final ThemeAgent                   themeAgent;
     private final Provider<ComponentRegistry>  componentRegistry;
@@ -85,6 +84,7 @@ public class BootstrapController {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
+    private AppContext appContext;
 
     /** Create controller. */
     @Inject
@@ -166,6 +166,7 @@ public class BootstrapController {
                                                 @Override
                                                 protected void onSuccess(WorkspaceDescriptor result) {
                                                     Config.setCurrentWorkspace(result);
+                                                    appContext.setWorkspace(result);
                                                     loadUserProfile();
                                                 }
 
