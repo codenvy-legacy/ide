@@ -71,6 +71,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("navigateToFile.view.file.field.prompt")
     String navigateToFileViewFileFieldPrompt();
 
+    @Key("navigateToFile.canNotOpenFile")
+    String navigateToFileCanNotOpenFile();
+
     @Key("appearance.title")
     String appearanceTitle();
 

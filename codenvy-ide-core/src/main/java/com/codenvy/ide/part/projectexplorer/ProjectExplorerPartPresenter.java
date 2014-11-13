@@ -265,6 +265,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
+        if (appContext.getCurrentProject() != null) {
+            appContext.getCurrentProject().setCurrentTree(currentTreeStructure);
+        }
         treeStructure.getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
             @Override
             public void onSuccess(Array<TreeNode<?>> result) {

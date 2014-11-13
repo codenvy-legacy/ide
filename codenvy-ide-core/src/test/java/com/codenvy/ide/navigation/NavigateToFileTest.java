@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.navigation;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.websocket.MessageBus;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -56,7 +56,7 @@ public class NavigateToFileTest {
     @Mock
     private MessageBus              messageBus;
     @Mock
-    private ProjectServiceClient    projectServiceClient;
+    private DialogFactory           dialogFactory;
     @Mock
     private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     @Mock
@@ -69,8 +69,8 @@ public class NavigateToFileTest {
     public void setUp() {
         when(appContext.getCurrentProject()).thenReturn(project);
 
-        presenter = new NavigateToFilePresenter(view, appContext, eventBus, messageBus, anyString(), dtoUnmarshallerFactory,
-                                                projectServiceClient);
+        presenter = new NavigateToFilePresenter(view, appContext, eventBus, messageBus, anyString(), dtoUnmarshallerFactory, dialogFactory,
+                                                localizationConstant);
     }
 
     @Test

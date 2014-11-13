@@ -58,6 +58,68 @@ public class GenericTreeStructure extends AbstractTreeStructure {
         callback.onSuccess(Collections.<TreeNode<?>>createArray(projectRoot));
     }
 
+    @Override
+    public void getNodeByPath(final String path, final AsyncCallback<TreeNode<?>> callback) {
+        getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
+            @Override
+            public void onSuccess(Array<TreeNode<?>> result) {
+                ProjectNode project = null;
+                for (TreeNode<?> node : result.asIterable()) {
+                    if (node instanceof ProjectNode) {
+                        project = (ProjectNode)node;
+                        break;
+                    }
+                }
+
+                String p = path;
+                if (path.startsWith("/")) {
+                    p = path.substring(1);
+                }
+                refreshAndGetChildByName(project, p.split("/"), 1, new AsyncCallback<TreeNode<?>>() {
+                    @Override
+                    public void onSuccess(TreeNode<?> result) {
+                        callback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        callback.onFailure(caught);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
+    }
+
+    private void refreshAndGetChildByName(TreeNode<?> node, final String[] path, final int index,
+                                          final AsyncCallback<TreeNode<?>> callback) {
+        node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
+            @Override
+            public void onSuccess(TreeNode<?> result) {
+                for (TreeNode<?> childNode : result.getChildren().asIterable()) {
+                    if (childNode.getId().equals(path[index])) {
+                        if (index + 1 == path.length) {
+                            callback.onSuccess(childNode);
+                        } else {
+                            refreshAndGetChildByName(childNode, path, index + 1, callback);
+                        }
+                        return;
+                    }
+                }
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
+    }
+
     public FileNode newFileNode(TreeNode parent, ItemReference data) {
         return new FileNode(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
