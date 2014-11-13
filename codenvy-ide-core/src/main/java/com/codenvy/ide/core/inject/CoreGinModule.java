@@ -154,6 +154,8 @@ import com.codenvy.ide.ui.dialogs.message.MessageDialogPresenter;
 import com.codenvy.ide.ui.dialogs.message.MessageDialogView;
 import com.codenvy.ide.ui.dialogs.message.MessageDialogViewImpl;
 import com.codenvy.ide.ui.loader.IdeLoader;
+import com.codenvy.ide.ui.zeroClipboard.ClipboardButtonBuilder;
+import com.codenvy.ide.ui.zeroClipboard.ClipboardButtonBuilderImpl;
 import com.codenvy.ide.upload.UploadFileView;
 import com.codenvy.ide.upload.UploadFileViewImpl;
 import com.codenvy.ide.util.Config;
@@ -199,6 +201,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
         bind(BuildContext.class).to(BuildContextImpl.class).in(Singleton.class);
+        bind(ClipboardButtonBuilder.class).to(ClipboardButtonBuilderImpl.class);
 
         install(new GinFactoryModuleBuilder().implement(PartStackView.class, PartStackViewImpl.class).build(PartStackViewFactory.class));
         install(new GinFactoryModuleBuilder().implement(PartStack.class, PartStackPresenter.class).build(PartStackPresenterFactory.class));

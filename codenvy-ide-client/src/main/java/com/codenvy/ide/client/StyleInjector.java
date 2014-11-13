@@ -39,6 +39,7 @@ public class StyleInjector {
         resources.partStackCss().ensureInjected();
         resources.parenMatchHighlighterCss().ensureInjected();
         resources.dialogBox().ensureInjected();
+        resources.clipboardCss().ensureInjected();
         resources.notificationCss().ensureInjected();
         resources.dataGridStyle().ensureInjected();
         resources.cellTableStyle().ensureInjected();
