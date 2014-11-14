@@ -230,17 +230,11 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.messageFailure")
     String importProjectMessageFailure();
 
-    @Key("importProject.messageNameRepoIncorrect")
-    String importProjectMessageNameRepoIncorrect();
-
-    @Key("importProject.messageHostIncorrect")
-    String importProjectMessageHostIncorrect();
-
-    @Key("importProject.messageProtocolIncorrect")
-    String importProjectMessageProtocolIncorrect();
-
     @Key("importProject.messageStartWithWhiteSpace")
     String importProjectMessageStartWithWhiteSpace();
+
+    @Key("importProject.messageUrlInvalid")
+    String importProjectMessageUrlInvalid();
 
     @Key("importProject.name")
     String importProjectName();
@@ -280,6 +274,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("importProject.description.prompt")
     String importProjectDescriptionPrompt();
+
+    @Key("importProject.zipImporter.skipFirstLevel")
+    String importProjectZipImporterSkipFirstLevel();
 
     @Key("import.project.error")
     String importProjectError();

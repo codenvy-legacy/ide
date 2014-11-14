@@ -14,30 +14,34 @@ import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Roman Nikitenko
  */
 public interface ImporterPagePresenter extends Presenter{
 
-    /**
-     * @return unique id of importer e.g git, zip, github
-     */
+    /** @return unique id of importer e.g git, zip, github */
+    @Nonnull
     String getId();
 
-    /**
-     * Disable all page inputs.
-     */
+    /** Disable all page inputs. */
     public void disableInputs();
 
-    /**
-     * Enable all page inputs.
-     */
+    /** Enable all page inputs. */
     public void enableInputs();
 
-    public void setContext(WizardContext wizardContext);
+    /**
+     * Set wizard context for current page.
+     *
+     * @param wizardContext
+     */
+    public void setContext(@Nonnull WizardContext wizardContext);
 
-    public void setProjectWizardDelegate(Wizard.UpdateDelegate updateDelegate);
+    /** Sets the delegate to receive events from current page. */
+    public void setProjectWizardDelegate(@Nonnull Wizard.UpdateDelegate updateDelegate);
 
+    /** Reset the page. */
     public void clear();
 
 }

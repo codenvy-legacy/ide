@@ -10,83 +10,70 @@
  *******************************************************************************/
 package com.codenvy.ide.projectimporter.importerpage;
 
-import com.codenvy.ide.api.projectimporter.basepage.ImporterBasePageView;
-import com.google.gwt.user.client.ui.Widget;
+import com.codenvy.ide.CoreLocalizationConstant;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Roman Nikitenko
  */
-public class ZipImporterPageViewImpl implements ZipImporterPageView {
-    private ImporterBasePageView importerBasePageView;
+public class ZipImporterPageViewImpl extends Composite implements ZipImporterPageView {
+    interface ZipImporterPageViewImplUiBinder extends UiBinder<DockLayoutPanel, ZipImporterPageViewImpl> {
+    }
+
+    private ActionDelegate delegate;
+
+    @UiField
+    SimplePanel basePagePanel;
+    @UiField
+    CheckBox    skipFirstLevel;
+    @UiField(provided = true)
+    final CoreLocalizationConstant locale;
 
     @Inject
-    public ZipImporterPageViewImpl(ImporterBasePageView importerBasePageView) {
-        this.importerBasePageView = importerBasePageView;
+    public ZipImporterPageViewImpl(ZipImporterPageViewImplUiBinder uiBinder,
+                                   CoreLocalizationConstant locale) {
+        this.locale = locale;
+        initWidget(uiBinder.createAndBindUi(this));
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setProjectUrl(String url) {
-        importerBasePageView.setProjectUrl(url);
+    public boolean isSkipFirstLevelSelected() {
+        return skipFirstLevel.getValue();
     }
 
+    @UiHandler({"skipFirstLevel"})
+    void skipFirstLevelHandler(ValueChangeEvent<Boolean> event) {
+        delegate.skipFirstLevelChanged(skipFirstLevel.getValue());
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void reset() {
-        importerBasePageView.reset();
+        skipFirstLevel.setValue(false);
     }
 
+    /** {@inheritDoc} */
+    @Nonnull
     @Override
-    public void showNameError() {
-        importerBasePageView.showNameError();
+    public AcceptsOneWidget getBasePagePanel() {
+        return basePagePanel;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void hideNameError() {
-        importerBasePageView.hideNameError();
-    }
-
-    @Override
-    public void showUrlError(String message) {
-        importerBasePageView.showUrlError(message);
-    }
-
-    @Override
-    public void hideUrlError() {
-        importerBasePageView.hideUrlError();
-    }
-
-    @Override
-    public void setImporterDescription(String text) {
-        importerBasePageView.setImporterDescription(text);
-    }
-
-    @Override
-    public String getProjectName() {
-        return importerBasePageView.getProjectName();
-    }
-
-    @Override
-    public void setProjectName(String projectName) {
-        importerBasePageView.setProjectName(projectName);
-    }
-
-    @Override
-    public void focusInUrlInput() {
-        importerBasePageView.focusInUrlInput();
-    }
-
-    @Override
-    public void setInputsEnableState(boolean isEnabled) {
-        importerBasePageView.setInputsEnableState(isEnabled);
-    }
-
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        importerBasePageView.setDelegate(delegate);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return importerBasePageView.asWidget();
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 }

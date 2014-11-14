@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projectimporter;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -42,36 +43,30 @@ public class ProjectImporterRegistry {
         }
     }
 
-    public void registerImporter(ProjectImporter importer) {
+    public void registerImporter(@Nonnull ProjectImporter importer) {
         importers.put(importer.getId(), importer);
     }
 
-    public ProjectImporter unregisterImporter(String id) {
-        if (id == null) {
-            return null;
-        }
+    public ProjectImporter unregisterImporter(@Nonnull String id) {
         return importers.remove(id);
     }
 
-    public ProjectImporter getImporter(String id) {
-        if (id == null) {
-            return null;
-        }
+    @Nonnull
+    public ProjectImporter getImporter(@Nonnull String id) {
         return importers.get(id);
     }
 
+    @Nonnull
     public List<ProjectImporter> getImporters() {
         return new ArrayList<>(importers.values());
     }
 
-    public void registerImporterPage(ImporterPagePresenter importerPage) {
+    public void registerImporterPage(@Nonnull ImporterPagePresenter importerPage) {
         importersPages.put(importerPage.getId(), importerPage);
     }
 
-    public ImporterPagePresenter getImporterPage(String id) {
-        if (id == null) {
-            return null;
-        }
+    @Nonnull
+    public ImporterPagePresenter getImporterPage(@Nonnull String id) {
         return importersPages.get(id);
     }
 }
