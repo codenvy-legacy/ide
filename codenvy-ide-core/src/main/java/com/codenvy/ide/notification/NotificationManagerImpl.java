@@ -18,8 +18,9 @@ import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -44,8 +45,10 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
                                                                       Notification.NotificationObserver,
                                                                       NotificationManagerView.ActionDelegate,
                                                                       NotificationMessageStack.ActionDelegate {
-    private static final String TITLE = "Events";
+    private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("hh:mm:ss");
+    private static final String         TITLE       = "Events";
     private NotificationManagerView  view;
+    private DialogFactory            dialogFactory;
     private NotificationContainer    notificationContainer;
     private NotificationMessageStack notificationMessageStack;
     private Array<Notification>      notifications;
@@ -53,15 +56,20 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
     /**
      * Create manager.
      *
+     * @param eventBus
      * @param view
+     * @param dialogFactory
+     * @param notificationContainer
      * @param notificationMessageStack
      */
     @Inject
     public NotificationManagerImpl(EventBus eventBus,
                                    NotificationManagerView view,
+                                   DialogFactory dialogFactory,
                                    final NotificationContainer notificationContainer,
                                    final NotificationMessageStack notificationMessageStack) {
         this.view = view;
+        this.dialogFactory = dialogFactory;
         this.notificationContainer = notificationContainer;
         this.view.setDelegate(this);
         this.view.setContainer(notificationContainer);
@@ -161,7 +169,8 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         if (openHandler != null) {
             openHandler.onOpenClicked();
         } else {
-            Window.alert(notification.getMessage());
+            dialogFactory.createMessageDialog(notification.getType().toString(),
+                                              DATA_FORMAT.format(notification.getTime()) + " " + notification.getMessage(), null).show();
         }
     }
 
