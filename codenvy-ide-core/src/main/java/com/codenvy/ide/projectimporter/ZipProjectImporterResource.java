@@ -8,15 +8,22 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projectimporter.importerpage;
+package com.codenvy.ide.projectimporter;
 
-import com.codenvy.ide.api.projectimporter.basepage.ImporterBasePageView;
-import com.google.inject.ImplementedBy;
+import com.codenvy.ide.projectimporter.zipimporterpage.ZipImporterPageViewImpl;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * @author Roman Nikitenko
  */
-@ImplementedBy(ZipImporterPageViewImpl.class)
-public interface ZipImporterPageView extends ImporterBasePageView {
+public interface ZipProjectImporterResource extends ClientBundle {
+
+    public interface Css extends CssResource {
+        String inputError();
+    }
+
+    @Source({"zipimporterpage/ZipImporterPage.css", "com/codenvy/ide/ui/Styles.css"})
+    ZipImporterPageViewImpl.Style zipImporterPageStyle();
 
 }

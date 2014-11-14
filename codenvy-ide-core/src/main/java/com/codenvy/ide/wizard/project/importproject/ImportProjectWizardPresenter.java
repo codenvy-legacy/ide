@@ -12,11 +12,15 @@ package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.Constants;
+import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectProblem;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
+import com.codenvy.api.project.shared.dto.Source;
 import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
@@ -43,6 +47,7 @@ import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -119,7 +124,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         view.setDelegate(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void updateControls() {
         ProjectImporterDescriptor importer = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
@@ -146,7 +150,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         view.setImportButtonEnabled(canImport);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void show() {
         wizardContext.clear();
@@ -155,7 +158,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         setPage(mainPage);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onNextClicked() {
         currentPage.storeOptions();
@@ -167,8 +169,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         }
     }
 
-
-    /** {@inheritDoc} */
     @Override
     public void onBackClicked() {
         currentPage.removeOptions();
@@ -181,43 +181,15 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         }
     }
 
+    @Override
+    public void onCancelClicked() {
+        showProcessing(false);
+        view.close();
+    }
 
-    /** {@inheritDoc} */
     @Override
     public void onImportClicked() {
-        final ProjectImporterDescriptor importer = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
         final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
-        final String url = wizardContext.getData(ImportProjectWizard.PROJECT_URL);
-        final WizardPage.CommitCallback callback = new WizardPage.CommitCallback() {
-            @Override
-            public void onSuccess() {
-                view.close();
-                if (importedProject == null) {
-                    return;
-                }
-                boolean projectTypeResolvedViaResolver = false;
-                List<ProjectProblem> problems = importedProject.getProblems();
-                for (ProjectProblem problem : problems) {
-                    if (problem.getCode() == 300) {
-                        projectTypeResolvedViaResolver = true;
-                    }
-                }
-                if (importedProject.getType() == null
-                    || com.codenvy.api.project.shared.Constants.BLANK_ID.equals(importedProject.getType())
-                    || projectTypeResolvedViaResolver) {
-
-                    WizardContext context = new WizardContext();
-                    context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
-                    newProjectWizardPresenter.show(context);
-                }
-            }
-
-            @Override
-            public void onFailure(@Nonnull Throwable exception) {
-                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
-            }
-        };
-
         // Check whether project with the same name already exists.
         // Check on VFS directly because need to check ide-2 projects also.
         vfsServiceClient.getItemByPath(projectName, new AsyncRequestCallback<Item>() {
@@ -230,51 +202,43 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
             @Override
             protected void onFailure(Throwable exception) {
-                importProject(importer, url, projectName, callback);
+                importProject();
             }
         });
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onCancelClicked() {
-        showProcessing(false);
-        view.close();
-    }
+    private void importProject() {
+        final ProjectImporterDescriptor importer = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
+        final String importerId = importer.getId();
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        final String url = wizardContext.getData(ImportProjectWizard.PROJECT_URL);
 
-    /**
-     * Import project with the pointed importer, location.
-     *
-     * @param importer
-     *         project's importer
-     * @param url
-     *         project's location
-     * @param projectName
-     *         name of the project
-     * @param callback
-     *         wizard callback
-     */
-    private void importProject(ProjectImporterDescriptor importer,
-                               String url,
-                               final String projectName,
-                               final WizardPage.CommitCallback callback) {
         importedProject = null;
         importProjectNotificationSubscriber.subscribe(projectName);
 
         showProcessing(true);
 
-        ProjectImporter projectImporter = projectImporterRegistry.getImporter(importer.getId());
-        projectImporter.importSources(url, projectName, new ProjectImporter.ImportCallback() {
-            @Override
-            public void onSuccess(ProjectDescriptor projectDescriptor) {
-                importProjectNotificationSubscriber.onSuccess();
-                importedProject = projectDescriptor;
-                showProcessing(false);
-                checkRam(projectDescriptor, callback);
-            }
+        ImportSourceDescriptor importSourceDescriptor = dtoFactory.createDto(ImportSourceDescriptor.class)
+                                                                  .withType(importerId)
+                                                                  .withLocation(url);
 
+        if (importer.getAttributes() != null && !importer.getAttributes().isEmpty()) {
+            importSourceDescriptor.setParameters(importer.getAttributes());
+        }
+
+        ImportProject importProject = dtoFactory.createDto(ImportProject.class)
+                                                .withSource(dtoFactory.createDto(Source.class)
+                                                                      .withProject(importSourceDescriptor));
+
+        ProjectImporter projectImporter = projectImporterRegistry.getImporter(importerId);
+        projectImporter.importSources(projectName, importProject, setImportProjectCallback());
+    }
+
+    private AsyncCallback<ProjectDescriptor> setImportProjectCallback() {
+        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        return new AsyncCallback<ProjectDescriptor>() {
             @Override
-            public void onFailure(@Nonnull Throwable exception) {
+            public void onFailure(Throwable exception) {
                 showProcessing(false);
                 String errorMessage;
                 if (exception instanceof UnauthorizedException) {
@@ -293,7 +257,47 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 importProjectNotificationSubscriber.onFailure(errorMessage);
                 deleteFolder(projectName);
             }
-        });
+
+            @Override
+            public void onSuccess(ProjectDescriptor projectDescriptor) {
+                importProjectNotificationSubscriber.onSuccess();
+                importedProject = projectDescriptor;
+                showProcessing(false);
+                checkRam(projectDescriptor, setCommitCallback());
+            }
+        };
+    }
+
+    private WizardPage.CommitCallback setCommitCallback() {
+        return new WizardPage.CommitCallback() {
+            @Override
+            public void onSuccess() {
+                view.close();
+                if (importedProject == null) {
+                    return;
+                }
+                boolean projectTypeResolvedViaResolver = false;
+                List<ProjectProblem> problems = importedProject.getProblems();
+                for (ProjectProblem problem : problems) {
+                    if (problem.getCode() == 300) {
+                        projectTypeResolvedViaResolver = true;
+                    }
+                }
+                if (importedProject.getType() == null
+                    || Constants.BLANK_ID.equals(importedProject.getType())
+                    || projectTypeResolvedViaResolver) {
+
+                    WizardContext context = new WizardContext();
+                    context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
+                    newProjectWizardPresenter.show(context);
+                }
+            }
+
+            @Override
+            public void onFailure(@Nonnull Throwable exception) {
+                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+            }
+        };
     }
 
     private void checkRam(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
@@ -333,8 +337,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                                               locale.messagesGetResourcesFailed(), null).show();
                             Log.error(getClass(), exception.getMessage());
                         }
-                    }
-                                      );
+                    });
             return;
         }
         importProjectSuccessful(projectDescriptor, callback);
@@ -459,8 +462,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         view.showPage(currentPage);
     }
 
-
-    /** {@inheritDoc} */
     @Override
     public void onEnterKeyPressed() {
         if (canGoNext) {
