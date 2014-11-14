@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projectimporter.importerpage;
+package com.codenvy.ide.projectimporter.zipimporterpage;
 
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
@@ -21,12 +21,19 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+
 /**
  * @author Roman Nikitenko
  */
-public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate{
+public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate {
 
-    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_-]*$");
+    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_\\-]*$");
+    private static final RegExp URL_REGEX    = RegExp.compile("(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?");
+    private static final RegExp WHITESPACE   = RegExp.compile("^\\s");
+    private static final RegExp END_URL      = RegExp.compile(".zip$");
+
     private CoreLocalizationConstant locale;
     private ZipImporterPageView      view;
     private WizardContext            wizardContext;
@@ -40,6 +47,7 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
         this.locale = locale;
     }
 
+    @Nonnull
     @Override
     public String getId() {
         return "zip";
@@ -56,12 +64,12 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     }
 
     @Override
-    public void setContext(WizardContext wizardContext) {
+    public void setContext(@Nonnull WizardContext wizardContext) {
         this.wizardContext = wizardContext;
     }
 
     @Override
-    public void setProjectWizardDelegate(Wizard.UpdateDelegate updateDelegate) {
+    public void setProjectWizardDelegate(@Nonnull Wizard.UpdateDelegate updateDelegate) {
         this.updateDelegate = updateDelegate;
     }
 
@@ -71,8 +79,8 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     }
 
     @Override
-    public void projectNameChanged(String name) {
-        if (name == null || name.isEmpty()) {
+    public void projectNameChanged(@Nonnull String name) {
+        if (name.isEmpty()) {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
         } else if (NAME_PATTERN.test(name)) {
             wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
@@ -85,13 +93,11 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     }
 
     @Override
-    public void projectUrlChanged(String url) {
-        if (!isGitUrlCorrect(url)) {
+    public void projectUrlChanged(@Nonnull String url) {
+        if (!isUrlCorrect(url)) {
             wizardContext.removeData(ImportProjectWizard.PROJECT_URL);
         } else {
             wizardContext.putData(ImportProjectWizard.PROJECT_URL, url);
-            view.hideUrlError();
-
             String projectName = view.getProjectName();
             if (projectName.isEmpty()) {
                 projectName = parseUri(url);
@@ -103,32 +109,42 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     }
 
     @Override
-    public void projectDescriptionChanged(String projectDescriptionValue) {
+    public void projectDescriptionChanged(@Nonnull String projectDescriptionValue) {
         wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
     }
 
     @Override
-    public void projectVisibilityChanged(Boolean aPublic) {
+    public void projectVisibilityChanged(boolean aPublic) {
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
     }
 
     @Override
-    public void onEnterClicked() {
-
+    public void skipFirstLevelChanged(boolean isSkipFirstLevel) {
+        ProjectImporterDescriptor projectImporter = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
+        if (projectImporter != null) {
+            if (projectImporter.getAttributes() == null) {
+                projectImporter.setAttributes(new HashMap<String, String>());
+            }
+            String skipFirstLevel = isSkipFirstLevel ? "true" : "false";
+            projectImporter.getAttributes().put("skipFirstLevel", skipFirstLevel);
+        }
     }
 
     @Override
     public void go(AcceptsOneWidget container) {
         clear();
         ProjectImporterDescriptor projectImporter = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
-        view.setImporterDescription(projectImporter.getDescription());
+        if (projectImporter != null) {
+            view.setImporterDescription(projectImporter.getDescription());
+        }
+
         view.setInputsEnableState(true);
         container.setWidget(view);
         view.focusInUrlInput();
     }
 
     /** Gets project name from uri. */
-    private String parseUri(String uri) {
+    private String parseUri(@Nonnull String uri) {
         String result;
         int indexStartProjectName = uri.lastIndexOf("/") + 1;
         int indexFinishProjectName = uri.indexOf(".", indexStartProjectName);
@@ -142,49 +158,29 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
         return result;
     }
 
-    private boolean isGitUrlCorrect(String url) {
-        // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
-        RegExp scpLikeSyntax = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
+    /**
+     * Validate url
+     *
+     * @param url
+     *         url for validate
+     * @return <code>true</code> if url is correct
+     */
+    private boolean isUrlCorrect(@Nonnull String url) {
+        if (!END_URL.test(url)) {
+            view.showUrlError(locale.importProjectMessageUrlInvalid());
+            return false;
+        }
 
-        // the transport protocol
-        RegExp protocol = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
-
-        // the address of the remote server between // and /
-        RegExp host1 = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
-
-        // the address of the remote server between @ and : or /
-        RegExp host2 = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
-
-        // the repository name
-        RegExp repoName = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
-
-        // start with white space
-        RegExp whiteSpace = RegExp.compile("^\\s");
-
-        if (whiteSpace.test(url)) {
+        if (WHITESPACE.test(url)) {
             view.showUrlError(locale.importProjectMessageStartWithWhiteSpace());
             return false;
         }
 
-        if (scpLikeSyntax.test(url) && repoName.test(url)) {
-            return true;
-        } else if (scpLikeSyntax.test(url) && !repoName.test(url)) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
+        if (!URL_REGEX.test(url)) {
+            view.showUrlError(locale.importProjectMessageUrlInvalid());
             return false;
         }
 
-        if (!protocol.test(url)) {
-            view.showUrlError(locale.importProjectMessageProtocolIncorrect());
-            return false;
-        }
-        if (!(host1.test(url) || host2.test(url))) {
-            view.showUrlError(locale.importProjectMessageHostIncorrect());
-            return false;
-        }
-        if (!(repoName.test(url))) {
-            view.showUrlError(locale.importProjectMessageNameRepoIncorrect());
-            return false;
-        }
         view.hideUrlError();
         return true;
     }

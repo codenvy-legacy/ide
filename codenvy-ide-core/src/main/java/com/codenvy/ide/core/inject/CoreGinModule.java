@@ -119,7 +119,7 @@ import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
 import com.codenvy.ide.privacy.PrivacyPresenter;
 import com.codenvy.ide.projectimporter.ZipProjectImporter;
-import com.codenvy.ide.projectimporter.importerpage.ZipImporterPagePresenter;
+import com.codenvy.ide.projectimporter.zipimporterpage.ZipImporterPagePresenter;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
