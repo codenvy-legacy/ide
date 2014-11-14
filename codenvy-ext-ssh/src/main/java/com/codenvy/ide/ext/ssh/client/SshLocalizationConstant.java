@@ -11,6 +11,7 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -59,7 +60,7 @@ public interface SshLocalizationConstant extends Messages {
     String hostNameField();
 
     @Key("delete.sshkey.question")
-    String deleteSshKeyQuestion(String host);
+    SafeHtml deleteSshKeyQuestion(String host);
 
     @Key("delete.sshkey.title")
     String deleteSshKeyTitle();
