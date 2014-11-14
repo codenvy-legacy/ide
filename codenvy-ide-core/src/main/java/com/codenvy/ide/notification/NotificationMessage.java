@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -188,7 +189,7 @@ public class NotificationMessage extends PopupPanel implements Notification.Noti
     /** Change message. */
     private void changeMessage() {
         //If notification message is formated HTML - need to display only plain text from it.
-        title.setHTML("<p>" + new HTML(notification.getMessage()).getText() + "</p>");
+        title.setHTML("<p>" + new HTML(SimpleHtmlSanitizer.sanitizeHtml(notification.getMessage())).getText() + "</p>");
     }
 
     /**

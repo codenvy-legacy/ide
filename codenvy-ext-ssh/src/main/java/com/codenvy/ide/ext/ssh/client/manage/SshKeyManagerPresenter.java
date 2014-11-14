@@ -29,6 +29,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -100,7 +101,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
-                Notification notification = new Notification(exception.getMessage(), ERROR);
+                Notification notification = new Notification(
+                        SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
@@ -110,7 +112,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
     /** {@inheritDoc} */
     @Override
     public void onDeleteClicked(@Nonnull final KeyItem key) {
-        dialogFactory.createConfirmDialog(constant.deleteSshKeyTitle(), constant.deleteSshKeyQuestion(key.getHost()),
+        dialogFactory.createConfirmDialog(constant.deleteSshKeyTitle(),
+                constant.deleteSshKeyQuestion(key.getHost()).asString(),
                                           new ConfirmCallback() {
                                               @Override
                                               public void accepted() {
@@ -130,7 +133,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             @Override
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
-                Notification notification = new Notification(exception.getMessage(), ERROR);
+                Notification notification = new Notification(
+                        SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
                 notificationManager.showNotification(notification);
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
@@ -150,7 +154,8 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    Notification notification = new Notification(exception.getMessage(), ERROR);
+                    Notification notification = new Notification(
+                            SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
                     notificationManager.showNotification(notification);
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }

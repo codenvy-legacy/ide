@@ -12,23 +12,16 @@ package com.codenvy.ide.notification;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.notification.Notification;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.user.client.ui.*;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nonnull;
-
-import static com.google.gwt.dom.client.Style.Unit.PX;
 
 /**
  * The wrapper for {@link Notification}. It is a graphic view of notification in notification manager popup.
@@ -74,7 +67,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         //If notification message is formated HTML - need to display only plain text from it.
-        title = new HTML(notification.getMessage());
+        title = new HTML(SimpleHtmlSanitizer.sanitizeHtml(notification.getMessage()));
 
         Image closeIcon = new Image(resources.close());
         closeIcon.addStyleName(resources.notificationCss().close());
