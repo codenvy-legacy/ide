@@ -27,6 +27,7 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -132,7 +133,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
         final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
-        final String url = SEARCH_URL + projectPath + "?name=" + fileName;
+        final String url = SEARCH_URL + projectPath + "?name=" + URL.encodePathSegment(fileName);
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
         try {
