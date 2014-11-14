@@ -81,7 +81,7 @@ public class ZipImporterPagePresenterTest {
 
     @Test
     public void incorrectProjectUrlEnteredTest() {
-        String incorrectUrl = "https//dl.dropboxusercontent.com/u/2187905/Codenvy/angularjs.zip";
+        String incorrectUrl = "https//host.com/some/path/angularjs.zip";
 
         presenter.projectUrlChanged(incorrectUrl);
 
@@ -95,7 +95,7 @@ public class ZipImporterPagePresenterTest {
     @Test
     public void projectUrlWithoutZipEnteredTest() {
         //url without .zip was entered
-        String incorrectUrl = "https://dl.dropboxusercontent.com/u/2187905/Codenvy/angularjs.ip";
+        String incorrectUrl = "https://host.com/some/path/angularjs.ip";
 
         presenter.projectUrlChanged(incorrectUrl);
 
@@ -108,7 +108,7 @@ public class ZipImporterPagePresenterTest {
 
     @Test
     public void projectUrlStartWithWhiteSpaceEnteredTest() {
-        String incorrectUrl = " https://dl.dropboxusercontent.com/u/2187905/Codenvy/angularjs.zip";
+        String incorrectUrl = " https://host.com/some/path/angularjs.zip";
 
         presenter.projectUrlChanged(incorrectUrl);
 
@@ -121,7 +121,7 @@ public class ZipImporterPagePresenterTest {
 
     @Test
     public void correctProjectUrlEnteredTest() {
-        String correctUrl = "https://dl.dropboxusercontent.com/u/2187905/Codenvy/angularjs.zip";
+        String correctUrl = "https://host.com/some/path/angularjs.zip";
         when(view.getProjectName()).thenReturn("");
 
         presenter.projectUrlChanged(correctUrl);
