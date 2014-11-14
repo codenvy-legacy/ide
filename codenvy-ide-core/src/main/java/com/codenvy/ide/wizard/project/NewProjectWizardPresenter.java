@@ -80,14 +80,14 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private       WizardPage                currentPage;
     private       ProjectWizardView         view;
     private       MainPagePresenter         mainPage;
-    private Provider<WizardPage> mainPageProvider      = new Provider<WizardPage>() {
+    private Provider<WizardPage> mainPageProvider             = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
             return mainPage;
         }
     };
-    private Map<String, String>  runnersDescriptionMap = new HashMap<>();
-    private Map<String, String>  builderDescriptionMap = new HashMap<>();
+    private Map<String, String>  runnersDescriptionMap        = new HashMap<>();
+    private Map<String, String>  defaultBuilderDescriptionMap = new HashMap<>();
     private WizardContext wizardContext;
     private ProjectWizard wizard;
     private int           workspaceMemory;
@@ -136,8 +136,10 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                         continue;
                     }
                     for (BuilderEnvironment builderEnv : builderDes.getEnvironments().values()) {
-                        if (builderEnv != null && builderEnv.getDisplayName() != null) {
-                            builderDescriptionMap.put(builderEnv.getId(), builderEnv.getDisplayName());
+                        if (builderEnv != null && builderEnv.getId() == "default") {
+                            //append display name for default builder name. Used to show the builder environment name
+                            // because we use default builder to set environment in json file(maven.json).
+                            defaultBuilderDescriptionMap.put(builderDes.getName(), builderEnv.getDisplayName());
                         }
                     }
                 }
@@ -547,7 +549,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
             final BuildersDescriptor builders = templateDescriptor.getBuilders();
-            view.setBuilderEnvironmentConfig(builderDescriptionMap.get(builders == null ? null : builders.getDefault()));
+            view.setBuilderEnvironmentConfig(defaultBuilderDescriptionMap.get(builders == null ? null : builders.getDefault()));
             final RunnersDescriptor runners = templateDescriptor.getRunners();
             view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(runners == null ? null : runners.getDefault()));
             view.setRAMRequired(getRequiredRam(runners));
@@ -557,7 +559,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setRunnerEnvironmentConfig(
                     runnersDescriptionMap.get(descriptor.getRunners() == null ? null : descriptor.getRunners().getDefault()));
             view.setBuilderEnvironmentConfig(
-                    builderDescriptionMap.get(descriptor.getBuilders() == null ? null : descriptor.getBuilders().getDefault()));
+                    defaultBuilderDescriptionMap.get(descriptor.getBuilders() == null ? null : descriptor.getBuilders().getDefault()));
             view.setRAMRequired(getRequiredRam(descriptor.getRunners()));
             view.setInfoVisible(true);
         } else {
