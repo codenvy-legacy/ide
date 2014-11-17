@@ -27,6 +27,8 @@ import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
@@ -59,6 +61,7 @@ import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +71,7 @@ import java.util.Map;
  *
  * @author Nikolay Zamosenchuk
  */
-public class BootstrapController {
+public class BootstrapController implements ProjectActionHandler {
 
     private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
     private final AnalyticsEventLoggerExt      analyticsEventLoggerExt;
@@ -84,7 +87,7 @@ public class BootstrapController {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
-    private AppContext appContext;
+    private       AppContext                   appContext;
 
     /** Create controller. */
     @Inject
@@ -157,6 +160,7 @@ public class BootstrapController {
                               initializationFailed("Unable to inject CodeMirror");
                           }
                       }).inject();
+
     }
 
     /**
@@ -354,15 +358,18 @@ public class BootstrapController {
         }
     }
 
+    HandlerRegistration handlerRegistration = null;
+
     private void processStartupParameters() {
         final String projectNameToOpen = Config.getProjectName();
         if (projectNameToOpen != null) {
+            handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, this);
             eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
-            processStartupAction();
         } else {
             processStartupAction();
         }
     }
+
 
     private void processStartupAction() {
         final String startupAction = Config.getStartupParam("action");
@@ -377,6 +384,21 @@ public class BootstrapController {
             }
         }
     }
+
+    //process action only after opening project
+    @Override
+    public void onProjectOpened(ProjectActionEvent event) {
+        processStartupAction();
+        if (handlerRegistration != null) {
+            handlerRegistration.removeHandler();
+        }
+    }
+
+    @Override
+    public void onProjectClosed(ProjectActionEvent event) {
+
+    }
+
 
     /** Applying user defined Theme. */
     private void setTheme() {
@@ -409,9 +431,10 @@ public class BootstrapController {
         }
     }-*/;
 
+
     private static class AnalyticsSessions {
         private String id;
-        private long lastLogTime;
+        private long   lastLogTime;
 
         private AnalyticsSessions() {
             makeNew();
