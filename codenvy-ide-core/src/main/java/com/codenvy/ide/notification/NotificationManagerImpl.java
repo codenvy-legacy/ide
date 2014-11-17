@@ -33,6 +33,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+import static com.codenvy.ide.api.notification.Notification.Type.INFO;
+import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
  * The implementation of {@link NotificationManager}.
@@ -129,6 +132,23 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         view.scrollBottom();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void showInfo(@Nonnull String message) {
+        showNotification(new Notification(message, INFO));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showWarning(@Nonnull String message) {
+        showNotification(new Notification(message, WARNING));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showError(@Nonnull String message) {
+        showNotification(new Notification(message, ERROR));
+    }
 
     /**
      * Remove notification.
