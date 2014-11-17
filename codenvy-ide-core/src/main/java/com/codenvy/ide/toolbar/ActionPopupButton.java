@@ -14,6 +14,7 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionGroup;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
@@ -75,7 +76,10 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         panel.add(caret);
         final String description = presentationFactory.getPresentation(action).getDescription();
         if (description != null) {
-            panel.getElement().setAttribute("title", description);
+            Element tooltip = DOM.createSpan();
+            tooltip.setInnerText(description);
+            tooltip.addClassName(css.tooltip());
+            panel.getElement().appendChild(tooltip);
         }
         this.ensureDebugId(place + "/" + action.getTemplatePresentation().getText());
     }
