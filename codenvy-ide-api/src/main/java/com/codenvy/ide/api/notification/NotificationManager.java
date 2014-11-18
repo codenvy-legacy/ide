@@ -30,6 +30,8 @@ public interface NotificationManager extends PartPresenter {
 
     /**
      * Show information notification with the specified message.
+     * <p/>
+     * This is a shortcut for <code>showNotification(new Notification({message}, Notification.Type.INFO))</code>.
      *
      * @param message
      *         notification's message
@@ -38,6 +40,8 @@ public interface NotificationManager extends PartPresenter {
 
     /**
      * Show warning notification with the specified message.
+     * <p/>
+     * This is a shortcut for <code>showNotification(new Notification({message}, Notification.Type.WARNING))</code>.
      *
      * @param message
      *         notification's message
@@ -46,6 +50,8 @@ public interface NotificationManager extends PartPresenter {
 
     /**
      * Show error notification with the specified message.
+     * <p/>
+     * This is a shortcut for <code>showNotification(new Notification({message}, Notification.Type.ERROR))</code>.
      *
      * @param message
      *         notification's message

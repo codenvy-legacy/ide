@@ -111,7 +111,7 @@ public class CurrentProject {
     }
 
     /**
-     * Get value of attribute <code>name</code>. It is shortcut for:
+     * Get value of attribute <code>name</code>.
      *
      * @param attributeName
      *         attribute name
