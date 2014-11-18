@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js.editor;
 
-import com.google.inject.Inject;
+import java.util.Set;
 
 import javax.inject.Provider;
-import java.util.Set;
+
+import com.codenvy.ide.ext.web.html.editor.AutoEditStrategyFactory;
+import com.google.inject.Inject;
 
 /**
  * Provider for HTML Editor configuration.
- *
+ * 
  * @author Florent Benoit
  */
 
@@ -35,7 +37,7 @@ public class JsEditorConfigurationProvider implements Provider<JsEditorConfigura
 
     /**
      * Build a new instance of JsEditor Configuration
-     *
+     * 
      * @return
      */
     @Override

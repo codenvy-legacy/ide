@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.ext.web.DefaultChainedCodeAssistProcessor;
+import com.codenvy.ide.jseditor.client.codeassist.DefaultChainedCodeAssistProcessor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

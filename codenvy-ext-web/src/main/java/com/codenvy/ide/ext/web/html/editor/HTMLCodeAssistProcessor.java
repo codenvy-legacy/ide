@@ -10,11 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.api.texteditor.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
+
 
 /**
  * Marker interface for HTML.
- *
+ * 
  * @author Florent Benoit
  */
 public interface HTMLCodeAssistProcessor extends CodeAssistProcessor {

@@ -51,6 +51,8 @@ public interface ToolbarResources extends ClientBundle {
 
         String popupButtonPanelOver();
 
+        String tooltip();
+
         String caret();
     }
 

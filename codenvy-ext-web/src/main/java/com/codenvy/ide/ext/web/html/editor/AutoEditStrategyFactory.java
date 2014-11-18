@@ -10,24 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html.editor;
 
-import com.codenvy.ide.api.texteditor.AutoEditStrategy;
-import com.codenvy.ide.api.texteditor.TextEditorPartView;
+import com.codenvy.ide.jseditor.client.changeintercept.TextChangeInterceptor;
 
 /**
  * Allows to define a new AutoEditStrategy based on text editor and content type.
- *
+ * 
  * @author Florent Benoit
  */
 public interface AutoEditStrategyFactory {
 
     /**
      * Build a new instance
-     *
-     * @param textEditorPartView
-     *         editor view
-     * @param contentType
-     *         content type
+     * 
      * @return a new strategy
      */
-    AutoEditStrategy build(TextEditorPartView textEditorPartView, String contentType);
+    TextChangeInterceptor build(String contentType);
 }

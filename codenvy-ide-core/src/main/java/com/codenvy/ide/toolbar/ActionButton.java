@@ -18,6 +18,7 @@ import com.codenvy.ide.api.action.CustomComponentAction;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.action.PropertyChangeEvent;
 import com.codenvy.ide.api.action.PropertyChangeListener;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -28,6 +29,7 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -67,8 +69,12 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         renderImage();
         setEnabled(presentation.isEnabled());
         setVisible(presentation.isVisible());
-        if (presentation.getDescription() != null)
-            panel.getElement().setAttribute("title", presentation.getDescription());
+        if (presentation.getDescription() != null) {
+            Element tooltip = DOM.createSpan();
+            tooltip.setInnerText(presentation.getDescription());
+            tooltip.addClassName(css.tooltip());
+            panel.getElement().appendChild(tooltip);
+        }
     }
 
     /** {@inheritDoc} */
