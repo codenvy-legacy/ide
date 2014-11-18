@@ -27,4 +27,28 @@ public interface NotificationManager extends PartPresenter {
      *         notification that need to show
      */
     void showNotification(@Nonnull Notification notification);
+
+    /**
+     * Show information notification with the specified message.
+     *
+     * @param message
+     *         notification's message
+     */
+    void showInfo(@Nonnull String message);
+
+    /**
+     * Show warning notification with the specified message.
+     *
+     * @param message
+     *         notification's message
+     */
+    void showWarning(@Nonnull String message);
+
+    /**
+     * Show error notification with the specified message.
+     *
+     * @param message
+     *         notification's message
+     */
+    void showError(@Nonnull String message);
 }

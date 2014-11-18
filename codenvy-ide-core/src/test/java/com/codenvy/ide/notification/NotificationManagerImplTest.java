@@ -20,6 +20,7 @@ import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import static com.codenvy.ide.api.notification.Notification.State.READ;
@@ -86,12 +87,38 @@ public class NotificationManagerImplTest extends GwtTestWithMockito {
 
     @Test
     public void testShowNotification() throws Exception {
-
         Notification notification = new Notification("test message", INFO);
         manager.showNotification(notification);
 
         verify(notificationContainer).addNotification(eq(notification));
         verify(notificationMessageStack).addNotification(eq(notification));
+        verify(view).setNotificationCount(anyInt());
+    }
+
+    @Test
+    public void testShowInfo() throws Exception {
+        manager.showInfo("test message");
+
+        verify(notificationContainer).addNotification(Matchers.<Notification>anyObject());
+        verify(notificationMessageStack).addNotification(Matchers.<Notification>anyObject());
+        verify(view).setNotificationCount(anyInt());
+    }
+
+    @Test
+    public void testShowWarning() throws Exception {
+        manager.showWarning("test message");
+
+        verify(notificationContainer).addNotification(Matchers.<Notification>anyObject());
+        verify(notificationMessageStack).addNotification(Matchers.<Notification>anyObject());
+        verify(view).setNotificationCount(anyInt());
+    }
+
+    @Test
+    public void testShowError() throws Exception {
+        manager.showError("test message");
+
+        verify(notificationContainer).addNotification(Matchers.<Notification>anyObject());
+        verify(notificationMessageStack).addNotification(Matchers.<Notification>anyObject());
         verify(view).setNotificationCount(anyInt());
     }
 
