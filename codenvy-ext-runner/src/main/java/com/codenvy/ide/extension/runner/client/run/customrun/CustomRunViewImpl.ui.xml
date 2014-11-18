@@ -79,7 +79,7 @@
                 <g:Label text="{locale.runConfigurationViewEnvironmentLabel}" width="100%"
                          addStyleNames="{style.labelMargin} {resources.runner.mainStyle}"/>
                 <g:Label ui:field="noEnvLabel" text="No environments available" addStyleNames="{style.noEnvLabel}"/>
-                <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
+                <g:ScrollPanel ui:field="treeContainer" debugId="project-customRun-treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>
         <g:north size="20">
@@ -141,7 +141,8 @@
             </g:HorizontalPanel>
         </g:north>
         <g:center>
-            <g:TextArea ui:field="descriptionField" readOnly="true" width="100%" addStyleNames="{style.noResize}}"/>
+            <g:TextArea ui:field="descriptionField" readOnly="true" width="100%" debugId="project-customRun-descriptionField"
+                        addStyleNames="{style.noResize}}"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -48,7 +48,7 @@
             height: 425px;
         }
 
-        .margin{
+        .margin {
             margin-left: 6px;
         }
 
@@ -66,7 +66,7 @@
                 <g:Label text="Select Runner environment:"
                          addStyleNames="{style.labelPosition} {style.margin}"/>
                 <g:Label ui:field="noEnvLabel" text="No environments available" addStyleNames="{style.noEnvLabel}"/>
-                <g:ScrollPanel ui:field="treeContainer" addStyleNames="{style.treeContainer}"/>
+                <g:ScrollPanel ui:field="treeContainer" debugId="selectRunnerPage-treeContainer" addStyleNames="{style.treeContainer}"/>
             </g:FlowPanel>
         </g:west>
         <g:east size="50">
@@ -75,7 +75,8 @@
                     <g:FlowPanel>
                         <g:Label text="Runner environment description:"
                                  addStyleNames="{style.labelPosition}"/>
-                        <g:TextArea ui:field="runnerDescription" enabled="false" width="356px" height="200px">
+                        <g:TextArea ui:field="runnerDescription" enabled="false" width="356px" height="200px"
+                                    debugId="selectRunnerPage-runnerDescription">
                         </g:TextArea>
                     </g:FlowPanel>
                 </g:north>
