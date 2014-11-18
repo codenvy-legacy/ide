@@ -19,7 +19,6 @@ import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
-import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -67,7 +66,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     private PreferencesPagePresenter firstPage;
     private CategoriesList           list;
 
-    private final Category.CategoryEventDelegate<PreferencesPagePresenter> PreferencesPageDelegate =
+    private final Category.CategoryEventDelegate<PreferencesPagePresenter> preferencesPageDelegate =
             new Category.CategoryEventDelegate<PreferencesPagePresenter>() {
                 @Override
                 public void onListItemClicked(com.google.gwt.dom.client.Element listItemBase, PreferencesPagePresenter itemData) {
@@ -75,7 +74,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
                 }
             };
 
-    private final CategoryRenderer<PreferencesPagePresenter> PreferencesPageRenderer =
+    private final CategoryRenderer<PreferencesPagePresenter> preferencesPageRenderer =
             new CategoryRenderer<PreferencesPagePresenter>() {
                 @Override
                 public void renderElement(com.google.gwt.dom.client.Element element, PreferencesPagePresenter preference) {
@@ -154,7 +153,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
         //show first page if page is exist
         if (firstPage != null) {
-            PreferencesPageDelegate.onListItemClicked(null, firstPage);
+            preferencesPageDelegate.onListItemClicked(null, firstPage);
         } else {
             btnApply.setEnabled(false);
         }
@@ -192,7 +191,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
         List<Category<?>> categoriesList = new ArrayList<Category<?>>();
         for (String s : preferences.keySet()) {
             Category<PreferencesPagePresenter> category =
-                    new Category<PreferencesPagePresenter>(s, PreferencesPageRenderer, preferences.get(s), PreferencesPageDelegate);
+                    new Category<PreferencesPagePresenter>(s, preferencesPageRenderer, preferences.get(s), preferencesPageDelegate);
             categoriesList.add(category);
         }
         list.render(categoriesList);
