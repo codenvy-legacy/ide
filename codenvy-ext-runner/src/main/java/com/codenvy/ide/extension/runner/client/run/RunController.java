@@ -63,6 +63,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
@@ -85,21 +86,24 @@ import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 public class RunController implements Notification.OpenNotificationHandler, ProjectActionHandler {
 
     /** WebSocket channel to get application's status. */
-    public static final String STATUS_CHANNEL     = "runner:status:";
+    public static final String STATUS_CHANNEL          = "runner:status:";
+    public static final String PROCESS_STARTED_CHANNEL = "runner:process_started:";
     /** WebSocket channel to get runner output. */
-    public static final String OUTPUT_CHANNEL     = "runner:output:";
+    public static final String OUTPUT_CHANNEL          = "runner:output:";
     /** WebSocket channel to check application's health. */
-    public static final String APP_HEALTH_CHANNEL = "runner:app_health:";
+    public static final String APP_HEALTH_CHANNEL      = "runner:app_health:";
     private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private final DtoFactory             dtoFactory;
     private final AppContext             appContext;
     private final DialogFactory          dialogFactory;
+    private final String                 workspaceId;
     /** Whether any app is running now? */
     protected boolean isAnyAppRunning  = false;
     protected boolean isAnyAppLaunched = false;
     protected LogMessagesHandler                                runnerOutputHandler;
     protected SubscriptionHandler<ApplicationProcessDescriptor> runnerStatusHandler;
     protected SubscriptionHandler<String>                       runnerHealthHandler;
+    protected SubscriptionHandler<ApplicationProcessDescriptor> processStartedHandler;
     private   EditorAgent                                       editorAgent;
     private   MessageBus                                        messageBus;
     private   WorkspaceAgent                                    workspaceAgent;
@@ -137,7 +141,8 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                          MessageBus messageBus,
                          ThemeAgent themeAgent,
                          final AppContext appContext,
-                         DialogFactory dialogFactory) {
+                         DialogFactory dialogFactory,
+                         @Named("workspaceId") String workspaceId) {
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -150,6 +155,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
         this.messageBus = messageBus;
         this.appContext = appContext;
         this.dialogFactory = dialogFactory;
+        this.workspaceId = workspaceId;
         theme = themeAgent.getCurrentThemeId();
 
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
@@ -157,6 +163,8 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
 
     @Override
     public void onProjectOpened(final ProjectActionEvent event) {
+        startCheckingNewProcesses();
+
         Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
                 dtoUnmarshallerFactory.newArrayUnmarshaller(ApplicationProcessDescriptor.class);
         service.getRunningProcesses(
@@ -200,6 +208,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
             stopCheckingAppStatus(currentAppProcess);
             stopCheckingAppHealth(currentAppProcess);
             stopCheckingAppOutput(currentAppProcess);
+            stopCheckingNewProcesses();
             console.onAppStopped();
         }
     }
@@ -414,8 +423,9 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
      */
     private void runProject(RunOptions runOptions, final boolean isUserAction) {
         final CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject == null)
+        if (currentProject == null) {
             return;
+        }
         mainNotification = new Notification(constant.launchingRunner(currentProject.getProjectDescription().getName()),
                                             PROGRESS,
                                             true,
@@ -572,6 +582,48 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
         runnerOutputHandler.stop();
         try {
             messageBus.unsubscribe(OUTPUT_CHANNEL + applicationProcessDescriptor.getProcessId(), runnerOutputHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunController.class, e);
+        }
+    }
+
+    private void startCheckingNewProcesses() {
+        final ProjectDescriptor project = appContext.getCurrentProject().getProjectDescription();
+        com.codenvy.ide.websocket.rest.Unmarshallable<ApplicationProcessDescriptor> unmarshaller =
+                dtoUnmarshallerFactory.newWSUnmarshaller(ApplicationProcessDescriptor.class);
+        processStartedHandler = new SubscriptionHandler<ApplicationProcessDescriptor>(unmarshaller) {
+            @Override
+            protected void onMessageReceived(ApplicationProcessDescriptor processDescriptor) {
+                if (!isAnyAppLaunched() && (processDescriptor.getStatus() == NEW || processDescriptor.getStatus() == RUNNING)) {
+                    isLastAppHealthOk = true; // set true here because we don't get information
+                    isAnyAppRunning = true;   // about app health in case we open already run app
+                    isAnyAppLaunched = true;
+                    console.setCurrentRunnerStatus(RunnerStatus.RUNNING);
+                    onAppLaunched(processDescriptor);
+                    getLogs(false);
+                    console.onAppStarted(appContext.getCurrentProject().getProcessDescriptor());
+                    Notification notification = new Notification(constant.projectRunningNow(project.getName()), INFO, true);
+                    notificationManager.showNotification(notification);
+                }
+            }
+
+            @Override
+            protected void onErrorReceived(Throwable exception) {
+                Log.error(RunController.class, exception);
+            }
+        };
+        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + project.getPath();
+        try {
+            messageBus.subscribe(channel, processStartedHandler);
+        } catch (WebSocketException e) {
+            Log.error(RunController.class, e);
+        }
+    }
+
+    private void stopCheckingNewProcesses() {
+        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + appContext.getCurrentProject().getProjectDescription().getPath();
+        try {
+            messageBus.unsubscribe(channel, processStartedHandler);
         } catch (WebSocketException e) {
             Log.error(RunController.class, e);
         }
