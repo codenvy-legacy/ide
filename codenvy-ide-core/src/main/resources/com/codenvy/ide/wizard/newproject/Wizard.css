@@ -80,3 +80,53 @@
     color: rgba(255, 255, 255, 0.35);
 }
 
+/* Rightmost button, should be added the first onto Window footer. */
+.rightButton {
+    margin: 5px 25px 0px 8px;
+}
+
+/* Primary button styles */
+.buttonPrimary {
+    background: #256c9f;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px rgba(55, 126, 172, 1);
+    border-color: #2f3237;
+}
+
+.buttonPrimary:HOVER {
+    background: #18537e;
+}
+
+.buttonPrimary:ACTIVE {
+    background: #18537e;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.buttonPrimary[disabled],
+.buttonPrimary[disabled]:HOVER {
+    background: rgba(37, 108, 159, 0.35);
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Success button styles. */
+.buttonSuccess {
+    background-color:#317E31;
+    border-color: #2f3237;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px #309E30;
+}
+
+.buttonSuccess:HOVER {
+    background: #246C24;
+}
+
+.buttonSuccess:ACTIVE {
+    background: #246C24;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.buttonSuccess[disabled],
+.buttonSuccess[disabled]:HOVER {
+    background: rgba(49, 126, 49, 0.35);
+    color: rgba(255, 255, 255, 0.35);
+}
+
+

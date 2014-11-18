@@ -400,8 +400,14 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("close")
     String close();
 
+    @Key("save")
+    String save();
+
     @Key("apply")
     String apply();
+
+    @Key("refresh")
+    String refresh();
 
     @Key("delete")
     @DefaultMessage("Delete")

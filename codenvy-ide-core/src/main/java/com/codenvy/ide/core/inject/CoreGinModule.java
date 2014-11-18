@@ -59,9 +59,8 @@ import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.WorkBenchView;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
-import com.codenvy.ide.api.preferences.PreferencesAgent;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
@@ -113,7 +112,6 @@ import com.codenvy.ide.part.editor.EditorPartStackView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerViewImpl;
-import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.preferences.PreferencesManagerImpl;
 import com.codenvy.ide.preferences.PreferencesView;
 import com.codenvy.ide.preferences.PreferencesViewImpl;
@@ -247,7 +245,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
         bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
         bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
-        bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
         bind(IconRegistry.class).to(IconRegistryImpl.class).in(Singleton.class);
         // UI Model
         bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
@@ -269,7 +266,7 @@ public class CoreGinModule extends AbstractGinModule {
         GinMultibinder<ImporterPagePresenter> importerPageMultibinder = GinMultibinder.newSetBinder(binder(), ImporterPagePresenter.class);
         importerPageMultibinder.addBinding().to(ZipImporterPagePresenter.class);
 
-        GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
+        GinMultibinder<PreferencePagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencePagePresenter.class);
         prefBinder.addBinding().to(AppearancePresenter.class);
         prefBinder.addBinding().to(ExtensionManagerPresenter.class);
 

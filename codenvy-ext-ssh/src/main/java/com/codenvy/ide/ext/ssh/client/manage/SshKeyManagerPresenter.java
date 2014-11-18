@@ -14,7 +14,7 @@ import com.codenvy.api.user.gwt.client.UserServiceClient;
 import com.codenvy.api.user.shared.dto.UserDescriptor;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
@@ -47,7 +47,7 @@ import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
  * @author Evgen Vidolob
  */
 @Singleton
-public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter implements SshKeyManagerView.ActionDelegate {
+public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter implements SshKeyManagerView.ActionDelegate {
     public static final String GITHUB_HOST = "github.com";
     private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private DialogFactory           dialogFactory;
@@ -266,12 +266,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
 
     /** {@inheritDoc} */
     @Override
-    public void doApply() {
-        // do nothing
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public boolean isDirty() {
         return false;
     }
@@ -301,4 +295,22 @@ public class SshKeyManagerPresenter extends AbstractPreferencesPagePresenter imp
             }
         });
     }
+
+//    /** {@inheritDoc} */
+//    @Override
+//    public void doApply() {
+//        // do nothing
+//    }
+
+    @Override
+    public void storeChanges() {
+
+    }
+
+    @Override
+    public void revertChanges() {
+
+    }
+
+
 }

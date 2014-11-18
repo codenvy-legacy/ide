@@ -24,10 +24,21 @@ public interface ProjectWizardResources extends ClientBundle {
 
         String button();
 
+        String rightButton();
+
+        /**
+         * @deprecated use {@link #buttonPrimary()} instead
+         */
+        @Deprecated
         String blueButton();
 
-        String inputError();
+        // Primary
+        String buttonPrimary();
 
+        // Success
+        String buttonSuccess();
+
+        String inputError();
     }
 
     @Source({"com/codenvy/ide/wizard/newproject/Wizard.css", "com/codenvy/ide/api/ui/style.css"})

@@ -20,7 +20,7 @@ public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
 
     public interface ActionDelegate {
 
-        void setDirty(boolean b);
+        void setDirty(boolean dirty);
 
         void validateRamSize(String value);
 

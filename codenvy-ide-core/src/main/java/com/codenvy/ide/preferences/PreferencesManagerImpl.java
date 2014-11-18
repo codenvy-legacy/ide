@@ -72,6 +72,9 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public void flushPreferences(final AsyncCallback<ProfileDescriptor> callback) {
+
+        Log.trace("<< com.codenvy.ide.preferences.PreferencesManagerImpl.flushPreferences");
+
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
@@ -97,6 +100,14 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param preferences
      */
     public void load(Map<String, String> preferences) {
+        Log.trace("<< com.codenvy.ide.preferences.PreferencesManagerImpl.load");
+
+        if (preferences != null) {
+            for (Map.Entry<String, String> entry : preferences.entrySet()) {
+                Log.trace("entry [" + entry.getKey() + "] values [" + entry.getValue() + "]");
+            }
+        }
+
         persistedPreferences.putAll(preferences);
     }
 }

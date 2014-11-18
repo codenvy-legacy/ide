@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
-import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,12 +32,13 @@ import java.util.Set;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencesPagePresenter.DirtyStateListener {
-    private PreferencesView                 view;
-    private Set<PreferencesPagePresenter>   presenters;
-    private PreferencesPagePresenter        currentPage;
-    private Array<PreferencesPagePresenter> preferences;
-    private boolean                         hasDirtyPage;
+public class PreferencesPresenter implements PreferencesView.ActionDelegate, PreferencePagePresenter.DirtyStateListener {
+
+    private PreferencesView view;
+
+    private Set<PreferencePagePresenter> preferences;
+
+    private Map<String, Set<PreferencePagePresenter>> preferencesMap;
 
     /**
      * Create presenter.
@@ -45,23 +46,74 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
      * For tests.
      *
      * @param view
-     * @param presenters
+     * @param preferences
      */
     @Inject
-    protected PreferencesPresenter(PreferencesView view, Set<PreferencesPagePresenter> presenters) {
+    protected PreferencesPresenter(PreferencesView view, Set<PreferencePagePresenter> preferences) {
         this.view = view;
-        this.presenters = presenters;
+        this.preferences = preferences;
+
         this.view.setDelegate(this);
+
+        for (PreferencePagePresenter preference : preferences) {
+            preference.setUpdateDelegate(this);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void onDirtyChanged() {
-        if (currentPage != null && !hasDirtyPage) {
-            hasDirtyPage = currentPage.isDirty();
+        for (PreferencePagePresenter p : preferences) {
+            if (p.isDirty()) {
+                view.enableSaveButton(true);
+                return;
+            }
+        }
+        view.enableSaveButton(false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPreferenceSelected(PreferencePagePresenter preference) {
+        Log.trace("<< com.codenvy.ide.preferences.PreferencesPresenter.onPreferenceSelected " + preference.getCategory() + " : " + preference.getTitle());
+        preference.go(view.getContentPanel());
+    }
+
+    /** Shows preferences. */
+    public void showPreferences() {
+
+        Log.trace(">> PreferencesPresenter.showPreferences()");
+
+        if (preferencesMap != null) {
+            view.show();
+            return;
         }
 
-        view.setApplyButtonEnabled(hasDirtyPage);
+        preferencesMap = new HashMap<>();
+        for (PreferencePagePresenter preference : preferences) {
+            Set<PreferencePagePresenter> prefsList = preferencesMap.get(preference.getCategory());
+            if (prefsList == null) {
+                prefsList = new HashSet<PreferencePagePresenter>();
+                preferencesMap.put(preference.getCategory(), prefsList);
+            }
+
+            prefsList.add(preference);
+        }
+        view.setPreferences(preferencesMap);
+
+        view.show();
+        view.enableSaveButton(false);
+        view.selectPreference(preferencesMap.entrySet().iterator().next().getValue().iterator().next());
+    }
+
+    @Override
+    public void onSaveClicked() {
+        Log.trace("storeChanges clicked");
+    }
+
+    @Override
+    public void onRefreshClicked() {
+        Log.trace("refresh clicked");
     }
 
     /** {@inheritDoc} */
@@ -70,58 +122,4 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
         view.close();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void onApplyClicked() {
-        for (int i = 0; i < preferences.size(); i++) {
-            PreferencesPagePresenter page = preferences.get(i);
-            if (page.isDirty()) {
-                page.doApply();
-            }
-        }
-
-        hasDirtyPage = false;
-
-        onDirtyChanged();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void selectedPreference(PreferencesPagePresenter preference) {
-        currentPage = preference;
-        currentPage.setUpdateDelegate(this);
-        onDirtyChanged();
-        currentPage.go(view.getContentPanel());
-    }
-
-    /** Shows preferences. */
-    public void showPreferences() {
-        Map<String, Set<PreferencesPagePresenter>> preferencesMap = new HashMap<>();
-        if (preferences == null) {
-            preferences = Collections.createArray();
-            for (PreferencesPagePresenter presenter : presenters) {
-                preferences.add(presenter);
-                Set<PreferencesPagePresenter> preferences;
-                if (!preferencesMap.isEmpty() && preferencesMap.containsKey(presenter.getCategory())) {
-                    preferences = preferencesMap.get(presenter.getCategory());
-                } else {
-                    preferences = new HashSet<PreferencesPagePresenter>();
-                }
-                preferences.add(presenter);
-                preferencesMap.put(presenter.getCategory(), preferences);
-            }
-        }
-        this.view.setPreferences(preferencesMap, currentPage);
-        view.showPreferences();
-        if (preferences != null && preferences.size() > 0) {
-            view.selectPreference(preferences.get(0));
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onOkClicked() {
-        onApplyClicked();
-        onCloseClicked();
-    }
 }
