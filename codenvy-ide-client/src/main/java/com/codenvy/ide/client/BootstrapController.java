@@ -301,12 +301,14 @@ public class BootstrapController implements ProjectActionHandler {
         Window.addWindowClosingHandler(new Window.ClosingHandler() {
             @Override
             public void onWindowClosing(Window.ClosingEvent event) {
+                onWindowClose(analyticsSessions);
                 eventBus.fireEvent(WindowActionEvent.createWindowClosingEvent(event));
             }
         });
         Window.addCloseHandler(new CloseHandler<Window>() {
             @Override
             public void onClose(CloseEvent<Window> event) {
+                onWindowClose(analyticsSessions);
                 eventBus.fireEvent(WindowActionEvent.createWindowClosedEvent());
             }
         });
@@ -333,13 +335,21 @@ public class BootstrapController implements ProjectActionHandler {
     private void onFocusIn(AnalyticsSessions analyticsSessions, boolean force) {
         if (analyticsSessions.getIdleTime() > 600000) { // 10 min
             analyticsSessions.makeNew();
+            force = true;
+        }
+
+        analyticsSessions.setHasFocus(true);
+        logSessionUsageEvent(analyticsSessions, force);
+    }
+
+    private void onWindowClose(AnalyticsSessions analyticsSessions) {
+        if (analyticsSessions.isHasFocus() || analyticsSessions.getIdleTime() <= 60000) { // 1 min
             logSessionUsageEvent(analyticsSessions, true);
-        } else {
-            logSessionUsageEvent(analyticsSessions, force);
         }
     }
 
     private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
+        analyticsSessions.setHasFocus(false);
         logSessionUsageEvent(analyticsSessions, force);
     }
 
@@ -435,6 +445,7 @@ public class BootstrapController implements ProjectActionHandler {
     private static class AnalyticsSessions {
         private String id;
         private long   lastLogTime;
+        private boolean hasFocus;
 
         private AnalyticsSessions() {
             makeNew();
@@ -451,10 +462,19 @@ public class BootstrapController implements ProjectActionHandler {
         public void makeNew() {
             this.id = UUID.uuid();
             this.lastLogTime = System.currentTimeMillis();
+            this.hasFocus = false;
         }
 
         public long getIdleTime() {
             return System.currentTimeMillis() - lastLogTime;
+        }
+
+        public boolean isHasFocus() {
+            return hasFocus;
+        }
+
+        public void setHasFocus(boolean hasFocus) {
+            this.hasFocus = hasFocus;
         }
     }
 }
