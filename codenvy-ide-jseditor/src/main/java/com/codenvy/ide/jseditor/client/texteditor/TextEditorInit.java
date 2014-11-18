@@ -242,6 +242,9 @@ public class TextEditorInit {
             this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
                 @Override
                 public void computeCompletions(final CompletionReadyCallback callback) {
+                    // cursor must be computed here again so it's original value is not baked in
+                    // the SMI instance closure - important for completion update when typing
+                    final int cursor = textEditor.getCursorOffset();
                     codeAssistant.computeCompletionProposals(cursor, new CodeAssistCallback() {
                         @Override
                         public void proposalComputed(final List<CompletionProposal> proposals) {

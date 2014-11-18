@@ -10,25 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js.editor;
 
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.jseditor.client.defaulteditor.DefaultEditorProvider;
+import com.codenvy.ide.jseditor.client.texteditor.ConfigurableTextEditor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
 /**
  * EditorProvider for JavaScript css type
- *
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public class JsEditorProvider implements EditorProvider {
-    private final DocumentProvider            documentProvider;
-    private       Provider<CodenvyTextEditor> editorProvider;
-    private final NotificationManager         notificationManager;
+    private final DefaultEditorProvider editorProvider;
+    private final NotificationManager notificationManager;
 
     /**
      * JS editor configuration.
@@ -37,12 +36,9 @@ public class JsEditorProvider implements EditorProvider {
 
     /** @param documentProvider */
     @Inject
-    public JsEditorProvider(DocumentProvider documentProvider,
-                            Provider<CodenvyTextEditor> editorProvider,
+    public JsEditorProvider(final DefaultEditorProvider editorProvider,
                             NotificationManager notificationManager,
                             Provider<JsEditorConfiguration> jsEditorConfigurationProvider) {
-        super();
-        this.documentProvider = documentProvider;
         this.editorProvider = editorProvider;
         this.notificationManager = notificationManager;
         this.jsEditorConfigurationProvider = jsEditorConfigurationProvider;
@@ -61,8 +57,8 @@ public class JsEditorProvider implements EditorProvider {
     /** {@inheritDoc} */
     @Override
     public EditorPartPresenter getEditor() {
-        CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(jsEditorConfigurationProvider.get(), documentProvider, notificationManager);
+        ConfigurableTextEditor textEditor = editorProvider.getEditor();
+        textEditor.initialize(jsEditorConfigurationProvider.get(), notificationManager);
         return textEditor;
     }
 }
