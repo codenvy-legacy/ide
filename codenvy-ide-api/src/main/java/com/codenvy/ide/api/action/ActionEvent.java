@@ -102,6 +102,7 @@ public class ActionEvent {
      *
      * @return action's parameters
      */
+    @Nullable
     public Map<String, Object> getParameters() {
         return myParameters;
     }
