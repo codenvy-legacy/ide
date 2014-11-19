@@ -453,4 +453,44 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("privacy.tooltip.privateMessage")
     String privacyTooltipPrivateMessage();
+
+    @Key("action.copy.text")
+    String actionCopyText();
+
+    @Key("action.copy.description")
+    String actionCopyDescription();
+
+    @Key("action.move.text")
+    String actionMoveText();
+
+    @Key("action.move.description")
+    String actionMoveDescription();
+
+    @Key("copyItemView.title")
+    String copyItemViewTitle();
+
+    @Key("copyItemView.item.title")
+    String copyItemViewItemTitle(String path);
+
+    @Key("copyItemView.items.title")
+    String copyItemViewItemsTitle();
+
+    @Key("copyItemView.new.name.field")
+    String copyItemViewNewNameField();
+
+    @Key("copyItemView.directory.field")
+    String copyItemViewDirectoryField();
+
+    @Key("copyItemView.open.copy.field")
+    String copyItemViewOpenCopyField();
+
+    @Key("moveItemView.item.title")
+    String moveItemViewItemTitle(String type);
+
+    @Key("moveItemView.items.title")
+    String moveItemViewItemsTitle();
+
+    String copyButton();
+
+    String moveButton();
 }

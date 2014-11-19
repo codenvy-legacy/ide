@@ -14,10 +14,12 @@ import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.ChangeProjectTypeAction;
 import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.CopyItemAction;
 import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
+import com.codenvy.ide.actions.MoveItemAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectWizardAction;
 import com.codenvy.ide.actions.OpenProjectAction;
@@ -121,6 +123,12 @@ public class StandardComponentInitializer {
     @Inject
     @MainToolbar
     private ToolbarPresenter toolbarPresenter;
+
+    @Inject
+    private CopyItemAction copyItemAction;
+
+    @Inject
+    private MoveItemAction moveItemAction;
 
     @Inject
     private DeleteItemAction deleteItemAction;
@@ -314,6 +322,8 @@ public class StandardComponentInitializer {
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameItemAction);
+        fileGroup.add(copyItemAction);
+        fileGroup.add(moveItemAction);
         fileGroup.add(deleteItemAction);
         fileGroup.add(saveGroup);
 
@@ -352,6 +362,8 @@ public class StandardComponentInitializer {
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.addSeparator();
         resourceOperation.add(renameItemAction);
+        resourceOperation.add(copyItemAction);
+        resourceOperation.add(moveItemAction);
         resourceOperation.add(deleteItemAction);
 
         DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);

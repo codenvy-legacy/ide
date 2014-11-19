@@ -146,6 +146,12 @@ public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resou
     @Source("actions/close-project.svg")
     SVGResource closeProject();
 
+    @Source("actions/copy.svg")
+    SVGResource copy();
+
+    @Source("actions/move.svg")
+    SVGResource move();
+
     @Source("actions/delete.svg")
     SVGResource delete();
 

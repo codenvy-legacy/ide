@@ -1,0 +1,56 @@
+<!--
+
+    Copyright (c) 2012-2014 Codenvy, S.A.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+      Codenvy, S.A. - initial API and implementation
+
+-->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="locale" type="com.codenvy.ide.CoreLocalizationConstant"></ui:with>
+    <ui:with field="resource" type="com.codenvy.ide.Resources"></ui:with>
+    <ui:style>
+        .emptyBorder {
+            margin: 12px;
+        }
+
+        .input {
+            width: 100%;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        .error {
+            margin-left : 80px;
+            height: 14px;
+        }
+
+        .margin {
+            margin-top: 10px;
+        }
+    </ui:style>
+    <g:VerticalPanel ui:field="mainPanel" width="420px" height="120px" styleName="{style.emptyBorder}">
+        <g:Label ui:field="copyItemTitle"/>
+        <g:HorizontalPanel ui:field="newNamePanel" width="100%" verticalAlignment="ALIGN_MIDDLE" addStyleNames="{style.margin}">
+            <g:cell width="80px">
+                <g:Label text="{locale.copyItemViewNewNameField}" width="75px"/>
+            </g:cell>
+            <g:TextBox ui:field="newNameField" addStyleNames="{style.input}"/>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel width="100%" verticalAlignment="ALIGN_MIDDLE" height="25px" addStyleNames="{style.margin}">
+             <g:cell width="80px">
+                 <g:Label width="75px" text="{locale.copyItemViewDirectoryField}" />
+             </g:cell>
+             <g:SuggestBox ui:field="directoryField" addStyleNames="{style.input}" />
+        </g:HorizontalPanel>
+        <g:Label ui:field="errorLabel"  addStyleNames="{style.error} {resource.coreCss.errorFont}"/>
+        <g:cell horizontalAlignment="ALIGN_RIGHT">
+            <g:CheckBox text="{locale.copyItemViewOpenCopyField}" width="140px" ui:field="openInEditorField"/>
+        </g:cell>
+    </g:VerticalPanel>
+</ui:UiBinder>
