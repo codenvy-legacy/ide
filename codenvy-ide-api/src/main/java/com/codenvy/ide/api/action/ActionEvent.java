@@ -35,6 +35,18 @@ public class ActionEvent {
     private final Map<String, Object> myParameters;
     private       boolean             myWorksInInjected;
 
+    /**
+     * Create new action event.
+     *
+     * @param place
+     *         the identifier of the place in the IDE UI from where the action is invoked or updated
+     * @param presentation
+     *         the presentation which represents the action in the place from where it is invoked or updated
+     * @param actionManager
+     *         the manager for actions
+     * @param modifiers
+     *         the modifier keys held down during this action event
+     */
     public ActionEvent(@Nonnull String place,
                        @Nonnull Presentation presentation,
                        ActionManager actionManager,
@@ -42,6 +54,20 @@ public class ActionEvent {
         this(place, presentation, actionManager, modifiers, null);
     }
 
+    /**
+     * Create new action event.
+     *
+     * @param place
+     *         the identifier of the place in the IDE UI from where the action is invoked or updated
+     * @param presentation
+     *         the presentation which represents the action in the place from where it is invoked or updated
+     * @param actionManager
+     *         the manager for actions
+     * @param modifiers
+     *         the modifier keys held down during this action event
+     * @param parameters
+     *         the parameters with which the action is invoked or updated
+     */
     public ActionEvent(@Nonnull String place,
                        @Nonnull Presentation presentation,
                        ActionManager actionManager,
