@@ -625,49 +625,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.showPage(currentPage);
     }
 
-    //    /**
-//     * Save recommended Ram in projectUpdate from wizardContext.
-//     *
-//     * @param projectUpdate
-//     */
-//    private void saveRecommendedRamInProjectDescriptor(ProjectUpdate projectUpdate) {
-//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectUpdate.getRunnerEnvironmentConfigurations();
-//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-//            projectUpdate.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-//
-//            if (runnerEnvironmentConfigurationDescriptor == null) {
-//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-//            }
-//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-//            projectUpdate.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//        }
-//    }
-//
-//    /**
-//     * Save recommended Ram in projectUpdate from wizardContext.
-//     *
-//     * @param newProject
-//     */
-//    private void saveRecommendedRamInNewProject(NewProject newProject) {
-//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = newProject.getRunnerEnvironmentConfigurations();
-//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-//            newProject.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-//
-//            if (runnerEnvironmentConfigurationDescriptor == null) {
-//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-//            }
-//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-//            newProject.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//        }
-//    }
     private void fillProjectUpdate(ProjectDescriptor projectDescriptor, ProjectUpdate projectUpdate) {
         projectUpdate.setType(projectDescriptor.getType());
         projectUpdate.setDescription(projectDescriptor.getDescription());
@@ -698,11 +655,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility().equals("public")));
         wizardContext.putData(ProjectWizard.PROJECT, dtoFactory.createDto(ProjectDescriptor.class));
     }
-
-//    private ProjectDescriptor copyProjectDescriptor(ProjectDescriptor oldProject) {
-//        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
-//    }
-
 
     private String getRequiredRam(RunnersDescriptor runners) {
         if (runners != null) {

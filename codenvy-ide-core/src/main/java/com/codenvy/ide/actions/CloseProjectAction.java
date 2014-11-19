@@ -85,7 +85,7 @@ public class CloseProjectAction extends Action {
                     eventBus.fireEvent(new CloseCurrentProjectEvent());
                 else {
                     final String projectName = appContext.getCurrentProject().getProjectDescription().getName();
-                    dialogFactory.createConfirmDialog(constant.closeProjectAskTitle(),
+                    dialogFactory.createConfirmDialog(constant.closeProjectTitle(),
                                                       constant.appWillBeStopped(projectName),
                                                       confirmStoppingAppCallback, null).show();
                 }
