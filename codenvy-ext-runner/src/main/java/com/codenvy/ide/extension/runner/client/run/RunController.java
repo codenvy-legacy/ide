@@ -740,6 +740,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
 
 
         console.print("[INFO] " + notificationMessage);
+        console.onShellStarted(applicationProcessDescriptor);
 
         appContext.getCurrentProject().setProcessDescriptor(applicationProcessDescriptor);
         appContext.getCurrentProject().setIsRunningEnabled(false);
