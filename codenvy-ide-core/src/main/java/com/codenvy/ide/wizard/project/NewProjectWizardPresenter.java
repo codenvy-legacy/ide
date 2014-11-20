@@ -409,8 +409,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
         fillNewProject(projectDescriptor, newProject);
 
-        if (templateDescriptor != null && templateDescriptor.getDescription() != null) {
+        final ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
+        String description = null;
+        if (project != null) {
+            description = project.getDescription();
+        }
+        if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
             newProject.setDescription(templateDescriptor.getDescription());
+        } else {
+            newProject.setDescription(description);
         }
 
         fillVisibilityFromContext(newProject);
