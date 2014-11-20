@@ -11,7 +11,6 @@
 package com.codenvy.ide.api.wizard;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
