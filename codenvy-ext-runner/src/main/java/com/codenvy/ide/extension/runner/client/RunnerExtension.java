@@ -70,7 +70,6 @@ public class RunnerExtension {
 
     @Inject
     private void prepareActions(RunnerLocalizationConstant localizationConstants,
-                                RunnerResources resources,
                                 ActionManager actionManager,
                                 RunAction runAction,
                                 CustomRunAction customRunAction,
