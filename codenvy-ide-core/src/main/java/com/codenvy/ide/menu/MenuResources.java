@@ -14,8 +14,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 public interface MenuResources extends ClientBundle {
     public interface Css extends CssResource {
@@ -32,9 +31,13 @@ public interface MenuResources extends ClientBundle {
 
         String menuBarItemOver();
 
+        String leftPanel();
+
         String rightPanel();
 
-        String rightPanelSeparator();
+        String customComponent();
+
+        String panelSeparator();
     }
 
     @Source({"menu.css", "com/codenvy/ide/api/ui/style.css"})

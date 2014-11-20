@@ -14,6 +14,7 @@
 
 .menuBarTable {
     float: left;
+    border: 0;
 }
 
 .menuBar,
@@ -67,18 +68,30 @@
     color: disabledMenuItemColor;
 }
 
+.leftPanel {
+    float: left;
+}
+
+.leftPanel .customComponent {
+    float: left;
+}
+
 .rightPanel {
     float: right;
 }
 
-.rightPanelSeparator {
-    width: 4px;
-    height: 17px;
-    margin: 2px;
+.rightPanel .customComponent {
     float: right;
 }
 
-.rightPanelSeparator div {
+.panelSeparator {
+    width: 4px;
+    height: 17px;
+    margin: 2px;
+    float: inherit;
+}
+
+.panelSeparator div {
     height: 0;
     width: 4px;
     border-bottom: 1px solid #000000;

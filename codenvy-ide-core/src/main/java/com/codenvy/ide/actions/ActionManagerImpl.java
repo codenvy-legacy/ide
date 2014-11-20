@@ -86,6 +86,9 @@ public class ActionManagerImpl implements ActionManager {
         DefaultActionGroup runContextMenuGroup = new DefaultActionGroup(IdeActions.GROUP_RUN_CONTEXT_MENU, false, this);
         registerAction(IdeActions.GROUP_RUN_CONTEXT_MENU, runContextMenuGroup);
 
+        DefaultActionGroup leftMainMenu = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_LEFT_MAIN_MENU, leftMainMenu);
+
         DefaultActionGroup rightMainMenu = new DefaultActionGroup(this);
         registerAction(IdeActions.GROUP_RIGHT_MAIN_MENU, rightMainMenu);
 

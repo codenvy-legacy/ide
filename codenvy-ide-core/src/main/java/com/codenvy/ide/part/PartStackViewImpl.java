@@ -75,18 +75,7 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
         this.tabsPanel = tabsPanel;
         contentPanel = new DeckLayoutPanel();
 
-        if (tabPosition == LEFT) {
-            top += 3;
-            TabButton dashboardTabButton = new TabButton(new SVGImage(resources.arrow()), "Dashboard");
-            dashboardTabButton.setStyleName(resources.partStackCss().idePartStackButtonLeft());
-            dashboardTabButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    handleDashboardButton();
-                }
-            });
-            tabsPanel.add(dashboardTabButton);
-        } else if (tabPosition == RIGHT) {
+        if (tabPosition == RIGHT) {
             top -= 1;
         }
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
@@ -94,17 +83,6 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
 
         addFocusRequestHandler();
     }
-
-    /**
-     * Switch to Codenvy Dashboard.
-     */
-    private native void handleDashboardButton() /*-{
-        try {
-            $wnd.IDE.eventHandlers.dashboardhandler();
-        } catch (e) {
-            console.log(e.message);
-        }
-    }-*/;
 
     /** {@inheritDoc} */
     @Override
