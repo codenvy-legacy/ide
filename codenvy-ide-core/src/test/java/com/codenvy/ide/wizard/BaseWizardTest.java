@@ -13,6 +13,7 @@ package com.codenvy.ide.wizard;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardPage;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Base test for testing wizard.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @RunWith(MockitoJUnitRunner.class)
 public abstract class BaseWizardTest {

@@ -12,6 +12,7 @@ package com.codenvy.ide.api.wizard;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,7 +97,7 @@ public interface WizardPage extends Presenter {
      *
      * @param callback
      */
-    void commit(@Nonnull CommitCallback callback);
+    void commit(@Nonnull WizardPage.CommitCallback callback);
 
     /** Store options which can add the page. */
     void storeOptions();

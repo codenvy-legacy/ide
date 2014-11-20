@@ -49,6 +49,7 @@ import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -63,6 +64,7 @@ import java.util.Map;
 /**
  * @author Evgen Vidolob
  * @author Oleksii Orel
+ * @author Sergii Leschenko
  */
 @Singleton
 public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
@@ -71,29 +73,30 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private final RunnerServiceClient       runnerServiceClient;
     private final BuilderServiceClient      builderServiceClient;
     private final CoreLocalizationConstant  constant;
-    private       ProjectTypeWizardRegistry wizardRegistry;
-    private       String                    workspaceId;
-    private       AppContext                appContext;
-    private       DtoFactory                dtoFactory;
-    private       EventBus                  eventBus;
+    private final ProjectTypeWizardRegistry wizardRegistry;
+    private final String                    workspaceId;
+    private final AppContext                appContext;
+    private final DtoFactory                dtoFactory;
+    private final EventBus                  eventBus;
     private final DialogFactory             dialogFactory;
-    private       WizardPage                currentPage;
-    private       ProjectWizardView         view;
-    private       MainPagePresenter         mainPage;
-    private Provider<WizardPage> mainPageProvider             = new Provider<WizardPage>() {
+    private final ProjectWizardView         view;
+    private final MainPagePresenter         mainPage;
+    private final Provider<WizardPage> mainPageProvider             = new Provider<WizardPage>() {
         @Override
         public WizardPage get() {
             return mainPage;
         }
     };
-    private Map<String, String>  runnersDescriptionMap        = new HashMap<>();
-    private Map<String, String>  defaultBuilderDescriptionMap = new HashMap<>();
+    private final Map<String, String>  runnersDescriptionMap        = new HashMap<>();
+    private final Map<String, String>  defaultBuilderDescriptionMap = new HashMap<>();
     private WizardContext wizardContext;
+    private WizardPage    currentPage;
     private ProjectWizard wizard;
     private int           workspaceMemory;
 
     @Inject
-    public NewProjectWizardPresenter(ProjectWizardView view,
+    public NewProjectWizardPresenter(@Named("workspaceId") String workspaceId,
+                                     ProjectWizardView view,
                                      MainPagePresenter mainPage,
                                      ProjectServiceClient projectService,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -101,7 +104,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      CoreLocalizationConstant constant,
                                      RunnerServiceClient runnerServiceClient,
                                      BuilderServiceClient builderServiceClient,
-                                     @Named("workspaceId") String workspaceId,
                                      AppContext appContext,
                                      DtoFactory dtoFactory,
                                      EventBus eventBus,
@@ -136,7 +138,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                         continue;
                     }
                     for (BuilderEnvironment builderEnv : builderDes.getEnvironments().values()) {
-                        if (builderEnv != null && builderEnv.getId() == "default") {
+                        if (builderEnv != null && "default".equals(builderEnv.getId())) {
                             //append display name for default builder name. Used to show the builder environment name
                             // because we use default builder to set environment in json file(maven.json).
                             defaultBuilderDescriptionMap.put(builderDes.getName(), builderEnv.getDisplayName());
@@ -330,9 +332,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
     /**
      * This method called during changing project type
-     *
-     * @param project
-     * @param callback
      */
     private void updateProject(final ProjectDescriptor project, final WizardPage.CommitCallback callback) {
         ProjectUpdate projectUpdate = dtoFactory.createDto(ProjectUpdate.class);
@@ -341,13 +340,19 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             fillProjectUpdate(descriptor, projectUpdate);
         }
 
+        Boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+        if (visibility != null) {
+            projectUpdate.setVisibility(visibility ? "public" : "private");
+        }
+
         view.setLoaderVisible(true);
 
         projectService.updateProject(project.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                checkVisibility(result, callback);
+                view.setLoaderVisible(false);
+                checkName(result, callback);
             }
 
             @Override
@@ -356,17 +361,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 callback.onFailure(exception);
             }
         });
-    }
-
-    private void checkVisibility(ProjectDescriptor result,
-                                 WizardPage.CommitCallback callback) {
-        String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
-        view.setLoaderVisible(false);
-        if (result.getVisibility().equals(visibility)) {
-            checkName(result, callback);
-        } else {
-            switchVisibility(callback, result);
-        }
     }
 
     private void checkName(ProjectDescriptor result, WizardPage.CommitCallback callback) {
@@ -381,9 +375,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     /**
      * This method called after importing new project.
      * In need for changing visibility private/public and setting description from project template
-     *
-     * @param projectDescriptor
-     * @param callback
      */
     private void updateProjectAfterImport(final ProjectDescriptor projectDescriptor, final WizardPage.CommitCallback callback) {
         final ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
@@ -401,6 +392,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             projectUpdate.setDescription(description);
         }
 
+        Boolean visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY);
+        if (visibility != null) {
+            projectUpdate.setVisibility(visibility ? "public" : "private");
+        }
+
         view.setLoaderVisible(true);
         projectService.updateProject(projectDescriptor.getPath(), projectUpdate, new AsyncRequestCallback<ProjectDescriptor>(
                 dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
@@ -411,7 +407,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                 if ((visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY)) != null && visibility) {
                     getProject(projectDescriptor.getName(), callback);
                 } else {
-                    switchVisibility(callback, projectDescriptor);
+                    checkName(project, callback);
                 }
             }
 
@@ -472,22 +468,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                          }
                                      }
                                     );
-    }
-
-    private void switchVisibility(final WizardPage.CommitCallback callback, final ProjectDescriptor project) {
-        String visibility = wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private";
-        projectService.switchVisibility(project.getPath(), visibility, new AsyncRequestCallback<Void>() {
-
-            @Override
-            protected void onSuccess(Void result) {
-                checkName(project, callback);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
-            }
-        });
     }
 
     private void getProject(String name, final WizardPage.CommitCallback callback) {
@@ -625,49 +605,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.showPage(currentPage);
     }
 
-    //    /**
-//     * Save recommended Ram in projectUpdate from wizardContext.
-//     *
-//     * @param projectUpdate
-//     */
-//    private void saveRecommendedRamInProjectDescriptor(ProjectUpdate projectUpdate) {
-//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = projectUpdate.getRunnerEnvironmentConfigurations();
-//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-//            projectUpdate.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-//
-//            if (runnerEnvironmentConfigurationDescriptor == null) {
-//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-//            }
-//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-//            projectUpdate.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//        }
-//    }
-//
-//    /**
-//     * Save recommended Ram in projectUpdate from wizardContext.
-//     *
-//     * @param newProject
-//     */
-//    private void saveRecommendedRamInNewProject(NewProject newProject) {
-//        String defaultRunnerEnvironment = wizardContext.getData(ProjectWizard.RUNNER_ENV_ID);
-//        Map<String, RunnerEnvironmentConfigurationDescriptor> runEnvConfigurations = newProject.getRunnerEnvironmentConfigurations();
-//        RunnerEnvironmentConfigurationDescriptor runnerEnvironmentConfigurationDescriptor;
-//        if (defaultRunnerEnvironment != null && runEnvConfigurations != null) {
-//            newProject.setDefaultRunnerEnvironment(defaultRunnerEnvironment);
-//            runnerEnvironmentConfigurationDescriptor = runEnvConfigurations.get(defaultRunnerEnvironment);
-//
-//            if (runnerEnvironmentConfigurationDescriptor == null) {
-//                runnerEnvironmentConfigurationDescriptor = dtoFactory.createDto(RunnerEnvironmentConfigurationDescriptor.class);
-//            }
-//            runnerEnvironmentConfigurationDescriptor.setRecommendedMemorySize(wizardContext.getData(ProjectWizard.RECOMMENDED_RAM));
-//            runEnvConfigurations.put(defaultRunnerEnvironment, runnerEnvironmentConfigurationDescriptor);
-//            newProject.setRunnerEnvironmentConfigurations(runEnvConfigurations);
-//        }
-//    }
     private void fillProjectUpdate(ProjectDescriptor projectDescriptor, ProjectUpdate projectUpdate) {
         projectUpdate.setType(projectDescriptor.getType());
         projectUpdate.setDescription(projectDescriptor.getDescription());
@@ -698,11 +635,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, Boolean.valueOf(projectDescriptor.getVisibility().equals("public")));
         wizardContext.putData(ProjectWizard.PROJECT, dtoFactory.createDto(ProjectDescriptor.class));
     }
-
-//    private ProjectDescriptor copyProjectDescriptor(ProjectDescriptor oldProject) {
-//        return dtoFactory.createDtoFromJson(dtoFactory.toJson(oldProject), ProjectDescriptor.class);
-//    }
-
 
     private String getRequiredRam(RunnersDescriptor runners) {
         if (runners != null) {
