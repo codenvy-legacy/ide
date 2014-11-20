@@ -146,6 +146,17 @@ public class ZipImporterPagePresenterTest {
     }
 
     @Test
+    public void correctProjectNameWithPointEnteredTest() {
+        String correctName = "Test.project..ForCodenvy";
+
+        presenter.projectNameChanged(correctName);
+
+        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_NAME), eq(correctName));
+        verify(view).hideNameError();
+        verify(updateDelegate).updateControls();
+    }
+
+    @Test
     public void emptyProjectNameEnteredTest() {
         String emptyName = "";
 
