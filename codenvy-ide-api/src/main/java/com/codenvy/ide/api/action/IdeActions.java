@@ -33,5 +33,6 @@ public interface IdeActions {
     String GROUP_EDITOR_POPUP    = "EditorPopupMenu";
     String GROUP_EDITOR          = "EditorActions";
     String GROUP_OTHER_MENU      = "OtherMenu";
+    String GROUP_LEFT_MAIN_MENU  = "LeftMainMenu";
     String GROUP_RIGHT_MAIN_MENU = "RightMainMenu";
 }

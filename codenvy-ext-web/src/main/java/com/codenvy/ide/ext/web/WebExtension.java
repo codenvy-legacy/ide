@@ -45,90 +45,66 @@ import static com.codenvy.ide.api.action.IdeActions.GROUP_FILE_NEW;
 @Singleton
 @Extension(title = "Web", version = "3.0.0", description = "syntax highlighting and autocomplete.")
 public class WebExtension {
-    public interface ParserResource extends ClientBundle {
-        @Source("com/codenvy/ide/ext/web/web_parser.js")
-        TextResource webParser();
-
-        @Source("css.svg")
-        SVGResource cssFile();
-
-        @Source("less.svg")
-        SVGResource lessFile();
-
-        @Source("html.svg")
-        SVGResource htmlFile();
-
-        @Source("js.svg")
-        SVGResource jsFile();
-
-        @Source("php.svg")
-        SVGResource phpFile();
-
-        @Source("category/js.svg")
-        SVGResource samplesCategoryJs();
-    }
-
     /**
      * Web Extension adds JavaScript, HTML and CSS Support to IDE Application.
      * It provides syntax highlighting for CSS, JS, HTML files and code completion features for CSS files to IDE.
      */
     @Inject
-    public WebExtension(FileTypeRegistry fileTypeRegistry,
-                        HtmlEditorProvider htmlEditorProvider,
+    public WebExtension(HtmlEditorProvider htmlEditorProvider,
                         JsEditorProvider jsEditorProvider,
                         EditorRegistry editorRegistry,
-                        ParserResource res,
-                        WebLocalizationConstant constant,
-                        ActionManager actionManager,
-                        NewCssFileAction newCssFileAction,
-                        NewLessFileAction newLessFileAction,
-                        NewHtmlFileAction newHtmlFileAction,
-                        WebExtension.ParserResource resources,
+                        WebExtensionResource resources,
                         IconRegistry iconRegistry,
-                        NewJavaScriptFileAction newJavaScriptFileAction,
-                        @Named("CSSFileType") FileType cssFile,
-                        @Named("LESSFileType") FileType lessFile,
                         @Named("JSFileType") FileType jsFile,
-                        @Named("HTMLFileType") FileType htmlFile,
-                        @Named("PHPFileType") FileType phpFile) {
+                        @Named("HTMLFileType") FileType htmlFile) {
         // register new Icon for javascript project type
         iconRegistry.registerIcon(new Icon("JavaScript.samples.category.icon", resources.samplesCategoryJs()));
 
-        // Register and add actions
+        editorRegistry.registerDefaultEditor(jsFile, jsEditorProvider);
+        editorRegistry.registerDefaultEditor(htmlFile, htmlEditorProvider);
+        Elements.injectJs(resources.webParser().getText());
+    }
+
+    @Inject
+    private void registerFileTypes(FileTypeRegistry fileTypeRegistry,
+                                   @Named("CSSFileType") FileType cssFile,
+                                   @Named("LESSFileType") FileType lessFile,
+                                   @Named("JSFileType") FileType jsFile,
+                                   @Named("HTMLFileType") FileType htmlFile,
+                                   @Named("PHPFileType") FileType phpFile) {
+        fileTypeRegistry.registerFileType(cssFile);
+        fileTypeRegistry.registerFileType(lessFile);
+        fileTypeRegistry.registerFileType(jsFile);
+        fileTypeRegistry.registerFileType(htmlFile);
+        fileTypeRegistry.registerFileType(phpFile);
+    }
+
+    @Inject
+    private void prepareActions(WebLocalizationConstant constant,
+                                WebExtensionResource resources,
+                                ActionManager actionManager,
+                                NewCssFileAction newCssFileAction,
+                                NewLessFileAction newLessFileAction,
+                                NewHtmlFileAction newHtmlFileAction,
+                                NewJavaScriptFileAction newJavaScriptFileAction) {
+        // register actions
         actionManager.registerAction(constant.newCssFileActionId(), newCssFileAction);
-        newCssFileAction.getTemplatePresentation().setSVGIcon(res.cssFile());
         actionManager.registerAction(constant.newLessFileActionId(), newLessFileAction);
-        newLessFileAction.getTemplatePresentation().setSVGIcon(res.lessFile());
         actionManager.registerAction(constant.newHtmlFileActionId(), newHtmlFileAction);
-        newHtmlFileAction.getTemplatePresentation().setSVGIcon(res.htmlFile());
         actionManager.registerAction(constant.newJavaScriptFileActionId(), newJavaScriptFileAction);
-        newJavaScriptFileAction.getTemplatePresentation().setSVGIcon(res.jsFile());
+
+        // set icons
+        newCssFileAction.getTemplatePresentation().setSVGIcon(resources.cssFile());
+        newLessFileAction.getTemplatePresentation().setSVGIcon(resources.lessFile());
+        newHtmlFileAction.getTemplatePresentation().setSVGIcon(resources.htmlFile());
+        newJavaScriptFileAction.getTemplatePresentation().setSVGIcon(resources.jsFile());
+
+        // add actions in main menu
         DefaultActionGroup newGroup = (DefaultActionGroup)actionManager.getAction(GROUP_FILE_NEW);
         newGroup.addSeparator();
         newGroup.add(newCssFileAction);
         newGroup.add(newLessFileAction);
         newGroup.add(newHtmlFileAction);
         newGroup.add(newJavaScriptFileAction);
-
-        // Register new File types
-        // CSS
-        fileTypeRegistry.registerFileType(cssFile);
-
-        // Also register .less files
-        fileTypeRegistry.registerFileType(lessFile);
-
-        // JS
-        fileTypeRegistry.registerFileType(jsFile);
-
-        // HTML
-//        FileType htmlFile = new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
-        fileTypeRegistry.registerFileType(htmlFile);
-
-        fileTypeRegistry.registerFileType(phpFile);
-
-        // register Editor Provider
-        editorRegistry.registerDefaultEditor(jsFile, jsEditorProvider);
-        editorRegistry.registerDefaultEditor(htmlFile, htmlEditorProvider);
-        Elements.injectJs(res.webParser().getText());
     }
 }
