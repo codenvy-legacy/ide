@@ -12,8 +12,8 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.api.runner.dto.RunOptions;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -29,7 +29,7 @@ import com.google.inject.assistedinject.Assisted;
  * @author Artem Zatsarynnyy
  * @see com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionFactory
  */
-public class EnvironmentAction extends Action {
+public class EnvironmentAction extends ProjectAction {
 
     private final RunController        runController;
     private final DtoFactory           dtoFactory;
@@ -42,7 +42,7 @@ public class EnvironmentAction extends Action {
                              @Assisted("description") String description,
                              @Assisted CustomEnvironment customEnvironment,
                              AnalyticsEventLogger eventLogger) {
-        super(title, description, null, resources.environment());
+        super(title, description, resources.environment());
         this.runController = runController;
         this.dtoFactory = dtoFactory;
         this.customEnvironment = customEnvironment;
@@ -61,7 +61,7 @@ public class EnvironmentAction extends Action {
 
     /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
+    public void updateProjectAction(ActionEvent e) {
         e.getPresentation().setVisible(true);
         e.getPresentation().setEnabled(!runController.isAnyAppRunning());
     }
