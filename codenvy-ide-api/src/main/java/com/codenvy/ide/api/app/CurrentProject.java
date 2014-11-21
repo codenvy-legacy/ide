@@ -111,7 +111,7 @@ public class CurrentProject {
     }
 
     /**
-     * Get value of attribute <code>name</code>. It is shortcut for:
+     * Get value of attribute <code>name</code>.
      *
      * @param attributeName
      *         attribute name
@@ -139,13 +139,13 @@ public class CurrentProject {
     }
 
     /**
-     * Indicate that current user has only read rights.
+     * Indicate that current user has only read rights for this project.
      *
-     * @return true if user can only read this project, false otherwise.
+     * @return true if user can only read this project, false otherwise
      */
     public boolean isReadOnly() {
-        return projectDescription.getPermissions() != null && !projectDescription.getPermissions().isEmpty() &&
-               projectDescription.getPermissions().size() == 1 && "read".equalsIgnoreCase(projectDescription.getPermissions().get(0));
+        return projectDescription.getPermissions() != null && projectDescription.getPermissions().size() == 1
+               && "read".equalsIgnoreCase(projectDescription.getPermissions().get(0));
     }
 
     /** Returns project's tree. */

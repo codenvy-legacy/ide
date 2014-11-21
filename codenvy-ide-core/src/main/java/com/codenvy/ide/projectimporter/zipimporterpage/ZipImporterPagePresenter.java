@@ -29,7 +29,7 @@ import java.util.HashMap;
  */
 public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImporterPageView.ActionDelegate {
 
-    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_\\-]*$");
+    private static final RegExp NAME_PATTERN = RegExp.compile("^[A-Za-z0-9_\\-\\.]*$");
     private static final RegExp URL_REGEX    = RegExp.compile("(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?");
     private static final RegExp WHITESPACE   = RegExp.compile("^\\s");
     private static final RegExp END_URL      = RegExp.compile(".zip$");

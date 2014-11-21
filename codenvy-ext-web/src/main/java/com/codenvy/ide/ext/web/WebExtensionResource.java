@@ -12,8 +12,11 @@ package com.codenvy.ide.ext.web;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.TextResource;
 
-/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+/** @author Nikolay Zamosenchuk */
 public interface WebExtensionResource extends ClientBundle {
     @Source("css_file.png")
     ImageResource css();
@@ -23,4 +26,25 @@ public interface WebExtensionResource extends ClientBundle {
 
     @Source("html_file.png")
     ImageResource html();
+
+    @Source("com/codenvy/ide/ext/web/web_parser.js")
+    TextResource webParser();
+
+    @Source("css.svg")
+    SVGResource cssFile();
+
+    @Source("less.svg")
+    SVGResource lessFile();
+
+    @Source("html.svg")
+    SVGResource htmlFile();
+
+    @Source("js.svg")
+    SVGResource jsFile();
+
+    @Source("php.svg")
+    SVGResource phpFile();
+
+    @Source("category/js.svg")
+    SVGResource samplesCategoryJs();
 }

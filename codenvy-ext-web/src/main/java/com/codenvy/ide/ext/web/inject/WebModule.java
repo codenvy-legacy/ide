@@ -13,7 +13,7 @@ package com.codenvy.ide.ext.web.inject;
 import com.codenvy.ide.MimeType;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.ext.web.WebExtension;
+import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.html.editor.HTMLEditorConfigurationProvider;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorConfiguration;
 import com.codenvy.ide.ext.web.js.editor.JsEditorConfiguration;
@@ -41,36 +41,35 @@ public class WebModule extends AbstractGinModule {
     @Provides
     @Singleton
     @Named("CSSFileType")
-    protected FileType provideCSSFile(WebExtension.ParserResource res) {
+    protected FileType provideCSSFile(WebExtensionResource res) {
         return new FileType("CSS file", res.cssFile(), MimeType.TEXT_CSS, "css");
     }
 
     @Provides
     @Singleton
     @Named("LESSFileType")
-    protected FileType provideLESSFile(WebExtension.ParserResource res) {
+    protected FileType provideLESSFile(WebExtensionResource res) {
         return new FileType("Leaner CSS file", res.lessFile(), MimeType.TEXT_CSS, "less");
     }
 
     @Provides
     @Singleton
     @Named("JSFileType")
-    protected FileType provideJSFile(WebExtension.ParserResource res) {
+    protected FileType provideJSFile(WebExtensionResource res) {
         return new FileType("javaScript", res.jsFile(), MimeType.TEXT_JAVASCRIPT, "js");
     }
 
     @Provides
     @Singleton
     @Named("HTMLFileType")
-    protected FileType provideHTMLFile(WebExtension.ParserResource res) {
+    protected FileType provideHTMLFile(WebExtensionResource res) {
         return new FileType("HTML file", res.htmlFile(), MimeType.TEXT_HTML, "html");
     }
 
     @Provides
     @Singleton
     @Named("PHPFileType")
-    protected FileType providePHPFile(WebExtension.ParserResource res) {
+    protected FileType providePHPFile(WebExtensionResource res) {
         return new FileType("PHP file", res.phpFile(), MimeType.APPLICATION_PHP, "php");
     }
-
 }

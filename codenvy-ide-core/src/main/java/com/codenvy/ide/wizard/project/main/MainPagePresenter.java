@@ -20,6 +20,7 @@ import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -51,11 +52,13 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private DialogFactory                 dialogFactory;
     private CoreLocalizationConstant      localizationConstant;
     private DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private DtoFactory dtoFactory;
 
     @Inject
     public MainPagePresenter(MainPageView view, ProjectTypeServiceClient projectTypeServiceClient, ProjectTypeWizardRegistry wizardRegistry,
                              PreSelectedProjectTypeManager preSelectedProjectTypeManager, DialogFactory dialogFactory,
-                             CoreLocalizationConstant localizationConstant, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+                             CoreLocalizationConstant localizationConstant, DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                             DtoFactory dtoFactory) {
         super("Choose Project", null);
         this.view = view;
         this.projectTypeServiceClient = projectTypeServiceClient;
@@ -64,6 +67,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.dialogFactory = dialogFactory;
         this.localizationConstant = localizationConstant;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dtoFactory = dtoFactory;
         view.setDelegate(this);
     }
 
@@ -203,8 +207,10 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     public void projectTemplateSelected(ProjectTemplateDescriptor template) {
         this.template = template;
         wizardContext.putData(ProjectWizard.PROJECT_TEMPLATE, template);
+        wizardContext.putData(ProjectWizard.PROJECT, dtoFactory.createDto(ProjectDescriptor.class));
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         typeDescriptor = null;
         delegate.updateControls();
+
     }
 }

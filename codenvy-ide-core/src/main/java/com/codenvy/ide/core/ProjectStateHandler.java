@@ -24,6 +24,8 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.event.CloseCurrentProjectHandler;
+import com.codenvy.ide.api.event.ConfigureCurrentProjectEvent;
+import com.codenvy.ide.api.event.ConfigureCurrentProjectHandler;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -69,7 +71,8 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizard.PROJECT_FOR_U
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ProjectStateHandler implements Component, OpenProjectHandler, CloseCurrentProjectHandler, ProjectDescriptorChangedHandler {
+public class ProjectStateHandler implements Component, OpenProjectHandler, CloseCurrentProjectHandler, ProjectDescriptorChangedHandler,
+                                            ConfigureCurrentProjectHandler {
     private EventBus                  eventBus;
     private AppContext                appContext;
     private ProjectServiceClient      projectServiceClient;
@@ -99,6 +102,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         eventBus.addHandler(OpenProjectEvent.TYPE, this);
         eventBus.addHandler(CloseCurrentProjectEvent.TYPE, this);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
+        eventBus.addHandler(ConfigureCurrentProjectEvent.TYPE, this);
         callback.onSuccess(this);
     }
 
@@ -115,8 +119,18 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     @Override
     public void onProjectDescriptorChanged(ProjectDescriptorChangedEvent event) {
         final String path = event.getProjectDescriptor().getPath();
-        if (appContext.getCurrentProject().getProjectDescription().getPath().equals(path)) {
-            appContext.getCurrentProject().setProjectDescription(event.getProjectDescriptor());
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null && currentProject.getProjectDescription().getPath().equals(path)) {
+            currentProject.setProjectDescription(event.getProjectDescriptor());
+        }
+    }
+
+    @Override
+    public void onConfigureCurrentProject(ConfigureCurrentProjectEvent event) {
+        if (appContext.getCurrentProject() != null) {
+            final WizardContext context = new WizardContext();
+            context.putData(PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
+            newProjectWizard.show(context);
         }
     }
 
@@ -222,10 +236,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                     @Override
                     public void onConfigure() {
                         openProject(project);
-                        // open 'Project Configuration' wizard
-                        final WizardContext context = new WizardContext();
-                        context.putData(PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
-                        newProjectWizard.show(context);
+                        eventBus.fireEvent(new ConfigureCurrentProjectEvent());
                     }
 
                     @Override

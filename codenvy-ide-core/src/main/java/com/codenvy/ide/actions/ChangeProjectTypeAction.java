@@ -16,11 +16,10 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
-import com.codenvy.ide.api.wizard.WizardContext;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.codenvy.ide.api.event.ConfigureCurrentProjectEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Call Project wizard to change project type
@@ -30,21 +29,21 @@ import com.google.inject.Singleton;
 @Singleton
 public class ChangeProjectTypeAction extends Action {
 
-    private       AppContext                appContext;
-    private       NewProjectWizardPresenter wizardPresenter;
-    private final AnalyticsEventLogger      eventLogger;
+    private final AnalyticsEventLogger eventLogger;
+    private final EventBus             eventBus;
+    private final AppContext           appContext;
 
     @Inject
     public ChangeProjectTypeAction(AppContext appContext,
                                    CoreLocalizationConstant localization,
-                                   NewProjectWizardPresenter wizardPresenter,
                                    AnalyticsEventLogger eventLogger,
-                                   Resources resources) {
+                                   Resources resources,
+                                   EventBus eventBus) {
         super(localization.actionChangeProjectTypeDescription(), localization.actionChangeProjectTypeTitle(), null,
               resources.projectConfiguration());
         this.appContext = appContext;
-        this.wizardPresenter = wizardPresenter;
         this.eventLogger = eventLogger;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -55,8 +54,6 @@ public class ChangeProjectTypeAction extends Action {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        WizardContext context = new WizardContext();
-        context.putData(ProjectWizard.PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
-        wizardPresenter.show(context);
+        eventBus.fireEvent(new ConfigureCurrentProjectEvent());
     }
 }
