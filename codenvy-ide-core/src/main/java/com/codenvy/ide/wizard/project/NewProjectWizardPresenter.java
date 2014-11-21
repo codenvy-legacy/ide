@@ -278,7 +278,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                                   public void accepted() {
                                                       createProject(callback);
                                                   }
-                                              }).show();
+                                              }
+                                             ).show();
             return;
         }
         createProject(callback);
@@ -294,7 +295,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                                   public void accepted() {
                                                       updateProject(project, callback);
                                                   }
-                                              }).show();
+                                              }
+                                             ).show();
             return;
         }
         updateProject(project, callback);
@@ -401,20 +403,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                ProjectTemplateDescriptor templateDescriptor,
                                final String projectName) {
         view.setLoaderVisible(true);
-
         NewProject newProject = dtoFactory.createDto(NewProject.class);
-        ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
-        String description = null;
+        fillNewProject(wizardContext.getData(ProjectWizard.PROJECT), newProject);
+        newProject.setBuilders(templateDescriptor.getBuilders());
+        newProject.setRunners(templateDescriptor.getRunners());
 
-        if (projectDescriptor != null) {
-            fillNewProject(projectDescriptor, newProject);
-            description = projectDescriptor.getDescription();
-        }
-
-        if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
+        if (newProject.getDescription() == null || newProject.getDescription().isEmpty()) {
             newProject.setDescription(templateDescriptor.getDescription());
-        } else {
-            newProject.setDescription(description);
         }
 
         fillVisibilityFromContext(newProject);
