@@ -24,6 +24,7 @@ import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -58,6 +59,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     private RunnerLocalizationConstant constant;
     private EventBus                   eventBus;
     private RunnerEnvironment          currentEnvironment;
+    private PreferencesManager         preferencesManager;
 
     /** Create presenter. */
     @Inject
@@ -70,7 +72,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  NotificationManager notificationManager,
                                  AppContext appContext,
                                  RunnerLocalizationConstant constant,
-                                 EventBus eventBus) {
+                                 EventBus eventBus,
+                                 PreferencesManager preferencesManager) {
         this.runController = runController;
         this.runnerServiceClient = runnerServiceClient;
         this.projectService = projectService;
@@ -81,6 +84,7 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.appContext = appContext;
         this.constant = constant;
         this.eventBus = eventBus;
+        this.preferencesManager = preferencesManager;
         this.view.setDelegate(this);
     }
 
@@ -204,8 +208,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                 if (requiredMemory <= 0) {
                     // the value of memory from runner configuration <= 0
                     // try to get the value of memory from user preferences
-                    Map<String, String> preferences = appContext.getCurrentUser().getPreferences();
-                    final String ramSize = preferences.get(PREFS_RUNNER_RAM_SIZE_DEFAULT);
+
+                    final String ramSize = preferencesManager.getValue(PREFS_RUNNER_RAM_SIZE_DEFAULT);
                     if (ramSize != null) {
                         try {
                             requiredMemory = Integer.parseInt(ramSize);

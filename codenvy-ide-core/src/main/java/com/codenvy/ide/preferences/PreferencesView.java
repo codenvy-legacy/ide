@@ -60,7 +60,6 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
      */
     void selectPreference(PreferencePagePresenter preference);
 
-
     /** Close view. */
     void close();
 

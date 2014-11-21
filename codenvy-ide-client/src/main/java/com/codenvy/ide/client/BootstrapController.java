@@ -198,7 +198,6 @@ public class BootstrapController implements ProjectActionHandler {
 
     /** Get User profile, restore preferences and theme */
     private void loadUserProfile() {
-        Window.alert("loadUserProfile()");
         userProfileService.getCurrentProfile(new AsyncRequestCallback<ProfileDescriptor>(
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
@@ -225,11 +224,9 @@ public class BootstrapController implements ProjectActionHandler {
     }
 
     private void loadPreferences() {
-        Window.alert("loadPreferences()");
         userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
             @Override
             protected void onSuccess(Map<String, String> preferences) {
-                appContext.getCurrentUser().setPreferences(preferences);
                 preferencesManager.load(preferences);
             }
 

@@ -48,9 +48,8 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public String getValue(String preferenceName) {
-        boolean isValueDeleted = changedPreferences.containsKey(preferenceName);
         String value = changedPreferences.get(preferenceName);
-        if (value == null && !isValueDeleted) {
+        if (value == null) {
             value = persistedPreferences.get(preferenceName);
         }
 
@@ -72,9 +71,6 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public void flushPreferences(final AsyncCallback<ProfileDescriptor> callback) {
-
-        Log.trace("<< com.codenvy.ide.preferences.PreferencesManagerImpl.flushPreferences");
-
         Map<String, String> attributes = new HashMap<String, String>();
         attributes.putAll(changedPreferences);
 
@@ -100,14 +96,8 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param preferences
      */
     public void load(Map<String, String> preferences) {
-        Log.trace("<< com.codenvy.ide.preferences.PreferencesManagerImpl.load");
-
         if (preferences != null) {
-            for (Map.Entry<String, String> entry : preferences.entrySet()) {
-                Log.trace("entry [" + entry.getKey() + "] values [" + entry.getValue() + "]");
-            }
+            persistedPreferences.putAll(preferences);
         }
-
-        persistedPreferences.putAll(preferences);
     }
 }

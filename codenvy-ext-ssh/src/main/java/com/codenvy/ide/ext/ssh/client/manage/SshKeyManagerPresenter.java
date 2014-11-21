@@ -296,12 +296,6 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
         });
     }
 
-//    /** {@inheritDoc} */
-//    @Override
-//    public void doApply() {
-//        // do nothing
-//    }
-
     @Override
     public void storeChanges() {
 

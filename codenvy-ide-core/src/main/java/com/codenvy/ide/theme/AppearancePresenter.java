@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.theme;
 
-import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.theme.ThemeAgent;
-import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -60,7 +56,12 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-        view.setThemes(themeAgent.getThemes(), themeAgent.getCurrentThemeId());
+
+        String currentThemeId = preferencesManager.getValue("theme");
+        if (currentThemeId == null || currentThemeId.isEmpty()) {
+            currentThemeId = themeAgent.getCurrentThemeId();
+        }
+        view.setThemes(themeAgent.getThemes(), currentThemeId);
     }
 
     @Override
@@ -72,14 +73,20 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
 
     @Override
     public void storeChanges() {
-        preferencesManager.setPreference("Theme", themeId);
+        preferencesManager.setPreference("ide.theme", themeId);
         dirty = false;
     }
 
     @Override
     public void revertChanges() {
-    }
+        String currentThemeId = preferencesManager.getValue("theme");
+        if (currentThemeId == null || currentThemeId.isEmpty()) {
+            currentThemeId = themeAgent.getCurrentThemeId();
+        }
+        view.setThemes(themeAgent.getThemes(), currentThemeId);
 
+        dirty = false;
+    }
 
 //    @Override
 //    public void doApply() {
@@ -104,7 +111,5 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
 //            });
 //        }
 //    }
-
-
 
 }

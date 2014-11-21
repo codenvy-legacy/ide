@@ -10,12 +10,17 @@
  *******************************************************************************/
 package com.codenvy.ide.preferences;
 
+import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
+import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.api.preferences.PreferencePagePresenter;
-import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.StringMapUnmarshaller;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import javax.ws.rs.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,6 +45,12 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
 
     private Map<String, Set<PreferencePagePresenter>> preferencesMap;
 
+    private PreferencesManager preferencesManager;
+
+    private DialogFactory dialogFactory;
+
+    private UserProfileServiceClient userProfileService;
+
     /**
      * Create presenter.
      * <p/>
@@ -47,11 +58,21 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
      *
      * @param view
      * @param preferences
+     * @param preferencesManager
+     * @param dialogFactory
+     * @param userProfileService
      */
     @Inject
-    protected PreferencesPresenter(PreferencesView view, Set<PreferencePagePresenter> preferences) {
+    protected PreferencesPresenter(PreferencesView view,
+                                   Set<PreferencePagePresenter> preferences,
+                                   PreferencesManager preferencesManager,
+                                   DialogFactory dialogFactory,
+                                   UserProfileServiceClient userProfileService) {
         this.view = view;
         this.preferences = preferences;
+        this.preferencesManager = preferencesManager;
+        this.dialogFactory = dialogFactory;
+        this.userProfileService = userProfileService;
 
         this.view.setDelegate(this);
 
@@ -75,15 +96,11 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     /** {@inheritDoc} */
     @Override
     public void onPreferenceSelected(PreferencePagePresenter preference) {
-        Log.trace("<< com.codenvy.ide.preferences.PreferencesPresenter.onPreferenceSelected " + preference.getCategory() + " : " + preference.getTitle());
         preference.go(view.getContentPanel());
     }
 
     /** Shows preferences. */
     public void showPreferences() {
-
-        Log.trace(">> PreferencesPresenter.showPreferences()");
-
         if (preferencesMap != null) {
             view.show();
             return;
@@ -108,12 +125,60 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
 
     @Override
     public void onSaveClicked() {
-        Log.trace("storeChanges clicked");
+        try {
+            for (PreferencePagePresenter preference : preferences) {
+                if (preference.isDirty()) {
+                    preference.storeChanges();
+                }
+            }
+
+            preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
+                @Override
+                public void onSuccess(ProfileDescriptor result) {
+                    view.enableSaveButton(false);
+                }
+
+                @Override
+                public void onFailure(Throwable error) {
+                    dialogFactory.createMessageDialog("", "Unable to save preferences", null).show();
+                }
+            });
+        } catch (Throwable error) {
+            dialogFactory.createMessageDialog("", "Unable to save preferences", null).show();
+        }
     }
 
     @Override
     public void onRefreshClicked() {
-        Log.trace("refresh clicked");
+        try {
+            userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+                @Override
+                protected void onSuccess(Map<String, String> preferences) {
+                    /**
+                     * Reload preferences by Preferences Manager
+                     */
+                    if (preferencesManager instanceof PreferencesManagerImpl) {
+                        ((PreferencesManagerImpl)preferencesManager).load(preferences);
+                    }
+
+                    /**
+                     * Revert changes on every preference page
+                     */
+                    for (PreferencePagePresenter p: PreferencesPresenter.this.preferences) {
+                        p.revertChanges();
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    dialogFactory.createMessageDialog("", "Unable to refresh preferences", null).show();
+                }
+            });
+
+        } catch (Throwable error) {
+            dialogFactory.createMessageDialog("", "Unable to refresh preferences", null).show();
+        }
+
     }
 
     /** {@inheritDoc} */

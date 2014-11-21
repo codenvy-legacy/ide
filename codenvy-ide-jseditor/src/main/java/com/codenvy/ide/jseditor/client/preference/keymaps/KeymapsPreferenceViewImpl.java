@@ -22,7 +22,6 @@ import com.codenvy.ide.jseditor.client.keymap.KeymapValuesHolder;
 import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource.CellStyle;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
@@ -38,6 +37,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  * Implementation of the {@link KeymapsPreferenceView}.
  */
 public class KeymapsPreferenceViewImpl extends Composite implements KeymapsPreferenceView {
+
+    /** UI binder interface for the {@link KeymapsPreferenceViewImpl} component. */
+    interface KeymapsPreferenceViewImplUiBinder extends UiBinder<HTMLPanel, KeymapsPreferenceViewImpl> {
+    }
 
     /** The UI binder instance. */
     private static final KeymapsPreferenceViewImplUiBinder UIBINDER = GWT.create(KeymapsPreferenceViewImplUiBinder.class);
@@ -101,31 +104,29 @@ public class KeymapsPreferenceViewImpl extends Composite implements KeymapsPrefe
     @Override
     protected void onLoad() {
         // delayed until the view is displayed
-
-        this.keyBindingSelection.setRowData(this.editorTypeRegistry.getEditorTypes());
+        keyBindingSelection.setRowData(editorTypeRegistry.getEditorTypes());
         for (final Entry<EditorType, Keymap> entry : this.valuesHolder) {
-            Log.debug(KeymapsPreferenceViewImpl.class,
-                      "Select configured keymap for editor type '" + entry.getKey() + "': " + entry.getValue());
-            this.keymapSelectionColumn.setSelection(entry.getKey(), entry.getValue());
+            keymapSelectionColumn.setSelection(entry.getKey(), entry.getValue());
         }
-        this.keyBindingSelection.redraw();
+        keyBindingSelection.redraw();
     }
 
     public void setKeymapValuesHolder(final KeymapValuesHolder newValue) {
         this.valuesHolder = newValue;
 
         final FieldUpdater<EditorType, Keymap> fieldUpdater = new FieldUpdater<EditorType, Keymap>() {
-
             @Override
             public void update(final int index, final EditorType object, final Keymap value) {
                 handleEditorKeymapChanged(object, value);
             }
         };
-        keymapSelectionColumn = new KeymapSelectionColumn(this.valuesHolder, fieldUpdater, this.cellStyle.selectWidth());
-        this.keyBindingSelection.addColumn(keymapSelectionColumn);
+
+        keymapSelectionColumn = new KeymapSelectionColumn(valuesHolder, fieldUpdater, cellStyle.selectWidth());
+        keyBindingSelection.addColumn(keymapSelectionColumn);
     }
 
-    /** UI binder interface for the {@link KeymapsPreferenceViewImpl} component. */
-    interface KeymapsPreferenceViewImplUiBinder extends UiBinder<HTMLPanel, KeymapsPreferenceViewImpl> {
+    @Override
+    public void refresh() {
     }
+
 }

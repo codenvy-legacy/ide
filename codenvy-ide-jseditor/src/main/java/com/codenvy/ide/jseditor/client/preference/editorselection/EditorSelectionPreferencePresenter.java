@@ -14,16 +14,11 @@ import static com.codenvy.ide.jseditor.client.JsEditorExtension.DEFAULT_EDITOR_T
 
 import javax.inject.Named;
 
-import com.codenvy.ide.api.editor.EditorRegistry;
-import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
-import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceSection;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferenceReader;
 import com.codenvy.ide.jseditor.client.prefmodel.EditorPreferences;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -40,7 +35,7 @@ public class EditorSelectionPreferencePresenter implements EditorPreferenceSecti
 
 
     /** have the default editor pref been changed ? */
-    private boolean defaultEditorDirty = false;
+    private boolean dirty = false;
 
     private ParentPresenter parentPresenter;
 
@@ -48,10 +43,7 @@ public class EditorSelectionPreferencePresenter implements EditorPreferenceSecti
     public EditorSelectionPreferencePresenter(final EditorSelectionPreferenceView view,
                                               final EditorPreferenceReader editorPreferenceReader,
                                               final DefaultEditorTypePrefReader defaultEditorPrefReader,
-                                              final @PlainTextFileType FileType plainTextFileType,
-                                              final @Named(DEFAULT_EDITOR_TYPE_INSTANCE) EditorType defaultEditorType,
-                                              final EditorRegistry editorRegistry,
-                                              final FileTypeRegistry fileTypeRegistry) {
+                                              final @Named(DEFAULT_EDITOR_TYPE_INSTANCE) EditorType defaultEditorType) {
         this.view = view;
         this.defaultEditorPrefReader = defaultEditorPrefReader;
         this.editorPreferenceReader = editorPreferenceReader;
@@ -59,54 +51,47 @@ public class EditorSelectionPreferencePresenter implements EditorPreferenceSecti
         this.view.setDelegate(this);
     }
 
-    @Override
-    public void doApply() {
-        if (!isDirty()) {
-            return;
-        }
-        final EditorPreferences editorPreferences = this.editorPreferenceReader.getPreferences();
+    public void storeChanges() {
+        EditorPreferences editorPreferences = editorPreferenceReader.getPreferences();
+        defaultEditorPrefReader.storePref(editorPreferences, configuredDefaultEditorType);
+        savedDefaultEditorType = configuredDefaultEditorType;
+        dirty = false;
+    }
 
-        if (this.defaultEditorDirty) {
-            Log.debug(EditorSelectionPreferencePresenter.class, "Applying changes - default editor");
-            this.defaultEditorPrefReader.storePref(editorPreferences, configuredDefaultEditorType);
-            this.savedDefaultEditorType = this.configuredDefaultEditorType;
-            this.defaultEditorDirty = false;
-        }
+    public void refresh() {
+        final EditorPreferences editorPreferences = editorPreferenceReader.getPreferences();
+        savedDefaultEditorType = defaultEditorPrefReader.readPref(editorPreferences);
+        configuredDefaultEditorType = savedDefaultEditorType;
+        view.refresh();
+        dirty = false;
     }
 
     @Override
     public boolean isDirty() {
-        return this.defaultEditorDirty;
+        return dirty;
     }
 
     @Override
     public void go(final AcceptsOneWidget container) {
         container.setWidget(null);
-
-        final EditorPreferences editorPreferences = this.editorPreferenceReader.getPreferences();
-        initDefaultEditor(editorPreferences);
-
+        final EditorPreferences editorPreferences = editorPreferenceReader.getPreferences();
+        savedDefaultEditorType = defaultEditorPrefReader.readPref(editorPreferences);
+        configuredDefaultEditorType = savedDefaultEditorType;
         container.setWidget(view);
-    }
-
-    private void initDefaultEditor(final EditorPreferences editorPreferences) {
-        // read configured and saved default editor from preferences
-        this.savedDefaultEditorType = this.defaultEditorPrefReader.readPref(editorPreferences);
-        this.configuredDefaultEditorType = this.savedDefaultEditorType;
     }
 
     @Override
     public void defaultEditorChanged(final EditorType newEditorType) {
-        this.configuredDefaultEditorType = newEditorType;
-        this.defaultEditorDirty = (this.savedDefaultEditorType != this.configuredDefaultEditorType);
-        if (this.defaultEditorDirty) {
-            this.parentPresenter.signalDirtyState();
+        configuredDefaultEditorType = newEditorType;
+        dirty = (savedDefaultEditorType != configuredDefaultEditorType);
+        if (dirty) {
+            parentPresenter.signalDirtyState();
         }
     }
 
     @Override
     public void setParent(final ParentPresenter parent) {
-        this.parentPresenter = parent;
+        parentPresenter = parent;
     }
 
     @Override

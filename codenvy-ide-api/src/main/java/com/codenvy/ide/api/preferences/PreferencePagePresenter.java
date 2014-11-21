@@ -66,8 +66,14 @@ public interface PreferencePagePresenter extends Presenter {
      */
     boolean isDirty();
 
+    /**
+     * Stores changes to Preferences Manager.
+     */
     void storeChanges();
 
+    /**
+     * Reverts changes on values stored in Preferences Manager.
+     */
     void revertChanges();
 
 }

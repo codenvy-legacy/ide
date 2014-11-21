@@ -25,6 +25,11 @@ public interface KeymapsPreferenceView extends View<KeymapsPreferenceView.Action
      */
     void setKeymapValuesHolder(KeymapValuesHolder valuesHolders);
 
+    /**
+     * Refreshes the view.
+     */
+    void refresh();
+
     /** Action delegate for the keymap preference view. */
     public interface ActionDelegate {
 

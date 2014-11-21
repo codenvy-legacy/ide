@@ -97,8 +97,8 @@ public class EditorSelectionPreferenceViewImpl extends Composite implements Edit
         // delayed until the view is displayed
 
         // seValue before setAcceptableValues - see https://code.google.com/p/google-web-toolkit/issues/detail?id=5477
-        this.defaultEditorSelection.setValue(this.delegate.getConfiguredDefaultEditor());
-        this.defaultEditorSelection.setAcceptableValues(this.editorTypeRegistry.getEditorTypes());
+        defaultEditorSelection.setValue(delegate.getConfiguredDefaultEditor());
+        defaultEditorSelection.setAcceptableValues(editorTypeRegistry.getEditorTypes());
     }
 
     @UiHandler("defaultEditorSelection")
@@ -110,6 +110,12 @@ public class EditorSelectionPreferenceViewImpl extends Composite implements Edit
             return;
         }
         this.delegate.defaultEditorChanged(newValue);
+    }
+
+    @Override
+    public void refresh() {
+        defaultEditorSelection.setValue(delegate.getConfiguredDefaultEditor());
+        defaultEditorSelection.setAcceptableValues(editorTypeRegistry.getEditorTypes());
     }
 
     /** UI binder interface for the {@link EditorSelectionPreferenceViewImpl} component. */
