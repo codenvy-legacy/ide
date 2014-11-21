@@ -404,16 +404,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
 
         NewProject newProject = dtoFactory.createDto(NewProject.class);
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
+        String description = null;
+
         if (projectDescriptor != null) {
             fillNewProject(projectDescriptor, newProject);
+            description = projectDescriptor.getDescription();
         }
-        fillNewProject(projectDescriptor, newProject);
 
-        final ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        String description = null;
-        if (project != null) {
-            description = project.getDescription();
-        }
         if (description == null && templateDescriptor != null && templateDescriptor.getDescription() != null) {
             newProject.setDescription(templateDescriptor.getDescription());
         } else {
@@ -426,8 +423,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                                 .withProject(newProject)
                                                 .withSource(dtoFactory.createDto(Source.class)
                                                                       .withProject(templateDescriptor.getSource()));
-        projectService.importProject(projectName, false,
-                                     importProject,
+        projectService.importProject(projectName, false, importProject,
                                      new AsyncRequestCallback<ProjectDescriptor>(
                                              dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class)) {
                                          @Override
