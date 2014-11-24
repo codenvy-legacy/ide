@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.html;
 
-import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
@@ -34,10 +33,9 @@ public class NewHtmlFileAction extends AbstractNewResourceAction {
                                                   "</html>";
 
     @Inject
-    public NewHtmlFileAction(WebExtensionResource webExtensionResource, WebLocalizationConstant localizationConstant) {
+    public NewHtmlFileAction(WebLocalizationConstant localizationConstant) {
         super(localizationConstant.newHtmlFileActionTitle(),
               localizationConstant.newHtmlFileActionDescription(),
-              webExtensionResource.html(),
               null);
     }
 

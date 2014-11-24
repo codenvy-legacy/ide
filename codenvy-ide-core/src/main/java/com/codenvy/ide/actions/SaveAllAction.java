@@ -12,8 +12,8 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
@@ -24,19 +24,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
- */
+/** @author Evgen Vidolob */
 @Singleton
-public class SaveAllAction extends Action {
+public class SaveAllAction extends ProjectAction {
 
     private final EditorAgent          editorAgent;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public SaveAllAction(EditorAgent editorAgent, Resources resources, AnalyticsEventLogger eventLogger) {
-        super("Save All", "Save all changes for project", null, resources.save());
+        super("Save All", "Save all changes for project", resources.save());
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }
@@ -80,7 +77,8 @@ public class SaveAllAction extends Action {
 
     /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
+    public void updateProjectAction(ActionEvent e) {
+        e.getPresentation().setVisible(true);
         boolean hasDirtyEditor = false;
         for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
             if (editor.isDirty()) {

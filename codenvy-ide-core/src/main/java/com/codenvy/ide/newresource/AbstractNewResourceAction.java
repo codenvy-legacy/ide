@@ -16,7 +16,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
@@ -31,7 +31,6 @@ import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
 import com.codenvy.ide.ui.dialogs.input.InputValidator;
 import com.codenvy.ide.util.NameUtils;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -46,28 +45,18 @@ import javax.annotation.Nullable;
  *
  * @author Artem Zatsarynnyy
  */
-public abstract class AbstractNewResourceAction extends Action {
+public abstract class AbstractNewResourceAction extends ProjectAction {
     protected String                   title;
-    @Inject
-    protected AppContext               appContext;
-    @Inject
     protected SelectionAgent           selectionAgent;
-    @Inject
     protected EditorAgent              editorAgent;
-    @Inject
     protected ProjectServiceClient     projectServiceClient;
-    @Inject
     protected EventBus                 eventBus;
-    @Inject
     protected AnalyticsEventLogger     eventLogger;
-    @Inject
     protected DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    @Inject
     protected DialogFactory            dialogFactory;
     protected InputValidator           fileNameValidator;
     protected InputValidator           folderNameValidator;
-    @Inject
-    private   CoreLocalizationConstant coreLocalizationConstant;
+    protected CoreLocalizationConstant coreLocalizationConstant;
 
     /**
      * Creates new action.
@@ -76,13 +65,11 @@ public abstract class AbstractNewResourceAction extends Action {
      *         action's title
      * @param description
      *         action's description
-     * @param icon
-     *         action's icon
      * @param svgIcon
      *         action's SVG icon
      */
-    public AbstractNewResourceAction(String title, String description, @Nullable ImageResource icon, @Nullable SVGResource svgIcon) {
-        super(title, description, icon, svgIcon);
+    public AbstractNewResourceAction(String title, String description, @Nullable SVGResource svgIcon) {
+        super(title, description, svgIcon);
         fileNameValidator = new FileNameValidator();
         folderNameValidator = new FolderNameValidator();
         this.title = title;
@@ -114,7 +101,8 @@ public abstract class AbstractNewResourceAction extends Action {
 
                                     @Override
                                     protected void onFailure(Throwable exception) {
-                                        dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                                        dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null)
+                                                     .show();
                                     }
                                 });
                     }
@@ -122,8 +110,7 @@ public abstract class AbstractNewResourceAction extends Action {
     }
 
     @Override
-    public void update(ActionEvent e) {
-        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
+    public void updateProjectAction(ActionEvent e) {
         e.getPresentation().setEnabled(getParent() != null);
     }
 
@@ -165,6 +152,25 @@ public abstract class AbstractNewResourceAction extends Action {
             }
         }
         return null;
+    }
+
+    @Inject
+    private void init(SelectionAgent selectionAgent,
+                      EditorAgent editorAgent,
+                      ProjectServiceClient projectServiceClient,
+                      EventBus eventBus,
+                      AnalyticsEventLogger eventLogger,
+                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                      DialogFactory dialogFactory,
+                      CoreLocalizationConstant coreLocalizationConstant) {
+        this.selectionAgent = selectionAgent;
+        this.editorAgent = editorAgent;
+        this.projectServiceClient = projectServiceClient;
+        this.eventBus = eventBus;
+        this.eventLogger = eventLogger;
+        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dialogFactory = dialogFactory;
+        this.coreLocalizationConstant = coreLocalizationConstant;
     }
 
     private class FileNameValidator implements InputValidator {

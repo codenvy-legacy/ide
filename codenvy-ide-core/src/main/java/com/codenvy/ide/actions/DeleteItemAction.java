@@ -15,6 +15,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -32,16 +33,18 @@ public class DeleteItemAction extends Action {
     private final AnalyticsEventLogger eventLogger;
     private       SelectionAgent       selectionAgent;
     private       DeleteNodeHandler    deleteNodeHandler;
+    private       AppContext           appContext;
 
     @Inject
     public DeleteItemAction(Resources resources,
                             AnalyticsEventLogger eventLogger,
                             SelectionAgent selectionAgent,
-                            DeleteNodeHandler deleteNodeHandler, CoreLocalizationConstant localization) {
+                            DeleteNodeHandler deleteNodeHandler, CoreLocalizationConstant localization, AppContext appContext) {
         super(localization.deleteItemActionText(), localization.deleteItemActionDescription(), null, resources.delete());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
         this.deleteNodeHandler = deleteNodeHandler;
+        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -58,6 +61,17 @@ public class DeleteItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        if (appContext.getCurrentProject() == null && !appContext.getCurrentUser().isUserPermanent()) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        if (appContext.getCurrentProject() != null && appContext.getCurrentProject().isReadOnly()) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
         boolean isEnabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof StorableNode) {

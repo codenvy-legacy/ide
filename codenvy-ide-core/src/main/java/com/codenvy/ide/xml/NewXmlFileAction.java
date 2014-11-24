@@ -29,7 +29,6 @@ public class NewXmlFileAction extends AbstractNewResourceAction {
     public NewXmlFileAction(CoreLocalizationConstant localizationConstant, Resources resources) {
         super(localizationConstant.actionNewXmlFileTitle(),
               localizationConstant.actionNewXmlFileDescription(),
-              null,
               resources.defaultFile());
     }
 

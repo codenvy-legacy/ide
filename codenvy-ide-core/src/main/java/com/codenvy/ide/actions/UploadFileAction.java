@@ -13,9 +13,8 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.upload.UploadFilePresenter;
@@ -28,25 +27,22 @@ import com.google.inject.Singleton;
  * @author Roman Nikitenko
  */
 @Singleton
-public class UploadFileAction extends Action {
+public class UploadFileAction extends ProjectAction {
 
     private final UploadFilePresenter  presenter;
     private final SelectionAgent       selectionAgent;
     private final AnalyticsEventLogger eventLogger;
-    private final AppContext           appContext;
 
     @Inject
     public UploadFileAction(UploadFilePresenter presenter,
                             CoreLocalizationConstant locale,
                             SelectionAgent selectionAgent,
                             AnalyticsEventLogger eventLogger,
-                            Resources resources,
-                            AppContext appContext) {
-        super(locale.uploadFileName(), locale.uploadFileDescription(), null, resources.uploadFile());
+                            Resources resources) {
+        super(locale.uploadFileName(), locale.uploadFileDescription(), resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
-        this.appContext = appContext;
     }
 
     /** {@inheritDoc} */
@@ -58,13 +54,12 @@ public class UploadFileAction extends Action {
 
     /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent event) {
+    public void updateProjectAction(ActionEvent event) {
+        event.getPresentation().setVisible(true);
         boolean enabled = false;
-        if (appContext.getCurrentProject() != null) {
-            Selection<?> selection = selectionAgent.getSelection();
-            if (selection != null) {
-                enabled = selection.getFirstElement() != null;
-            }
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null) {
+            enabled = selection.getFirstElement() != null;
         }
         event.getPresentation().setEnabled(enabled);
     }
