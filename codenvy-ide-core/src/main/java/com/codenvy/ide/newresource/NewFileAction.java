@@ -26,7 +26,6 @@ public class NewFileAction extends AbstractNewResourceAction {
     public NewFileAction(CoreLocalizationConstant localizationConstant, Resources resources) {
         super(localizationConstant.actionNewFileTitle(),
               localizationConstant.actionNewFileDescription(),
-              null,
               resources.defaultFile());
     }
 }

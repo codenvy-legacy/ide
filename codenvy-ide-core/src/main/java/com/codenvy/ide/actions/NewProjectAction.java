@@ -14,30 +14,40 @@ import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- * @author Evgen Vidolob
- */
+/** @author Evgen Vidolob */
 @Singleton
-public class NewProjectWizardAction extends Action {
+public class NewProjectAction extends Action {
 
     private final NewProjectWizardPresenter wizard;
     private final AnalyticsEventLogger      eventLogger;
+    private final AppContext                appContext;
 
     @Inject
-    public NewProjectWizardAction(Resources resources, NewProjectWizardPresenter wizard,
-                                  AnalyticsEventLogger eventLogger) {
+    public NewProjectAction(Resources resources, NewProjectWizardPresenter wizard, AnalyticsEventLogger eventLogger,
+                            AppContext appContext) {
         super("Project...", "Create new project", resources.project());
         this.wizard = wizard;
         this.eventLogger = eventLogger;
+        this.appContext = appContext;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
         wizard.show();
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        if (appContext.getCurrentProject() == null) {
+            e.getPresentation().setEnabled(appContext.getCurrentUser().isUserPermanent());
+        } else {
+            e.getPresentation().setEnabled(!appContext.getCurrentProject().isReadOnly());
+        }
     }
 }

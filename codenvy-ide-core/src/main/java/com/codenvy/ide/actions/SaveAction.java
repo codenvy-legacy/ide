@@ -12,8 +12,8 @@ package com.codenvy.ide.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.google.inject.Inject;
@@ -22,18 +22,17 @@ import com.google.inject.Singleton;
 /**
  * Save editor content Action
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author Evgen Vidolob
  */
 @Singleton
-public class SaveAction extends Action {
+public class SaveAction extends ProjectAction {
 
     private final EditorAgent          editorAgent;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
     public SaveAction(Resources resources, EditorAgent editorAgent, AnalyticsEventLogger eventLogger) {
-        super("Save", "Save changes for current file", null, resources.save());
+        super("Save", "Save changes for current file", resources.save());
         this.editorAgent = editorAgent;
         this.eventLogger = eventLogger;
     }
@@ -45,7 +44,8 @@ public class SaveAction extends Action {
     }
 
     @Override
-    public void update(ActionEvent e) {
+    public void updateProjectAction(ActionEvent e) {
+        e.getPresentation().setVisible(true);
         EditorPartPresenter editor = editorAgent.getActiveEditor();
         e.getPresentation().setEnabled(editor != null && editor.isDirty());
     }

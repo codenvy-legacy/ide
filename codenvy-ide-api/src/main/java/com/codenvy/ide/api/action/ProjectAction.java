@@ -37,11 +37,9 @@ public abstract class ProjectAction extends Action {
         super(text, description);
     }
 
-    protected ProjectAction(String text, String description,
-                            SVGResource svgIcon) {
+    protected ProjectAction(String text, String description, SVGResource svgIcon) {
         super(text, description, null, svgIcon);
     }
-
 
     @Override
     public final void update(ActionEvent e) {
@@ -64,6 +62,4 @@ public abstract class ProjectAction extends Action {
     private void injectAppContext(AppContext appContext) {
         this.appContext = appContext;
     }
-
-
 }

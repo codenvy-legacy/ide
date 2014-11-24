@@ -20,6 +20,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
@@ -71,10 +72,11 @@ public class RenameItemAction extends Action {
     private final RunnerServiceClient      runnerServiceClient;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final DialogFactory            dialogFactory;
-    private final SelectionAgent           selectionAgent;
-    private final InputValidator           fileNameValidator;
-    private final InputValidator           folderNameValidator;
-    private final InputValidator           projectNameValidator;
+    private final AppContext appContext;
+    private final SelectionAgent selectionAgent;
+    private final InputValidator fileNameValidator;
+    private final InputValidator folderNameValidator;
+    private final InputValidator projectNameValidator;
 
     @Inject
     public RenameItemAction(Resources resources,
@@ -86,7 +88,8 @@ public class RenameItemAction extends Action {
                             ProjectServiceClient projectServiceClient,
                             RunnerServiceClient runnerServiceClient,
                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                            DialogFactory dialogFactory) {
+                            DialogFactory dialogFactory,
+                            AppContext appContext) {
         super(localization.renameItemActionText(), localization.renameItemActionDescription(), null, resources.rename());
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
@@ -97,6 +100,7 @@ public class RenameItemAction extends Action {
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
+        this.appContext = appContext;
         this.fileNameValidator = new FileNameValidator();
         this.folderNameValidator = new FolderNameValidator();
         this.projectNameValidator = new ProjectNameValidator();
@@ -138,6 +142,13 @@ public class RenameItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
+        if ((appContext.getCurrentProject() == null && !appContext.getCurrentUser().isUserPermanent()) ||
+            (appContext.getCurrentProject() != null && appContext.getCurrentProject().isReadOnly())) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+
         boolean enabled = false;
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() instanceof AbstractTreeNode) {

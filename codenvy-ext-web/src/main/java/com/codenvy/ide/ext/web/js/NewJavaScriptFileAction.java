@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.js;
 
-import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
@@ -25,10 +24,9 @@ import com.google.inject.Singleton;
 public class NewJavaScriptFileAction extends AbstractNewResourceAction {
 
     @Inject
-    public NewJavaScriptFileAction(WebExtensionResource webExtensionResource, WebLocalizationConstant localizationConstant) {
+    public NewJavaScriptFileAction(WebLocalizationConstant localizationConstant) {
         super(localizationConstant.newJavaScriptFileActionTitle(),
               localizationConstant.newJavaScriptFileActionDescription(),
-              webExtensionResource.js(),
               null);
     }
 
