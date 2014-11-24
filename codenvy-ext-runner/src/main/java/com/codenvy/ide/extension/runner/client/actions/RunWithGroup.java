@@ -39,6 +39,10 @@ public class RunWithGroup extends DefaultActionGroup {
 
     @Override
     public void update(ActionEvent e) {
-        e.getPresentation().setVisible(appContext.getCurrentProject() != null);
+        if (appContext.getCurrentProject() == null) {
+            e.getPresentation().setEnabledAndVisible(false);
+        } else {
+            e.getPresentation().setEnabledAndVisible(!appContext.getCurrentProject().isReadOnly());
+        }
     }
 }
