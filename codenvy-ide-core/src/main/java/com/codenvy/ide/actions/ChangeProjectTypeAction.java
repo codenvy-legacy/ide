@@ -13,14 +13,12 @@ package com.codenvy.ide.actions;
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
-import com.codenvy.ide.api.wizard.WizardContext;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.codenvy.ide.api.action.ProjectAction;
+import com.codenvy.ide.api.event.ConfigureCurrentProjectEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Call Project wizard to change project type
@@ -28,35 +26,30 @@ import com.google.inject.Singleton;
  * @author Evgen Vidolob
  */
 @Singleton
-public class ChangeProjectTypeAction extends Action {
+public class ProjectConfigurationAction extends ProjectAction {
 
-    private       AppContext                appContext;
-    private       NewProjectWizardPresenter wizardPresenter;
-    private final AnalyticsEventLogger      eventLogger;
+    private final AnalyticsEventLogger eventLogger;
+    private final EventBus             eventBus;
 
     @Inject
-    public ChangeProjectTypeAction(AppContext appContext,
-                                   CoreLocalizationConstant localization,
-                                   NewProjectWizardPresenter wizardPresenter,
-                                   AnalyticsEventLogger eventLogger,
-                                   Resources resources) {
-        super(localization.actionChangeProjectTypeDescription(), localization.actionChangeProjectTypeTitle(), null,
+    public ProjectConfigurationAction(CoreLocalizationConstant localization,
+                                      AnalyticsEventLogger eventLogger,
+                                      Resources resources,
+                                      EventBus eventBus) {
+        super(localization.actionProjectConfigurationDescription(), localization.actionProjectConfigurationTitle(),
               resources.projectConfiguration());
-        this.appContext = appContext;
-        this.wizardPresenter = wizardPresenter;
         this.eventLogger = eventLogger;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public void update(ActionEvent e) {
-        e.getPresentation().setEnabled(appContext.getCurrentProject() != null);
+    public void updateProjectAction(ActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        WizardContext context = new WizardContext();
-        context.putData(ProjectWizard.PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
-        wizardPresenter.show(context);
+        eventBus.fireEvent(new ConfigureCurrentProjectEvent());
     }
 }

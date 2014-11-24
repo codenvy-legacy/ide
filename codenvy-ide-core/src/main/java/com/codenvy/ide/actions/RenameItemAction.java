@@ -142,8 +142,12 @@ public class RenameItemAction extends Action {
     /** {@inheritDoc} */
     @Override
     public void update(ActionEvent e) {
-        if ((appContext.getCurrentProject() == null && !appContext.getCurrentUser().isUserPermanent()) ||
-                (appContext.getCurrentProject() != null && appContext.getCurrentProject().isReadOnly())) {
+        if (appContext.getCurrentProject() == null && !appContext.getCurrentUser().isUserPermanent()) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(false);
+            return;
+        }
+        if (appContext.getCurrentProject() != null && appContext.getCurrentProject().isReadOnly()) {
             e.getPresentation().setVisible(true);
             e.getPresentation().setEnabled(false);
             return;

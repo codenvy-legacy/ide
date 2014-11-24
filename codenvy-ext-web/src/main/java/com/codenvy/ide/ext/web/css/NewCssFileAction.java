@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web.css;
 
-import com.codenvy.ide.ext.web.WebExtensionResource;
 import com.codenvy.ide.ext.web.WebLocalizationConstant;
 import com.codenvy.ide.newresource.AbstractNewResourceAction;
 import com.google.inject.Inject;
@@ -26,10 +25,9 @@ public class NewCssFileAction extends AbstractNewResourceAction {
     private static final String DEFAULT_CONTENT = "@CHARSET \"UTF-8\";";
 
     @Inject
-    public NewCssFileAction(WebExtensionResource webExtensionResource, WebLocalizationConstant localizationConstant) {
+    public NewCssFileAction(WebLocalizationConstant localizationConstant) {
         super(localizationConstant.newCssFileActionTitle(),
               localizationConstant.newCssFileActionDescription(),
-              webExtensionResource.css(),
               null);
     }
 

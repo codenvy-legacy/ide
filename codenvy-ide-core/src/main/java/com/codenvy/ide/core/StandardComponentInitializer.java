@@ -19,7 +19,7 @@ import com.codenvy.ide.actions.ExpandEditorAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
-import com.codenvy.ide.actions.NewProjectWizardAction;
+import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.OpenProjectAction;
 import com.codenvy.ide.actions.RedirectToFeedbackAction;
 import com.codenvy.ide.actions.RedirectToForumsAction;
@@ -150,7 +150,7 @@ public class StandardComponentInitializer {
     private ImportProjectFromLocationAction importProjectFromLocationAction;
 
     @Inject
-    private NewProjectWizardAction newProjectWizardAction;
+    private NewProjectAction newProjectAction;
 
     @Inject
     private NewFolderAction newFolderAction;
@@ -277,13 +277,13 @@ public class StandardComponentInitializer {
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
         actionManager.registerAction(GROUP_FILE_NEW, newGroup);
-        actionManager.registerAction("newProject", newProjectWizardAction);
+        actionManager.registerAction("newProject", newProjectAction);
         actionManager.registerAction("newFile", newFileAction);
         actionManager.registerAction("newFolder", newFolderAction);
         actionManager.registerAction("newXmlFile", newXmlFileAction);
         newXmlFileAction.getTemplatePresentation().setSVGIcon(xmlFile.getSVGImage());
 
-        newGroup.addAction(newProjectWizardAction);
+        newGroup.addAction(newProjectAction);
         newGroup.addSeparator();
         newGroup.addAction(newFileAction);
         newGroup.addAction(newFolderAction);

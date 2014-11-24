@@ -36,7 +36,6 @@ public class NewFolderAction extends AbstractNewResourceAction {
     public NewFolderAction(CoreLocalizationConstant localizationConstant, Resources resources) {
         super(localizationConstant.actionNewFolderTitle(),
               localizationConstant.actionNewFolderDescription(),
-              null,
               resources.defaultFolder());
         this.localizationConstant = localizationConstant;
     }
