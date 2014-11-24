@@ -10,43 +10,43 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 
 /**
  * I18n Constants for the JsEditor module.
  *
  * @author "Mickaël Leduque"
  */
-public interface JsEditorConstants extends Constants {
+public interface JsEditorConstants extends Messages {
 
-    @DefaultStringValue("Default Editor")
+    @DefaultMessage("Default Editor")
     String defaultEditorDescription();
 
-    @DefaultStringValue("Unidentified File")
+    @DefaultMessage("Unidentified File")
     String infoPanelUnknownFileType();
 
     // space is meaningful
-    @DefaultStringValue("Line ")
+    @DefaultMessage("Line ")
     String infoPaneLineLabel();
 
     // spaces and comma are meaningful
-    @DefaultStringValue(", Char ")
+    @DefaultMessage(", Char ")
     String infoPanelCharacterLabel();
 
     // space is meaningful
-    @DefaultStringValue("Tab Size: ")
+    @DefaultMessage("Tab Size: ")
     String infoPaneTabSizeLabel();
 
-    @DefaultStringValue("Editor: ")
+    @DefaultMessage("Editor: ")
     String infoPaneEditorLabel();
 
-    @DefaultStringValue("Key Bindings: ")
+    @DefaultMessage("Key Bindings: ")
     String infoPaneKeybindingLabel();
 
-    @DefaultStringValue("Unknown")
+    @DefaultMessage("Unknown")
     String infoPanelUnknownEditorType();
 
-    @DefaultStringValue("Unknown")
+    @DefaultMessage("Unknown")
     String infoPanelUnknownKeybindings();
 
 }
