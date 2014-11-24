@@ -11,10 +11,9 @@
 package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -27,10 +26,9 @@ import com.google.inject.Singleton;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class GetLogsAction extends Action {
+public class GetLogsAction extends ProjectAction {
 
     private final AnalyticsEventLogger eventLogger;
-    private       AppContext           appContext;
     private       RunController        runController;
 
     @Inject
@@ -39,8 +37,7 @@ public class GetLogsAction extends Action {
                          AnalyticsEventLogger eventLogger,
                          AppContext appContext,
                          RunController runController) {
-        super(localizationConstants.getAppLogsActionText(),
-              localizationConstants.getAppLogsActionDescription(), null, resources.getAppLogs());
+        super(localizationConstants.getAppLogsActionText(), localizationConstants.getAppLogsActionDescription(), resources.getAppLogs());
         this.eventLogger = eventLogger;
         this.appContext = appContext;
         this.runController = runController;
@@ -55,13 +52,8 @@ public class GetLogsAction extends Action {
 
     /** {@inheritDoc} */
     @Override
-    public void update(ActionEvent e) {
-        CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            e.getPresentation().setVisible(currentProject.getRunner() != null);
-            e.getPresentation().setEnabled(runController.isAnyAppRunning());
-        } else {
-            e.getPresentation().setEnabledAndVisible(false);
-        }
+    public void updateProjectAction(ActionEvent e) {
+        e.getPresentation().setVisible(runController.isAnyAppLaunched() || appContext.getCurrentProject().getIsRunningEnabled());
+        e.getPresentation().setEnabled(runController.isAnyAppRunning());
     }
 }

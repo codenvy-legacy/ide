@@ -14,7 +14,6 @@ import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -30,7 +29,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends ProjectAction {
 
-    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
     private final RunController        runController;
     private final CustomRunPresenter   customRunPresenter;
@@ -60,11 +58,6 @@ public class CustomRunAction extends ProjectAction {
 
     @Override
     protected void updateProjectAction(ActionEvent e) {
-        CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            e.getPresentation().setEnabledAndVisible(currentProject.getIsRunningEnabled() && !runController.isAnyAppLaunched());
-        } else {
-            e.getPresentation().setEnabledAndVisible(false);
-        }
+        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject().getIsRunningEnabled() && !runController.isAnyAppLaunched());
     }
 }

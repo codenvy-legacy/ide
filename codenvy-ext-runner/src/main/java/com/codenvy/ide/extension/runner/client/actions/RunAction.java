@@ -30,7 +30,6 @@ import com.google.inject.Singleton;
 public class RunAction extends ProjectAction {
 
     private final RunController        runController;
-    private final AppContext           appContext;
     private final AnalyticsEventLogger eventLogger;
 
     @Inject
@@ -56,9 +55,8 @@ public class RunAction extends ProjectAction {
 
     @Override
     protected void updateProjectAction(ActionEvent e) {
-        CurrentProject currentProject = appContext.getCurrentProject();
         // Project launch set isRunningEnabled to false, but you still want to see the Run button.
-        e.getPresentation().setVisible(runController.isAnyAppLaunched() || currentProject != null && currentProject.getIsRunningEnabled());
+        e.getPresentation().setVisible(runController.isAnyAppLaunched() || appContext.getCurrentProject().getIsRunningEnabled());
         e.getPresentation().setEnabled(!runController.isAnyAppLaunched());
     }
 }
