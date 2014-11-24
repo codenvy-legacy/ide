@@ -12,7 +12,7 @@ package com.codenvy.ide.core;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.ChangeProjectTypeAction;
+import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
@@ -171,7 +171,7 @@ public class StandardComponentInitializer {
     private NotificationManager notificationManager;
 
     @Inject
-    private ChangeProjectTypeAction changeProjectTypeAction;
+    private ProjectConfigurationAction projectConfigurationAction;
 
     @Inject
     private ExpandEditorAction expandEditorAction;
@@ -270,7 +270,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
         importProjectGroup.getTemplatePresentation().setSVGIcon(resources.importProject());
         actionManager.registerAction(IdeActions.GROUP_IMPORT_PROJECT, importProjectGroup);
-        actionManager.registerAction("importProject", importProjectFromLocationAction);
+        actionManager.registerAction("importProjectFromLocation", importProjectFromLocationAction);
         importProjectGroup.addAction(importProjectFromLocationAction);
 
         // Compose New group
@@ -293,7 +293,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);
-        actionManager.registerAction("ChangeProjectType", changeProjectTypeAction);
+        actionManager.registerAction("projectConfiguration", projectConfigurationAction);
 
         // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
@@ -310,7 +310,7 @@ public class StandardComponentInitializer {
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
         fileGroup.add(closeProjectAction);
-        fileGroup.add(changeProjectTypeAction);
+        fileGroup.add(projectConfigurationAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameItemAction);

@@ -27,19 +27,19 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author Evgen Vidolob
  */
 @Singleton
-public class ChangeProjectTypeAction extends Action {
+public class ProjectConfigurationAction extends Action {
 
     private final AnalyticsEventLogger eventLogger;
     private final EventBus             eventBus;
     private final AppContext           appContext;
 
     @Inject
-    public ChangeProjectTypeAction(AppContext appContext,
-                                   CoreLocalizationConstant localization,
-                                   AnalyticsEventLogger eventLogger,
-                                   Resources resources,
-                                   EventBus eventBus) {
-        super(localization.actionChangeProjectTypeDescription(), localization.actionChangeProjectTypeTitle(), null,
+    public ProjectConfigurationAction(AppContext appContext,
+                                      CoreLocalizationConstant localization,
+                                      AnalyticsEventLogger eventLogger,
+                                      Resources resources,
+                                      EventBus eventBus) {
+        super(localization.actionProjectConfigurationDescription(), localization.actionProjectConfigurationTitle(), null,
               resources.projectConfiguration());
         this.appContext = appContext;
         this.eventLogger = eventLogger;

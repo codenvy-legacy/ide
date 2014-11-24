@@ -52,7 +52,7 @@ import static com.codenvy.ide.api.action.IdeActions.*;
 @Extension(title = "Runner", version = "3.0.0")
 public class RunnerExtension {
     public static final String GROUP_RUNNER_CONSOLE_TOOLBAR  = "RunnerConsoleToolbar";
-    public static final String GROUP_RUN_WITH                = "RunWithGroup";
+    public static final String GROUP_RUN_WITH                = "runWithGroup";
     /** Key for user preference which contains default RAM size. */
     public final static String PREFS_RUNNER_RAM_SIZE_DEFAULT = "runner.ram-size.default";
 
@@ -82,6 +82,7 @@ public class RunnerExtension {
         // register actions
         actionManager.registerAction(localizationConstants.runAppActionId(), runAction);
         actionManager.registerAction(localizationConstants.customRunAppActionId(), customRunAction);
+        actionManager.registerAction(localizationConstants.clearConsoleControlId(), clearConsoleAction);
         actionManager.registerAction(localizationConstants.editCustomEnvironmentsActionId(), editCustomEnvironmentsAction);
         actionManager.registerAction(localizationConstants.getAppLogsActionId(), getLogsAction);
         actionManager.registerAction(localizationConstants.shutdownActionId(), shutdownAction);

@@ -294,6 +294,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                         return constants.customEnvironmentsViewSpacesNotAllowedMessage();
                     }
                 };
+            } else if (value.contains(".")) {
+                return new Violation() {
+                    @Nullable
+                    @Override
+                    public String getMessage() {
+                        return constants.customEnvironmentsViewDotsNotAllowedMessage();
+                    }
+                };
             } else if (!NameUtils.checkFolderName(value)) {
                 return new Violation() {
                     @Nullable
