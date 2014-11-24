@@ -49,4 +49,12 @@ public interface JsEditorConstants extends Messages {
     @DefaultMessage("Unknown")
     String infoPanelUnknownKeybindings();
 
+    @DefaultMessage("Close")
+    String askWindowCloseTitle();
+
+    @DefaultMessage("{0} has been modified. Save changes?")
+    String askWindowSaveChangesMessage(String name);
+
+    @DefaultMessage("An error occured while initializing the editor.\nReloading the page may be necessary.")
+    String editorInitErrorMessage();
 }
