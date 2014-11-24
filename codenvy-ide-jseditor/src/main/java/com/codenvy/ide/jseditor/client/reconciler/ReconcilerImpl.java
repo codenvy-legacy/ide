@@ -18,8 +18,8 @@ import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.collections.StringMap.IterationCallback;
+import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
@@ -134,7 +134,7 @@ public class ReconcilerImpl implements Reconciler {
      * 
      * @return the reconciler document
      */
-    protected EmbeddedDocument getDocument() {
+    protected Document getDocument() {
         return documentHandle.getDocument();
     }
 

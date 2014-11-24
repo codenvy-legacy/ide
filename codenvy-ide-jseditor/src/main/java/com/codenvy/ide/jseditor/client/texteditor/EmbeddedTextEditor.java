@@ -12,12 +12,14 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
+import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 
 public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, HasOutline {
 
     /**
      * @return the text editor view implementation //todo need to introduce more simple way to use TextEditorPartView interface
      */
+    @Deprecated
     EmbeddedTextEditorPartView getView();
 
     /** Calls all editor update actions for thsi editor. */
@@ -28,5 +30,11 @@ public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, 
      *  @param action the action to add
      */
     void addEditorUpdateAction(EditorUpdateAction action);
+
+    /**
+     * Returns the cursor model for the editor.
+     * @return the cursor model
+     */
+    CursorModelWithHandler getCursorModel();
 
 }

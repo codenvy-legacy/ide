@@ -11,6 +11,7 @@
 package com.codenvy.ide.jseditor.client.reconciler;
 
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 
 /**
@@ -38,7 +39,7 @@ public interface ReconcilingStrategy {
      * As a dirty region might span multiple content types, the segment of the
      * dirty region which should be investigated is also provided to this
      * reconciling strategy. The given regions refer to the document passed into
-     * the most recent call of {@link #setDocument(EmbeddedDocument)}.
+     * the most recent call of {@link #setDocument(Document)}.
      *
      * @param dirtyRegion
      *         the document region which has been changed
@@ -50,7 +51,7 @@ public interface ReconcilingStrategy {
     /**
      * Activates non-incremental reconciling. The reconciling strategy is just told
      * that there are changes and that it should reconcile the given partition of the
-     * document most recently passed into {@link #setDocument(EmbeddedDocument)}.
+     * document most recently passed into {@link #setDocument(Document)}.
      *
      * @param partition
      *         the document partition to be reconciled

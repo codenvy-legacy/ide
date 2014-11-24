@@ -14,9 +14,5 @@ package com.codenvy.ide.jseditor.client.texteditor;
  * Handle on an editor view instance.
  */
 public interface EditorHandle {
-    /**
-     * Returns the editor view component.
-     * @return the editor view
-     */
-    EmbeddedTextEditorPartView getEditor();
+
 }

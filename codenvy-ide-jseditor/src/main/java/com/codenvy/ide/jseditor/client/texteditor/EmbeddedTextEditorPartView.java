@@ -11,169 +11,35 @@
 package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.editor.EditorWithErrors;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.api.text.Region;
-import com.codenvy.ide.api.texteditor.HandlesTextOperations;
-import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
-import com.codenvy.ide.api.texteditor.IsConfigurable;
-import com.codenvy.ide.api.texteditor.UndoableEditor;
-import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
-import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
-import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
-import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
-import com.codenvy.ide.texteditor.selection.HasCursorModelWithHandler;
-import com.google.gwt.event.dom.client.HasChangeHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.jseditor.client.keymap.Keymap;
+import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * View interface for the embedded editors components.
  *
  * @author "Mickaël Leduque"
  */
-public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, HasReadOnlyProperty, HandlesTextOperations,
-                                                    IsConfigurable<TextEditorConfiguration>, RequiresResize, IsWidget,
-                                                    HasChangeHandlers, UndoableEditor,
-                                                    HasBreakpointRenderer {
-
-
-    /**
-     * Tells is the editor is dirty (if changes were made since opening or since last time {@link #markClean()} was called).
-     *
-     * @return the dirty state
-     */
-    boolean isDirty();
-
-    /**
-     * Marks the editor as clean (not dirty).
-     */
-    void markClean();
-
-    /**
-     * Returns the whole editor contents as string.
-     *
-     * @return the contents
-     */
-    String getContents();
-
-    /**
-     * Sets the editor contents.
-     *
-     * @param contents the new contents
-     * @param fileNode the file
-     */
-    void setContents(String contents, FileNode fileNode);
-
-    /**
-     * Returns an object that describes the current selection (primary selection if the editor implementation supports multiple selection).
-     *
-     * @return the selection
-     */
-    Region getSelectedRegion();
-
-    /**
-     * Configures the editor.
-     *
-     * @param configuration the configuration object
-     * @param file the file object
-     */
-    void configure(TextEditorConfiguration configuration, FileNode file);
-
-    /**
-     * Returns the instance of embedded document for this editor.
-     *
-     * @return the document
-     */
-    EmbeddedDocument getEmbeddedDocument();
-
-    /** Gives the focus to the editor. */
-    void setFocus();
-
-
-    /**
-     * Returns a handle for this editor view.
-     * @return an editor handle
-     */
-    EditorHandle getEditorHandle();
-
-    /**
-     * Replaces the selection by the given range.
-     *
-     * @param region the new selection
-     */
-    void setSelectedRegion(Region region);
-
-    /**
-     * Replaces the selection by the given range and optionally scrolls the editor to show the range.
-     *
-     * @param region the new selection
-     * @param show scroll to show iff value is true
-     */
-    void setSelectedRegion(Region region, boolean show);
-
-    /**
-     * Display a message in the editor.
-     *
-     * @param message the message to display
-     */
-    void showMessage(String message);
-
-    /**
-     * Return the content type of the editor content.<br>
-     * Returns null if the type is not known yet.
-     *
-     * @return the content type
-     */
-    String getContentType();
-
-    /**
-     * Defines the {@link EditorWidgetFactory}.
-     * @param factory the new factory
-     */
-    public void setEditorWidgetFactory(EditorWidgetFactory<?> factory);
-
-    /**
-     * Returns a component handling the gutter.
-     * @return the {@link HasGutter}
-     */
-    HasGutter getHasGutter();
-    
-    /**
-     * Returns a component handling line styling.
-     * @return the {@link LineStyler}
-     */
-    LineStyler getLineStyler();
-
-    /**
-     * Returns a component handling the text markers.
-     * @return the {@link HasTextMarkers}
-     */
-    HasTextMarkers getHasTextMarkers();
-
-    /**
-     * Returns a component handling the key bindings.
-     * @return the {@link HasKeybindings}
-     */
-    HasKeybindings getHasKeybindings();
-
-    /**
-     * Switch the implementation of the {@link HasKeybindings}.
-     */
-    void setFinalHasKeybinding();
+public interface EmbeddedTextEditorPartView extends RequiresResize,
+                                                    IsWidget {
 
     /**
      * Invoke the code complete dialog.
      *
+     * @param editorWidget the editor widget
      * @param completionsSource the completion source
      */
-    void showCompletionProposals(CompletionsSource completionsSource);
+    void showCompletionProposals(EditorWidget editorWidget, CompletionsSource completionsSource);
 
     /**
      * Invoke the code complete dialog with default completion.
+     * @param editorWidget the editor widget
      */
-    void showCompletionProposals();
+    void showCompletionProposals(EditorWidget editorWidget);
 
     /**
      * Sets the view delegate.
@@ -182,13 +48,46 @@ public interface EmbeddedTextEditorPartView extends HasCursorModelWithHandler, H
     void setDelegate(Delegate delegate);
 
     /**
-     * Adds a handler for gutter click events.
-     * @param gutterClickHandler the handler
-     * @return 
+     * Sets the editor widget.
+     * @param editorWidget the widget
      */
-    HandlerRegistration addGutterClickHandler(GutterClickHandler handler);
+    void setEditorWidget(EditorWidget editorWidget);
+
+    /**
+     * Display a placeholder in place of the editor widget.
+     * @param placeHolder the widget to display
+     */
+    void showPlaceHolder(Widget placeHolder);
+
+    /**
+     * Sets the initial state of the info panel.
+     * @param mode the file mode
+     * @param editorType the editor implementation
+     * @param keymap the current keymap
+     * @param lineCount the number of lines
+     * @param tabSize the tab size in this editor
+     */
+    void initInfoPanel(String mode, EditorType editorType, Keymap keymap, int lineCount, int tabSize);
+
+    /**
+     * Update the location displayed in the info panel.
+     * @param position the new position
+     */
+    void updateInfoPanelPosition(TextPosition position);
+
+    /**
+     * Update the values in the info panel for when the editor is not focused (i.e. show line count and not char part).
+     * @param linecount the number of lines in the file
+     */
+    void updateInfoPanelUnfocused(int linecount);
 
     /** Delegate interface for theis view. */
-    public interface Delegate extends EditorWithErrors {
+    public interface Delegate extends EditorWithErrors, RequiresResize {
+        /** Reaction on loss of focus. */
+        void editorLostFocus();
+        /** Reaction when the editor gains focus. */
+        void editorGotFocus();
+        /** Reaction when the cursor position changes. */
+        void editorCursorPositionChanged();
     }
 }

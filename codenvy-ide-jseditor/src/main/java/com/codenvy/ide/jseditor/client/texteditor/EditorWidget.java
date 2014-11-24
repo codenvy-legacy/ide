@@ -56,12 +56,11 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     void setValue(String newValue);
 
     /**
-     * Sets the language mode for highlighting.
+     * Returns the current language mode for highlighting.
      *
-     * @param modeName
-     *         the new mode
+     * @return the mode
      */
-    void setMode(String modeName);
+    String getMode();
 
     /**
      * Change readonly state of the editor.
