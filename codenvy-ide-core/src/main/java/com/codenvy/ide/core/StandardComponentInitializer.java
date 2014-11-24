@@ -12,26 +12,7 @@ package com.codenvy.ide.core;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.ChangeProjectTypeAction;
-import com.codenvy.ide.actions.CloseProjectAction;
-import com.codenvy.ide.actions.DeleteItemAction;
-import com.codenvy.ide.actions.ExpandEditorAction;
-import com.codenvy.ide.actions.FormatterAction;
-import com.codenvy.ide.actions.ImportProjectFromLocationAction;
-import com.codenvy.ide.actions.NavigateToFileAction;
-import com.codenvy.ide.actions.NewProjectAction;
-import com.codenvy.ide.actions.OpenProjectAction;
-import com.codenvy.ide.actions.RedirectToFeedbackAction;
-import com.codenvy.ide.actions.RedirectToForumsAction;
-import com.codenvy.ide.actions.RedirectToHelpAction;
-import com.codenvy.ide.actions.RedoAction;
-import com.codenvy.ide.actions.RenameItemAction;
-import com.codenvy.ide.actions.SaveAction;
-import com.codenvy.ide.actions.SaveAllAction;
-import com.codenvy.ide.actions.ShowAboutAction;
-import com.codenvy.ide.actions.ShowPreferencesAction;
-import com.codenvy.ide.actions.UndoAction;
-import com.codenvy.ide.actions.UploadFileAction;
+import com.codenvy.ide.actions.*;
 import com.codenvy.ide.actions.find.FindActionAction;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.DefaultActionGroup;
@@ -171,7 +152,7 @@ public class StandardComponentInitializer {
     private NotificationManager notificationManager;
 
     @Inject
-    private ChangeProjectTypeAction changeProjectTypeAction;
+    private ProjectConfigurationAction projectConfigurationAction;
 
     @Inject
     private ExpandEditorAction expandEditorAction;
@@ -292,7 +273,7 @@ public class StandardComponentInitializer {
 
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);
-        actionManager.registerAction("ChangeProjectType", changeProjectTypeAction);
+        actionManager.registerAction("projectConfiguration", projectConfigurationAction);
 
         // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
@@ -309,7 +290,7 @@ public class StandardComponentInitializer {
         fileGroup.add(newGroup);
         fileGroup.add(openProjectAction);
         fileGroup.add(closeProjectAction);
-        fileGroup.add(changeProjectTypeAction);
+        fileGroup.add(projectConfigurationAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameItemAction);
