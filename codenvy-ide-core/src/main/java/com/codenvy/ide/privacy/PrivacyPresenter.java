@@ -35,7 +35,7 @@ import static com.codenvy.ide.api.constraints.Constraints.LAST;
  */
 @Singleton
 public class PrivacyPresenter implements ProjectActionHandler {
-    private static final String PRIVACY_ACTION_ID = "Privacy";
+    private static final String PRIVACY_ACTION_ID = "privacy";
 
     private final ActionManager      actionManager;
     private final DefaultActionGroup rightMainMenuGroup;
