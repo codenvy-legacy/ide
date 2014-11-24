@@ -12,6 +12,7 @@ package com.codenvy.ide.api.preferences;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 /**
@@ -20,7 +21,7 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface PreferencesPagePresenter extends Presenter {
+public interface PreferencePagePresenter extends Presenter {
     /** Needs for delegate updateControls function into PagePresenter. */
     interface DirtyStateListener {
         /** Updates preference view components without content panel. */
@@ -35,20 +36,11 @@ public interface PreferencesPagePresenter extends Presenter {
     void setUpdateDelegate(DirtyStateListener delegate);
 
     /**
-     * Performs any actions appropriate in response to the user
-     * having pressed the Apply button.
-     */
-    void doApply();
-
-    /**
-     * Returns whether this page is changed or not.
-     * This information is typically used by the preferences presenter to decide
-     * when the information is changed.
+     * Return preference category. This category will used for grouping elements.
      *
-     * @return <code>true</code> if this page is changed, and
-     * <code>false</code> otherwise
+     * @return
      */
-    boolean isDirty();
+    String getCategory();
 
     /**
      * Return preference page's title. This title will be shown into list of preferences.
@@ -65,9 +57,23 @@ public interface PreferencesPagePresenter extends Presenter {
     ImageResource getIcon();
 
     /**
-     * Return preference category. This category will used for grouping elements.
+     * Returns whether this page is changed or not.
+     * This information is typically used by the preferences presenter to decide
+     * when the information is changed.
      *
-     * @return
+     * @return <code>true</code> if this page is changed, and
+     * <code>false</code> otherwise
      */
-    String getCategory();
+    boolean isDirty();
+
+    /**
+     * Stores changes to Preferences Manager.
+     */
+    void storeChanges();
+
+    /**
+     * Reverts changes on values stored in Preferences Manager.
+     */
+    void revertChanges();
+
 }

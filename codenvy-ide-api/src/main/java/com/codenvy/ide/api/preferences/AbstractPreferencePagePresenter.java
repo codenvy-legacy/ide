@@ -18,7 +18,7 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter {
+public abstract class AbstractPreferencePagePresenter implements PreferencePagePresenter {
     protected DirtyStateListener delegate;
 
     private static String defaultCategory = "IDE Settings";
@@ -36,7 +36,7 @@ public abstract class AbstractPreferencesPagePresenter implements PreferencesPag
      * @param category
      * @param icon
      */
-    public AbstractPreferencesPagePresenter(String title, String category, ImageResource icon) {
+    public AbstractPreferencePagePresenter(String title, String category, ImageResource icon) {
         this.title = title;
         this.category = category;
         this.icon = icon;
@@ -48,7 +48,7 @@ public abstract class AbstractPreferencesPagePresenter implements PreferencesPag
      * @param title
      * @param icon
      */
-    public AbstractPreferencesPagePresenter(String title, ImageResource icon) {
+    public AbstractPreferencePagePresenter(String title, ImageResource icon) {
         this(title, defaultCategory, icon);
     }
 

@@ -48,9 +48,8 @@ public class PreferencesManagerImpl implements PreferencesManager {
     /** {@inheritDoc} */
     @Override
     public String getValue(String preferenceName) {
-        boolean isValueDeleted = changedPreferences.containsKey(preferenceName);
         String value = changedPreferences.get(preferenceName);
-        if (value == null && !isValueDeleted) {
+        if (value == null) {
             value = persistedPreferences.get(preferenceName);
         }
 
@@ -97,6 +96,8 @@ public class PreferencesManagerImpl implements PreferencesManager {
      * @param preferences
      */
     public void load(Map<String, String> preferences) {
-        persistedPreferences.putAll(preferences);
+        if (preferences != null) {
+            persistedPreferences.putAll(preferences);
+        }
     }
 }

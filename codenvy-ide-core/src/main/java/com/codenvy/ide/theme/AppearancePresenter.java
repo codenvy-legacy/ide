@@ -10,22 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.theme;
 
-import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.theme.ThemeAgent;
-import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** @author Evgen Vidolob */
 @Singleton
-public class AppearancePresenter extends AbstractPreferencesPagePresenter implements AppearanceView.ActionDelegate {
+public class AppearancePresenter extends AbstractPreferencePagePresenter implements AppearanceView.ActionDelegate {
 
     private AppearanceView     view;
     private ThemeAgent         themeAgent;
@@ -33,40 +30,22 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
     private DialogFactory      dialogFactory;
     private boolean dirty = false;
     private String themeId;
+    private AppContext appContext;
 
     @Inject
-    public AppearancePresenter(AppearanceView view, CoreLocalizationConstant constant, ThemeAgent themeAgent,
-                               PreferencesManager preferencesManager, DialogFactory dialogFactory) {
+    public AppearancePresenter(AppearanceView view,
+                               CoreLocalizationConstant constant,
+                               ThemeAgent themeAgent,
+                               PreferencesManager preferencesManager,
+                               DialogFactory dialogFactory,
+                               AppContext appContext) {
         super(constant.appearanceTitle(), constant.appearanceCategory(), null);
         this.view = view;
         this.themeAgent = themeAgent;
         this.preferencesManager = preferencesManager;
         this.dialogFactory = dialogFactory;
+        this.appContext = appContext;
         view.setDelegate(this);
-    }
-
-    @Override
-    public void doApply() {
-        if (isDirty()) {
-            preferencesManager.setPreference("Theme", themeId);
-            preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
-                @Override
-                public void onFailure(Throwable ignore) {
-                }
-
-                @Override
-                public void onSuccess(ProfileDescriptor result) {
-                    dialogFactory.createConfirmDialog("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?",
-                                                      new ConfirmCallback() {
-                                                          @Override
-                                                          public void accepted() {
-                                                              themeAgent.setCurrentThemeId(themeId);
-                                                              Window.Location.reload();
-                                                          }
-                                                      }, null).show();
-                }
-            });
-        }
     }
 
     @Override
@@ -77,7 +56,12 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
-        view.setThemes(themeAgent.getThemes(), themeAgent.getCurrentThemeId());
+
+        String currentThemeId = preferencesManager.getValue("theme");
+        if (currentThemeId == null || currentThemeId.isEmpty()) {
+            currentThemeId = themeAgent.getCurrentThemeId();
+        }
+        view.setThemes(themeAgent.getThemes(), currentThemeId);
     }
 
     @Override
@@ -86,4 +70,46 @@ public class AppearancePresenter extends AbstractPreferencesPagePresenter implem
         dirty = !themeId.equals(themeAgent.getCurrentThemeId());
         delegate.onDirtyChanged();
     }
+
+    @Override
+    public void storeChanges() {
+        preferencesManager.setPreference("ide.theme", themeId);
+        dirty = false;
+    }
+
+    @Override
+    public void revertChanges() {
+        String currentThemeId = preferencesManager.getValue("theme");
+        if (currentThemeId == null || currentThemeId.isEmpty()) {
+            currentThemeId = themeAgent.getCurrentThemeId();
+        }
+        view.setThemes(themeAgent.getThemes(), currentThemeId);
+
+        dirty = false;
+    }
+
+//    @Override
+//    public void doApply() {
+//        if (isDirty()) {
+//            preferencesManager.setPreference("Theme", themeId);
+//            preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
+//                @Override
+//                public void onFailure(Throwable ignore) {
+//                }
+//
+//                @Override
+//                public void onSuccess(ProfileDescriptor result) {
+//                    dialogFactory.createConfirmDialog("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?",
+//                                                      new ConfirmCallback() {
+//                                                          @Override
+//                                                          public void accepted() {
+//                                                              themeAgent.setCurrentThemeId(themeId);
+//                                                              Window.Location.reload();
+//                                                          }
+//                                                      }, null).show();
+//                }
+//            });
+//        }
+//    }
+
 }

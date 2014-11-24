@@ -10,30 +10,19 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.preference;
 
-import com.codenvy.api.user.shared.dto.ProfileDescriptor;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.Notification.Type;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.preferences.AbstractPreferencesPagePresenter;
-import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.jseditor.client.preference.editorselection.EditorSelectionPreferencePresenter;
 import com.codenvy.ide.jseditor.client.preference.keymaps.KeyMapsPreferencePresenter;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /** Preference page presenter for the editors. */
 @Singleton
-public class EditorPreferencePresenter extends AbstractPreferencesPagePresenter implements EditorPreferenceSection.ParentPresenter {
+public class EditorPreferencePresenter extends AbstractPreferencePagePresenter implements EditorPreferenceSection.ParentPresenter {
 
     /** The editor preferences page view. */
     private final EditorPreferenceView view;
-
-    /** Preference manager instance. */
-    private final PreferencesManager preferencesManager;
-    /** The notification manager. */
-    private final NotificationManager notificationManager;
 
     /** I18n messages for the editor preferences. */
     private final EditorPrefLocalizationConstant constant;
@@ -44,8 +33,6 @@ public class EditorPreferencePresenter extends AbstractPreferencesPagePresenter 
     @Inject
     public EditorPreferencePresenter(final EditorPreferenceView view,
                                      final EditorPrefLocalizationConstant constant,
-                                     final PreferencesManager preferencesManager,
-                                     final NotificationManager notificationManager,
                                      final EditorPreferenceResource resource,
                                      final EditorSelectionPreferencePresenter editorTypeSection,
                                      final KeyMapsPreferencePresenter keymapsSection) {
@@ -55,8 +42,6 @@ public class EditorPreferencePresenter extends AbstractPreferencesPagePresenter 
               resource.editorPrefIconTemporary());// TODO use svg icon when the PreferencesPagePresenter allow it
 
         this.view = view;
-        this.preferencesManager = preferencesManager;
-        this.notificationManager = notificationManager;
         this.constant = constant;
         this.editorTypeSection = editorTypeSection;
         this.keymapsSection = keymapsSection;
@@ -66,42 +51,38 @@ public class EditorPreferencePresenter extends AbstractPreferencesPagePresenter 
     }
 
     @Override
-    public void doApply() {
-        this.editorTypeSection.doApply();
-        this.keymapsSection.doApply();
-
-        this.preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
-
-            @Override
-            public void onSuccess(final ProfileDescriptor result) {
-                final Notification notification = new Notification(constant.flushSuccess(), Type.INFO);
-                notificationManager.showNotification(notification);
-
-            }
-
-            @Override
-            public void onFailure(final Throwable caught) {
-                final Notification notification = new Notification(constant.flushError(), Type.ERROR);
-                notificationManager.showNotification(notification);
-            }
-        });
-    }
-
-    @Override
     public boolean isDirty() {
-        return this.editorTypeSection.isDirty() || this.keymapsSection.isDirty();
+        return editorTypeSection.isDirty() || keymapsSection.isDirty();
     }
 
     @Override
     public void go(final AcceptsOneWidget container) {
-        this.editorTypeSection.go(view.getEditorTypeContainer());
-        this.keymapsSection.go(view.getKeymapsContainer());
+        editorTypeSection.go(view.getEditorTypeContainer());
+        keymapsSection.go(view.getKeymapsContainer());
         container.setWidget(view);
     }
 
     @Override
     public void signalDirtyState() {
-        this.delegate.onDirtyChanged();
+        delegate.onDirtyChanged();
+    }
+
+    @Override
+    public void storeChanges() {
+        if (editorTypeSection.isDirty()) {
+            editorTypeSection.storeChanges();
+        }
+
+        if (keymapsSection.isDirty()) {
+            keymapsSection.storeChanges();
+        }
+    }
+
+    @Override
+    public void revertChanges() {
+        editorTypeSection.refresh();
+        keymapsSection.refresh();
+        signalDirtyState();
     }
 
 }

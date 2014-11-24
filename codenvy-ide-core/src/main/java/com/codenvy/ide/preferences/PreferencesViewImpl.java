@@ -13,12 +13,13 @@ package com.codenvy.ide.preferences;
 import elemental.html.TableElement;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
 import com.codenvy.ide.ui.window.Window;
 import com.codenvy.ide.util.dom.Elements;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,39 +53,39 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     }
 
     Button btnClose;
-    Button btnOk;
-    Button btnApply;
+    Button btnSave;
+    Button btnRefresh;
+
     @UiField
     SimplePanel               preferences;
     @UiField
     SimplePanel               contentPanel;
     @UiField(provided = true)
-    com.codenvy.ide.Resources res;
+    com.codenvy.ide.Resources resources;
 
     private CoreLocalizationConstant locale;
     private ActionDelegate           delegate;
-    private PreferencesPagePresenter firstPage;
     private CategoriesList           list;
 
-    private final Category.CategoryEventDelegate<PreferencesPagePresenter> preferencesPageDelegate =
-            new Category.CategoryEventDelegate<PreferencesPagePresenter>() {
+    private final Category.CategoryEventDelegate<PreferencePagePresenter> preferencesPageDelegate =
+            new Category.CategoryEventDelegate<PreferencePagePresenter>() {
                 @Override
-                public void onListItemClicked(com.google.gwt.dom.client.Element listItemBase, PreferencesPagePresenter itemData) {
-                    delegate.selectedPreference(itemData);
+                public void onListItemClicked(com.google.gwt.dom.client.Element listItemBase, PreferencePagePresenter itemData) {
+                    delegate.onPreferenceSelected(itemData);
                 }
             };
 
-    private final CategoryRenderer<PreferencesPagePresenter> preferencesPageRenderer =
-            new CategoryRenderer<PreferencesPagePresenter>() {
+    private final CategoryRenderer<PreferencePagePresenter> preferencesPageRenderer =
+            new CategoryRenderer<PreferencePagePresenter>() {
                 @Override
-                public void renderElement(com.google.gwt.dom.client.Element element, PreferencesPagePresenter preference) {
+                public void renderElement(com.google.gwt.dom.client.Element element, PreferencePagePresenter preference) {
                     element.setInnerText(preference.getTitle());
                 }
 
                 @Override
-                public com.google.gwt.dom.client.SpanElement renderCategory(Category<PreferencesPagePresenter> category) {
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<PreferencePagePresenter> category) {
                     SpanElement spanElement = Document.get().createSpanElement();
-                    spanElement.setClassName(res.defaultCategoriesListCss().headerText());
+                    spanElement.setClassName(resources.defaultCategoriesListCss().headerText());
                     spanElement.setInnerText(category.getTitle());
                     return spanElement;
                 }
@@ -98,7 +99,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
     @Inject
     protected PreferencesViewImpl(com.codenvy.ide.Resources resources, PreferenceViewImplUiBinder uiBinder,
                                   CoreLocalizationConstant locale) {
-        this.res = resources;
+        this.resources = resources;
         this.locale = locale;
 
         Widget widget = uiBinder.createAndBindUi(this);
@@ -109,54 +110,60 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
         //create list of preferences
         TableElement tableElement = Elements.createTableElement();
         tableElement.setAttribute("style", "width: 100%");
-        list = new CategoriesList(res);
-        this.preferences.add(list);
+        list = new CategoriesList(resources);
+        preferences.add(list);
         createButtons();
     }
 
     private void createButtons() {
-        btnClose = createButton(locale.close(), "window-preferences-close", new ClickHandler() {
-
+        /*
+            Save
+         */
+        btnSave = createButton(locale.save(), "window-preferences-storeChanges", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
+                Log.trace("< SAVE");
+                delegate.onSaveClicked();
+            }
+        });
+
+        btnSave.addStyleName(resources.wizardCss().button());
+        btnSave.addStyleName(resources.wizardCss().rightButton());
+        btnSave.addStyleName(resources.wizardCss().buttonPrimary());
+        getFooter().add(btnSave);
+
+        /*
+            Refresh
+         */
+        btnRefresh = createButton(locale.refresh(), "window-preferences-refresh", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Log.trace("< REFRESH");
+                delegate.onRefreshClicked();
+            }
+        });
+        btnRefresh.addStyleName(resources.wizardCss().button());
+        btnRefresh.addStyleName(resources.wizardCss().buttonSuccess());
+        getFooter().add(btnRefresh);
+
+        /*
+            Close
+         */
+        btnClose = createButton(locale.close(), "window-preferences-close", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Log.trace("< CLOSE");
                 delegate.onCloseClicked();
             }
         });
-        btnClose.addStyleName(res.wizardCss().button());
+        btnClose.addStyleName(resources.wizardCss().button());
         getFooter().add(btnClose);
-
-        btnOk = createButton(locale.ok(), "window-preferences-ok", new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                delegate.onOkClicked();
-            }
-        });
-        btnOk.addStyleName(res.wizardCss().button());
-        getFooter().add(btnOk);
-
-        btnApply = createButton(locale.apply(), "window-preferences-apply", new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                delegate.onApplyClicked();
-            }
-        });
-        btnApply.addStyleName(res.wizardCss().button());
-        getFooter().add(btnApply);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
-
-        //show first page if page is exist
-        if (firstPage != null) {
-            preferencesPageDelegate.onListItemClicked(null, firstPage);
-        } else {
-            btnApply.setEnabled(false);
-        }
     }
 
     /** {@inheritDoc} */
@@ -167,8 +174,8 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
     /** {@inheritDoc} */
     @Override
-    public void showPreferences() {
-        this.show();
+    public void show() {
+        super.show();
     }
 
     /** {@inheritDoc} */
@@ -179,19 +186,17 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
     /** {@inheritDoc} */
     @Override
-    public void setApplyButtonEnabled(boolean isEnabled) {
-        btnApply.setEnabled(isEnabled);
+    public void enableSaveButton(boolean enabled) {
+        btnSave.setEnabled(enabled);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPreferences(Map<String, Set<PreferencesPagePresenter>> preferences, PreferencesPagePresenter firstPage) {
-        this.firstPage = firstPage;
-
+    public void setPreferences(Map<String, Set<PreferencePagePresenter>> preferences) {
         List<Category<?>> categoriesList = new ArrayList<Category<?>>();
         for (String s : preferences.keySet()) {
-            Category<PreferencesPagePresenter> category =
-                    new Category<PreferencesPagePresenter>(s, preferencesPageRenderer, preferences.get(s), preferencesPageDelegate);
+            Category<PreferencePagePresenter> category =
+                    new Category<PreferencePagePresenter>(s, preferencesPageRenderer, preferences.get(s), preferencesPageDelegate);
             categoriesList.add(category);
         }
         list.render(categoriesList);
@@ -204,7 +209,7 @@ public class PreferencesViewImpl extends Window implements PreferencesView {
 
     /** {@inheritDoc} */
     @Override
-    public void selectPreference(PreferencesPagePresenter preference) {
+    public void selectPreference(PreferencePagePresenter preference) {
         list.selectElement(preference);
     }
 }

@@ -11,7 +11,7 @@
 package com.codenvy.ide.preferences;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import java.util.Map;
@@ -26,22 +26,21 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
     /** Needs for delegate some function into preferences view. */
     public interface ActionDelegate {
         /**
+         * Performs actions when user click Save button.
+         * Actually when button is pressed, preferences must be stored on the server.
+         */
+        void onSaveClicked();
+
+        /**
+         * Loads preferences from the server discarding any changes.
+         */
+        void onRefreshClicked();
+
+        /**
          * Performs any actions appropriate in response to the user
          * having pressed the Close button
          */
         void onCloseClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the Apply button
-         */
-        void onApplyClicked();
-
-        /**
-         * Performs any actions appropriate in response to the user
-         * having pressed the OK button
-         */
-        void onOkClicked();
 
         /**
          * Performs any actions appropriate in response to select some preference.
@@ -49,7 +48,7 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
          * @param preference
          *         selected preference
          */
-        void selectedPreference(PreferencesPagePresenter preference);
+        void onPreferenceSelected(PreferencePagePresenter preference);
 
     }
 
@@ -59,14 +58,13 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
      * @param preference
      *         preference to select.
      */
-    void selectPreference(PreferencesPagePresenter preference);
-
+    void selectPreference(PreferencePagePresenter preference);
 
     /** Close view. */
     void close();
 
     /** Show preferences. */
-    void showPreferences();
+    void show();
 
     /**
      * Returns content panel.
@@ -76,18 +74,18 @@ public interface PreferencesView extends View<PreferencesView.ActionDelegate> {
     AcceptsOneWidget getContentPanel();
 
     /**
-     * Sets whether Apply button is enabled.
+     * Enables or disables Save button.
      *
-     * @param isEnabled
+     * @param enabled
      *         <code>true</code> to enable the button, <code>false</code>
      *         to disable it
      */
-    void setApplyButtonEnabled(boolean isEnabled);
+    void enableSaveButton(boolean enabled);
 
     /**
      * Sets available preferences.
      *
      * @param preferences
      */
-    void setPreferences(Map<String, Set<PreferencesPagePresenter>> preferences, PreferencesPagePresenter firstPage);
+    void setPreferences(Map<String, Set<PreferencePagePresenter>> preferences);
 }

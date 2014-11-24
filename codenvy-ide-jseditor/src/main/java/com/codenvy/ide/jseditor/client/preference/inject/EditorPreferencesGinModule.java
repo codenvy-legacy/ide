@@ -12,7 +12,7 @@ package com.codenvy.ide.jseditor.client.preference.inject;
 
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferencePresenter;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceView;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceViewImpl;
@@ -32,7 +32,7 @@ public class EditorPreferencesGinModule extends AbstractGinModule {
     @Override
     protected void configure() {
         // Bind the editor preference panel
-        final GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
+        final GinMultibinder<PreferencePagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencePagePresenter.class);
         prefBinder.addBinding().to(EditorPreferencePresenter.class);
 
         bind(EditorPreferenceView.class).to(EditorPreferenceViewImpl.class);

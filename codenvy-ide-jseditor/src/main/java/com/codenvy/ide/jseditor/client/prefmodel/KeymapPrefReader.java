@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapValuesHolder;
-import com.codenvy.ide.util.loging.Log;
 
 import elemental.js.util.JsArrayOfString;
 import elemental.js.util.JsMapFromStringToString;
@@ -51,7 +50,7 @@ public class KeymapPrefReader {
      * @param valuesHolder the object that keeps the values
      */
     public void readPref(final KeymapValuesHolder valuesHolder) {
-        final EditorPreferences editorPreferences = this.preferenceReader.getPreferences();
+        final EditorPreferences editorPreferences = preferenceReader.getPreferences();
         readPref(editorPreferences, valuesHolder);
     }
 

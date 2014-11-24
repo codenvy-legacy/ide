@@ -11,7 +11,7 @@
 package com.codenvy.ide.extension.runner.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleView;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
@@ -44,7 +44,7 @@ public class RunnerGinModule extends AbstractGinModule {
         bind(ToolbarPresenter.class).annotatedWith(RunnerConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
 
         bind(RamManagerView.class).to(RamManagerViewImpl.class).in(Singleton.class);
-        GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
+        GinMultibinder<PreferencePagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencePagePresenter.class);
         prefBinder.addBinding().to(RamManagePresenter.class);
 
         bind(EnvironmentActionsManager.class).asEagerSingleton();

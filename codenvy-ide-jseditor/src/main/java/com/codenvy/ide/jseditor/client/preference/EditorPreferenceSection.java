@@ -15,14 +15,21 @@ import com.codenvy.ide.api.mvp.Presenter;
 /** Presenter for a section of the editor preferences page. */
 public interface EditorPreferenceSection extends Presenter {
 
-    /** Performs any actions appropriate in response to the user having pressed the Apply button. */
-    void doApply();
-
     /** Tells if the content of the section has been changed. */
     boolean isDirty();
 
     /** Sets the editor page presenter that owns the section. */
     void setParent(ParentPresenter parent);
+
+    /**
+     * Stores changes to preferences.
+     */
+    void storeChanges();
+
+    /**
+     * Reads changes from preferences and updates the view.
+     */
+    void refresh();
 
     /** Interface for the parent presenter that owns the section. */
     public interface ParentPresenter {

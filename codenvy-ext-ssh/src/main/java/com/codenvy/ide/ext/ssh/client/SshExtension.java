@@ -11,10 +11,7 @@
 package com.codenvy.ide.ext.ssh.client;
 
 import com.codenvy.ide.api.extension.Extension;
-import com.codenvy.ide.api.preferences.PreferencesAgent;
-import com.codenvy.ide.ext.ssh.client.manage.SshKeyManagerPresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
@@ -26,7 +23,6 @@ import com.google.inject.Singleton;
 @Extension(title = "SSH", version = "3.0.0")
 public class SshExtension {
     @Inject
-    public SshExtension(PreferencesAgent preferencesAgent, Provider<SshKeyManagerPresenter> managerPresenter) {
-//        preferencesAgent.addPage(managerPresenter);
+    public SshExtension() {
     }
 }

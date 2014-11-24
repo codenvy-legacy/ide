@@ -37,48 +37,23 @@ public class EditorPreferenceReader {
     }
 
     /**
-     * Retrieves the editor preference object as stored in the preference json string.
-     * @return the preference object or null
-     */
-    private EditorPreferences getPreferencesOrNull() {
-        final String prefAsJson = this.preferencesManager.getValue(PREFERENCE_PROPERTY);
-        if (prefAsJson == null || prefAsJson.isEmpty()) {
-            return null;
-        }
-        JSONValue propertyObject;
-        try {
-            final JSONValue parseResult = JSONParser.parseStrict(prefAsJson);
-            propertyObject = parseResult.isObject();
-        } catch (final RuntimeException e) {
-            Log.error(KeymapPrefReader.class, "Error during preference parsing.", e);
-            return null;
-        }
-        if (propertyObject == null) {
-            return null;
-        }
-        JavaScriptObject propertyValue;
-        try {
-            propertyValue = propertyObject.isObject().getJavaScriptObject();
-        } catch (final RuntimeException e) {
-            Log.error(KeymapPrefReader.class, "Invalid value for editor preference.", e);
-            return null;
-        }
-        return propertyValue.cast();
-    }
-
-    /**
      * Returns the editor preference object.<br>
      * If there is none, return a properly initialized preference object.
      * @return editor preference
      */
     @NotNull
     public EditorPreferences getPreferences() {
-        final EditorPreferences resultOrNull = getPreferencesOrNull();
-        if (resultOrNull == null) {
-            return EditorPreferences.create();
-        } else {
-            return resultOrNull;
+        try {
+            final String prefAsJson = this.preferencesManager.getValue(PREFERENCE_PROPERTY);
+            JSONValue parseResult = JSONParser.parseStrict(prefAsJson);
+            JSONValue propertyObject = parseResult.isObject();
+            JavaScriptObject propertyValue = propertyObject.isObject().getJavaScriptObject();
+            return propertyValue.cast();
+        } catch (Exception e) {
+            Log.error(KeymapPrefReader.class, "Unable to get editor references.", e);
         }
+
+        return EditorPreferences.create();
     }
 
     /**

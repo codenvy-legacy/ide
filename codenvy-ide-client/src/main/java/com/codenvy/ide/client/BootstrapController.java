@@ -131,7 +131,17 @@ public class BootstrapController implements ProjectActionHandler {
         registerDefaultIcons(resources);
 
         // Inject ZeroClipboard script
-        injectScript("ZeroClipboard.min.js");
+        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "ZeroClipboard.min.js").setWindow(ScriptInjector.TOP_WINDOW)
+                      .setCallback(new Callback<Void, Exception>() {
+                          @Override
+                          public void onSuccess(Void result) {
+                          }
+
+                          @Override
+                          public void onFailure(Exception e) {
+                              Log.error(getClass(), "Unable to inject ZeroClipboard.min.js", e);
+                          }
+                      }).inject();
 
         // Inject CodeMirror scripts
         ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
@@ -158,26 +168,6 @@ public class BootstrapController implements ProjectActionHandler {
                           public void onFailure(Exception e) {
                               Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
                               initializationFailed("Unable to inject CodeMirror");
-                          }
-                      }).inject();
-
-    }
-
-    /**
-     * Inject the script from base module by file name.
-     *
-     * @param fileName
-     */
-    private void injectScript(final String fileName) {
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + fileName).setWindow(ScriptInjector.TOP_WINDOW)
-                      .setCallback(new Callback<Void, Exception>() {
-                          @Override
-                          public void onSuccess(Void result) {
-                          }
-
-                          @Override
-                          public void onFailure(Exception e) {
-                              Log.error(getClass(), "Unable to inject " + fileName, e);
                           }
                       }).inject();
 
@@ -237,7 +227,6 @@ public class BootstrapController implements ProjectActionHandler {
         userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
             @Override
             protected void onSuccess(Map<String, String> preferences) {
-                appContext.getCurrentUser().setPreferences(preferences);
                 preferencesManager.load(preferences);
             }
 

@@ -50,6 +50,10 @@ public class KeymapValuesHolder implements Iterable<Entry<EditorType, Keymap>> {
         return this.values.get(editorType);
     }
 
+    public Map<EditorType, Keymap> getValues() {
+        return values;
+    }
+
     @Override
     public Iterator<Entry<EditorType, Keymap>> iterator() {
         return this.values.entrySet().iterator();

@@ -30,4 +30,10 @@ public interface EditorSelectionPreferenceView extends View<EditorSelectionPrefe
 
         EditorType getConfiguredDefaultEditor();
     }
+
+    /**
+     * Refreshes the view.
+     */
+    void refresh();
+
 }

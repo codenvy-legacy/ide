@@ -11,7 +11,7 @@
 package com.codenvy.ide.ext.ssh.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-import com.codenvy.ide.api.preferences.PreferencesPagePresenter;
+import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.ext.ssh.client.SshKeyService;
 import com.codenvy.ide.ext.ssh.client.SshKeyServiceImpl;
 import com.codenvy.ide.ext.ssh.client.manage.SshKeyManagerPresenter;
@@ -33,7 +33,7 @@ public class SshGinModule extends AbstractGinModule {
 
         bind(SshKeyManagerView.class).to(SshKeyManagerViewImpl.class).in(Singleton.class);
         bind(UploadSshKeyView.class).to(UploadSshKeyViewImpl.class).in(Singleton.class);
-        GinMultibinder<PreferencesPagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencesPagePresenter.class);
+        GinMultibinder<PreferencePagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencePagePresenter.class);
         prefBinder.addBinding().to(SshKeyManagerPresenter.class);
     }
 }

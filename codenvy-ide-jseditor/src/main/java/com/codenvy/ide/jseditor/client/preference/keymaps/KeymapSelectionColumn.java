@@ -50,4 +50,5 @@ public class KeymapSelectionColumn extends Column<EditorType, Keymap> {
         final KeymapSelectionCell cell = (KeymapSelectionCell)getCell();
         cell.setViewData(key, value.getKey());
     }
+
 }
