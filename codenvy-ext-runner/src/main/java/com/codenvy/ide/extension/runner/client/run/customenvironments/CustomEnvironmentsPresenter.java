@@ -98,8 +98,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                             public void accepted(String value) {
                                                 createEnvironment(value);
                                             }
-                                        }, null
-                                       ).withValidator(nameValidator).show();
+                                        }, null).withValidator(nameValidator).show();
     }
 
     private void createEnvironment(String name) {
@@ -134,8 +133,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                                 @Override
                                                 protected void onFailure(Throwable ignore) {
                                                 }
-                                            }
-                                           );
+                                            });
         }
     }
 
@@ -149,8 +147,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                               public void accepted() {
                                                   removeSelectedEnvironment();
                                               }
-                                          }, null
-                                         ).show();
+                                          }, null).show();
     }
 
     private void removeSelectedEnvironment() {
@@ -192,8 +189,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
                                                                 dtoUnmarshallerFactory);
                     eventBus.fireEvent(new FileEvent(new EnvironmentScript(project, item, eventBus, projectServiceClient,
                                                                            dtoUnmarshallerFactory, environment.getName()),
-                                                     FileEvent.FileOperation.OPEN
-                    ));
+                                                     FileEvent.FileOperation.OPEN));
                 }
             }
 
