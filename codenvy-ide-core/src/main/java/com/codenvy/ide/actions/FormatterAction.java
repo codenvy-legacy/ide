@@ -48,11 +48,14 @@ public class FormatterAction extends Action {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
         final EditorPartPresenter editor = editorAgent.getActiveEditor();
-        if (editor instanceof HasHandlesOperationsView) {
-            final HandlesTextOperations handlesOperationsView = ((HasHandlesOperationsView)editor).getView();
-            if (handlesOperationsView != null && handlesOperationsView.canDoOperation(TextEditorOperations.FORMAT)) {
-                handlesOperationsView.doOperation(TextEditorOperations.FORMAT);
-            }
+        HandlesTextOperations handlesOperations = null;
+        if (editor instanceof HandlesTextOperations) {
+            handlesOperations = (HandlesTextOperations) editor;
+        } else if (editor instanceof HasHandlesOperationsView) {
+            handlesOperations = ((HasHandlesOperationsView)editor).getView();
+        }
+        if (handlesOperations != null && handlesOperations.canDoOperation(TextEditorOperations.FORMAT)) {
+            handlesOperations.doOperation(TextEditorOperations.FORMAT);
         }
     }
 
@@ -61,12 +64,17 @@ public class FormatterAction extends Action {
         final EditorPartPresenter editor = editorAgent.getActiveEditor();
         boolean isCanDoOperation = false;
 
-        if (editor instanceof HasHandlesOperationsView) {
-            final HandlesTextOperations handlesOperationsView = ((HasHandlesOperationsView)editor).getView();
-            if (handlesOperationsView != null) {
-                isCanDoOperation = handlesOperationsView.canDoOperation(TextEditorOperations.FORMAT);
-            }
+        HandlesTextOperations handlesOperations = null;
+        if (editor instanceof HandlesTextOperations) {
+            handlesOperations = (HandlesTextOperations) editor;
+        } else if (editor instanceof HasHandlesOperationsView) {
+            handlesOperations = ((HasHandlesOperationsView)editor).getView();
         }
+
+        if (handlesOperations != null) {
+                isCanDoOperation = handlesOperations.canDoOperation(TextEditorOperations.FORMAT);
+        }
+
         e.getPresentation().setEnabled(isCanDoOperation);
         e.getPresentation().setVisible(appContext.getCurrentProject() != null);
     }

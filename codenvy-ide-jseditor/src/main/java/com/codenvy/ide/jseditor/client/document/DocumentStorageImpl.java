@@ -52,7 +52,7 @@ public class DocumentStorageImpl implements DocumentStorage {
     }
 
     @Override
-    public void saveDocument(final EditorInput editorInput, final EmbeddedDocument document,
+    public void saveDocument(final EditorInput editorInput, final Document document,
                              final boolean overwrite, final AsyncCallback<EditorInput> callback) {
         final FileNode file = editorInput.getFile();
         file.updateContent(document.getContents(), new AsyncCallback<Void>() {
@@ -80,7 +80,7 @@ public class DocumentStorageImpl implements DocumentStorage {
     }
 
     @Override
-    public void documentClosed(final EmbeddedDocument document) {
+    public void documentClosed(final Document document) {
     }
 
 }

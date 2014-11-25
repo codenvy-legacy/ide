@@ -39,18 +39,23 @@ public class RequireJsLoader {
         this.moduleHolder = moduleHolder;
     }
 
-    public void require(final Callback<Void, Throwable> callback,
+    public void require(final Callback<JavaScriptObject[], Throwable> callback,
                         final String[] requiredScripts,
                         final String[] moduleKeys) {
         // require with default config
         final RequirejsConfig defaultConfig = RequirejsConfig.create();
         defaultConfig.setBaseUrl(GWT.getModuleBaseForStaticFiles());
+        defaultConfig.setWaitSeconds(15);
 
         require(new RequirejsCallback() {
 
             @Override
             public void onReady(final JsArray<RequirejsModule> modules) {
-                callback.onSuccess(null);
+                final JavaScriptObject[] result = new JavaScriptObject[modules.length()];
+                for (int i = 0; i < modules.length(); i++) {
+                    result[i] = modules.get(i);
+                }
+                callback.onSuccess(result);
             }
         }, new RequirejsErrorHandler() {
 
@@ -175,4 +180,8 @@ public class RequireJsLoader {
     private static final native void consoleWarn(String base, Object param1, Object param2, Object param3) /*-{
         $wnd.console.warn(base, param1, param2, param3);
     }-*/;
+
+    public void require(final Callback<JavaScriptObject[], Throwable> callback, final String[] requiredScripts) {
+        require(callback, requiredScripts, new String[0]);
+    }
 }

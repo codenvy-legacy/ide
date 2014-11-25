@@ -10,31 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.infopanel;
 
+import javax.inject.Inject;
+
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
-import com.codenvy.ide.jseditor.client.events.CursorActivityEvent;
-import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeHandler;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Visibility;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -43,18 +36,14 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author "Mickaël Leduque"
  */
-public class InfoPanel extends Composite implements CursorActivityHandler, FocusHandler, BlurHandler, KeymapChangeHandler {
+public class InfoPanel extends Composite implements KeymapChangeHandler {
 
     /** The UI binder instance. */
     private static final InfoPanelUiBinder UIBINDER = GWT.create(InfoPanelUiBinder.class);
 
-
     private final EditorTypeRegistry editorTypeRegistry;
 
-    /** The related editor view. */
-    private EmbeddedTextEditorPartView editor;
     /** The i18n constants. */
-
     @UiField(provided = true)
     JsEditorConstants constants;
 
@@ -75,12 +64,10 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
 
     private EditorType editorType;
 
-    @AssistedInject
-    public InfoPanel(@Assisted final EmbeddedTextEditorPartView editor,
-                     final JsEditorConstants constants,
+    @Inject
+    public InfoPanel(final JsEditorConstants constants,
                      final EditorTypeRegistry editorTypeRegistry,
                      final EventBus eventBus) {
-        this.editor = editor;
         this.constants = constants;
         this.editorTypeRegistry = editorTypeRegistry;
         initWidget(UIBINDER.createAndBindUi(this));
@@ -107,27 +94,21 @@ public class InfoPanel extends Composite implements CursorActivityHandler, Focus
         setTabSize(tabSize);
     }
 
-    @Override
-    public void onBlur(final BlurEvent event) {
-        setCharPosition(null);
-        setLineNumber(editor.getEmbeddedDocument().getLineCount());
-    }
-
-    @Override
-    public void onFocus(final FocusEvent event) {
-        updateCursorPosition();
-    }
-
-    /** Update the line and char display. */
-    public void updateCursorPosition() {
-        final TextPosition position = this.editor.getEmbeddedDocument().getCursorPosition();
+    /**
+     *  Update the line and char display to show a position in the text.
+     *  @param position the position in the text
+     */
+    public void updateCursorPosition(final TextPosition position) {
         setCharPosition(position.getCharacter() + 1);
         setLineNumber(position.getLine() + 1);
     }
 
-    @Override
-    public void onCursorActivity(final CursorActivityEvent event) {
-        updateCursorPosition();
+    /**
+     *  Update the line and char display to show the line count.
+     */
+    public void displayLineCount(final int linecount) {
+        setCharPosition(null);
+        setLineNumber(linecount + 1);
     }
 
     /**

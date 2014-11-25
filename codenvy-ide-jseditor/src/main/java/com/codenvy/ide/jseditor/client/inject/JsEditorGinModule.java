@@ -36,7 +36,7 @@ import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistryImpl;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.filetype.MultipleMethodFileIdentifier;
-import com.codenvy.ide.jseditor.client.infopanel.InfoPanelFactory;
+import com.codenvy.ide.jseditor.client.infopanel.InfoPanel;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMapImpl;
 import com.codenvy.ide.jseditor.client.prefmodel.DefaultEditorTypePrefReader;
@@ -52,8 +52,6 @@ import com.codenvy.ide.jseditor.client.reconciler.ReconcilerImpl;
 import com.codenvy.ide.jseditor.client.requirejs.ModuleHolder;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartViewImpl;
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPresenterFactory;
-import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorViewFactory;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.inject.Provides;
@@ -69,12 +67,8 @@ public class JsEditorGinModule extends AbstractGinModule {
     protected void configure() {
         bind(ModuleHolder.class).in(Singleton.class);
 
-        // Bind the embedded text editor presenter factory
-        install(new GinFactoryModuleBuilder().build(EmbeddedTextEditorPresenterFactory.class));
-        // the view factory
-        install(new GinFactoryModuleBuilder()
-                .implement(EmbeddedTextEditorPartView.class, EmbeddedTextEditorPartViewImpl.class)
-                .build(EmbeddedTextEditorViewFactory.class));
+        // the embedded editor view
+        bind(EmbeddedTextEditorPartView.class).to(EmbeddedTextEditorPartViewImpl.class);
 
         // Bind the file type identifier
         bind(FileTypeIdentifier.class).to(MultipleMethodFileIdentifier.class);
@@ -93,8 +87,8 @@ public class JsEditorGinModule extends AbstractGinModule {
         // bind the default editor
         bind(EditorProvider.class).annotatedWith(Names.named("defaultEditor")).to(DefaultEditorProvider.class);
 
-        // bind the info panel factory
-        install(new GinFactoryModuleBuilder().build(InfoPanelFactory.class));
+        // bind the info panel
+        bind(InfoPanel.class);
 
         // bind the document position model
         bind(DocumentPositionMap.class).to(DocumentPositionMapImpl.class);

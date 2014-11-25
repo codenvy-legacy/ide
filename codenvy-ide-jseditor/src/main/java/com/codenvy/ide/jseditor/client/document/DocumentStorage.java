@@ -11,13 +11,13 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.ImplementedBy;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Interface for file retrieval and storage operations.
@@ -42,7 +42,7 @@ public interface DocumentStorage {
      * @param callback operation to do when the content is ready
      */
     void saveDocument(@Nullable final EditorInput editorInput,
-                      @Nonnull EmbeddedDocument document,
+                      @Nonnull Document document,
                       boolean overwrite,
                       @Nonnull final AsyncCallback<EditorInput> callback);
 
@@ -50,7 +50,7 @@ public interface DocumentStorage {
      * Action taken when the document is closed.
      * @param document the document
      */
-    public void documentClosed(@Nonnull EmbeddedDocument document);
+    public void documentClosed(@Nonnull Document document);
 
     /**
      * Action taken when retrieve action is successful.

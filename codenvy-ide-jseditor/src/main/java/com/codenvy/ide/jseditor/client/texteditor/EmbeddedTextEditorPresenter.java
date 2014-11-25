@@ -28,29 +28,37 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
-import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.debug.BreakpointManager;
 import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.debug.HasBreakpointRenderer;
+import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
+import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
+import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
+import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
-import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
+import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
+import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
+import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
-import com.codenvy.ide.jseditor.client.preference.EditorPrefLocalizationConstant;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
+import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
@@ -60,6 +68,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -69,9 +78,12 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Presenter part for the embedded variety of editor implementations.
  */
-public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter implements EmbeddedTextEditor, FileEventHandler,
+public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends AbstractEditorPresenter
+                                                                         implements EmbeddedTextEditor,
+                                                                                    FileEventHandler,
                                                                                     UndoableEditor,
                                                                                     HasBreakpointRenderer,
+                                                                                    HandlesTextOperations,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
@@ -79,11 +91,13 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     private final Resources                      resources;
     private final WorkspaceAgent                 workspaceAgent;
-    private final EmbeddedTextEditorViewFactory  textEditorViewFactory;
-    private       EditorPrefLocalizationConstant constant;
+    private final EditorWidgetFactory<T>         editorWigetFactory;
+    private final EditorModule<T>                editorModule;
+    private final JsEditorConstants constant;
 
     private final DocumentStorage      documentStorage;
     private final EventBus             generalEventBus;
+    private final FileTypeIdentifier   fileTypeIdentifier;
     private final DialogFactory        dialogFactory;
     private final CodeAssistantFactory codeAssistantFactory;
     private final QuickAssistantFactory quickAssistantFactory;
@@ -92,44 +106,70 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     private List<EditorUpdateAction> updateActions;
 
     private TextEditorConfiguration    configuration;
+
+    private EditorWidget               editorWidget;
+    private EmbeddedDocument           document;
+    private CursorModelWithHandler     cursorModel;
+    private HasKeybindings keyBindingsManager = new TemporaryKeybindingsManager();
+
     private NotificationManager        notificationManager;
-    private EmbeddedTextEditorPartView editor;
+    private final EmbeddedTextEditorPartView editorView;
     private OutlineImpl                outline;
 
     /** The editor's error state. */
     private EditorState errorState;
 
+    private boolean delayedFocus = false;
+
+    private BreakpointRendererFactory breakpointRendererFactory;
+    private BreakpointRenderer breakpointRenderer;
+
+
+    /** The editor handle for this editor. */
+    private final EditorHandle handle = new EditorHandle() {};
+
+    private List<String> fileTypes;
+
     @AssistedInject
-    public EmbeddedTextEditorPresenter(final BreakpointManager breakpointManager,
-                                       final Resources resources,
-                                       final WorkspaceAgent workspaceAgent,
-                                       final EventBus eventBus,
-                                       final EditorPrefLocalizationConstant constant,
+    public EmbeddedTextEditorPresenter(final CodeAssistantFactory codeAssistantFactory,
+                                       final BreakpointManager breakpointManager,
+                                       final BreakpointRendererFactory breakpointRendererFactory,
+                                       final DialogFactory dialogFactory,
                                        final DocumentStorage documentStorage,
-                                       final CodeAssistantFactory codeAssistantFactory,
+                                       final JsEditorConstants constant,
+                                       @Assisted final EditorWidgetFactory<T> editorWigetFactory,
+                                       final EditorModule<T> editorModule,
+                                       final EmbeddedTextEditorPartView editorView,
+                                       final EventBus eventBus,
+                                       final FileTypeIdentifier fileTypeIdentifier,
                                        final QuickAssistantFactory quickAssistantFactory,
-                                       @Assisted final EmbeddedTextEditorViewFactory textEditorViewFactory,
-                                       DialogFactory dialogFactory) {
+                                       final Resources resources,
+                                       final WorkspaceAgent workspaceAgent) {
+
         this.breakpointManager = breakpointManager;
+        this.breakpointRendererFactory = breakpointRendererFactory;
+        this.codeAssistantFactory = codeAssistantFactory;
         this.constant = constant;
+        this.dialogFactory = dialogFactory;
+        this.documentStorage = documentStorage;
+        this.editorView = editorView;
+        this.editorModule = editorModule;
+        this.editorWigetFactory = editorWigetFactory;
+        this.fileTypeIdentifier = fileTypeIdentifier;
+        this.generalEventBus = eventBus;
+        this.quickAssistantFactory = quickAssistantFactory;
         this.resources = resources;
         this.workspaceAgent = workspaceAgent;
-        this.textEditorViewFactory = textEditorViewFactory;
-        this.documentStorage = documentStorage;
-        this.codeAssistantFactory = codeAssistantFactory;
-        this.quickAssistantFactory = quickAssistantFactory;
 
-        this.generalEventBus = eventBus;
-        this.dialogFactory = dialogFactory;
+        this.editorView.setDelegate(this);
         eventBus.addHandler(FileEvent.TYPE, this);
     }
 
     @Override
     protected void initializeEditor() {
-        editor.configure(getConfiguration(), getEditorInput().getFile());
-        new TextEditorInit(configuration, 
+
+        new TextEditorInit<T>(configuration, 
                            generalEventBus,
-                           this.editor.getEditorHandle(),
                            this.codeAssistantFactory,
                            this.quickAssistantFactory,
                            this).init();
@@ -139,27 +179,81 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-                documentStorage.getDocument(input.getFile(), new EmbeddedDocumentCallback() {
+                if (editorModule.isError()) {
+                    displayErrorPanel();
+                    return;
+                }
+                final boolean moduleReady = editorModule.isReady();
+                EditorInitCallback<T> dualCallback = new EditorInitCallback<T>(moduleReady) {
                     @Override
-                    public void onDocumentReceived(final String contents) {
-                        editor.setContents(contents, input.getFile());
-                        firePropertyChange(PROP_INPUT);
-
-                        setupEventHandlers();
+                    public void onReady(final String content) {
+                        createEditor(content);
                     }
-                });
+
+                    @Override
+                    public void onError() {
+                        displayErrorPanel();
+                    }
+                };
+                documentStorage.getDocument(input.getFile(), dualCallback);
+                if (! moduleReady) {
+                    editorModule.waitReady(dualCallback);
+                }
             }
         });
     }
 
+    private void createEditor(final String content) {
+        this.fileTypes = detectFileType(getEditorInput().getFile());
+        this.editorWidget =  editorWigetFactory.createEditorWidget(fileTypes);
+
+        // finish editor initialization
+        this.editorView.setEditorWidget(this.editorWidget);
+
+        this.document = this.editorWidget.getDocument();
+        this.document.setFile(input.getFile());
+        this.cursorModel = new EmbeddedEditorCursorModel(this.document);
+
+        this.editorWidget.setTabSize(this.configuration.getTabWidth());
+
+        // initialize info panel
+        this.editorView.initInfoPanel(this.editorWidget.getMode(), this.editorWidget.getEditorType(),
+                                      this.editorWidget.getKeymap(), this.document.getLineCount(),
+                                      this.configuration.getTabWidth());
+
+        // handle delayed focus
+        // should also check if I am visible, but how ?
+        if (delayedFocus) {
+            this.editorWidget.setFocus();
+            this.delayedFocus = false;
+        }
+
+        // delayed keybindings creation ?
+        switchHasKeybinding();
+
+        this.editorWidget.setValue(content);
+        this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.document));
+        final DocumentHandle docHandle = this.document.getDocumentHandle();
+        docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, content.length(), content));
+
+        final OutlineImpl outline = getOutline();
+        if (outline != null) {
+            outline.bind(this.cursorModel, this.document);
+        }
+
+        firePropertyChange(PROP_INPUT);
+
+        setupEventHandlers();
+    }
+
     private void setupEventHandlers() {
-        this.editor.addChangeHandler(new ChangeHandler() {
+        this.editorWidget.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(final ChangeEvent event) {
                 handleDocumentChanged();
             }
         });
-        this.editor.addGutterClickHandler(new GutterClickHandler() {
+        this.editorWidget.addGutterClickHandler(new GutterClickHandler() {
             @Override
             public void onGutterClick(final GutterClickEvent event) {
                 if (Gutters.BREAKPOINTS_GUTTER.equals(event.getGutterId())
@@ -170,18 +264,22 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         });
     }
 
+    private void displayErrorPanel() {
+        this.editorView.showPlaceHolder(new Label(constant.editorInitErrorMessage()));
+    }
+
     private void handleDocumentChanged() {
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
-                updateDirtyState(editor.isDirty());
+                updateDirtyState(editorWidget.isDirty());
             }
         });
     }
 
     @Override
     public void close(final boolean save) {
-        this.documentStorage.documentClosed(this.editor.getEmbeddedDocument());
+        this.documentStorage.documentClosed(this.document);
     }
 
     @Override
@@ -195,13 +293,13 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
     }
 
     @Override
-    public OutlinePresenter getOutline() {
+    public OutlineImpl getOutline() {
         if (outline != null) {
             return outline;
         }
         final OutlineModel outlineModel = getConfiguration().getOutline();
         if (outlineModel != null) {
-            outline = new OutlineImpl(resources, outlineModel, editor, this);
+            outline = new OutlineImpl(resources, outlineModel);
             return outline;
         } else {
             return null;
@@ -210,7 +308,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Nonnull
     protected Widget getWidget() {
-        return editor.asWidget();
+        return this.editorView.asWidget();
     }
 
     @Override
@@ -223,7 +321,6 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
         return null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void onClose(@Nonnull final AsyncCallback<Void> callback) {
         if (isDirty()) {
@@ -253,12 +350,16 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public EmbeddedTextEditorPartView getView() {
-        return this.editor;
+        return this.editorView;
     }
 
     @Override
     public void activate() {
-        this.editor.setFocus();
+        if (editorWidget != null) {
+            this.editorWidget.setFocus();
+        } else {
+            this.delayedFocus = true;
+        }
     }
 
     @Override
@@ -279,8 +380,6 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
                            @Nonnull final NotificationManager notificationManager) {
         this.configuration = configuration;
         this.notificationManager = notificationManager;
-        this.editor = this.textEditorViewFactory.createTextEditorPartView();
-        this.editor.setDelegate(this);
     }
 
     @Override
@@ -325,12 +424,12 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public void doSave(final AsyncCallback<EditorInput> callback) {
-        final EmbeddedDocument doc = editor.getEmbeddedDocument();
 
-        this.documentStorage.saveDocument(getEditorInput(), doc, false, new AsyncCallback<EditorInput>() {
+        this.documentStorage.saveDocument(getEditorInput(), this.document, false, new AsyncCallback<EditorInput>() {
             @Override
             public void onSuccess(EditorInput editorInput) {
                 updateDirtyState(false);
+                editorWidget.markClean();
                 afterSave();
                 if (callback != null) {
                     callback.onSuccess(editorInput);
@@ -350,7 +449,6 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     /** Override this method for handling after save actions. */
     protected void afterSave() {
-        this.editor.markClean();
     }
 
     @Override
@@ -360,8 +458,8 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public HandlesUndoRedo getUndoRedo() {
-        if (this.editor != null) {
-            return this.editor.getUndoRedo();
+        if (this.editorWidget != null) {
+            return this.editorWidget.getUndoRedo();
         } else {
             return null;
         }
@@ -380,17 +478,27 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public BreakpointRenderer getBreakpointRenderer() {
-        return this.editor.getBreakpointRenderer();
+        if (this.breakpointRenderer == null && this.editorWidget != null) {
+            this.breakpointRenderer = this.breakpointRendererFactory.create(this.getHasGutter(),
+                                                                            this.editorWidget.getLineStyler(),
+                                                                            this.document);
+        }
+        return this.breakpointRenderer;
     }
 
     @Override
     public EmbeddedDocument getDocument() {
-        return this.getView().getEmbeddedDocument();
+        return this.document;
     }
 
     @Override
     public String getContentType() {
-        return this.getView().getContentType();
+        // Before the editor content is ready, the content type is not defined
+        if (this.fileTypes == null || this.fileTypes.isEmpty()) {
+            return null;
+        } else {
+            return this.fileTypes.get(0);
+        }
     }
 
     @Override
@@ -405,7 +513,7 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public void showMessage(final String message) {
-        getView().showMessage(message);
+        this.editorWidget.showMessage(message);
     }
 
     @Override
@@ -441,6 +549,126 @@ public class EmbeddedTextEditorPresenter extends AbstractEditorPresenter impleme
 
     @Override
     public void addKeybinding(final Keybinding keybinding) {
-        this.editor.getHasKeybindings().addKeybinding(keybinding);
+        // the actual HasKeyBindings object can change, so use indirection
+        getHasKeybindings().addKeybinding(keybinding);
+    }
+
+    private List<String> detectFileType(final FileNode file) {
+        final List<String> result = new ArrayList<>();
+        if (file != null) {
+            // use the identification patterns
+            final List<String> types = this.fileTypeIdentifier.identifyType(file);
+            if (types != null && !types.isEmpty()) {
+                result.addAll(types);
+            }
+            // use the registered media type if there is one
+            if (file.getData() != null) {
+                final String storedContentType = file.getData().getMediaType();
+                if (storedContentType != null
+                    && ! storedContentType.isEmpty()
+                    // give another chance at detection
+                    && ! DEFAULT_CONTENT_TYPE.equals(storedContentType)) {
+                    result.add(storedContentType);
+                }
+            }
+        }
+
+        // ultimate fallback - can't make more generic for text
+        result.add(DEFAULT_CONTENT_TYPE);
+
+        return result;
+    }
+
+    public HasGutter getHasGutter() {
+        if (this.editorWidget != null) {
+            return this.editorWidget;
+        } else {
+            return null;
+        }
+    }
+
+    public HasTextMarkers getHasTextMarkers() {
+        if (this.editorWidget != null) {
+            return this.editorWidget;
+        } else {
+            return null;
+        }
+    }
+
+    public HasKeybindings getHasKeybindings() {
+        return this.keyBindingsManager;
+    }
+
+    @Override
+    public CursorModelWithHandler getCursorModel() {
+        return this.cursorModel;
+    }
+
+    public void showCompletionProposals(final CompletionsSource source) {
+        this.editorView.showCompletionProposals(this.editorWidget, source);
+    }
+
+    public void showCompletionProposals() {
+        this.editorView.showCompletionProposals(this.editorWidget);
+    }
+
+    public EditorHandle getEditorHandle() {
+        return this.handle;
+    }
+
+    private void switchHasKeybinding() {
+        final HasKeybindings current = getHasKeybindings();
+        if (! (current instanceof TemporaryKeybindingsManager)) {
+            return;
+        }
+        // change the key binding instance and add all bindings to the new one
+        this.keyBindingsManager = this.editorWidget;
+        final List<Keybinding> bindings = ((TemporaryKeybindingsManager)current).getbindings();
+        for (final Keybinding binding : bindings) {
+            this.keyBindingsManager.addKeybinding(binding);
+        }
+    }
+
+    @Override
+    public void onResize() {
+        if (this.editorWidget != null) {
+            this.editorWidget.onResize();
+        }
+    }
+
+    @Override
+    public void editorLostFocus() {
+        this.editorView.updateInfoPanelUnfocused(this.document.getLineCount());
+    }
+
+    @Override
+    public void editorGotFocus() {
+        this.editorView.updateInfoPanelPosition(this.document.getCursorPosition());
+    }
+
+    @Override
+    public void editorCursorPositionChanged() {
+        this.editorView.updateInfoPanelPosition(this.document.getCursorPosition());
+    }
+
+    @Override
+    public boolean canDoOperation(final int operation) {
+        if (TextEditorOperations.CODEASSIST_PROPOSALS == operation) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void doOperation(final int operation) {
+        switch (operation) {
+            case TextEditorOperations.CODEASSIST_PROPOSALS:
+                if (this.document != null) {
+                    this.document.getDocumentHandle().getDocEventBus().fireEvent(new CompletionRequestEvent());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
+        }
     }
 }

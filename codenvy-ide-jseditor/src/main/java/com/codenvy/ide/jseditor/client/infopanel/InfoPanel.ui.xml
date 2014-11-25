@@ -111,7 +111,7 @@
         <div class="{style.topBorder}"/>
         <!-- Actual content -->
         <div class="{style.infoPanel-horizlayout}">
-            <div class="{style.info-block} {style.info-block-start}">
+            <div class="{style.info-block} {style.info-block-start}"  style="width:22em;">
                 <span class="{style.infoPanel-item} {style.info-label}">
                     <ui:text from="{constants.infoPaneLineLabel}"/>
                 </span>

@@ -39,10 +39,4 @@ public interface EditorPrefLocalizationConstant extends Messages {
 
     @DefaultMessage("Default Editor")
     String defaultEditorLabel();
-
-    @Key("askWindow.close.title")
-    String askWindowCloseTitle();
-
-    @Key("askWindow.SaveChangesMessage")
-    String askWindowSaveChangesMessage(String name);
 }

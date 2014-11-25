@@ -15,9 +15,7 @@ import static com.codenvy.ide.jseditor.client.gutter.Gutters.BREAKPOINTS_GUTTER;
 import javax.annotation.Nonnull;
 
 import com.codenvy.ide.debug.BreakpointRenderer;
-import com.codenvy.ide.jseditor.client.document.DocumentHandle;
-import com.codenvy.ide.jseditor.client.document.UseDocumentHandle;
-import com.codenvy.ide.jseditor.client.texteditor.EditorHandle;
+import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.texteditor.EditorResources;
 import com.codenvy.ide.jseditor.client.texteditor.HasGutter;
 import com.codenvy.ide.jseditor.client.texteditor.HasGutter.LineNumberingChangeCallback;
@@ -33,7 +31,7 @@ import elemental.dom.Element;
 /**
  * Renderer for breakpoint marks in gutter (on the left margin of the text).
  */
-public class BreakpointRendererImpl implements BreakpointRenderer, UseDocumentHandle {
+public class BreakpointRendererImpl implements BreakpointRenderer {
 
     private static final String BREAKPOINT_ACTIVE_PROPERTY_NAME = "bpActive";
 
@@ -49,28 +47,20 @@ public class BreakpointRendererImpl implements BreakpointRenderer, UseDocumentHa
     /** The component responsible for line style handling. */
     private final LineStyler lineStyler ;
 
-    /** The handle on the component. */
-    private DocumentHandle documentHandle;
+    /** The documentt. */
+    private Document document;
 
     @AssistedInject
     public BreakpointRendererImpl(final BreakpointResources breakpointResources,
                                   final EditorResources editorResources,
-                                  @Assisted final EditorHandle editorHandle) {
+                                  @Assisted final HasGutter hasGutter,
+                                  @Assisted final LineStyler lineStyler,
+                                  @Assisted final Document document) {
         this.breakpointResources = breakpointResources;
         this.editorResources = editorResources;
-        this.hasGutter = editorHandle.getEditor().getHasGutter();
-        this.lineStyler = editorHandle.getEditor().getLineStyler();
-        this.documentHandle = editorHandle.getEditor().getEmbeddedDocument().getDocumentHandle();
-    }
-
-    @Override
-    public void setDocumentHandle(final DocumentHandle handle) {
-        this.documentHandle = handle;
-    }
-
-    @Override
-    public DocumentHandle getDocumentHandle() {
-        return this.documentHandle;
+        this.hasGutter = hasGutter;
+        this.lineStyler = lineStyler;
+        this.document = document;
     }
 
     @Override
@@ -86,7 +76,7 @@ public class BreakpointRendererImpl implements BreakpointRenderer, UseDocumentHa
             this.hasGutter.addGutterItem(lineNumber, BREAKPOINTS_GUTTER, createBreakpointMark(), new LineNumberingChangeCallback() {
                 @Override
                 public void onLineNumberingChange(final int fromLine, final int linesRemoved, final int linesAdded) {
-                    action.onLineChange(documentHandle.getDocument().getFile(), fromLine, linesAdded, linesRemoved);
+                    action.onLineChange(document.getFile(), fromLine, linesAdded, linesRemoved);
                 }
             });
         }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import java.util.List;
+
 
 /**
  * Interface for {@link EditorWidget} factories.
@@ -21,9 +23,8 @@ public interface EditorWidgetFactory<T extends EditorWidget> {
     /**
      * Create an editor instance.
      *
-     * @param editorMode
-     *         the editor mode
+     * @param editorModes the editor modes
      * @return an editor instance
      */
-    T createEditorWidget(final String editorMode);
+    T createEditorWidget(List<String> editorModes);
 }

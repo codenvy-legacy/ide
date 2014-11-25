@@ -62,29 +62,26 @@ import elemental.events.MouseEvent;
  * Initialization controller for the text editor.
  * Sets-up (when available) the different components that depend on the document being ready.
  */
-public class TextEditorInit {
+public class TextEditorInit<T extends EditorWidget> {
 
     /** The logger. */
     private static final Logger LOG = Logger.getLogger(TextEditorInit.class.getName());
 
     private final TextEditorConfiguration configuration;
     private final EventBus generalEventBus;
-    private final EditorHandle editorHandle;
     private final CodeAssistantFactory codeAssistantFactory;
     private final QuickAssistantFactory quickAssistantFactory;
-    private final EmbeddedTextEditorPresenter textEditor;
+    private final EmbeddedTextEditorPresenter<T> textEditor;
 
 
     public TextEditorInit(final TextEditorConfiguration configuration,
                           final EventBus generalEventBus,
-                          final EditorHandle editorHandle,
                           final CodeAssistantFactory codeAssistantFactory,
                           final QuickAssistantFactory quickAssistantFactory,
-                          final EmbeddedTextEditorPresenter textEditor) {
+                          final EmbeddedTextEditorPresenter<T> textEditor) {
 
         this.configuration = configuration;
         this.generalEventBus = generalEventBus;
-        this.editorHandle = editorHandle;
         this.codeAssistantFactory = codeAssistantFactory;
         this.quickAssistantFactory = quickAssistantFactory;
         this.textEditor = textEditor;
@@ -96,20 +93,19 @@ public class TextEditorInit {
      */
     public void init() {
 
-        final DocReadyInit<TextEditorInit> init = new DocReadyInit<TextEditorInit>() {
+        final DocReadyInit<TextEditorInit<T>> init = new DocReadyInit<TextEditorInit<T>>() {
 
             @Override
-            public void initialize(final DocumentHandle documentHandle, final TextEditorInit wrapped) {
+            public void initialize(final DocumentHandle documentHandle, final TextEditorInit<T> wrapped) {
                 configurePartitioner(documentHandle);
                 configureReconciler(documentHandle);
                 configureAnnotationModel(documentHandle);
                 configureCodeAssist(documentHandle);
                 configureQuickAssist(documentHandle);
                 configureChangeInterceptors(documentHandle);
-                configureKeybindings();
             }
         };
-        new DocReadyWrapper<TextEditorInit>(generalEventBus, this.editorHandle, init, this);
+        new DocReadyWrapper<TextEditorInit<T>>(generalEventBus, this.textEditor.getEditorHandle(), init, this);
     }
 
     /**
@@ -152,14 +148,14 @@ public class TextEditorInit {
         // gutter renderer
         final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
         annotationRenderer.setDocumentHandle(documentHandle);
-        annotationRenderer.setHasGutter(this.editorHandle.getEditor().getHasGutter());
+        annotationRenderer.setHasGutter(this.textEditor.getHasGutter());
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, annotationRenderer);
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, annotationRenderer);
 
         // inline renderer
         final InlineAnnotationRenderer inlineAnnotationRenderer = new InlineAnnotationRenderer();
         inlineAnnotationRenderer.setDocumentHandle(documentHandle);
-        inlineAnnotationRenderer.setHasTextMarkers(this.editorHandle.getEditor().getHasTextMarkers());
+        inlineAnnotationRenderer.setHasTextMarkers(this.textEditor.getHasTextMarkers());
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, inlineAnnotationRenderer);
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, inlineAnnotationRenderer);
 
@@ -197,7 +193,7 @@ public class TextEditorInit {
                     showCompletion(codeAssistant);
                 }
             };
-            final HasKeybindings hasKeybindings = this.editorHandle.getEditor().getHasKeybindings();
+            final HasKeybindings hasKeybindings = this.textEditor.getHasKeybindings();
             hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.SPACE, action));
 
             // handle CompletionRequest events that come from text operations instead of simple key binding
@@ -214,7 +210,7 @@ public class TextEditorInit {
                     showCompletion();
                 }
             };
-            final HasKeybindings hasKeybindings = this.editorHandle.getEditor().getHasKeybindings();
+            final HasKeybindings hasKeybindings = this.textEditor.getHasKeybindings();
             hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.SPACE, action));
 
             // handle CompletionRequest events that come from text operations instead of simple key binding
@@ -239,7 +235,7 @@ public class TextEditorInit {
         }
         final CodeAssistProcessor processor = codeAssistant.getProcessor(cursor);
         if (processor != null) {
-            this.editorHandle.getEditor().showCompletionProposals(new CompletionsSource() {
+            this.textEditor.showCompletionProposals(new CompletionsSource() {
                 @Override
                 public void computeCompletions(final CompletionReadyCallback callback) {
                     // cursor must be computed here again so it's original value is not baked in
@@ -260,7 +256,7 @@ public class TextEditorInit {
 
     /** Show the available completions. */
     private void showCompletion() {
-        editorHandle.getEditor().showCompletionProposals();
+        this.textEditor.showCompletionProposals();
     }
 
     /**
@@ -328,19 +324,6 @@ public class TextEditorInit {
                     }
                 }
             });
-        }
-    }
-
-    private void configureKeybindings() {
-        final HasKeybindings current = this.textEditor.getView().getHasKeybindings();
-        if (! (current instanceof TemporaryKeybindingsManager)) {
-            return;
-        }
-        // change the key binding instance and add all bindings to the new one
-        this.textEditor.getView().setFinalHasKeybinding();
-        final List<Keybinding> bindings = ((TemporaryKeybindingsManager)current).getbindings();
-        for (final Keybinding binding : bindings) {
-            this.textEditor.getView().getHasKeybindings().addKeybinding(binding);
         }
     }
 }

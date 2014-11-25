@@ -10,6 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-public interface EmbeddedTextEditorPresenterFactory {
-    EmbeddedTextEditorPresenter createTextEditor(EmbeddedTextEditorViewFactory textEditorViewFactory);
+/**
+ * Factory for {@link EmbeddedTextEditorPresenter} objects.
+ * @param <T> the type of the editor
+ */
+public interface EmbeddedTextEditorPresenterFactory<T extends EditorWidget> {
+    /**
+     * Create an instance of {@link EmbeddedTextEditorPresenter}.
+     * @param editorWidgetFactory the {@link EditorWidget} factory tu use
+     * @return a new {@link EmbeddedTextEditorPresenter}
+     */
+    EmbeddedTextEditorPresenter<T> createTextEditor(EditorWidgetFactory<T> editorWidgetFactory);
 }
