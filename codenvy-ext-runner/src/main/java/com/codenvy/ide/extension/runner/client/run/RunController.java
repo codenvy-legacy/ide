@@ -40,6 +40,7 @@ import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.extension.runner.client.RunnerExtension;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
+import com.codenvy.ide.extension.runner.client.run.event.RunnerApplicationStatusEvent;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
@@ -113,6 +114,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
     private   NotificationManager                               notificationManager;
     private   PreferencesManager                                preferencesManager;
     private   Notification                                      mainNotification;
+    private   EventBus                                          eventBus;
     private   ProjectRunCallback                                runCallback;
     private   boolean                                           isLastAppHealthOk;
     // The server makes the limited quantity of tries checking application's health,
@@ -143,6 +145,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                          final AppContext appContext,
                          DialogFactory dialogFactory,
                          @Named("workspaceId") String workspaceId) {
+        this.eventBus = eventBus;
         this.workspaceAgent = workspaceAgent;
         this.console = console;
         this.service = service;
@@ -877,6 +880,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                 break;
 
         }
+        eventBus.fireEvent(new RunnerApplicationStatusEvent(descriptor, appContext, descriptor.getStatus()));
     }
 
     /** Get logs of the currently launched application. */
