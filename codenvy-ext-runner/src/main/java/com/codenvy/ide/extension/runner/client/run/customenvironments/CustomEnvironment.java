@@ -81,7 +81,7 @@ public class CustomEnvironment {
                                                       "# your Dockerfile launches a server or daemon, like Tomcat,\n" +
                                                       "# you do not need to set this value as Docker will not\n" +
                                                       "# terminate until that process has finished.\n" +
-                                                      "CMD while true;do true; done" +
+                                                      "CMD sleep 365d" +
                                                       "\n";
     private String name;
 
