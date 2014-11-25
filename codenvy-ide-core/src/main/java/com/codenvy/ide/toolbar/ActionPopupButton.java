@@ -34,6 +34,7 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
     private static final ToolbarResources.Css css = Toolbar.RESOURCES.toolbar();
     private final ActionGroup         action;
     private final ActionManager       actionManager;
+    private final Element             tooltip;
     private       KeyBindingAgent     keyBindingAgent;
     private       PresentationFactory presentationFactory;
     private final String              place;
@@ -58,6 +59,7 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         this.place = place;
 
         panel = new ButtonPanel();
+        tooltip = DOM.createSpan();
         initWidget(panel);
         panel.setStyleName(css.popupButtonPanel());
         SVGResource icon = presentationFactory.getPresentation(action).getSVGIcon();
@@ -76,7 +78,6 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
         panel.add(caret);
         final String description = presentationFactory.getPresentation(action).getDescription();
         if (description != null) {
-            Element tooltip = DOM.createSpan();
             tooltip.setInnerText(description);
             tooltip.addClassName(css.tooltip());
             panel.getElement().appendChild(tooltip);
@@ -144,6 +145,8 @@ public class ActionPopupButton extends Composite implements CloseMenuHandler, Ac
 
     /** Mouse Over handler. */
     private void onMouseOver() {
+        tooltip.getStyle().setProperty("top", (panel.getAbsoluteTop() + panel.getOffsetHeight() + 9) + "px");
+        tooltip.getStyle().setProperty("left", (panel.getAbsoluteLeft() + panel.getOffsetWidth() / 2 - 11) + "px");
         panel.setStyleName(css.popupButtonPanelOver());
     }
 

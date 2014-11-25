@@ -97,25 +97,15 @@
 }
 
 .tooltip {
-    visibility: hidden;
-}
-
-.iconButtonPanelOver .tooltip,
-.iconButtonPanel:hover .tooltip {
-    top: 12px;
-}
-
-.popupButtonPanelOver .tooltip,
-.popupButtonPanel:hover .tooltip {
-    top: 15px;
+    display: none;
 }
 
 .iconButtonPanelOver .tooltip,
 .popupButtonPanelOver .tooltip,
 .iconButtonPanel:hover .tooltip,
 .popupButtonPanel:hover .tooltip {
-    visibility: visible;
-    position: relative;
+    display: inline-block;
+    position: fixed;
     cursor: default;
     padding: 8px;
     font-size: 8pt;

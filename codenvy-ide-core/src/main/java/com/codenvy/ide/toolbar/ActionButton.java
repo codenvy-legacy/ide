@@ -47,6 +47,7 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
     protected static final ToolbarResources.Css css = Toolbar.RESOURCES.toolbar();
     private final Presentation presentation;
     private final String       place;
+    private final Element      tooltip;
     /** Command which will be executed when button was pressed. */
     protected     Action       action;
     private       FlowPanel    panel;
@@ -60,6 +61,7 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
     public ActionButton(final Action action, ActionManager actionManager, final Presentation presentation, String place) {
         this.actionManager = actionManager;
         panel = new FlowPanel();
+        tooltip = DOM.createSpan();
         initWidget(panel);
         panel.setStyleName(css.iconButtonPanel());
         this.action = action;
@@ -70,7 +72,6 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         setEnabled(presentation.isEnabled());
         setVisible(presentation.isVisible());
         if (presentation.getDescription() != null) {
-            Element tooltip = DOM.createSpan();
             tooltip.setInnerText(presentation.getDescription());
             tooltip.addClassName(css.tooltip());
             panel.getElement().appendChild(tooltip);
@@ -144,6 +145,8 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
     /** Mouse Over handler. */
     @Override
     public void onMouseOver(MouseOverEvent event) {
+        tooltip.getStyle().setProperty("top", (panel.getAbsoluteTop() + panel.getOffsetHeight() + 9) + "px");
+        tooltip.getStyle().setProperty("left", (panel.getAbsoluteLeft() + panel.getOffsetWidth() / 2 - 11) + "px");
         if (!enabled) {
             return;
         }
