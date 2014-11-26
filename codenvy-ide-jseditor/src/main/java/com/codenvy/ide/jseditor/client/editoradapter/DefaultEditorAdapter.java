@@ -10,14 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.editoradapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
@@ -40,7 +46,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Default implementation of {@link EditorAdapter}.
  */
-public class DefaultEditorAdapter extends Composite implements EditorAdapter, RequiresResize {
+public class DefaultEditorAdapter extends Composite implements EditorAdapter, RequiresResize, UndoableEditor {
 
     /** The UI binder instance. */
     private static final DefaultEditorAdapterUiBinder UIBINDER = GWT.create(DefaultEditorAdapterUiBinder.class);
@@ -50,6 +56,9 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
 
     /** The nested presenter. */
     private NestablePresenter nestedPresenter;
+
+    /** The property listeners. */
+    private List<PropertyListener> propertylisteners;
 
     /** The panel of the component. */
     @UiField
@@ -201,18 +210,31 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
     }
 
     @Override
-    public void addPropertyListener(final PropertyListener listener) {
-        this.textEditor.addPropertyListener(listener);
-    }
-
-    @Override
     public Selection< ? > getSelection() {
         return this.textEditor.getSelection();
     }
 
     @Override
+    public void addPropertyListener(final PropertyListener listener) {
+        if (this.propertylisteners == null) {
+            this.propertylisteners = new ArrayList<>();
+            this.textEditor.addPropertyListener(new PropertyListener() {
+                @Override
+                public void propertyChanged(final PartPresenter source, final int propId) {
+                    for (final PropertyListener listener: propertylisteners) {
+                        listener.propertyChanged(DefaultEditorAdapter.this, propId);
+                    }
+                }
+            });
+        }
+        this.propertylisteners.add(listener);
+    }
+
+    @Override
     public void removePropertyListener(final PropertyListener listener) {
-        this.textEditor.removePropertyListener(listener);
+        if (this.propertylisteners != null) {
+            this.propertylisteners.remove(listener);
+        }
     }
 
     @Override
@@ -257,6 +279,16 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
     public void addKeybinding(final Keybinding keybinding) {
         this.textEditor.addKeybinding(keybinding);
     }
+
+    @Override
+    public HandlesUndoRedo getUndoRedo() {
+        if (this.textEditor instanceof UndoableEditor) {
+            return ((UndoableEditor)this.textEditor).getUndoRedo();
+        } else {
+            return new DummyHandlesUndoRedo();
+        }
+    }
+
     /** Interface for this component's UIBinder. */
     interface DefaultEditorAdapterUiBinder extends UiBinder<SimplePanel, Composite> {}
 
