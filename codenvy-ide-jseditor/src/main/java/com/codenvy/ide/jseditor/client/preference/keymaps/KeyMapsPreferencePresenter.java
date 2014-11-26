@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.preference.keymaps;
 
-import java.util.List;
 import java.util.Map.Entry;
 
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
@@ -66,11 +65,15 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
 
     @Override
     public void refresh() {
-        // Read preferences from PreferenceManager
-        keymapPrefReader.readPref(prefKeymaps);
-
-        // Update the view
+        readPreferenceFromPreferenceManager();
         view.refresh();
+    }
+
+    protected void readPreferenceFromPreferenceManager() {
+        keymapPrefReader.readPref(prefKeymaps);
+        for (final Entry<EditorType, Keymap> entry : prefKeymaps) {
+            keymapValuesHolder.setKeymap(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
@@ -81,10 +84,7 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
     @Override
     public void go(final AcceptsOneWidget container) {
         container.setWidget(null);
-        keymapPrefReader.readPref(prefKeymaps);
-        for (final Entry<EditorType, Keymap> entry : prefKeymaps) {
-            keymapValuesHolder.setKeymap(entry.getKey(), entry.getValue());
-        }
+        readPreferenceFromPreferenceManager();
         container.setWidget(view);
     }
 

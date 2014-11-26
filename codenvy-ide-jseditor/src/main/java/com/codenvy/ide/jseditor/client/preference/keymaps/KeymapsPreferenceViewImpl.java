@@ -127,6 +127,7 @@ public class KeymapsPreferenceViewImpl extends Composite implements KeymapsPrefe
 
     @Override
     public void refresh() {
+        onLoad();
     }
 
 }
