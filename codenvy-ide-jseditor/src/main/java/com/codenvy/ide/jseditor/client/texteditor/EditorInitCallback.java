@@ -31,6 +31,9 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
     /** The content of the document to open. */
     private String receivedContent;
 
+    /** Tells if editor init loader was shown. */
+    private boolean loaderWasShown = false;
+
     /**
      * Constructor.
      * @param moduleAlreadyReady if set to true, the callback will not wait for editor module initialization.
@@ -52,7 +55,9 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
 
     @Override
     public void onEditorModuleError() {
-        this.loader.hide(this.waitEditorMessageString);
+        if (this.loaderWasShown) {
+            this.loader.hide(this.waitEditorMessageString);
+        }
         onError();
     }
 
@@ -68,10 +73,13 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
 
     private void checkReadyAndContinue() {
         if (this.receivedContent != null && this.editorModuleReady) {
-            this.loader.hide(this.waitEditorMessageString);
+            if (this.loaderWasShown) {
+                this.loader.hide(this.waitEditorMessageString);
+            }
             onReady(this.receivedContent);
         } else if (! this.editorModuleReady) {
             // Show a loader for the editor preparation
+            this.loaderWasShown = true;
             this.loader.show(this.waitEditorMessageString);
         }
     }
