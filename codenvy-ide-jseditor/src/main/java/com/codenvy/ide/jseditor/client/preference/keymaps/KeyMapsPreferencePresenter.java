@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.preference.keymaps;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.jseditor.client.editortype.EditorTypeRegistry;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
 import com.codenvy.ide.jseditor.client.keymap.KeymapChangeEvent;
 import com.codenvy.ide.jseditor.client.keymap.KeymapValuesHolder;
@@ -37,15 +39,19 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
     private boolean dirty    = false;
 
     /** The preference page presenter. */
-    private ParentPresenter parentPresenter;
+    private ParentPresenter             parentPresenter;
+
+    private EditorTypeRegistry          editorTypeRegistry;
 
     @Inject
     public KeyMapsPreferencePresenter(final KeymapsPreferenceView view,
                                       final KeymapPrefReader keymapPrefReader,
-                                      final EventBus eventBus) {
+                                      final EventBus eventBus,
+                                      final EditorTypeRegistry editorTypeRegistry) {
         this.view = view;
         this.eventBus = eventBus;
         this.keymapPrefReader = keymapPrefReader;
+        this.editorTypeRegistry = editorTypeRegistry;
 
         this.view.setDelegate(this);
 
@@ -71,6 +77,13 @@ public class KeyMapsPreferencePresenter implements EditorPreferenceSection, Keym
 
     protected void readPreferenceFromPreferenceManager() {
         keymapPrefReader.readPref(prefKeymaps);
+        // init the default keymap
+        for (EditorType editorType : editorTypeRegistry.getEditorTypes()) {
+            List<Keymap> editorKeymaps = Keymap.getInstances(editorType);
+            if (editorKeymaps.size() > 0) {
+                keymapValuesHolder.setKeymap(editorType, editorKeymaps.get(0));
+            }
+        }
         for (final Entry<EditorType, Keymap> entry : prefKeymaps) {
             keymapValuesHolder.setKeymap(entry.getKey(), entry.getValue());
         }
