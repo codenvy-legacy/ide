@@ -74,12 +74,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     /** Store selected Menu Bar item. */
     private MenuBarItem selectedMenuBarItem;
 
-    private List<Action> leftVisibleActions     = new ArrayList<>();
-    private List<Action> newLeftVisibleActions  = new ArrayList<>();
-    private List<Action> newMenuVisibleActions  = new ArrayList<>();
-    private List<Action> menuVisibleActions     = new ArrayList<>();
-    private List<Action> rightVisibleActions    = new ArrayList<>();
-    private List<Action> newRightVisibleActions = new ArrayList<>();
+    private List<Action> leftVisibleActions  = new ArrayList<>();
+    private List<Action> menuVisibleActions  = new ArrayList<>();
+    private List<Action> rightVisibleActions = new ArrayList<>();
+    private List<Action>    newLeftVisibleActions;
+    private List<Action>    newMenuVisibleActions;
+    private List<Action>    newRightVisibleActions;
     private ActionManager   actionManager;
     private KeyBindingAgent keyBindingAgent;
 
@@ -124,7 +124,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             return;
         }
 
-        newMenuVisibleActions.clear();
+        newMenuVisibleActions = new ArrayList<>();
         expandActionGroup(IdeActions.GROUP_MAIN_MENU, newMenuVisibleActions, actionManager);
         if (!newMenuVisibleActions.equals(menuVisibleActions)) {
             removeAll();
@@ -133,7 +133,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             }
             menuVisibleActions = newMenuVisibleActions;
         }
-        newRightVisibleActions.clear();
+        newRightVisibleActions = new ArrayList<>();
         expandActionGroup(IdeActions.GROUP_RIGHT_MAIN_MENU, newRightVisibleActions, actionManager);
         if (!newRightVisibleActions.equals(rightVisibleActions)) {
             rightPanel.clear();
@@ -142,7 +142,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             }
             rightVisibleActions = newRightVisibleActions;
         }
-        newLeftVisibleActions.clear();
+        newLeftVisibleActions = new ArrayList<>();
         expandActionGroup(IdeActions.GROUP_LEFT_MAIN_MENU, newLeftVisibleActions, actionManager);
         if (!newLeftVisibleActions.equals(leftVisibleActions)) {
             leftPanel.clear();
