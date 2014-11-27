@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -58,6 +59,7 @@ import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.codenvy.ide.jseditor.client.texteditor.EmbeddedTextEditorPartView.Delegate;
+import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
@@ -112,6 +114,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     private CursorModelWithHandler     cursorModel;
     private HasKeybindings keyBindingsManager = new TemporaryKeybindingsManager();
 
+    private AsyncRequestLoader         loader;
     private NotificationManager        notificationManager;
     private final EmbeddedTextEditorPartView editorView;
     private OutlineImpl                outline;
@@ -184,7 +187,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                     return;
                 }
                 final boolean moduleReady = editorModule.isReady();
-                EditorInitCallback<T> dualCallback = new EditorInitCallback<T>(moduleReady) {
+                EditorInitCallback<T> dualCallback = new EditorInitCallback<T>(moduleReady, loader, constant) {
                     @Override
                     public void onReady(final String content) {
                         createEditor(content);
@@ -280,6 +283,11 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void close(final boolean save) {
         this.documentStorage.documentClosed(this.document);
+    }
+
+    @Inject
+    public void injectAsyncLoader(final AsyncRequestLoader loader) {
+        this.loader = loader;
     }
 
     @Override

@@ -10,14 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.texteditor.EditorModule.EditorModuleReadyCallback;
+import com.codenvy.ide.rest.AsyncRequestLoader;
 
 /**
  * Composite callback that waits for both the editor module initialization and the document content.
  * @param <T> the type of the editor widget
  */
 abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDocumentCallback, EditorModuleReadyCallback {
+
+    /** Loader used to wait for editor impl initialization. */
+    private final AsyncRequestLoader loader;
+    /** The message displayed while waiting for the editor init. */
+    private final String waitEditorMessageString;
 
     /** Flag that tells if the editor intiialization was finished. */
     private boolean editorModuleReady;
@@ -27,9 +34,14 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
     /**
      * Constructor.
      * @param moduleAlreadyReady if set to true, the callback will not wait for editor module initialization.
+     * @param loader loader used to wait for editor impl initialization
      */
-    public EditorInitCallback(final boolean moduleAlreadyReady) {
+    public EditorInitCallback(final boolean moduleAlreadyReady,
+                              final AsyncRequestLoader loader,
+                              final JsEditorConstants constants) {
         this.editorModuleReady = moduleAlreadyReady;
+        this.loader = loader;
+        this.waitEditorMessageString = constants.waitEditorInitMessage();
     }
 
     @Override
@@ -40,6 +52,7 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
 
     @Override
     public void onEditorModuleError() {
+        this.loader.hide(this.waitEditorMessageString);
         onError();
     }
 
@@ -55,7 +68,11 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
 
     private void checkReadyAndContinue() {
         if (this.receivedContent != null && this.editorModuleReady) {
+            this.loader.hide(this.waitEditorMessageString);
             onReady(this.receivedContent);
+        } else if (! this.editorModuleReady) {
+            // Show a loader for the editor preparation
+            this.loader.show(this.waitEditorMessageString);
         }
     }
 
