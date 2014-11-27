@@ -103,6 +103,10 @@ public class KeymapsPreferenceViewImpl extends Composite implements KeymapsPrefe
 
     @Override
     protected void onLoad() {
+        setSelectionFromValuesHolder();
+    }
+
+    protected void setSelectionFromValuesHolder() {
         // delayed until the view is displayed
         keyBindingSelection.setRowData(editorTypeRegistry.getEditorTypes());
         for (final Entry<EditorType, Keymap> entry : this.valuesHolder) {
@@ -127,7 +131,7 @@ public class KeymapsPreferenceViewImpl extends Composite implements KeymapsPrefe
 
     @Override
     public void refresh() {
-        onLoad();
+        setSelectionFromValuesHolder();
     }
 
 }
