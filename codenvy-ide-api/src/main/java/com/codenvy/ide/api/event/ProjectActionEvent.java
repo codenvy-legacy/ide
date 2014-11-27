@@ -24,6 +24,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
     public static Type<ProjectActionHandler> TYPE = new Type<>();
     private final ProjectDescriptor project;
     private final ProjectAction     projectAction;
+    private final boolean           closingBeforeOpening;
 
     /**
      * Create new {@link ProjectActionEvent}.
@@ -32,10 +33,13 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *         an instance of affected project
      * @param projectAction
      *         the type of action
+     * @param closingBeforeOpening
+     *         whether is this closing project before opening another one
      */
-    protected ProjectActionEvent(ProjectDescriptor project, ProjectAction projectAction) {
+    protected ProjectActionEvent(ProjectDescriptor project, ProjectAction projectAction, boolean closingBeforeOpening) {
         this.project = project;
         this.projectAction = projectAction;
+        this.closingBeforeOpening = closingBeforeOpening;
     }
 
     /**
@@ -46,7 +50,7 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      * @see OpenProjectEvent
      */
     public static ProjectActionEvent createProjectOpenedEvent(ProjectDescriptor project) {
-        return new ProjectActionEvent(project, ProjectAction.OPENED);
+        return new ProjectActionEvent(project, ProjectAction.OPENED, false);
     }
 
     /**
@@ -54,10 +58,12 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
      *
      * @param project
      *         an instance of affected project
+     * @param closingBeforeOpening
+     *         whether is this closing project before opening another one
      * @see com.codenvy.ide.api.event.CloseCurrentProjectEvent
      */
-    public static ProjectActionEvent createProjectClosedEvent(ProjectDescriptor project) {
-        return new ProjectActionEvent(project, ProjectAction.CLOSED);
+    public static ProjectActionEvent createProjectClosedEvent(ProjectDescriptor project, boolean closingBeforeOpening) {
+        return new ProjectActionEvent(project, ProjectAction.CLOSED, closingBeforeOpening);
     }
 
     @Override
@@ -73,6 +79,11 @@ public class ProjectActionEvent extends GwtEvent<ProjectActionHandler> {
     /** @return the type of action */
     public ProjectAction getProjectAction() {
         return projectAction;
+    }
+
+    /** @return {@code true} if this is a Project Close Event that preceding opening other project. */
+    public boolean isCloseBeforeOpening() {
+        return closingBeforeOpening;
     }
 
     @Override

@@ -214,7 +214,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
             rewriteBrowserHistory(null);
 
             // notify all listeners about current project has been closed
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject));
+            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject, closingBeforeOpening));
         }
     }
 
