@@ -18,8 +18,11 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.UIObject;
 
 import java.util.HashMap;
@@ -46,12 +49,13 @@ import java.util.HashMap;
 public class CategoryNodeElement extends FlowPanel {
     private final Category                        category;
     private       CategoriesList.SelectionManager selectionManager;
-    private final FlowPanel                       container;
+    private final FocusPanel                      container;
     private final AnimationController             animator;
     private       CategoriesList.Resources        resources;
     private       boolean                         expanded;
     private final DivElement                      expandControl;
     private       HashMap<Object, Element>        elementsMap;
+    private       Element                         selectedElement;
 
     @SuppressWarnings("unchecked")
     CategoryNodeElement(Category category,
@@ -82,16 +86,47 @@ public class CategoryNodeElement extends FlowPanel {
         expandControl.appendChild(resources.expansionImage().getSvg().getElement());
         expandControl.setClassName(resources.defaultCategoriesListCss().expandControl());
         header.getElement().appendChild(expandControl);
-        container = new FlowPanel();
+        container = new FocusPanel();
         container.setStyleName(resources.defaultCategoriesListCss().itemContainer());
         container.sinkEvents(Event.ONCLICK);
         container.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                event.getNativeEvent().getEventTarget();
                 selectElement(Element.as(event.getNativeEvent().getEventTarget()));
             }
         }, ClickEvent.getType());
+        container.sinkEvents(Event.ONKEYDOWN);
+        container.addHandler(new KeyDownHandler() {
+            @Override
+            public void onKeyDown(KeyDownEvent keyDownEvent) {
+
+                if (selectedElement == null) {
+                    return;
+                }
+
+                Element element = null;
+
+                if (keyDownEvent.isDownArrow()) {
+                    element = selectedElement.getNextSiblingElement();
+                    if (element == null) {
+                        return;
+                    }
+                }
+
+                if (keyDownEvent.isUpArrow()) {
+                    element = selectedElement.getPreviousSiblingElement();
+                    if (element.getClassName().equals("")) {
+                        return;
+                    }
+                }
+
+                if (keyDownEvent.isUpArrow() || keyDownEvent.isDownArrow()) {
+                    keyDownEvent.preventDefault();
+                    element.scrollIntoView();
+                    selectElement(element);
+                }
+            }
+        }, KeyDownEvent.getType());
         add(header);
         add(container);
         animator = new AnimationController.Builder().setCollapse(true).setFade(true).build();
@@ -102,6 +137,7 @@ public class CategoryNodeElement extends FlowPanel {
 
     @SuppressWarnings("unchecked")
     private void selectElement(Element eventTarget) {
+        selectedElement = eventTarget;
         selectionManager.selectItem(eventTarget);
         category.getEventDelegate().onListItemClicked(eventTarget, ListItem.cast(eventTarget).getData());
     }
