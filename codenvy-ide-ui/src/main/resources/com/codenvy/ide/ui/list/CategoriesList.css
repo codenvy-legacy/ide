@@ -81,6 +81,7 @@
 }
 
 .itemContainer, .expandControl {
+    outline: 0;
 }
 
 .expandControl {
