@@ -15,7 +15,7 @@ import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
-import com.codenvy.api.project.shared.dto.GenerateDescriptor;
+import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -377,7 +377,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
         if (projectDescriptor != null) {
             fillNewProject(projectDescriptor, newProject);
-            newProject.setGenerateDescriptor(dtoFactory.createDto(GenerateDescriptor.class).withName(projectDescriptor.getType()));
+            newProject.setGeneratorDescription(dtoFactory.createDto(GeneratorDescription.class).withName(projectDescriptor.getType()));
         }
 
         fillVisibilityFromContext(newProject);
