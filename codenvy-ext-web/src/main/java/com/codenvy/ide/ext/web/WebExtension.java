@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web;
 
+import static com.codenvy.ide.api.action.IdeActions.GROUP_FILE_NEW;
+
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.DefaultActionGroup;
 import com.codenvy.ide.api.editor.EditorRegistry;
@@ -24,16 +26,9 @@ import com.codenvy.ide.ext.web.html.NewHtmlFileAction;
 import com.codenvy.ide.ext.web.html.editor.HtmlEditorProvider;
 import com.codenvy.ide.ext.web.js.NewJavaScriptFileAction;
 import com.codenvy.ide.ext.web.js.editor.JsEditorProvider;
-import com.codenvy.ide.util.dom.Elements;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
-import static com.codenvy.ide.api.action.IdeActions.GROUP_FILE_NEW;
 
 /**
  * Extension add editing JavaScript, HTML, CSS css type support to the IDE Application.
@@ -62,7 +57,6 @@ public class WebExtension {
 
         editorRegistry.registerDefaultEditor(jsFile, jsEditorProvider);
         editorRegistry.registerDefaultEditor(htmlFile, htmlEditorProvider);
-        Elements.injectJs(resources.webParser().getText());
     }
 
     @Inject
