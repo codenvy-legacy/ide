@@ -158,4 +158,9 @@ public class ImageViewer extends AbstractEditorPresenter {
     @Override
     protected void initializeEditor() {
     }
+
+    @Override
+    public void close(final boolean save) {
+        // nothing to do
+    }
 }
