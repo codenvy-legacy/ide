@@ -17,7 +17,7 @@ import com.codenvy.ide.api.texteditor.outline.OutlinePresenter;
 import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.outline.CodeBlockDataAdapter;
-import com.codenvy.ide.outline.OutlineImpl.OutlineView;
+import com.codenvy.ide.outline.OutlineView;
 import com.codenvy.ide.outline.OutlineViewImpl;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler.CursorHandler;
