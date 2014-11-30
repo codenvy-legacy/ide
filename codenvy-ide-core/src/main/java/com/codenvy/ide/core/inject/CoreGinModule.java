@@ -181,7 +181,6 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -286,7 +285,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
 //        bind(PartStackView.class).to(PartStackViewImpl.class);
-        bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
+        bind(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
 
