@@ -23,6 +23,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -86,6 +87,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                                                                                     UndoableEditor,
                                                                                     HasBreakpointRenderer,
                                                                                     HandlesTextOperations,
+                                                                                    EditorWithErrors,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
