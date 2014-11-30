@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
+import com.codenvy.ide.autocomplete.AutoCompleteResources;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.jseditor.client.texteditor.TextEditor;
-import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -33,7 +33,7 @@ public class CodeAssistantImpl implements CodeAssistant {
     private final DocumentPartitioner partitioner;
 
 
-    public static final Resources res = GWT.create(Resources.class);
+    public static final AutoCompleteResources res = GWT.create(AutoCompleteResources.class);
 
     @AssistedInject
     public CodeAssistantImpl(@Assisted final DocumentPartitioner partitioner,

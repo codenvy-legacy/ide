@@ -17,9 +17,6 @@ import com.google.inject.Inject;
 public class StyleInjector {
     private Resources resources;
 
-    /**
-     *
-     */
     @Inject
     public StyleInjector(Resources resources) {
         this.resources = resources;
@@ -27,23 +24,15 @@ public class StyleInjector {
 
     public void inject() {
         resources.coreCss().ensureInjected();
-        resources.editableContentAreaCss().ensureInjected();
-        resources.editorSelectionLineRendererCss().ensureInjected();
-        resources.lineNumberRendererCss().ensureInjected();
         resources.treeCss().ensureInjected();
         resources.defaultSimpleListCss().ensureInjected();
-        resources.workspaceEditorBufferCss().ensureInjected();
-        resources.workspaceEditorCss().ensureInjected();
-        resources.workspaceEditorCursorCss().ensureInjected();
         resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
         resources.partStackCss().ensureInjected();
-        resources.parenMatchHighlighterCss().ensureInjected();
         resources.dialogBox().ensureInjected();
         resources.clipboardCss().ensureInjected();
         resources.notificationCss().ensureInjected();
         resources.dataGridStyle().ensureInjected();
         resources.cellTableStyle().ensureInjected();
-        resources.infoPanelCss().ensureInjected();
         resources.defaultCategoriesListCss().ensureInjected();
         resources.Css().ensureInjected();
     }

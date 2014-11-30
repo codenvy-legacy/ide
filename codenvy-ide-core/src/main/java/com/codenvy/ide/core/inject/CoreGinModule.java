@@ -39,7 +39,6 @@ import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorRegistry;
@@ -122,7 +121,6 @@ import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactoryImpl;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
@@ -317,7 +315,6 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configures binding for Editor API */
     protected void configureEditorAPI() {
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
