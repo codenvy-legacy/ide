@@ -211,7 +211,8 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
             stopCheckingAppStatus(currentAppProcess);
             stopCheckingAppHealth(currentAppProcess);
             stopCheckingAppOutput(currentAppProcess);
-            stopCheckingNewProcesses();
+            //At the moment, the value appContext.getCurrentProject() can be set to null so that the project take from event
+            stopCheckingNewProcesses(event.getProject());
             console.onAppStopped();
         }
     }
@@ -623,8 +624,8 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
         }
     }
 
-    private void stopCheckingNewProcesses() {
-        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + appContext.getCurrentProject().getProjectDescription().getPath();
+    private void stopCheckingNewProcesses(ProjectDescriptor projectDescriptor) {
+        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + projectDescriptor.getPath();
         try {
             messageBus.unsubscribe(channel, processStartedHandler);
         } catch (WebSocketException e) {

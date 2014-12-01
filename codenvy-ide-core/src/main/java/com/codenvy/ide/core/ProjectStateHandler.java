@@ -208,13 +208,13 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             ProjectDescriptor closedProject = currentProject.getRootProject();
-            appContext.setCurrentProject(null);
 
             Document.get().setTitle(constant.codenvyTabTitle());
             rewriteBrowserHistory(null);
 
             // notify all listeners about current project has been closed
             eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject, closingBeforeOpening));
+            appContext.setCurrentProject(null);
         }
     }
 
