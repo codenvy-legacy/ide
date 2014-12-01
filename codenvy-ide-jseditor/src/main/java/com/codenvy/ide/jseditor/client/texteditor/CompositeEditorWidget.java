@@ -62,4 +62,9 @@ public abstract class CompositeEditorWidget extends Composite implements EditorW
                                         final AdditionalInfoCallback additionalInfoCallback) {
         showCompletionProposals(completionsSource);
     }
+
+    @Override
+    public void refresh() {
+        
+    }
 }
