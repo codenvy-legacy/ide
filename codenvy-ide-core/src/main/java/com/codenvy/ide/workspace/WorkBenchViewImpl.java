@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.workspace;
 
-import com.codenvy.ide.api.parts.WorkBenchView;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,7 +29,7 @@ import com.google.inject.Singleton;
  * @author Nikolay Zamosenchuk
  */
 @Singleton
-public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<WorkBenchView.ActionDelegate> {
+public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView {
 
     private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
 
@@ -95,6 +94,41 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
     /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget getToolPanel() {
+        return toolPanel;
+    }
+
+    @Override
+    public FlowPanel getLeftPanelWidget() {
+        return leftPanel;
+    }
+
+    @Override
+    public FlowPanel getBottomPanelWidget() {
+        return bottomPanel;
+    }
+
+    @Override
+    public FlowPanel getRightPanelWidget() {
+        return rightPanel;
+    }
+
+    @Override
+    public SplitLayoutPanel getSplitPanelWidget() {
+        return splitPanel;
+    }
+
+    @Override
+    public SimplePanel getNavPanelWidget() {
+        return navPanel;
+    }
+
+    @Override
+    public SimplePanel getInfoPanelWidget() {
+        return infoPanel;
+    }
+
+    @Override
+    public SimplePanel getToolPanelWidget() {
         return toolPanel;
     }
 

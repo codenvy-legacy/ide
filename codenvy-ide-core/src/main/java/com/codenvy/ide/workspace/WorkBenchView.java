@@ -8,17 +8,20 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.parts;
+package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * Perspective View contains abstract containers for PartStack
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface WorkBenchView<T> extends View<T> {
+public interface WorkBenchView extends View<WorkBenchView.ActionDelegate> {
     /**
      * Returns central panel.
      *
@@ -46,6 +49,20 @@ public interface WorkBenchView<T> extends View<T> {
      * @return
      */
     AcceptsOneWidget getToolPanel();
+
+    FlowPanel getLeftPanelWidget();
+
+    FlowPanel getBottomPanelWidget();
+
+    FlowPanel   getRightPanelWidget();
+
+    SplitLayoutPanel getSplitPanelWidget();
+
+    SimplePanel getNavPanelWidget();
+
+    SimplePanel getInfoPanelWidget();
+
+    SimplePanel getToolPanelWidget();
 
     /** Handle View events */
     public interface ActionDelegate {

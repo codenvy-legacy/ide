@@ -57,7 +57,6 @@ import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
-import com.codenvy.ide.api.parts.WorkBenchView;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
@@ -169,6 +168,7 @@ import com.codenvy.ide.wizard.project.importproject.ImportProjectNotificationSub
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
 import com.codenvy.ide.workspace.PartStackViewFactory;
+import com.codenvy.ide.workspace.WorkBenchView;
 import com.codenvy.ide.workspace.WorkBenchViewImpl;
 import com.codenvy.ide.workspace.WorkspacePresenter;
 import com.codenvy.ide.workspace.WorkspaceView;
