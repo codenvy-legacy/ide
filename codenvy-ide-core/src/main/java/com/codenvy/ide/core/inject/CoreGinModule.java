@@ -39,7 +39,6 @@ import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
@@ -77,7 +76,6 @@ import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
-import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
@@ -318,7 +316,6 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }
