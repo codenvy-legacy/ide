@@ -40,10 +40,10 @@ import java.util.List;
  * @author Nikolay Zamosenchuk
  */
 @Singleton
-public class WorkBenchPresenter implements Presenter, WorkBenchView.ActionDelegate {
+public class WorkBenchPresenter implements Presenter {
 
     protected final StringMap<PartStack> partStacks = Collections.createStringMap();
-    private WorkBenchView       view;
+    private WorkBenchViewImpl   view;
     private List<PartPresenter> activeParts;
 
     /**
@@ -58,7 +58,7 @@ public class WorkBenchPresenter implements Presenter, WorkBenchView.ActionDelega
      * @param notificationManager
      */
     @Inject
-    public WorkBenchPresenter(WorkBenchView view,
+    public WorkBenchPresenter(WorkBenchViewImpl view,
                               EditorPartStack editorPartStackPresenter,
                               PartStackPresenterFactory stackPresenterFactory,
                               PartStackViewFactory partViewFactory,
@@ -71,22 +71,22 @@ public class WorkBenchPresenter implements Presenter, WorkBenchView.ActionDelega
         partStacks.put(PartStackType.EDITING.toString(), editorPartStackPresenter);
 
         //TODO move to implementation
-        PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT, view.getLeftPanelWidget());
+        PartStackView navigationView = partViewFactory.create(PartStackView.TabPosition.LEFT, view.leftPanel);
 
         PartStack navigationPartStack =
-                stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.getSplitPanelWidget(), view.getNavPanelWidget(),
+                stackPresenterFactory.create(navigationView, new WorkBenchPartControllerImpl(view.splitPanel, view.navPanel,
                                                                                              hideWidgetCallback));
         partStacks.put(PartStackType.NAVIGATION.toString(), navigationPartStack);
 
-        PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.getBottomPanelWidget());
+        PartStackView informationView = partViewFactory.create(PartStackView.TabPosition.BELOW, view.bottomPanel);
         PartStack informationStack =
-                stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.getSplitPanelWidget(), view.getInfoPanelWidget(),
+                stackPresenterFactory.create(informationView, new WorkBenchPartControllerImpl(view.splitPanel, view.infoPanel,
                                                                                               hideWidgetCallback));
         partStacks.put(PartStackType.INFORMATION.toString(), informationStack);
 
-        PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.getRightPanelWidget());
+        PartStackView toolingView = partViewFactory.create(PartStackView.TabPosition.RIGHT, view.rightPanel);
         PartStack toolingPartStack =
-                stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.getSplitPanelWidget(), view.getToolPanelWidget(),
+                stackPresenterFactory.create(toolingView, new WorkBenchPartControllerImpl(view.splitPanel, view.toolPanel,
                                                                                           hideWidgetCallback));
         partStacks.put(PartStackType.TOOLING.toString(), toolingPartStack);
 
@@ -131,13 +131,6 @@ public class WorkBenchPresenter implements Presenter, WorkBenchView.ActionDelega
     }
 
     public void restoreEditorPart() {
-        PartStack navigationPartStack = partStacks.get(PartStackType.NAVIGATION.toString());
-        PartPresenter navigationPart = navigationPartStack.getActivePart();
-
-        //Refreshing navigationPart in active parts list
-        activeParts.remove(navigationPart);
-        activeParts.add(navigationPart);
-
         for (PartPresenter activePart : activeParts) {
             setActivePart(activePart);
         }
