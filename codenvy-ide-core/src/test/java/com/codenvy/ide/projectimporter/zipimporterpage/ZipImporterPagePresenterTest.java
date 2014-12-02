@@ -157,6 +157,17 @@ public class ZipImporterPagePresenterTest {
     }
 
     @Test
+    public void replaceSpaceToHyphenTest() {
+        String namesWithSpace = "Test project For  Codenvy";
+        String fixedName = "Test-project-For--Codenvy";
+        presenter.projectNameChanged(namesWithSpace);
+
+        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_NAME), eq(fixedName));
+        verify(view).hideNameError();
+        verify(updateDelegate).updateControls();
+    }
+
+    @Test
     public void emptyProjectNameEnteredTest() {
         String emptyName = "";
 

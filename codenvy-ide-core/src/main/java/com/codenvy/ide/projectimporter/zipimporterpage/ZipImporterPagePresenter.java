@@ -82,14 +82,25 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     public void projectNameChanged(@Nonnull String name) {
         if (name.isEmpty()) {
             wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-        } else if (NAME_PATTERN.test(name)) {
-            wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
-            view.hideNameError();
         } else {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
-            view.showNameError();
+            name = replaceSpaceToHyphen(name);
+            if (NAME_PATTERN.test(name)) {
+                wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+                view.hideNameError();
+            } else {
+                wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+                view.showNameError();
+            }
         }
         updateDelegate.updateControls();
+    }
+
+    private String replaceSpaceToHyphen(String projectName) {
+        if (projectName.contains(" ")) {
+            projectName  = projectName.replace(" ", "-");
+            view.setProjectName(projectName);
+        }
+        return projectName;
     }
 
     @Override
