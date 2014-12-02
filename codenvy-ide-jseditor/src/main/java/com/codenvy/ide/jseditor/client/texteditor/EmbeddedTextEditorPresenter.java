@@ -364,6 +364,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void activate() {
         if (editorWidget != null) {
+            this.editorWidget.refresh();
             this.editorWidget.setFocus();
         } else {
             this.delayedFocus = true;

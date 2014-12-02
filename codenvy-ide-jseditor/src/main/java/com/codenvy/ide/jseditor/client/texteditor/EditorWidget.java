@@ -184,4 +184,9 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     void showCompletionProposals();
 
     void showCompletionProposals(CompletionsSource completionsSource, AdditionalInfoCallback additionalInfoCallback);
+
+    /**
+     * Refresh the editor widget.
+     */
+    void refresh();
 }
