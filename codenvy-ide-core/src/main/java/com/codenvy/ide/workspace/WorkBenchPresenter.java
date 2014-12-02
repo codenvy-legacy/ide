@@ -131,6 +131,13 @@ public class WorkBenchPresenter implements Presenter {
     }
 
     public void restoreEditorPart() {
+        PartStack navigationPartStack = partStacks.get(PartStackType.NAVIGATION.toString());
+        PartPresenter navigationPart = navigationPartStack.getActivePart();
+
+        //Refreshing navigationPart in active parts list
+        activeParts.remove(navigationPart);
+        activeParts.add(navigationPart);
+
         for (PartPresenter activePart : activeParts) {
             setActivePart(activePart);
         }
