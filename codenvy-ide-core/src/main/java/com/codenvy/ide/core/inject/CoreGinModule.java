@@ -12,7 +12,7 @@ package com.codenvy.ide.core.inject;
 
 import com.codenvy.api.account.gwt.client.AccountServiceClient;
 import com.codenvy.api.account.gwt.client.AccountServiceClientImpl;
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;

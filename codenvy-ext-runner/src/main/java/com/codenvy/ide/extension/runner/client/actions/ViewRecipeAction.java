@@ -13,7 +13,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;

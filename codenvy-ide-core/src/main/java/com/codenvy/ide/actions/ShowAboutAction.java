@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.about.AboutLocalizationConstant;
 import com.codenvy.ide.about.AboutPresenter;
