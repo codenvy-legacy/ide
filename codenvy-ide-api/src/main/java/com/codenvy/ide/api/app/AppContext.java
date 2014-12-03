@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.api.app;
 
+import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.workspace.shared.dto.WorkspaceDescriptor;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
-import java.util.Map;
 
 /**
  * Describes current state of application.
@@ -28,6 +28,7 @@ public class AppContext {
     private WorkspaceDescriptor workspace;
     private CurrentProject      currentProject;
     private CurrentUser         currentUser;
+    private Factory             factory;
 
     public WorkspaceDescriptor getWorkspace() {
         return workspace;
@@ -48,6 +49,17 @@ public class AppContext {
     @Nullable
     public CurrentProject getCurrentProject() {
         return currentProject;
+    }
+
+    //TODO javadocs
+    @Nullable
+    public Factory getFactory() {
+        return factory;
+    }
+
+    //TODO javadocs
+    public void setFactory(Factory factory) {
+        this.factory = factory;
     }
 
     /**

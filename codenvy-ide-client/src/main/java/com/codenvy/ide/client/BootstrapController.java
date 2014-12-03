@@ -15,6 +15,8 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
+import com.codenvy.api.factory.dto.Factory;
+import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
@@ -80,6 +82,7 @@ public class BootstrapController implements ProjectActionHandler {
     private final Provider<ComponentRegistry>  componentRegistry;
     private final Provider<WorkspacePresenter> workspaceProvider;
     private final ExtensionInitializer         extensionInitializer;
+    private final FactoryServiceClient         factoryService;
     private final UserProfileServiceClient     userProfileService;
     private final WorkspaceServiceClient       workspaceServiceClient;
     private final PreferencesManagerImpl       preferencesManager;
@@ -103,6 +106,7 @@ public class BootstrapController implements ProjectActionHandler {
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                AnalyticsEventLoggerExt analyticsEventLoggerExt,
                                Resources resources,
+                               FactoryServiceClient factoryService,
                                EventBus eventBus,
                                AppContext appContext,
                                final IconRegistry iconRegistry,
@@ -116,6 +120,7 @@ public class BootstrapController implements ProjectActionHandler {
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
         this.coreLocalizationConstant = coreLocalizationConstant;
+        this.factoryService = factoryService;
         this.eventBus = eventBus;
         this.appContext = appContext;
         this.iconRegistry = iconRegistry;
@@ -177,14 +182,6 @@ public class BootstrapController implements ProjectActionHandler {
                                                  protected void onSuccess(final ProfileDescriptor profile) {
                                                      appContext.setCurrentUser(new CurrentUser(profile));
                                                      loadPreferences();
-                                                     setTheme();
-                                                     styleInjector.inject();
-                                                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                                                         @Override
-                                                         public void execute() {
-                                                             initializeComponentRegistry();
-                                                         }
-                                                     });
                                                  }
 
                                                  @Override
@@ -197,10 +194,14 @@ public class BootstrapController implements ProjectActionHandler {
     }
 
     private void loadPreferences() {
-        userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+        userProfileService.getPreferences(new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
             @Override
             protected void onSuccess(Map<String, String> preferences) {
                 preferencesManager.load(preferences);
+                setTheme();
+                styleInjector.inject();
+
+                loadFactory();
             }
 
             @Override
@@ -211,8 +212,49 @@ public class BootstrapController implements ProjectActionHandler {
         });
     }
 
-    /** Initialize Component Registry, start extensions */
+    private void loadFactory() {
+        String factoryParams = null;
+        boolean encoded = false;
+        if (Config.getStartupParam("id") != null) {
+            factoryParams = Config.getStartupParam("id");
+            encoded = true;
+        } else if (Config.getStartupParam("v") != null) {
+            factoryParams = Config.getStartupParams();
+        }
+
+        if (factoryParams != null) {
+            factoryService.getFactory(factoryParams, encoded,
+                                      new AsyncRequestCallback<Factory>(dtoUnmarshallerFactory.newUnmarshaller(Factory.class)) {
+                                          @Override
+                                          protected void onSuccess(Factory factory) {
+                                              appContext.setFactory(factory);
+                                              initializeComponentRegistry();
+                                          }
+
+                                          @Override
+                                          protected void onFailure(Throwable error) {
+                                              Log.error(BootstrapController.class, "Unable to get Profile", error);
+                                              initializationFailed("Unable to get Profile");
+                                          }
+                                      }
+                                     );
+            return;
+        }
+
+        initializeComponentRegistry();
+    }
+
     private void initializeComponentRegistry() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                doInitializeComponentRegistry();
+            }
+        });
+    }
+
+    /** Initialize Component Registry, start extensions */
+    private void doInitializeComponentRegistry() {
         componentRegistry.get().start(new Callback<Void, ComponentException>() {
             @Override
             public void onSuccess(Void result) {
@@ -342,7 +384,6 @@ public class BootstrapController implements ProjectActionHandler {
         }
     }
 
-
     private void processStartupAction() {
         final String startupAction = Config.getStartupParam("action");
         if (startupAction != null) {
@@ -405,8 +446,8 @@ public class BootstrapController implements ProjectActionHandler {
 
 
     private static class AnalyticsSessions {
-        private String id;
-        private long   lastLogTime;
+        private String  id;
+        private long    lastLogTime;
         private boolean hasFocus;
 
         private AnalyticsSessions() {
