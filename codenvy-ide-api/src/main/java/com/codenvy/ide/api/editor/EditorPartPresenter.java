@@ -101,4 +101,11 @@ public interface EditorPartPresenter extends PartPresenter {
 
     /** Call this method then editor became visible */
     void activate();
+
+    /**
+     * Closes this text editor after optionally saving changes.
+     * 
+     * @param save <code>true</code> if unsaved changed should be saved, and <code>false</code> if unsaved changed should be discarded
+     */
+    void close(boolean save);
 }

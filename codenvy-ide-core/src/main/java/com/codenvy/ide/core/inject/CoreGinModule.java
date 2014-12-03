@@ -39,8 +39,6 @@ import com.codenvy.ide.actions.find.FindActionView;
 import com.codenvy.ide.actions.find.FindActionViewImpl;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.build.BuildContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorRegistry;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
@@ -78,7 +76,6 @@ import com.codenvy.ide.build.BuildContextImpl;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
-import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.extension.ExtensionManagerPresenter;
 import com.codenvy.ide.extension.ExtensionManagerView;
 import com.codenvy.ide.extension.ExtensionManagerViewImpl;
@@ -122,7 +119,6 @@ import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactoryImpl;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
@@ -181,7 +177,6 @@ import com.google.gwt.user.client.Window;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
@@ -286,7 +281,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(NotificationManagerView.class).to(NotificationManagerViewImpl.class).in(Singleton.class);
 //        bind(PartStackView.class).to(PartStackViewImpl.class);
-        bind(PartStackView.class).annotatedWith(Names.named("editorPartStack")).to(EditorPartStackView.class);
+        bind(EditorPartStackView.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
 
@@ -318,11 +313,9 @@ public class CoreGinModule extends AbstractGinModule {
     /** Configures binding for Editor API */
     protected void configureEditorAPI() {
         bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-        bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }

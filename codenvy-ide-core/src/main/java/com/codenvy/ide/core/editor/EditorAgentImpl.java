@@ -35,7 +35,6 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -169,9 +168,7 @@ public class EditorAgentImpl implements EditorAgent {
         openedEditors.remove(closedFilePath);
 
         //call close() method
-        if (editor instanceof TextEditorPresenter) {
-            ((TextEditorPresenter)editor).close(false);
-        }
+        editor.close(false);
 
         String activeFilePath = activeEditor.getEditorInput().getFile().getPath();
         if (activeFilePath == closedFilePath) {

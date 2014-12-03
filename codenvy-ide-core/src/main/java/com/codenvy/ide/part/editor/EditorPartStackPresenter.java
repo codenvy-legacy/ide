@@ -23,14 +23,12 @@ import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
@@ -49,16 +47,14 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
     @Inject
-    public EditorPartStackPresenter(@Named("editorPartStack") final PartStackView view,
+    public EditorPartStackPresenter(final EditorPartStackView view,
                                     EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
         this.listOpenedFilesPresenter = listOpenedFilesPresenter;
 
-        if (view instanceof EditorPartStackView) {
-            ((EditorPartStackView)view).setShowListButtonHandler(this);
-        }
+        view.setShowListButtonHandler(this);
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
@@ -113,23 +109,21 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                                   null,
                                   partsClosable);
 
-        if (part instanceof TextEditorPresenter) {
-            final TextEditorPresenter presenter = ((TextEditorPresenter)part);
+        if (part instanceof EditorWithErrors) {
+            final EditorWithErrors presenter = ((EditorWithErrors)part);
             final TabItemWithMarks tab = (TabItemWithMarks)tabItem;
             part.addPropertyListener(new PropertyListener() {
                 @Override
                 public void propertyChanged(PartPresenter source, int propId) {
-                    if (view instanceof EditorPartStackView) {
-                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.ERROR)) {
-                            tab.setErrorMark(true);
-                        } else {
-                            tab.setErrorMark(false);
-                        }
-                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.WARNING)) {
-                            tab.setWarningMark(true);
-                        } else {
-                            tab.setWarningMark(false);
-                        }
+                    if (presenter.getErrorState().equals(EditorWithErrors.EditorState.ERROR)) {
+                        tab.setErrorMark(true);
+                    } else {
+                        tab.setErrorMark(false);
+                    }
+                    if (presenter.getErrorState().equals(EditorWithErrors.EditorState.WARNING)) {
+                        tab.setWarningMark(true);
+                    } else {
+                        tab.setWarningMark(false);
                     }
                 }
             });

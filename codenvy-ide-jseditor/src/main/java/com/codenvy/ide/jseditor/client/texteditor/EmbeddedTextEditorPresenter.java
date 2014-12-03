@@ -23,6 +23,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -31,6 +32,7 @@ import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
@@ -85,7 +87,9 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                                                                                     FileEventHandler,
                                                                                     UndoableEditor,
                                                                                     HasBreakpointRenderer,
+                                                                                    HasReadOnlyProperty,
                                                                                     HandlesTextOperations,
+                                                                                    EditorWithErrors,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
@@ -679,5 +683,15 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }
+    }
+
+    @Override
+    public void setReadOnly(final boolean readOnly) {
+        this.editorWidget.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return this.editorWidget.isReadOnly();
     }
 }
