@@ -61,5 +61,11 @@ public interface DocumentStorage {
          * @param content the content that was received
          */
         void onDocumentReceived(String content);
+
+        /**
+         * Action taken when retrieve action fails.
+         * @param caught the exception
+         */
+        void onDocumentLoadFailure(Throwable caught);
     }
 }
