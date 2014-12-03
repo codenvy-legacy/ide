@@ -71,6 +71,14 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
         checkReadyAndContinue();
     }
 
+    @Override
+    public void onDocumentLoadFailure(final Throwable cause) {
+        if (this.loaderWasShown) {
+            this.loader.hide(this.waitEditorMessageString);
+        }
+        onFileError();
+    }
+
     private void checkReadyAndContinue() {
         if (this.receivedContent != null && this.editorModuleReady) {
             if (this.loaderWasShown) {
@@ -91,8 +99,13 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
     public abstract void onReady(final String content);
 
     /**
-     * Action when something failed.
+     * Action when editor init failed.
      */
     public abstract void onError();
+
+    /**
+     * Action when file load failed.
+     */
+    public abstract void onFileError();
 
 }

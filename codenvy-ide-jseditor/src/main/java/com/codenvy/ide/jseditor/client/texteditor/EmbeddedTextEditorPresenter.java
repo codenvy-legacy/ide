@@ -187,7 +187,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             @Override
             public void execute() {
                 if (editorModule.isError()) {
-                    displayErrorPanel();
+                    displayErrorPanel(constant.editorInitErrorMessage());
                     return;
                 }
                 final boolean moduleReady = editorModule.isReady();
@@ -199,7 +199,12 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
 
                     @Override
                     public void onError() {
-                        displayErrorPanel();
+                        displayErrorPanel(constant.editorInitErrorMessage());
+                    }
+
+                    @Override
+                    public void onFileError() {
+                        displayErrorPanel(constant.editorFileErrorMessage());
                     }
                 };
                 documentStorage.getDocument(input.getFile(), dualCallback);
@@ -271,8 +276,8 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         });
     }
 
-    private void displayErrorPanel() {
-        this.editorView.showPlaceHolder(new Label(constant.editorInitErrorMessage()));
+    private void displayErrorPanel(final String message) {
+        this.editorView.showPlaceHolder(new Label(message));
     }
 
     private void handleDocumentChanged() {
