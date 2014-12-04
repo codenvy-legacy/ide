@@ -51,17 +51,6 @@ public class AppContext {
         return currentProject;
     }
 
-    //TODO javadocs
-    @Nullable
-    public Factory getFactory() {
-        return factory;
-    }
-
-    //TODO javadocs
-    public void setFactory(Factory factory) {
-        this.factory = factory;
-    }
-
     /**
      * Set the current project instance.
      * <p/>
@@ -81,10 +70,27 @@ public class AppContext {
         return currentUser;
     }
 
-    /**
-     * @param currentUser
-     */
     public void setCurrentUser(CurrentUser currentUser) {
         this.currentUser = currentUser;
+    }
+
+    /**
+     * Returns {@link Factory} instance that loaded for query parameters
+     * or {@code null} if parameters don't contains information about factory
+     *
+     * @return loaded factory or {@code null}
+     */
+    @Nullable
+    public Factory getFactory() {
+        return factory;
+    }
+
+    /**
+     * Set the factory instance.
+     * <p/>
+     * Should not be called directly as the factory is managed by the core.
+     */
+    public void setFactory(Factory factory) {
+        this.factory = factory;
     }
 }
