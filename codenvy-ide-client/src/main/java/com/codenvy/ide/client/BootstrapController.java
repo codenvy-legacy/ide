@@ -233,46 +233,41 @@ public class BootstrapController implements ProjectActionHandler {
 
                                           @Override
                                           protected void onFailure(Throwable error) {
-                                              Log.error(BootstrapController.class, "Unable to get Profile", error);
-                                              initializationFailed("Unable to get Profile");
+                                              Log.error(BootstrapController.class, "Unable to load Factory", error);
+                                              initializationFailed("Unable to get Factory");
                                           }
                                       }
                                      );
-            return;
+        } else {
+            initializeComponentRegistry();
         }
-
-        initializeComponentRegistry();
     }
 
+    /** Initialize Component Registry, start extensions */
     private void initializeComponentRegistry() {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                doInitializeComponentRegistry();
-            }
-        });
-    }
-
-    /** Initialize Component Registry, start extensions */
-    private void doInitializeComponentRegistry() {
-        componentRegistry.get().start(new Callback<Void, ComponentException>() {
-            @Override
-            public void onSuccess(Void result) {
-                // Instantiate extensions
-                extensionInitializer.startExtensions();
-
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                componentRegistry.get().start(new Callback<Void, ComponentException>() {
                     @Override
-                    public void execute() {
-                        displayIDE();
+                    public void onSuccess(Void result) {
+                        // Instantiate extensions
+                        extensionInitializer.startExtensions();
+
+                        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                            @Override
+                            public void execute() {
+                                displayIDE();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(ComponentException caught) {
+                        Log.error(BootstrapController.class, "Unable to start component " + caught.getComponent(), caught);
+                        initializationFailed("Unable to start component " + caught.getComponent());
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(ComponentException caught) {
-                Log.error(BootstrapController.class, "Unable to start component " + caught.getComponent(), caught);
-                initializationFailed("Unable to start component " + caught.getComponent());
             }
         });
     }
