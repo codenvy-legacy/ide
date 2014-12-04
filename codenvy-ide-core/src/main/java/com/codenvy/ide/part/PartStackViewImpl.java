@@ -121,6 +121,12 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     /** {@inheritDoc} */
     @Override
     public void setTabpositions(Array<Integer> partPositions) {
+        // if this method is called, we reset the top position in case the tabitem is added after a first display of the part stack
+        top = 0;
+        if (tabPosition == RIGHT) {
+            top -= 1;
+        }
+
         for (int pos = 0; pos < partPositions.size(); pos++) {
             int realPartPos = partPositions.get(pos);
             if (realPartPos < tabButtons.size()) {

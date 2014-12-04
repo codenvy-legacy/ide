@@ -11,7 +11,7 @@
 package com.codenvy.ide.logger;
 
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 
 import java.util.Map;
 

@@ -143,34 +143,7 @@ public class BootstrapController implements ProjectActionHandler {
                           }
                       }).inject();
 
-        // Inject CodeMirror scripts
-        ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_base.js").setWindow(ScriptInjector.TOP_WINDOW)
-                      .setCallback(new Callback<Void, Exception>() {
-                          @Override
-                          public void onSuccess(Void result) {
-                              ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "codemirror2_parsers.js")
-                                            .setWindow(ScriptInjector.TOP_WINDOW).
-                                      setCallback(new Callback<Void, Exception>() {
-                                          @Override
-                                          public void onSuccess(Void aVoid) {
-                                              loadWorkspace();
-                                          }
-
-                                          @Override
-                                          public void onFailure(Exception e) {
-                                              Log.error(BootstrapController.class, "Unable to inject CodeMirror parsers", e);
-                                              initializationFailed("Unable to inject CodeMirror parsers");
-                                          }
-                                      }).inject();
-                          }
-
-                          @Override
-                          public void onFailure(Exception e) {
-                              Log.error(BootstrapController.class, "Unable to inject CodeMirror", e);
-                              initializationFailed("Unable to inject CodeMirror");
-                          }
-                      }).inject();
-
+        loadWorkspace();
     }
 
     /**

@@ -13,7 +13,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codenvy.api.analytics.logger.AnalyticsEventLogger;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
@@ -21,11 +21,11 @@ import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -110,8 +110,8 @@ public class ViewRecipeAction extends Action {
                 final FileNode recipeFile = new RecipeFile(null, recipeFileItem, eventBus, projectServiceClient, dtoUnmarshallerFactory);
                 editorAgent.openEditor(recipeFile);
                 EditorPartPresenter editor = editorAgent.getOpenedEditors().get(recipeFileItem.getPath());
-                if (editor instanceof CodenvyTextEditor) {
-                    ((CodenvyTextEditor)editor).getView().setReadOnly(true);
+                if (editor instanceof HasReadOnlyProperty) {
+                    ((HasReadOnlyProperty)editor).setReadOnly(true);
                 }
             }
         }

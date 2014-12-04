@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.ext.web;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
-
 import org.vectomatic.dom.svg.ui.SVGResource;
+
+import com.google.gwt.resources.client.ClientBundle;
 
 /** @author Nikolay Zamosenchuk */
 public interface WebExtensionResource extends ClientBundle {
-
-    @Source("com/codenvy/ide/ext/web/web_parser.js")
-    TextResource webParser();
 
     @Source("css.svg")
     SVGResource cssFile();

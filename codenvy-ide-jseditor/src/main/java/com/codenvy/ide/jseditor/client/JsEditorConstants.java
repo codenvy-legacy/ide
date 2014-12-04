@@ -58,6 +58,9 @@ public interface JsEditorConstants extends Messages {
     @DefaultMessage("An error occured while initializing the editor.\nReloading the page may be necessary.")
     String editorInitErrorMessage();
 
+    @DefaultMessage("An error occured while loading the file.")
+    String editorFileErrorMessage();
+
     @DefaultMessage("Finishing editor initialization")
     String waitEditorInitMessage();
 }

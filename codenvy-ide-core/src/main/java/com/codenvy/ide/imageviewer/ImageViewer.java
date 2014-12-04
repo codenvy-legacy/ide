@@ -12,7 +12,6 @@ package com.codenvy.ide.imageviewer;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
@@ -40,12 +39,12 @@ import javax.annotation.Nonnull;
  */
 public class ImageViewer extends AbstractEditorPresenter {
 
-    private Resources                resources;
+    private ImageViewerResources     resources;
     private CoreLocalizationConstant constant;
     private DialogFactory            dialogFactory;
 
     @Inject
-    public ImageViewer(Resources resources,
+    public ImageViewer(ImageViewerResources resources,
                        CoreLocalizationConstant constant,
                        DialogFactory dialogFactory) {
         this.resources = resources;
@@ -151,12 +150,17 @@ public class ImageViewer extends AbstractEditorPresenter {
             }
         }
         Image image = (contentLink != null) ? new Image(contentLink.getHref()) : new Image();
-        image.setStyleName(resources.workspaceEditorCss().imageViewer());
+        image.setStyleName(resources.imageViewerCss().imageViewer());
         return image;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void initializeEditor() {
+    }
+
+    @Override
+    public void close(final boolean save) {
+        // nothing to do
     }
 }

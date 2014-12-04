@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.actions.find;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.dom.Node;
 import elemental.html.TableCellElement;
@@ -22,8 +21,7 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
-import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController;
-import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
+import com.codenvy.ide.autocomplete.AutoCompleteResources;
 import com.codenvy.ide.toolbar.PresentationFactory;
 import com.codenvy.ide.toolbar.Toolbar;
 import com.codenvy.ide.ui.list.SimpleList;
@@ -60,7 +58,7 @@ import java.util.Map;
  */
 public class FindActionViewImpl extends PopupPanel implements FindActionView {
     private static FindActionViewImplUiBinder ourUiBinder = GWT.create(FindActionViewImplUiBinder.class);
-    private final AutocompleteUiController.Css css;
+    private final AutoCompleteResources.Css    css;
     private final PresentationFactory          presentationFactory;
     private final SimpleList.ListEventDelegate<Action> eventDelegate    = new SimpleList.ListEventDelegate<Action>() {
         @Override
@@ -130,12 +128,13 @@ public class FindActionViewImpl extends PopupPanel implements FindActionView {
     private Map<Action, String> actions;
 
     @Inject
-    public FindActionViewImpl(com.codenvy.ide.Resources resources, KeyBindingAgent keyBindingAgent, ActionManager actionManager) {
+    public FindActionViewImpl(com.codenvy.ide.Resources resources, KeyBindingAgent keyBindingAgent,
+                              ActionManager actionManager, AutoCompleteResources autoCompleteResources) {
         this.resources = resources;
         this.keyBindingAgent = keyBindingAgent;
         this.actionManager = actionManager;
         this.presentationFactory = new PresentationFactory();
-        css = CodeAssistantImpl.res.autocompleteComponentCss();
+        css = autoCompleteResources.autocompleteComponentCss();
         css.ensureInjected();
         DockLayoutPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);

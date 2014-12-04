@@ -23,6 +23,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.editor.EditorWithErrors;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -31,6 +32,7 @@ import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
+import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
@@ -85,7 +87,9 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                                                                                     FileEventHandler,
                                                                                     UndoableEditor,
                                                                                     HasBreakpointRenderer,
+                                                                                    HasReadOnlyProperty,
                                                                                     HandlesTextOperations,
+                                                                                    EditorWithErrors,
                                                                                     Delegate {
 
     /** File type used when we have no idea of the actual content type. */
@@ -183,7 +187,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             @Override
             public void execute() {
                 if (editorModule.isError()) {
-                    displayErrorPanel();
+                    displayErrorPanel(constant.editorInitErrorMessage());
                     return;
                 }
                 final boolean moduleReady = editorModule.isReady();
@@ -195,7 +199,12 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
 
                     @Override
                     public void onError() {
-                        displayErrorPanel();
+                        displayErrorPanel(constant.editorInitErrorMessage());
+                    }
+
+                    @Override
+                    public void onFileError() {
+                        displayErrorPanel(constant.editorFileErrorMessage());
                     }
                 };
                 documentStorage.getDocument(input.getFile(), dualCallback);
@@ -267,8 +276,8 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         });
     }
 
-    private void displayErrorPanel() {
-        this.editorView.showPlaceHolder(new Label(constant.editorInitErrorMessage()));
+    private void displayErrorPanel(final String message) {
+        this.editorView.showPlaceHolder(new Label(message));
     }
 
     private void handleDocumentChanged() {
@@ -364,6 +373,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void activate() {
         if (editorWidget != null) {
+            this.editorWidget.refresh();
             this.editorWidget.setFocus();
         } else {
             this.delayedFocus = true;
@@ -678,5 +688,15 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             default:
                 throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
         }
+    }
+
+    @Override
+    public void setReadOnly(final boolean readOnly) {
+        this.editorWidget.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return this.editorWidget.isReadOnly();
     }
 }

@@ -35,7 +35,7 @@ public class DocumentStorageImpl implements DocumentStorage {
     public void getDocument(final FileNode file, final EmbeddedDocumentCallback callback) {
         file.getContent(new AsyncCallback<String>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(final String result) {
                 Log.debug(DocumentStorageImpl.class, "Document retrieved (" + file.getPath() + ").");
                 try {
                     callback.onDocumentReceived(result);
@@ -45,7 +45,12 @@ public class DocumentStorageImpl implements DocumentStorage {
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(final Throwable caught) {
+                try {
+                    callback.onDocumentLoadFailure(caught);
+                } catch (final Exception e) {
+                    Log.warn(DocumentStorageImpl.class, "Exception during doc retrieve failure callback: ", e);
+                }
                 Log.error(DocumentStorageImpl.class, "Could not retrieve document (" + file.getPath() + ").", caught);
             }
         });
