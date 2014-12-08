@@ -229,7 +229,7 @@ public interface RunnerLocalizationConstant extends Messages {
     String titlesRamManager();
 
     @Key("ram-manager.ram-size-must-multiple")
-    @DefaultMessage("RAM size must be a positive value that is a multiple of {0} MB")
+    @DefaultMessage("RAM size must be a multiple of {0} MB")
     String ramSizeMustBeMultipleOf(String multiple);
 
     /* RunConfigurationView */
