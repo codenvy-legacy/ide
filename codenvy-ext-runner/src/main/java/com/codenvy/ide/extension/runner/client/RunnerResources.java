@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client;
 
+import com.codenvy.ide.ui.Styles;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -77,7 +77,7 @@ public interface RunnerResources extends ClientBundle {
     @Source("removeEnvironment.svg")
     SVGResource removeEnvironment();
 
-    public interface Css extends CssResource {
+    public interface Css extends Styles {
         @ClassName("info-panel")
         String infoPanel();
 
@@ -124,6 +124,6 @@ public interface RunnerResources extends ClientBundle {
         String grid();
     }
 
-    @Source({"runner.css", "com/codenvy/ide/api/ui/style.css"})
+    @Source({"runner.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
     Css runner();
 }

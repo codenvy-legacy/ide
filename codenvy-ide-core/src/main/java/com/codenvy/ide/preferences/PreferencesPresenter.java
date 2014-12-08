@@ -185,6 +185,12 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     @Override
     public void onCloseClicked() {
         view.close();
+        for (PreferencePagePresenter preference : preferences) {
+            if (preference.isDirty()) {
+                preference.revertChanges();
+            }
+        }
+        view.enableSaveButton(false);
     }
 
 }
