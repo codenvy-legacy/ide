@@ -114,12 +114,14 @@ public class WorkBenchPresenter implements Presenter {
     public void expandEditorPart() {
         activeParts = new ArrayList<>();
         for (PartStack value : partStacks.getValues().asIterable()) {
-            if (!(value instanceof EditorPartStack)) {
-                PartPresenter part = value.getActivePart();
-                if (part != null) {
-                    activeParts.add(part);
-                    value.hidePart(part);
-                }
+            if (value instanceof EditorPartStack) {
+                continue;
+            }
+
+            PartPresenter part = value.getActivePart();
+            if (part != null) {
+                value.hidePart(part);
+                activeParts.add(part);
             }
         }
 //        partStacks.iterate(new StringMap.IterationCallback<PartStack>() {
@@ -131,12 +133,24 @@ public class WorkBenchPresenter implements Presenter {
     }
 
     public void restoreEditorPart() {
-        PartStack navigationPartStack = partStacks.get(PartStackType.NAVIGATION.toString());
-        PartPresenter navigationPart = navigationPartStack.getActivePart();
+        for (PartStack container : partStacks.getValues().asIterable()) {
+            if (container instanceof EditorPartStack) {
+                continue;
+            }
 
-        //Refreshing navigationPart in active parts list
-        activeParts.remove(navigationPart);
-        activeParts.add(navigationPart);
+            PartPresenter newPart = container.getActivePart();
+            if (newPart == null) {
+                continue;
+            }
+
+            for (PartPresenter oldPart : activeParts){
+                if (container.containsPart(oldPart) & !(newPart.equals(oldPart))){
+                    activeParts.remove(oldPart);
+                }
+            }
+
+            activeParts.add(newPart);
+        }
 
         for (PartPresenter activePart : activeParts) {
             setActivePart(activePart);
