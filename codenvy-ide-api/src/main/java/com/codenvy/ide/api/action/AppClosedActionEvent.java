@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Sergii Leschenko
  */
 public class AppClosedActionEvent extends ActionEvent {
-    private String allertMessage;
+    private String alertMessage;
 
     public AppClosedActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers) {
         super(place, presentation, actionManager, modifiers);
@@ -29,11 +29,11 @@ public class AppClosedActionEvent extends ActionEvent {
         super(place, presentation, actionManager, modifiers, parameters);
     }
 
-    public String getAllertMessage() {
-        return allertMessage;
+    public String getAlertMessage() {
+        return alertMessage;
     }
 
-    public void setAllertMessage(String myResult) {
-        this.allertMessage = myResult;
+    public void setAlertMessage(String myResult) {
+        this.alertMessage = myResult;
     }
 }

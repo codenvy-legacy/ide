@@ -47,29 +47,38 @@ public class AppClosedSubscriber {
         var instance = this;
 
         $wnd.onbeforeunload = function () {
-            return instance.@com.codenvy.ide.client.AppClosedSubscriber::startActions()();
+            return instance.@com.codenvy.ide.client.AppClosedSubscriber::checkCancel()();
         }
     }-*/;
 
-    private String startActions() {
-        List<Action> actions = appContext.getFactory().getIde().getOnAppClosed().getActions();
+    private String checkCancel() {
+        List<Action> actions = getOnAppClosedActions();
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
             if (ideAction != null) {
-                AppClosedActionEvent e =
-                        new AppClosedActionEvent("", new PresentationFactory().getPresentation(ideAction), actionManager, 0,
-                                                 action.getProperties());
+                AppClosedActionEvent e = new AppClosedActionEvent("", new PresentationFactory().getPresentation(ideAction), actionManager,
+                                                                  0, action.getProperties());
                 ideAction.update(e);
                 if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
                     ideAction.actionPerformed(e);
 
-                    if (e.getAllertMessage() != null) {
-                        return e.getAllertMessage();
+                    if (e.getAlertMessage() != null) {
+                        return e.getAlertMessage();
                     }
                 }
             }
         }
 
         return null;
+    }
+
+    private List<Action> getOnAppClosedActions() {
+        if (appContext.getFactory() == null || appContext.getFactory().getIde() == null
+            || appContext.getFactory().getIde().getOnAppClosed() == null ||
+            appContext.getFactory().getIde().getOnAppClosed().getActions() == null) {
+            return null;
+        }
+
+        return appContext.getFactory().getIde().getOnAppClosed().getActions();
     }
 }
