@@ -12,15 +12,17 @@ package com.codenvy.ide.core;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
+import com.codenvy.ide.actions.FindReplaceAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.OpenFileAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.RedirectToFeedbackAction;
 import com.codenvy.ide.actions.RedirectToForumsAction;
 import com.codenvy.ide.actions.RedirectToHelpAction;
@@ -114,6 +116,12 @@ public class StandardComponentInitializer {
 
     @Inject
     private FindActionAction findActionAction;
+
+    @Inject
+    private FindReplaceAction findReplaceAction;
+
+    @Inject
+    private OpenFileAction openFileAction;
 
     @Inject
     private NavigateToFileAction navigateToFileAction;
@@ -376,6 +384,10 @@ public class StandardComponentInitializer {
         actionManager.registerAction("closeProject", closeProjectAction);
         actionManager.registerAction("renameResource", renameItemAction);
         actionManager.registerAction("deleteItem", deleteItemAction);
+
+        actionManager.registerAction("findReplace", findReplaceAction);
+        actionManager.registerAction("openfile", openFileAction);
+
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteItemAction);
         changeResourceGroup.addSeparator();

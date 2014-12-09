@@ -90,6 +90,7 @@ public class BootstrapController implements ProjectActionHandler {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
+    private final FactoryActionRunner          factoryActionRunner;
     private       AppContext                   appContext;
 
     /** Create controller. */
@@ -111,7 +112,8 @@ public class BootstrapController implements ProjectActionHandler {
                                AppContext appContext,
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
-                               ActionManager actionManager) {
+                               ActionManager actionManager,
+                               FactoryActionRunner factoryActionRunner) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -128,6 +130,7 @@ public class BootstrapController implements ProjectActionHandler {
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
+        this.factoryActionRunner = factoryActionRunner;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -375,7 +378,11 @@ public class BootstrapController implements ProjectActionHandler {
             handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, this);
             eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
         } else {
-            processStartupAction();
+            if (appContext.getFactory() != null) {
+                factoryActionRunner.runActions(appContext.getFactory());
+            } else {
+                processStartupAction();
+            }
         }
     }
 

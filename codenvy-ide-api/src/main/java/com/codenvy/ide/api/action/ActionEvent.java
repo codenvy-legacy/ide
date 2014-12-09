@@ -32,8 +32,8 @@ public class ActionEvent {
     private final String              myPlace;
     private final Presentation        myPresentation;
     private final int                 myModifiers;
-    private final Map<String, Object> myParameters;
-    private       boolean             myWorksInInjected;
+    private final Map<String, String> myParameters;
+    private       boolean             myWorksInInjected ;
 
     /**
      * Create new action event.
@@ -72,7 +72,7 @@ public class ActionEvent {
                        @Nonnull Presentation presentation,
                        ActionManager actionManager,
                        int modifiers,
-                       @Nullable Map<String, Object> parameters) {
+                       @Nullable Map<String, String> parameters) {
         myActionManager = actionManager;
         myPlace = place;
         myPresentation = presentation;
@@ -129,7 +129,7 @@ public class ActionEvent {
      * @return action's parameters
      */
     @Nullable
-    public Map<String, Object> getParameters() {
+    public Map<String, String> getParameters() {
         return myParameters;
     }
 

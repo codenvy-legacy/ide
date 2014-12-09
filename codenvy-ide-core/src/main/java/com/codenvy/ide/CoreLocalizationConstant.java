@@ -459,4 +459,7 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("privacy.tooltip.privateMessage")
     String privacyTooltipPrivateMessage();
+
+    @Key("messages.unable-open-file")
+    public String unableOpenFile(String path);
 }
