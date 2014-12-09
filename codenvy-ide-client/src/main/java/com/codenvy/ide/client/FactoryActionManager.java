@@ -37,23 +37,31 @@ import java.util.List;
  * @author Sergii Leschenko
  */
 @Singleton
-public class FactoryActionRunner {
+public class FactoryActionManager {
 
-    private final EventBus      eventBus;
-    private final ActionManager actionManager;
+    private final EventBus            eventBus;
+    private final ActionManager       actionManager;
+    private final AppClosedSubscriber appClosedSubscriber;
 
     private HandlerRegistration openProjectHandler;
 
     @Inject
-    public FactoryActionRunner(EventBus eventBus,
-                               ActionManager actionManager) {
+    public FactoryActionManager(EventBus eventBus,
+                                ActionManager actionManager,
+                                AppClosedSubscriber appClosedSubscriber) {
         this.eventBus = eventBus;
         this.actionManager = actionManager;
+        this.appClosedSubscriber = appClosedSubscriber;
     }
 
-    public void runActions(final Factory factory) {
+    public void processActions(final Factory factory) {
         if (factory.getIde() != null) {
             final Ide ide = factory.getIde();
+
+            if (ide.getOnAppClosed() != null && ide.getOnAppClosed().getActions() != null) {
+                appClosedSubscriber.addUnloadHandler();
+            }
+
             if (ide.getOnAppLoaded() != null && ide.getOnAppLoaded().getActions() != null) {
                 startActions(factory.getIde().getOnAppLoaded().getActions());
             }

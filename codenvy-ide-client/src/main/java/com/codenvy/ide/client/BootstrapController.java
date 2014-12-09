@@ -90,8 +90,7 @@ public class BootstrapController implements ProjectActionHandler {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
-    private final FactoryActionRunner          factoryActionRunner;
-    private final AppClosedSubscriber          appClosedSubscriber;
+    private final FactoryActionManager         factoryActionManager;
     private       AppContext                   appContext;
 
     /** Create controller. */
@@ -114,8 +113,7 @@ public class BootstrapController implements ProjectActionHandler {
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager,
-                               FactoryActionRunner factoryActionRunner,
-                               AppClosedSubscriber appClosedSubscriber) {
+                               FactoryActionManager factoryActionManager) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -132,8 +130,7 @@ public class BootstrapController implements ProjectActionHandler {
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
-        this.factoryActionRunner = factoryActionRunner;
-        this.appClosedSubscriber = appClosedSubscriber;
+        this.factoryActionManager = factoryActionManager;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -376,12 +373,10 @@ public class BootstrapController implements ProjectActionHandler {
     HandlerRegistration handlerRegistration = null;
 
     private void processStartupParameters() {
-        appClosedSubscriber.addUnloadHandler();
-
         final String projectNameToOpen = Config.getProjectName();
 
         if (appContext.getFactory() != null) {
-            factoryActionRunner.runActions(appContext.getFactory());
+            factoryActionManager.processActions(appContext.getFactory());
         }
 
         if (projectNameToOpen != null) {
