@@ -91,6 +91,7 @@ public class BootstrapController implements ProjectActionHandler {
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
     private final FactoryActionRunner          factoryActionRunner;
+    private final AppClosedSubscriber          appClosedSubscriber;
     private       AppContext                   appContext;
 
     /** Create controller. */
@@ -113,7 +114,8 @@ public class BootstrapController implements ProjectActionHandler {
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager,
-                               FactoryActionRunner factoryActionRunner) {
+                               FactoryActionRunner factoryActionRunner,
+                               AppClosedSubscriber appClosedSubscriber) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -131,6 +133,7 @@ public class BootstrapController implements ProjectActionHandler {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
         this.factoryActionRunner = factoryActionRunner;
+        this.appClosedSubscriber = appClosedSubscriber;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -216,6 +219,7 @@ public class BootstrapController implements ProjectActionHandler {
     }
 
     private void loadFactory() {
+        appClosedSubscriber.addUnloadHandler();
         String factoryParams = null;
         boolean encoded = false;
         if (Config.getStartupParam("id") != null) {
