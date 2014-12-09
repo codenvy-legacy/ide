@@ -35,12 +35,8 @@
         <g:Label addStyleNames="{style.section}" text="{constants.editorsMappingSectionLabel}" />
         <table class="{style.tables}">
             <tr>
-                <td class="{cellStyle.prefCell} {cellStyle.firstColumn} {tableStyle.cellTableCell}">
-                    <ui:text from="{constants.defaultEditorLabel}" />
-                </td>
-                <td class="{cellStyle.prefCell} {tableStyle.cellTableCell}">
-                    <g:ValueListBox ui:field="defaultEditorSelection" addStyleNames="{cellStyle.selectWidth}" />
-                </td>
+                <td class="{cellStyle.prefCell} {cellStyle.firstColumn} {tableStyle.cellTableCell}"><ui:text from="{constants.defaultEditorLabel}" /></td>
+                <td class="{cellStyle.prefCell} {tableStyle.cellTableCell}"><g:ValueListBox ui:field="defaultEditorSelection" addStyleNames="{cellStyle.selectWidth}" /></td>
             </tr>
         </table>
     </g:HTMLPanel>

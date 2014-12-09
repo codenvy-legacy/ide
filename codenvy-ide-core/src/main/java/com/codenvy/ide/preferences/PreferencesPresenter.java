@@ -73,9 +73,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
         this.preferencesManager = preferencesManager;
         this.dialogFactory = dialogFactory;
         this.userProfileService = userProfileService;
-
         this.view.setDelegate(this);
-
         for (PreferencePagePresenter preference : preferences) {
             preference.setUpdateDelegate(this);
         }
