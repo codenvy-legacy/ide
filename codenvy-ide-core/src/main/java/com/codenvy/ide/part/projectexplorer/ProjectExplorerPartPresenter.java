@@ -14,6 +14,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -26,6 +29,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
@@ -145,6 +149,20 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** Adds behavior to view's components. */
     protected void bind() {
         view.setDelegate(this);
+
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
+
+            @Override
+            public void onActivePartChanged(ActivePartChangedEvent event) {
+                if (!(event.getActivePart() instanceof EditorPartPresenter)) {
+                    return;
+                }
+
+                EditorPartPresenter editorPresenter = (EditorPartPresenter)event.getActivePart();
+                FileNode fileNode = editorPresenter.getEditorInput().getFile();
+                view.selectAndExpandNode(fileNode);
+            }
+        });
 
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override

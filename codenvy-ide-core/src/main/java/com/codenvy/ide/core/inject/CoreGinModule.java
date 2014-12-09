@@ -15,6 +15,8 @@ import com.codenvy.api.account.gwt.client.AccountServiceClientImpl;
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClientImpl;
+import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
+import com.codenvy.api.factory.gwt.client.FactoryServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
@@ -225,6 +227,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(UserServiceClient.class).to(UserServiceClientImpl.class).in(Singleton.class);
         bind(UserProfileServiceClient.class).to(UserProfileServiceClientImpl.class).in(Singleton.class);
         bind(AccountServiceClient.class).to(AccountServiceClientImpl.class).in(Singleton.class);
+        bind(FactoryServiceClient.class).to(FactoryServiceClientImpl.class).in(Singleton.class);
         bind(WorkspaceServiceClient.class).to(WorkspaceServiceClientImpl.class).in(Singleton.class);
         bind(VfsServiceClient.class).to(VfsServiceClientImpl.class).in(Singleton.class);
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);

@@ -13,6 +13,8 @@ package com.codenvy.ide.extension.runner.client.manage.ram;
 
 import com.codenvy.ide.api.mvp.View;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Vitaly Parfonov
  */
@@ -28,5 +30,9 @@ public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
 
     void showRam(String ram);
 
-    void showWarnMessage(String s);
+    /** Show warning message. */
+    void showWarnMessage(@Nonnull String s);
+
+    /** Hide warning message. */
+    void hideWarnMessage();
 }
