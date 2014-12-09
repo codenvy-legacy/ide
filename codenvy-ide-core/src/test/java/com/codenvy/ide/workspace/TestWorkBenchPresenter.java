@@ -70,10 +70,10 @@ public class TestWorkBenchPresenter extends GwtTestWithMockito {
     @Mock
     private PartPresenter navigationPart;
 
-    private PartStack toolingPartStack;
-    private PartStack informationPartStack;
-    private PartStack editorPartStack;
-    private PartStack navigationPartStack;
+    private static PartStack toolingPartStack;
+    private static PartStack informationPartStack;
+    private static PartStack editorPartStack;
+    private static PartStack navigationPartStack;
 
     @Before
     public void initialize() {
@@ -170,7 +170,39 @@ public class TestWorkBenchPresenter extends GwtTestWithMockito {
     }
 
     @Test
-    public void shouldRestoreEditorPart() {
+    public void shouldRestoreEditorPartWithHiddenParts() {
+        when(toolingPartStack.getActivePart()).thenReturn(toolingPart);
+        when(informationPartStack.getActivePart()).thenReturn(informationPart);
+        when(editorPartStack.getActivePart()).thenReturn(editorPart);
+        when(navigationPartStack.getActivePart()).thenReturn(navigationPart);
+
+        workBenchPresenter.expandEditorPart();
+
+        reset(toolingPartStack);
+        reset(informationPartStack);
+        reset(editorPartStack);
+        reset(navigationPartStack);
+
+        when(toolingPartStack.getActivePart()).thenReturn(null);
+        when(informationPartStack.getActivePart()).thenReturn(null);
+        when(editorPartStack.getActivePart()).thenReturn(null);
+        when(navigationPartStack.getActivePart()).thenReturn(null);
+
+        when(toolingPartStack.containsPart(toolingPart)).thenReturn(true);
+        when(informationPartStack.containsPart(informationPart)).thenReturn(true);
+        when(editorPartStack.containsPart(editorPart)).thenReturn(true);
+        when(navigationPartStack.containsPart(navigationPart)).thenReturn(true);
+
+        workBenchPresenter.restoreEditorPart();
+
+        verify(toolingPartStack).setActivePart(toolingPart);
+        verify(informationPartStack).setActivePart(informationPart);
+        verify(editorPartStack, never()).setActivePart(editorPart);
+        verify(navigationPartStack).setActivePart(navigationPart);
+    }
+
+    @Test
+    public void shouldNotRestoreEditorPartWithActiveParts() {
         when(toolingPartStack.getActivePart()).thenReturn(toolingPart);
         when(informationPartStack.getActivePart()).thenReturn(informationPart);
         when(editorPartStack.getActivePart()).thenReturn(editorPart);
@@ -184,10 +216,10 @@ public class TestWorkBenchPresenter extends GwtTestWithMockito {
         workBenchPresenter.expandEditorPart();
         workBenchPresenter.restoreEditorPart();
 
-        verify(toolingPartStack).setActivePart(toolingPart);
-        verify(informationPartStack).setActivePart(informationPart);
+        verify(toolingPartStack, never()).setActivePart(toolingPart);
+        verify(informationPartStack, never()).setActivePart(informationPart);
         verify(editorPartStack, never()).setActivePart(editorPart);
-        verify(navigationPartStack).setActivePart(navigationPart);
+        verify(navigationPartStack, never()).setActivePart(navigationPart);
     }
 
     @Test
@@ -202,27 +234,74 @@ public class TestWorkBenchPresenter extends GwtTestWithMockito {
     }
 
     @Test
-    public void shouldOpenPart() {
+    public void shouldNotSetUnexistingActivePart() {
         PartPresenter part = mock(PartPresenter.class);
 
+        when(toolingPartStack.containsPart(part)).thenReturn(false);
+
+        workBenchPresenter.setActivePart(part);
+
+        verify(toolingPartStack, never()).setActivePart(part);
+    }
+
+    @Test
+    public void shouldNavigationContainerOpenPart() {
+        PartPresenter part = mock(PartPresenter.class);
         Constraints constraints = mock(Constraints.class);
 
-        for (PartStackType partStackType : PartStackType.values()) {
-            workBenchPresenter.openPart(part, partStackType, constraints);
+        workBenchPresenter.openPart(part, PartStackType.NAVIGATION, constraints);
 
-            PartStack destPartStack = workBenchPresenter.partStacks.get(partStackType.toString());
+        verify(navigationPartStack).addPart(part, constraints);
 
-            verify(destPartStack).addPart(part, constraints);
-        }
 
-        for (PartStackType partStackType : PartStackType.values()) {
+        workBenchPresenter.openPart(part, PartStackType.NAVIGATION);
 
-            workBenchPresenter.openPart(part, partStackType);
+        verify(navigationPartStack).addPart(part, null);
+    }
 
-            PartStack destPartStack = workBenchPresenter.partStacks.get(partStackType.toString());
+    @Test
+    public void shouldEditorContainerOpenPart() {
+        PartPresenter part = mock(PartPresenter.class);
+        Constraints constraints = mock(Constraints.class);
 
-            verify(destPartStack).addPart(part, null);
-        }
+        workBenchPresenter.openPart(part, PartStackType.EDITING, constraints);
+
+        verify(editorPartStack).addPart(part, constraints);
+
+
+        workBenchPresenter.openPart(part, PartStackType.EDITING);
+
+        verify(editorPartStack).addPart(part, null);
+    }
+
+    @Test
+    public void shouldToolingContainerOpenPart() {
+        PartPresenter part = mock(PartPresenter.class);
+        Constraints constraints = mock(Constraints.class);
+
+        workBenchPresenter.openPart(part, PartStackType.TOOLING, constraints);
+
+        verify(toolingPartStack).addPart(part, constraints);
+
+
+        workBenchPresenter.openPart(part, PartStackType.TOOLING);
+
+        verify(toolingPartStack).addPart(part, null);
+    }
+
+    @Test
+    public void shouldInformationContainerOpenPart() {
+        PartPresenter part = mock(PartPresenter.class);
+        Constraints constraints = mock(Constraints.class);
+
+        workBenchPresenter.openPart(part, PartStackType.INFORMATION, constraints);
+
+        verify(informationPartStack).addPart(part, constraints);
+
+
+        workBenchPresenter.openPart(part, PartStackType.INFORMATION);
+
+        verify(informationPartStack).addPart(part, null);
     }
 
     @Test

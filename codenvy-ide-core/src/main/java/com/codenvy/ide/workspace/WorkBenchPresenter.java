@@ -133,27 +133,12 @@ public class WorkBenchPresenter implements Presenter {
     }
 
     public void restoreEditorPart() {
-        for (PartStack container : partStacks.getValues().asIterable()) {
-            if (container instanceof EditorPartStack) {
-                continue;
-            }
-
-            PartPresenter newPart = container.getActivePart();
-            if (newPart == null) {
-                continue;
-            }
-
-            for (PartPresenter oldPart : activeParts){
-                if (container.containsPart(oldPart) & !(newPart.equals(oldPart))){
-                    activeParts.remove(oldPart);
-                }
-            }
-
-            activeParts.add(newPart);
-        }
-
         for (PartPresenter activePart : activeParts) {
-            setActivePart(activePart);
+            PartStack destPartStack = findPartStackByPart(activePart);
+            PartPresenter newPart = destPartStack.getActivePart();
+            if (newPart == null) {
+                destPartStack.setActivePart(activePart);
+            }
         }
     }
 
