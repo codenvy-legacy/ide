@@ -200,6 +200,13 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
+    public void selectAndExpandNode(TreeNode< ? > node) {
+        tree.autoExpandAndSelectNode(node, true);
+        delegate.onNodeSelected(node);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void setProjectHeader(@Nonnull ProjectDescriptor project) {
         if (toolBar.getWidgetIndex(projectHeader) < 0) {
             toolBar.addSouth(projectHeader, 28);

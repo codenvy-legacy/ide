@@ -10,51 +10,65 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.manage.ram;
 
-import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nonnull;
+
 /** @author Vitaly Parfonov */
 public class RamManagerViewImpl extends Composite implements RamManagerView {
-    private RunnerResources            resources;
-    private RunnerLocalizationConstant locale;
-    private DialogFactory              dialogFactory;
-
     private ActionDelegate delegate;
 
     @UiField
-    SuggestBox memoryField;
+    TextBox memoryField;
+    @UiField
+    Label   warningLabel;
+
+    @UiField(provided = true)
+    RunnerResources.Css styles;
 
     interface RamManagerViewImplUiBinder extends UiBinder<Widget, RamManagerViewImpl> {
     }
 
     private static RamManagerViewImplUiBinder ourUiBinder = GWT.create(RamManagerViewImplUiBinder.class);
 
-    /**
-     * Create view.
-     *
-     * @param resources
-     * @param locale
-     * @param dialogFactory
-     */
+    /** Create view. */
     @Inject
-    protected RamManagerViewImpl(RunnerResources resources, RunnerLocalizationConstant locale, DialogFactory dialogFactory) {
-        this.resources = resources;
-        this.locale = locale;
-        this.dialogFactory = dialogFactory;
+    protected RamManagerViewImpl(RunnerResources resources) {
+        styles = resources.runner();
+        styles.ensureInjected();
         initWidget(ourUiBinder.createAndBindUi(this));
         memoryField.getElement().setAttribute("type", "number");
         memoryField.getElement().setAttribute("step", "128");
         memoryField.getElement().setAttribute("min", "0");
+        memoryField.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                delegate.validateRamSize(memoryField.getText());
+            }
+        });
+        memoryField.addKeyPressHandler(new KeyPressHandler() {
+            @Override
+            public void onKeyPress(KeyPressEvent event) {
+                Character charCode = event.getCharCode();
+                if (!(Character.isDigit(charCode))) {
+                    memoryField.cancelKey();
+                }
+            }
+        });
     }
 
     @Override
@@ -68,13 +82,20 @@ public class RamManagerViewImpl extends Composite implements RamManagerView {
     }
 
     @Override
-    public void showWarnMessage(String warning) {
-        dialogFactory.createMessageDialog("Warning", warning, null).show();
+    public void showWarnMessage(@Nonnull String warning) {
+        memoryField.addStyleName(styles.inputError());
+        warningLabel.setText(warning);
+    }
+
+    @Override
+    public void hideWarnMessage() {
+        memoryField.removeStyleName(styles.inputError());
+        warningLabel.setText("");
     }
 
     @UiHandler("memoryField")
-    public void onRamFieldsChanged(ValueChangeEvent<String> valueChangeEvent) {
-        delegate.validateRamSize(valueChangeEvent.getValue());
+    public void onRamFieldsChanged(KeyUpEvent event) {
+        delegate.validateRamSize(memoryField.getText());
     }
 
     @Override

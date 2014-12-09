@@ -99,17 +99,17 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
-        if (event.getActivePart() == null) {
+        if (event.getActivePart() == null || !(event.getActivePart() instanceof HasOutline)) {
             view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
+            return;
         }
-        if (event.getActivePart() instanceof HasOutline) {
-            if (activePart != event.getActivePart()) {
-                activePart = (HasOutline)event.getActivePart();
-                if (activePart.getOutline() != null) {
-                    activePart.getOutline().go(view.getContainer());
-                } else {
-                    view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
-                }
+
+        if (activePart != event.getActivePart()) {
+            activePart = (HasOutline)event.getActivePart();
+            if (activePart.getOutline() != null) {
+                activePart.getOutline().go(view.getContainer());
+            } else {
+                view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
             }
         }
     }

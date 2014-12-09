@@ -149,7 +149,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     @Override
     public void onRefreshClicked() {
         try {
-            userProfileService.getPreferences(null, new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
+            userProfileService.getPreferences(new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
                 @Override
                 protected void onSuccess(Map<String, String> preferences) {
                     /**
@@ -183,6 +183,12 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     @Override
     public void onCloseClicked() {
         view.close();
+        for (PreferencePagePresenter preference : preferences) {
+            if (preference.isDirty()) {
+                preference.revertChanges();
+            }
+        }
+        view.enableSaveButton(false);
     }
 
 }

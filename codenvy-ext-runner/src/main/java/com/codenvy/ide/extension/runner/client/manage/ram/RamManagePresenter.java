@@ -13,7 +13,6 @@ package com.codenvy.ide.extension.runner.client.manage.ram;
 import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import javax.inject.Inject;
@@ -51,20 +50,26 @@ public class RamManagePresenter extends AbstractPreferencePagePresenter implemen
 
     @Override
     public void validateRamSize(String value) {
-        if (!value.isEmpty()) {
-            try {
-                final int ram = Integer.parseInt(value);
-                if (ram % 128 == 0) {
-                    dirty = true;
-                } else {
-                    view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
-                    dirty = false;
-                }
-                delegate.onDirtyChanged();
-            } catch (NumberFormatException e) {
-                Log.error(RamManagePresenter.class, e.getMessage());
-                view.showWarnMessage(localizationConstant.enteredValueNotCorrect());
+        if (value.isEmpty()) {
+            dirty = true;
+            view.hideWarnMessage();
+            delegate.onDirtyChanged();
+            return;
+        }
+        try {
+            final int ram = Integer.parseInt(value);
+            if (ram % 128 == 0) {
+                dirty = true;
+                view.hideWarnMessage();
+            } else {
+                dirty = false;
+                view.showWarnMessage(localizationConstant.ramSizeMustBeMultipleOf("128"));
             }
+            delegate.onDirtyChanged();
+        } catch (NumberFormatException e) {
+            dirty = false;
+            view.showWarnMessage(localizationConstant.enteredValueNotCorrect());
+            delegate.onDirtyChanged();
         }
     }
 
@@ -89,6 +94,7 @@ public class RamManagePresenter extends AbstractPreferencePagePresenter implemen
         String ramSize = preferencesManager.getValue(PREFS_RUNNER_RAM_SIZE_DEFAULT);
         if (ramSize != null) {
             view.showRam(ramSize.replace("\"", ""));
+            view.hideWarnMessage();
         }
         dirty = false;
     }
