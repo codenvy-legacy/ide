@@ -219,7 +219,6 @@ public class BootstrapController implements ProjectActionHandler {
     }
 
     private void loadFactory() {
-        appClosedSubscriber.addUnloadHandler();
         String factoryParams = null;
         boolean encoded = false;
         if (Config.getStartupParam("id") != null) {
@@ -377,30 +376,19 @@ public class BootstrapController implements ProjectActionHandler {
     HandlerRegistration handlerRegistration = null;
 
     private void processStartupParameters() {
+        appClosedSubscriber.addUnloadHandler();
+
         final String projectNameToOpen = Config.getProjectName();
+
+        if (appContext.getFactory() != null) {
+            factoryActionRunner.runActions(appContext.getFactory());
+        }
+
         if (projectNameToOpen != null) {
             handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, this);
             eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
         } else {
-            if (appContext.getFactory() != null) {
-                factoryActionRunner.runActions(appContext.getFactory());
-            } else {
-                processStartupAction();
-            }
-        }
-    }
-
-    private void processStartupAction() {
-        final String startupAction = Config.getStartupParam("action");
-        if (startupAction != null) {
-            Action action = actionManager.getAction(startupAction);
-            if (action != null) {
-                ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
-                action.update(e);
-                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
-                    action.actionPerformed(e);
-                }
-            }
+            processStartupAction();
         }
     }
 
@@ -416,6 +404,20 @@ public class BootstrapController implements ProjectActionHandler {
     @Override
     public void onProjectClosed(ProjectActionEvent event) {
 
+    }
+
+    private void processStartupAction() {
+        final String startupAction = Config.getStartupParam("action");
+        if (startupAction != null) {
+            Action action = actionManager.getAction(startupAction);
+            if (action != null) {
+                ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
+                action.update(e);
+                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
+                    action.actionPerformed(e);
+                }
+            }
+        }
     }
 
 
