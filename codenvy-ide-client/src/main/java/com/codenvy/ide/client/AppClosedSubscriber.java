@@ -1,26 +1,18 @@
-/*
- * CODENVY CONFIDENTIAL
- * __________________
+/*******************************************************************************
+ * Copyright (c) 2012-2014 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  [2012] - [2014] Codenvy, S.A.
- *  All Rights Reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Codenvy S.A. and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * herein are proprietary to Codenvy S.A.
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Codenvy S.A..
- */
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
 package com.codenvy.ide.client;
 
 import com.codenvy.api.factory.dto.Action;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.AppClosedActionEvent;
-import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.toolbar.PresentationFactory;
 
 import javax.inject.Inject;
@@ -30,20 +22,23 @@ import java.util.List;
  * @author Sergii Leschenko
  */
 public class AppClosedSubscriber {
-    private final AppContext    appContext;
     private final ActionManager actionManager;
+    private       List<Action>  actions;
 
     @Inject
-    public AppClosedSubscriber(AppContext appContext,
-                               ActionManager actionManager) {
-        this.appContext = appContext;
+    public AppClosedSubscriber(ActionManager actionManager) {
         this.actionManager = actionManager;
+    }
+
+    public void startBeforeUnload(List<Action> actions) {
+        this.actions = actions;
+        addUnloadHandler();
     }
 
     /**
      * Adds before unload event listener.
      */
-    public native void addUnloadHandler() /*-{
+    private native void addUnloadHandler() /*-{
         var instance = this;
 
         $wnd.onbeforeunload = function () {
@@ -52,7 +47,6 @@ public class AppClosedSubscriber {
     }-*/;
 
     private String checkCancel() {
-        List<Action> actions = getOnAppClosedActions();
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
             if (ideAction != null) {
@@ -70,15 +64,5 @@ public class AppClosedSubscriber {
         }
 
         return null;
-    }
-
-    private List<Action> getOnAppClosedActions() {
-        if (appContext.getFactory() == null || appContext.getFactory().getIde() == null
-            || appContext.getFactory().getIde().getOnAppClosed() == null ||
-            appContext.getFactory().getIde().getOnAppClosed().getActions() == null) {
-            return null;
-        }
-
-        return appContext.getFactory().getIde().getOnAppClosed().getActions();
     }
 }
