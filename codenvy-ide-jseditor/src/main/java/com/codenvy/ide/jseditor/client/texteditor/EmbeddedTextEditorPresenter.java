@@ -10,16 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -56,6 +46,7 @@ import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
+import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
@@ -77,6 +68,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 
 /**
@@ -620,6 +620,11 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public CursorModelWithHandler getCursorModel() {
         return this.cursorModel;
+    }
+
+    @Override
+    public PositionConverter getPositionConverter() {
+        return this.editorWidget.getPositionConverter();
     }
 
     public void showCompletionProposals(final CompletionsSource source) {

@@ -12,6 +12,7 @@ package com.codenvy.ide.jseditor.client.texteditor;
 
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
+import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 
 public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, HasOutline {
@@ -22,7 +23,7 @@ public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, 
     @Deprecated
     EmbeddedTextEditorPartView getView();
 
-    /** Calls all editor update actions for thsi editor. */
+    /** Calls all editor update actions for this editor. */
     void refreshEditor();
 
     /**
@@ -37,4 +38,10 @@ public interface EmbeddedTextEditor extends TextEditor, ConfigurableTextEditor, 
      */
     CursorModelWithHandler getCursorModel();
 
+    /**
+     * Returns a position converter relative to this editor (pixel coordinates <-> line char positions).
+     *
+     * @return a position converter
+     */
+    PositionConverter getPositionConverter();
 }
