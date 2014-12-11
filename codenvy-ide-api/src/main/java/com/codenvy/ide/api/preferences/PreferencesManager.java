@@ -20,33 +20,26 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface PreferencesManager {
+
     /**
      * Returns preference's value for the given preference's name.
      *
-     * @param preferenceName
+     * @param preference
      *         the preference's name whose associated value will be returned
      * @return preference's value
      */
-    String getValue(String preferenceName);
+    String getValue(String preference);
 
     /**
-     * Associates the preference's value with the preference's name. If preferences previously contained this preference, the old value is
-     * replaced by new one.
+     * Associates the preference's value with the preference's name.
+     * If preferences previously contained this preference, the old value is replaced by new one.
      *
-     * @param name
+     * @param preference
      *         preference's name with which the preference's value will be associated
      * @param value
      *         preference's value will be associated with preference's name
      */
-    void setPreference(String name, String value);
-
-    /**
-     * Removes given preference from preferences.
-     *
-     * @param name
-     *         preference's name which preference needs to remove
-     */
-    void removeValue(String name);
+    void setValue(String preference, String value);
 
     /**
      * Persists preferences by passing it to the server side.

@@ -85,7 +85,7 @@ public class RamManagePresenter extends AbstractPreferencePagePresenter implemen
     @Override
     public void storeChanges() {
         String ramSize = view.getRam().replace("\"", "");
-        preferencesManager.setPreference(PREFS_RUNNER_RAM_SIZE_DEFAULT, ramSize);
+        preferencesManager.setValue(PREFS_RUNNER_RAM_SIZE_DEFAULT, ramSize);
         dirty = false;
     }
 

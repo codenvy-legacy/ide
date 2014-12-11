@@ -11,11 +11,9 @@
 package com.codenvy.ide.theme;
 
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.preferences.AbstractPreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.theme.ThemeAgent;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -24,27 +22,23 @@ import com.google.inject.Singleton;
 @Singleton
 public class AppearancePresenter extends AbstractPreferencePagePresenter implements AppearanceView.ActionDelegate {
 
+    public static final String PREF_IDE_THEME = "ide.theme";
+
     private AppearanceView     view;
     private ThemeAgent         themeAgent;
     private PreferencesManager preferencesManager;
-    private DialogFactory      dialogFactory;
     private boolean dirty = false;
     private String themeId;
-    private AppContext appContext;
 
     @Inject
     public AppearancePresenter(AppearanceView view,
                                CoreLocalizationConstant constant,
                                ThemeAgent themeAgent,
-                               PreferencesManager preferencesManager,
-                               DialogFactory dialogFactory,
-                               AppContext appContext) {
+                               PreferencesManager preferencesManager) {
         super(constant.appearanceTitle(), constant.appearanceCategory(), null);
         this.view = view;
         this.themeAgent = themeAgent;
         this.preferencesManager = preferencesManager;
-        this.dialogFactory = dialogFactory;
-        this.appContext = appContext;
         view.setDelegate(this);
     }
 
@@ -57,7 +51,7 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
 
-        String currentThemeId = preferencesManager.getValue("theme");
+        String currentThemeId = preferencesManager.getValue(PREF_IDE_THEME);
         if (currentThemeId == null || currentThemeId.isEmpty()) {
             currentThemeId = themeAgent.getCurrentThemeId();
         }
@@ -73,13 +67,13 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
 
     @Override
     public void storeChanges() {
-        preferencesManager.setPreference("ide.theme", themeId);
+        preferencesManager.setValue(PREF_IDE_THEME, themeId);
         dirty = false;
     }
 
     @Override
     public void revertChanges() {
-        String currentThemeId = preferencesManager.getValue("theme");
+        String currentThemeId = preferencesManager.getValue(PREF_IDE_THEME);
         if (currentThemeId == null || currentThemeId.isEmpty()) {
             currentThemeId = themeAgent.getCurrentThemeId();
         }
@@ -87,29 +81,5 @@ public class AppearancePresenter extends AbstractPreferencePagePresenter impleme
 
         dirty = false;
     }
-
-//    @Override
-//    public void doApply() {
-//        if (isDirty()) {
-//            preferencesManager.setPreference("Theme", themeId);
-//            preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
-//                @Override
-//                public void onFailure(Throwable ignore) {
-//                }
-//
-//                @Override
-//                public void onSuccess(ProfileDescriptor result) {
-//                    dialogFactory.createConfirmDialog("Restart Codenvy", "Restart Codenvy to activate changes in Appearances?",
-//                                                      new ConfirmCallback() {
-//                                                          @Override
-//                                                          public void accepted() {
-//                                                              themeAgent.setCurrentThemeId(themeId);
-//                                                              Window.Location.reload();
-//                                                          }
-//                                                      }, null).show();
-//                }
-//            });
-//        }
-//    }
 
 }

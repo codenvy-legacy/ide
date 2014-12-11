@@ -139,7 +139,7 @@ public class RamManagePresenterTest {
 
         Assert.assertEquals(false, dirty);
         verify(view).getRam();
-        verify(preferencesManager).setPreference(eq(PREFS_RUNNER_RAM_SIZE_DEFAULT), eq("128"));
+        verify(preferencesManager).setValue(eq(PREFS_RUNNER_RAM_SIZE_DEFAULT), eq("128"));
     }
 
     @Test

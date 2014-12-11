@@ -77,7 +77,7 @@ public class ExtensionManagerPresenter extends AbstractPreferencePagePresenter i
 //        for (ExtensionDescription ed : extensions) {
 //            jso.addField(ed.getId(), ed.isEnabled());
 //        }
-//        preferencesManager.setPreference(PREFS_EXTENSIONS, jso.serialize());
+//        preferencesManager.setValue(PREFS_EXTENSIONS, jso.serialize());
         dirty = false;
     }
 

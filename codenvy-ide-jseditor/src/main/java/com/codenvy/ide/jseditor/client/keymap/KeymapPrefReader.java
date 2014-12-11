@@ -140,6 +140,6 @@ public class KeymapPrefReader {
         }
 
         final String newJson = prefObject.toString();
-        preferencesManager.setPreference(KEYMAP_PREF_KEY, newJson);
+        preferencesManager.setValue(KEYMAP_PREF_KEY, newJson);
     }
 }

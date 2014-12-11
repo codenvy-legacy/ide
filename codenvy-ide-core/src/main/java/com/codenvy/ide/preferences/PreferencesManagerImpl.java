@@ -47,25 +47,17 @@ public class PreferencesManagerImpl implements PreferencesManager {
 
     /** {@inheritDoc} */
     @Override
-    public String getValue(String preferenceName) {
-        String value = changedPreferences.get(preferenceName);
-        if (value == null) {
-            value = persistedPreferences.get(preferenceName);
+    public String getValue(String preference) {
+        if (changedPreferences.containsKey(preference)) {
+            return changedPreferences.get(preference);
         }
-
-        return value;
+        return persistedPreferences.get(preference);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setPreference(String name, String value) {
-        changedPreferences.put(name, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void removeValue(String name) {
-        setPreference(name, null);
+    public void setValue(String preference, String value) {
+        changedPreferences.put(preference, value);
     }
 
     /** {@inheritDoc} */
