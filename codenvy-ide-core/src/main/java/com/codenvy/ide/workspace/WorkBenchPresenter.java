@@ -114,12 +114,14 @@ public class WorkBenchPresenter implements Presenter {
     public void expandEditorPart() {
         activeParts = new ArrayList<>();
         for (PartStack value : partStacks.getValues().asIterable()) {
-            if (!(value instanceof EditorPartStack)) {
-                PartPresenter part = value.getActivePart();
-                if (part != null) {
-                    activeParts.add(part);
-                    value.hidePart(part);
-                }
+            if (value instanceof EditorPartStack) {
+                continue;
+            }
+
+            PartPresenter part = value.getActivePart();
+            if (part != null) {
+                value.hidePart(part);
+                activeParts.add(part);
             }
         }
 //        partStacks.iterate(new StringMap.IterationCallback<PartStack>() {
@@ -132,7 +134,11 @@ public class WorkBenchPresenter implements Presenter {
 
     public void restoreEditorPart() {
         for (PartPresenter activePart : activeParts) {
-            setActivePart(activePart);
+            PartStack destPartStack = findPartStackByPart(activePart);
+            PartPresenter newPart = destPartStack.getActivePart();
+            if (newPart == null) {
+                destPartStack.setActivePart(activePart);
+            }
         }
     }
 
