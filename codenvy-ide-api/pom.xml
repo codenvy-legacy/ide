@@ -65,6 +65,11 @@
         </dependency>
         <dependency>
             <groupId>com.codenvy.platform-api-gwt-client</groupId>
+            <artifactId>codenvy-api-workspace-gwt-client</artifactId>
+            <version>${codenvy.platform-api-gwt-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codenvy.platform-api-gwt-client</groupId>
             <artifactId>codenvy-gwt-client-commons</artifactId>
             <version>${codenvy.platform-api-gwt-client.version}</version>
         </dependency>
@@ -72,6 +77,11 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
             <version>${com.google.gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${com.google.gwt.gin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
