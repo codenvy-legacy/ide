@@ -57,7 +57,6 @@ public class AppearanceViewImpl implements AppearanceView {
                 themeBox.setSelectedIndex(themes.indexOf(t));
             }
         }
-
     }
 
     @UiHandler("themeBox")

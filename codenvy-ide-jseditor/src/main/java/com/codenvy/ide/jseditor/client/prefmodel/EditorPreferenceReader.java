@@ -87,6 +87,6 @@ public class EditorPreferenceReader {
      */
     public void setPreferences(final EditorPreferences newPreferences) {
         final JSONObject json = new JSONObject(newPreferences);
-        this.preferencesManager.setPreference(PREFERENCE_PROPERTY, json.toString());
+        this.preferencesManager.setValue(PREFERENCE_PROPERTY, json.toString());
     }
 }

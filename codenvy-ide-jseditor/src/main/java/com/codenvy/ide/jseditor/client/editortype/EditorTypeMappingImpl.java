@@ -152,7 +152,7 @@ public class EditorTypeMappingImpl implements EditorTypeMapping {
 
         final String pref = keyMapping.toString();
         Log.debug(EditorTypeMappingImpl.class, "Storing editor type mappings in prefs - " + pref);
-        this.preferencesManager.setPreference(PREFERENCE_PROPERTY_NAME, pref);
+        this.preferencesManager.setValue(PREFERENCE_PROPERTY_NAME, pref);
     }
 
     @Override
