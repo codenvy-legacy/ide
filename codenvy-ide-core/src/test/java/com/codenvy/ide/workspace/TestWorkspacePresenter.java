@@ -68,7 +68,7 @@ public class TestWorkspacePresenter {
         when(partStackProvider.get()).thenReturn(partStack);
         when(activePerspectiveProvider.get()).thenReturn(activePerspective);
 
-        presenter = new WorkspacePresenter(view, null, null, activePerspectiveProvider);
+        presenter = new WorkspacePresenter(view, null, null, null, activePerspectiveProvider);
     }
 
     @After
