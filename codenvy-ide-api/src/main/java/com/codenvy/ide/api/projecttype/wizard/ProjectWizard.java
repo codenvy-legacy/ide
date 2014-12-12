@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
+import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
@@ -39,7 +40,7 @@ public class ProjectWizard extends DefaultWizard {
      * Value of this key is project description that will used for create or update project.
      * So if you wont to change some project attributes or settings (like type or builder/runner) apply your changes to this key value
      */
-    public static final WizardContext.Key<ProjectDescriptor> PROJECT            = new WizardContext.Key<>("Project");
+    public static final WizardContext.Key<ProjectDescriptor> PROJECT = new WizardContext.Key<>("Project");
 
     /**
      * Value of this key is original {@code ProjectDescriptor}, appears only when project wizard used for update project.
@@ -47,7 +48,9 @@ public class ProjectWizard extends DefaultWizard {
      */
     public static final WizardContext.Key<ProjectDescriptor> PROJECT_FOR_UPDATE = new WizardContext.Key<>("Project for update");
 
-    public static final WizardContext.Key<Boolean>           PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");
+    public static final WizardContext.Key<Boolean> PROJECT_VISIBILITY = new WizardContext.Key<>("Project Visibility");
+
+    public static final WizardContext.Key<GeneratorDescription> GENERATOR = new WizardContext.Key<>("Project Generator");
 
     /**
      * Create default wizard.
