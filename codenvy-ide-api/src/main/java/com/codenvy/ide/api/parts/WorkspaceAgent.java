@@ -61,4 +61,13 @@ public interface WorkspaceAgent {
      * @param part
      */
     void removePart(PartPresenter part);
+
+    /**
+     * Retrieves the instance of the {@link PartStack} for given {@link PartStackType}
+     *
+     * @param type one of the enumerated type {@link com.codenvy.ide.api.parts.PartStackType}
+     * @return the part stack found, else null
+     */
+    PartStack getPartStack(PartStackType type);
+
 }

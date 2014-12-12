@@ -14,6 +14,8 @@ import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import java.util.List;
+
 /**
  * Part Stack is tabbed layout element, containing Parts.
  *
@@ -90,5 +92,10 @@ public interface PartStack extends Presenter {
      * @param part
      */
     void removePart(PartPresenter part);
+
+    /**
+     * Gets all the parts registered.
+     */
+    List<PartPresenter> getPartPresenters();
 
 }
