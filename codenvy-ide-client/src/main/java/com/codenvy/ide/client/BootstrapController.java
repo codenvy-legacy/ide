@@ -280,7 +280,7 @@ public class BootstrapController implements ProjectActionHandler {
         RootLayoutPanel.get().add(mainPanel);
 
         // Make sure the root panel creates its own stacking context
-        RootLayoutPanel.get().getElement().getStyle().setZIndex(1);
+        RootLayoutPanel.get().getElement().getStyle().setZIndex(0);
 
         WorkspacePresenter workspacePresenter = workspaceProvider.get();
 
