@@ -90,7 +90,6 @@ public class FocusManager {
                         partStackHandler.onActivePartChanged(activePartStack.getActivePart());
                     }
                 });
-//                activePartChanged(activePartStack.getActivePart());
             }
             return;
         }
@@ -109,8 +108,6 @@ public class FocusManager {
                 partStackHandler.onActivePartChanged(activePartStack.getActivePart());
             }
         });
-
-//        activePartChanged(activePartStack.getActivePart());
     }
 
 }

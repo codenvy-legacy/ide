@@ -65,8 +65,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected final PartStackView view;
     private final   EventBus      eventBus;
     protected boolean          partsClosable    = false;
-    protected PropertyListener propertyListener = new PropertyListener() {
 
+    protected PropertyListener propertyListener = new PropertyListener() {
         @Override
         public void propertyChanged(PartPresenter source, int propId) {
             if (PartPresenter.TITLE_PROPERTY == propId) {
@@ -77,6 +77,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         }
     };
+
     /** current active part */
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;

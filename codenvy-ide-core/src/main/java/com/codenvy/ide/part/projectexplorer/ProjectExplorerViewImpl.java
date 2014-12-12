@@ -23,6 +23,7 @@ import com.codenvy.ide.collections.js.JsoArray;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -54,7 +55,6 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
-
 
         tree = Tree.create(resources, new ProjectTreeNodeDataAdapter(), projectTreeNodeRenderer);
 
@@ -129,9 +129,14 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public void onNodeContextMenu(int mouseX, int mouseY, TreeNodeElement<TreeNode<?>> node) {
+            public void onNodeContextMenu(final int mouseX, final int mouseY, TreeNodeElement<TreeNode<?>> node) {
                 delegate.onNodeSelected(node.getData());
-                delegate.onContextMenu(mouseX, mouseY);
+                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        delegate.onContextMenu(mouseX, mouseY);
+                    }
+                });
             }
 
             @Override
@@ -153,8 +158,13 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
 
             @Override
-            public void onRootContextMenu(int mouseX, int mouseY) {
-                delegate.onContextMenu(mouseX, mouseY);
+            public void onRootContextMenu(final int mouseX, final int mouseY) {
+                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        delegate.onContextMenu(mouseX, mouseY);
+                    }
+                });
             }
 
             @Override
