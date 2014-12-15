@@ -22,6 +22,7 @@ import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
 import com.codenvy.ide.actions.OpenFileAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.OpenSelectedFileAction;
 import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.RedirectToFeedbackAction;
 import com.codenvy.ide.actions.RedirectToForumsAction;
@@ -138,6 +139,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
+
+    @Inject
+    private OpenSelectedFileAction openSelectedFileAction;
 
     @Inject
     private OpenFileAction openFileAction;
@@ -359,7 +363,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.addSeparator();
-        resourceOperation.add(openFileAction);
+        resourceOperation.add(openSelectedFileAction);
         resourceOperation.add(renameItemAction);
         resourceOperation.add(deleteItemAction);
 
@@ -383,12 +387,12 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("closeProject", closeProjectAction);
-        actionManager.registerAction("openFile", openFileAction);
+        actionManager.registerAction("openSelectedFile", openSelectedFileAction);
         actionManager.registerAction("renameResource", renameItemAction);
         actionManager.registerAction("deleteItem", deleteItemAction);
 
         actionManager.registerAction("findReplace", findReplaceAction);
-        actionManager.registerAction("openfile", openFileAction);
+        actionManager.registerAction("openFile", openFileAction);
 
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteItemAction);
