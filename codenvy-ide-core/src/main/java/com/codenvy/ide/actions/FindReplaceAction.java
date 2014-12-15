@@ -45,12 +45,12 @@ public class FindReplaceAction extends Action {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (appContext.getCurrentProject() == null || appContext.getCurrentProject().getRootProject() == null) {
-            Log.error(getClass(), "ERROR"); //TODO
+            Log.error(getClass(), "Can not open run find replace without opened project");//TODO
             return;
         }
 
         if (event.getParameters() == null) {
-            Log.error(getClass(), "Can't find and replace without parameters");
+            Log.error(getClass(), "Can't find and replace without parameters");//TODO
             return;
         }
 

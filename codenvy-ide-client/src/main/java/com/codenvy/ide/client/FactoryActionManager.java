@@ -13,7 +13,6 @@ package com.codenvy.ide.client;
 import com.codenvy.api.factory.dto.Action;
 import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.factory.dto.Ide;
-import com.codenvy.api.factory.dto.OnProjectOpened;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -52,22 +51,18 @@ public class FactoryActionManager {
             final Ide ide = factory.getIde();
 
             if (ide.getOnAppClosed() != null && ide.getOnAppClosed().getActions() != null) {
-                appClosedSubscriber.startBeforeUnload(ide.getOnAppClosed().getActions());
+                appClosedSubscriber.subscribeBeforeUnload(ide.getOnAppClosed().getActions());
             }
 
             if (ide.getOnAppLoaded() != null && ide.getOnAppLoaded().getActions() != null) {
-                startActions(factory.getIde().getOnAppLoaded().getActions());
+                performActions(factory.getIde().getOnAppLoaded().getActions());
             }
 
-            if (ide.getOnProjectOpened() != null) {
-                final OnProjectOpened onProjectOpened = ide.getOnProjectOpened();
-
+            if (ide.getOnProjectOpened() != null && ide.getOnProjectOpened().getActions() != null) {
                 openProjectHandler = eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
                     @Override
                     public void onProjectOpened(ProjectActionEvent event) {
-                        if (onProjectOpened.getActions() != null) {
-                            startActions(onProjectOpened.getActions());
-                        }
+                        performActions(ide.getOnProjectOpened().getActions());
 
                         openProjectHandler.removeHandler();
                     }
@@ -81,7 +76,7 @@ public class FactoryActionManager {
         }
     }
 
-    private void startActions(List<Action> actions) {
+    private void performActions(List<Action> actions) {
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
             if (ideAction != null) {

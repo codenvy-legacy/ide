@@ -33,7 +33,7 @@ public class AppClosedActionEvent extends ActionEvent {
         return alertMessage;
     }
 
-    public void setAlertMessage(String myResult) {
-        this.alertMessage = myResult;
+    public void setAlertMessage(String alertMessage) {
+        this.alertMessage = alertMessage;
     }
 }

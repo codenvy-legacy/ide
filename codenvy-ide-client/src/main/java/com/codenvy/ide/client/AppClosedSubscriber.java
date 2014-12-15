@@ -16,6 +16,7 @@ import com.codenvy.ide.api.action.AppClosedActionEvent;
 import com.codenvy.ide.toolbar.PresentationFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,16 +24,16 @@ import java.util.List;
  */
 public class AppClosedSubscriber {
     private final ActionManager actionManager;
-    private       List<Action>  actions;
+    private List<Action> actions = new ArrayList<>();
 
     @Inject
     public AppClosedSubscriber(ActionManager actionManager) {
         this.actionManager = actionManager;
+        addUnloadHandler();
     }
 
-    public void startBeforeUnload(List<Action> actions) {
-        this.actions = actions;
-        addUnloadHandler();
+    public void subscribeBeforeUnload(List<Action> actions) {
+        this.actions.addAll(actions);
     }
 
     /**
@@ -42,11 +43,11 @@ public class AppClosedSubscriber {
         var instance = this;
 
         $wnd.onbeforeunload = function () {
-            return instance.@com.codenvy.ide.client.AppClosedSubscriber::checkCancel()();
+            return instance.@com.codenvy.ide.client.AppClosedSubscriber::getCancelMessage()();
         }
     }-*/;
 
-    private String checkCancel() {
+    private String getCancelMessage() {
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
             if (ideAction != null) {
