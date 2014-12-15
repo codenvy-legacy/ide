@@ -17,23 +17,23 @@ import java.util.Map;
 /**
  * @author Sergii Leschenko
  */
-public class AppClosedActionEvent extends ActionEvent {
-    private String alertMessage;
+public class AppCloseActionEvent extends ActionEvent {
+    private String cancelMessage;
 
-    public AppClosedActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers) {
+    public AppCloseActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers) {
         super(place, presentation, actionManager, modifiers);
     }
 
-    public AppClosedActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers,
-                                @Nullable Map<String, String> parameters) {
+    public AppCloseActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers,
+                               @Nullable Map<String, String> parameters) {
         super(place, presentation, actionManager, modifiers, parameters);
     }
 
-    public String getAlertMessage() {
-        return alertMessage;
+    public String getCancelMessage() {
+        return cancelMessage;
     }
 
-    public void setAlertMessage(String alertMessage) {
-        this.alertMessage = alertMessage;
+    public void setCancelMessage(String cancelMessage) {
+        this.cancelMessage = cancelMessage;
     }
 }

@@ -45,12 +45,12 @@ public class FindReplaceAction extends Action {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (appContext.getCurrentProject() == null || appContext.getCurrentProject().getRootProject() == null) {
-            Log.error(getClass(), "Can not open run find replace without opened project");//TODO
+            Log.error(getClass(), "Can not run find/replace without opened project\n");
             return;
         }
 
         if (event.getParameters() == null) {
-            Log.error(getClass(), "Can't find and replace without parameters");//TODO
+            Log.error(getClass(), "Can not run find/replace without parameters");
             return;
         }
 
@@ -61,7 +61,8 @@ public class FindReplaceAction extends Action {
         String replace = parameters.get("replace");
 
         final ReplacementSet replacementSet = dtoFactory.createDto(ReplacementSet.class).withFiles(Arrays.asList(file))
-                                                        .withEntries(Arrays.asList(dtoFactory.createDto(Variable.class).withFind(find)
+                                                        .withEntries(Arrays.asList(dtoFactory.createDto(Variable.class)
+                                                                                             .withFind(find)
                                                                                              .withReplace(replace)));
 
         vfsServiceClient.replaceInCurrentWorkspace(appContext.getCurrentProject().getRootProject(),
@@ -69,7 +70,7 @@ public class FindReplaceAction extends Action {
                                                    new AsyncRequestCallback<Void>() {
                                                        @Override
                                                        protected void onSuccess(Void result) {
-
+                                                           //TODO Send event described in IDEX-1743
                                                        }
 
                                                        @Override

@@ -92,8 +92,8 @@ public class BootstrapController implements ProjectActionHandler {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
-    private final AppClosedSubscriber          appClosedSubscriber;
-    private       HandlerRegistration          openProjectHandler;
+    private final AppCloseHandler              appCloseHandler;
+    private final PresentationFactory          presentationFactory;
     private       AppContext                   appContext;
 
     /** Create controller. */
@@ -116,7 +116,7 @@ public class BootstrapController implements ProjectActionHandler {
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager,
-                               AppClosedSubscriber appClosedSubscriber) {
+                               AppCloseHandler appCloseHandler) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -133,7 +133,9 @@ public class BootstrapController implements ProjectActionHandler {
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
-        this.appClosedSubscriber = appClosedSubscriber;
+        this.appCloseHandler = appCloseHandler;
+
+        presentationFactory = new PresentationFactory();
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -388,7 +390,7 @@ public class BootstrapController implements ProjectActionHandler {
             final Ide ide = appContext.getFactory().getIde();
 
             if (ide.getOnAppClosed() != null && ide.getOnAppClosed().getActions() != null) {
-                appClosedSubscriber.subscribeOnBeforeUnload(ide.getOnAppClosed().getActions());
+                appCloseHandler.performBeforeUnload(ide.getOnAppClosed().getActions());
             }
 
             if (ide.getOnAppLoaded() != null && ide.getOnAppLoaded().getActions() != null) {
@@ -431,11 +433,10 @@ public class BootstrapController implements ProjectActionHandler {
         }
     }
 
-
     private void performAction(String actionId) {
         Action action = actionManager.getAction(actionId);
         if (action != null) {
-            ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
+            ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0);
             action.update(e);
             if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
                 action.actionPerformed(e);

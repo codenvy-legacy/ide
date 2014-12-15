@@ -12,7 +12,7 @@ package com.codenvy.ide.client;
 
 import com.codenvy.api.factory.dto.Action;
 import com.codenvy.ide.api.action.ActionManager;
-import com.codenvy.ide.api.action.AppClosedActionEvent;
+import com.codenvy.ide.api.action.AppCloseActionEvent;
 import com.codenvy.ide.toolbar.PresentationFactory;
 
 import javax.inject.Inject;
@@ -22,17 +22,17 @@ import java.util.List;
 /**
  * @author Sergii Leschenko
  */
-public class AppClosedSubscriber {
+public class AppCloseHandler {
     private final ActionManager actionManager;
     private List<Action> actions = new ArrayList<>();
 
     @Inject
-    public AppClosedSubscriber(ActionManager actionManager) {
+    public AppCloseHandler(ActionManager actionManager) {
         this.actionManager = actionManager;
         addUnloadHandler();
     }
 
-    public void subscribeOnBeforeUnload(List<Action> actions) {
+    public void performBeforeUnload(List<Action> actions) {
         this.actions.addAll(actions);
     }
 
@@ -43,22 +43,28 @@ public class AppClosedSubscriber {
         var instance = this;
 
         $wnd.onbeforeunload = function () {
-            return instance.@com.codenvy.ide.client.AppClosedSubscriber::getCancelMessage()();
+            return instance.@com.codenvy.ide.client.AppCloseHandler::performActions()();
         }
     }-*/;
 
-    private String getCancelMessage() {
+    /**
+     * Performs registered action
+     *
+     * @return null if all action is successfully performed
+     * or string with message if some action sent cancel closing of application.
+     */
+    private String performActions() {
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
             if (ideAction != null) {
-                AppClosedActionEvent e = new AppClosedActionEvent("", new PresentationFactory().getPresentation(ideAction), actionManager,
-                                                                  0, action.getProperties());
+                AppCloseActionEvent e = new AppCloseActionEvent("", new PresentationFactory().getPresentation(ideAction), actionManager,
+                                                                0, action.getProperties());
                 ideAction.update(e);
                 if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
                     ideAction.actionPerformed(e);
 
-                    if (e.getAlertMessage() != null) {
-                        return e.getAlertMessage();
+                    if (e.getCancelMessage() != null) {
+                        return e.getCancelMessage();
                     }
                 }
             }
