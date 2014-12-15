@@ -65,28 +65,22 @@ public class OpenFileAction extends Action {
             return;
         }
 
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getRootProject();
+        final ProjectDescriptor activeProject = appContext.getCurrentProject().getRootProject();
         if (event.getParameters() == null) {
             Log.error(getClass(), "Can't open file without parameters");//TODO
         }
 
-        String path = event.getParameters().get("file");
+        final String path = event.getParameters().get("file");
         final String filePathToOpen = activeProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path);
 
         openFileByPath(filePathToOpen);
 
-        reopenFile(activeProject.getName(), path);
-    }
-
-    /**
-     * Reopens file after select project type
-     */
-    private void reopenFile(final String projectName, final String path) {
+        //Reopens file after select project type
         reopenFileHandler = eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 final String openedProject = event.getProject().getName();
-                if (openedProject.equals(projectName)) {
+                if (openedProject.equals(activeProject.getName())) {
                     ProjectDescriptor activeProject = event.getProject();
                     final String filePathToOpen = activeProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path);
 
