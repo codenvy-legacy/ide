@@ -16,6 +16,7 @@ import elemental.events.EventListener;
 
 import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.factory.dto.Factory;
+import com.codenvy.api.factory.dto.Ide;
 import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
@@ -66,6 +67,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,7 +92,8 @@ public class BootstrapController implements ProjectActionHandler {
     private final CoreLocalizationConstant     coreLocalizationConstant;
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
-    private final FactoryActionManager         factoryActionManager;
+    private final AppClosedSubscriber          appClosedSubscriber;
+    private       HandlerRegistration          openProjectHandler;
     private       AppContext                   appContext;
 
     /** Create controller. */
@@ -113,7 +116,7 @@ public class BootstrapController implements ProjectActionHandler {
                                final IconRegistry iconRegistry,
                                final ThemeAgent themeAgent,
                                ActionManager actionManager,
-                               FactoryActionManager factoryActionManager) {
+                               AppClosedSubscriber appClosedSubscriber) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -130,7 +133,7 @@ public class BootstrapController implements ProjectActionHandler {
         this.actionManager = actionManager;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
-        this.factoryActionManager = factoryActionManager;
+        this.appClosedSubscriber = appClosedSubscriber;
 
         // Register DTO providers
         dtoRegistrar.registerDtoProviders();
@@ -374,16 +377,23 @@ public class BootstrapController implements ProjectActionHandler {
 
     private void processStartupParameters() {
         final String projectNameToOpen = Config.getProjectName();
-
-        if (appContext.getFactory() != null) {
-            factoryActionManager.processActions(appContext.getFactory());
-        }
-
         if (projectNameToOpen != null) {
             handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, this);
             eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
         } else {
             processStartupAction();
+        }
+
+        if (appContext.getFactory() != null && appContext.getFactory().getIde() != null) {
+            final Ide ide = appContext.getFactory().getIde();
+
+            if (ide.getOnAppClosed() != null && ide.getOnAppClosed().getActions() != null) {
+                appClosedSubscriber.subscribeOnBeforeUnload(ide.getOnAppClosed().getActions());
+            }
+
+            if (ide.getOnAppLoaded() != null && ide.getOnAppLoaded().getActions() != null) {
+                performActions(ide.getOnAppLoaded().getActions());
+            }
         }
     }
 
@@ -393,6 +403,13 @@ public class BootstrapController implements ProjectActionHandler {
         processStartupAction();
         if (handlerRegistration != null) {
             handlerRegistration.removeHandler();
+        }
+
+        if (appContext.getFactory() != null && appContext.getFactory().getIde() != null
+            && appContext.getFactory().getIde().getOnProjectOpened() != null
+            && appContext.getFactory().getIde().getOnProjectOpened().getActions() != null) {
+
+            performActions(appContext.getFactory().getIde().getOnProjectOpened().getActions());
         }
     }
 
@@ -404,13 +421,24 @@ public class BootstrapController implements ProjectActionHandler {
     private void processStartupAction() {
         final String startupAction = Config.getStartupParam("action");
         if (startupAction != null) {
-            Action action = actionManager.getAction(startupAction);
-            if (action != null) {
-                ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
-                action.update(e);
-                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
-                    action.actionPerformed(e);
-                }
+            performAction(startupAction);
+        }
+    }
+
+    private void performActions(List<com.codenvy.api.factory.dto.Action> actions) {
+        for (com.codenvy.api.factory.dto.Action action : actions) {
+            performAction(action.getId());
+        }
+    }
+
+
+    private void performAction(String actionId) {
+        Action action = actionManager.getAction(actionId);
+        if (action != null) {
+            ActionEvent e = new ActionEvent("", new PresentationFactory().getPresentation(action), actionManager, 0);
+            action.update(e);
+            if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
+                action.actionPerformed(e);
             }
         }
     }

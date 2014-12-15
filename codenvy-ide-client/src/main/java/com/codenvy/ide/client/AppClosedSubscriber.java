@@ -32,7 +32,7 @@ public class AppClosedSubscriber {
         addUnloadHandler();
     }
 
-    public void subscribeBeforeUnload(List<Action> actions) {
+    public void subscribeOnBeforeUnload(List<Action> actions) {
         this.actions.addAll(actions);
     }
 
