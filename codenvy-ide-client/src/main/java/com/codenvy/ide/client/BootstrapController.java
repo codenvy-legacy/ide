@@ -390,7 +390,7 @@ public class BootstrapController implements ProjectActionHandler {
             final Ide ide = appContext.getFactory().getIde();
 
             if (ide.getOnAppClosed() != null && ide.getOnAppClosed().getActions() != null) {
-                appCloseHandler.performBeforeUnload(ide.getOnAppClosed().getActions());
+                appCloseHandler.performBeforeClose(ide.getOnAppClosed().getActions());
             }
 
             if (ide.getOnAppLoaded() != null && ide.getOnAppLoaded().getActions() != null) {

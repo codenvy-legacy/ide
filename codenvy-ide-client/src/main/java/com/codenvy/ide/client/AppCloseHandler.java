@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Handler that performs actions before closing of application
+ *
  * @author Sergii Leschenko
  */
 public class AppCloseHandler {
@@ -32,7 +34,10 @@ public class AppCloseHandler {
         addUnloadHandler();
     }
 
-    public void performBeforeUnload(List<Action> actions) {
+    /**
+     * Register actions for perform before closing of application
+     */
+    public void performBeforeClose(List<Action> actions) {
         this.actions.addAll(actions);
     }
 

@@ -15,6 +15,8 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
+ * Container for the information necessary to execute {@link Action} and cancel closing of application.
+ *
  * @author Sergii Leschenko
  */
 public class AppCloseActionEvent extends ActionEvent {
@@ -29,10 +31,17 @@ public class AppCloseActionEvent extends ActionEvent {
         super(place, presentation, actionManager, modifiers, parameters);
     }
 
+    /**
+     * @return message that should be displayed in confirmation window on closing of application
+     * or {@code null} if confirmation window should not be displayed
+     */
     public String getCancelMessage() {
         return cancelMessage;
     }
 
+    /**
+     * Sets message that will be displayed in confirmation window on closing of application
+     */
     public void setCancelMessage(String cancelMessage) {
         this.cancelMessage = cancelMessage;
     }
