@@ -10,114 +10,66 @@
  *******************************************************************************/
 package com.codenvy.ide.actions;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionHandler;
-import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.codenvy.ide.api.selection.Selection;
+import com.codenvy.ide.api.selection.SelectionAgent;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import static com.codenvy.ide.api.notification.Notification.Type.WARNING;
 
 /**
- * @author Sergii Leschenko
+ * @author Vitaliy Guliy
  */
 @Singleton
 public class OpenFileAction extends Action {
-    private final EventBus                 eventBus;
-    private final AppContext               appContext;
-    private final NotificationManager      notificationManager;
-    private final CoreLocalizationConstant localization;
-    private final EditorAgent              editorAgent;
 
-    private HandlerRegistration reopenFileHandler;
+    private final AppContext           appContext;
+    private final SelectionAgent       selectionAgent;
+    private final EventBus             eventBus;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public OpenFileAction(EventBus eventBus,
-                          AppContext appContext,
-                          NotificationManager notificationManager,
-                          CoreLocalizationConstant localization,
-                          EditorAgent editorAgent) {
-        this.eventBus = eventBus;
+    public OpenFileAction(AppContext appContext, SelectionAgent selectionAgent,
+                          EventBus eventBus, AnalyticsEventLogger eventLogger, Resources resources) {
+        super("Open", null, null, resources.defaultFile());
         this.appContext = appContext;
-        this.notificationManager = notificationManager;
-        this.localization = localization;
-        this.editorAgent = editorAgent;
+        this.selectionAgent = selectionAgent;
+        this.eventBus = eventBus;
+        this.eventLogger = eventLogger;
     }
 
     @Override
-    public void actionPerformed(ActionEvent event) {
-        if (appContext.getCurrentProject() == null || appContext.getCurrentProject().getRootProject() == null) {
+    public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
+
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null && selection.getFirstElement() instanceof FileNode) {
+            FileNode fileNode = (FileNode)selection.getFirstElement();
+            eventBus.fireEvent(new FileEvent(fileNode, FileEvent.FileOperation.OPEN));
+        }
+    }
+
+    @Override
+    public void update(ActionEvent e) {
+        if (appContext.getCurrentProject() == null) {
+            e.getPresentation().setVisible(false);
+            e.getPresentation().setEnabled(false);
             return;
         }
 
-        ProjectDescriptor activeProject = appContext.getCurrentProject().getRootProject();
-        if (event.getParameters() == null) {
-            Log.error(getClass(), "Can't open file without parameters");//TODO
-        }
-
-        String path = event.getParameters().get("file");
-        final String filePathToOpen = activeProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path);
-
-        openFileByPath(filePathToOpen);
-
-        reopenFile(activeProject.getName(), path);
-    }
-
-    /**
-     * Reopens file after select project type
-     */
-    private void reopenFile(final String projectName, final String path) {
-        reopenFileHandler = eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                final String openedProject = event.getProject().getName();
-                if (openedProject.equals(projectName)) {
-                    ProjectDescriptor activeProject = event.getProject();
-                    final String filePathToOpen = activeProject.getPath() + (!path.startsWith("/") ? "/".concat(path) : path);
-
-                    openFileByPath(filePathToOpen);
-                }
-                reopenFileHandler.removeHandler();
-            }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                //do nothing
-            }
-        });
-    }
-
-    private void openFileByPath(final String filePath) {
-        final CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            currentProject.getCurrentTree().getNodeByPath(filePath, new AsyncCallback<TreeNode<?>>() {
-                @Override
-                public void onSuccess(TreeNode<?> result) {
-                    if (result instanceof FileNode) {
-                        editorAgent.openEditor((FileNode)result);
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    notificationManager.showNotification(new Notification(localization.unableOpenFile(filePath), WARNING));
-                }
-            });
+        Selection<?> selection = selectionAgent.getSelection();
+        if (selection != null && selection.getFirstElement() instanceof FileNode) {
+            e.getPresentation().setVisible(true);
+            e.getPresentation().setEnabled(true);
+        } else {
+            e.getPresentation().setVisible(false);
+            e.getPresentation().setEnabled(false);
         }
     }
 }

@@ -34,7 +34,7 @@
             -webkit-box-sizing: border-box;
         }
     </ui:style>
-    <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}">
+    <g:DockLayoutPanel unit="PX" width="400px" height="100px" addStyleNames="{style.emptyBorder}" debugId="file-navigateToFile-mainPanel">
         <g:center>
             <g:FlowPanel addStyleNames="{style.emptyBorder} {style.spacingTop}">
                 <g:Label width="100%" addStyleNames="{style.labelMargin}" text="{locale.navigateToFileViewFileFieldTitle}"/>

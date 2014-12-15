@@ -13,6 +13,7 @@ package com.codenvy.ide.workspace;
 import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.menu.MainMenuPresenter;
@@ -97,6 +98,16 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     @Override
     public void removePart(PartPresenter part) {
         workBenchPresenter.removePart(part);
+    }
+
+    /**
+     * Retrieves the instance of the {@link com.codenvy.ide.api.parts.PartStack} for given {@link PartStackType}
+     *
+     * @param type one of the enumerated type {@link com.codenvy.ide.api.parts.PartStackType}
+     * @return the part stack found, else null
+     */
+    public PartStack getPartStack(PartStackType type) {
+        return workBenchPresenter.getPartStack(type);
     }
 
     /** {@inheritDoc} */

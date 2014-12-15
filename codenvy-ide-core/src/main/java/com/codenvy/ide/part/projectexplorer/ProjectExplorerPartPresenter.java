@@ -151,7 +151,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         view.setDelegate(this);
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
-
             @Override
             public void onActivePartChanged(ActivePartChangedEvent event) {
                 if (!(event.getActivePart() instanceof EditorPartPresenter)) {
@@ -248,13 +247,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         selectedNode = node;
         setSelection(new Selection<>(node));
 
-        if (node != null) {
-            updateAppContext(node);
-        }
-    }
-
-    private void updateAppContext(TreeNode<?> node) {
-        if (node instanceof StorableNode && appContext.getCurrentProject() != null && node.getProject() != null) {
+        if (node != null && node instanceof StorableNode && appContext.getCurrentProject() != null && node.getProject() != null) {
             appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
         }
     }

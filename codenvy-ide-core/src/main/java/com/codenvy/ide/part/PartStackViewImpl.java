@@ -17,6 +17,8 @@ import com.codenvy.ide.collections.Collections;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -52,14 +54,17 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     // list of tabs
     private final Array<TabButton>       tabButtons          = Collections.createArray();
     final         int                    margin              = 8;//tabButtons text margin
-    private InsertPanel         tabsPanel;
-    private DeckLayoutPanel     contentPanel;
-    private ActionDelegate      delegate;
-    private TabButton           activeTabButton;
-    private boolean             focused;
-    private HandlerRegistration focusRequestHandlerRegistration;
-    private TabPosition         tabPosition;
-    private int                 top;
+    private InsertPanel     tabsPanel;
+    private DeckLayoutPanel contentPanel;
+    private ActionDelegate  delegate;
+    private TabButton       activeTabButton;
+    private boolean         focused;
+
+    private HandlerRegistration mouseDowntHandlerRegistration;
+    private HandlerRegistration contextMenuHandlerRegistration;
+
+    private TabPosition tabPosition;
+    private int         top;
 
     /**
      * Create View.
@@ -177,15 +182,22 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
 
     /** Add MouseDown DOM Handler */
     protected void addFocusRequestHandler() {
-        focusRequestHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
+        mouseDowntHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
+        contextMenuHandlerRegistration = addDomHandler(focusRequestHandler, ContextMenuEvent.getType());
     }
 
     /** Remove MouseDown DOM Handler */
     protected void removeFocusRequestHandler() {
-        if (focusRequestHandlerRegistration != null) {
-            focusRequestHandlerRegistration.removeHandler();
-            focusRequestHandlerRegistration = null;
+        if (mouseDowntHandlerRegistration != null) {
+            mouseDowntHandlerRegistration.removeHandler();
+            mouseDowntHandlerRegistration = null;
         }
+
+        if (contextMenuHandlerRegistration != null) {
+            contextMenuHandlerRegistration.removeHandler();
+            contextMenuHandlerRegistration = null;
+        }
+
     }
 
     /** {@inheritDoc} */
@@ -327,9 +339,16 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     }
 
     /** Notifies delegated handler */
-    private final class FocusRequestDOMHandler implements MouseDownHandler {
+    private final class FocusRequestDOMHandler implements MouseDownHandler, ContextMenuHandler {
         @Override
         public void onMouseDown(MouseDownEvent event) {
+            if (delegate != null) {
+                delegate.onRequestFocus();
+            }
+        }
+
+        @Override
+        public void onContextMenu(ContextMenuEvent event) {
             if (delegate != null) {
                 delegate.onRequestFocus();
             }

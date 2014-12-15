@@ -121,9 +121,6 @@ public class StandardComponentInitializer {
     private FindReplaceAction findReplaceAction;
 
     @Inject
-    private OpenFileAction openFileAction;
-
-    @Inject
     private NavigateToFileAction navigateToFileAction;
 
     @Inject
@@ -141,6 +138,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
+
+    @Inject
+    private OpenFileAction openFileAction;
 
     @Inject
     private FormatterAction formatterAction;
@@ -359,6 +359,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.addSeparator();
+        resourceOperation.add(openFileAction);
         resourceOperation.add(renameItemAction);
         resourceOperation.add(deleteItemAction);
 
@@ -382,6 +383,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("closeProject", closeProjectAction);
+        actionManager.registerAction("openFile", openFileAction);
         actionManager.registerAction("renameResource", renameItemAction);
         actionManager.registerAction("deleteItem", deleteItemAction);
 

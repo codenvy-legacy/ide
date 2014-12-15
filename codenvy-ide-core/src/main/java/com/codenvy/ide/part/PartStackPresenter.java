@@ -39,7 +39,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,8 +67,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     protected final PartStackView view;
     private final   EventBus      eventBus;
     protected boolean          partsClosable    = false;
-    protected PropertyListener propertyListener = new PropertyListener() {
 
+    protected PropertyListener propertyListener = new PropertyListener() {
         @Override
         public void propertyChanged(PartPresenter source, int propId) {
             if (PartPresenter.TITLE_PROPERTY == propId) {
@@ -77,6 +79,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         }
     };
+
     /** current active part */
     protected PartPresenter           activePart;
     protected PartStackEventHandler   partStackHandler;
@@ -234,6 +237,17 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                 workBenchPartController.setSize(activePart.getSize());
             }
         }
+    }
+
+    /**
+     * Gets all the parts registered.
+     */
+    public List<PartPresenter> getPartPresenters() {
+        List<PartPresenter> presenters = new ArrayList<>();
+        for (int i = 0; i < parts.size(); i++) {
+            presenters.add(parts.get(i));
+    }
+        return presenters;
     }
 
     /** {@inheritDoc} */
