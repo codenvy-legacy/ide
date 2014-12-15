@@ -128,6 +128,9 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     @Override
     public void onConfigureCurrentProject(ConfigureCurrentProjectEvent event) {
         if (appContext.getCurrentProject() != null) {
+            if (event.isProblemsOnly() && !hasProblems(appContext.getCurrentProject().getProjectDescription())) {
+                return;
+            }
             final WizardContext context = new WizardContext();
             context.putData(PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
             newProjectWizard.show(context);

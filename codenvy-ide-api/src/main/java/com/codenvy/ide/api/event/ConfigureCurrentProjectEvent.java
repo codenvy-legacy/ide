@@ -18,9 +18,24 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author Artem Zatsarynnyy
  */
 public class ConfigureCurrentProjectEvent extends GwtEvent<ConfigureCurrentProjectHandler> {
-
     /** Type class used to register this event. */
     public static Type<ConfigureCurrentProjectHandler> TYPE = new Type<>();
+    private final boolean problemsOnly;
+
+    /** Creates new {@link ConfigureCurrentProjectEvent}. */
+    public ConfigureCurrentProjectEvent() {
+        this(false);
+    }
+
+    /**
+     * Creates new {@link ConfigureCurrentProjectEvent}.
+     *
+     * @param problemsOnly
+     *         {@code true} - only project with problems should be configured, {@code false} - any project
+     */
+    public ConfigureCurrentProjectEvent(boolean problemsOnly) {
+        this.problemsOnly = problemsOnly;
+    }
 
     @Override
     public Type<ConfigureCurrentProjectHandler> getAssociatedType() {
@@ -30,5 +45,10 @@ public class ConfigureCurrentProjectEvent extends GwtEvent<ConfigureCurrentProje
     @Override
     protected void dispatch(ConfigureCurrentProjectHandler handler) {
         handler.onConfigureCurrentProject(this);
+    }
+
+    /** @return {@code true} - only project with problems should be configured, {@code false} - any project */
+    public boolean isProblemsOnly() {
+        return problemsOnly;
     }
 }
