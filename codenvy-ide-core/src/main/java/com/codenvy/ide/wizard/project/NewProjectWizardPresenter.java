@@ -377,7 +377,11 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         ProjectDescriptor projectDescriptor = wizardContext.getData(ProjectWizard.PROJECT);
         if (projectDescriptor != null) {
             fillNewProject(projectDescriptor, newProject);
-            newProject.setGeneratorDescription(dtoFactory.createDto(GeneratorDescription.class).withName(projectDescriptor.getType()));
+        }
+
+        GeneratorDescription generatorDescription = wizardContext.getData(ProjectWizard.GENERATOR);
+        if (generatorDescription != null) {
+            newProject.setGeneratorDescription(generatorDescription);
         }
 
         fillVisibilityFromContext(newProject);
