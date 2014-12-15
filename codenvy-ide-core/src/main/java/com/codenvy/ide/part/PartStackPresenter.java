@@ -39,7 +39,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -235,6 +237,17 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
                 workBenchPartController.setSize(activePart.getSize());
             }
         }
+    }
+
+    /**
+     * Gets all the parts registered.
+     */
+    public List<PartPresenter> getPartPresenters() {
+        List<PartPresenter> presenters = new ArrayList<>();
+        for (int i = 0; i < parts.size(); i++) {
+            presenters.add(parts.get(i));
+    }
+        return presenters;
     }
 
     /** {@inheritDoc} */
