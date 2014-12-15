@@ -67,7 +67,7 @@ public class OpenFileAction extends Action {
 
         final ProjectDescriptor activeProject = appContext.getCurrentProject().getRootProject();
         if (event.getParameters() == null) {
-            Log.error(getClass(), "Can't open file without parameters");//TODO
+            Log.error(getClass(), "Can't open file without parameters");
         }
 
         final String path = event.getParameters().get("file");
