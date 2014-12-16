@@ -27,6 +27,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionManager;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentUser;
 import com.codenvy.ide.api.event.OpenProjectEvent;
@@ -459,12 +460,18 @@ public class BootstrapController {
 
     private void performAction(String actionId, Map<String, String> parameters) {
         Action action = actionManager.getAction(actionId);
-        if (action != null) {
-            ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0, parameters);
-            action.update(e);
-            if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
-                action.actionPerformed(e);
-            }
+
+        if (action == null) {
+            return;
+        }
+
+        final Presentation presentation = presentationFactory.getPresentation(action);
+
+        ActionEvent e = new ActionEvent("", presentation, actionManager, 0, parameters);
+        action.update(e);
+
+        if (presentation.isEnabled() && presentation.isVisible()) {
+            action.actionPerformed(e);
         }
     }
 

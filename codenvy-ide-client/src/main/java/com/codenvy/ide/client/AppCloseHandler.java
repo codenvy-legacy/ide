@@ -13,6 +13,7 @@ package com.codenvy.ide.client;
 import com.codenvy.api.factory.dto.Action;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.AppCloseActionEvent;
+import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.toolbar.PresentationFactory;
 
 import javax.inject.Inject;
@@ -61,17 +62,23 @@ public class AppCloseHandler {
     private String performActions() {
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
-            if (ideAction != null) {
-                AppCloseActionEvent e = new AppCloseActionEvent("", new PresentationFactory().getPresentation(ideAction), actionManager,
-                                                                0, action.getProperties());
-                ideAction.update(e);
-                if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
-                    ideAction.actionPerformed(e);
 
-                    if (e.getCancelMessage() != null) {
-                        return e.getCancelMessage();
-                    }
-                }
+            if (ideAction == null) {
+                continue;
+            }
+
+            Presentation presentation = new PresentationFactory().getPresentation(ideAction);
+            AppCloseActionEvent e = new AppCloseActionEvent("", presentation, actionManager, 0, action.getProperties());
+            ideAction.update(e);
+
+            if (!presentation.isEnabled() || !presentation.isVisible()) {
+                continue;
+            }
+
+            ideAction.actionPerformed(e);
+
+            if (e.getCancelMessage() != null) {
+                return e.getCancelMessage();
             }
         }
 

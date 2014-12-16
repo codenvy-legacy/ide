@@ -33,7 +33,7 @@ public class ActionEvent {
     private final Presentation        myPresentation;
     private final int                 myModifiers;
     private final Map<String, String> myParameters;
-    private       boolean             myWorksInInjected ;
+    private       boolean             myWorksInInjected;
 
     /**
      * Create new action event.
@@ -49,7 +49,7 @@ public class ActionEvent {
      */
     public ActionEvent(@Nonnull String place,
                        @Nonnull Presentation presentation,
-                       ActionManager actionManager,
+                       @Nonnull ActionManager actionManager,
                        int modifiers) {
         this(place, presentation, actionManager, modifiers, null);
     }
@@ -70,7 +70,7 @@ public class ActionEvent {
      */
     public ActionEvent(@Nonnull String place,
                        @Nonnull Presentation presentation,
-                       ActionManager actionManager,
+                       @Nonnull ActionManager actionManager,
                        int modifiers,
                        @Nullable Map<String, String> parameters) {
         myActionManager = actionManager;

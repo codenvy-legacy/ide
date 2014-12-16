@@ -22,12 +22,20 @@ import java.util.Map;
 public class AppCloseActionEvent extends ActionEvent {
     private String cancelMessage;
 
-    public AppCloseActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers) {
+    public AppCloseActionEvent(@Nonnull String place,
+                               @Nonnull Presentation presentation,
+                               @Nonnull ActionManager actionManager,
+                               int modifiers) {
+
         super(place, presentation, actionManager, modifiers);
     }
 
-    public AppCloseActionEvent(@Nonnull String place, @Nonnull Presentation presentation, ActionManager actionManager, int modifiers,
+    public AppCloseActionEvent(@Nonnull String place,
+                               @Nonnull Presentation presentation,
+                               @Nonnull ActionManager actionManager,
+                               int modifiers,
                                @Nullable Map<String, String> parameters) {
+
         super(place, presentation, actionManager, modifiers, parameters);
     }
 
@@ -35,6 +43,7 @@ public class AppCloseActionEvent extends ActionEvent {
      * @return message that should be displayed in confirmation window on closing of application
      * or {@code null} if confirmation window should not be displayed
      */
+    @Nullable
     public String getCancelMessage() {
         return cancelMessage;
     }
