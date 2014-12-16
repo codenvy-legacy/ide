@@ -63,4 +63,17 @@ public interface JsEditorConstants extends Messages {
 
     @DefaultMessage("Finishing editor initialization")
     String waitEditorInitMessage();
+
+    @DefaultMessage("File changed")
+    String fileUpdateTitle();
+
+    @DefaultMessage("The content for the file named {0} has been changed on the server.<br>"
+                    + " Do you wish to keep your unsaved changes or do you want to overwrite them with changes from the server?")
+    String fileUpdateMessage(String path);
+
+    @DefaultMessage("Overwrite")
+    String fileUpdateOvewrite();
+
+    @DefaultMessage("Keep my changes")
+    String fileUpdateKeepUnsaved();
 }
