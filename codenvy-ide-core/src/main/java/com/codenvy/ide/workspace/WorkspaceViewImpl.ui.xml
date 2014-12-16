@@ -45,7 +45,7 @@
         .statusPanel {
             box-sizing: border-box;
             /*background-color: conColor;*/
-            background-color: #313131;
+            background-color: #404040;
             border-top: #232323 1px solid;
             overflow: hidden;
         }

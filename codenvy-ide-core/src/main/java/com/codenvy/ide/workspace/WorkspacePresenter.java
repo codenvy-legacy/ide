@@ -16,6 +16,7 @@ import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.menu.BottomMenuPresenter;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -35,38 +36,43 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
-    private final WorkspaceView      view;
-    private final MainMenuPresenter  menu;
-    private final ToolbarPresenter   toolbarPresenter;
-    private       WorkBenchPresenter workBenchPresenter;
+    private final WorkspaceView       view;
+    private final MainMenuPresenter   mainMenu;
+    private final BottomMenuPresenter bottomMenu;
+    private final ToolbarPresenter    toolbarPresenter;
+    private       WorkBenchPresenter  workBenchPresenter;
 
     /**
      * Instantiates Presenter.
      *
      * @param view
-     * @param menu
+     * @param mainMenu
+     * @param bottomMenu
      * @param toolbarPresenter
      * @param genericPerspectiveProvider
      */
     @Inject
     protected WorkspacePresenter(WorkspaceView view,
-                                 MainMenuPresenter menu,
+                                 MainMenuPresenter mainMenu,
+                                 BottomMenuPresenter bottomMenu,
                                  @MainToolbar ToolbarPresenter toolbarPresenter,
                                  Provider<WorkBenchPresenter> genericPerspectiveProvider) {
         super();
         this.view = view;
         this.view.setDelegate(this);
         this.toolbarPresenter = toolbarPresenter;
-        this.menu = menu;
+        this.mainMenu = mainMenu;
+        this.bottomMenu = bottomMenu;
         this.workBenchPresenter = genericPerspectiveProvider.get();
     }
 
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
-        menu.go(view.getMenuPanel());
+        mainMenu.go(view.getMenuPanel());
         toolbarPresenter.go(view.getToolbarPanel());
         workBenchPresenter.go(view.getPerspectivePanel());
+        bottomMenu.go(view.getStatusPanel());
         container.setWidget(view);
     }
 
@@ -135,5 +141,15 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
      */
     public void setUpdateButtonVisibility(boolean visible) {
         view.setUpdateButtonVisibility(visible);
+    }
+
+    /**
+     * Shows or hides status panel
+     *
+     * @param visible
+     *         <code>true</code> to show the panel, <code>false</code> to hide it
+     */
+    public void setStatusPanelVisible(boolean visible) {
+        view.setStatusPanelVisible(visible);
     }
 }

@@ -70,6 +70,7 @@
 
 .leftPanel {
     float: left;
+    white-space: nowrap;
 }
 
 .leftPanel .customComponent {
@@ -78,6 +79,7 @@
 
 .rightPanel {
     float: right;
+    white-space: nowrap;
 }
 
 .rightPanel .customComponent {
