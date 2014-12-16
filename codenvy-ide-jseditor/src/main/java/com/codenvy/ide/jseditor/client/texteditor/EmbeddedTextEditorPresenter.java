@@ -47,6 +47,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
+import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
@@ -309,11 +310,28 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     }
 
     private void updateContent() {
-        /* -save current line and viewport
-         * -set editor content
-         * -reset dirty flag
-         * -clear history
+        /* -save current cursor and (ideally) viewport
+         * -set editor content which is also expected to
+         *     -reset dirty flag
+         *     -clear history
+         * -restore current cursor position
          */
+        final TextPosition currentCursor = getCursorPosition();
+        this.documentStorage.getDocument(document.getFile(), new EmbeddedDocumentCallback() {
+            
+            @Override
+            public void onDocumentReceived(final String content) {
+                editorWidget.setValue(content);
+                final DocumentHandle docHandle = document.getDocumentHandle();
+                docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, content.length(), content));
+                document.setCursorPosition(currentCursor);
+            }
+            
+            @Override
+            public void onDocumentLoadFailure(final Throwable caught) {
+                displayErrorPanel(constant.editorFileErrorMessage());
+            }
+        });
     }
 
     private void displayErrorPanel(final String message) {
