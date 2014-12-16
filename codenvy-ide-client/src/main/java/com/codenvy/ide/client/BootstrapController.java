@@ -75,7 +75,7 @@ import java.util.Map;
  *
  * @author Nikolay Zamosenchuk
  */
-public class BootstrapController implements ProjectActionHandler {
+public class BootstrapController {
 
     private final DtoUnmarshallerFactory       dtoUnmarshallerFactory;
     private final AnalyticsEventLoggerExt      analyticsEventLoggerExt;
@@ -380,10 +380,12 @@ public class BootstrapController implements ProjectActionHandler {
     private void processStartupParameters() {
         final String projectNameToOpen = Config.getProjectName();
         if (projectNameToOpen != null) {
-            handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, this);
+            handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, getStartupActionHandler());
             eventBus.fireEvent(new OpenProjectEvent(projectNameToOpen));
         } else {
             processStartupAction();
+
+            handlerRegistration = eventBus.addHandler(ProjectActionEvent.TYPE, getFactoryActionHandler());
         }
 
         if (appContext.getFactory() != null && appContext.getFactory().getIde() != null) {
@@ -399,25 +401,43 @@ public class BootstrapController implements ProjectActionHandler {
         }
     }
 
-    //process action only after opening project
-    @Override
-    public void onProjectOpened(ProjectActionEvent event) {
-        processStartupAction();
-        if (handlerRegistration != null) {
-            handlerRegistration.removeHandler();
-        }
+    private ProjectActionHandler getFactoryActionHandler() {
+        return new ProjectActionHandler() {
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                if (handlerRegistration != null) {
+                    handlerRegistration.removeHandler();
+                }
 
-        if (appContext.getFactory() != null && appContext.getFactory().getIde() != null
-            && appContext.getFactory().getIde().getOnProjectOpened() != null
-            && appContext.getFactory().getIde().getOnProjectOpened().getActions() != null) {
+                if (appContext.getFactory() != null && appContext.getFactory().getIde() != null
+                    && appContext.getFactory().getIde().getOnProjectOpened() != null
+                    && appContext.getFactory().getIde().getOnProjectOpened().getActions() != null) {
 
-            performActions(appContext.getFactory().getIde().getOnProjectOpened().getActions());
-        }
+                    performActions(appContext.getFactory().getIde().getOnProjectOpened().getActions());
+                }
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+                //do nothing
+            }
+        };
     }
 
-    @Override
-    public void onProjectClosed(ProjectActionEvent event) {
+    private ProjectActionHandler getStartupActionHandler() {
+        return new ProjectActionHandler() {
+            //process action only after opening project
+            @Override
+            public void onProjectOpened(ProjectActionEvent event) {
+                processStartupAction();
 
+            }
+
+            @Override
+            public void onProjectClosed(ProjectActionEvent event) {
+
+            }
+        };
     }
 
     private void processStartupAction() {
@@ -429,14 +449,18 @@ public class BootstrapController implements ProjectActionHandler {
 
     private void performActions(List<com.codenvy.api.factory.dto.Action> actions) {
         for (com.codenvy.api.factory.dto.Action action : actions) {
-            performAction(action.getId());
+            performAction(action.getId(), action.getProperties());
         }
     }
 
     private void performAction(String actionId) {
+        performAction(actionId, null);
+    }
+
+    private void performAction(String actionId, Map<String, String> parameters) {
         Action action = actionManager.getAction(actionId);
         if (action != null) {
-            ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0);
+            ActionEvent e = new ActionEvent("", presentationFactory.getPresentation(action), actionManager, 0, parameters);
             action.update(e);
             if (e.getPresentation().isEnabled() && e.getPresentation().isVisible()) {
                 action.actionPerformed(e);
