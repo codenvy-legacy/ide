@@ -17,6 +17,7 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -103,7 +104,7 @@ public class OpenFileAction extends Action {
                 @Override
                 public void onSuccess(TreeNode<?> result) {
                     if (result instanceof FileNode) {
-                        editorAgent.openEditor((FileNode)result);
+                        eventBus.fireEvent(new FileEvent((FileNode)result, FileEvent.FileOperation.OPEN));
                     }
                 }
 

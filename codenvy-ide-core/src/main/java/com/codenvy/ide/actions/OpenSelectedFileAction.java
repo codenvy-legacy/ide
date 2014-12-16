@@ -62,17 +62,11 @@ public class OpenSelectedFileAction extends Action {
     public void update(ActionEvent e) {
         if (appContext.getCurrentProject() == null) {
             e.getPresentation().setVisible(false);
-            e.getPresentation().setEnabled(false);
             return;
         }
 
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() instanceof FileNode) {
-            e.getPresentation().setVisible(true);
-            e.getPresentation().setEnabled(true);
-        } else {
-            e.getPresentation().setVisible(false);
-            e.getPresentation().setEnabled(false);
-        }
+        final boolean isFileSelected = selection != null && selection.getFirstElement() instanceof FileNode;
+        e.getPresentation().setVisible(isFileSelected);
     }
 }
