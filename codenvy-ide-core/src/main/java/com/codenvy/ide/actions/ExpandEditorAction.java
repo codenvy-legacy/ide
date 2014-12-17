@@ -34,6 +34,9 @@ import com.google.inject.Singleton;
 import org.vectomatic.dom.svg.ui.SVGButtonBase;
 import org.vectomatic.dom.svg.ui.SVGToggleButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Evgen Vidolob
  */
@@ -45,6 +48,9 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
     private final CoreLocalizationConstant constant;
     private final AnalyticsEventLogger     eventLogger;
 
+    private boolean expanded = false;
+    private List<SVGToggleButton> toggleButtons = new ArrayList<>();
+
     @Inject
     public ExpandEditorAction(Resources resources, CoreLocalizationConstant constant, WorkBenchPresenter workBenchPresenter,
                               AnalyticsEventLogger eventLogger) {
@@ -53,7 +59,20 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
         this.workBenchPresenter = workBenchPresenter;
         this.constant = constant;
         this.eventLogger = eventLogger;
+
+        setToggleEditorHandler();
     }
+
+    /**
+     * Using native functions helps us to bind different components of IDE each other.
+     */
+    private native void setToggleEditorHandler() /*-{
+        var that = this;
+        $wnd.IDE.eventHandlers.toggleEditor = function () {
+            that.@com.codenvy.ide.actions.ExpandEditorAction::toggleEditor()();
+        };
+    }-*/;
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -66,24 +85,21 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
         tooltip.setInnerHTML(constant.actionExpandEditorTitle());
 
         final SVGToggleButton svgToggleButton = new SVGToggleButton(presentation.getSVGIcon(), null);
+        toggleButtons.add(svgToggleButton);
         svgToggleButton.addFace(SVGButtonBase.SVGFaceName.DOWN, new SVGButtonBase.SVGFace(new SVGButtonBase.SVGFaceChange[]{
                 new SVGButtonBase.SVGStyleChange(new String[]{resources.coreCss().editorFullScreenSvgDown()})}));
         svgToggleButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                if (!svgToggleButton.isDown()) {
-                    workBenchPresenter.restoreEditorPart();
-                } else {
-                    workBenchPresenter.expandEditorPart();
-                }
+                toggleEditor();
             }
         });
 
-        final FlowPanel flowPanel = new FlowPanel();
-        flowPanel.addStyleName(resources.coreCss().editorFullScreen());
-        flowPanel.add(svgToggleButton);
-        flowPanel.getElement().appendChild(tooltip);
-        flowPanel.addDomHandler(new MouseOverHandler() {
+        FlowPanel widgetPanel = new FlowPanel();
+        widgetPanel.addStyleName(resources.coreCss().editorFullScreen());
+        widgetPanel.add(svgToggleButton);
+        widgetPanel.getElement().appendChild(tooltip);
+        widgetPanel.addDomHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent event) {
                 final Element panel = event.getRelativeElement();
@@ -92,6 +108,26 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
             }
         }, MouseOverEvent.getType());
 
-        return flowPanel;
+        return widgetPanel;
     }
+
+    /**
+     * Handles the clicking on Expand button and expands or restores the editor.
+     */
+    public void toggleEditor() {
+        if (expanded) {
+            workBenchPresenter.restoreEditorPart();
+            for (SVGToggleButton toggleButton : toggleButtons) {
+                toggleButton.setDown(false);
+            }
+            expanded = false;
+        } else {
+            workBenchPresenter.expandEditorPart();
+            for (SVGToggleButton toggleButton : toggleButtons) {
+                toggleButton.setDown(true);
+            }
+            expanded = true;
+        }
+    }
+
 }
