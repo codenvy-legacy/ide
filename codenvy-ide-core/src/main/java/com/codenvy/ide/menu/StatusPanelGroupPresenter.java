@@ -16,14 +16,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Manages Bottom Menu Items, their runtime visibility and enabled state.
+ * Manages status panel group items, their runtime visibility and enabled state.
  *
  * @author Oleksii Orel
  */
 @Singleton
-public class BottomMenuPresenter implements Presenter, BottomMenuView.ActionDelegate {
+public class StatusPanelGroupPresenter implements Presenter, StatusPanelGroupView.ActionDelegate {
 
-    private final BottomMenuView view;
+    private final StatusPanelGroupView view;
 
     /**
      * Bottom Menu Presenter requires View implementation
@@ -31,7 +31,7 @@ public class BottomMenuPresenter implements Presenter, BottomMenuView.ActionDele
      * @param view
      */
     @Inject
-    public BottomMenuPresenter(BottomMenuView view) {
+    public StatusPanelGroupPresenter(StatusPanelGroupView view) {
         this.view = view;
         this.view.setDelegate(this);
     }

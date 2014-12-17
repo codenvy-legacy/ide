@@ -16,7 +16,7 @@ import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
-import com.codenvy.ide.menu.BottomMenuPresenter;
+import com.codenvy.ide.menu.StatusPanelGroupPresenter;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.MainToolbar;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
@@ -35,12 +35,13 @@ import com.google.inject.Singleton;
  * @author Nikolay Zamosenchuk
  */
 @Singleton
-public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
-    private final WorkspaceView       view;
-    private final MainMenuPresenter   mainMenu;
-    private final BottomMenuPresenter bottomMenu;
-    private final ToolbarPresenter    toolbarPresenter;
-    private       WorkBenchPresenter  workBenchPresenter;
+public class
+        WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
+    private final WorkspaceView             view;
+    private final MainMenuPresenter         mainMenu;
+    private final StatusPanelGroupPresenter bottomMenu;
+    private final ToolbarPresenter          toolbarPresenter;
+    private       WorkBenchPresenter        workBenchPresenter;
 
     /**
      * Instantiates Presenter.
@@ -54,7 +55,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     @Inject
     protected WorkspacePresenter(WorkspaceView view,
                                  MainMenuPresenter mainMenu,
-                                 BottomMenuPresenter bottomMenu,
+                                 StatusPanelGroupPresenter bottomMenu,
                                  @MainToolbar ToolbarPresenter toolbarPresenter,
                                  Provider<WorkBenchPresenter> genericPerspectiveProvider) {
         super();

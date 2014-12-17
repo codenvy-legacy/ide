@@ -99,14 +99,14 @@ public class ActionManagerImpl implements ActionManager {
 
 
         // register default action groups for down toolbar
-        DefaultActionGroup leftDownMenu = new DefaultActionGroup(this);
-        registerAction(IdeActions.GROUP_LEFT_BOTTOM_MENU, leftDownMenu);
+        DefaultActionGroup leftStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_LEFT_STATUS_PANEL, leftStatusPanelGroup);
 
-        DefaultActionGroup centerDownMenu = new DefaultActionGroup(this);
-        registerAction(IdeActions.GROUP_CENTER_BOTTOM_MENU, centerDownMenu);
+        DefaultActionGroup centerStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_CENTER_STATUS_PANEL, centerStatusPanelGroup);
 
-        DefaultActionGroup rightDownMenu = new DefaultActionGroup(this);
-        registerAction(IdeActions.GROUP_RIGHT_BOTTOM_MENU, rightDownMenu);
+        DefaultActionGroup rightStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_RIGHT_STATUS_PANEL, rightStatusPanelGroup);
     }
 
     private static void reportActionError(final String pluginId, final String message) {

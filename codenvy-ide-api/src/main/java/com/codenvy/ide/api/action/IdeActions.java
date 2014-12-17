@@ -36,7 +36,7 @@ public interface IdeActions {
     String GROUP_LEFT_MAIN_MENU  = "leftMainMenu";
     String GROUP_RIGHT_MAIN_MENU = "rightMainMenu";
 
-    String GROUP_CENTER_BOTTOM_MENU = "centerBottomMenu";
-    String GROUP_LEFT_BOTTOM_MENU   = "leftBottomMenu";
-    String GROUP_RIGHT_BOTTOM_MENU  = "rightBottomMenu";
+    String GROUP_CENTER_STATUS_PANEL = "centerStatusPanelGroup";
+    String GROUP_LEFT_STATUS_PANEL    = "leftStatusPanelGroup";
+    String GROUP_RIGHT_STATUS_PANEL  = "rightStatusPanelGroup";
 }

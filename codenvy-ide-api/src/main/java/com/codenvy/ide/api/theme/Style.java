@@ -264,6 +264,10 @@ public class Style {
         return theme.getConsolePanelColor();
     }
 
+    public static String getStatusPanelColor() {
+        return theme.getStatusPanelColor();
+    }
+
     public static String getCellOddRow() {
         return theme.getCellOddRowColor();
     }

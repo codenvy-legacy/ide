@@ -38,11 +38,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implements {@link BottomMenuView}
+ * Implements {@link StatusPanelGroupView}
  *
  * @author Oleksii Orel
  */
-public class BottomMenuViewImpl extends Composite implements BottomMenuView, CloseMenuHandler, ActionSelectedHandler {
+public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGroupView, CloseMenuHandler, ActionSelectedHandler {
 
     static final MenuResources resources = GWT.create(MenuResources.class);
 
@@ -80,7 +80,7 @@ public class BottomMenuViewImpl extends Composite implements BottomMenuView, Clo
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
-    public BottomMenuViewImpl(ActionManager actionManager) {
+    public StatusPanelGroupViewImpl(ActionManager actionManager) {
         this.actionManager = actionManager;
 
         initWidget(rootPanel);
@@ -122,7 +122,7 @@ public class BottomMenuViewImpl extends Composite implements BottomMenuView, Clo
             return;
         }
         newCenterVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_CENTER_BOTTOM_MENU, newCenterVisibleActions, actionManager);
+        expandActionGroup(IdeActions.GROUP_CENTER_STATUS_PANEL, newCenterVisibleActions, actionManager);
         if (!newCenterVisibleActions.equals(centerVisibleActions)) {
             centerPanel.clear();
             for (Action action : newCenterVisibleActions) {
@@ -131,7 +131,7 @@ public class BottomMenuViewImpl extends Composite implements BottomMenuView, Clo
             centerVisibleActions = newCenterVisibleActions;
         }
         newRightVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_RIGHT_BOTTOM_MENU, newRightVisibleActions, actionManager);
+        expandActionGroup(IdeActions.GROUP_RIGHT_STATUS_PANEL, newRightVisibleActions, actionManager);
         if (!newRightVisibleActions.equals(rightVisibleActions)) {
             rightPanel.clear();
             for (Action action : newRightVisibleActions) {
@@ -140,7 +140,7 @@ public class BottomMenuViewImpl extends Composite implements BottomMenuView, Clo
             rightVisibleActions = newRightVisibleActions;
         }
         newLeftVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_LEFT_BOTTOM_MENU, newLeftVisibleActions, actionManager);
+        expandActionGroup(IdeActions.GROUP_LEFT_STATUS_PANEL, newLeftVisibleActions, actionManager);
         if (!newLeftVisibleActions.equals(leftVisibleActions)) {
             leftPanel.clear();
             for (Action action : newLeftVisibleActions) {

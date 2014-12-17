@@ -437,6 +437,13 @@ public interface Theme {
     String getConsolePanelColor();
 
     /**
+     * Font color for status panel
+     *
+     * @return the color
+     */
+    String getStatusPanelColor();
+
+    /**
      * Background color for odd rows in Cell Widgets
      *
      * @return the color
