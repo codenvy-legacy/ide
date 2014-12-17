@@ -89,6 +89,8 @@ import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.logger.AnalyticsEventLoggerImpl;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.menu.StatusPanelGroupView;
+import com.codenvy.ide.menu.StatusPanelGroupViewImpl;
 import com.codenvy.ide.navigation.NavigateToFileView;
 import com.codenvy.ide.navigation.NavigateToFileViewImpl;
 import com.codenvy.ide.notification.NotificationManagerImpl;
@@ -283,6 +285,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
         bind(WorkBenchView.class).to(WorkBenchViewImpl.class).in(Singleton.class);
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
+        bind(StatusPanelGroupView.class).to(StatusPanelGroupViewImpl.class).in(Singleton.class);
 
         bind(ToolbarView.class).to(ToolbarViewImpl.class);
         bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarMainPresenter.class).in(Singleton.class);

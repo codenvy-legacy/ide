@@ -318,6 +318,11 @@ public class DarkTheme implements Theme {
     }
 
     @Override
+    public String getStatusPanelColor() {
+        return "#404040";
+    }
+
+    @Override
     public String getCellOddRowColor() {
         return "#424242";
     }
