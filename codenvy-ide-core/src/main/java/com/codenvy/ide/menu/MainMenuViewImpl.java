@@ -49,12 +49,7 @@ import java.util.Map;
  * @author Oleksii Orel
  */
 public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMenuHandler, ActionSelectedHandler {
-
-    static final MenuResources resources = GWT.create(MenuResources.class);
-
-    static {
-        resources.menuCss().ensureInjected();
-    }
+    private final MenuResources resources;
 
     private final MenuItemPresentationFactory presentationFactory = new MenuItemPresentationFactory();
     /** Working table, cells of which are contains element of Menu. */
@@ -85,7 +80,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
-    public MainMenuViewImpl(ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
+    public MainMenuViewImpl(MenuResources resources, ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
+        this.resources = resources;
         this.actionManager = actionManager;
         this.keyBindingAgent = keyBindingAgent;
 
@@ -160,7 +156,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         Presentation presentation = presentationFactory.getPresentation(action);
 
         if (action instanceof Separator) {
-            panel.add(new SeparatorItem());
+            panel.add(new SeparatorItem(resources.menuCss().panelSeparator()));
 
             // todo find way to render non custom actions
         } else if (action instanceof CustomComponentAction) {
@@ -308,9 +304,9 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
     }
 
     private static class SeparatorItem extends Composite {
-        public SeparatorItem() {
+        public SeparatorItem(String styleName) {
             final FlowPanel widget = new FlowPanel();
-            widget.addStyleName(resources.menuCss().panelSeparator());
+            widget.addStyleName(styleName);
             Element separator = widget.getElement();
             for (int i = 0; i < 6; i++) {
                 separator.appendChild(DOM.createDiv());

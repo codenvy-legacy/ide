@@ -35,5 +35,6 @@ public class StyleInjector {
         resources.cellTableStyle().ensureInjected();
         resources.defaultCategoriesListCss().ensureInjected();
         resources.Css().ensureInjected();
+        resources.menuCss().ensureInjected();
     }
 }
