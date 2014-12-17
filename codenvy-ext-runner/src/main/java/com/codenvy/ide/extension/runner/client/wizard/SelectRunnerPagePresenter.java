@@ -13,6 +13,7 @@ package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
@@ -31,7 +32,9 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -121,7 +124,15 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
-                view.addRunner(result);
+                ProjectTypeDescriptor data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+                String typeCategory = data.getTypeCategory();
+                if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
+                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
+                    tree.addNode(result.getNode(typeCategory.toLowerCase()));
+                    view.addRunner(tree);
+                } else {
+                    view.addRunner(result);
+                }
                 selectRunner();
             }
 

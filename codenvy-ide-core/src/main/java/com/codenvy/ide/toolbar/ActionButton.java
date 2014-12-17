@@ -126,6 +126,12 @@ public class ActionButton extends Composite implements MouseOverHandler, MouseOu
         if (enabled) {
             removeStyleName(css.disabled());
         } else {
+            if (selected) {
+                panel.setStyleName(css.iconButtonPanelSelected());
+            } else {
+                panel.setStyleName(css.iconButtonPanel());
+            }
+
             addStyleName(css.disabled());
         }
         this.ensureDebugId(place + "/" + actionManager.getId(action) + "-" + enabled);

@@ -96,6 +96,17 @@ public class ActionManagerImpl implements ActionManager {
         // register default action groups for main toolbar
         DefaultActionGroup mainToolbarGroup = new DefaultActionGroup(this);
         registerAction(IdeActions.GROUP_MAIN_TOOLBAR, mainToolbarGroup);
+
+
+        // register default action groups for down toolbar
+        DefaultActionGroup leftStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_LEFT_STATUS_PANEL, leftStatusPanelGroup);
+
+        DefaultActionGroup centerStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_CENTER_STATUS_PANEL, centerStatusPanelGroup);
+
+        DefaultActionGroup rightStatusPanelGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_RIGHT_STATUS_PANEL, rightStatusPanelGroup);
     }
 
     private static void reportActionError(final String pluginId, final String message) {
