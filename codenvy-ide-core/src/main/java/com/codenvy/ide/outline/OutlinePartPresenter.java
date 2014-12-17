@@ -11,6 +11,7 @@
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -36,7 +37,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
     private final OutlinePartView          view;
     private final CoreLocalizationConstant coreLocalizationConstant;
-    private       HasOutline               activePart;
+    private       HasOutline               lastHasOutlineActivePart;
 
     @Inject
     public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus, CoreLocalizationConstant coreLocalizationConstant) {
@@ -95,17 +96,27 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
-        if (event.getActivePart() == null) {
+        if (event.getActivePart() == null && lastHasOutlineActivePart == null) {
             view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
+            return;
         }
-        if (event.getActivePart() instanceof HasOutline) {
-            if (activePart != event.getActivePart()) {
-                activePart = (HasOutline)event.getActivePart();
-                if (activePart.getOutline() != null) {
-                    activePart.getOutline().go(view.getContainer());
-                } else {
-                    view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
-                }
+
+        if (!(event.getActivePart() instanceof EditorPartPresenter)) {
+            return;
+        }
+
+        if (!(event.getActivePart() instanceof HasOutline)) {
+            lastHasOutlineActivePart = null;
+            view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
+            return;
+        }
+
+        if (lastHasOutlineActivePart != event.getActivePart()) {
+            lastHasOutlineActivePart = (HasOutline)event.getActivePart();
+            if (lastHasOutlineActivePart.getOutline() != null) {
+                lastHasOutlineActivePart.getOutline().go(view.getContainer());
+            } else {
+                view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
             }
         }
     }
