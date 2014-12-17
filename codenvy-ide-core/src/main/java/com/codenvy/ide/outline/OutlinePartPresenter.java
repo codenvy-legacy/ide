@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.outline;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
@@ -26,19 +24,19 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 
 /**
  * Part presenter for Outline.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
 public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
-    private final OutlinePartView view;
+    private final OutlinePartView          view;
     private final CoreLocalizationConstant coreLocalizationConstant;
-    private HasOutline activePart;
+    private       HasOutline               activePart;
 
     @Inject
     public OutlinePartPresenter(final OutlinePartView view, EventBus eventBus, CoreLocalizationConstant coreLocalizationConstant) {
@@ -46,7 +44,6 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
         this.coreLocalizationConstant = coreLocalizationConstant;
 
         view.setTitle(coreLocalizationConstant.outlineTitleBarText());
-        view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
         view.setDelegate(this);
 
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
@@ -64,7 +61,6 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     }
 
     /** {@inheritDoc} */
-    @Nonnull
     @Override
     public String getTitle() {
         return coreLocalizationConstant.outlineButtonTitle();
@@ -99,17 +95,17 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
-        if (event.getActivePart() == null || !(event.getActivePart() instanceof HasOutline)) {
+        if (event.getActivePart() == null) {
             view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
-            return;
         }
-
-        if (activePart != event.getActivePart()) {
-            activePart = (HasOutline)event.getActivePart();
-            if (activePart.getOutline() != null) {
-                activePart.getOutline().go(view.getContainer());
-            } else {
-                view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
+        if (event.getActivePart() instanceof HasOutline) {
+            if (activePart != event.getActivePart()) {
+                activePart = (HasOutline)event.getActivePart();
+                if (activePart.getOutline() != null) {
+                    activePart.getOutline().go(view.getContainer());
+                } else {
+                    view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
+                }
             }
         }
     }
