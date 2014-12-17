@@ -316,6 +316,11 @@ public class LightTheme implements Theme {
     }
 
     @Override
+    public String getStatusPanelColor() {
+        return getTabsPanelBackground();
+    }
+
+    @Override
     public String getCellOddRowColor() {
         return "#f3f7fb";
     }
