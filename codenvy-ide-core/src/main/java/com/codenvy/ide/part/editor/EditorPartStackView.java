@@ -317,7 +317,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
             tabItem.addDomHandler(new DoubleClickHandler() {
                 @Override
                 public void onDoubleClick(DoubleClickEvent event) {
-                    toggleEditor();
+                    expandEditor();
                 }
             }, DoubleClickEvent.getType());
 
@@ -330,11 +330,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         }
 
         /**
-         * Calls a native function which is linked with toggling functionality.
+         * Expands or collapses the editor using IDE.eventHandlers.expandEditor().
          */
-        private native void toggleEditor() /*-{
+        private native void expandEditor() /*-{
             try {
-                $wnd.IDE.eventHandlers.toggleEditor();
+                $wnd.IDE.eventHandlers.expandEditor();
             } catch (e) {
                 console.log(e.message);
             }

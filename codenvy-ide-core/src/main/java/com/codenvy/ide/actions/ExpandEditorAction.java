@@ -60,16 +60,16 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
         this.constant = constant;
         this.eventLogger = eventLogger;
 
-        setToggleEditorHandler();
+        setExpandEditorEventHandler();
     }
 
     /**
      * Using native functions helps us to bind different components of IDE each other.
      */
-    private native void setToggleEditorHandler() /*-{
-        var that = this;
-        $wnd.IDE.eventHandlers.toggleEditor = function () {
-            that.@com.codenvy.ide.actions.ExpandEditorAction::toggleEditor()();
+    private native void setExpandEditorEventHandler() /*-{
+        var instance = this;
+        $wnd.IDE.eventHandlers.expandEditor = function () {
+            instance.@com.codenvy.ide.actions.ExpandEditorAction::expandEditor()();
         };
     }-*/;
 
@@ -91,7 +91,7 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
         svgToggleButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                toggleEditor();
+                expandEditor();
             }
         });
 
@@ -114,7 +114,7 @@ public class ExpandEditorAction extends Action implements CustomComponentAction 
     /**
      * Handles the clicking on Expand button and expands or restores the editor.
      */
-    public void toggleEditor() {
+    public void expandEditor() {
         if (expanded) {
             workBenchPresenter.restoreEditorPart();
             for (SVGToggleButton toggleButton : toggleButtons) {
