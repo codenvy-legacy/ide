@@ -10,14 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialog;
 import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
 import com.codenvy.ide.ui.dialogs.input.InputDialog;
 import com.codenvy.ide.ui.dialogs.message.MessageDialog;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.assistedinject.Assisted;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Factory for {@link MessageDialog}, {@link ConfirmDialog} and {@link InputDialog} components.
@@ -141,4 +142,44 @@ public interface DialogFactory {
                                   @Nonnull @Assisted("selectionLength") Integer selectionLength,
                                   @Nullable InputCallback inputCallback,
                                   @Nullable CancelCallback cancelCallback);
+
+    /**
+     * Create a choice dialog with only text as content.
+     *
+     * @param title
+     *         the window title
+     * @param content
+     *         the window content/text
+     * @param firstChoiceLabel the label for the first choice
+     * @param secondeChoiceLabel the label for the first choice
+     * @param confirmCallback
+     *         the callback used on OK
+     * @param cancelCallback
+     *         the callback used on cancel
+     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     */
+    ChoiceDialog createChoiceDialog(@Nonnull @Assisted("title") String title,
+                                     @Nonnull @Assisted("message") String content,
+                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                    @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
+                                    @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
+
+    /**
+     * Create a choice dialog with a widget as content.
+     * 
+     * @param title the window title
+     * @param content the window content
+     * @param firstChoiceLabel the label for the first choice
+     * @param secondeChoiceLabel the label for the first choice
+     * @param firstChoiceCallback the callback used on fist choice
+     * @param secondChoiceCallback the callback used on second choice
+     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     */
+    ChoiceDialog createChoiceDialog(@Nonnull String title,
+                                     @Nonnull IsWidget content,
+                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                    @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
+                                    @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
 }
