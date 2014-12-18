@@ -73,6 +73,12 @@ public class FileNode extends ItemNode implements VirtualFile {
     }
 
     @Override
+    public boolean isReadOnly() {
+        //todo add permissions check here
+        return false;
+    }
+
+    @Override
     public String getContentUrl() {
         List<Link> links = data.getLinks();
         Link li = null;

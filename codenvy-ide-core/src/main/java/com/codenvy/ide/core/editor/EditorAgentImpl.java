@@ -29,9 +29,12 @@ import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackType;
+import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.VirtualFile;
+import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -51,24 +54,14 @@ import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 public class EditorAgentImpl implements EditorAgent {
 
     private final StringMap<EditorPartPresenter> openedEditors;
-    private       Array<EditorPartPresenter>     dirtyEditors;
     /** Used to notify {@link EditorAgentImpl} that editor has closed */
-    private final EditorPartCloseHandler   editorClosed             = new EditorPartCloseHandler() {
+    private final EditorPartCloseHandler editorClosed     = new EditorPartCloseHandler() {
         @Override
         public void onClose(EditorPartPresenter editor) {
             editorClosed(editor);
         }
     };
-    private final ActivePartChangedHandler activePartChangedHandler = new ActivePartChangedHandler() {
-        @Override
-        public void onActivePartChanged(ActivePartChangedEvent event) {
-            if (event.getActivePart() instanceof EditorPartPresenter) {
-                activeEditor = (EditorPartPresenter)event.getActivePart();
-                activeEditor.activate();
-            }
-        }
-    };
-    private final FileEventHandler         fileEventHandler         = new FileEventHandler() {
+    private final FileEventHandler       fileEventHandler = new FileEventHandler() {
         @Override
         public void onFileOperation(final FileEvent event) {
             if (event.getOperationType() == FileOperation.OPEN) {
@@ -78,7 +71,24 @@ public class EditorAgentImpl implements EditorAgent {
             }
         }
     };
-    private final WindowActionHandler      windowActionHandler      = new WindowActionHandler() {
+    private final EventBus                   eventBus;
+    private final WorkspaceAgent             workspace;
+    private       Array<EditorPartPresenter> dirtyEditors;
+    private       FileTypeRegistry           fileTypeRegistry;
+    private       EditorRegistry             editorRegistry;
+    private       EditorPartPresenter        activeEditor;
+    private final ActivePartChangedHandler activePartChangedHandler = new ActivePartChangedHandler() {
+        @Override
+        public void onActivePartChanged(ActivePartChangedEvent event) {
+            if (event.getActivePart() instanceof EditorPartPresenter) {
+                activeEditor = (EditorPartPresenter)event.getActivePart();
+                activeEditor.activate();
+            }
+        }
+    };
+    private NotificationManager      notificationManager;
+    private CoreLocalizationConstant coreLocalizationConstant;
+    private final WindowActionHandler windowActionHandler = new WindowActionHandler() {
         @Override
         public void onWindowClosing(final WindowActionEvent event) {
             openedEditors.iterate(new StringMap.IterationCallback<EditorPartPresenter>() {
@@ -95,13 +105,6 @@ public class EditorAgentImpl implements EditorAgent {
         public void onWindowClosed(WindowActionEvent event) {
         }
     };
-    private final EventBus                 eventBus;
-    private       FileTypeRegistry         fileTypeRegistry;
-    private       EditorRegistry           editorRegistry;
-    private final WorkspaceAgent           workspace;
-    private       EditorPartPresenter      activeEditor;
-    private       NotificationManager      notificationManager;
-    private       CoreLocalizationConstant coreLocalizationConstant;
 
     @Inject
     public EditorAgentImpl(EventBus eventBus,
@@ -136,7 +139,7 @@ public class EditorAgentImpl implements EditorAgent {
         } else {
             FileType fileType = fileTypeRegistry.getFileTypeByFile(file);
             EditorProvider editorProvider = editorRegistry.getEditor(fileType);
-            EditorPartPresenter editor = editorProvider.getEditor();
+            final EditorPartPresenter editor = editorProvider.getEditor();
             try {
                 editor.init(new EditorInputImpl(fileType, file));
                 editor.addCloseHandler(editorClosed);
@@ -147,6 +150,17 @@ public class EditorAgentImpl implements EditorAgent {
             openedEditors.put(file.getPath(), editor);
 
             workspace.setActivePart(editor);
+            if (file.isReadOnly() && editor instanceof HasReadOnlyProperty) {
+                editor.addPropertyListener(new PropertyListener() {
+                    @Override
+                    public void propertyChanged(PartPresenter source, int propId) {
+                        if (propId == EditorPartPresenter.PROP_INPUT) {
+                            ((HasReadOnlyProperty)editor).setReadOnly(file.isReadOnly());
+                        }
+
+                    }
+                });
+            }
         }
     }
 
