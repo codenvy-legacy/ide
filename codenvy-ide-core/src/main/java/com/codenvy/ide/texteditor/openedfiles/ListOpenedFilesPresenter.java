@@ -12,7 +12,7 @@ package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEvent.FileOperation;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -51,7 +51,7 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
      *         y coordinate of the right top corner of the list view
      * @param callback
      */
-    public void showDialog(@Nonnull Array<FileNode> files, int x, int y, @Nonnull AsyncCallback<Void> callback) {
+    public void showDialog(@Nonnull Array<VirtualFile> files, int x, int y, @Nonnull AsyncCallback<Void> callback) {
         this.callback = callback;
         view.setOpenedFiles(files);
         view.showDialog(x, y);
@@ -59,14 +59,14 @@ public class ListOpenedFilesPresenter implements ListOpenedFilesView.ActionDeleg
 
     /** {@inheritDoc} */
     @Override
-    public void onFileSelected(FileNode file) {
+    public void onFileSelected(VirtualFile file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.OPEN));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void onCloseFile(FileNode file) {
+    public void onCloseFile(VirtualFile file) {
         view.close();
         eventBus.fireEvent(new FileEvent(file, FileOperation.CLOSE));
     }

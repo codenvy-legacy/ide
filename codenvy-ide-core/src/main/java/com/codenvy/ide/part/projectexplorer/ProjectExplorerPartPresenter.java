@@ -29,7 +29,7 @@ import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
@@ -158,8 +158,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 }
 
                 EditorPartPresenter editorPresenter = (EditorPartPresenter)event.getActivePart();
-                FileNode fileNode = editorPresenter.getEditorInput().getFile();
-                view.selectAndExpandNode(fileNode);
+                VirtualFile fileNode = editorPresenter.getEditorInput().getFile();
+                if(fileNode instanceof TreeNode) {
+                    view.selectAndExpandNode((TreeNode<?>)fileNode);
+                }
             }
         });
 

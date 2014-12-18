@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.util.loging.Log;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class MultipleMethodFileIdentifier implements FileTypeIdentifier {
     private final FirstLineFileTypeIdentifier firstLineFileTypeIdentifier = new FirstLineFileTypeIdentifier();
 
     @Override
-    public List<String> identifyType(final FileNode file) {
+    public List<String> identifyType(final VirtualFile file) {
         Log.debug(MultipleMethodFileIdentifier.class, "Try identification by file name.");
         final List<String> firstTry = this.fileNameFileTypeIdentifier.identifyType(file);
         if (firstTry != null && !firstTry.isEmpty()) {

@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 
 /** @author Evgen Vidolob */
 public class Breakpoint {
     protected int      lineNumber;
-    protected FileNode file;
+    protected VirtualFile file;
     private   Type     type;
     private   String   message;
     private   String   path;
@@ -26,7 +26,7 @@ public class Breakpoint {
      * @param path
      * @param file
      */
-    public Breakpoint(Type type, int lineNumber, String path, FileNode file) {
+    public Breakpoint(Type type, int lineNumber, String path, VirtualFile file) {
         this(type, lineNumber, path, file, null);
     }
 
@@ -37,7 +37,7 @@ public class Breakpoint {
      * @param file
      * @param message
      */
-    public Breakpoint(Type type, int lineNumber, String path, FileNode file, String message) {
+    public Breakpoint(Type type, int lineNumber, String path, VirtualFile file, String message) {
         super();
         this.type = type;
         this.lineNumber = lineNumber;
@@ -71,7 +71,7 @@ public class Breakpoint {
      *
      * @return file with which this breakpoint is associated
      */
-    public FileNode getFile() {
+    public VirtualFile getFile() {
         return file;
     }
 

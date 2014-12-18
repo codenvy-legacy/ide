@@ -10,22 +10,27 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
+import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * A node that represents a file.
  *
  * @author Artem Zatsarynnyy
  */
-public class FileNode extends ItemNode {
+public class FileNode extends ItemNode implements VirtualFile {
 
     public FileNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                     DtoUnmarshallerFactory dtoUnmarshallerFactory) {
@@ -59,6 +64,25 @@ public class FileNode extends ItemNode {
                 callback.onFailure(caught);
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public String getMediaType() {
+        return data.getMediaType();
+    }
+
+    @Override
+    public String getContentUrl() {
+        List<Link> links = data.getLinks();
+        Link li = null;
+        for (Link link : links) {
+            if (link.getRel().equals("get content")) {
+                li = link;
+                break;
+            }
+        }
+        return li == null ? null : li.getHref();
     }
 
     /**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.document;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.text.RegionImpl;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
 import com.codenvy.ide.jseditor.client.text.TextRange;
@@ -22,7 +22,7 @@ public abstract class AbstractEmbeddedDocument implements EmbeddedDocument, Docu
     private final DocumentEventBus eventBus = new DocumentEventBus();
 
     /** The file holding the document. */
-    private FileNode file;
+    private VirtualFile file;
 
     @Override
     public DocumentEventBus getDocEventBus() {
@@ -44,12 +44,12 @@ public abstract class AbstractEmbeddedDocument implements EmbeddedDocument, Docu
     }
 
     @Override
-    public void setFile(FileNode fileNode) {
+    public void setFile(VirtualFile fileNode) {
         this.file = fileNode;
     }
 
     @Override
-    public FileNode getFile() {
+    public VirtualFile getFile() {
         return this.file;
     }
 

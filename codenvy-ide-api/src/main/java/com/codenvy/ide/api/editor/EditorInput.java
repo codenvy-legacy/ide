@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
@@ -77,12 +77,12 @@ public interface EditorInput {
      * @return the File; never <code>null</code>
      */
     @Nonnull
-    FileNode getFile();
+    VirtualFile getFile();
 
     /**
      * Sets file of this input.
      *
      * @param file
      */
-    void setFile(@Nonnull FileNode file);
+    void setFile(@Nonnull VirtualFile file);
 }

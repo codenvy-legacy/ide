@@ -19,7 +19,7 @@ import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
@@ -386,8 +386,8 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             return;
         }
 
-        final FileNode eventFile = event.getFile();
-        final FileNode file = input.getFile();
+        final VirtualFile eventFile = event.getFile();
+        final VirtualFile file = input.getFile();
         if (file.equals(eventFile)) {
             workspaceAgent.removePart(this);
         }
@@ -571,7 +571,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         getHasKeybindings().addKeybinding(keybinding);
     }
 
-    private List<String> detectFileType(final FileNode file) {
+    private List<String> detectFileType(final VirtualFile file) {
         final List<String> result = new ArrayList<>();
         if (file != null) {
             // use the identification patterns
@@ -580,15 +580,13 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                 result.addAll(types);
             }
             // use the registered media type if there is one
-            if (file.getData() != null) {
-                final String storedContentType = file.getData().getMediaType();
+                final String storedContentType = file.getMediaType();
                 if (storedContentType != null
                     && ! storedContentType.isEmpty()
                     // give another chance at detection
                     && ! DEFAULT_CONTENT_TYPE.equals(storedContentType)) {
                     result.add(storedContentType);
                 }
-            }
         }
 
         // ultimate fallback - can't make more generic for text

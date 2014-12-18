@@ -11,7 +11,7 @@
 package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.collections.Array;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
      *
      * @param files
      */
-    void setOpenedFiles(@Nonnull Array<FileNode> files);
+    void setOpenedFiles(@Nonnull Array<VirtualFile> files);
 
     /** Close dialog. */
     void close();
@@ -51,7 +51,7 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
          * @param file
          *         selected file
          */
-        void onFileSelected(FileNode file);
+        void onFileSelected(VirtualFile file);
 
         /**
          * Performs any actions appropriate in response to the user having clicked close the file.
@@ -59,7 +59,7 @@ public interface ListOpenedFilesView extends View<ListOpenedFilesView.ActionDele
          * @param file
          *         file to be closed
          */
-        void onCloseFile(FileNode file);
+        void onCloseFile(VirtualFile file);
 
         /** Performs any actions appropriate in response to the user having closed the view. */
         void onClose();

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.debug;
 
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 
 /** Component that handles breakpoints display. */
@@ -67,6 +68,6 @@ public interface BreakpointRenderer {
     /** Reaction on line numbering changes. */
     public interface LineChangeAction {
         /** Action taken on change. */
-        void onLineChange(FileNode file, int firstLine, int linesAdded, int linesRemoved);
+        void onLineChange(VirtualFile file, int firstLine, int linesAdded, int linesRemoved);
     }
 }

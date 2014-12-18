@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.document;
 
-import javax.inject.Inject;
-
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.event.FileEvent;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.inject.Inject;
 
 /**
  * Implementation of {@link DocumentStorage}.
@@ -32,7 +32,7 @@ public class DocumentStorageImpl implements DocumentStorage {
     }
 
     @Override
-    public void getDocument(final FileNode file, final EmbeddedDocumentCallback callback) {
+    public void getDocument(final VirtualFile file, final EmbeddedDocumentCallback callback) {
         file.getContent(new AsyncCallback<String>() {
             @Override
             public void onSuccess(final String result) {
@@ -59,7 +59,7 @@ public class DocumentStorageImpl implements DocumentStorage {
     @Override
     public void saveDocument(final EditorInput editorInput, final Document document,
                              final boolean overwrite, final AsyncCallback<EditorInput> callback) {
-        final FileNode file = editorInput.getFile();
+        final VirtualFile file = editorInput.getFile();
         file.updateContent(document.getContents(), new AsyncCallback<Void>() {
             @Override
             public void onSuccess(Void result) {

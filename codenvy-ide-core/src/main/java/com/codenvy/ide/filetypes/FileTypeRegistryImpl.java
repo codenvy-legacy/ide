@@ -12,7 +12,7 @@ package com.codenvy.ide.filetypes;
 
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.gwt.regexp.shared.RegExp;
@@ -47,10 +47,10 @@ public class FileTypeRegistryImpl implements FileTypeRegistry {
     }
 
     @Override
-    public FileType getFileTypeByFile(FileNode file) {
+    public FileType getFileTypeByFile(VirtualFile file) {
         FileType fileType = getFileTypeByNamePattern(file.getName());
         if (fileType == unknownFileType) {
-            fileType = getFileTypeByMimeType(file.getData().getMediaType());
+            fileType = getFileTypeByMimeType(file.getMediaType());
         }
         if (fileType == unknownFileType) {
             fileType = getFileTypeByExtension(getFileExtension(file.getName()));

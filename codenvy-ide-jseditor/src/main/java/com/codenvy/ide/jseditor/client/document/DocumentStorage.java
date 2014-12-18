@@ -11,13 +11,13 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.codenvy.ide.api.editor.EditorInput;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.ImplementedBy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Interface for file retrieval and storage operations.
@@ -31,7 +31,7 @@ public interface DocumentStorage {
      * @param file the file
      * @param callback operation to do when the content is ready
      */
-    void getDocument(@Nonnull FileNode file,
+    void getDocument(@Nonnull VirtualFile file,
                      @Nonnull final EmbeddedDocumentCallback callback);
 
     /**

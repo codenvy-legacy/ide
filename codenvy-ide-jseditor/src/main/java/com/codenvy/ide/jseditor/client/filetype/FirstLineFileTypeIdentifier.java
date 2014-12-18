@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -34,7 +35,7 @@ public class FirstLineFileTypeIdentifier implements FileTypeIdentifier {
     private static final RegExp SHEBANG_PATTERN = RegExp.compile("^#!([^\\n\\s]+)\\s*([^\\n\\s]+)?.*\\n");
 
     @Override
-    public List<String> identifyType(final FileNode file) {
+    public List<String> identifyType(final VirtualFile file) {
         // TODO: file's content retrieved asynchronously
         final String content = ""/*file.getContent()*/;
         if (isXml(content)) {
