@@ -67,6 +67,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
         time = new Label(DATA_FORMAT.format(notification.getTime()));
         //If notification message is formated HTML - need to display only plain text from it.
+        //TODO: need rework this. we need sanitize only messages that comes from server if we do it here we lose possibility for formatting outputs
         title = new HTML(SimpleHtmlSanitizer.sanitizeHtml(notification.getMessage()));
 
         Image closeIcon = new Image(resources.close());

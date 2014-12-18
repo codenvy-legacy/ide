@@ -43,12 +43,7 @@ import java.util.Map;
  * @author Oleksii Orel
  */
 public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGroupView, CloseMenuHandler, ActionSelectedHandler {
-
-    static final MenuResources resources = GWT.create(MenuResources.class);
-
-    static {
-        resources.menuCss().ensureInjected();
-    }
+    private final MenuResources resources;
 
     private final MenuItemPresentationFactory presentationFactory = new MenuItemPresentationFactory();
 
@@ -80,7 +75,8 @@ public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGr
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
-    public StatusPanelGroupViewImpl(ActionManager actionManager) {
+    public StatusPanelGroupViewImpl(MenuResources resources, ActionManager actionManager) {
+        this.resources = resources;
         this.actionManager = actionManager;
 
         initWidget(rootPanel);
@@ -159,7 +155,7 @@ public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGr
         Presentation presentation = presentationFactory.getPresentation(action);
 
         if (action instanceof Separator) {
-            panel.add(new SeparatorItem());
+            panel.add(new SeparatorItem(resources.menuCss().panelSeparator()));
 
             // todo find way to render non custom actions
         } else if (action instanceof CustomComponentAction) {
@@ -210,9 +206,9 @@ public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGr
     }
 
     private static class SeparatorItem extends Composite {
-        public SeparatorItem() {
+        public SeparatorItem(String styleName) {
             final FlowPanel widget = new FlowPanel();
-            widget.addStyleName(resources.menuCss().panelSeparator());
+            widget.addStyleName(styleName);
             Element separator = widget.getElement();
             for (int i = 0; i < 6; i++) {
                 separator.appendChild(DOM.createDiv());

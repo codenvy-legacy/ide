@@ -20,12 +20,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -79,7 +80,6 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     private ListButton listTabsButton;
 
     private ShowListButtonClickHandler showListButtonClickHandler;
-
 
     interface PartStackUiBinder extends UiBinder<Widget, EditorPartStackView> {
     }
@@ -314,6 +314,13 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         }
 
         private void addHandlers() {
+            tabItem.addDomHandler(new DoubleClickHandler() {
+                @Override
+                public void onDoubleClick(DoubleClickEvent event) {
+                    expandEditor();
+                }
+            }, DoubleClickEvent.getType());
+
             image.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -321,6 +328,17 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 }
             });
         }
+
+        /**
+         * Expands or collapses the editor using IDE.eventHandlers.expandEditor().
+         */
+        private native void expandEditor() /*-{
+            try {
+                $wnd.IDE.eventHandlers.expandEditor();
+            } catch (e) {
+                console.log(e.message);
+            }
+        }-*/;
 
         @Override
         public void setErrorMark(boolean isVisible) {

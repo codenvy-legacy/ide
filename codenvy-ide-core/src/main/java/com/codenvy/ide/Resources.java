@@ -43,7 +43,7 @@ import com.google.gwt.resources.client.ImageResource;
  * EditableContentArea.Resources,
  * PartStackUIResources,
  */
-public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resources, 
+public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resources,
                                    PartStackUIResources, SimpleList.Resources,
                                    MenuResources, DialogBoxResources, ZeroClipboardResources, NotificationResources, DataGridResources,
                                    CellTableResources, CategoriesList.Resources, ButtonLoaderResources, ProjectWizardResources {
