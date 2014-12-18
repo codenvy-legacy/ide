@@ -96,7 +96,8 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     /** {@inheritDoc} */
     @Override
     public void onActivePartChanged(ActivePartChangedEvent event) {
-        if (event.getActivePart() == null && lastHasOutlineActivePart == null) {
+        if (event.getActivePart() == null) {
+            lastHasOutlineActivePart = null;
             view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
             return;
         }
