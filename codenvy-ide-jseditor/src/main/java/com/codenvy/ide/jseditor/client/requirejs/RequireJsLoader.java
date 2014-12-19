@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.requirejs;
 
+import javax.inject.Inject;
+
 import com.codenvy.ide.jseditor.client.requirejs.config.RequirejsConfig;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
@@ -19,8 +21,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.ScriptInjector;
-
-import javax.inject.Inject;
 
 /**
  * Loads javascript modules with requirejs.
@@ -45,7 +45,7 @@ public class RequireJsLoader {
         // require with default config
         final RequirejsConfig defaultConfig = RequirejsConfig.create();
         defaultConfig.setBaseUrl(GWT.getModuleBaseForStaticFiles());
-        defaultConfig.setWaitSeconds(15);
+        defaultConfig.setWaitSeconds(0);
 
         require(new RequirejsCallback() {
 
