@@ -14,9 +14,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.event.ActivePartChangedEvent;
-import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -29,7 +26,6 @@ import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
-import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
@@ -67,7 +63,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private AppContext                    appContext;
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     private AbstractTreeStructure         currentTreeStructure;
-    private TreeNode<?>                   selectedNode;
     private DeleteNodeHandler             deleteNodeHandler;
 
     /** Instantiates the Project Explorer presenter. */
@@ -231,7 +226,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onNodeSelected(TreeNode<?> node) {
-        selectedNode = node;
         setSelection(new Selection<>(node));
 
         if (node != null && node instanceof StorableNode && appContext.getCurrentProject() != null && node.getProject() != null) {
@@ -275,6 +269,21 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         contextMenu.show(mouseX, mouseY);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteKey() {
+        final TreeNode<?> selectedNode = view.getSelectedNode();
+        if (selectedNode instanceof StorableNode) {
+            deleteNodeHandler.delete((StorableNode)selectedNode);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onEnterKey() {
+        view.getSelectedNode().processNodeAction();
+    }
+
     private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
         if (appContext.getCurrentProject() != null) {
@@ -295,21 +304,5 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onDeleteKey() {
-        if (selectedNode != null && selectedNode instanceof StorableNode) {
-            deleteNodeHandler.delete((StorableNode)selectedNode);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void onEnterKey() {
-        if (selectedNode != null) {
-            selectedNode.processNodeAction();
-        }
     }
 }
