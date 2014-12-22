@@ -26,6 +26,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.projecttree.generic.ItemNode;
@@ -253,7 +254,7 @@ public class RenameItemAction extends Action {
                     }
 
                     for (EditorPartPresenter editor : editorAgent.getOpenedEditors().getValues().asIterable()) {
-                        FileNode openedFile = editor.getEditorInput().getFile();
+                        VirtualFile openedFile = editor.getEditorInput().getFile();
 
                         if (children.get(openedFile.getPath()) != null) {
                             String pathBeforeRenaming = openedFile.getPath().replaceFirst(itemPathAfterRenaming, itemPathBeforeRenaming);

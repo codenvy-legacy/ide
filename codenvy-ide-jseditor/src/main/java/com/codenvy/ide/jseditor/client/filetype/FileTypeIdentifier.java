@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 
 import java.util.List;
 
@@ -28,5 +28,5 @@ public interface FileTypeIdentifier {
      *         the file to identify
      * @return a list of content type or null if identification failed
      */
-    List<String> identifyType(FileNode file);
+    List<String> identifyType(VirtualFile file);
 }

@@ -10,19 +10,10 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.debug;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.ConsolePart;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.commons.exception.ServerException;
@@ -35,6 +26,14 @@ import com.codenvy.ide.debug.DebuggerManager;
 import com.codenvy.ide.debug.HasBreakpointRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 /** Implementation of {@link BreakpointManager} for jseditor. */
 public class BreakpointManagerImpl implements BreakpointManager, LineChangeAction {
@@ -67,7 +66,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
             return;
         }
 
-        final FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        final VirtualFile activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         final BreakpointRenderer breakpointRenderer = getBreakpointRendererForFile(activeFile);
         if (breakpointRenderer == null) {
             return;
@@ -182,7 +181,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
             return false;
         }
 
-        final FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        final VirtualFile activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         final List<Breakpoint> breakPoints = this.breakpoints.get(activeFile.getPath());
         if (breakPoints != null) {
             for (final Breakpoint breakpoint : breakPoints) {
@@ -214,7 +213,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
         unmarkCurrentBreakpoint();
         LOG.fine("Mark current breakpoint on line " + lineNumber);
 
-        final FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+        final VirtualFile activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
         this.currentBreakpoint = new Breakpoint(Breakpoint.Type.CURRENT, lineNumber, activeFile.getPath(), activeFile);
 
         final BreakpointRenderer breakpointRenderer = getBreakpointRendererForFile(activeFile);
@@ -245,7 +244,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
     @Override
     public boolean isCurrentBreakpoint(int lineNumber) {
         if (this.currentBreakpoint != null) {
-            final FileNode activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
+            final VirtualFile activeFile = editorAgent.getActiveEditor().getEditorInput().getFile();
             boolean isFileWithMarkBreakPoint = activeFile.getPath().equals(this.currentBreakpoint.getPath());
             boolean isCurrentLine = lineNumber == this.currentBreakpoint.getLineNumber();
             return isFileWithMarkBreakPoint && isCurrentLine;
@@ -259,7 +258,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
         return isCurrentBreakpoint(lineNumber);
     }
 
-    private EditorPartPresenter getEditorForFile(FileNode fileNode) {
+    private EditorPartPresenter getEditorForFile(VirtualFile fileNode) {
         final StringMap<EditorPartPresenter> openedEditors = editorAgent.getOpenedEditors();
         for (final String key : openedEditors.getKeys().asIterable()) {
             final EditorPartPresenter editor = openedEditors.get(key);
@@ -270,7 +269,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
         return null;
     }
 
-    private BreakpointRenderer getBreakpointRendererForFile(FileNode fileNode) {
+    private BreakpointRenderer getBreakpointRendererForFile(VirtualFile fileNode) {
         final EditorPartPresenter editor = getEditorForFile(fileNode);
         if (editor != null) {
             return getBreakpointRendererForEditor(editor);
@@ -293,7 +292,7 @@ public class BreakpointManagerImpl implements BreakpointManager, LineChangeActio
     }
 
     @Override
-    public void onLineChange(final FileNode file, final int firstLine, final int linesAdded, final int linesRemoved) {
+    public void onLineChange(final VirtualFile file, final int firstLine, final int linesAdded, final int linesRemoved) {
         final List<Breakpoint> fileBreakpoints = this.breakpoints.get(file.getPath());
 
         final int delta = linesAdded - linesRemoved;
