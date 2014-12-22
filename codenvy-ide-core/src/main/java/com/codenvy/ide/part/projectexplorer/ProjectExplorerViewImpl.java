@@ -210,7 +210,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void selectAndExpandNode(TreeNode< ? > node) {
+    public void selectAndExpandNode(TreeNode<?> node) {
         tree.autoExpandAndSelectNode(node, true);
         delegate.onNodeSelected(node);
     }
@@ -242,5 +242,13 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public void hideProjectHeader() {
         toolBar.remove(projectHeader);
         container.setWidgetSize(toolBar, 22);
+    }
+
+    @Nonnull
+    @Override
+    public TreeNode<?> getSelectedNode() {
+        // Tree always must to have one selected node at least.
+        // Return the first one until we don't support multi-selection.
+        return tree.getSelectionModel().getSelectedNodes().get(0);
     }
 }

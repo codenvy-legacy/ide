@@ -11,7 +11,7 @@
 package com.codenvy.ide.jseditor.client.document;
 
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.jseditor.client.events.CursorActivityHandler;
 import com.codenvy.ide.jseditor.client.text.LinearRange;
@@ -92,9 +92,9 @@ public interface Document extends ReadOnlyDocument {
      */
     void replace(int offset, int length, String text);
 
-    void setFile(FileNode file);
+    void setFile(VirtualFile file);
 
-    FileNode getFile();
+    VirtualFile getFile();
 
     /**
      * Returns a {@link ReadOnlyDocument} that refers to the same document.

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.imageviewer;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
@@ -143,13 +142,8 @@ public class ImageViewer extends AbstractEditorPresenter {
      * @return {@link Image}
      */
     private Image getImage() {
-        Link contentLink = null;
-        for (Link link : input.getFile().getData().getLinks()) {
-            if ("get content".equals(link.getRel())) {
-                contentLink = link;
-            }
-        }
-        Image image = (contentLink != null) ? new Image(contentLink.getHref()) : new Image();
+        String contentLink = input.getFile().getContentUrl();
+        Image image = (contentLink != null) ? new Image(contentLink) : new Image();
         image.setStyleName(resources.imageViewerCss().imageViewer());
         return image;
     }

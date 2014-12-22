@@ -12,17 +12,17 @@ package com.codenvy.ide.core.editor;
 
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.filetypes.FileType;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 /** @author Vitaly Parfonov */
 final class EditorInputImpl implements EditorInput {
-    private FileNode file;
+    private VirtualFile file;
     private FileType fileType;
 
-    EditorInputImpl(FileType fileType, FileNode file) {
+    EditorInputImpl(FileType fileType, VirtualFile file) {
         this.fileType = fileType;
         this.file = file;
     }
@@ -53,12 +53,12 @@ final class EditorInputImpl implements EditorInput {
     }
 
     @Override
-    public FileNode getFile() {
+    public VirtualFile getFile() {
         return file;
     }
 
     @Override
-    public void setFile(FileNode file) {
+    public void setFile(VirtualFile file) {
         this.file = file;
     }
 }

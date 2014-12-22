@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.editor;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.StringMap;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,7 +30,7 @@ public interface EditorAgent {
      *
      * @param file
      */
-    void openEditor(@Nonnull final FileNode file);
+    void openEditor(@Nonnull final VirtualFile file);
 
     /**
      * Returns array of EditorPartPresenters whose content have changed since the last save operation.

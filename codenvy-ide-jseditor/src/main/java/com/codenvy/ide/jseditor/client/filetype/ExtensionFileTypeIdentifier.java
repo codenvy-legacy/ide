@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.util.loging.Log;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
     }
 
     @Override
-    public List<String> identifyType(final FileNode file) {
+    public List<String> identifyType(final VirtualFile file) {
         final String filename = file.getName();
         if (filename != null) {
             final int dotPos = filename.lastIndexOf('.');
@@ -59,6 +59,7 @@ public class ExtensionFileTypeIdentifier implements FileTypeIdentifier {
         this.mappings.put("m", Collections.singletonList("text/x-objective-c")); // conflict with octave/matlab
 
         this.mappings.put("java", Collections.singletonList("text/x-java"));
+        this.mappings.put("class", Collections.singletonList("text/x-java"));
         this.mappings.put("scala", Collections.singletonList("text/x-scala"));
         this.mappings.put("sbt", Collections.singletonList("text/x-scala"));// scala build definition
         this.mappings.put("clj", Collections.singletonList("text/x-clojure"));

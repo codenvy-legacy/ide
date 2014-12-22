@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.filetype;
 
-import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +24,7 @@ public class FileNameFileTypeIdentifier implements FileTypeIdentifier {
 
 
     @Override
-    public List<String> identifyType(final FileNode file) {
+    public List<String> identifyType(final VirtualFile file) {
         final String filename = file.getName();
         if ("Rakefile".equals(filename) || "Gemfile".equals(filename)) {
             return Collections.singletonList("text/x-ruby");

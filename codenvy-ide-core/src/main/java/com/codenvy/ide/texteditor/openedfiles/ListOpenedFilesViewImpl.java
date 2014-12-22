@@ -11,6 +11,7 @@
 package com.codenvy.ide.texteditor.openedfiles;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,9 +49,9 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
 
         private Image closeButton;
 
-        private FileNode file;
+        private VirtualFile file;
 
-        public FileItem(FileNode file) {
+        public FileItem(VirtualFile file) {
             this.file = file;
             FlowPanel panel = new FlowPanel();
             panel.setStyleName(partStackResources.partStackCss().idePartStackMultipleTabsItem());
@@ -80,7 +81,7 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
             });
         }
 
-        public FileNode getFile() {
+        public VirtualFile getFile() {
             return file;
         }
 
@@ -131,9 +132,9 @@ public class ListOpenedFilesViewImpl extends PopupPanel implements ListOpenedFil
 
     /** {@inheritDoc} */
     @Override
-    public void setOpenedFiles(Array<FileNode> files) {
+    public void setOpenedFiles(Array<VirtualFile> files) {
         container.clear();
-        for (FileNode file : files.asIterable()) {
+        for (VirtualFile file : files.asIterable()) {
             FileItem fileItem = new FileItem(file);
             bindEvents(fileItem);
             container.add(fileItem);
