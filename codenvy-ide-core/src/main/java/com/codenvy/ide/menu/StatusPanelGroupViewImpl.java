@@ -19,7 +19,6 @@ import com.codenvy.ide.api.action.CustomComponentAction;
 import com.codenvy.ide.api.action.IdeActions;
 import com.codenvy.ide.api.action.Presentation;
 import com.codenvy.ide.api.action.Separator;
-import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.toolbar.ActionSelectedHandler;
 import com.codenvy.ide.toolbar.CloseMenuHandler;
 import com.codenvy.ide.toolbar.MenuLockLayer;
@@ -27,75 +26,74 @@ import com.codenvy.ide.toolbar.PresentationFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * Implements {@link MainMenuView} using standard GWT Menu Widgets
+ * Implements {@link StatusPanelGroupView}
  *
- * @author Nikolay Zamosenchuk
  * @author Oleksii Orel
  */
-public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMenuHandler, ActionSelectedHandler {
+public class StatusPanelGroupViewImpl extends Composite implements StatusPanelGroupView, CloseMenuHandler, ActionSelectedHandler {
     private final MenuResources resources;
 
     private final MenuItemPresentationFactory presentationFactory = new MenuItemPresentationFactory();
-    /** Working table, cells of which are contains element of Menu. */
-    private final MenuBarTable                table               = new MenuBarTable();
+
+    private final FlowPanel centerPanel = new FlowPanel();
 
     private final FlowPanel rightPanel = new FlowPanel();
 
     private final FlowPanel leftPanel = new FlowPanel();
     /** Panel, which contains top menu. */
     private final FlowPanel rootPanel = new FlowPanel();
+
+
     /** Lock layer for displaying popup menus. */
     private MenuLockLayer lockLayer;
     /** List Menu Bar items. */
-    private Map<Element, MenuBarItem> menuBarItems   = new LinkedHashMap<>();
-    private Map<Action, MenuBarItem>  action2barItem = new HashMap<>();
+    private Map<Action, MenuBarItem> action2barItem = new HashMap<>();
 
     /** Store selected Menu Bar item. */
     private MenuBarItem selectedMenuBarItem;
 
-    private List<Action> leftVisibleActions  = new ArrayList<>();
-    private List<Action> menuVisibleActions  = new ArrayList<>();
-    private List<Action> rightVisibleActions = new ArrayList<>();
-    private List<Action>    newLeftVisibleActions;
-    private List<Action>    newMenuVisibleActions;
-    private List<Action>    newRightVisibleActions;
-    private ActionManager   actionManager;
-    private KeyBindingAgent keyBindingAgent;
+
+    private List<Action> rightVisibleActions  = new ArrayList<>();
+    private List<Action> centerVisibleActions = new ArrayList<>();
+    private List<Action> leftVisibleActions   = new ArrayList<>();
+    private List<Action>  newLeftVisibleActions;
+    private List<Action>  newCenterVisibleActions;
+    private List<Action>  newRightVisibleActions;
+    private ActionManager actionManager;
 
     /** Create new {@link MainMenuViewImpl} */
     @Inject
-    public MainMenuViewImpl(MenuResources resources, ActionManager actionManager, KeyBindingAgent keyBindingAgent) {
+    public StatusPanelGroupViewImpl(MenuResources resources, ActionManager actionManager) {
         this.resources = resources;
         this.actionManager = actionManager;
-        this.keyBindingAgent = keyBindingAgent;
 
         initWidget(rootPanel);
 
         rootPanel.setStyleName(resources.menuCss().menuBar());
+
         leftPanel.addStyleName(resources.menuCss().leftPanel());
+        leftPanel.getElement().getStyle().setPropertyPx("marginLeft", 1);
         rootPanel.add(leftPanel);
-        table.setStyleName(resources.menuCss().menuBarTable());
-        table.setCellPadding(0);
-        table.setCellSpacing(0);
-        rootPanel.add(table);
+
+        centerPanel.setStyleName(resources.menuCss().leftPanel());
+        rootPanel.add(centerPanel);
+
         rightPanel.addStyleName(resources.menuCss().rightPanel());
+        rightPanel.getElement().getStyle().setPropertyPx("marginRight", 1);
         rootPanel.add(rightPanel);
+
     }
 
     @Override
@@ -119,18 +117,17 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         if (selectedMenuBarItem != null) {
             return;
         }
-
-        newMenuVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_MAIN_MENU, newMenuVisibleActions, actionManager);
-        if (!newMenuVisibleActions.equals(menuVisibleActions)) {
-            removeAll();
-            for (final Action action : newMenuVisibleActions) {
-                add(ActionPlaces.MAIN_MENU, action, presentationFactory);
+        newCenterVisibleActions = new ArrayList<>();
+        expandActionGroup(IdeActions.GROUP_CENTER_STATUS_PANEL, newCenterVisibleActions, actionManager);
+        if (!newCenterVisibleActions.equals(centerVisibleActions)) {
+            centerPanel.clear();
+            for (Action action : newCenterVisibleActions) {
+                addToPanel(centerPanel, action, presentationFactory);
             }
-            menuVisibleActions = newMenuVisibleActions;
+            centerVisibleActions = newCenterVisibleActions;
         }
         newRightVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_RIGHT_MAIN_MENU, newRightVisibleActions, actionManager);
+        expandActionGroup(IdeActions.GROUP_RIGHT_STATUS_PANEL, newRightVisibleActions, actionManager);
         if (!newRightVisibleActions.equals(rightVisibleActions)) {
             rightPanel.clear();
             for (Action action : newRightVisibleActions) {
@@ -139,7 +136,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             rightVisibleActions = newRightVisibleActions;
         }
         newLeftVisibleActions = new ArrayList<>();
-        expandActionGroup(IdeActions.GROUP_LEFT_MAIN_MENU, newLeftVisibleActions, actionManager);
+        expandActionGroup(IdeActions.GROUP_LEFT_STATUS_PANEL, newLeftVisibleActions, actionManager);
         if (!newLeftVisibleActions.equals(leftVisibleActions)) {
             leftPanel.clear();
             for (Action action : newLeftVisibleActions) {
@@ -147,6 +144,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
             }
             leftVisibleActions = newLeftVisibleActions;
         }
+        centerPanel.getElement().getStyle().setPropertyPx("marginLeft", rootPanel.getOffsetWidth() / 2 - leftPanel.getOffsetWidth() -
+                                                                        centerPanel.getOffsetWidth() / 2);
     }
 
     /**
@@ -167,11 +166,6 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         }
     }
 
-    private void removeAll() {
-        table.clear();
-        menuBarItems.clear();
-        action2barItem.clear();
-    }
 
     private void expandActionGroup(String actionGroupId, final List<Action> newVisibleActions, ActionManager actionManager) {
         final ActionGroup mainActionGroup = (ActionGroup)actionManager.getAction(actionGroupId);
@@ -194,44 +188,6 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         }
     }
 
-    /**
-     * Create and add new item in menu.
-     */
-    private void add(String place, Action action, MenuItemPresentationFactory presentationFactory) {
-        Presentation presentation = presentationFactory.getPresentation(action);
-        if (action instanceof ActionGroup) {
-            ActionGroup group = (ActionGroup)action;
-            table.setText(0, menuBarItems.size(), presentation.getText());
-            Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
-            MenuBarItem item =
-                    new MenuBarItem(group, actionManager, presentationFactory, place, element, this, keyBindingAgent, resources.menuCss());
-
-            item.onMouseOut();
-            menuBarItems.put(element, item);
-            action2barItem.put(group, item);
-        } else if (action instanceof CustomComponentAction) {
-            Widget widget = ((CustomComponentAction)action).createCustomComponent(presentation);
-            table.setWidget(0, menuBarItems.size(), widget);
-            Element element = table.getCellFormatter().getElement(0, menuBarItems.size());
-            menuBarItems.put(element, null);
-        }
-
-    }
-
-    /**
-     * Open Popup Menu.
-     *
-     * @param item
-     *         popup menu item.
-     */
-    public void openPopupMenu(MenuBarItem item) {
-        if (lockLayer == null) {
-            int top = getAbsoluteTop() + getOffsetHeight();
-            lockLayer = new MenuLockLayer(this, top);
-        }
-
-        item.openPopupMenu(lockLayer);
-    }
 
     @Override
     public void onActionSelected(Action action) {
@@ -246,60 +202,6 @@ public class MainMenuViewImpl extends Composite implements MainMenuView, CloseMe
         } else {
             lockLayer.close();
             lockLayer = null;
-        }
-    }
-
-    /**
-     * This is visual component.
-     * Uses for handling mouse events on MenuBar.
-     */
-    private class MenuBarTable extends FlexTable {
-
-        public MenuBarTable() {
-            sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEDOWN);
-        }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            Element td = getEventTargetCell(event);
-            MenuBarItem item = menuBarItems.get(td);
-
-            if (item == null) {
-                return;
-            }
-
-            switch (DOM.eventGetType(event)) {
-                case Event.ONMOUSEOVER:
-                    if (selectedMenuBarItem != null && item != selectedMenuBarItem) {
-                        if (item.onMouseDown()) {
-                            openPopupMenu(item);
-                        }
-                    }
-
-                    item.onMouseOver();
-                    break;
-
-                case Event.ONMOUSEOUT:
-                    item.onMouseOut();
-                    break;
-
-                case Event.ONMOUSEDOWN:
-                    if (item == selectedMenuBarItem) {
-                        if (lockLayer != null) {
-                            lockLayer.close();
-                        }
-                        return;
-                    }
-
-                    if (item.onMouseDown()) {
-                        openPopupMenu(item);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-
         }
     }
 

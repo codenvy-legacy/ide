@@ -16,6 +16,7 @@
         @eval bgColor com.codenvy.ide.api.theme.Style.getMainMenuBkgColor();
         @eval tabBorder com.codenvy.ide.api.theme.Style.getTabBorderColor();
         @eval conColor com.codenvy.ide.api.theme.Style.getConsolePanelColor();
+        @eval statusPanelColor com.codenvy.ide.api.theme.Style.getStatusPanelColor();
         .buttonsPanel {
             background-color: bgColor;
         }
@@ -35,8 +36,7 @@
 
         .actionsPanel {
             box-sizing: border-box;
-            /*background-color: conColor;*/
-            background-color: #313131;
+            background-color: conColor;
             border-top: #2f2f2f 1px solid;
             /*border-right: 1px solid tabBorder;*/
             overflow: hidden;
@@ -44,8 +44,7 @@
 
         .statusPanel {
             box-sizing: border-box;
-            /*background-color: conColor;*/
-            background-color: #313131;
+            background-color: statusPanelColor;
             border-top: #232323 1px solid;
             overflow: hidden;
         }

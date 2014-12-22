@@ -150,21 +150,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     protected void bind() {
         view.setDelegate(this);
 
-        eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
-            @Override
-            public void onActivePartChanged(ActivePartChangedEvent event) {
-                if (!(event.getActivePart() instanceof EditorPartPresenter)) {
-                    return;
-                }
-
-                EditorPartPresenter editorPresenter = (EditorPartPresenter)event.getActivePart();
-                VirtualFile fileNode = editorPresenter.getEditorInput().getFile();
-                if(fileNode instanceof TreeNode) {
-                    view.selectAndExpandNode((TreeNode<?>)fileNode);
-                }
-            }
-        });
-
         eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
             @Override
             public void onProjectOpened(ProjectActionEvent event) {

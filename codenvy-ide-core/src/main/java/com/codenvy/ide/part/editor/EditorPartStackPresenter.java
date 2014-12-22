@@ -48,9 +48,8 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
     @Inject
-    public EditorPartStackPresenter(final EditorPartStackView view,
-                                    EventBus eventBus,
-                                    PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
+    public EditorPartStackPresenter(final EditorPartStackView view, EventBus eventBus,
+                 PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
         this.listOpenedFilesPresenter = listOpenedFilesPresenter;

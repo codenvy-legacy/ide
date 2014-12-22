@@ -89,6 +89,8 @@ import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
 import com.codenvy.ide.logger.AnalyticsEventLoggerImpl;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
+import com.codenvy.ide.menu.StatusPanelGroupView;
+import com.codenvy.ide.menu.StatusPanelGroupViewImpl;
 import com.codenvy.ide.navigation.NavigateToFileView;
 import com.codenvy.ide.navigation.NavigateToFileViewImpl;
 import com.codenvy.ide.notification.NotificationManagerImpl;
@@ -134,6 +136,11 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialog;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialogFooter;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialogPresenter;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialogView;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialogViewImpl;
 import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog;
 import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogFooter;
 import com.codenvy.ide.ui.dialogs.confirm.ConfirmDialogPresenter;
@@ -278,6 +285,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
         bind(WorkBenchView.class).to(WorkBenchViewImpl.class).in(Singleton.class);
         bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
+        bind(StatusPanelGroupView.class).to(StatusPanelGroupViewImpl.class).in(Singleton.class);
 
         bind(ToolbarView.class).to(ToolbarViewImpl.class);
         bind(ToolbarPresenter.class).annotatedWith(MainToolbar.class).to(ToolbarMainPresenter.class).in(Singleton.class);
@@ -292,11 +300,14 @@ public class CoreGinModule extends AbstractGinModule {
         bind(MessageDialogView.class).to(MessageDialogViewImpl.class);
         bind(ConfirmDialogFooter.class);
         bind(ConfirmDialogView.class).to(ConfirmDialogViewImpl.class);
+        bind(ChoiceDialogFooter.class);
+        bind(ChoiceDialogView.class).to(ChoiceDialogViewImpl.class);
         bind(InputDialogFooter.class);
         bind(InputDialogView.class).to(InputDialogViewImpl.class);
         install(new GinFactoryModuleBuilder().implement(MessageDialog.class, MessageDialogPresenter.class)
                                              .implement(ConfirmDialog.class, ConfirmDialogPresenter.class)
                                              .implement(InputDialog.class, InputDialogPresenter.class)
+                                             .implement(ChoiceDialog.class, ChoiceDialogPresenter.class)
                                              .build(DialogFactory.class));
 
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);

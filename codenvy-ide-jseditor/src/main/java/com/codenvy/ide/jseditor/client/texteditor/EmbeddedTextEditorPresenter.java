@@ -10,10 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.texteditor;
 
+import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractEditorPresenter;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.EditorWithErrors;
+import com.codenvy.ide.api.event.FileContentUpdateEvent;
+import com.codenvy.ide.api.event.FileContentUpdateHandler;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.Notification;
@@ -35,6 +47,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
 import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
+import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
@@ -57,6 +70,7 @@ import com.codenvy.ide.texteditor.selection.CursorModelWithHandler;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.ui.dialogs.choice.ChoiceDialog;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -68,15 +82,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
-
-import org.vectomatic.dom.svg.ui.SVGResource;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 
 
 /**
@@ -256,6 +261,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         firePropertyChange(PROP_INPUT);
 
         setupEventHandlers();
+        setupFileContentUpdateHandler();
     }
 
     private void setupEventHandlers() {
@@ -272,6 +278,58 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                     ||Gutters.LINE_NUMBERS_GUTTER.equals(event.getGutterId())) {
                     breakpointManager.changeBreakPointState(event.getLineNumber());
                 }
+            }
+        });
+    }
+
+    private void setupFileContentUpdateHandler() {
+        this.generalEventBus.addHandler(FileContentUpdateEvent.TYPE, new FileContentUpdateHandler() {
+            @Override
+            public void onFileContentUpdate(final FileContentUpdateEvent event) {
+                if (event.getFilePath() != null && event.getFilePath().equals(document.getFile().getPath())) {
+                    if (isDirty()) {
+                        final ConfirmCallback callback = new ConfirmCallback() {
+                            @Override
+                            public void accepted() {
+                                updateContent();
+                            }
+                        };
+                        final ChoiceDialog choice = dialogFactory.createChoiceDialog(constant.fileUpdateTitle(),
+                                                          constant.fileUpdateMessage(event.getFilePath()),
+                                                          constant.fileUpdateOvewrite(),
+                                                          constant.fileUpdateKeepUnsaved(),
+                                                          callback,
+                                                          null);
+                        choice.show();
+                    } else {
+                        updateContent();
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateContent() {
+        /* -save current cursor and (ideally) viewport
+         * -set editor content which is also expected to
+         *     -reset dirty flag
+         *     -clear history
+         * -restore current cursor position
+         */
+        final TextPosition currentCursor = getCursorPosition();
+        this.documentStorage.getDocument(document.getFile(), new EmbeddedDocumentCallback() {
+            
+            @Override
+            public void onDocumentReceived(final String content) {
+                editorWidget.setValue(content);
+                final DocumentHandle docHandle = document.getDocumentHandle();
+                docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, content.length(), content));
+                document.setCursorPosition(currentCursor);
+            }
+            
+            @Override
+            public void onDocumentLoadFailure(final Throwable caught) {
+                displayErrorPanel(constant.editorFileErrorMessage());
             }
         });
     }
