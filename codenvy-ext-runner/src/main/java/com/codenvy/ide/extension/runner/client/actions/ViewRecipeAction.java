@@ -124,6 +124,11 @@ public class ViewRecipeAction extends Action {
         }
 
         @Override
+        public boolean isReadOnly() {
+            return true;
+        }
+
+        @Override
         public void getContent(final AsyncCallback<String> callback) {
             for (Link link : data.getLinks()) {
                 if ("get content".equals(link.getRel())) {
