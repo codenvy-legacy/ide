@@ -37,7 +37,9 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      * Updates the specified node.
      *
      * @param oldNode
+     *         the node to be replaced
      * @param newNode
+     *         the new node
      */
     void updateNode(@Nonnull TreeNode<?> oldNode, @Nonnull TreeNode<?> newNode);
 
@@ -52,9 +54,10 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     /**
      * Select and expand the specified node in the view.
      *
-     * @param node node to select
+     * @param node
+     *         node to select
      */
-    void selectAndExpandNode(@Nonnull TreeNode< ? > node);
+    void selectAndExpandNode(@Nonnull TreeNode<?> node);
 
     /**
      * Sets title of part.
@@ -71,10 +74,12 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      */
     void setProjectHeader(@Nonnull ProjectDescriptor project);
 
-    /**
-     * Hide the project's header panel.
-     */
+    /** Hide the project's header panel. */
     void hideProjectHeader();
+
+    /** Returns the currently selected node. */
+    @Nonnull
+    TreeNode<?> getSelectedNode();
 
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {

@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -129,7 +130,7 @@ public class ProjectExplorerPartPresenterTest {
     @Test
     public void testOnDeleteKey() throws Exception {
         StorableNode node = mock(StorableNode.class);
-        presenter.onNodeSelected(node);
+        doReturn(node).when(view).getSelectedNode();
         presenter.onDeleteKey();
 
         verify(deleteNodeHandler).delete(node);
@@ -138,7 +139,7 @@ public class ProjectExplorerPartPresenterTest {
     @Test
     public void testOnEnterKey() throws Exception {
         TreeNode node = mock(TreeNode.class);
-        presenter.onNodeSelected(node);
+        doReturn(node).when(view).getSelectedNode();
         presenter.onEnterKey();
 
         verify(node).processNodeAction();
