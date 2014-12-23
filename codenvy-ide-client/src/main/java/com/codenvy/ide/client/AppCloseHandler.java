@@ -14,7 +14,10 @@ import com.codenvy.api.factory.dto.Action;
 import com.codenvy.ide.api.action.ActionManager;
 import com.codenvy.ide.api.action.AppCloseActionEvent;
 import com.codenvy.ide.api.action.Presentation;
+import com.codenvy.ide.api.event.WindowActionEvent;
+import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.toolbar.PresentationFactory;
+import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -30,9 +33,22 @@ public class AppCloseHandler {
     private List<Action> actions = new ArrayList<>();
 
     @Inject
-    public AppCloseHandler(ActionManager actionManager) {
+    public AppCloseHandler(ActionManager actionManager, EventBus eventBus) {
         this.actionManager = actionManager;
-        addUnloadHandler();
+
+        eventBus.addHandler(WindowActionEvent.TYPE, new WindowActionHandler() {
+            @Override
+            public void onWindowClosing(final WindowActionEvent event) {
+                String message = performActions();
+                if (message != null) {
+                    event.setMessage(message);
+                }
+            }
+
+            @Override
+            public void onWindowClosed(WindowActionEvent event) {
+            }
+        });
     }
 
     /**
@@ -43,23 +59,13 @@ public class AppCloseHandler {
     }
 
     /**
-     * Adds before unload event listener.
-     */
-    private native void addUnloadHandler() /*-{
-        var instance = this;
-
-        $wnd.onbeforeunload = function () {
-            return instance.@com.codenvy.ide.client.AppCloseHandler::performActions()();
-        }
-    }-*/;
-
-    /**
      * Performs registered action
      *
      * @return null if all action is successfully performed
      * or string with message if some action sent cancel closing of application.
      */
     private String performActions() {
+        String cancelMessage = null;
         for (Action action : actions) {
             com.codenvy.ide.api.action.Action ideAction = actionManager.getAction(action.getId());
 
@@ -78,10 +84,10 @@ public class AppCloseHandler {
             ideAction.actionPerformed(e);
 
             if (e.getCancelMessage() != null) {
-                return e.getCancelMessage();
+                cancelMessage = e.getCancelMessage();
             }
         }
 
-        return null;
+        return cancelMessage;
     }
 }
