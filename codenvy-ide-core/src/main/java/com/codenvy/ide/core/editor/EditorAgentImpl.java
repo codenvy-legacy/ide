@@ -134,6 +134,15 @@ public class EditorAgentImpl implements EditorAgent {
     /** {@inheritDoc} */
     @Override
     public void openEditor(@Nonnull final VirtualFile file) {
+        doOpen(file, null);
+    }
+
+    @Override
+    public void openEditor(@Nonnull VirtualFile file, @Nonnull OpenEditorCallback callback) {
+        doOpen(file, callback);
+    }
+
+    private void doOpen(final VirtualFile file, final OpenEditorCallback callback) {
         if (openedEditors.containsKey(file.getPath())) {
             workspace.setActivePart(openedEditors.get(file.getPath()));
         } else {
@@ -150,18 +159,25 @@ public class EditorAgentImpl implements EditorAgent {
             openedEditors.put(file.getPath(), editor);
 
             workspace.setActivePart(editor);
-            if (file.isReadOnly() && editor instanceof HasReadOnlyProperty) {
-                editor.addPropertyListener(new PropertyListener() {
-                    @Override
-                    public void propertyChanged(PartPresenter source, int propId) {
-                        if (propId == EditorPartPresenter.PROP_INPUT) {
-                            ((HasReadOnlyProperty)editor).setReadOnly(file.isReadOnly());
+            editor.addPropertyListener(new PropertyListener() {
+                @Override
+                public void propertyChanged(PartPresenter source, int propId) {
+                    if (propId == EditorPartPresenter.PROP_INPUT) {
+                        ((HasReadOnlyProperty)editor).setReadOnly(file.isReadOnly());
+                        if(callback != null) {
+                            callback.onEditorOpened(editor);
                         }
-
                     }
-                });
-            }
+
+                }
+            });
+
         }
+    }
+
+    @Override
+    public void activateEditor(@Nonnull EditorPartPresenter editor) {
+        workspace.setActivePart(editor);
     }
 
     /** {@inheritDoc} */
