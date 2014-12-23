@@ -12,16 +12,18 @@ package com.codenvy.ide.core;
 
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.actions.OpenFileAction;
-import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.CloseProjectAction;
 import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
+import com.codenvy.ide.actions.FindReplaceAction;
 import com.codenvy.ide.actions.FormatterAction;
 import com.codenvy.ide.actions.ImportProjectFromLocationAction;
 import com.codenvy.ide.actions.NavigateToFileAction;
 import com.codenvy.ide.actions.NewProjectAction;
+import com.codenvy.ide.actions.OpenFileAction;
 import com.codenvy.ide.actions.OpenProjectAction;
+import com.codenvy.ide.actions.OpenSelectedFileAction;
+import com.codenvy.ide.actions.ProjectConfigurationAction;
 import com.codenvy.ide.actions.RedirectToFeedbackAction;
 import com.codenvy.ide.actions.RedirectToForumsAction;
 import com.codenvy.ide.actions.RedirectToHelpAction;
@@ -117,6 +119,9 @@ public class StandardComponentInitializer {
     private FindActionAction findActionAction;
 
     @Inject
+    private FindReplaceAction findReplaceAction;
+
+    @Inject
     private NavigateToFileAction navigateToFileAction;
 
     @Inject
@@ -134,6 +139,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private CloseProjectAction closeProjectAction;
+
+    @Inject
+    private OpenSelectedFileAction openSelectedFileAction;
 
     @Inject
     private OpenFileAction openFileAction;
@@ -355,7 +363,7 @@ public class StandardComponentInitializer {
         DefaultActionGroup resourceOperation = new DefaultActionGroup(actionManager);
         actionManager.registerAction("resourceOperation", resourceOperation);
         resourceOperation.addSeparator();
-        resourceOperation.add(openFileAction);
+        resourceOperation.add(openSelectedFileAction);
         resourceOperation.add(renameItemAction);
         resourceOperation.add(deleteItemAction);
 
@@ -379,9 +387,13 @@ public class StandardComponentInitializer {
         actionManager.registerAction("changeResourceGroup", changeResourceGroup);
         actionManager.registerAction("openProject", openProjectAction);
         actionManager.registerAction("closeProject", closeProjectAction);
-        actionManager.registerAction("openFile", openFileAction);
+        actionManager.registerAction("openSelectedFile", openSelectedFileAction);
         actionManager.registerAction("renameResource", renameItemAction);
         actionManager.registerAction("deleteItem", deleteItemAction);
+
+        actionManager.registerAction("findReplace", findReplaceAction);
+        actionManager.registerAction("openFile", openFileAction);
+
         changeResourceGroup.add(closeProjectAction);
         changeResourceGroup.add(deleteItemAction);
         changeResourceGroup.addSeparator();
