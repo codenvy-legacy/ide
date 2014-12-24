@@ -285,8 +285,9 @@ public class RenameItemAction extends Action {
 
                 @Override
                 public void onSuccess(TreeNode<?> result) {
-                    editor.getEditorInput().setFile((FileNode)result);
-                    editorAgent.getOpenedEditors().put(((FileNode) result).getPath(), editor);
+                    FileNode fileNode = (FileNode)result;
+                    editor.getEditorInput().setFile(fileNode);
+                    editorAgent.getOpenedEditors().put(fileNode.getPath(), editor);
                     editor.onFileChanged();
                 }
             });
