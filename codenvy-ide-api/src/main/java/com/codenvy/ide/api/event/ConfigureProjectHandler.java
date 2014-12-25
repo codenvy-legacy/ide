@@ -13,16 +13,16 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * A handler for handling {@link ConfigureCurrentProjectEvent}.
+ * A handler for handling {@link ConfigureProjectEvent}.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ConfigureCurrentProjectHandler extends EventHandler {
+public interface ConfigureProjectHandler extends EventHandler {
     /**
      * Called when someone wants to configure the currently opened project.
      *
      * @param event
-     *         the fired {@link ConfigureCurrentProjectEvent}
+     *         the fired {@link ConfigureProjectEvent}
      */
-    void onConfigureCurrentProject(ConfigureCurrentProjectEvent event);
+    void onConfigureProject(ConfigureProjectEvent event);
 }
