@@ -12,13 +12,11 @@ package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.Constants;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectProblem;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.project.shared.dto.Source;
@@ -27,6 +25,7 @@ import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.event.ConfigureProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.importproject.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
@@ -47,14 +46,12 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Presenter for import project wizard dialog.
@@ -76,7 +73,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private final ProjectImporterRegistry             projectImporterRegistry;
     private final RunnerServiceClient                 runnerService;
     private final ImportProjectWizardView             view;
-    private final NewProjectWizardPresenter           newProjectWizardPresenter;
     private final MainPagePresenter                   mainPage;
     private final ImportProjectNotificationSubscriber importProjectNotificationSubscriber;
     private final Provider<WizardPage> mainPageProvider = new Provider<WizardPage>() {
@@ -104,7 +100,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                                         DtoFactory factory,
                                         EventBus eventBus,
                                         ImportProjectNotificationSubscriber importProjectNotificationSubscriber,
-                                        NewProjectWizardPresenter newProjectWizardPresenter,
                                         DialogFactory dialogFactory) {
         this.view = view;
         this.projectImporterRegistry = projectImporterRegistry;
@@ -112,7 +107,6 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
         this.eventBus = eventBus;
         this.wizardRegistry = wizardRegistry;
         this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
-        this.newProjectWizardPresenter = newProjectWizardPresenter;
         this.projectService = projectService;
         this.runnerService = runnerService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -286,20 +280,9 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
                 if (importedProject == null) {
                     return;
                 }
-                boolean projectTypeResolvedViaResolver = false;
-                List<ProjectProblem> problems = importedProject.getProblems();
-                for (ProjectProblem problem : problems) {
-                    if (problem.getCode() == 300) {
-                        projectTypeResolvedViaResolver = true;
-                    }
-                }
-                if (importedProject.getType() == null
-                    || Constants.BLANK_ID.equals(importedProject.getType())
-                    || projectTypeResolvedViaResolver) {
 
-                    WizardContext context = new WizardContext();
-                    context.putData(ProjectWizard.PROJECT_FOR_UPDATE, importedProject);
-                    newProjectWizardPresenter.show(context);
+                if (!importedProject.getProblems().isEmpty()) {
+                    eventBus.fireEvent(new ConfigureProjectEvent(importedProject));
                 }
             }
 

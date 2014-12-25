@@ -15,7 +15,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
-import com.codenvy.ide.api.event.ConfigureCurrentProjectEvent;
+import com.codenvy.ide.api.event.ConfigureProjectEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -49,7 +49,11 @@ public class ProjectConfigurationAction extends ProjectAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (appContext.getCurrentProject() == null) {
+            return;
+        }
+
         eventLogger.log(this);
-        eventBus.fireEvent(new ConfigureCurrentProjectEvent());
+        eventBus.fireEvent(new ConfigureProjectEvent(appContext.getCurrentProject().getRootProject()));
     }
 }

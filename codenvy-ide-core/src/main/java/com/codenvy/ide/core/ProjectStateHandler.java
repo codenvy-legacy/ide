@@ -24,8 +24,8 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.CloseCurrentProjectEvent;
 import com.codenvy.ide.api.event.CloseCurrentProjectHandler;
-import com.codenvy.ide.api.event.ConfigureCurrentProjectEvent;
-import com.codenvy.ide.api.event.ConfigureCurrentProjectHandler;
+import com.codenvy.ide.api.event.ConfigureProjectEvent;
+import com.codenvy.ide.api.event.ConfigureProjectHandler;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
@@ -49,6 +49,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static com.codenvy.api.runner.dto.RunnerMetric.ALWAYS_ON;
@@ -72,20 +73,24 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizard.PROJECT_FOR_U
  */
 @Singleton
 public class ProjectStateHandler implements Component, OpenProjectHandler, CloseCurrentProjectHandler, ProjectDescriptorChangedHandler,
-                                            ConfigureCurrentProjectHandler {
-    private EventBus                  eventBus;
-    private AppContext                appContext;
-    private ProjectServiceClient      projectServiceClient;
-    private RunnerServiceClient       runnerServiceClient;
-    private NewProjectWizardPresenter newProjectWizard;
-    private DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    private CoreLocalizationConstant  constant;
-    private DialogFactory             dialogFactory;
+                                            ConfigureProjectHandler {
+    private final EventBus                  eventBus;
+    private final AppContext                appContext;
+    private final ProjectServiceClient      projectServiceClient;
+    private final RunnerServiceClient       runnerServiceClient;
+    private final NewProjectWizardPresenter newProjectWizard;
+    private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private final CoreLocalizationConstant  constant;
+    private final DialogFactory             dialogFactory;
 
     @Inject
-    public ProjectStateHandler(AppContext appContext, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                               RunnerServiceClient runnerServiceClient, NewProjectWizardPresenter newProjectWizard,
-                               CoreLocalizationConstant constant, DtoUnmarshallerFactory dtoUnmarshallerFactory,
+    public ProjectStateHandler(AppContext appContext,
+                               EventBus eventBus,
+                               ProjectServiceClient projectServiceClient,
+                               RunnerServiceClient runnerServiceClient,
+                               NewProjectWizardPresenter newProjectWizard,
+                               CoreLocalizationConstant constant,
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                DialogFactory dialogFactory) {
         this.eventBus = eventBus;
         this.appContext = appContext;
@@ -102,7 +107,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         eventBus.addHandler(OpenProjectEvent.TYPE, this);
         eventBus.addHandler(CloseCurrentProjectEvent.TYPE, this);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
-        eventBus.addHandler(ConfigureCurrentProjectEvent.TYPE, this);
+        eventBus.addHandler(ConfigureProjectEvent.TYPE, this);
         callback.onSuccess(this);
     }
 
@@ -126,15 +131,16 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     }
 
     @Override
-    public void onConfigureCurrentProject(ConfigureCurrentProjectEvent event) {
-        if (appContext.getCurrentProject() != null) {
-            if (event.isProblemsOnly() && !hasProblems(appContext.getCurrentProject().getProjectDescription())) {
-                return;
-            }
-            final WizardContext context = new WizardContext();
-            context.putData(PROJECT_FOR_UPDATE, appContext.getCurrentProject().getProjectDescription());
-            newProjectWizard.show(context);
+    public void onConfigureProject(@Nonnull ConfigureProjectEvent event) {
+        ProjectDescriptor toConfigure = event.getProject();
+
+        if (toConfigure == null) {
+            return;
         }
+
+        final WizardContext context = new WizardContext();
+        context.putData(PROJECT_FOR_UPDATE, toConfigure);
+        newProjectWizard.show(context);
     }
 
     private void checkRunnerAndCloseCurrentProject(CloseCallback closeCallback, boolean closingBeforeOpening) {
@@ -239,7 +245,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                     @Override
                     public void onConfigure() {
                         openProject(project);
-                        eventBus.fireEvent(new ConfigureCurrentProjectEvent());
+                        eventBus.fireEvent(new ConfigureProjectEvent(project));
                     }
 
                     @Override
