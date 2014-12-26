@@ -202,7 +202,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
             id = "/" + parent.getId() + id;
             parent = parent.getParent();
         }
-        UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(id));
+        UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(node.getDisplayName()));
     }
 
     public interface Css extends TreeNodeMutator.Css {
