@@ -38,11 +38,14 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     private static final String INFO  = "INFO";
     private static final String ERROR = "ERROR";
     private static final String WARN  = "WARNING";
+    private static final String MAVEN = "MAVEN";
 
     private static final String PRE_STYLE   = "style='margin:0px;'";
+
     private static final String INFO_COLOR  = "lightgreen";
     private static final String WARN_COLOR  = "#FFBA00";
     private static final String ERROR_COLOR = "#F62217";
+    private static final String MAVEN_COLOR = "#61b7ef";
 
     interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
     }
@@ -87,6 +90,8 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
             html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
         } else if (message.startsWith("["+WARN+"]")) {
             html.setHTML(buildSafeHtmlMessage(WARN, WARN_COLOR, message));
+        } else if (message.startsWith("["+MAVEN+"]")) {
+            html.setHTML(buildHtmlMessage(MAVEN, MAVEN_COLOR, message));
         } else {
             html.setHTML(buildSafeHtmlMessage(message));
         }
@@ -118,6 +123,23 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
                 .appendHtmlConstant("<pre " + PRE_STYLE + ">")
                 .appendHtmlConstant("[<span style='color:" + color + ";'><b>" + type + "</b></span>]")
                 .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring(("[" + type + "]").length())))
+                .appendHtmlConstant("</pre>")
+                .toSafeHtml();
+    }
+
+    /**
+     * Returns partially sanitized message. The method allows to place html inside the message.
+     *
+     * @param type message type (info, error etc.)
+     * @param color color constant
+     * @param message message to print
+     * @return message in SafeHtml
+     */
+    private SafeHtml buildHtmlMessage(String type, String color, String message) {
+        return new SafeHtmlBuilder()
+                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
+                .appendHtmlConstant("[<span style='color:" + color + ";'><b>" + type + "</b></span>]")
+                .appendHtmlConstant (message.substring(("[" + type + "]").length()))
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }

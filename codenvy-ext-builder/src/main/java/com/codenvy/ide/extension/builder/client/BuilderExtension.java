@@ -17,6 +17,7 @@ import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.extension.builder.client.actions.BrowseTargetFolderAction;
 import com.codenvy.ide.extension.builder.client.actions.BuildAction;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.extension.builder.client.console.BuilderConsoleToolbar;
@@ -56,15 +57,18 @@ public class BuilderExtension {
     private void prepareActions(BuilderLocalizationConstant localizationConstants,
                                 ActionManager actionManager,
                                 BuildAction buildAction,
-                                ClearConsoleAction clearConsoleAction) {
+                                ClearConsoleAction clearConsoleAction,
+                                BrowseTargetFolderAction browseTargetFolderAction) {
         // register actions
         actionManager.registerAction(localizationConstants.buildProjectControlId(), buildAction);
         actionManager.registerAction(localizationConstants.clearConsoleControlId(), clearConsoleAction);
+        actionManager.registerAction("browseTargetFolder", browseTargetFolderAction);
 
         // add actions in main menu
         DefaultActionGroup buildMenuActionGroup = (DefaultActionGroup)actionManager.getAction(GROUP_BUILD);
         buildMenuActionGroup.add(buildAction, Constraints.FIRST);
         buildMenuActionGroup.add(clearConsoleAction, Constraints.LAST);
+        buildMenuActionGroup.add(browseTargetFolderAction, Constraints.LAST);
 
         // add actions on main toolbar
         DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(GROUP_MAIN_TOOLBAR);
