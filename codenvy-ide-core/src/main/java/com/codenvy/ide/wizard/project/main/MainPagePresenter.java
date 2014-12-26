@@ -12,10 +12,10 @@ package com.codenvy.ide.wizard.project.main;
 
 import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
@@ -46,7 +46,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private       ProjectTypeServiceClient      projectTypeServiceClient;
     private final ProjectTypeRegistry           projectTypeRegistry;
     private       ProjectTypeWizardRegistry     wizardRegistry;
-    private       ProjectType2                  typeDescriptor;
+    private       ProjectTypeDefinition         typeDescriptor;
     private       ProjectTemplateDescriptor     template;
     private       PreSelectedProjectTypeManager preSelectedProjectTypeManager;
     private       DialogFactory                 dialogFactory;
@@ -131,19 +131,19 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         typeDescriptor = null;
         template = null;
         container.setWidget(view);
-        List<ProjectType2> projectTypes = projectTypeRegistry.getProjectTypes();
+        List<ProjectTypeDefinition> projectTypes = projectTypeRegistry.getProjectTypes();
 
-        Map<String, Set<ProjectType2>> descriptorsByCategory = new HashMap<>();
-        ProjectType2 defaultProjectTypeDescriptor = null;
+        Map<String, Set<ProjectTypeDefinition>> descriptorsByCategory = new HashMap<>();
+        ProjectTypeDefinition defaultProjectTypeDescriptor = null;
 
 
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
-        for (ProjectType2 type : projectTypes) {
+        for (ProjectTypeDefinition type : projectTypes) {
             if (wizardRegistry.getWizard(type.getId()) != null) {
                 String category = wizardRegistry.getCategoryForProjectType(type.getId());
                 if (!descriptorsByCategory.containsKey(category)) {
-                    descriptorsByCategory.put(category, new HashSet<ProjectType2>());
+                    descriptorsByCategory.put(category, new HashSet<ProjectTypeDefinition>());
                 }
                 descriptorsByCategory.get(category).add(type);
 
@@ -186,7 +186,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     }
 
     @Override
-    public void projectTypeSelected(ProjectType2 typeDescriptor) {
+    public void projectTypeSelected(ProjectTypeDefinition typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
         template = null;
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);

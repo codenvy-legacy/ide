@@ -12,8 +12,8 @@
 package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
@@ -33,9 +33,7 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +46,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private       DtoUnmarshallerFactory    dtoUnmarshallerFactory;
     private       ProjectServiceClient      projectServiceClient;
     private final ProjectTypeWizardRegistry projectTypeWizardRegistry;
-    private DtoFactory dtoFactory;
+    private       DtoFactory                dtoFactory;
 
     /** Create wizard page. */
     @Inject
@@ -107,20 +105,21 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         }
 
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
-        projectServiceClient.getRunnerEnvironments(projectForUpdate.getPath(), new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
-            @Override
-            protected void onSuccess(RunnerEnvironmentTree result) {
-                if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
-                    view.addRunner(result);
-                }
-                requestSystemEnvironments();
-            }
+        projectServiceClient
+                .getRunnerEnvironments(projectForUpdate.getPath(), new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(RunnerEnvironmentTree result) {
+                        if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
+                            view.addRunner(result);
+                        }
+                        requestSystemEnvironments();
+                    }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(SelectRunnerPagePresenter.class, "Can't get project-scoped runner environments", exception);
-            }
-        });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(SelectRunnerPagePresenter.class, "Can't get project-scoped runner environments", exception);
+                    }
+                });
     }
 
     private void requestSystemEnvironments() {
@@ -128,7 +127,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
-                ProjectType2 data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+                ProjectTypeDefinition data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
                 String typeCategory = projectTypeWizardRegistry.getCategoryForProjectType(data.getId());
                 if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
                     RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());

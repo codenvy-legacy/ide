@@ -21,6 +21,8 @@ import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
+import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
+import com.codenvy.api.project.gwt.client.ProjectTypeRegistryImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClientImpl;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
@@ -217,6 +219,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
 
+
         bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
         bind(PreSelectedProjectTypeManager.class).to(PreSelectedProjectTypeManagerImpl.class).in(Singleton.class);
         bind(ImportProjectWizardRegistry.class).to(ImportProjectWizardRegistryImpl.class).in(Singleton.class);
@@ -240,6 +243,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
+        bind(ProjectTypeRegistry.class).to(ProjectTypeRegistryImpl.class).in(Singleton.class);
         bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
         bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
     }

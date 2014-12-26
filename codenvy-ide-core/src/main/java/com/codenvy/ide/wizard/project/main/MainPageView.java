@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptor;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.inject.ImplementedBy;
 
@@ -29,7 +28,7 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
     void selectProjectType(String projectTypeId);
 
-    void setProjectTypeCategories(Map<String, Set<ProjectType2>> categories, Map<String, Set<ProjectTemplateDescriptor>> samples);
+    void setProjectTypeCategories(Map<String, Set<ProjectTypeDefinition>> categories, Map<String, Set<ProjectTemplateDescriptor>> samples);
 
     void reset();
 
@@ -63,8 +62,8 @@ public interface MainPageView extends View<MainPageView.ActionDelegate> {
 
         void projectTemplateSelected(ProjectTemplateDescriptor template);
 
-        void projectTypeSelected(ProjectType2 typeDescriptor);
+        void projectTypeSelected(ProjectTypeDefinition typeDescriptor);
     }
 
-    void setAvailableProjectTypeDescriptors(List<ProjectType2> availableProjectTypes);
+    void setAvailableProjectTypeDescriptors(List<ProjectTypeDefinition> availableProjectTypes);
 }

@@ -10,12 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.codenvy.ide.api.projecttype.ProjectTypeDescriptor;
 import com.codenvy.ide.ui.Styles;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
@@ -63,22 +62,22 @@ public class MainPageViewImpl implements MainPageView {
                     selectNextWizardType(itemData);
                 }
             };
-    private final Category.CategoryEventDelegate<ProjectType2>     projectTypeDelegate     =
-            new Category.CategoryEventDelegate<ProjectType2>() {
+    private final Category.CategoryEventDelegate<ProjectTypeDefinition>     projectTypeDelegate     =
+            new Category.CategoryEventDelegate<ProjectTypeDefinition>() {
                 @Override
-                public void onListItemClicked(Element listItemBase, ProjectType2 itemData) {
+                public void onListItemClicked(Element listItemBase, ProjectTypeDefinition itemData) {
                     selectNextWizardType(itemData);
                 }
             };
-    private final CategoryRenderer<ProjectType2>                   projectTypeRenderer     =
-            new CategoryRenderer<ProjectType2>() {
+    private final CategoryRenderer<ProjectTypeDefinition>                            projectTypeRenderer     =
+            new CategoryRenderer<ProjectTypeDefinition>() {
                 @Override
-                public void renderElement(com.google.gwt.dom.client.Element element, ProjectType2 data) {
+                public void renderElement(com.google.gwt.dom.client.Element element, ProjectTypeDefinition data) {
                     element.setInnerText(data.getDisplayName());
                 }
 
                 @Override
-                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectType2> category) {
+                public com.google.gwt.dom.client.SpanElement renderCategory(Category<ProjectTypeDefinition> category) {
                     return renderCategoryWithIcon(category.getTitle());
                 }
             };
@@ -118,11 +117,11 @@ public class MainPageViewImpl implements MainPageView {
     RadioButton projectPublic;
 
     private ActionDelegate                              delegate;
-    private Map<String, Set<ProjectType2>>     categories;
+    private Map<String, Set<ProjectTypeDefinition>>              categories;
     private Map<String, Set<ProjectTemplateDescriptor>> samples;
     private Resources                                   resources;
     private CategoriesList                              list;
-    private List<ProjectType2>                availableProjectTypes;
+    private List<ProjectTypeDefinition>                          availableProjectTypes;
 
     @Inject
     public MainPageViewImpl(Resources resources, IconRegistry iconRegistry, ProjectWizardResources wizardResources) {
@@ -176,10 +175,10 @@ public class MainPageViewImpl implements MainPageView {
             delegate.projectTemplateSelected((ProjectTemplateDescriptor)itemData);
             descriptionArea.getElement().setInnerText(((ProjectTemplateDescriptor)itemData).getDescription());
             projectType.setText(((ProjectTemplateDescriptor)itemData).getDisplayName());
-        } else if (itemData instanceof ProjectTypeDescriptor) {
-            delegate.projectTypeSelected((ProjectType2)itemData);
-            descriptionArea.getElement().setInnerText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
-            projectType.setText(((ProjectTypeDescriptor)itemData).getProjectTypeName());
+        } else if (itemData instanceof ProjectTypeDefinition) {
+            delegate.projectTypeSelected((ProjectTypeDefinition)itemData);
+            descriptionArea.getElement().setInnerText(((ProjectTypeDefinition)itemData).getDisplayName());
+            projectType.setText(((ProjectTypeDefinition)itemData).getDisplayName());
         } else {
             descriptionArea.getElement().setInnerText("");
             resetConfigOptions();
@@ -316,9 +315,9 @@ public class MainPageViewImpl implements MainPageView {
     @Override
     public void selectProjectType(final String projectTypeId) {
 
-        ProjectType2 typeDescriptor = null;
+        ProjectTypeDefinition typeDescriptor = null;
         for (String category : categories.keySet()) {
-            for (ProjectType2 descriptor : categories.get(category)) {
+            for (ProjectTypeDefinition descriptor : categories.get(category)) {
                 if (descriptor.getId().equals(projectTypeId)) {
                     typeDescriptor = descriptor;
                     break;
@@ -329,7 +328,7 @@ public class MainPageViewImpl implements MainPageView {
             }
         }
         if (typeDescriptor != null) {
-            for (ProjectType2 existingProjectTypeDescriptor : availableProjectTypes) {
+            for (ProjectTypeDefinition existingProjectTypeDescriptor : availableProjectTypes) {
                 if (existingProjectTypeDescriptor.getId().equals(typeDescriptor.getId())) {
                     list.selectElement(typeDescriptor);
                     selectNextWizardType(typeDescriptor);
@@ -340,19 +339,19 @@ public class MainPageViewImpl implements MainPageView {
     }
 
     @Override
-    public void setAvailableProjectTypeDescriptors(List<ProjectType2> availableProjectTypes) {
+    public void setAvailableProjectTypeDescriptors(List<ProjectTypeDefinition> availableProjectTypes) {
         this.availableProjectTypes = availableProjectTypes;
     }
 
     @Override
-    public void setProjectTypeCategories(Map<String, Set<ProjectType2>> categories,
+    public void setProjectTypeCategories(Map<String, Set<ProjectTypeDefinition>> categories,
                                          Map<String, Set<ProjectTemplateDescriptor>> samples) {
         this.categories = categories;
         this.samples = samples;
 
         List<Category<?>> categoriesList = new ArrayList<>();
         for (String s : categories.keySet()) {
-            Category<ProjectType2> category = new Category<>(s, projectTypeRenderer, categories.get(s), projectTypeDelegate);
+            Category<ProjectTypeDefinition> category = new Category<>(s, projectTypeRenderer, categories.get(s), projectTypeDelegate);
             categoriesList.add(category);
         }
 

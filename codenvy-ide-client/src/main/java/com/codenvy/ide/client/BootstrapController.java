@@ -20,8 +20,7 @@ import com.codenvy.api.factory.dto.Ide;
 import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
-import com.codenvy.api.project.server.ProjectTypeService;
-import com.codenvy.api.project.server.type.ProjectType2;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
@@ -93,16 +92,16 @@ public class BootstrapController {
     private final FactoryServiceClient         factoryService;
     private final UserProfileServiceClient     userProfileService;
     private final WorkspaceServiceClient       workspaceServiceClient;
-    private final ProjectTypeServiceClient           projectTypeService;
+    private final ProjectTypeServiceClient     projectTypeService;
     private final ProjectTypeRegistry          projectTypeRegistry;
-    private final PreferencesManagerImpl preferencesManager;
-    private final StyleInjector            styleInjector;
-    private final CoreLocalizationConstant coreLocalizationConstant;
-    private final EventBus                 eventBus;
-    private final ActionManager            actionManager;
-    private final AppCloseHandler          appCloseHandler;
-    private final PresentationFactory      presentationFactory;
-    private       AppContext               appContext;
+    private final PreferencesManagerImpl       preferencesManager;
+    private final StyleInjector                styleInjector;
+    private final CoreLocalizationConstant     coreLocalizationConstant;
+    private final EventBus                     eventBus;
+    private final ActionManager                actionManager;
+    private final AppCloseHandler              appCloseHandler;
+    private final PresentationFactory          presentationFactory;
+    private       AppContext                   appContext;
 
     /** Create controller. */
     @Inject
@@ -234,11 +233,11 @@ public class BootstrapController {
 
 
     private void loadProjectTypes() {
-        projectTypeService.getProjectTypes(new AsyncRequestCallback<Array<ProjectType2>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectType2.class)) {
+        projectTypeService.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
 
             @Override
-            protected void onSuccess(Array<ProjectType2> result) {
-                for(ProjectType2 projectType : result.asIterable()) {
+            protected void onSuccess(Array<ProjectTypeDefinition> result) {
+                for(ProjectTypeDefinition projectType : result.asIterable()) {
                     projectTypeRegistry.register(projectType);
                 }
                 loadFactory();

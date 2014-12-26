@@ -14,13 +14,13 @@ import com.codenvy.api.builder.dto.BuilderDescriptor;
 import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
@@ -467,7 +467,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void updateControls() {
         if (currentPage == mainPage) {
-            ProjectType2 descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+            ProjectTypeDefinition descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
             if (descriptor != null) {
                 wizard = wizardRegistry.getWizard(descriptor.getId());
                 if (wizard != null) {
@@ -489,7 +489,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
 
         ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
-        ProjectType2 descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+        ProjectTypeDefinition descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         // change state of buttons
         view.setBackButtonEnabled(currentPage != mainPage);
         view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
