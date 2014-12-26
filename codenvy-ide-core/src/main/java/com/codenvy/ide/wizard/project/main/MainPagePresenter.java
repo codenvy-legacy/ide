@@ -10,24 +10,22 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
+import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
+import com.codenvy.api.project.server.type.ProjectType2;
+import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
-import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.json.JsonHelper;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.NameUtils;
-import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -35,6 +33,7 @@ import com.google.inject.Inject;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,25 +42,32 @@ import java.util.Set;
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
 
-    private MainPageView                  view;
-    private ProjectTypeServiceClient      projectTypeServiceClient;
-    private ProjectTypeWizardRegistry     wizardRegistry;
-    private ProjectTypeDescriptor         typeDescriptor;
-    private ProjectTemplateDescriptor     template;
-    private PreSelectedProjectTypeManager preSelectedProjectTypeManager;
-    private DialogFactory                 dialogFactory;
-    private CoreLocalizationConstant      localizationConstant;
-    private DtoUnmarshallerFactory        dtoUnmarshallerFactory;
-    private DtoFactory dtoFactory;
+    private       MainPageView                  view;
+    private       ProjectTypeServiceClient      projectTypeServiceClient;
+    private final ProjectTypeRegistry           projectTypeRegistry;
+    private       ProjectTypeWizardRegistry     wizardRegistry;
+    private       ProjectType2                  typeDescriptor;
+    private       ProjectTemplateDescriptor     template;
+    private       PreSelectedProjectTypeManager preSelectedProjectTypeManager;
+    private       DialogFactory                 dialogFactory;
+    private       CoreLocalizationConstant      localizationConstant;
+    private       DtoUnmarshallerFactory        dtoUnmarshallerFactory;
+    private       DtoFactory                    dtoFactory;
 
     @Inject
-    public MainPagePresenter(MainPageView view, ProjectTypeServiceClient projectTypeServiceClient, ProjectTypeWizardRegistry wizardRegistry,
-                             PreSelectedProjectTypeManager preSelectedProjectTypeManager, DialogFactory dialogFactory,
-                             CoreLocalizationConstant localizationConstant, DtoUnmarshallerFactory dtoUnmarshallerFactory,
+    public MainPagePresenter(MainPageView view,
+                             ProjectTypeServiceClient projectTypeServiceClient,
+                             ProjectTypeRegistry projectTypeRegistry,
+                             ProjectTypeWizardRegistry wizardRegistry,
+                             PreSelectedProjectTypeManager preSelectedProjectTypeManager,
+                             DialogFactory dialogFactory,
+                             CoreLocalizationConstant localizationConstant,
+                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                              DtoFactory dtoFactory) {
         super("Choose Project", null);
         this.view = view;
         this.projectTypeServiceClient = projectTypeServiceClient;
+        this.projectTypeRegistry = projectTypeRegistry;
         this.wizardRegistry = wizardRegistry;
         this.preSelectedProjectTypeManager = preSelectedProjectTypeManager;
         this.dialogFactory = dialogFactory;
@@ -125,79 +131,71 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         typeDescriptor = null;
         template = null;
         container.setWidget(view);
+        List<ProjectType2> projectTypes = projectTypeRegistry.getProjectTypes();
 
-        final Unmarshallable<Array<ProjectTypeDescriptor>> unmarshaller =
-                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDescriptor.class);
-        projectTypeServiceClient.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDescriptor>>(unmarshaller) {
-            @Override
-            protected void onSuccess(Array<ProjectTypeDescriptor> descriptors) {
-                Map<String, Set<ProjectTypeDescriptor>> descriptorsByCategory = new HashMap<>();
-                ProjectTypeDescriptor defaultProjectTypeDescriptor = null;
+        Map<String, Set<ProjectType2>> descriptorsByCategory = new HashMap<>();
+        ProjectType2 defaultProjectTypeDescriptor = null;
 
-                Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
-                ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
-                for (ProjectTypeDescriptor descriptor : descriptors.asIterable()) {
-                    if (wizardRegistry.getWizard(descriptor.getType()) != null) {
-                        if (!descriptorsByCategory.containsKey(descriptor.getTypeCategory())) {
-                            descriptorsByCategory.put(descriptor.getTypeCategory(), new HashSet<ProjectTypeDescriptor>());
-                        }
-                        descriptorsByCategory.get(descriptor.getTypeCategory()).add(descriptor);
 
-                        // if exist, save the default project type descriptor
-                        if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(descriptor.getType())) {
-                            defaultProjectTypeDescriptor = descriptor;
-                        }
-                    }
-                    if (project == null) {
-                        if (descriptor.getTemplates() != null && !descriptor.getTemplates().isEmpty()) {
-                            for (ProjectTemplateDescriptor templateDescriptor : descriptor.getTemplates()) {
-                                String category = templateDescriptor.getCategory() == null
-                                                  ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
-                                                  : templateDescriptor.getCategory();
-                                if (!samples.containsKey(category)) {
-                                    samples.put(category, new HashSet<ProjectTemplateDescriptor>());
-                                }
-                                samples.get(category).add(templateDescriptor);
-                            }
-                        }
-                    }
+        Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
+        ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
+        for (ProjectType2 type : projectTypes) {
+            if (wizardRegistry.getWizard(type.getId()) != null) {
+                String category = wizardRegistry.getCategoryForProjectType(type.getId());
+                if (!descriptorsByCategory.containsKey(category)) {
+                    descriptorsByCategory.put(category, new HashSet<ProjectType2>());
                 }
+                descriptorsByCategory.get(category).add(type);
 
-                view.setAvailableProjectTypeDescriptors(descriptors);
-                view.setProjectTypeCategories(descriptorsByCategory, samples);
-                if (project != null) {
-                    view.selectProjectType(project.getType());
-                    view.setVisibility(project.getVisibility().equals("public"));
-                    view.setName(project.getName());
-                    view.setDescription(project.getDescription());
-                    projectNameChanged(project.getName());
-                    projectDescriptionChanged(project.getDescription());
-                } else if (defaultProjectTypeDescriptor != null) {
-                    // if no project type, pre select maven
-                    view.selectProjectType(defaultProjectTypeDescriptor.getType());
-                    view.focusOnName();
+                // if exist, save the default project type type
+                if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(type.getId())) {
+                    defaultProjectTypeDescriptor = type;
                 }
             }
+//                    if (project == null) {
+//                        if (type.getTemplates() != null && !type.getTemplates().isEmpty()) {
+//                            for (ProjectTemplateDescriptor templateDescriptor : type.getTemplates()) {
+//                                String category = templateDescriptor.getCategory() == null
+//                                                  ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
+//                                                  : templateDescriptor.getCategory();
+//                                if (!samples.containsKey(category)) {
+//                                    samples.put(category, new HashSet<ProjectTemplateDescriptor>());
+//                                }
+//                                samples.get(category).add(templateDescriptor);
+//                            }
+//                        }
+//                    }
+        }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                dialogFactory.createMessageDialog(localizationConstant.createProjectWarningTitle(),
-                                                  localizationConstant.messagesGetProjectTypesFailed(), null).show();
-                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
-            }
-        });
+        view.setAvailableProjectTypeDescriptors(projectTypes);
+        view.setProjectTypeCategories(descriptorsByCategory, samples);
+        if (project != null) {
+            view.selectProjectType(project.getType());
+            view.setVisibility(project.getVisibility().equals("public"));
+            view.setName(project.getName());
+            view.setDescription(project.getDescription());
+            projectNameChanged(project.getName());
+            projectDescriptionChanged(project.getDescription());
+        } else if (defaultProjectTypeDescriptor != null) {
+            // if no project type, pre select maven
+            view.selectProjectType(defaultProjectTypeDescriptor.getId());
+            view.focusOnName();
+        }
+
+
     }
 
     @Override
-    public void projectTypeSelected(ProjectTypeDescriptor typeDescriptor) {
+    public void projectTypeSelected(ProjectType2 typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
         template = null;
         wizardContext.putData(ProjectWizard.PROJECT_TYPE, typeDescriptor);
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT);
-        project.setType(typeDescriptor.getType());
-        project.setTypeName(typeDescriptor.getTypeName());
-        project.setBuilders(typeDescriptor.getBuilders());
-        project.setRunners(typeDescriptor.getRunners());
+        project.setType(typeDescriptor.getId());
+        project.setTypeName(typeDescriptor.getDisplayName());
+        project.setBuilders(dtoFactory.createDto(BuildersDescriptor.class).withDefault(typeDescriptor.getDefaultBuilder()));
+
+        project.setRunners(dtoFactory.createDto(RunnersDescriptor.class).withDefault(typeDescriptor.getDefaultRunner()));
 
         wizardContext.removeData(ProjectWizard.PROJECT_TEMPLATE);
         delegate.updateControls();

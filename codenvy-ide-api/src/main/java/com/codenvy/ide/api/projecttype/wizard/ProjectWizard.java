@@ -10,11 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
+import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.ide.api.notification.NotificationManager;
+import com.codenvy.ide.api.projecttype.ProjectTypeDescriptor;
 import com.codenvy.ide.api.wizard.DefaultWizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardPage;
@@ -29,12 +30,13 @@ import com.google.inject.Inject;
  */
 public class ProjectWizard extends DefaultWizard {
 
-    public static final WizardContext.Key<ProjectTypeDescriptor>     PROJECT_TYPE        =
+    public static final WizardContext.Key<ProjectType2>              PROJECT_TYPE        =
             new WizardContext.Key<>("Project type");
     public static final WizardContext.Key<ProjectTemplateDescriptor> PROJECT_TEMPLATE    =
             new WizardContext.Key<>("Project template");
     public static final WizardContext.Key<String>                    PROJECT_NAME        = new WizardContext.Key<>("Project name");
     public static final WizardContext.Key<String>                    PROJECT_DESCRIPTION = new WizardContext.Key<>("Project description");
+
 
     /**
      * Value of this key is project description that will used for create or update project.

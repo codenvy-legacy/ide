@@ -31,6 +31,21 @@ public interface ProjectTypeWizardRegistry {
     void addWizard(@Nonnull String projectTypeId, @Nonnull ProjectWizard wizard);
 
     /**
+     * Add projectType to category
+     *
+     * @param projectTypeCategory
+     *         the wizard
+     *
+     * @param projectTypeId
+     *         the project type id
+     */
+    void addProjectTypeToCategory(@Nonnull String projectTypeCategory, @Nonnull String projectTypeId);
+
+
+
+    String getCategoryForProjectType(@Nonnull String projectType);
+
+    /**
      * Gets wizard wizard for project type.
      *
      * @param projectTypeId

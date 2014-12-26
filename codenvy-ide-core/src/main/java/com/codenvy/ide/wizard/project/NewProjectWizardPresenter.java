@@ -14,13 +14,13 @@ import com.codenvy.api.builder.dto.BuilderDescriptor;
 import com.codenvy.api.builder.dto.BuilderEnvironment;
 import com.codenvy.api.builder.gwt.client.BuilderServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
@@ -467,9 +467,9 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     @Override
     public void updateControls() {
         if (currentPage == mainPage) {
-            ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+            ProjectType2 descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
             if (descriptor != null) {
-                wizard = wizardRegistry.getWizard(descriptor.getType());
+                wizard = wizardRegistry.getWizard(descriptor.getId());
                 if (wizard != null) {
                     wizard.setUpdateDelegate(this);
                     if (!wizard.containsPage(mainPageProvider)) {
@@ -489,13 +489,13 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         }
 
         ProjectTemplateDescriptor templateDescriptor = wizardContext.getData(ProjectWizard.PROJECT_TEMPLATE);
-        ProjectTypeDescriptor descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+        ProjectType2 descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
         // change state of buttons
         view.setBackButtonEnabled(currentPage != mainPage);
         view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
-                                    (descriptor != null && descriptor.getType().equals(
+                                    (descriptor != null && descriptor.getId().equals(
                                             com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
 
         if (templateDescriptor != null) {
@@ -504,15 +504,15 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             view.setBuilderEnvironmentConfig(defaultBuilderDescriptionMap.get(builders == null ? null : builders.getDefault()));
             final RunnersDescriptor runners = templateDescriptor.getRunners();
             view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(runners == null ? null : runners.getDefault()));
-            view.setRAMRequired(getRequiredRam(runners));
+//            view.setRAMRequired(getRequiredRam(runners));
             //set info visible
             view.setInfoVisible(true);
         } else if (descriptor != null) {
             view.setRunnerEnvironmentConfig(
-                    runnersDescriptionMap.get(descriptor.getRunners() == null ? null : descriptor.getRunners().getDefault()));
+                    runnersDescriptionMap.get(descriptor.getDefaultRunner()));
             view.setBuilderEnvironmentConfig(
-                    defaultBuilderDescriptionMap.get(descriptor.getBuilders() == null ? null : descriptor.getBuilders().getDefault()));
-            view.setRAMRequired(getRequiredRam(descriptor.getRunners()));
+                    defaultBuilderDescriptionMap.get(descriptor.getDefaultBuilder()));
+//            view.setRAMRequired(getRequiredRam(descriptor.getRunners()));
             view.setInfoVisible(true);
         } else {
             view.setInfoVisible(false);

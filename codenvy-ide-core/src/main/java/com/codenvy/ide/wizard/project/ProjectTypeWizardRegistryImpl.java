@@ -12,18 +12,47 @@ package com.codenvy.ide.wizard.project;
 
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
-import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Evgen Vidolob
  */
 public class ProjectTypeWizardRegistryImpl implements ProjectTypeWizardRegistry {
-    private StringMap<ProjectWizard> map = Collections.createStringMap();
+    private static final String                     DEFAULT_CATEGORY = "Other";
+    private              Map<String, ProjectWizard> map              = new HashMap<>();
+
+    private Map<String, List<String>> categories = new HashMap<>();
+
 
     @Override
     public void addWizard(String projectTypeId, ProjectWizard wizard) {
         map.put(projectTypeId, wizard);
+    }
+
+    @Override
+    public void addProjectTypeToCategory(@Nonnull String projectTypeCategory, @Nonnull String projectTypeId) {
+        List<String> types = categories.get(projectTypeCategory);
+        if (types == null) {
+            categories.put(projectTypeCategory, types = new ArrayList<>());
+        }
+        types.add(projectTypeId);
+
+    }
+
+    @Override
+    public String getCategoryForProjectType(@Nonnull String projectType) {
+        for (String key : categories.keySet()) {
+            if (categories.get(key) != null && categories.get(key).contains(projectType)) {
+                return key;
+            }
+        }
+        return DEFAULT_CATEGORY;
     }
 
     @Override

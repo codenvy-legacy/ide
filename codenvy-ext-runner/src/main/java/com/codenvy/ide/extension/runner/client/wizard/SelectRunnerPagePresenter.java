@@ -12,13 +12,14 @@
 package com.codenvy.ide.extension.runner.client.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.ProjectTypeDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -42,11 +43,12 @@ import java.util.Map;
  */
 public class SelectRunnerPagePresenter extends AbstractWizardPage implements SelectRunnerPageView.ActionDelegate {
 
-    private SelectRunnerPageView   view;
-    private RunnerServiceClient    runnerServiceClient;
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private ProjectServiceClient   projectServiceClient;
-    private DtoFactory             dtoFactory;
+    private       SelectRunnerPageView      view;
+    private       RunnerServiceClient       runnerServiceClient;
+    private       DtoUnmarshallerFactory    dtoUnmarshallerFactory;
+    private       ProjectServiceClient      projectServiceClient;
+    private final ProjectTypeWizardRegistry projectTypeWizardRegistry;
+    private DtoFactory dtoFactory;
 
     /** Create wizard page. */
     @Inject
@@ -54,12 +56,14 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
+                                     ProjectTypeWizardRegistry projectTypeWizardRegistry,
                                      DtoFactory dtoFactory) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
+        this.projectTypeWizardRegistry = projectTypeWizardRegistry;
         this.dtoFactory = dtoFactory;
         view.setDelegate(this);
     }
@@ -124,8 +128,8 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
         runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
-                ProjectTypeDescriptor data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
-                String typeCategory = data.getTypeCategory();
+                ProjectType2 data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
+                String typeCategory = projectTypeWizardRegistry.getCategoryForProjectType(data.getId());
                 if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
                     RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
                     tree.addNode(result.getNode(typeCategory.toLowerCase()));
