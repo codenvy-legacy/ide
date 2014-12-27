@@ -11,6 +11,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
@@ -202,7 +203,7 @@ public class ProjectTreeNodeRenderer implements NodeRenderer<TreeNode<?>> {
             id = "/" + parent.getId() + id;
             parent = parent.getParent();
         }
-        UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(node.getDisplayName()));
+        UIObject.ensureDebugId(element, "projectTree-" + TextUtils.md5(id));
     }
 
     public interface Css extends TreeNodeMutator.Css {
