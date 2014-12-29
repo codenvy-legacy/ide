@@ -23,6 +23,8 @@ public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
 
     void showNoOutline(String cause);
 
+    void enableOutline();
+
     void setTitle(String title);
 
     void clear();
