@@ -15,7 +15,7 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.ProjectNode;
@@ -62,7 +62,7 @@ public class ProjectExplorerPartPresenterTest {
     @Mock
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
     @Mock
-    private AbstractTreeStructure         currentTreeStructure;
+    private TreeStructure                 currentTreeStructure;
     @Mock
     private TreeNode<?>                   selectedNode;
     @Mock

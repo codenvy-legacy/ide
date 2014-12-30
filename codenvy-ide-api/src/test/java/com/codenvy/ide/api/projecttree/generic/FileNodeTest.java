@@ -36,8 +36,8 @@ import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;

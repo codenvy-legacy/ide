@@ -64,6 +64,7 @@ import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
+import com.codenvy.ide.api.projecttree.generic.NodeFactory;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
@@ -277,7 +278,6 @@ public class CoreGinModule extends AbstractGinModule {
 
         GinMultibinder<Theme> themeBinder = GinMultibinder.newSetBinder(binder(), Theme.class);
         themeBinder.addBinding().to(DarkTheme.class);
-//        themeBinder.addBinding().to(LightTheme.class);
 
         // Resources
         bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
@@ -334,9 +334,10 @@ public class CoreGinModule extends AbstractGinModule {
         bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }
 
-    /** Configure project's tree API. */
+    /** Configure bindings for project's tree. */
     private void configureProjectTree() {
         bind(TreeStructureProviderRegistry.class).to(TreeStructureProviderRegistryImpl.class).in(Singleton.class);
+        install(new GinFactoryModuleBuilder().build(NodeFactory.class));
     }
 
     @Provides

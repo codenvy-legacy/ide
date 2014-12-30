@@ -16,30 +16,22 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import javax.annotation.Nonnull;
 
 /**
- * Defines project's tree structure to display its in 'Project Explorer'.
+ * Defines the requirements for an object that can be used as a project's tree structure.
  *
  * @author Artem Zatsarynnyy
  */
-public abstract class AbstractTreeStructure {
-    protected TreeSettings settings;
-
+public interface TreeStructure {
     /**
-     * Creates new tree structure with the specified settings.
-     *
-     * @param settings
-     *         {@link TreeSettings} instance
-     */
-    public AbstractTreeStructure(@Nonnull TreeSettings settings) {
-        this.settings = settings;
-    }
-
-    /**
-     * Returns nodes at the root of the tree structure.
+     * Get nodes at the root of the tree structure.
      *
      * @param callback
      *         callback to return root nodes
      */
-    public abstract void getRoots(AsyncCallback<Array<TreeNode<?>>> callback);
+    void getRootNodes(@Nonnull AsyncCallback<Array<TreeNode<?>>> callback);
+
+    /** Returns settings for this tree structure. */
+    @Nonnull
+    TreeSettings getSettings();
 
     /**
      * Get node by it's full path.
@@ -49,5 +41,5 @@ public abstract class AbstractTreeStructure {
      * @param callback
      *         callback to return node, may return {@code null} if node not found
      */
-    public abstract void getNodeByPath(String path, AsyncCallback<TreeNode<?>> callback);
+    void getNodeByPath(@Nonnull String path, @Nonnull AsyncCallback<TreeNode<?>> callback);
 }

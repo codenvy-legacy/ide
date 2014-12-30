@@ -20,6 +20,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.StringUnmarshaller;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
@@ -32,8 +34,9 @@ import java.util.List;
  */
 public class FileNode extends ItemNode implements VirtualFile {
 
-    public FileNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    @AssistedInject
+    public FileNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, EventBus eventBus,
+                    ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 

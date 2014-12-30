@@ -10,31 +10,38 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree;
 
-import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
+import javax.annotation.Nonnull;
 
 /**
- * Registry for tree structure providers.
+ * Registry for tree structure providers. It also allows to associate project type ID with {@link TreeStructureProvider}.
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeStructureProviderRegistry {
-    /**
-     * Register specified {@link TreeStructureProvider} instance for the given project type ID.
-     *
-     * @param id
-     *         id of the project type for which {@link TreeStructureProvider} need to register
-     * @param provider
-     *         {@link TreeStructureProvider} to register
-     */
-    void registerProvider(String id, TreeStructureProvider provider);
 
     /**
-     * Returns {@link TreeStructureProvider} instance for the given project type ID
-     * or {@link GenericTreeStructureProvider} if none was found.
+     * Returns {@link TreeStructureProvider} that can provide {@link TreeStructure}
+     * for project with the given project type ID or
+     * {@link com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider}
+     * if none was associated.
      *
-     * @param id
-     *         id of the project type for which {@link TreeStructureProvider} need to get
-     * @return {@link TreeStructureProvider}
+     * @param projectTypeId
+     *         id of the project type for which need to get {@link TreeStructureProvider}
+     * @return {@link TreeStructureProvider} that can provide {@link TreeStructure} for project with the given type ID or
+     * {@link com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider} if none was associated
      */
-    TreeStructureProvider getTreeStructureProvider(String id);
+    @Nonnull
+    TreeStructureProvider getTreeStructureProvider(@Nonnull String projectTypeId);
+
+    /**
+     * Associates the given project type ID to the given tree structure provider ID.
+     * If the same {@code projectTypeId} already associated to any {@code treeStructureProviderId} it will be overwritten.
+     *
+     * @param projectTypeId
+     *         ID of the project type to associate with the given {@code projectTypeId}
+     * @param treeStructureProviderId
+     *         ID of the {@code TreeStructureProvider}
+     *         which should be used for project with the given {@code projectTypeId}
+     */
+    void associateProjectTypeToTreeProvider(@Nonnull String projectTypeId, @Nonnull String treeStructureProviderId);
 }
