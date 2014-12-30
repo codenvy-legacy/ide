@@ -345,12 +345,8 @@ public class GapTextStore implements TextStore {
      */
     private void arrayCopy(int srcPos, char[] dest, int destPos, int length) {
         if (length != 0) {
-            for (int i = 0; i < length; i++) {
-                dest[destPos + i] = fContent[srcPos + i];
-            }
-
+            System.arraycopy(fContent, srcPos, dest, destPos, length);
         }
-//            System.arraycopy(fContent, srcPos, dest, destPos, length);
     }
 
     /**
