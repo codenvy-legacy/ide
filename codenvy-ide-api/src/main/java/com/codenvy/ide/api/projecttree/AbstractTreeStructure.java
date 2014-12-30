@@ -50,4 +50,9 @@ public abstract class AbstractTreeStructure {
      *         callback to return node, may return {@code null} if node not found
      */
     public abstract void getNodeByPath(String path, AsyncCallback<TreeNode<?>> callback);
+
+    /** Returns settings for this tree structure. */
+    public TreeSettings getSettings() {
+        return settings;
+    }
 }
