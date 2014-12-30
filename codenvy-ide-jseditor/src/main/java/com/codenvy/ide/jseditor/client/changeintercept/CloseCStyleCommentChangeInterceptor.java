@@ -11,10 +11,12 @@
 package com.codenvy.ide.jseditor.client.changeintercept;
 
 import com.codenvy.ide.jseditor.client.document.ReadOnlyDocument;
-import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+/**
+ * Automatic insertion of c-style /* and /** comment end.
+ */
 public final class CloseCStyleCommentChangeInterceptor implements TextChangeInterceptor {
 
     @Override
@@ -33,9 +35,7 @@ public final class CloseCStyleCommentChangeInterceptor implements TextChangeInte
 
             final String modifiedInsert = "\n" + whitespaces + "* \n" + whitespaces + "*/";
 
-            // the new 'end' position is two lines below the 'from' position and #whitespace + 2 chars on the line
-            final TextPosition newEnd = new TextPosition(change.getFrom().getLine() + 2, whitespaces.length() + 2);
-            return new TextChange.Builder().from(change.getFrom()).to(newEnd).insert(modifiedInsert).build();
+            return new TextChange.Builder().from(change.getFrom()).to(change.getFrom()).insert(modifiedInsert).build();
         } else {
             return null;
         }
