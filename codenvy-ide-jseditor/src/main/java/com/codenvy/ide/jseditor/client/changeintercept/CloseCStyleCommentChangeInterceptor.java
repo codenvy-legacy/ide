@@ -14,6 +14,9 @@ import com.codenvy.ide.jseditor.client.document.ReadOnlyDocument;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+/**
+ * Automatic insertion of c-style /* and /** comment end.
+ */
 public final class CloseCStyleCommentChangeInterceptor implements TextChangeInterceptor {
 
     @Override
