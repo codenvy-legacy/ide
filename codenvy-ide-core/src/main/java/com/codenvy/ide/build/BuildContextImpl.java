@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.build;
 
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.ide.api.build.BuildContext;
 
 /**
@@ -21,6 +22,8 @@ public class BuildContextImpl implements BuildContext {
 
     private boolean building;
 
+    private BuildTaskDescriptor buildTaskDescriptor;
+
     @Override
     public boolean isBuilding() {
         return building;
@@ -29,5 +32,15 @@ public class BuildContextImpl implements BuildContext {
     @Override
     public void setBuilding(boolean building) {
         this.building = building;
+    }
+
+    @Override
+    public BuildTaskDescriptor getBuildTaskDescriptor() {
+        return buildTaskDescriptor;
+    }
+
+    @Override
+    public void setBuildTaskDescriptor(BuildTaskDescriptor buildTaskDescriptor) {
+        this.buildTaskDescriptor = buildTaskDescriptor;
     }
 }

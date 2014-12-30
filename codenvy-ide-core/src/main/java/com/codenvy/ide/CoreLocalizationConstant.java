@@ -312,6 +312,12 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("action.findAction.title")
     String actionFindActionTitle();
 
+    @Key("action.showHiddenFiles.title")
+    String actionShowHiddenFilesTitle();
+
+    @Key("action.showHiddenFiles.description")
+    String actionShowHiddenFilesDescription();
+
     /* Redirect Actions */
     @Key("action.redirectToHelp.title")
     String actionRedirectToHelpTitle();

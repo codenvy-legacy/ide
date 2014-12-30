@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.toolbar;
 
-import org.vectomatic.dom.svg.ui.SVGImage;
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ActionGroup;
@@ -45,6 +42,9 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
+
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * PopupMenu is visual component represents all known Popup Menu.
@@ -267,7 +267,7 @@ public class PopupMenu extends Composite {
                     hotKey = "&nbsp;";
                 } else {
                     hotKey =
-                            "<nobr>&nbsp;[" + hotKey + "]&nbsp;</nobr>";
+                            "<nobr>&nbsp;" + hotKey + "&nbsp;</nobr>";
                 }
 
                 table.setHTML(i, work, hotKey);

@@ -14,7 +14,6 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -120,10 +119,6 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
     /** {@inheritDoc} */
     @Override
     public void showNotification(@Nonnull Notification notification) {
-        PartPresenter activePart = partStack.getActivePart();
-        if (activePart == null || !activePart.equals(this)) {
-            partStack.setActivePart(this);
-        }
         notification.addObserver(this);
         notifications.add(notification);
         notificationMessageStack.addNotification(notification);

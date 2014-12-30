@@ -15,6 +15,7 @@ public interface IdeActions {
     String GROUP_MAIN_MENU      = "mainMenu";
     String GROUP_FILE           = "fileGroup";
     String GROUP_FILE_NEW       = "newGroup";
+    String GROUP_VIEW           = "viewGroup";
     String GROUP_CODE           = "codeGroup";
     String GROUP_IMPORT_PROJECT = "importProjectGroup";
     String GROUP_BUILD          = "buildGroup";

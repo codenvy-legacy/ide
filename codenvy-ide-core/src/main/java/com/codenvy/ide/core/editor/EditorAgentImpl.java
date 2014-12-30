@@ -163,7 +163,9 @@ public class EditorAgentImpl implements EditorAgent {
                 @Override
                 public void propertyChanged(PartPresenter source, int propId) {
                     if (propId == EditorPartPresenter.PROP_INPUT) {
-                        ((HasReadOnlyProperty)editor).setReadOnly(file.isReadOnly());
+                        if(editor instanceof HasReadOnlyProperty) {
+                            ((HasReadOnlyProperty)editor).setReadOnly(file.isReadOnly());
+                        }
                         if(callback != null) {
                             callback.onEditorOpened(editor);
                         }
