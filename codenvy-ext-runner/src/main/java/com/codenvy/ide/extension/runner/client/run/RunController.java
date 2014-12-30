@@ -510,7 +510,11 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
     }
 
     private void startCheckingAppStatus(final ApplicationProcessDescriptor applicationProcessDescriptor) {
-        clientStartTime = System.currentTimeMillis();
+        if (isAnyAppRunning) {
+            clientStartTime = applicationProcessDescriptor.getCreationTime();
+        } else {
+            clientStartTime = System.currentTimeMillis();
+        }
         totalActiveTimeMetric = dtoFactory.createDto(RunnerMetric.class).withDescription("Total active time")
                                           .withName("total_time");
 
