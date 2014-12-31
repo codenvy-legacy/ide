@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.core;
 
+import com.codenvy.ide.part.editor.EditorPartStackPresenter;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import elemental.client.Browser;
 
 import com.codenvy.api.core.rest.shared.dto.Link;
@@ -82,6 +84,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
     private final CoreLocalizationConstant  constant;
     private final DialogFactory             dialogFactory;
+    private final EditorPartStackPresenter  editorPartStackPresenter;
 
     @Inject
     public ProjectStateHandler(AppContext appContext,
@@ -91,7 +94,9 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                                NewProjectWizardPresenter newProjectWizard,
                                CoreLocalizationConstant constant,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                               DialogFactory dialogFactory) {
+                               DialogFactory dialogFactory,
+                               EditorPartStackPresenter editorPartStackPresenter) {
+        this.editorPartStackPresenter = editorPartStackPresenter;
         this.eventBus = eventBus;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
@@ -213,17 +218,28 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         return !project.getProblems().isEmpty();
     }
 
-    private void closeCurrentProject(boolean closingBeforeOpening) {
+    private void closeCurrentProject(final boolean closingBeforeOpening) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
-            ProjectDescriptor closedProject = currentProject.getRootProject();
+            final ProjectDescriptor closedProject = currentProject.getRootProject();
 
             Document.get().setTitle(constant.codenvyTabTitle());
             rewriteBrowserHistory(null);
 
             // notify all listeners about current project has been closed
-            eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject, closingBeforeOpening));
-            appContext.setCurrentProject(null);
+            editorPartStackPresenter.closeAllTabs(new AsyncCallback() {
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Log.error(getClass(), "Error closing files");
+                }
+
+                @Override
+                public void onSuccess(Object o) {
+                    eventBus.fireEvent(ProjectActionEvent.createProjectClosedEvent(closedProject, closingBeforeOpening));
+                    appContext.setCurrentProject(null);
+                }
+            });
         }
     }
 

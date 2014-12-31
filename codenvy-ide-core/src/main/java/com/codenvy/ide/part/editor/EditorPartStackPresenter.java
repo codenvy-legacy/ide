@@ -48,7 +48,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
     @Inject
-    public EditorPartStackPresenter(final EditorPartStackView view, EventBus eventBus,
+    public EditorPartStackPresenter(EditorPartStackView view, EventBus eventBus,
                  PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
@@ -64,14 +64,39 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                for (int i = parts.size() - 1; i >= 0; i--) {
-                    PartPresenter part = parts.get(i);
-                    if (part instanceof EditorPartPresenter) {
-                        removePart(part);
-                    }
-                }
+               //do nothing
             }
         });
+    }
+
+    /**
+     * This method closes all tabs and do action from asyncCallback
+     * @param asyncCallback this callback close project after close all tabs
+     */
+    public void closeAllTabs(AsyncCallback asyncCallback) {
+        for (int i = parts.size() - 1; i >= 0; i--) {
+            PartPresenter part = parts.get(i);
+            if (part instanceof EditorPartPresenter) {
+                removePart(part, asyncCallback);
+            }
+        }
+    }
+
+    /**
+     * Remove part
+     * @param part part for closing
+     * @param asyncCallback
+     */
+    public void removePart(PartPresenter part, AsyncCallback asyncCallback) {
+        close(part, asyncCallback);
+    }
+
+    /**
+     * this method checks that all tabs are closed
+     * @return
+     */
+    public boolean allTabsAreClosed() {
+        return parts.size() == 0;
     }
 
     /** {@inheritDoc} */
@@ -172,10 +197,19 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     protected void close(final PartPresenter part) {
+       close(part, null);
+    }
+
+    /**
+     * close tab and do some action from asyncCallback
+     * @param part part for closing
+     * @param asyncCallback callback for closing project
+     */
+    protected void close(final PartPresenter part, final AsyncCallback asyncCallback) {
         part.onClose(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
-
+                Log.error(getClass(), "Error closing tab");
             }
 
             @Override
@@ -187,6 +221,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
                     partStackHandler.onActivePartChanged(activePart);
+
+                    if (asyncCallback != null && allTabsAreClosed()) {
+                        asyncCallback.onSuccess(null);
+                    }
                 }
             }
         });
