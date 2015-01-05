@@ -46,6 +46,7 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
@@ -208,7 +209,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 } else {
                     final TreeNode<?> node = event.getNode();
 
-                    final ArrayList<Object> oldNodes = new ArrayList<Object>();
+                    final List<Object> oldNodes = new ArrayList<Object>();
                     for (TreeNode item : node.getChildren().asIterable()) {
                         oldNodes.add(item.getData());
                     }
