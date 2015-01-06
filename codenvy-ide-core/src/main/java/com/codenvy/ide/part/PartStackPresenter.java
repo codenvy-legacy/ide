@@ -246,7 +246,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         List<PartPresenter> presenters = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {
             presenters.add(parts.get(i));
-    }
+        }
         return presenters;
     }
 

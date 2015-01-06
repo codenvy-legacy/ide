@@ -70,33 +70,16 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     }
 
     /**
-     * This method closes all tabs and do action from asyncCallback
-     * @param asyncCallback this callback close project after close all tabs
+     * This method closes all tabs and after that, do action from asyncCallback
+     * @param asyncCallback this is callback with some action(f.e. close project)
      */
     public void closeAllTabs(AsyncCallback asyncCallback) {
         for (int i = parts.size() - 1; i >= 0; i--) {
             PartPresenter part = parts.get(i);
             if (part instanceof EditorPartPresenter) {
-                removePart(part, asyncCallback);
+                close(part, asyncCallback);
             }
         }
-    }
-
-    /**
-     * Remove part
-     * @param part part for closing
-     * @param asyncCallback
-     */
-    public void removePart(PartPresenter part, AsyncCallback asyncCallback) {
-        close(part, asyncCallback);
-    }
-
-    /**
-     * this method checks that all tabs are closed
-     * @return
-     */
-    public boolean allTabsAreClosed() {
-        return parts.size() == 0;
     }
 
     /** {@inheritDoc} */
@@ -174,6 +157,11 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     public void setActivePart(PartPresenter part) {
+        if (part == null) {
+            view.setActiveTab(-1);
+            return;
+        }
+
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
@@ -182,11 +170,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         }
         activePart = part;
 
-        if (part == null) {
-            view.setActiveTab(-1);
-        } else {
-            view.setActiveTab(parts.indexOf(activePart));
-        }
+        view.setActiveTab(parts.indexOf(activePart));
         // request part stack to get the focus
         onRequestFocus();
 
@@ -222,7 +206,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
                     partStackHandler.onActivePartChanged(activePart);
 
-                    if (asyncCallback != null && allTabsAreClosed()) {
+                    if (asyncCallback != null && parts.isEmpty()) {
                         asyncCallback.onSuccess(null);
                     }
                 }
