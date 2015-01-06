@@ -35,6 +35,12 @@ public interface BuilderLocalizationConstant extends Messages {
     @Key("control.clearBuilderConsole.text")
     String clearConsoleControlTitle();
 
+    @Key("control.browseTargetFolder.text")
+    String browseTargetFolderActionTitle();
+
+    @Key("control.browseTargetFolder.description")
+    String browseTargetFolderActionDescription();
+
     @Key("control.clearBuilderConsole.description")
     String clearConsoleControlDescription();
 

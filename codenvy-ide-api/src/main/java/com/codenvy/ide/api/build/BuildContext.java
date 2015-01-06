@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.build;
 
+import com.codenvy.api.builder.dto.BuildTaskDescriptor;
+
 /**
  * Context interface, used for communication between different action that used builder to avoid
  * running several builder tasks in one time.
@@ -32,4 +34,18 @@ public interface BuildContext {
      *         the building
      */
     void setBuilding(boolean building);
+
+    /**
+     * Returns descriptor of the last build task.
+     *
+     * @return descriptor of the last build task
+     */
+    BuildTaskDescriptor getBuildTaskDescriptor();
+
+    /**
+     * Sets descriptor of build task.
+     *
+     * @param buildTaskDescriptor descriptor of build task
+     */
+    void setBuildTaskDescriptor(BuildTaskDescriptor buildTaskDescriptor);
 }

@@ -116,6 +116,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
             lastHasOutlineActivePart = (HasOutline)event.getActivePart();
             if (lastHasOutlineActivePart.getOutline() != null) {
                 lastHasOutlineActivePart.getOutline().go(view.getContainer());
+                view.enableOutline();
             } else {
                 view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
             }

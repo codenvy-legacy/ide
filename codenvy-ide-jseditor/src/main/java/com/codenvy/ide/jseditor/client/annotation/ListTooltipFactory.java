@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.annotation;
 
+import elemental.dom.Element;
+import elemental.html.LIElement;
+
 import com.codenvy.ide.ui.Tooltip;
 import com.codenvy.ide.ui.Tooltip.Builder;
 import com.codenvy.ide.ui.Tooltip.TooltipPositionerBuilder;
@@ -18,9 +21,6 @@ import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.ui.menu.PositionController.Positioner;
 import com.codenvy.ide.ui.menu.PositionController.PositionerBuilder;
 import com.codenvy.ide.util.dom.Elements;
-
-import elemental.dom.Element;
-import elemental.html.LIElement;
 
 /**
  * Factory for a tooltip that shows list of messages.
@@ -62,7 +62,7 @@ public final class ListTooltipFactory {
             final Element list = Elements.createUListElement();
             for (final String tooltip : tooltipText) {
                 final LIElement item = Elements.createLiElement();
-                item.setInnerText(tooltip);
+                item.appendChild(Elements.createTextNode(tooltip));
                 list.appendChild(item);
             }
             content.appendChild(list);

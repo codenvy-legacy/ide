@@ -28,9 +28,22 @@ public interface EditorAgent {
     /**
      * Open editor with given file
      *
-     * @param file
+     * @param file the file to open
      */
     void openEditor(@Nonnull final VirtualFile file);
+
+    /**
+     * Open editor with given file, call callback when editor fully loaded and initialized.
+     * @param file the file to open
+     * @param callback
+     */
+    void openEditor(@Nonnull VirtualFile file, @Nonnull OpenEditorCallback callback);
+
+    /**
+     * Sets editor as active(switch tabs and pace cursor)
+     * @param editor the editor that must be active
+     */
+    void activateEditor(@Nonnull EditorPartPresenter editor);
 
     /**
      * Returns array of EditorPartPresenters whose content have changed since the last save operation.
@@ -61,4 +74,8 @@ public interface EditorAgent {
      */
     @Nullable
     EditorPartPresenter getActiveEditor();
+
+    public interface OpenEditorCallback{
+        void onEditorOpened(EditorPartPresenter editor);
+    }
 }

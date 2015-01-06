@@ -38,6 +38,7 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.CancelCallback;
 import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.MessageBus;
@@ -45,9 +46,11 @@ import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
@@ -90,8 +93,11 @@ public class BuildController implements Notification.OpenNotificationHandler {
     private       BuilderMetric       lastWaitingTimeLimit;
     private       EditorAgent         editorAgent;
 
+    private         String              baseUrl;
+
     @Inject
-    protected BuildController(EventBus eventBus,
+    protected BuildController(@Named("restContext") String baseUrl,
+                              EventBus eventBus,
                               WorkspaceAgent workspaceAgent,
                               AppContext appContext,
                               final BuilderConsolePresenter console,
@@ -104,6 +110,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               MessageBus messageBus,
                               BuildContext buildContext,
                               DialogFactory dialogFactory) {
+        this.baseUrl = baseUrl;
+
         this.workspaceAgent = workspaceAgent;
         this.appContext = appContext;
         this.console = console;
@@ -191,6 +199,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
         }
 
         lastBuildTaskDescriptor = null;
+        buildContext.setBuildTaskDescriptor(null);
         activeProject = appContext.getCurrentProject().getProjectDescription();
 
         notification = new Notification(constant.buildStarted(activeProject.getName()), PROGRESS, BuildController.this);
@@ -207,6 +216,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                           @Override
                           protected void onSuccess(BuildTaskDescriptor result) {
                               lastBuildTaskDescriptor = result;
+                              buildContext.setBuildTaskDescriptor(result);
                               if (result.getStatus() == BuildStatus.SUCCESSFUL) {
                                   // if project wasn't changed from the last build,
                                   // we get result immediately without re-build
@@ -237,6 +247,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                     @Override
                     protected void onMessageReceived(BuildTaskDescriptor result) {
                         lastBuildTaskDescriptor = result;
+                        buildContext.setBuildTaskDescriptor(result);
                         onBuildStatusUpdated(result);
                     }
 
@@ -296,6 +307,26 @@ public class BuildController implements Notification.OpenNotificationHandler {
         }
     }
 
+    /**
+     * Returns URL to the target folder.
+     *
+     * @param descriptor build task descriptor
+     * @return url to the target folder of the build
+     */
+    private String getTargetFolderURL(BuildTaskDescriptor descriptor) {
+        String url = Window.Location.getProtocol() + "//"
+                 + Window.Location.getHost() + baseUrl + "/builder/"
+                 + Config.getCurrentWorkspace().getId()
+                 + "/browse/"
+                 + descriptor.getTaskId()
+                 + "?path=target";
+
+        return "Browse <a href=\"" + url + "\" target=\"_blank\" " +
+               "style=\"color: #61b7ef;\"" +
+               "onmouseover=\"this.style.textDecoration='underline';\" " +
+               "onmouseout=\"this.style.textDecoration='none';\" " +
+               " ><b>target</b></a> folder of the build";
+    }
 
     /** Process changing build status. */
     private void onBuildStatusUpdated(BuildTaskDescriptor descriptor) {
@@ -311,6 +342,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 console.setCurrentBuilderStatus(BuilderStatus.DONE);
                 console.print("[INFO] " + notification.getMessage());
 
+                console.print("[MAVEN] " + getTargetFolderURL(descriptor));
+
                 buildContext.setBuilding(false);
                 break;
             case FAILED:
@@ -324,6 +357,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
 
                 console.setCurrentBuilderStatus(BuilderStatus.FAILED);
                 console.print("[ERROR] " + notification.getMessage());
+
+                console.print("[MAVEN] " + getTargetFolderURL(descriptor));
 
                 buildContext.setBuilding(false);
                 break;

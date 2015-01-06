@@ -11,6 +11,7 @@
 package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;

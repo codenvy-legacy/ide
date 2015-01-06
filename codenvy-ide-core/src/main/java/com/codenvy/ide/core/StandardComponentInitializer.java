@@ -32,6 +32,7 @@ import com.codenvy.ide.actions.RenameItemAction;
 import com.codenvy.ide.actions.SaveAction;
 import com.codenvy.ide.actions.SaveAllAction;
 import com.codenvy.ide.actions.ShowAboutAction;
+import com.codenvy.ide.actions.ShowHiddenFilesAction;
 import com.codenvy.ide.actions.ShowPreferencesAction;
 import com.codenvy.ide.actions.UndoAction;
 import com.codenvy.ide.actions.UploadFileAction;
@@ -145,6 +146,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private OpenFileAction openFileAction;
+
+    @Inject
+    private ShowHiddenFilesAction showHiddenFilesAction;
 
     @Inject
     private FormatterAction formatterAction;
@@ -328,6 +332,11 @@ public class StandardComponentInitializer {
         fileGroup.add(renameItemAction);
         fileGroup.add(deleteItemAction);
         fileGroup.add(saveGroup);
+
+        // Compose View menu
+        DefaultActionGroup viewGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_VIEW);
+        actionManager.registerAction("showHideHiddenFiles", showHiddenFilesAction);
+        viewGroup.add(showHiddenFilesAction);
 
         // Compose Code menu
         DefaultActionGroup codeGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_CODE);
