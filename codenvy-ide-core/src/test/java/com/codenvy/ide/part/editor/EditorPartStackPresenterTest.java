@@ -31,7 +31,6 @@ import org.mockito.*;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -98,7 +97,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
 
     @Before
     public void init(){
-        MockitoAnnotations.initMocks(this);
         presenter = new EditorPartStackPresenter(view, eventBus, partStackEventHandler, listOpenedFilesPresenter);
     }
 
