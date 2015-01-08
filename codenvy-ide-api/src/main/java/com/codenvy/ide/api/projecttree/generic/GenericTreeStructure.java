@@ -85,7 +85,7 @@ public class GenericTreeStructure implements TreeStructure {
                 if (path.startsWith("/")) {
                     p = path.substring(1);
                 }
-                refreshAndGetChildByName(project, p.split("/"), 1, new AsyncCallback<TreeNode<?>>() {
+                getNodeByPathRecursively(project, p, project.getId().length() + 1, new AsyncCallback<TreeNode<?>>() {
                     @Override
                     public void onSuccess(TreeNode<?> result) {
                         callback.onSuccess(result);
@@ -105,17 +105,17 @@ public class GenericTreeStructure implements TreeStructure {
         });
     }
 
-    private void refreshAndGetChildByName(TreeNode<?> node, final String[] path, final int index,
-                                          final AsyncCallback<TreeNode<?>> callback) {
+    private void getNodeByPathRecursively(TreeNode<?> node, final String path, final int offset, final AsyncCallback<TreeNode<?>> callback) {
         node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
             @Override
             public void onSuccess(TreeNode<?> result) {
                 for (TreeNode<?> childNode : result.getChildren().asIterable()) {
-                    if (childNode.getId().equals(path[index])) {
-                        if (index + 1 == path.length) {
+                    if (path.startsWith(childNode.getId(), offset)) {
+                        final int nextOffset = offset + childNode.getId().length() + 1;
+                        if (nextOffset > path.length()) {
                             callback.onSuccess(childNode);
                         } else {
-                            refreshAndGetChildByName(childNode, path, index + 1, callback);
+                            getNodeByPathRecursively(childNode, path, nextOffset, callback);
                         }
                         return;
                     }
