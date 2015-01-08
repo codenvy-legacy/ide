@@ -18,13 +18,14 @@ import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
@@ -42,16 +43,15 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     protected final EventBus               eventBus;
-    protected       TreeSettings           settings;
     private         boolean                opened;
 
-    public ProjectNode(TreeNode<?> parent, ProjectDescriptor data, GenericTreeStructure treeStructure, TreeSettings settings,
+    @AssistedInject
+    public ProjectNode(@Assisted TreeNode<?> parent, @Assisted ProjectDescriptor data, @Assisted GenericTreeStructure treeStructure,
                        EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
 
         this.treeStructure = treeStructure;
-        this.settings = settings;
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -77,6 +77,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public ProjectNode getProject() {
         return this;
@@ -101,7 +102,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
         getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> childItems) {
-                final boolean isShowHiddenItems = settings.isShowHiddenItems();
+                final boolean isShowHiddenItems = treeStructure.getSettings().isShowHiddenItems();
                 // remove child nodes for not existed items
                 purgeNodes(childItems);
                 // add child nodes for new items
@@ -109,7 +110,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         AbstractTreeNode node = createChildNode(item);
                         if (node != null) {
-                            children.add(node);
+                            cachedChildren.add(node);
                         }
                     }
                 }
@@ -206,7 +207,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
 
     /**
      * Returns filtered {@code items} array that contains only items
-     * for which we haven't appropriate node in this node's children.
+     * for which we haven't appropriate node in this node's cachedChildren.
      *
      * @param items
      *         array of {@link ItemReference} to filter

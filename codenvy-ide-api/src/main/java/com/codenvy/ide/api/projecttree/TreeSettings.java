@@ -11,14 +11,15 @@
 package com.codenvy.ide.api.projecttree;
 
 /**
- * The settings for the project tree.
+ * The settings for the project tree structure.
  *
  * @author Artem Zatsarynnyy
  */
 public interface TreeSettings {
-    /** The default settings for the project tree. */
+    /** The default settings. */
     TreeSettings DEFAULT = new TreeSettings() {
         private boolean showHiddenItems;
+
         @Override
         public boolean isShowHiddenItems() {
             return showHiddenItems;

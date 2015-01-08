@@ -17,8 +17,8 @@ import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class ShowHiddenFilesActionTest {
 
     @Before
     public void setUp() {
-        AbstractTreeStructure tree = mock(AbstractTreeStructure.class);
+        TreeStructure tree = mock(TreeStructure.class);
         CurrentProject currentProject = mock(CurrentProject.class);
         when(tree.getSettings()).thenReturn(treeSettings);
         when(currentProject.getCurrentTree()).thenReturn(tree);

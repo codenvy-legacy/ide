@@ -91,25 +91,6 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> 
     /** {@inheritDoc} */
     @Override
     public TreeNode<?> getNodeByPath(TreeNode<?> root, Array<String> relativeNodePath) {
-//        TreeNode localRoot = root;
-//        for (int i = 0; i < relativeNodePath.size(); i++) {
-//            final String path = relativeNodePath.get(i);
-//            if (localRoot != null) {
-//                Array<TreeNode> children = localRoot.getChildren();
-//                localRoot = null;
-//                for (int j = 0; j < children.size(); j++) {
-//                    TreeNode node = children.get(i);
-//                    if (node.getDisplayName().isEquals(path)) {
-//                        localRoot = node;
-//                        break;
-//                    }
-//                }
-//
-//                if (i == (relativeNodePath.size() - 1)) {
-//                    return localRoot;
-//                }
-//            }
-//        }
         return null;
     }
 }

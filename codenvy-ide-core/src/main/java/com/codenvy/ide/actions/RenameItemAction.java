@@ -26,7 +26,7 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
@@ -276,7 +276,7 @@ public class RenameItemAction extends Action {
     private void checkEditor(String filePathBeforeRename, String filePathAfterRename) {
         final EditorPartPresenter editor = editorAgent.getOpenedEditors().remove(filePathBeforeRename);
         if (editor != null) {
-            AbstractTreeStructure currentTreeStructure = appContext.getCurrentProject().getCurrentTree();
+            TreeStructure currentTreeStructure = appContext.getCurrentProject().getCurrentTree();
             currentTreeStructure.getNodeByPath(filePathAfterRename, new AsyncCallback<TreeNode<?>>() {
                 @Override
                 public void onFailure(Throwable caught) {
