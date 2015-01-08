@@ -65,11 +65,13 @@ public class FindReplaceAction extends Action {
         String file = parameters.get("in");
         String find = parameters.get("find");
         String replace = parameters.get("replace");
+        String mode = parameters.get("replaceMode");
 
         final ReplacementSet replacementSet = dtoFactory.createDto(ReplacementSet.class).withFiles(Arrays.asList(file))
                                                         .withEntries(Arrays.asList(dtoFactory.createDto(Variable.class)
                                                                                              .withFind(find)
-                                                                                             .withReplace(replace)));
+                                                                                             .withReplace(replace)
+                                                                                             .withReplacemode(mode)));
 
         vfsServiceClient.replaceInCurrentWorkspace(appContext.getCurrentProject().getRootProject(),
                                                    Collections.createArray(replacementSet),
