@@ -12,7 +12,10 @@ package com.codenvy.ide.part.editor;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-import com.codenvy.ide.api.parts.*;
+import com.codenvy.ide.api.parts.PartPresenter;
+import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.codenvy.ide.api.parts.PartStackView;
+import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Node;
@@ -27,22 +30,29 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * Testing {@link com.codenvy.ide.part.editor.EditorPartStackPresenter} functionality.
- *
  * @author Alexander Andrienko
  */
 @GwtModule("com.codenvy.ide.Core")
@@ -50,53 +60,46 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
 
     @Mock
     private PartStackUIResources partStackUIResources;
-
     @Mock
     private Resources resources;
 
     @Mock
-    private EditorPartStackView view;
-
-    @Mock
     private EditorPartPresenter part1;
-
     @Mock
     private EditorPartPresenter part2;
-
     @Mock
     private EditorPartPresenter part3;
-
-    @Mock
-    private PartStackView.TabItem item;
-
-    @Mock
-    private PartStackView.TabItem item2;
-
-    @Mock
-    private PartStackView.TabItem item3;
-
-    @Mock
-    private EventBus eventBus;
-
-    @Mock
-    private ListOpenedFilesPresenter listOpenedFilesPresenter;
-
-    @Mock
-    private AsyncCallback asyncCallback;
-
     @Mock
     private List<PartPresenter> parts;
 
     @Mock
-    private  PartStackView.ActionDelegate actionDelegate;
+    private PartStackView.TabItem item;
+    @Mock
+    private PartStackView.TabItem item2;
+    @Mock
+    private PartStackView.TabItem item3;
 
+    /*
+     * Variables for constructor
+     */
+    @Mock
+    private EditorPartStackView view;
+    @Mock
+    private EventBus eventBus;
     @Mock
     private EditorPartStackPresenter.PartStackEventHandler partStackEventHandler;
+    @Mock
+    private ListOpenedFilesPresenter listOpenedFilesPresenter;
+
+    @Mock
+    private PartStackView.ActionDelegate actionDelegate;
+    @Mock
+    private AsyncCallback asyncCallback;
 
     private EditorPartStackPresenter presenter;
 
     @Before
-    public void init(){
+    public void setUp() {
         presenter = new EditorPartStackPresenter(view, eventBus, partStackEventHandler, listOpenedFilesPresenter);
     }
 
@@ -125,7 +128,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback1 = asyncRequestCallbackCaptor.getValue();
 
         Method onSuccess = GwtReflectionUtils.getMethod(callback1.getClass(), "onSuccess");
-        onSuccess.invoke(callback1, (Void)null);
+        onSuccess.invoke(callback1, (Void) null);
 
         verify(view).removeTab(anyInt());
 
@@ -144,7 +147,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback2 = asyncRequestCallbackCaptor2.getValue();
 
         Method onSuccess2 = GwtReflectionUtils.getMethod(callback2.getClass(), "onSuccess");
-        onSuccess2.invoke(callback2, (Void)null);
+        onSuccess2.invoke(callback2, (Void) null);
 
         verify(view).removeTab(anyInt());
 
@@ -164,7 +167,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback3 = asyncRequestCallbackCaptor3.getValue();
 
         Method onSuccess3 = GwtReflectionUtils.getMethod(callback3.getClass(), "onSuccess");
-        onSuccess3.invoke(callback3, (Void)null);
+        onSuccess3.invoke(callback3, (Void) null);
 
         verify(view).removeTab(anyInt());
 
@@ -202,7 +205,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback1 = asyncRequestCallbackCaptor.getValue();
 
         Method onSuccess = GwtReflectionUtils.getMethod(callback1.getClass(), "onSuccess");
-        onSuccess.invoke(callback1, (Void)null);
+        onSuccess.invoke(callback1, (Void) null);
 
         verify(view).removeTab(anyInt());
 
@@ -221,7 +224,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback2 = asyncRequestCallbackCaptor2.getValue();
 
         Method onSuccess2 = GwtReflectionUtils.getMethod(callback2.getClass(), "onSuccess");
-        onSuccess2.invoke(callback2, (Void)null);
+        onSuccess2.invoke(callback2, (Void) null);
 
         verify(view).removeTab(anyInt());
 
@@ -241,7 +244,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         AsyncCallback callback3 = asyncRequestCallbackCaptor3.getValue();
 
         Method onSuccess3 = GwtReflectionUtils.getMethod(callback3.getClass(), "onSuccess");
-        onSuccess3.invoke(callback3, (Void)null);
+        onSuccess3.invoke(callback3, (Void) null);
 
         verify(view).removeTab(anyInt());
 
