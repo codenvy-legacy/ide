@@ -14,7 +14,6 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -34,9 +33,9 @@ import org.mockito.stubbing.Answer;
 import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -76,7 +75,7 @@ public class ProjectNodeTest {
         ProjectNode parentProjectNode = mock(ProjectNode.class);
         Array<TreeNode<?>> children = Collections.createArray();
         when(parentProjectNode.getChildren()).thenReturn(children);
-        projectNode = new ProjectNode(parentProjectNode, projectDescriptor, null, TreeSettings.DEFAULT, eventBus, projectServiceClient,
+        projectNode = new ProjectNode(parentProjectNode, projectDescriptor, null, eventBus, projectServiceClient,
                                       dtoUnmarshallerFactory);
     }
 

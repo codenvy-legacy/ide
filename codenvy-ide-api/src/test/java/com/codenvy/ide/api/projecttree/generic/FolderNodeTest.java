@@ -37,9 +37,9 @@ import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -77,7 +77,7 @@ public class FolderNodeTest {
     public void setUp() {
         when(itemReference.getPath()).thenReturn(ITEM_PATH);
         when(itemReference.getName()).thenReturn(ITEM_NAME);
-        folderNode = new FolderNode(projectNode, itemReference, null, null, eventBus, editorAgent, projectServiceClient,
+        folderNode = new FolderNode(projectNode, itemReference, null, eventBus, editorAgent, projectServiceClient,
                                     dtoUnmarshallerFactory);
 
         final Array<TreeNode<?>> children = Collections.createArray();

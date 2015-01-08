@@ -14,19 +14,16 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
-import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.Openable;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
@@ -47,8 +44,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
@@ -66,18 +61,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private CoreLocalizationConstant      coreLocalizationConstant;
     private AppContext                    appContext;
     private TreeStructureProviderRegistry treeStructureProviderRegistry;
-    private AbstractTreeStructure         currentTreeStructure;
+    private TreeStructure                 currentTreeStructure;
     private DeleteNodeHandler             deleteNodeHandler;
-
-    private NotificationManager           notificationManager;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenu contextMenu,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler,
-                                        NotificationManager notificationManager) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenu = contextMenu;
@@ -87,7 +79,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.deleteNodeHandler = deleteNodeHandler;
-        this.notificationManager = notificationManager;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -103,7 +94,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onOpen() {
         if (Config.getProjectName() == null) {
-            setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+            setTree(new ProjectListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
         } else {
             projectServiceClient.getProject(Config.getProjectName(), new AsyncRequestCallback<ProjectDescriptor>() {
                 @Override
@@ -112,7 +103,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                    setTree(new ProjectListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
                 }
             });
         }
@@ -157,7 +148,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             @Override
             public void onProjectOpened(ProjectActionEvent event) {
                 final ProjectDescriptor project = event.getProject();
-                setTree(treeStructureProviderRegistry.getTreeStructureProvider(project.getType()).newTreeStructure(project));
+                setTree(treeStructureProviderRegistry.getTreeStructureProvider(project.getType()).get());
                 view.setProjectHeader(event.getProject());
             }
 
@@ -165,7 +156,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
             public void onProjectClosed(ProjectActionEvent event) {
                 // this isn't case when some project going to open while previously opened project is closing
                 if (!event.isCloseBeforeOpening()) {
-                    setTree(new ProjectListStructure(TreeSettings.DEFAULT, eventBus, projectServiceClient, dtoUnmarshallerFactory));
+                    setTree(new ProjectListStructure(eventBus, projectServiceClient, dtoUnmarshallerFactory));
                     view.hideProjectHeader();
                 }
             }
@@ -215,22 +206,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 } else {
                     final TreeNode<?> node = event.getNode();
 
-                    final List<Object> oldNodes = new ArrayList<Object>();
-                    for (TreeNode item : node.getChildren().asIterable()) {
-                        oldNodes.add(item.getData());
-                    }
-
                     node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                         @Override
                         public void onSuccess(TreeNode<?> result) {
                             updateNode(node);
-
-                            Array<TreeNode<?>> newNodes = node.getChildren();
-                            for (TreeNode item : newNodes.asIterable()) {
-                                if (!oldNodes.contains(item.getData())) {
-                                    view.selectAndExpandNode(item);
-                                }
-                            }
+                            view.selectNode(node);
                         }
 
                         @Override
@@ -304,52 +284,12 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         view.getSelectedNode().processNodeAction();
     }
 
-    public TreeNode<?> getNodeByPath(TreeNode<?> root, Array<String> relativeNodePath) {
-        TreeNode localRoot = root;
-        for (int i = 0; i < relativeNodePath.size(); i++) {
-            final String path = relativeNodePath.get(i);
-            if (localRoot != null) {
-                Array<TreeNode> children = localRoot.getChildren();
-                localRoot = null;
-                for (int j = 0; j < children.size(); j++) {
-                    TreeNode node = children.get(i);
-                    if (node.getDisplayName().equals(path)) {
-                        localRoot = node;
-                        break;
-                    }
-                }
-
-                if (i == (relativeNodePath.size() - 1)) {
-                    return localRoot;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void selectItemByPath(final String itemPath) {
-        final CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            currentProject.getCurrentTree().getNodeByPath(itemPath, new AsyncCallback<TreeNode<?>>() {
-                @Override
-                public void onSuccess(TreeNode<?> result) {
-                    view.selectNode(result);
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    //notificationManager.showNotification(new Notification(localization.unableOpenFile(filePath), WARNING));
-                }
-            });
-        }
-    }
-
-    private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
+    private void setTree(@Nonnull final TreeStructure treeStructure) {
         currentTreeStructure = treeStructure;
         if (appContext.getCurrentProject() != null) {
             appContext.getCurrentProject().setCurrentTree(currentTreeStructure);
         }
-        treeStructure.getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
+        treeStructure.getRootNodes(new AsyncCallback<Array<TreeNode<?>>>() {
             @Override
             public void onSuccess(Array<TreeNode<?>> result) {
                 view.setRootNodes(result);

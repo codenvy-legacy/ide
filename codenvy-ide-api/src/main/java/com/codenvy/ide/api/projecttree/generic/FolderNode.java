@@ -17,13 +17,14 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
@@ -36,14 +37,13 @@ import javax.annotation.Nullable;
 public class FolderNode extends ItemNode {
     protected final GenericTreeStructure treeStructure;
     protected final EditorAgent          editorAgent;
-    protected       TreeSettings         settings;
 
-    public FolderNode(TreeNode<?> parent, ItemReference data, GenericTreeStructure treeStructure, TreeSettings settings,
+    @AssistedInject
+    public FolderNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, @Assisted GenericTreeStructure treeStructure,
                       EventBus eventBus, EditorAgent editorAgent, ProjectServiceClient projectServiceClient,
                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
         this.treeStructure = treeStructure;
-        this.settings = settings;
         this.editorAgent = editorAgent;
     }
 
@@ -59,18 +59,21 @@ public class FolderNode extends ItemNode {
         getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> childItems) {
-                final boolean isShowHiddenItems = settings.isShowHiddenItems();
+                final boolean isShowHiddenItems = treeStructure.getSettings().isShowHiddenItems();
                 // remove child nodes for not existed items
-                purgeNodes(childItems);
+//                purgeNodes(childItems);
                 // add child nodes for new items
-                for (ItemReference item : filterNewItems(childItems).asIterable()) {
+//                for (ItemReference item : filterNewItems(childItems).asIterable()) {
+                Array<TreeNode<?>> newChildren = Collections.createArray();
+                for (ItemReference item : childItems.asIterable()) {
                     if (isShowHiddenItems || !item.getName().startsWith(".")) {
                         AbstractTreeNode node = createChildNode(item);
                         if (node != null) {
-                            children.add(node);
+                            newChildren.add(node);
                         }
                     }
                 }
+                setChildren(newChildren);
                 callback.onSuccess(FolderNode.this);
             }
 
@@ -82,12 +85,12 @@ public class FolderNode extends ItemNode {
     }
 
     /**
-     * Method helps to retrieve children by the specified path using Codenvy Project API.
+     * Method helps to retrieve cachedChildren by the specified path using Codenvy Project API.
      *
      * @param path
-     *         path to retrieve children
+     *         path to retrieve cachedChildren
      * @param callback
-     *         callback to return retrieved children
+     *         callback to return retrieved cachedChildren
      */
     protected void getChildren(String path, final AsyncCallback<Array<ItemReference>> callback) {
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
@@ -116,7 +119,7 @@ public class FolderNode extends ItemNode {
 
     /**
      * Returns filtered {@code items} array that contains only items
-     * for which we haven't appropriate node in this node's children.
+     * for which we haven't appropriate node in this node's cachedChildren.
      *
      * @param items
      *         array of {@link ItemReference} to filter
