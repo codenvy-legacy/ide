@@ -47,6 +47,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
@@ -212,11 +214,23 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     setTree(currentTreeStructure);
                 } else {
                     final TreeNode<?> node = event.getNode();
+
+                    final List<Object> oldNodes = new ArrayList<Object>();
+                    for (TreeNode item : node.getChildren().asIterable()) {
+                        oldNodes.add(item.getData());
+                    }
+
                     node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
                         @Override
                         public void onSuccess(TreeNode<?> result) {
                             updateNode(node);
-                            view.selectNode(node);
+
+                            Array<TreeNode<?>> newNodes = node.getChildren();
+                            for (TreeNode item : newNodes.asIterable()) {
+                                if (!oldNodes.contains(item.getData())) {
+                                    view.selectAndExpandNode(item);
+                                }
+                            }
                         }
 
                         @Override
