@@ -17,7 +17,6 @@ import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.TreeNode;
-import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.collections.Array;
@@ -185,8 +184,7 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
             protected void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {
                     final ProjectNode project = new ProjectNode(null, appContext.getCurrentProject().getProjectDescription(), null,
-                                                                TreeSettings.DEFAULT, eventBus, projectServiceClient,
-                                                                dtoUnmarshallerFactory);
+                                                                eventBus, projectServiceClient, dtoUnmarshallerFactory);
                     eventBus.fireEvent(new FileEvent(new EnvironmentScript(project, item, eventBus, projectServiceClient,
                                                                            dtoUnmarshallerFactory, environment.getName()),
                                                      FileEvent.FileOperation.OPEN));
