@@ -14,9 +14,9 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectReference;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -33,14 +33,12 @@ import javax.annotation.Nonnull;
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectListStructure extends AbstractTreeStructure {
+public class ProjectListStructure implements TreeStructure {
     private EventBus               eventBus;
     private ProjectServiceClient   projectServiceClient;
     private DtoUnmarshallerFactory dtoUnmarshallerFactory;
 
-    ProjectListStructure(TreeSettings settings, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                         DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(settings);
+    ProjectListStructure(EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -48,7 +46,7 @@ public class ProjectListStructure extends AbstractTreeStructure {
 
     /** {@inheritDoc} */
     @Override
-    public void getRoots(final AsyncCallback<Array<TreeNode<?>>> callback) {
+    public void getRootNodes(@Nonnull final AsyncCallback<Array<TreeNode<?>>> callback) {
         Unmarshallable<Array<ProjectReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectReference.class);
         projectServiceClient.getProjects(new AsyncRequestCallback<Array<ProjectReference>>(unmarshaller) {
             @Override
@@ -67,8 +65,14 @@ public class ProjectListStructure extends AbstractTreeStructure {
         });
     }
 
+    @Nonnull
     @Override
-    public void getNodeByPath(String path, AsyncCallback<TreeNode<?>> callback) {
+    public TreeSettings getSettings() {
+        return TreeSettings.DEFAULT;
+    }
+
+    @Override
+    public void getNodeByPath(@Nonnull String path, @Nonnull AsyncCallback<TreeNode<?>> callback) {
     }
 
     /** Node that represents project item. */
@@ -132,6 +136,7 @@ public class ProjectListStructure extends AbstractTreeStructure {
         }
 
         /** {@inheritDoc} */
+        @Nonnull
         @Override
         public com.codenvy.ide.api.projecttree.generic.ProjectNode getProject() {
             return null;

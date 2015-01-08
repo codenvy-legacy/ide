@@ -12,39 +12,35 @@ package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
-import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.api.projecttree.TreeSettings;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
+
 /**
- * {@link AbstractTreeStructure} for the hierarchical tree.
+ * {@link com.codenvy.ide.api.projecttree.TreeStructure} for the hierarchical tree.
  *
  * @author Artem Zatsarynnyy
  */
-public class GenericTreeStructure extends AbstractTreeStructure {
-    protected ProjectDescriptor      project;
+public class GenericTreeStructure implements TreeStructure {
     protected EventBus               eventBus;
-    protected EditorAgent            editorAgent;
     protected AppContext             appContext;
     protected ProjectServiceClient   projectServiceClient;
     protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    protected NodeFactory            nodeFactory;
 
-    protected GenericTreeStructure(TreeSettings settings, ProjectDescriptor project, EventBus eventBus, EditorAgent editorAgent,
-                                   AppContext appContext, ProjectServiceClient projectServiceClient,
-                                   DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(settings);
-        this.project = project;
+    protected GenericTreeStructure(NodeFactory nodeFactory, EventBus eventBus, AppContext appContext,
+                                   ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        this.nodeFactory = nodeFactory;
         this.eventBus = eventBus;
-        this.editorAgent = editorAgent;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -52,15 +48,29 @@ public class GenericTreeStructure extends AbstractTreeStructure {
 
     /** {@inheritDoc} */
     @Override
-    public void getRoots(AsyncCallback<Array<TreeNode<?>>> callback) {
-        AbstractTreeNode projectRoot =
-                new ProjectNode(null, project, this, settings, eventBus, projectServiceClient, dtoUnmarshallerFactory);
-        callback.onSuccess(Collections.<TreeNode<?>>createArray(projectRoot));
+    public void getRootNodes(@Nonnull AsyncCallback<Array<TreeNode<?>>> callback) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
+            ProjectNode projectRoot = getNodeFactory().newProjectNode(null, currentProject.getRootProject(), this);
+            callback.onSuccess(Collections.<TreeNode<?>>createArray(projectRoot));
+        } else {
+            callback.onFailure(new IllegalStateException("No opened project"));
+        }
+    }
+
+    @Nonnull
+    @Override
+    public TreeSettings getSettings() {
+        return TreeSettings.DEFAULT;
+    }
+
+    public NodeFactory getNodeFactory() {
+        return nodeFactory;
     }
 
     @Override
-    public void getNodeByPath(final String path, final AsyncCallback<TreeNode<?>> callback) {
-        getRoots(new AsyncCallback<Array<TreeNode<?>>>() {
+    public void getNodeByPath(@Nonnull final String path, @Nonnull final AsyncCallback<TreeNode<?>> callback) {
+        getRootNodes(new AsyncCallback<Array<TreeNode<?>>>() {
             @Override
             public void onSuccess(Array<TreeNode<?>> result) {
                 ProjectNode project = null;
@@ -75,7 +85,7 @@ public class GenericTreeStructure extends AbstractTreeStructure {
                 if (path.startsWith("/")) {
                     p = path.substring(1);
                 }
-                refreshAndGetChildByName(project, p.split("/"), 1, new AsyncCallback<TreeNode<?>>() {
+                getNodeByPathRecursively(project, p, project.getId().length() + 1, new AsyncCallback<TreeNode<?>>() {
                     @Override
                     public void onSuccess(TreeNode<?> result) {
                         callback.onSuccess(result);
@@ -95,17 +105,17 @@ public class GenericTreeStructure extends AbstractTreeStructure {
         });
     }
 
-    private void refreshAndGetChildByName(TreeNode<?> node, final String[] path, final int index,
-                                          final AsyncCallback<TreeNode<?>> callback) {
+    private void getNodeByPathRecursively(TreeNode<?> node, final String path, final int offset, final AsyncCallback<TreeNode<?>> callback) {
         node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
             @Override
             public void onSuccess(TreeNode<?> result) {
                 for (TreeNode<?> childNode : result.getChildren().asIterable()) {
-                    if (childNode.getId().equals(path[index])) {
-                        if (index + 1 == path.length) {
+                    if (path.startsWith(childNode.getId(), offset)) {
+                        final int nextOffset = offset + childNode.getId().length() + 1;
+                        if (nextOffset > path.length()) {
                             callback.onSuccess(childNode);
                         } else {
-                            refreshAndGetChildByName(childNode, path, index + 1, callback);
+                            getNodeByPathRecursively(childNode, path, nextOffset, callback);
                         }
                         return;
                     }
@@ -121,10 +131,10 @@ public class GenericTreeStructure extends AbstractTreeStructure {
     }
 
     public FileNode newFileNode(TreeNode parent, ItemReference data) {
-        return new FileNode(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        return getNodeFactory().newFileNode(parent, data);
     }
 
     public FolderNode newFolderNode(TreeNode parent, ItemReference data) {
-        return new FolderNode(parent, data, this, settings, eventBus, editorAgent, projectServiceClient, dtoUnmarshallerFactory);
+        return getNodeFactory().newFolderNode(parent, data, this);
     }
 }

@@ -71,12 +71,14 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getName() {
         return data.getName();
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public String getPath() {
         return data.getPath();

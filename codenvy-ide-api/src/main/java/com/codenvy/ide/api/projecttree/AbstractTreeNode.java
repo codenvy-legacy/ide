@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     protected TreeNode<?>                  parent;
     protected T                            data;
-    protected Array<TreeNode<?>>           children;
+    protected Array<TreeNode<?>>           cachedChildren;
     protected EventBus                     eventBus;
     private   SVGImage                     icon;
     private   TreeNodeElement<TreeNode<?>> treeNodeElement;
@@ -50,7 +50,7 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
         this.parent = parent;
         this.data = data;
         this.eventBus = eventBus;
-        children = Collections.createArray();
+        cachedChildren = Collections.createArray();
     }
 
     /** {@inheritDoc} */
@@ -78,6 +78,7 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     }
 
     /** {@inheritDoc} */
+    @Nonnull
     @Override
     public ProjectNode getProject() {
         TreeNode<?> parent = getParent();
@@ -103,13 +104,13 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     @Nonnull
     @Override
     public Array<TreeNode<?>> getChildren() {
-        return children;
+        return cachedChildren;
     }
 
     /** {@inheritDoc} */
     @Override
     public void setChildren(Array<TreeNode<?>> children) {
-        this.children = children;
+        cachedChildren = children;
     }
 
     /** {@inheritDoc} */

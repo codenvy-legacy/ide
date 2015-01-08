@@ -10,18 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree;
 
-import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.google.inject.Provider;
+
+import javax.annotation.Nonnull;
 
 /**
- * Tree structure provider responsible for creating tree structure instances for project.
+ * Provides an instances of {@code TreeStructure}.
+ * <p/>
+ * Implementations of this interface need to be registered using a multibinder
+ * in order to be picked up by {@link TreeStructureProviderRegistry}.
  *
  * @author Artem Zatsarynnyy
  */
-public interface TreeStructureProvider {
-    /**
-     * Creates a tree structure for the specified project.
-     *
-     * @return {@link AbstractTreeStructure} instance
-     */
-    AbstractTreeStructure newTreeStructure(ProjectDescriptor project);
+public interface TreeStructureProvider extends Provider<TreeStructure> {
+
+    @Nonnull
+    String getId();
+
+    /** Provides an instance of {@code TreeStructure}. */
+    @Override
+    TreeStructure get();
 }

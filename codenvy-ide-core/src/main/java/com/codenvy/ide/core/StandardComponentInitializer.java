@@ -48,8 +48,6 @@ import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.keybinding.KeyBuilder;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
-import com.codenvy.ide.api.projecttree.generic.GenericTreeStructureProvider;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.connection.WsConnectionListener;
@@ -191,12 +189,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private ExpandEditorAction expandEditorAction;
-
-    @Inject
-    private TreeStructureProviderRegistry treeStructureProviderRegistry;
-
-    @Inject
-    private GenericTreeStructureProvider genericTreeStructureProvider;
 
     @Inject
     @Named("XMLFileType")
@@ -428,7 +420,5 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
 
         wizardRegistry.addWizard(com.codenvy.api.project.shared.Constants.BLANK_ID, new ProjectWizard(notificationManager));
-
-        treeStructureProviderRegistry.registerProvider("codenvy_generic_tree", genericTreeStructureProvider);
     }
 }
