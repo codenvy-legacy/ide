@@ -45,14 +45,12 @@ import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.debug.BreakpointRendererFactory;
-import com.codenvy.ide.jseditor.client.document.DocumentHandle;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage.EmbeddedDocumentCallback;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.EditorUpdateAction;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import com.codenvy.ide.jseditor.client.events.CompletionRequestEvent;
-import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.DocumentReadyEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
@@ -250,8 +248,6 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
 
         this.editorWidget.setValue(content);
         this.generalEventBus.fireEvent(new DocumentReadyEvent(this.getEditorHandle(), this.document));
-        final DocumentHandle docHandle = this.document.getDocumentHandle();
-        docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, content.length(), content));
 
         final OutlineImpl outline = getOutline();
         if (outline != null) {
@@ -322,8 +318,6 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             @Override
             public void onDocumentReceived(final String content) {
                 editorWidget.setValue(content);
-                final DocumentHandle docHandle = document.getDocumentHandle();
-                docHandle.getDocEventBus().fireEvent(new DocumentChangeEvent(docHandle, 0, content.length(), content));
                 document.setCursorPosition(currentCursor);
             }
             

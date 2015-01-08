@@ -22,6 +22,7 @@ import com.codenvy.ide.jseditor.client.codeassist.CompletionProposal;
 import com.codenvy.ide.jseditor.client.codeassist.CompletionsSource;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editortype.EditorType;
+import com.codenvy.ide.jseditor.client.events.DocumentChangeEvent;
 import com.codenvy.ide.jseditor.client.events.HasCursorActivityHandlers;
 import com.codenvy.ide.jseditor.client.events.HasGutterClickHandlers;
 import com.codenvy.ide.jseditor.client.keymap.Keymap;
@@ -48,7 +49,8 @@ public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandl
     String getValue();
 
     /**
-     * Sets the content of the editor.
+     * Sets the content of the editor.<br>
+     * The operation <em>must</em> send a {@link DocumentChangeEvent} on the document private event bus.
      *
      * @param newValue
      *         the new contents
