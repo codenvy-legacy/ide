@@ -14,12 +14,14 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.projecttree.AbstractTreeStructure;
@@ -65,12 +67,15 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private AbstractTreeStructure         currentTreeStructure;
     private DeleteNodeHandler             deleteNodeHandler;
 
+    private NotificationManager           notificationManager;
+
     /** Instantiates the Project Explorer presenter. */
     @Inject
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                         DtoUnmarshallerFactory dtoUnmarshallerFactory, ContextMenu contextMenu,
                                         CoreLocalizationConstant coreLocalizationConstant, AppContext appContext,
-                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler) {
+                                        TreeStructureProviderRegistry treeStructureProviderRegistry, DeleteNodeHandler deleteNodeHandler,
+                                        NotificationManager notificationManager) {
         this.view = view;
         this.eventBus = eventBus;
         this.contextMenu = contextMenu;
@@ -80,6 +85,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         this.appContext = appContext;
         this.treeStructureProviderRegistry = treeStructureProviderRegistry;
         this.deleteNodeHandler = deleteNodeHandler;
+        this.notificationManager = notificationManager;
         this.view.setTitle(coreLocalizationConstant.projectExplorerTitleBarText());
 
         bind();
@@ -282,6 +288,46 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void onEnterKey() {
         view.getSelectedNode().processNodeAction();
+    }
+
+    public TreeNode<?> getNodeByPath(TreeNode<?> root, Array<String> relativeNodePath) {
+        TreeNode localRoot = root;
+        for (int i = 0; i < relativeNodePath.size(); i++) {
+            final String path = relativeNodePath.get(i);
+            if (localRoot != null) {
+                Array<TreeNode> children = localRoot.getChildren();
+                localRoot = null;
+                for (int j = 0; j < children.size(); j++) {
+                    TreeNode node = children.get(i);
+                    if (node.getDisplayName().equals(path)) {
+                        localRoot = node;
+                        break;
+                    }
+                }
+
+                if (i == (relativeNodePath.size() - 1)) {
+                    return localRoot;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void selectItemByPath(final String itemPath) {
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject != null) {
+            currentProject.getCurrentTree().getNodeByPath(itemPath, new AsyncCallback<TreeNode<?>>() {
+                @Override
+                public void onSuccess(TreeNode<?> result) {
+                    view.selectNode(result);
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    //notificationManager.showNotification(new Notification(localization.unableOpenFile(filePath), WARNING));
+                }
+            });
+        }
     }
 
     private void setTree(@Nonnull final AbstractTreeStructure treeStructure) {
