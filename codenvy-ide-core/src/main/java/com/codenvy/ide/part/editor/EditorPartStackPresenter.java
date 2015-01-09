@@ -13,8 +13,6 @@ package com.codenvy.ide.part.editor;
 import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
-import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.EditorPartStack;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackView;
@@ -53,18 +51,6 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         this.listOpenedFilesPresenter = listOpenedFilesPresenter;
 
         view.setShowListButtonHandler(this);
-
-        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                //do nothing
-            }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                //do nothing
-            }
-        });
     }
 
     /**
