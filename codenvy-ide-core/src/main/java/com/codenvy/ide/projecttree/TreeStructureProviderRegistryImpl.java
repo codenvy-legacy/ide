@@ -32,23 +32,21 @@ public class TreeStructureProviderRegistryImpl implements TreeStructureProviderR
     private final GenericTreeStructureProvider     defaultTreeStructureProvider;
 
     @Inject
-    public TreeStructureProviderRegistryImpl(Set<TreeStructureProvider> providers,
-                                             GenericTreeStructureProvider defaultTreeStructureProvider) {
+    public TreeStructureProviderRegistryImpl(GenericTreeStructureProvider defaultTreeStructureProvider) {
         treeProviders = Collections.createStringMap();
         projectType2TreeProvider = Collections.createStringMap();
         this.defaultTreeStructureProvider = defaultTreeStructureProvider;
-
-        for (TreeStructureProvider provider : providers) {
-            register(provider);
-        }
     }
 
-    private void register(TreeStructureProvider provider) {
-        final String id = provider.getId();
-        if (treeProviders.get(id) == null) {
-            treeProviders.put(id, provider);
-        } else {
-            Log.warn(TreeStructureProviderRegistryImpl.class, "Tree structure provider with ID " + id + " already registered.");
+    @Inject(optional = true)
+    private void register(Set<TreeStructureProvider> providers) {
+        for (TreeStructureProvider provider : providers) {
+            final String id = provider.getId();
+            if (treeProviders.get(id) == null) {
+                treeProviders.put(id, provider);
+            } else {
+                Log.warn(TreeStructureProviderRegistryImpl.class, "Tree structure provider with ID " + id + " already registered.");
+            }
         }
     }
 
