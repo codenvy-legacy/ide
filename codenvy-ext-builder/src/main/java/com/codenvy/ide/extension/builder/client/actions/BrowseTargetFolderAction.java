@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.builder.client.actions;
 
+import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.build.BuildContext;
@@ -30,18 +31,21 @@ public class BrowseTargetFolderAction extends ProjectAction {
 
     private final String               baseUrl;
     private       BuildContext         buildContext;
+    private final AnalyticsEventLogger eventLogger;
 
     @Inject
-    public BrowseTargetFolderAction(@Named("restContext") String baseUrl,
-                            BuilderLocalizationConstant localizationConstant, BuildContext buildContext) {
+    public BrowseTargetFolderAction(@Named("restContext") String baseUrl, BuilderLocalizationConstant localizationConstant,
+                                    BuildContext buildContext, AnalyticsEventLogger eventLogger) {
         super(localizationConstant.browseTargetFolderActionTitle(), localizationConstant.browseTargetFolderActionDescription(), null);
         this.baseUrl = baseUrl;
         this.buildContext = buildContext;
+        this.eventLogger = eventLogger;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
+        eventLogger.log(this);
         if (buildContext.getBuildTaskDescriptor() != null) {
             String url = Window.Location.getProtocol() + "//"
                          + Window.Location.getHost() + baseUrl + "/builder/"

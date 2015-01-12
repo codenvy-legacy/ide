@@ -72,6 +72,7 @@ public class NotificationItem extends Composite implements Notification.Notifica
 
         Image closeIcon = new Image(resources.close());
         closeIcon.addStyleName(resources.notificationCss().close());
+        closeIcon.ensureDebugId("notificationItem-close");
         closeIcon.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
