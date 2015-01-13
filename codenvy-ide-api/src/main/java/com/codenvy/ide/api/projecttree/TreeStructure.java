@@ -22,22 +22,23 @@ import javax.annotation.Nonnull;
  */
 public interface TreeStructure {
     /**
-     * Get nodes at the root of the tree structure.
+     * Get the root nodes of the tree structure.
      *
      * @param callback
-     *         callback to return root nodes
+     *         callback to return the root nodes
      */
     void getRootNodes(@Nonnull AsyncCallback<Array<TreeNode<?>>> callback);
 
-    /** Returns settings for this tree structure. */
+    /** Returns the settings for this tree structure. */
     @Nonnull
     TreeSettings getSettings();
 
     /**
-     * Get node by it's full path.
+     * Looks for the node with the specified path in the tree structure
+     * and returns it or {@code null} if it was not found.
      *
      * @param path
-     *         path to the node to get
+     *         node path
      * @param callback
      *         callback to return node, may return {@code null} if node not found
      */

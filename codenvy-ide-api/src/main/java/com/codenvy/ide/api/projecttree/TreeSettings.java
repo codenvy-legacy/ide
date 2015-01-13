@@ -34,9 +34,15 @@ public interface TreeSettings {
     /**
      * Checks if hidden items are shown.
      *
-     * @return <code>true</code> - if hidden items should be shown, <code>false</code> - otherwise
+     * @return {@code true} - if hidden items should be shown, {@code false} - otherwise
      */
     boolean isShowHiddenItems();
 
+    /**
+     * Sets hidden items displaying mode.
+     *
+     * @param showHiddenItems
+     *         {@code true} - if hidden items should be shown, {@code false} - otherwise
+     */
     void setShowHiddenItems(boolean showHiddenItems);
 }

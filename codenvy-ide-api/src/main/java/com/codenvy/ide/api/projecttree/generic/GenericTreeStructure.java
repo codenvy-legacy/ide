@@ -12,6 +12,7 @@ package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
+import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.projecttree.TreeNode;
@@ -26,16 +27,21 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 /**
- * {@link com.codenvy.ide.api.projecttree.TreeStructure} for the hierarchical tree.
+ * Serves as a 'generic' tree and as the factory for creating new tree nodes owned by that tree.
+ * <p/>
+ * Builds a currently opened project's tree structure that reflects the project's physical structure.
  *
  * @author Artem Zatsarynnyy
+ * @see NodeFactory
+ * @see com.codenvy.ide.api.projecttree.TreeSettings
  */
 public class GenericTreeStructure implements TreeStructure {
-    protected EventBus               eventBus;
-    protected AppContext             appContext;
-    protected ProjectServiceClient   projectServiceClient;
-    protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    protected NodeFactory            nodeFactory;
+    protected final NodeFactory            nodeFactory;
+    protected       EventBus               eventBus;
+    protected       AppContext             appContext;
+    protected       ProjectServiceClient   projectServiceClient;
+    protected       DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private         ProjectNode            projectNode;
 
     protected GenericTreeStructure(NodeFactory nodeFactory, EventBus eventBus, AppContext appContext,
                                    ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
@@ -49,13 +55,16 @@ public class GenericTreeStructure implements TreeStructure {
     /** {@inheritDoc} */
     @Override
     public void getRootNodes(@Nonnull AsyncCallback<Array<TreeNode<?>>> callback) {
-        CurrentProject currentProject = appContext.getCurrentProject();
-        if (currentProject != null) {
-            ProjectNode projectRoot = getNodeFactory().newProjectNode(null, currentProject.getRootProject(), this);
-            callback.onSuccess(Collections.<TreeNode<?>>createArray(projectRoot));
-        } else {
-            callback.onFailure(new IllegalStateException("No opened project"));
+        if (projectNode == null) {
+            final CurrentProject currentProject = appContext.getCurrentProject();
+            if (currentProject != null) {
+                projectNode = newProjectNode(currentProject.getRootProject());
+            } else {
+                callback.onFailure(new IllegalStateException("No project is opened."));
+                return;
+            }
         }
+        callback.onSuccess(Collections.<TreeNode<?>>createArray(projectNode));
     }
 
     @Nonnull
@@ -105,7 +114,8 @@ public class GenericTreeStructure implements TreeStructure {
         });
     }
 
-    private void getNodeByPathRecursively(TreeNode<?> node, final String path, final int offset, final AsyncCallback<TreeNode<?>> callback) {
+    private void getNodeByPathRecursively(TreeNode<?> node, final String path, final int offset,
+                                          final AsyncCallback<TreeNode<?>> callback) {
         node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
             @Override
             public void onSuccess(TreeNode<?> result) {
@@ -130,11 +140,48 @@ public class GenericTreeStructure implements TreeStructure {
         });
     }
 
-    public FileNode newFileNode(TreeNode parent, ItemReference data) {
-        return getNodeFactory().newFileNode(parent, data);
+    /**
+     * Creates a new {@link ProjectNode} owned by this tree with the specified associated {@code data}.
+     *
+     * @param data
+     *         the associated {@link ProjectDescriptor}
+     * @return a new {@link ProjectNode}
+     */
+    public ProjectNode newProjectNode(@Nonnull ProjectDescriptor data) {
+        return getNodeFactory().newProjectNode(null, data, this);
     }
 
-    public FolderNode newFolderNode(TreeNode parent, ItemReference data) {
+    /**
+     * Creates a new {@link FileNode} owned by this tree
+     * with the specified {@code parent} and associated {@code data}.
+     *
+     * @param parent
+     *         the parent node
+     * @param data
+     *         the associated {@link ItemReference}
+     * @return a new {@link FileNode}
+     */
+    public FileNode newFileNode(@Nonnull TreeNode parent, @Nonnull ItemReference data) {
+        if (!"file".equals(data.getType())) {
+            throw new IllegalArgumentException("The associated ItemReference type must be - file.");
+        }
+        return getNodeFactory().newFileNode(parent, data, this);
+    }
+
+    /**
+     * Creates a new {@link FolderNode} owned by this tree
+     * with the specified {@code parent} and associated {@code data}.
+     *
+     * @param parent
+     *         the parent node
+     * @param data
+     *         the associated {@link ItemReference}
+     * @return a new {@link FolderNode}
+     */
+    public FolderNode newFolderNode(@Nonnull TreeNode parent, @Nonnull ItemReference data) {
+        if (!"folder".equals(data.getType())) {
+            throw new IllegalArgumentException("The associated ItemReference type must be - folder.");
+        }
         return getNodeFactory().newFolderNode(parent, data, this);
     }
 }

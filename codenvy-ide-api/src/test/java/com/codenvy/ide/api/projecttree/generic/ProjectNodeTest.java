@@ -10,24 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
@@ -49,34 +45,27 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ProjectNodeTest {
+public class ProjectNodeTest extends BaseNodeTest {
     private static final String ITEM_PATH       = "/project_name";
     private static final String ITEM_NAME       = "project_name";
     private static final String PROJECT_TYPE_ID = "project_type";
     @Mock
-    private EventBus               eventBus;
+    private ProjectDescriptor projectDescriptor;
     @Mock
-    private EditorAgent            editorAgent;
-    @Mock
-    private ProjectServiceClient   projectServiceClient;
-    @Mock
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    @Mock
-    private ProjectDescriptor      projectDescriptor;
-    private ProjectNode            projectNode;
+    private ProjectNode       parentProjectNode;
+    @InjectMocks
+    private ProjectNode       projectNode;
 
     @Before
     public void setUp() {
+        super.setUp();
+
         when(projectDescriptor.getPath()).thenReturn(ITEM_PATH);
         when(projectDescriptor.getName()).thenReturn(ITEM_NAME);
         when(projectDescriptor.getType()).thenReturn(PROJECT_TYPE_ID);
 
-        ProjectNode parentProjectNode = mock(ProjectNode.class);
         Array<TreeNode<?>> children = Collections.createArray();
         when(parentProjectNode.getChildren()).thenReturn(children);
-        projectNode = new ProjectNode(parentProjectNode, projectDescriptor, null, eventBus, projectServiceClient,
-                                      dtoUnmarshallerFactory);
     }
 
     @Test
@@ -152,5 +141,25 @@ public class ProjectNodeTest {
     @Test
     public void shouldReturnProjectTypeId() throws Exception {
         assertEquals(projectDescriptor.getType(), projectNode.getProjectTypeId());
+    }
+
+    @Test
+    public void shouldCreateChildFileNode() {
+        ItemReference fileItem = mock(ItemReference.class);
+        when(fileItem.getType()).thenReturn("file");
+
+        projectNode.createChildNode(fileItem);
+
+        verify(treeStructure).newFileNode(eq(projectNode), eq(fileItem));
+    }
+
+    @Test
+    public void shouldCreateChildFolderNode() {
+        ItemReference folderItem = mock(ItemReference.class);
+        when(folderItem.getType()).thenReturn("folder");
+
+        projectNode.createChildNode(folderItem);
+
+        verify(treeStructure).newFolderNode(eq(projectNode), eq(folderItem));
     }
 }
