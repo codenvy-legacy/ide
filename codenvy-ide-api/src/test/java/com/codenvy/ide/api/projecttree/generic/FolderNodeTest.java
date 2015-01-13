@@ -10,27 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
-import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
@@ -53,38 +46,27 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-@RunWith(MockitoJUnitRunner.class)
-public class FolderNodeTest {
+public class FolderNodeTest extends BaseNodeTest {
     private static final String ITEM_PATH = "/project/folder/folder_name";
     private static final String ITEM_NAME = "folder_name";
     @Mock
-    private EventBus               eventBus;
+    private ItemReference     itemReference;
     @Mock
-    private EditorAgent            editorAgent;
+    private ProjectDescriptor projectDescriptor;
     @Mock
-    private ProjectServiceClient   projectServiceClient;
-    @Mock
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    @Mock
-    private ItemReference          itemReference;
-    @Mock
-    private ProjectDescriptor      projectDescriptor;
-    @Mock
-    private ProjectNode            projectNode;
-    private FolderNode             folderNode;
+    private ProjectNode       projectNode;
+    @InjectMocks
+    private FolderNode        folderNode;
 
     @Before
     public void setUp() {
+        super.setUp();
+
         when(itemReference.getPath()).thenReturn(ITEM_PATH);
         when(itemReference.getName()).thenReturn(ITEM_NAME);
-        folderNode = new FolderNode(projectNode, itemReference, null, eventBus, editorAgent, projectServiceClient,
-                                    dtoUnmarshallerFactory);
 
         final Array<TreeNode<?>> children = Collections.createArray();
         when(projectNode.getChildren()).thenReturn(children);
-
-        StringMap<EditorPartPresenter> editorsMap = Collections.createStringMap();
-        when(editorAgent.getOpenedEditors()).thenReturn(editorsMap);
     }
 
     @Test
@@ -199,5 +181,25 @@ public class FolderNodeTest {
 
         verify(projectServiceClient).delete(eq(ITEM_PATH), Matchers.<AsyncRequestCallback<Void>>anyObject());
         verify(callback).onFailure(Matchers.<Throwable>anyObject());
+    }
+
+    @Test
+    public void shouldCreateChildFileNode() {
+        ItemReference fileItem = mock(ItemReference.class);
+        when(fileItem.getType()).thenReturn("file");
+
+        folderNode.createChildNode(fileItem);
+
+        verify(treeStructure).newFileNode(eq(folderNode), eq(fileItem));
+    }
+
+    @Test
+    public void shouldCreateChildFolderNode() {
+        ItemReference folderItem = mock(ItemReference.class);
+        when(folderItem.getType()).thenReturn("folder");
+
+        folderNode.createChildNode(folderItem);
+
+        verify(treeStructure).newFolderNode(eq(folderNode), eq(folderItem));
     }
 }

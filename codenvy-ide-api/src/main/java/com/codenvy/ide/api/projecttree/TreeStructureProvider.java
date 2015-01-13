@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
  */
 public interface TreeStructureProvider extends Provider<TreeStructure> {
 
+    /** Returns ID of the {@code TreeStructure} what this provider can supply. */
     @Nonnull
     String getId();
 

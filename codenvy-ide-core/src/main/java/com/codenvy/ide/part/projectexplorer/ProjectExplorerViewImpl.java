@@ -66,7 +66,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
         // create special 'invisible' root node that will contain 'visible' root nodes
-        rootNode = new AbstractTreeNode<Void>(null, null, null) {
+        rootNode = new AbstractTreeNode<Void>(null, null, null, null) {
             @Nonnull
             @Override
             public String getId() {

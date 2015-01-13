@@ -13,7 +13,7 @@ package com.codenvy.ide.api.projecttree;
 import javax.annotation.Nonnull;
 
 /**
- * Registry for tree structure providers. It also allows to associate project type ID with {@link TreeStructureProvider}.
+ * Registry for tree structure providers. It also allows to associate project type with {@link TreeStructureProvider}.
  *
  * @author Artem Zatsarynnyy
  */

@@ -23,6 +23,8 @@ import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.FileEvent.FileOperation;
 import com.codenvy.ide.api.event.FileEventHandler;
+import com.codenvy.ide.api.event.ItemEvent;
+import com.codenvy.ide.api.event.ItemHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.event.WindowActionHandler;
 import com.codenvy.ide.api.filetypes.FileType;
@@ -34,6 +36,8 @@ import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.projecttree.VirtualFile;
+import com.codenvy.ide.api.projecttree.generic.FolderNode;
+import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.texteditor.HasReadOnlyProperty;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -46,6 +50,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.api.event.FileEvent.FileOperation.CLOSE;
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.DELETE;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
@@ -66,7 +72,7 @@ public class EditorAgentImpl implements EditorAgent {
         public void onFileOperation(final FileEvent event) {
             if (event.getOperationType() == FileOperation.OPEN) {
                 openEditor(event.getFile());
-            } else if (event.getOperationType() == FileOperation.CLOSE) {
+            } else if (event.getOperationType() == CLOSE) {
                 // close associated editor. OR it can be closed itself TODO
             }
         }
@@ -129,6 +135,23 @@ public class EditorAgentImpl implements EditorAgent {
         eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
         eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
         eventBus.addHandler(WindowActionEvent.TYPE, windowActionHandler);
+        eventBus.addHandler(ItemEvent.TYPE, new ItemHandler() {
+            @Override
+            public void onItem(ItemEvent event) {
+                final ItemNode item = event.getItem();
+                if (event.getOperation() == DELETE && item instanceof FolderNode) {
+                    closeAllFilesByPath(item.getPath());
+                }
+            }
+        });
+    }
+
+    private void closeAllFilesByPath(String path) {
+        for (EditorPartPresenter editor : getOpenedEditors().getValues().asIterable()) {
+            if (editor.getEditorInput().getFile().getPath().startsWith(path)) {
+                eventBus.fireEvent(new FileEvent(editor.getEditorInput().getFile(), CLOSE));
+            }
+        }
     }
 
     /** {@inheritDoc} */

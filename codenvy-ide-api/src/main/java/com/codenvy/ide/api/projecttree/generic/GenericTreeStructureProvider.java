@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 /** @author Artem Zatsarynnyy */
 final public class GenericTreeStructureProvider implements TreeStructureProvider {
+    public final static String ID = "_codenvy_generic_tree_";
     private final NodeFactory            nodeFactory;
     private final EventBus               eventBus;
     private final AppContext             appContext;
@@ -40,7 +41,7 @@ final public class GenericTreeStructureProvider implements TreeStructureProvider
     @Nonnull
     @Override
     public String getId() {
-        return "codenvy_generic_tree";
+        return ID;
     }
 
     @Override

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttree.generic;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.event.FileEvent;
@@ -18,18 +17,14 @@ import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.lang.reflect.Method;
@@ -51,29 +46,24 @@ import static org.mockito.Mockito.when;
  *
  * @author Artem Zatsarynnyy
  */
-@RunWith(MockitoJUnitRunner.class)
-public class FileNodeTest {
+public class FileNodeTest extends BaseNodeTest {
     private static final String ITEM_PATH = "/project/folder/file_name";
     private static final String ITEM_NAME = "file_name";
     @Mock
-    private EventBus               eventBus;
+    private ItemReference     itemReference;
     @Mock
-    private ProjectServiceClient   projectServiceClient;
+    private ProjectDescriptor projectDescriptor;
     @Mock
-    private ItemReference          itemReference;
-    @Mock
-    private ProjectDescriptor      projectDescriptor;
-    @Mock
-    private DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    @Mock
-    private ProjectNode            projectNode;
-    private FileNode               fileNode;
+    private ProjectNode       projectNode;
+    private FileNode          fileNode;
 
     @Before
     public void setUp() {
+        super.setUp();
+
         when(itemReference.getPath()).thenReturn(ITEM_PATH);
         when(itemReference.getName()).thenReturn(ITEM_NAME);
-        fileNode = new FileNode(projectNode, itemReference, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        fileNode = new FileNode(projectNode, itemReference, treeStructure, eventBus, projectServiceClient, dtoUnmarshallerFactory);
 
         final Array<TreeNode<?>> children = Collections.createArray();
         when(projectNode.getChildren()).thenReturn(children);

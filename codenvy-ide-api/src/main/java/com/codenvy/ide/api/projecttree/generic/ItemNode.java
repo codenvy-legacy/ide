@@ -15,6 +15,7 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.ItemEvent;
 import com.codenvy.ide.api.projecttree.AbstractTreeNode;
 import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -25,9 +26,12 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 /**
- * A node that represents an {@link ItemReference}.
+ * Abstract base class for all tree nodes that represent an {@link ItemReference}.
+ * There are exactly two kinds of {@link ItemNode}: {@link FileNode}, {@link FolderNode}.
  *
  * @author Artem Zatsarynnyy
+ * @see FileNode
+ * @see FolderNode
  */
 public abstract class ItemNode extends AbstractTreeNode<ItemReference> implements StorableNode<ItemReference> {
     protected ProjectServiceClient   projectServiceClient;
@@ -40,13 +44,18 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
      *         parent node
      * @param data
      *         an object this node encapsulates
+     * @param treeStructure
+     *         {@link TreeStructure} which this node belongs
      * @param eventBus
+     *         {@link EventBus}
      * @param projectServiceClient
+     *         {@link ProjectServiceClient}
      * @param dtoUnmarshallerFactory
+     *         {@link DtoUnmarshallerFactory}
      */
-    public ItemNode(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
-                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, eventBus);
+    public ItemNode(TreeNode<?> parent, ItemReference data, TreeStructure treeStructure, EventBus eventBus,
+                    ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+        super(parent, data, treeStructure, eventBus);
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
     }
@@ -55,14 +64,14 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
     @Nonnull
     @Override
     public String getId() {
-        return data.getName();
+        return getData().getName();
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getDisplayName() {
-        return data.getName();
+        return getData().getName();
     }
 
     /** {@inheritDoc} */
@@ -74,14 +83,14 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
     @Nonnull
     @Override
     public String getName() {
-        return data.getName();
+        return getData().getName();
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getPath() {
-        return data.getPath();
+        return getData().getPath();
     }
 
     /** {@inheritDoc} */
@@ -106,7 +115,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
                     protected void onSuccess(Array<ItemReference> items) {
                         for (ItemReference item : items.asIterable()) {
                             if (newName.equals(item.getName())) {
-                                data = item;
+                                setData(item);
                                 break;
                             }
                         }

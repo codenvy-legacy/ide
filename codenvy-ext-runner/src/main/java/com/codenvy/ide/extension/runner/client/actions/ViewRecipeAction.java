@@ -10,9 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.extension.runner.client.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
@@ -41,6 +38,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action to view the runner 'recipe' file being used for running app.
@@ -117,10 +117,11 @@ public class ViewRecipeAction extends Action {
         }
     }
 
-    private static class RecipeFile extends FileNode {
+    private class RecipeFile extends FileNode {
         public RecipeFile(TreeNode< ? > parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                           DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+            super(parent, data, appContext.getCurrentProject().getCurrentTree(), eventBus, projectServiceClient,
+                  dtoUnmarshallerFactory);
         }
 
         @Override
@@ -130,7 +131,7 @@ public class ViewRecipeAction extends Action {
 
         @Override
         public void getContent(final AsyncCallback<String> callback) {
-            for (Link link : data.getLinks()) {
+            for (Link link : getData().getLinks()) {
                 if ("get content".equals(link.getRel())) {
                     try {
                         new RequestBuilder(RequestBuilder.GET, link.getHref()).sendRequest("", new RequestCallback() {
