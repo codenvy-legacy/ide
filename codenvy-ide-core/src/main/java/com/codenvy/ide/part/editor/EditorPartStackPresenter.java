@@ -13,14 +13,11 @@ package com.codenvy.ide.part.editor;
 import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorWithErrors;
-import com.codenvy.ide.api.event.ProjectActionEvent;
-import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.parts.EditorPartStack;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.projecttree.VirtualFile;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.PartStackPresenter;
@@ -31,7 +28,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -48,30 +44,26 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
     @Inject
-    public EditorPartStackPresenter(final EditorPartStackView view, EventBus eventBus,
-                 PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
+    public EditorPartStackPresenter(EditorPartStackView view, EventBus eventBus,
+                                    PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
         super(eventBus, partStackEventHandler, view, null);
         partsClosable = true;
         this.listOpenedFilesPresenter = listOpenedFilesPresenter;
 
         view.setShowListButtonHandler(this);
+    }
 
-        eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler() {
-            @Override
-            public void onProjectOpened(ProjectActionEvent event) {
-                //do nothing
+    /**
+     * This method closes all tabs and after that, do action from asyncCallback
+     * @param asyncCallback this is callback with some action(f.e. close project)
+     */
+    public void closeAllTabs(AsyncCallback asyncCallback) {
+        for (int i = parts.size() - 1; i >= 0; i--) {
+            PartPresenter part = parts.get(i);
+            if (part instanceof EditorPartPresenter) {
+                close(part, asyncCallback);
             }
-
-            @Override
-            public void onProjectClosed(ProjectActionEvent event) {
-                for (int i = parts.size() - 1; i >= 0; i--) {
-                    PartPresenter part = parts.get(i);
-                    if (part instanceof EditorPartPresenter) {
-                        removePart(part);
-                    }
-                }
-            }
-        });
+        }
     }
 
     /** {@inheritDoc} */
@@ -104,10 +96,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         }
         PartStackView.TabItem tabItem =
                 view.addTabButton(titleSVGImage,
-                                  part.getTitle(),
-                                  part.getTitleToolTip(),
-                                  null,
-                                  partsClosable);
+                        part.getTitle(),
+                        part.getTitleToolTip(),
+                        null,
+                        partsClosable);
 
         if (part instanceof EditorWithErrors) {
             final EditorWithErrors presenter = ((EditorWithErrors)part);
@@ -149,6 +141,11 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     public void setActivePart(PartPresenter part) {
+        if (part == null) {
+            view.setActiveTab(-1);
+            return;
+        }
+
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
@@ -157,11 +154,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         }
         activePart = part;
 
-        if (part == null) {
-            view.setActiveTab(-1);
-        } else {
-            view.setActiveTab(parts.indexOf(activePart));
-        }
+        view.setActiveTab(parts.indexOf(activePart));
         // request part stack to get the focus
         onRequestFocus();
 
@@ -172,10 +165,19 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
     /** {@inheritDoc} */
     @Override
     protected void close(final PartPresenter part) {
+        close(part, null);
+    }
+
+    /**
+     * close tab and do some action from asyncCallback
+     * @param part part for closing
+     * @param asyncCallback callback for closing project
+     */
+    protected void close(final PartPresenter part, final AsyncCallback asyncCallback) {
         part.onClose(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
-
+                Log.error(getClass(), "Error closing tab");
             }
 
             @Override
@@ -187,6 +189,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
                     partStackHandler.onActivePartChanged(activePart);
+
+                    if (asyncCallback != null && parts.isEmpty()) {
+                        asyncCallback.onSuccess(null);
+                    }
                 }
             }
         });
