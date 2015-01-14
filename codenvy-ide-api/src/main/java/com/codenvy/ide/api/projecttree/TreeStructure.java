@@ -27,6 +27,7 @@ public interface TreeStructure {
      * @param callback
      *         callback to return the root nodes
      */
+    // TODO: should return one root node that may be visible/hidden in tree
     void getRootNodes(@Nonnull AsyncCallback<Array<TreeNode<?>>> callback);
 
     /** Returns the settings for this tree structure. */
