@@ -76,12 +76,12 @@ public class ProjectListStructure implements TreeStructure {
     }
 
     /** Node that represents project item. */
-    public static class ProjectNode extends AbstractTreeNode<ProjectReference> implements StorableNode<ProjectReference> {
+    public class ProjectNode extends AbstractTreeNode<ProjectReference> implements StorableNode<ProjectReference> {
         private EventBus             eventBus;
         private ProjectServiceClient projectServiceClient;
 
         ProjectNode(TreeNode<?> parent, ProjectReference data, EventBus eventBus, ProjectServiceClient projectServiceClient) {
-            super(parent, data, eventBus);
+            super(parent, data, ProjectListStructure.this, eventBus);
             this.eventBus = eventBus;
             this.projectServiceClient = projectServiceClient;
         }
@@ -90,7 +90,7 @@ public class ProjectListStructure implements TreeStructure {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return data.getName();
+            return getData().getName();
         }
 
         /** {@inheritDoc} */
@@ -119,20 +119,20 @@ public class ProjectListStructure implements TreeStructure {
         /** {@inheritDoc} */
         @Override
         public String getName() {
-            return data.getName();
+            return getData().getName();
         }
 
         /** {@inheritDoc} */
         @Override
         public String getPath() {
-            return data.getPath();
+            return getData().getPath();
         }
 
         /** {@inheritDoc} */
         @Nonnull
         @Override
         public String getId() {
-            return data.getName();
+            return getData().getName();
         }
 
         /** {@inheritDoc} */
@@ -145,7 +145,7 @@ public class ProjectListStructure implements TreeStructure {
         /** {@inheritDoc} */
         @Override
         public void rename(final String newName, final RenameCallback callback) {
-            projectServiceClient.rename(data.getPath(), newName, null, new AsyncRequestCallback<Void>() {
+            projectServiceClient.rename(getData().getPath(), newName, null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     ProjectNode.super.rename(newName, new RenameCallback() {
@@ -177,7 +177,7 @@ public class ProjectListStructure implements TreeStructure {
         /** {@inheritDoc} */
         @Override
         public void delete(final DeleteCallback callback) {
-            projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
+            projectServiceClient.delete(getData().getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     ProjectNode.super.delete(new DeleteCallback() {

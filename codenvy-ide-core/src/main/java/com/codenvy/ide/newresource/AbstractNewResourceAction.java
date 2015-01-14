@@ -39,24 +39,24 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 import javax.annotation.Nullable;
 
 /**
- * Implementation of an {@link Action} that provides an ability to create new file/folder.
+ * Implementation of an {@link Action} that provides an ability to create new resource (e.g. file, folder).
  * After performing this action, it asks user for the resource's name
  * and then creates resource in the selected folder.
  *
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractNewResourceAction extends ProjectAction {
-    protected String                   title;
-    protected SelectionAgent           selectionAgent;
-    protected EditorAgent              editorAgent;
-    protected ProjectServiceClient     projectServiceClient;
-    protected EventBus                 eventBus;
-    protected AnalyticsEventLogger     eventLogger;
-    protected DtoUnmarshallerFactory   dtoUnmarshallerFactory;
-    protected DialogFactory            dialogFactory;
-    protected InputValidator           fileNameValidator;
-    protected InputValidator           folderNameValidator;
-    protected CoreLocalizationConstant coreLocalizationConstant;
+    protected final InputValidator           fileNameValidator;
+    protected final InputValidator           folderNameValidator;
+    protected final String                   title;
+    protected       SelectionAgent           selectionAgent;
+    protected       EditorAgent              editorAgent;
+    protected       ProjectServiceClient     projectServiceClient;
+    protected       EventBus                 eventBus;
+    protected       AnalyticsEventLogger     eventLogger;
+    protected       DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    protected       DialogFactory            dialogFactory;
+    protected       CoreLocalizationConstant coreLocalizationConstant;
 
     /**
      * Creates new action.
@@ -81,32 +81,38 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
             eventLogger.log(this);
         }
 
-        dialogFactory.createInputDialog(coreLocalizationConstant.newResourceTitle(title),
-                                        coreLocalizationConstant.newResourceLabel(title.toLowerCase()), new InputCallback() {
+        dialogFactory.createInputDialog(
+                coreLocalizationConstant.newResourceTitle(title),
+                coreLocalizationConstant.newResourceLabel(title.toLowerCase()),
+                new InputCallback() {
                     @Override
                     public void accepted(String value) {
-                        final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
-                        final StorableNode parent = getParent();
-                        projectServiceClient.createFile(
-                                parent.getPath(), name, getDefaultContent(), getMimeType(),
-                                new AsyncRequestCallback<ItemReference>(dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class)) {
-                                    @Override
-                                    protected void onSuccess(ItemReference result) {
-                                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
-                                        if ("file".equals(result.getType())) {
-                                            FileNode file = new FileNode(parent, result, eventBus, projectServiceClient, null);
-                                            editorAgent.openEditor(file);
-                                        }
-                                    }
-
-                                    @Override
-                                    protected void onFailure(Throwable exception) {
-                                        dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null)
-                                                     .show();
-                                    }
-                                });
+                        onAccepted(value);
                     }
                 }, null).withValidator(fileNameValidator).show();
+    }
+
+    private void onAccepted(String value) {
+        final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
+        final StorableNode parent = getParent();
+        projectServiceClient.createFile(
+                parent.getPath(), name, getDefaultContent(), getMimeType(),
+                new AsyncRequestCallback<ItemReference>(dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class)) {
+                    @Override
+                    protected void onSuccess(ItemReference result) {
+                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
+                        if ("file".equals(result.getType())) {
+                            final FileNode file = new FileNode(parent, result, appContext.getCurrentProject().getCurrentTree(), eventBus,
+                                                               projectServiceClient, dtoUnmarshallerFactory);
+                            editorAgent.openEditor(file);
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                    }
+                });
     }
 
     @Override
@@ -115,7 +121,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
     }
 
     /**
-     * Returns extension for a new resource, e.g. html.
+     * Returns extension (without dot) for a new resource.
      * By default, returns an empty string.
      */
     protected String getExtension() {
@@ -132,7 +138,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
 
     /**
      * Returns MIME-type for a new resource.
-     * By default, returns <code>null</code>.
+     * By default, returns {@code null}.
      */
     protected String getMimeType() {
         return null;

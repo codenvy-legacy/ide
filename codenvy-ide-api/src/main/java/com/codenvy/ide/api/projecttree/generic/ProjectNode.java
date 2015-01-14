@@ -33,22 +33,22 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Node that represents project item.
+ * Node that represents a project.
  *
  * @author Artem Zatsarynnyy
  */
 public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements StorableNode<ProjectDescriptor>, Openable,
                                                                                 ProjectDescriptorChangedHandler {
-    protected final GenericTreeStructure   treeStructure;
     protected final ProjectServiceClient   projectServiceClient;
     protected final DtoUnmarshallerFactory dtoUnmarshallerFactory;
     protected final EventBus               eventBus;
+    private final   GenericTreeStructure   treeStructure;
     private         boolean                opened;
 
     @AssistedInject
     public ProjectNode(@Assisted TreeNode<?> parent, @Assisted ProjectDescriptor data, @Assisted GenericTreeStructure treeStructure,
                        EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, eventBus);
+        super(parent, data, treeStructure, eventBus);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
 
         this.treeStructure = treeStructure;
@@ -60,20 +60,20 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     /** {@inheritDoc} */
     @Override
     public String getName() {
-        return data.getName();
+        return getData().getName();
     }
 
     /** {@inheritDoc} */
     @Override
     public String getPath() {
-        return data.getPath();
+        return getData().getPath();
     }
 
     /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getId() {
-        return data.getName();
+        return getData().getName();
     }
 
     /** {@inheritDoc} */
@@ -87,7 +87,13 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     @Nonnull
     @Override
     public String getDisplayName() {
-        return data.getName();
+        return getData().getName();
+    }
+
+    /** Returns {@link com.codenvy.ide.api.projecttree.TreeStructure} which this node belongs. */
+    @Nonnull
+    public GenericTreeStructure getTreeStructure() {
+        return treeStructure;
     }
 
     /** {@inheritDoc} */
@@ -99,21 +105,10 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     /** {@inheritDoc} */
     @Override
     public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
-        getChildren(data.getPath(), new AsyncCallback<Array<ItemReference>>() {
+        getChildren(getData().getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> childItems) {
-                final boolean isShowHiddenItems = treeStructure.getSettings().isShowHiddenItems();
-                // remove child nodes for not existed items
-                purgeNodes(childItems);
-                // add child nodes for new items
-                for (ItemReference item : filterNewItems(childItems).asIterable()) {
-                    if (isShowHiddenItems || !item.getName().startsWith(".")) {
-                        AbstractTreeNode node = createChildNode(item);
-                        if (node != null) {
-                            cachedChildren.add(node);
-                        }
-                    }
-                }
+                setChildren(getChildNodesForItems(childItems));
                 callback.onSuccess(ProjectNode.this);
             }
 
@@ -122,6 +117,27 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
                 callback.onFailure(caught);
             }
         });
+    }
+
+    private Array<TreeNode<?>> getChildNodesForItems(Array<ItemReference> childItems) {
+        final boolean isShowHiddenItems = treeStructure.getSettings().isShowHiddenItems();
+        Array<TreeNode<?>> oldChildren = Collections.createArray(getChildren().asIterable());
+        Array<TreeNode<?>> newChildren = Collections.createArray();
+        for (ItemReference item : childItems.asIterable()) {
+            if (!isShowHiddenItems && item.getName().startsWith(".")) {
+                continue;
+            }
+            AbstractTreeNode node = createChildNode(item);
+            if (node != null) {
+                if (oldChildren.contains(node)) {
+                    final int i = oldChildren.indexOf(node);
+                    newChildren.add(oldChildren.get(i));
+                } else {
+                    newChildren.add(node);
+                }
+            }
+        }
+        return newChildren;
     }
 
     /** {@inheritDoc} */
@@ -146,7 +162,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     /** {@inheritDoc} */
     @Override
     public void delete(final DeleteCallback callback) {
-        projectServiceClient.delete(data.getPath(), new AsyncRequestCallback<Void>() {
+        projectServiceClient.delete(getData().getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 if (isRootProject()) {
@@ -195,38 +211,9 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
         });
     }
 
-    /** Throw away child nodes which was removed (for which we haven't appropriate item in {@code items}). */
-    private void purgeNodes(Array<ItemReference> items) {
-        Iterable<TreeNode<?>> it = getChildren().asIterable();
-        for (TreeNode<?> node : it) {
-            if (node.getData() instanceof ItemReference && !items.contains((ItemReference)node.getData())) {
-                it.iterator().remove();
-            }
-        }
-    }
-
-    /**
-     * Returns filtered {@code items} array that contains only items
-     * for which we haven't appropriate node in this node's cachedChildren.
-     *
-     * @param items
-     *         array of {@link ItemReference} to filter
-     * @return an array of new items, or an empty array if there are no new items
-     */
-    private Array<ItemReference> filterNewItems(Array<ItemReference> items) {
-        Array<ItemReference> newItems = Collections.createArray(items.asIterable());
-        Iterable<TreeNode<?>> it = getChildren().asIterable();
-        for (TreeNode<?> node : it) {
-            if (node.getData() instanceof ItemReference && items.contains((ItemReference)node.getData())) {
-                newItems.remove((ItemReference)node.getData());
-            }
-        }
-        return newItems;
-    }
-
     /** Get unique ID of type of project. */
     public String getProjectTypeId() {
-        return data.getType();
+        return getData().getType();
     }
 
     /**
@@ -274,7 +261,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      */
     @Nullable
     public List<String> getAttributeValues(String attributeName) {
-        return data.getAttributes().get(attributeName);
+        return getData().getAttributes().get(attributeName);
     }
 
     @Override

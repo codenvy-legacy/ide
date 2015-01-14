@@ -47,6 +47,8 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     private   FlowPanel           projectHeader;
     private   AbstractTreeNode<?> rootNode;
 
+    private ProjectTreeNodeDataAdapter projectTreeNodeDataAdapter;
+
     /** Create view. */
     @Inject
     public ProjectExplorerViewImpl(Resources resources, ProjectTreeNodeRenderer projectTreeNodeRenderer) {
@@ -56,14 +58,15 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
-        tree = Tree.create(resources, new ProjectTreeNodeDataAdapter(), projectTreeNodeRenderer);
+        projectTreeNodeDataAdapter = new ProjectTreeNodeDataAdapter();
+        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer);
 
         container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
         // create special 'invisible' root node that will contain 'visible' root nodes
-        rootNode = new AbstractTreeNode<Void>(null, null, null) {
+        rootNode = new AbstractTreeNode<Void>(null, null, null, null) {
             @Nonnull
             @Override
             public String getId() {
@@ -173,10 +176,12 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onKeyboard(KeyboardEvent event) {
+                if (event.getKeyCode() == KeyboardEvent.KeyCode.ENTER) {
+                    delegate.onEnterKey();
+
+                } else
                 if (event.getKeyCode() == KeyboardEvent.KeyCode.DELETE) {
                     delegate.onDeleteKey();
-                } else if (event.getKeyCode() == KeyboardEvent.KeyCode.ENTER) {
-                    delegate.onEnterKey();
                 }
             }
         });

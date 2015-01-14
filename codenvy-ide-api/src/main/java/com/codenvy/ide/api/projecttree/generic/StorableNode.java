@@ -13,7 +13,7 @@ package com.codenvy.ide.api.projecttree.generic;
 import com.codenvy.ide.api.projecttree.TreeNode;
 
 /**
- * An interface defines methods common to all nodes represent an item which
+ * Defines the requirements for a node that represents an item which was
  * retrieved from Codenvy Project API (e.g. file, folder, project, module).
  *
  * @param <T>

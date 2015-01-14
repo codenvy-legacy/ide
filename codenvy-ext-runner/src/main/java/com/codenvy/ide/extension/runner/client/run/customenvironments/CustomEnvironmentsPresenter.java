@@ -269,14 +269,14 @@ public class CustomEnvironmentsPresenter implements CustomEnvironmentsView.Actio
 
         public EnvironmentScript(TreeNode<?> parent, ItemReference data, EventBus eventBus, ProjectServiceClient projectServiceClient,
                                  DtoUnmarshallerFactory dtoUnmarshallerFactory, String environmentName) {
-            super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+            super(parent, data, appContext.getCurrentProject().getCurrentTree(), eventBus, projectServiceClient, dtoUnmarshallerFactory);
             this.environmentName = environmentName;
         }
 
         @Nonnull
         @Override
         public String getDisplayName() {
-            return '[' + environmentName + "] " + data.getName();
+            return '[' + environmentName + "] " + getData().getName();
         }
     }
 

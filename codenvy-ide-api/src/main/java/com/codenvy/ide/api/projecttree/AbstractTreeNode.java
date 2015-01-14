@@ -20,35 +20,41 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * Abstract implementation of {@link TreeNode} that is intended
- * to be used by subclassing instead of directly implementing an interface.
+ * Provides a base implementation of the {@link TreeNode} interface
+ * to minimize the effort required to implement this interface.
  *
  * @param <T>
  *         the type of the associated data
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractTreeNode<T> implements TreeNode<T> {
-    protected TreeNode<?>                  parent;
-    protected T                            data;
-    protected Array<TreeNode<?>>           cachedChildren;
-    protected EventBus                     eventBus;
-    private   SVGImage                     icon;
-    private   TreeNodeElement<TreeNode<?>> treeNodeElement;
+    private final TreeStructure                treeStructure;
+    protected     EventBus                     eventBus;
+    private       TreeNode<?>                  parent;
+    private       T                            data;
+    private       Array<TreeNode<?>>           cachedChildren;
+    private       SVGImage                     icon;
+    private       TreeNodeElement<TreeNode<?>> treeNodeElement;
 
     /**
-     * Creates new node with the specified parent, associated data and display name.
+     * Creates new node with the specified parent and associated data.
      *
      * @param parent
      *         parent node
      * @param data
      *         an object this node encapsulates
+     * @param treeStructure
+     *         {@link TreeStructure} which this node belongs
      * @param eventBus
+     *         {@link EventBus}
      */
-    public AbstractTreeNode(TreeNode<?> parent, T data, EventBus eventBus) {
+    public AbstractTreeNode(TreeNode<?> parent, T data, TreeStructure treeStructure, EventBus eventBus) {
         this.parent = parent;
         this.data = data;
+        this.treeStructure = treeStructure;
         this.eventBus = eventBus;
         cachedChildren = Collections.createArray();
     }
@@ -80,15 +86,26 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     /** {@inheritDoc} */
     @Nonnull
     @Override
-    public ProjectNode getProject() {
-        TreeNode<?> parent = getParent();
-        while (!(parent instanceof ProjectNode)) {
-            parent = parent.getParent();
-        }
-        return (ProjectNode)parent;
+    public TreeStructure getTreeStructure() {
+        return treeStructure;
     }
 
     /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public ProjectNode getProject() {
+        TreeNode<?> candidate = getParent();
+        while (candidate != null) {
+            if (candidate instanceof ProjectNode) {
+                return (ProjectNode)candidate;
+            }
+            candidate = candidate.getParent();
+        }
+        throw new IllegalStateException("Node is not owned by some project node.");
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
     @Override
     public SVGImage getDisplayIcon() {
         return icon;
@@ -158,5 +175,35 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     @Override
     public void setTreeNodeElement(TreeNodeElement<TreeNode<?>> treeNodeElement) {
         this.treeNodeElement = treeNodeElement;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AbstractTreeNode that = (AbstractTreeNode)o;
+        String id = getId();
+        String thatId = that.getId();
+
+        if (id != null ? !id.equals(thatId) : thatId != null) {
+            return false;
+        }
+        if (parent != null ? !parent.equals(that.parent) : that.parent != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = parent != null ? parent.hashCode() : 0;
+        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+        return result;
     }
 }

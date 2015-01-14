@@ -15,6 +15,7 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.TreeStructure;
 import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -28,16 +29,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * A node that represents a file.
+ * A node that represents a file (an {@link ItemReference} with type - file).
  *
  * @author Artem Zatsarynnyy
  */
 public class FileNode extends ItemNode implements VirtualFile {
 
     @AssistedInject
-    public FileNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, EventBus eventBus,
+    public FileNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, @Assisted TreeStructure treeStructure, EventBus eventBus,
                     ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
-        super(parent, data, eventBus, projectServiceClient, dtoUnmarshallerFactory);
+        super(parent, data, treeStructure, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
     /** {@inheritDoc} */
@@ -72,7 +73,7 @@ public class FileNode extends ItemNode implements VirtualFile {
     @Nullable
     @Override
     public String getMediaType() {
-        return data.getMediaType();
+        return getData().getMediaType();
     }
 
     @Override
@@ -83,7 +84,7 @@ public class FileNode extends ItemNode implements VirtualFile {
 
     @Override
     public String getContentUrl() {
-        List<Link> links = data.getLinks();
+        List<Link> links = getData().getLinks();
         Link li = null;
         for (Link link : links) {
             if (link.getRel().equals("get content")) {
@@ -101,7 +102,7 @@ public class FileNode extends ItemNode implements VirtualFile {
      *         callback to return retrieved content
      */
     public void getContent(final AsyncCallback<String> callback) {
-        projectServiceClient.getFileContent(data.getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+        projectServiceClient.getFileContent(getData().getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
                 callback.onSuccess(result);
@@ -123,7 +124,7 @@ public class FileNode extends ItemNode implements VirtualFile {
      *         callback to return retrieved content
      */
     public void updateContent(String content, final AsyncCallback<Void> callback) {
-        projectServiceClient.updateFile(data.getPath(), content, null, new AsyncRequestCallback<Void>() {
+        projectServiceClient.updateFile(getData().getPath(), content, null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 callback.onSuccess(result);
@@ -145,14 +146,14 @@ public class FileNode extends ItemNode implements VirtualFile {
             return false;
         }
         final FileNode other = (FileNode)o;
-        return data.equals(other.data);
+        return getData().equals(other.getData());
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((data == null) ? 0 : data.hashCode());
+        result = prime * result + ((getData() == null) ? 0 : getData().hashCode());
         return result;
     }
 }
