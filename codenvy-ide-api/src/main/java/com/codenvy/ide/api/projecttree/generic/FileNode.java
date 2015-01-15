@@ -144,12 +144,12 @@ public class FileNode extends ItemNode implements VirtualFile {
             return true;
         }
 
-        if (o instanceof FileNode) {
-            FileNode other = (FileNode)o;
-            return Objects.equals(getData(), other.getData());
+        if (!(o instanceof FileNode)) {
+            return false;
         }
 
-        return false;
+        FileNode other = (FileNode)o;
+        return Objects.equals(getData(), other.getData());
     }
 
     @Override

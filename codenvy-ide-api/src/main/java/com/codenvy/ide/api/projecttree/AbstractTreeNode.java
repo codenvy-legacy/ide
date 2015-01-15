@@ -184,12 +184,12 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
             return true;
         }
 
-        if (o instanceof AbstractTreeNode) {
-            AbstractTreeNode other = (AbstractTreeNode)o;
-            return Objects.equals(parent, other.parent) && Objects.equals(getId(), other.getId());
+        if (!(o instanceof AbstractTreeNode)) {
+            return false;
         }
 
-        return false;
+        AbstractTreeNode other = (AbstractTreeNode)o;
+        return Objects.equals(parent, other.parent) && Objects.equals(getId(), other.getId());
     }
 
     @Override
