@@ -87,10 +87,4 @@ public class ProjectTreeNodeDataAdapter implements NodeDataAdapter<TreeNode<?>> 
     public Array<String> getNodePath(TreeNode<?> data) {
         return PathUtils.getNodePath(this, data);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public TreeNode<?> getNodeByPath(TreeNode<?> root, Array<String> relativeNodePath) {
-        return null;
-    }
 }

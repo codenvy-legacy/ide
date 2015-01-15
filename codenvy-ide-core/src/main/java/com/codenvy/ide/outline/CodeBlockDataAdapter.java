@@ -95,11 +95,4 @@ public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock> {
         return PathUtils.getNodePath(this, data);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public CodeBlock getNodeByPath(CodeBlock root, Array<String> relativeNodePath) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
