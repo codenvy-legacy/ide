@@ -123,4 +123,9 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
         return null;
     }
 
+    @Override
+    public Object getNodeByPath(Object root, Array<String> relativeNodePath) {
+        return null;
+    }
+
 }
