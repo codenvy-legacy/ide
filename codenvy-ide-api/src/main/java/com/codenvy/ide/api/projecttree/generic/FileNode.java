@@ -27,6 +27,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A node that represents a file (an {@link ItemReference} with type - file).
@@ -142,18 +143,17 @@ public class FileNode extends ItemNode implements VirtualFile {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof FileNode)) {
-            return false;
+
+        if (o instanceof FileNode) {
+            FileNode other = (FileNode)o;
+            return Objects.equals(getData(), other.getData());
         }
-        final FileNode other = (FileNode)o;
-        return getData().equals(other.getData());
+
+        return false;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getData() == null) ? 0 : getData().hashCode());
-        return result;
+        return Objects.hash(getData());
     }
 }
