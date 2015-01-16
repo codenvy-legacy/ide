@@ -118,14 +118,14 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getDocument()).thenReturn(embeddedDocument);
 
-        assertEquals(defaultEditorAdapter.getDocument(), embeddedDocument);
+        assertEquals(embeddedDocument, defaultEditorAdapter.getDocument());
     }
 
     @Test
     public void shouldGetContentType() {
         when(textEditor.getContentType()).thenReturn("ContentType");
 
-        assertEquals(defaultEditorAdapter.getContentType(), "ContentType");
+        assertEquals("ContentType", defaultEditorAdapter.getContentType());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getSelectedTextRange()).thenReturn(textRange);
 
-        assertEquals(defaultEditorAdapter.getSelectedTextRange(), textRange);
+        assertEquals(textRange, defaultEditorAdapter.getSelectedTextRange());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getSelectedLinearRange()).thenReturn(linearRange);
 
-        assertEquals(defaultEditorAdapter.getSelectedLinearRange(), linearRange);
+        assertEquals(linearRange, defaultEditorAdapter.getSelectedLinearRange());
     }
 
     @Test
@@ -152,14 +152,14 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getCursorPosition()).thenReturn(textPosition);
 
-        assertEquals(defaultEditorAdapter.getCursorPosition(), textPosition);
+        assertEquals(textPosition, defaultEditorAdapter.getCursorPosition());
     }
 
     @Test
     public void shouldGetCursorOffset() {
         when(textEditor.getCursorOffset()).thenReturn(15);
 
-        assertEquals(defaultEditorAdapter.getCursorOffset(), 15);
+        assertEquals(15, defaultEditorAdapter.getCursorOffset());
     }
 
     @Test
@@ -184,7 +184,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getEditorInput()).thenReturn(editorInput);
 
-        assertEquals(defaultEditorAdapter.getEditorInput(), editorInput);
+        assertEquals(editorInput, defaultEditorAdapter.getEditorInput());
     }
 
     @Test
@@ -255,7 +255,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getTitleImage()).thenReturn(imageResource);
 
-        assertEquals(defaultEditorAdapter.getTitleImage(), imageResource);
+        assertEquals(imageResource, defaultEditorAdapter.getTitleImage());
     }
 
     @Test
@@ -264,7 +264,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getTitleSVGImage()).thenReturn(svgResource);
 
-        assertEquals(defaultEditorAdapter.getTitleSVGImage(), svgResource);
+        assertEquals(svgResource, defaultEditorAdapter.getTitleSVGImage());
     }
 
     @Test
@@ -274,7 +274,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.decorateIcon(inputSvgImage)).thenReturn(svgImage);
 
-        assertEquals(defaultEditorAdapter.decorateIcon(inputSvgImage), svgImage);
+        assertEquals(svgImage, defaultEditorAdapter.decorateIcon(inputSvgImage));
     }
 
     @Test
@@ -283,21 +283,21 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getTitleWidget()).thenReturn(isWidget);
 
-        assertEquals(defaultEditorAdapter.getTitleWidget(), isWidget);
+        assertEquals(isWidget, defaultEditorAdapter.getTitleWidget());
     }
 
     @Test
     public void shouldGetTitleToolTip() {
         when(textEditor.getTitleToolTip()).thenReturn("TitleToolTip");
 
-        assertEquals(defaultEditorAdapter.getTitleToolTip(), "TitleToolTip");
+        assertEquals("TitleToolTip", defaultEditorAdapter.getTitleToolTip());
     }
 
     @Test
     public void shouldGetSize() {
         when(textEditor.getSize()).thenReturn(15);
 
-        assertEquals(defaultEditorAdapter.getSize(), 15);
+        assertEquals(15, defaultEditorAdapter.getSize());
     }
 
     @Test
@@ -322,7 +322,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getSelection()).thenReturn(selection);
 
-        assertEquals(defaultEditorAdapter.getSelection(), selection);
+        assertEquals(selection, defaultEditorAdapter.getSelection());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class DefaultEditorAdapterTest {
 
         when(textEditor.getConfiguration()).thenReturn(editorConfiguration);
 
-        assertEquals(defaultEditorAdapter.getConfiguration(), editorConfiguration);
+        assertEquals(editorConfiguration, defaultEditorAdapter.getConfiguration());
     }
 
     @Test
@@ -376,12 +376,12 @@ public class DefaultEditorAdapterTest {
 
         defaultEditorAdapter.setTextEditor(textEditor);
 
-        assertEquals(defaultEditorAdapter.getTextEditor(), textEditor);
+        assertEquals(textEditor, defaultEditorAdapter.getTextEditor());
     }
 
     @Test
     public void shouldGetTextEditor() {
-        assertEquals(defaultEditorAdapter.getTextEditor(), textEditor);
+        assertEquals(textEditor, defaultEditorAdapter.getTextEditor());
     }
 
     @Test
