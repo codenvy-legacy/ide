@@ -21,10 +21,23 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
     AcceptsOneWidget getContainer();
 
-    void showNoOutline(String cause);
-
+    /**
+     * Enables the outline.
+     */
     void enableOutline();
 
+    /**
+     * Disables outline and displays a message.
+     *
+     * @param cause message to display
+     */
+    void disableOutline(String cause);
+
+    /**
+     * Sets new title for
+     *
+     * @param title
+     */
     void setTitle(String title);
 
     void clear();

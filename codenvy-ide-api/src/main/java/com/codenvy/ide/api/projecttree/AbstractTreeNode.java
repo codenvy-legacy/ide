@@ -21,6 +21,7 @@ import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Provides a base implementation of the {@link TreeNode} interface
@@ -182,28 +183,17 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+
+        if (!(o instanceof AbstractTreeNode)) {
             return false;
         }
 
-        AbstractTreeNode that = (AbstractTreeNode)o;
-        String id = getId();
-        String thatId = that.getId();
-
-        if (id != null ? !id.equals(thatId) : thatId != null) {
-            return false;
-        }
-        if (parent != null ? !parent.equals(that.parent) : that.parent != null) {
-            return false;
-        }
-
-        return true;
+        AbstractTreeNode other = (AbstractTreeNode)o;
+        return Objects.equals(parent, other.parent) && Objects.equals(getId(), other.getId());
     }
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
-        return result;
+        return Objects.hash(parent, getId());
     }
 }

@@ -98,7 +98,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
     public void onActivePartChanged(ActivePartChangedEvent event) {
         if (event.getActivePart() == null) {
             lastHasOutlineActivePart = null;
-            view.showNoOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
+            view.disableOutline(coreLocalizationConstant.outlineNoFileOpenedMessage());
             return;
         }
 
@@ -108,7 +108,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
 
         if (!(event.getActivePart() instanceof HasOutline)) {
             lastHasOutlineActivePart = null;
-            view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
+            view.disableOutline(coreLocalizationConstant.outlineNotAvailableMessage());
             return;
         }
 
@@ -118,7 +118,7 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
                 lastHasOutlineActivePart.getOutline().go(view.getContainer());
                 view.enableOutline();
             } else {
-                view.showNoOutline(coreLocalizationConstant.outlineNotAvailableMessage());
+                view.disableOutline(coreLocalizationConstant.outlineNotAvailableMessage());
             }
         }
     }

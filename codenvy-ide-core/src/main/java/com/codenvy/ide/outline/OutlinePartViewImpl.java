@@ -53,7 +53,7 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
 
     /** {@inheritDoc} */
     @Override
-    public void showNoOutline(String cause) {
+    public void disableOutline(String cause) {
         clear();
         noOutlineCause.setText(cause);
         container.add(noOutline);
