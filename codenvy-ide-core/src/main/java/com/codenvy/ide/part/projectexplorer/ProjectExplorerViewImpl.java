@@ -99,6 +99,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             treeNode.setParent(rootNode);
         }
 
+        tree.getSelectionModel().clearSelections();
         tree.getModel().setRoot(rootNode);
         tree.renderTree(0);
 

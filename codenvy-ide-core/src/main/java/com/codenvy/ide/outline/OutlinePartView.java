@@ -15,7 +15,7 @@ import com.codenvy.ide.api.parts.base.BaseActionDelegate;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @author Evgen Vidolob
  * @version $Id:
  */
 public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
@@ -34,14 +34,20 @@ public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
     void disableOutline(String cause);
 
     /**
-     * Sets new title for
+     * Sets new title for outline part.
      *
-     * @param title
+     * @param title new title
      */
     void setTitle(String title);
 
+    /**
+     * Clears outline part.
+     */
     void clear();
 
+    /**
+     * A delegate to bind UI with logic.
+     */
     public interface ActionDelegate extends BaseActionDelegate {
 
     }

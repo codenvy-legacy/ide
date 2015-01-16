@@ -16,7 +16,6 @@ import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
-import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.event.FileEvent;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
@@ -43,7 +42,6 @@ public class OpenFileAction extends Action {
     private final AppContext               appContext;
     private final NotificationManager      notificationManager;
     private final CoreLocalizationConstant localization;
-    private final EditorAgent              editorAgent;
 
     private HandlerRegistration reopenFileHandler;
 
@@ -51,13 +49,11 @@ public class OpenFileAction extends Action {
     public OpenFileAction(EventBus eventBus,
                           AppContext appContext,
                           NotificationManager notificationManager,
-                          CoreLocalizationConstant localization,
-                          EditorAgent editorAgent) {
+                          CoreLocalizationConstant localization) {
         this.eventBus = eventBus;
         this.appContext = appContext;
         this.notificationManager = notificationManager;
         this.localization = localization;
-        this.editorAgent = editorAgent;
     }
 
     @Override
@@ -98,11 +94,17 @@ public class OpenFileAction extends Action {
     }
 
     private void openFileByPath(final String filePath) {
+        Log.error(getClass(), "there");
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             currentProject.getCurrentTree().getNodeByPath(filePath, new AsyncCallback<TreeNode<?>>() {
                 @Override
                 public void onSuccess(TreeNode<?> result) {
+                    if (result == null) {
+                        notificationManager.showNotification(new Notification(localization.unableOpenFile(filePath), WARNING));
+                        return;
+                    }
+
                     if (result instanceof FileNode) {
                         eventBus.fireEvent(new FileEvent((FileNode)result, FileEvent.FileOperation.OPEN));
                     }
