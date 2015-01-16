@@ -18,9 +18,13 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
+import com.codenvy.ide.api.event.FileEvent;
+import com.codenvy.ide.api.event.FileEventHandler;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PropertyListener;
+import com.codenvy.ide.api.parts.WorkspaceAgent;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.texteditor.HandlesUndoRedo;
 import com.codenvy.ide.api.texteditor.UndoableEditor;
@@ -42,11 +46,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Default implementation of {@link EditorAdapter}.
  */
-public class DefaultEditorAdapter extends Composite implements EditorAdapter, RequiresResize, UndoableEditor {
+public class DefaultEditorAdapter extends Composite implements EditorAdapter, FileEventHandler, RequiresResize, UndoableEditor {
 
     /** The UI binder instance. */
     private static final DefaultEditorAdapterUiBinder UIBINDER = GWT.create(DefaultEditorAdapterUiBinder.class);
@@ -60,12 +65,22 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
     /** The property listeners. */
     private List<PropertyListener> propertylisteners;
 
+    /** The editor input. */
+    private EditorInput input;
+
+    /** The workspace agent. */
+    private WorkspaceAgent workspaceAgent;
+
     /** The panel of the component. */
     @UiField
     SimplePanel panel = new SimplePanel();
 
-    public DefaultEditorAdapter() {
+    public DefaultEditorAdapter(EventBus eventBus, final WorkspaceAgent workspaceAgent) {
         initWidget(UIBINDER.createAndBindUi(this));
+
+        eventBus.addHandler(FileEvent.TYPE, this);
+
+        this.workspaceAgent = workspaceAgent;
     }
 
     @Override
@@ -121,6 +136,7 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
     @Override
     public void init(final EditorInput input) throws EditorInitException {
         this.textEditor.init(input);
+        this.input = input;
     }
 
     @Override
@@ -286,6 +302,19 @@ public class DefaultEditorAdapter extends Composite implements EditorAdapter, Re
             return ((UndoableEditor)this.textEditor).getUndoRedo();
         } else {
             return new DummyHandlesUndoRedo();
+        }
+    }
+
+    @Override
+    public void onFileOperation(FileEvent event) {
+        if (event.getOperationType() != FileEvent.FileOperation.CLOSE) {
+            return;
+        }
+
+        final VirtualFile eventFile = event.getFile();
+        final VirtualFile file = input.getFile();
+        if (file.equals(eventFile)) {
+            workspaceAgent.removePart(this);
         }
     }
 
