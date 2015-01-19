@@ -63,6 +63,8 @@ public class PopupKeyDownListener implements EventListener {
                     focusLast();
                     break;
                 case KeyCodes.KEY_ENTER:
+                    evt.preventDefault();
+                    evt.stopImmediatePropagation();
                     validateItem();
                     break;
                 default:
@@ -130,7 +132,9 @@ public class PopupKeyDownListener implements EventListener {
      * Activates the currently selected item.
      */
     private void validateItem() {
-        // TODO Auto-generated method stub
-        
+        final Element current = Elements.getDocument().getActiveElement();
+        if (current.getParentElement().isEqualNode(listElement)) {
+            this.popupWidget.validateItem(current);
+        }
     }
 }

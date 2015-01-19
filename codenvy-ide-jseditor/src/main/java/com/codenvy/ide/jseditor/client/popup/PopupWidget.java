@@ -212,6 +212,15 @@ public abstract class PopupWidget<T> {
     }
 
     /**
+     * Action taken when an item is validated.
+     * @param itemElement the validated item
+     */
+    public void validateItem(final Element itemElement) {
+        // by default, only hide the popup
+        hide();
+    }
+
+    /**
      * Returns the widget viewed as an element.
      * @return the element
      */
