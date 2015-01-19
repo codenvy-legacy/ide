@@ -13,6 +13,8 @@ package com.codenvy.ide.jseditor.client;
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
+import com.codenvy.ide.api.keybinding.KeyBindingAgent;
+import com.codenvy.ide.api.keybinding.KeyBuilder;
 import com.codenvy.ide.jseditor.client.inject.PlainTextFileType;
 import com.codenvy.ide.jseditor.client.popup.PopupResources;
 import com.codenvy.ide.jseditor.client.preference.EditorPreferenceResource;
@@ -34,6 +36,7 @@ public class JsEditorExtension {
                              final @PlainTextFileType FileType plainText,
                              final EditorPreferenceResource editorPreferenceResource,
                              final EditorResources editorResources,
+                             final KeyBindingAgent keyBindingAgent,
                              final PopupResources popupResources) {
 
         // register text/plain file type
@@ -43,5 +46,7 @@ public class JsEditorExtension {
         editorPreferenceResource.cellStyle().ensureInjected();
         editorResources.editorCss().ensureInjected();
         popupResources.popupStyle().ensureInjected();
+
+        keyBindingAgent.getGlobal().addKey(new KeyBuilder().action().charCode('1').build(), "preventNative");
     }
 }
