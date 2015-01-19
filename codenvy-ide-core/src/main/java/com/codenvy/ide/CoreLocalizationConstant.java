@@ -384,6 +384,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.saveChanges")
     String messagesSaveChanges(String name);
 
+    @Key("messages.promtSaveChanges")
+    String messagesPromtSaveChanges();
+
     @Key("messages.unableOpenFile")
     public String unableOpenFile(String path);
 
