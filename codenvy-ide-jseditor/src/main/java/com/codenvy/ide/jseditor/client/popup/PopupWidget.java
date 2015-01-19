@@ -163,6 +163,8 @@ public abstract class PopupWidget<T> {
         }
         final Element itemElement = createItem(itemModel);
         if (itemElement != null) {
+            // makes the element focusable
+            itemElement.setTabIndex(1);
             this.listElement.appendChild(itemElement);
         }
     }
