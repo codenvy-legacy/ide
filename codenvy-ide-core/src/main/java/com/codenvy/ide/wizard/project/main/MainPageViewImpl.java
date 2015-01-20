@@ -358,7 +358,7 @@ public class MainPageViewImpl implements MainPageView {
         for (String s : samples.keySet()) {
             List<ProjectTemplateDescriptor> projectTemplateDescriptors = new ArrayList<>();
             projectTemplateDescriptors.addAll(samples.get(s));
-            Collections.sort(projectTemplateDescriptors, new ProjectTemplaDescriptorComparator());
+            Collections.sort(projectTemplateDescriptors, new ProjectTemplateDescriptorComparator());
             Category<ProjectTemplateDescriptor> category = new Category<>(s, projectTemplateRenderer, projectTemplateDescriptors,
                                                                           projectTemplateDelegate);
             categoriesList.add(category);

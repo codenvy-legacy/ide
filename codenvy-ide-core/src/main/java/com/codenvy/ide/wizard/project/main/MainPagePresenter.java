@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
+import com.codenvy.api.project.gwt.client.ProjectTemplateRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
@@ -22,6 +23,7 @@ import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
@@ -45,6 +47,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     private       MainPageView                  view;
     private       ProjectTypeServiceClient      projectTypeServiceClient;
     private final ProjectTypeRegistry           projectTypeRegistry;
+    private final ProjectTemplateRegistry       projectTemplateRegistry;
     private       ProjectTypeWizardRegistry     wizardRegistry;
     private       ProjectTypeDefinition         typeDescriptor;
     private       ProjectTemplateDescriptor     template;
@@ -58,6 +61,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
     public MainPagePresenter(MainPageView view,
                              ProjectTypeServiceClient projectTypeServiceClient,
                              ProjectTypeRegistry projectTypeRegistry,
+                             ProjectTemplateRegistry projectTemplateRegistry,
                              ProjectTypeWizardRegistry wizardRegistry,
                              PreSelectedProjectTypeManager preSelectedProjectTypeManager,
                              DialogFactory dialogFactory,
@@ -68,6 +72,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         this.view = view;
         this.projectTypeServiceClient = projectTypeServiceClient;
         this.projectTypeRegistry = projectTypeRegistry;
+        this.projectTemplateRegistry = projectTemplateRegistry;
         this.wizardRegistry = wizardRegistry;
         this.preSelectedProjectTypeManager = preSelectedProjectTypeManager;
         this.dialogFactory = dialogFactory;
@@ -152,19 +157,18 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
                     defaultProjectTypeDescriptor = type;
                 }
             }
-//                    if (project == null) {
-//                        if (type.getTemplates() != null && !type.getTemplates().isEmpty()) {
-//                            for (ProjectTemplateDescriptor templateDescriptor : type.getTemplates()) {
-//                                String category = templateDescriptor.getCategory() == null
-//                                                  ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
-//                                                  : templateDescriptor.getCategory();
-//                                if (!samples.containsKey(category)) {
-//                                    samples.put(category, new HashSet<ProjectTemplateDescriptor>());
-//                                }
-//                                samples.get(category).add(templateDescriptor);
-//                            }
-//                        }
-//                    }
+            if (project == null) {
+                Array<ProjectTemplateDescriptor> templateDescriptors = projectTemplateRegistry.getTemplateDescriptors(type.getId());
+                    for (ProjectTemplateDescriptor templateDescriptor : templateDescriptors.asIterable()) {
+                        String category = templateDescriptor.getCategory() == null
+                                          ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
+                                          : templateDescriptor.getCategory();
+                        if (!samples.containsKey(category)) {
+                            samples.put(category, new HashSet<ProjectTemplateDescriptor>());
+                        }
+                        samples.get(category).add(templateDescriptor);
+                    }
+            }
         }
 
         view.setAvailableProjectTypeDescriptors(projectTypes);
@@ -181,8 +185,6 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             view.selectProjectType(defaultProjectTypeDescriptor.getId());
             view.focusOnName();
         }
-
-
     }
 
     @Override
@@ -209,6 +211,5 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         wizardContext.removeData(ProjectWizard.PROJECT_TYPE);
         typeDescriptor = null;
         delegate.updateControls();
-
     }
 }

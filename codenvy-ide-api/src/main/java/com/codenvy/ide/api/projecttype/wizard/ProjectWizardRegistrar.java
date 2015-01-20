@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  * Defines the requirements for an object that provides information for registering new project type into project wizard.
  * <p/>
  * Implementations of this interface need to be registered using a multibinder
- * in order to be picked up by {@link ProjectWizardRegistrarAgent}.
+ * in order to be picked up by {@link ProjectWizardRegistry}.
  *
  * @author Artem Zatsarynnyy
  */

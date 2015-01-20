@@ -16,7 +16,6 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.wizard.Wizard;
@@ -29,13 +28,10 @@ import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Artem Zatsarynnyy
@@ -54,18 +50,9 @@ public class ProjectWizardPresenter implements WizardDialog, Wizard.UpdateDelega
     private final DialogFactory            dialogFactory;
     private final ProjectWizardView        view;
     private final MainPagePresenter        mainPage;
-    private final Provider<WizardPage> mainPageProvider             = new Provider<WizardPage>() {
-        @Override
-        public WizardPage get() {
-            return mainPage;
-        }
-    };
-    private final Map<String, String>  runnersDescriptionMap        = new HashMap<>();
-    private final Map<String, String>  defaultBuilderDescriptionMap = new HashMap<>();
-    private WizardContext wizardContext;
-    private WizardPage    currentPage;
-    private ProjectWizard wizard;
-    private int           workspaceMemory;
+    private       WizardContext            wizardContext;
+    private       WizardPage               currentPage;
+    private       ProjectWizard            wizard;
 
     @Inject
     public ProjectWizardPresenter(ProjectWizard projectWizard,

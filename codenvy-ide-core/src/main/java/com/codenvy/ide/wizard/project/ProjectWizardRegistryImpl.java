@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Implementation for {@link com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry}.
+ * Implementation for {@link ProjectWizardRegistry}.
  *
  * @author Artem Zatsarynnyy
  */

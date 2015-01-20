@@ -129,13 +129,13 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             protected void onSuccess(RunnerEnvironmentTree result) {
                 ProjectTypeDefinition data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
                 String typeCategory = projectTypeWizardRegistry.getCategoryForProjectType(data.getId());
-                if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
-                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
-                    tree.addNode(result.getNode(typeCategory.toLowerCase()));
-                    view.addRunner(tree);
-                } else {
+//                if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
+//                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
+//                    tree.addNode(result.getNode(typeCategory.toLowerCase()));
+//                    view.addRunner(tree);
+//                } else {
                     view.addRunner(result);
-                }
+//                }
                 selectRunner();
             }
 

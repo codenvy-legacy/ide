@@ -18,8 +18,11 @@ import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.factory.dto.Ide;
 import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTemplateRegistry;
+import com.codenvy.api.project.gwt.client.ProjectTemplateServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
@@ -93,7 +96,9 @@ public class BootstrapController {
     private final UserProfileServiceClient     userProfileService;
     private final WorkspaceServiceClient       workspaceServiceClient;
     private final ProjectTypeServiceClient     projectTypeService;
+    private final ProjectTemplateServiceClient projectTemplateServiceClient;
     private final ProjectTypeRegistry          projectTypeRegistry;
+    private final ProjectTemplateRegistry      projectTemplateRegistry;
     private final PreferencesManagerImpl       preferencesManager;
     private final StyleInjector                styleInjector;
     private final CoreLocalizationConstant     coreLocalizationConstant;
@@ -101,7 +106,7 @@ public class BootstrapController {
     private final ActionManager                actionManager;
     private final AppCloseHandler              appCloseHandler;
     private final PresentationFactory          presentationFactory;
-    private       AppContext                   appContext;
+    private final AppContext                   appContext;
 
     /** Create controller. */
     @Inject
@@ -111,7 +116,9 @@ public class BootstrapController {
                                UserProfileServiceClient userProfileService,
                                WorkspaceServiceClient workspaceServiceClient,
                                ProjectTypeServiceClient projectTypeService,
+                               ProjectTemplateServiceClient projectTemplateServiceClient,
                                ProjectTypeRegistry projectTypeRegistry,
+                               ProjectTemplateRegistry projectTemplateRegistry,
                                PreferencesManagerImpl preferencesManager,
                                StyleInjector styleInjector,
                                CoreLocalizationConstant coreLocalizationConstant,
@@ -132,7 +139,9 @@ public class BootstrapController {
         this.userProfileService = userProfileService;
         this.workspaceServiceClient = workspaceServiceClient;
         this.projectTypeService = projectTypeService;
+        this.projectTemplateServiceClient = projectTemplateServiceClient;
         this.projectTypeRegistry = projectTypeRegistry;
+        this.projectTemplateRegistry = projectTemplateRegistry;
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
         this.coreLocalizationConstant = coreLocalizationConstant;
@@ -220,7 +229,7 @@ public class BootstrapController {
                 setTheme();
                 styleInjector.inject();
                 loadProjectTypes();
-
+                loadProjectTemplates();
             }
 
             @Override
@@ -231,13 +240,12 @@ public class BootstrapController {
         });
     }
 
-
     private void loadProjectTypes() {
         projectTypeService.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
 
             @Override
             protected void onSuccess(Array<ProjectTypeDefinition> result) {
-                for(ProjectTypeDefinition projectType : result.asIterable()) {
+                for (ProjectTypeDefinition projectType : result.asIterable()) {
                     projectTypeRegistry.register(projectType);
                 }
                 loadFactory();
@@ -245,11 +253,27 @@ public class BootstrapController {
 
             @Override
             protected void onFailure(Throwable exception) {
-
+                Log.error(BootstrapController.class, exception);
             }
         });
     }
 
+    private void loadProjectTemplates() {
+        projectTemplateServiceClient.getProjectTemplates(new AsyncRequestCallback<Array<ProjectTemplateDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTemplateDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<ProjectTemplateDescriptor> result) {
+                for (ProjectTemplateDescriptor template : result.asIterable()) {
+                    projectTemplateRegistry.register(template);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, exception);
+            }
+        });
+    }
 
     private void loadFactory() {
         String factoryParams = null;

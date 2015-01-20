@@ -74,7 +74,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private final BuilderServiceClient      builderServiceClient;
     private final CoreLocalizationConstant  constant;
     private final ProjectTypeWizardRegistry wizardRegistry;
-    private final String                    workspaceId;
     private final AppContext                appContext;
     private final DtoFactory                dtoFactory;
     private final EventBus                  eventBus;
@@ -95,8 +94,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private int           workspaceMemory;
 
     @Inject
-    public NewProjectWizardPresenter(@Named("workspaceId") String workspaceId,
-                                     ProjectWizardView view,
+    public NewProjectWizardPresenter(ProjectWizardView view,
                                      MainPagePresenter mainPage,
                                      ProjectServiceClient projectService,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -114,7 +112,6 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.constant = constant;
         this.wizardRegistry = wizardRegistry;
-        this.workspaceId = workspaceId;
         this.appContext = appContext;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
@@ -129,7 +126,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     }
 
     private void requestBuildersDescriptor() {
-        builderServiceClient.getRegisteredServers(workspaceId, new AsyncRequestCallback<Array<BuilderDescriptor>>(
+        builderServiceClient.getRegisteredServers(new AsyncRequestCallback<Array<BuilderDescriptor>>(
                 dtoUnmarshallerFactory.newArrayUnmarshaller(BuilderDescriptor.class)) {
             @Override
             protected void onSuccess(Array<BuilderDescriptor> results) {
