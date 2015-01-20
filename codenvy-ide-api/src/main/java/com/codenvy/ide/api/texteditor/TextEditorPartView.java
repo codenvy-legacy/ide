@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Element;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface TextEditorPartView extends HandlesTextOperations, IsConfigurable<TextEditorConfiguration>, HasReadOnlyProperty,
+public interface TextEditorPartView extends HandlesTextOperations, HasReadOnlyProperty,
                                             HasTextInputListeners {
 
     /**
