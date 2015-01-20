@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -147,7 +147,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                                        final DialogFactory dialogFactory,
                                        final DocumentStorage documentStorage,
                                        final JsEditorConstants constant,
-                                       @Assisted final EditorWidgetFactory<T> editorWigetFactory,
+                                       @Assisted final EditorWidgetFactory<T> editorWidgetFactory,
                                        final EditorModule<T> editorModule,
                                        final EmbeddedTextEditorPartView editorView,
                                        final EventBus eventBus,
@@ -164,7 +164,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         this.documentStorage = documentStorage;
         this.editorView = editorView;
         this.editorModule = editorModule;
-        this.editorWigetFactory = editorWigetFactory;
+        this.editorWigetFactory = editorWidgetFactory;
         this.fileTypeIdentifier = fileTypeIdentifier;
         this.generalEventBus = eventBus;
         this.quickAssistantFactory = quickAssistantFactory;
@@ -425,7 +425,6 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void activate() {
         if (editorWidget != null) {
-            this.editorWidget.refresh();
             this.editorWidget.setFocus();
         } else {
             this.delayedFocus = true;

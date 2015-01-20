@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import com.google.inject.assistedinject.AssistedInject;
 
 import elemental.dom.Element;
 import elemental.dom.Node;
+import elemental.events.CustomEvent;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.SpanElement;
@@ -34,6 +35,11 @@ import elemental.html.SpanElement;
  * Widget for quick assist display.
  */
 public class QuickAssistWidget extends PopupWidget<CompletionProposal>{
+
+    /**
+     * Custom event type.
+     */
+    private static final String CUSTOM_EVT_TYPE_VALIDATE = "itemvalidate";
 
     /** The related editor. */
     private final TextEditor textEditor;
@@ -63,7 +69,7 @@ public class QuickAssistWidget extends PopupWidget<CompletionProposal>{
         element.appendChild(label);
         element.appendChild(group);
 
-        element.addEventListener(Event.DBLCLICK, new EventListener() {
+        final EventListener validateListener = new EventListener() {
             @Override
             public void handleEvent(final Event evt) {
                 proposal.getCompletion(new CompletionProposal.CompletionCallback() {
@@ -82,8 +88,9 @@ public class QuickAssistWidget extends PopupWidget<CompletionProposal>{
                 });
                 hide();
             }
-        }, false);
-
+        };
+        element.addEventListener(Event.DBLCLICK, validateListener, false);
+        element.addEventListener(CUSTOM_EVT_TYPE_VALIDATE, validateListener, false);
         return element;
     }
 
@@ -92,4 +99,14 @@ public class QuickAssistWidget extends PopupWidget<CompletionProposal>{
         noProposalMessage.setTextContent("No proposals");
         return noProposalMessage;
     }
+
+    @Override
+    public void validateItem(final Element validatedItem) {
+        validatedItem.dispatchEvent(createValidateEvent(CUSTOM_EVT_TYPE_VALIDATE));
+        super.validateItem(validatedItem);
+    }
+
+    private native CustomEvent createValidateEvent(String eventType) /*-{
+        return new CustomEvent(eventType);
+    }-*/;
 }
