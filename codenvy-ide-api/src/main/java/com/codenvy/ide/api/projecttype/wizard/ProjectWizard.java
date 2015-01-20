@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
-import com.codenvy.api.project.server.type.ProjectType2;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
