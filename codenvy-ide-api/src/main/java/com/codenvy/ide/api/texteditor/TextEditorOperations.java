@@ -11,10 +11,9 @@
 package com.codenvy.ide.api.texteditor;
 
 /**
- * Defines the target for text operations. {@link TextEditorPartView#canDoOperation(int)} informs
+ * Defines the target for text operations. The editor informs
  * the clients about the ability of the target to perform the specified
- * operation at the current point in time. {@link TextEditorPartView#doOperation(int)} executes
- * the specified operation.
+ * operation at the current point in time.
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
