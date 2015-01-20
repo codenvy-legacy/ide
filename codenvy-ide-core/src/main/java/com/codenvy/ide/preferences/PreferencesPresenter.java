@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,13 @@ package com.codenvy.ide.preferences;
 
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.StringMapUnmarshaller;
+import com.codenvy.ide.ui.dialogs.CancelCallback;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -51,6 +54,8 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
 
     private UserProfileServiceClient userProfileService;
 
+    private CoreLocalizationConstant locale;
+
     /**
      * Create presenter.
      * <p/>
@@ -67,12 +72,14 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
                                    Set<PreferencePagePresenter> preferences,
                                    PreferencesManager preferencesManager,
                                    DialogFactory dialogFactory,
-                                   UserProfileServiceClient userProfileService) {
+                                   UserProfileServiceClient userProfileService,
+                                   CoreLocalizationConstant locale) {
         this.view = view;
         this.preferences = preferences;
         this.preferencesManager = preferencesManager;
         this.dialogFactory = dialogFactory;
         this.userProfileService = userProfileService;
+        this.locale = locale;
         this.view.setDelegate(this);
         for (PreferencePagePresenter preference : preferences) {
             preference.setUpdateDelegate(this);
@@ -162,7 +169,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
                     /**
                      * Revert changes on every preference page
                      */
-                    for (PreferencePagePresenter p: PreferencesPresenter.this.preferences) {
+                    for (PreferencePagePresenter p : PreferencesPresenter.this.preferences) {
                         p.revertChanges();
                     }
                 }
@@ -182,13 +189,45 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
     /** {@inheritDoc} */
     @Override
     public void onCloseClicked() {
-        view.close();
+        boolean haveUnsavedData = false;
         for (PreferencePagePresenter preference : preferences) {
             if (preference.isDirty()) {
-                preference.revertChanges();
+                haveUnsavedData = true;
             }
+        }
+        if (haveUnsavedData) {
+            dialogFactory.createConfirmDialog("", locale.messagesPromtSaveChanges(), getConfirmCallback(), getCancelCallback()).show();
+        } else {
+            view.close();
         }
         view.enableSaveButton(false);
     }
 
+    private ConfirmCallback getConfirmCallback() {
+        return new ConfirmCallback() {
+            @Override
+            public void accepted() {
+                for (PreferencePagePresenter preference : preferences) {
+                    if (preference.isDirty()) {
+                        preference.storeChanges();
+                    }
+                }
+                view.close();
+            }
+        };
+    }
+
+    private CancelCallback getCancelCallback() {
+        return new CancelCallback() {
+            @Override
+            public void cancelled() {
+                for (PreferencePagePresenter preference : preferences) {
+                    if (preference.isDirty()) {
+                        preference.revertChanges();
+                    }
+                }
+                view.close();
+            }
+        };
+    }
 }

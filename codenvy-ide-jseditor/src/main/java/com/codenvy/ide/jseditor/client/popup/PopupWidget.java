@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,17 @@ public abstract class PopupWidget<T> {
 
     private final EventListener popupListener;
 
+    /**
+     * The keyboard listener in the popup.
+     */
+    private final EventListener keyboardListener;
+
     private final PopupResources popupResources;
+
+    /**
+     * The previously focused element.
+     */
+    private Element previousFocus;
 
     public PopupWidget(final PopupResources popupResources) {
         this.popupElement = Elements.createDivElement(popupResources.popupStyle().window());
@@ -70,6 +80,7 @@ public abstract class PopupWidget<T> {
                 // else won't happen
             }
         };
+        this.keyboardListener = new PopupKeyDownListener(this, this.listElement);
     }
 
     /** Returns the content to display when no items were added. */
@@ -96,6 +107,7 @@ public abstract class PopupWidget<T> {
         if (this.listElement.getChildElementCount() == 0) {
             Element emptyElement = getEmptyDisplay();
             if (emptyElement != null) {
+                emptyElement.setTabIndex(1);
                 this.listElement.appendChild(emptyElement);
             } else {
                 return;
@@ -146,6 +158,14 @@ public abstract class PopupWidget<T> {
                 this.popupElement.getStyle().setLeft(newLeft - MIN_WIDTH, PX);
             }
         }
+
+        // save previous focus and set focus in popup
+        this.previousFocus = Elements.getDocument().getActiveElement();
+        final Element toFocus = this.listElement.getFirstElementChild();
+        toFocus.focus();
+
+        // add key event listener on popup
+        this.listElement.addEventListener(Event.KEYDOWN, this.keyboardListener, false);
     }
 
     /** Returns the style to add to all items. */
@@ -163,18 +183,41 @@ public abstract class PopupWidget<T> {
         }
         final Element itemElement = createItem(itemModel);
         if (itemElement != null) {
+            // makes the element focusable
+            itemElement.setTabIndex(1);
             this.listElement.appendChild(itemElement);
         }
     }
 
     /** Hide the popup. */
     public void hide() {
+        // restore previous focus state
+        if (this.previousFocus != null) {
+            this.previousFocus.focus();
+            this.previousFocus = null;
+        }
+
+        // remove the keyboard listener
+        this.listElement.removeEventListener(Event.KEYDOWN, this.keyboardListener, false);
+
+        // remove the element from dom
         final Document document = Elements.getDocument();
         final Node parent = this.popupElement.getParentNode();
         if (parent  != null) {
             parent.removeChild(this.popupElement);
         }
+
+        // remove the mouse listener
         document.removeEventListener(Event.MOUSEDOWN, this.popupListener);
+    }
+
+    /**
+     * Action taken when an item is validated.
+     * @param itemElement the validated item
+     */
+    public void validateItem(final Element itemElement) {
+        // by default, only hide the popup
+        hide();
     }
 
     /**

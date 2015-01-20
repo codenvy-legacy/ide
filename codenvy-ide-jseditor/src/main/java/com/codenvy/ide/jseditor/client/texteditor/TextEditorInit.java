@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,8 @@ import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.KeyBindingAction;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
+import com.codenvy.ide.jseditor.client.position.PositionConverter;
+import com.codenvy.ide.jseditor.client.position.PositionConverter.PixelCoordinates;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistAssistant;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
@@ -73,6 +75,11 @@ public class TextEditorInit<T extends EditorWidget> {
     private final QuickAssistantFactory quickAssistantFactory;
     private final EmbeddedTextEditorPresenter<T> textEditor;
 
+
+    /**
+     * The quick assist assistant.
+     */
+    private QuickAssistAssistant quickAssist;
 
     public TextEditorInit(final TextEditorConfiguration configuration,
                           final EventBus generalEventBus,
@@ -266,20 +273,41 @@ public class TextEditorInit<T extends EditorWidget> {
     private void configureQuickAssist(final DocumentHandle documentHandle) {
         final QuickAssistProcessor processor = configuration.getQuickAssistProcessor();
         if (this.quickAssistantFactory != null && processor != null) {
-            final QuickAssistAssistant quickAssist = quickAssistantFactory.createQuickAssistant(this.textEditor);
-            quickAssist.setQuickAssistProcessor(processor);
+            this.quickAssist = quickAssistantFactory.createQuickAssistant(this.textEditor);
+            this.quickAssist.setQuickAssistProcessor(processor);
             documentHandle.getDocEventBus().addHandler(GutterClickEvent.TYPE, new GutterClickHandler() {
                 @Override
                 public void onGutterClick(final GutterClickEvent event) {
                     if (Gutters.ANNOTATION_GUTTER.equals(event.getGutterId())) {
                         final MouseEvent originalEvent = event.getEvent();
-                        quickAssist.showPossibleQuickAssists(event.getLineNumber(),
-                                                             originalEvent.getClientX(),
-                                                             originalEvent.getClientY());
+                        showQuickAssistant(event.getLineNumber(),
+                                           originalEvent.getClientX(),
+                                           originalEvent.getClientY());
                     }
                 }
             });
+
+            //add a key binding
+            final KeyBindingAction action = new KeyBindingAction() {
+                @Override
+                public void action() {
+                    final PositionConverter positionConverter = textEditor.getPositionConverter();
+                    if (positionConverter != null) {
+                        final TextPosition cursor = textEditor.getCursorPosition();
+                        final int lineNumber = cursor.getLine();
+                        final PixelCoordinates pixelPos = positionConverter.textToPixel(cursor);
+                        showQuickAssistant(lineNumber, pixelPos.getX(), pixelPos.getY());
+                    }
+                }
+            };
+            final HasKeybindings hasKeybindings = this.textEditor.getHasKeybindings();
+            hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.ONE, action));
+            hasKeybindings.addKeybinding(new Keybinding(true, false, false, false, KeyCode.NUM_ONE, action));
         }
+    }
+
+    private void showQuickAssistant(final int lineNumber, int clientX, int clientY) {
+        quickAssist.showPossibleQuickAssists(lineNumber, clientX, clientY);
     }
 
     private void configureChangeInterceptors(final DocumentHandle documentHandle) {
