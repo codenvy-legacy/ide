@@ -33,6 +33,7 @@
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-client</module>
         <module>codenvy-ide-jseditor</module>
+        <module>codenvy-ide-legacy-document</module>
     </modules>
     <scm>
         <connection>scm:git:git@github.com:codenvy/ide.git</connection>
