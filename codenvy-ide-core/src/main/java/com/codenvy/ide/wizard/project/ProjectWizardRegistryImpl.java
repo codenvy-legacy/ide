@@ -11,7 +11,7 @@
 package com.codenvy.ide.wizard.project;
 
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrarAgent;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.util.loging.Log;
@@ -25,17 +25,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Implementation for {@link ProjectWizardRegistrarAgent}.
+ * Implementation for {@link com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry}.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectWizardRegistrarAgentImpl implements ProjectWizardRegistrarAgent {
+public class ProjectWizardRegistryImpl implements ProjectWizardRegistry {
     private static final String DEFAULT_CATEGORY = "Other";
 
     private final StringMap<ProjectWizardRegistrar> projectRegistrars;
     private final Map<String, List<String>> categories = new HashMap<>();
 
-    public ProjectWizardRegistrarAgentImpl() {
+    public ProjectWizardRegistryImpl() {
         projectRegistrars = Collections.createStringMap();
     }
 
@@ -44,7 +44,7 @@ public class ProjectWizardRegistrarAgentImpl implements ProjectWizardRegistrarAg
         for (ProjectWizardRegistrar registrar : registrars) {
             final String id = registrar.getProjectTypeId();
             if (projectRegistrars.containsKey(id)) {
-                Log.warn(ProjectWizardRegistrarAgentImpl.class, "Wizard registrar for project type " + id + " already registered.");
+                Log.warn(ProjectWizardRegistryImpl.class, "Wizard registrar for project type " + id + " already registered.");
             } else {
                 projectRegistrars.put(id, registrar);
             }

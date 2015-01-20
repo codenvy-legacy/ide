@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectWizardRegistrarAgent {
+public interface ProjectWizardRegistry {
     /**
      * Get a {@link ProjectWizardRegistrar} for registering
      * the project type with the specified ID or {@code null} if none.
