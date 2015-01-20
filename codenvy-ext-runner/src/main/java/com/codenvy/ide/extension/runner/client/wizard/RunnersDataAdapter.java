@@ -127,4 +127,5 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
     public Object getNodeByPath(Object root, Array<String> relativeNodePath) {
         return null;
     }
+
 }
