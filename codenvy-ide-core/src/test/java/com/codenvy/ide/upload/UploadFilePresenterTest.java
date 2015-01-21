@@ -14,22 +14,28 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.generic.FolderNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,6 +58,9 @@ public class UploadFilePresenterTest {
 
     @Mock
     private SelectionAgent selectionAgent;
+
+    @Mock
+    private NotificationManager notificationManager;
 
     @InjectMocks
     private UploadFilePresenter presenter;
@@ -103,10 +112,44 @@ public class UploadFilePresenterTest {
     }
 
     @Test
-    public void onSubmitCompleteShouldBeExecuted() {
-        presenter.onSubmitComplete("Result");
+    public void onSubmitCompleteWhenError() {
+        String error = "Error";
+        presenter.onSubmitComplete(error);
 
         verify(view).closeDialog();
+        verify(notificationManager).showError(eq(error));
         verify(eventBus).fireEvent((RefreshProjectTreeEvent)anyObject());
+    }
+
+    @Test
+    public void onSubmitCompleteWhenOverwriteFileNotSelected() {
+        Selection select = mock(Selection.class);
+        FolderNode item = mock(FolderNode.class);
+        when(selectionAgent.getSelection()).thenReturn(select);
+        when(select.getFirstElement()).thenReturn(item);
+        when(view.isOverwriteFileSelected()).thenReturn(false);
+        when(view.getFileName()).thenReturn("fileName");
+
+        presenter.onSubmitComplete("");
+
+        verify(view).closeDialog();
+        verify(notificationManager, never()).showError(anyString());
+        verify(eventBus).fireEvent(Matchers.<RefreshProjectTreeEvent>anyObject());
+    }
+
+    @Test
+    public void onSubmitCompleteWhenOverwriteFileSelected() {
+        Selection select = mock(Selection.class);
+        FolderNode item = mock(FolderNode.class);
+        when(selectionAgent.getSelection()).thenReturn(select);
+        when(select.getFirstElement()).thenReturn(item);
+        when(view.isOverwriteFileSelected()).thenReturn(true);
+        when(view.getFileName()).thenReturn("fileName");
+
+        presenter.onSubmitComplete("");
+
+        verify(view).closeDialog();
+        verify(notificationManager, never()).showError(anyString());
+        verify(eventBus, times(2)).fireEvent((Event)anyObject());
     }
 }

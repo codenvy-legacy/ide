@@ -13,7 +13,9 @@ package com.codenvy.ide.upload;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
@@ -26,6 +28,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link UploadFileViewImpl} functionality.
@@ -67,38 +70,39 @@ public class UploadFileViewImplTest extends GwtTestWithMockito {
     @Test
     public void getFileNameShouldBeExecuted() {
         view.file = mock(FileUpload.class);
+        when(view.file.getFilename()).thenReturn("fileName");
 
         view.getFileName();
 
-        verify(view.file).getName();
+        verify(view.file).getFilename();
     }
 
     @Test
     public void submitShouldBeExecuted() {
-        view.uploadForm = mock(FormPanel.class);
+        view.submitForm = mock(FormPanel.class);
 
         view.submit();
 
-        verify(view.uploadForm).submit();
+        verify(view.submitForm).submit();
     }
 
     @Test
     public void setActionShouldBeExecuted() {
-        view.uploadForm = mock(FormPanel.class);
+        view.submitForm = mock(FormPanel.class);
 
         view.setAction("url");
 
-        verify(view.uploadForm).setAction(eq("url"));
-        verify(view.uploadForm).setMethod(eq(FormPanel.METHOD_POST));
+        verify(view.submitForm).setAction(eq("url"));
+        verify(view.submitForm).setMethod(eq(FormPanel.METHOD_POST));
     }
 
     @Test
     public void setEncodingShouldBeExecuted() {
-        view.uploadForm = mock(FormPanel.class);
+        view.submitForm = mock(FormPanel.class);
 
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
 
-        verify(view.uploadForm).setEncoding(eq(FormPanel.ENCODING_MULTIPART));
+        verify(view.submitForm).setEncoding(eq(FormPanel.ENCODING_MULTIPART));
     }
 
     @Test
@@ -111,10 +115,15 @@ public class UploadFileViewImplTest extends GwtTestWithMockito {
 
     @Test
     public void closeShouldBeExecuted() {
-        view.uploadForm = mock(FormPanel.class);
+        view.uploadPanel = mock(FlowPanel.class);
+        view.file = mock(FileUpload.class);
+        view.overwrite = mock(CheckBox.class);
+        view.btnUpload = mock(Button.class);
 
         view.closeDialog();
 
-        verify(view.uploadForm).remove((FileUpload)anyObject());
+        verify(view.uploadPanel).remove((FileUpload)anyObject());
+        verify(view.btnUpload).setEnabled(eq(false));
+        verify(view.overwrite).setValue(eq(false));
     }
 }
