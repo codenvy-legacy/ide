@@ -31,7 +31,7 @@ public interface UploadFileView extends IsWidget {
          * @param result
          *         result of submit operation
          */
-        void onSubmitComplete(@Nonnull String result);
+        void onSubmitComplete(String result);
 
         /** Performs any actions appropriate in response to the user having pressed the Upload button. */
         void onUploadClicked();
@@ -79,4 +79,7 @@ public interface UploadFileView extends IsWidget {
     /** @return file name */
     @Nonnull
     String getFileName();
+
+    /** Performs when user select 'overwrite if file exists'. */
+    boolean isOverwriteFileSelected();
 }
