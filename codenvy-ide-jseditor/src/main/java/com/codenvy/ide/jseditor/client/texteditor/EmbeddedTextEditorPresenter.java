@@ -18,6 +18,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.codenvy.ide.Resources;
@@ -425,6 +426,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void activate() {
         if (editorWidget != null) {
+            this.editorWidget.refresh();
             this.editorWidget.setFocus();
         } else {
             this.delayedFocus = true;
