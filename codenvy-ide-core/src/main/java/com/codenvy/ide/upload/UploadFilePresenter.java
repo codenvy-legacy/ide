@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.upload;
 
-import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.event.FileContentUpdateEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
+import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
@@ -21,8 +22,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
-import javax.annotation.Nonnull;
-
 /**
  * The purpose of this class is upload file
  *
@@ -30,29 +29,29 @@ import javax.annotation.Nonnull;
  */
 public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
-    private UploadFileView view;
-    private SelectionAgent selectionAgent;
-    private AppContext     appContext;
-    private String         restContext;
-    private String         workspaceId;
-    private EventBus       eventBus;
+    private UploadFileView      view;
+    private SelectionAgent      selectionAgent;
+    private String              restContext;
+    private String              workspaceId;
+    private EventBus            eventBus;
+    private NotificationManager notificationManager;
 
     @Inject
     public UploadFilePresenter(UploadFileView view,
                                @Named("restContext") String restContext,
                                @Named("workspaceId") String workspaceId,
                                SelectionAgent selectionAgent,
-                               AppContext appContext,
-                               EventBus eventBus) {
+                               EventBus eventBus,
+                               NotificationManager notificationManager) {
 
         this.restContext = restContext;
         this.workspaceId = workspaceId;
         this.selectionAgent = selectionAgent;
-        this.appContext = appContext;
         this.eventBus = eventBus;
         this.view = view;
         this.view.setDelegate(this);
         this.view.setEnabledUploadButton(false);
+        this.notificationManager = notificationManager;
     }
 
     /** Show dialog. */
@@ -68,9 +67,19 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
 
     /** {@inheritDoc} */
     @Override
-    public void onSubmitComplete(@Nonnull String result) {
-        view.closeDialog();
+    public void onSubmitComplete(String result) {
         eventBus.fireEvent(new RefreshProjectTreeEvent(getParent()));
+        if (result != null && !result.isEmpty()) {
+            view.closeDialog();
+            notificationManager.showError(parseMessage(result));
+            return;
+        }
+
+        if (view.isOverwriteFileSelected()) {
+            String path = getParent().getPath() + "/" + view.getFileName();
+            eventBus.fireEvent(new FileContentUpdateEvent(path));
+        }
+        view.closeDialog();
     }
 
     /** {@inheritDoc} */
@@ -102,5 +111,21 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
             }
         }
         return null;
+    }
+
+    private String parseMessage(String message) {
+        int startIndex = 0;
+        int endIndex = -1;
+
+        if (message.contains("<pre>message:")) {
+            startIndex = message.indexOf("<pre>message:") + "<pre>message:".length();
+        } else if (message.contains("<pre>")) {
+            startIndex = message.indexOf("<pre>") + "<pre>".length();
+        }
+
+        if (message.contains("</pre>")) {
+            endIndex = message.indexOf("</pre>");
+        }
+        return (endIndex != -1) ? message.substring(startIndex, endIndex) : message.substring(startIndex);
     }
 }
