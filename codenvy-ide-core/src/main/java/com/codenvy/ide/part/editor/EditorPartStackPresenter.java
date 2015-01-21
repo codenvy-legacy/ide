@@ -20,7 +20,6 @@ import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.projecttree.VirtualFile;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.PartStackPresenter;
@@ -186,7 +185,13 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 if (activePart == part) {
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
-                    partStackHandler.onActivePartChanged(activePart);
+
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            partStackHandler.onActivePartChanged(activePart);
+                        }
+                    });
                 }
             }
         });
