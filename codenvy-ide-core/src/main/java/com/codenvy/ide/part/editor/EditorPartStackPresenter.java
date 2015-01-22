@@ -46,6 +46,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
+    private interface CloseTabCallback {
+        void onTabsClosed();
+    }
+
     @Inject
     public EditorPartStackPresenter(final EditorPartStackView view, EventBus eventBus,
                  PartStackEventHandler partStackEventHandler, ListOpenedFilesPresenter listOpenedFilesPresenter) {
@@ -63,11 +67,13 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                for (int i = parts.size() - 1; i >= 0; i--) {
-                    PartPresenter part = parts.get(i);
-                    if (part instanceof EditorPartPresenter) {
-                        removePart(part);
-                    }
+                if (!parts.isEmpty()) {
+                    close(activePart, new CloseTabCallback() {
+                        @Override
+                        public void onTabsClosed() {
+                            closeActivePart(this);
+                        }
+                    });
                 }
             }
         });
@@ -167,10 +173,23 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 //        // notify handler, that part changed
 //        partStackHandler.onActivePartChanged(activePart);
     }
+    /*close active part and do action from callBack*/
+    protected void closeActivePart(final CloseTabCallback closeTabCallback) {
+        if (activePart != null) {
+            close(activePart, closeTabCallback);
+        } else {
+            Log.error(getClass(), "Active part is null");
+        }
+    }
 
     /** {@inheritDoc} */
     @Override
     protected void close(final PartPresenter part) {
+        close(part, null);
+    }
+
+    /*close tab and do action from callBack*/
+    protected void close(final PartPresenter part, final CloseTabCallback closeTabCallback) {
         part.onClose(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -185,13 +204,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 if (activePart == part) {
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
-
-                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            partStackHandler.onActivePartChanged(activePart);
-                        }
-                    });
+                    partStackHandler.onActivePartChanged(activePart);
+                }
+                if (closeTabCallback != null) {
+                    closeTabCallback.onTabsClosed();
                 }
             }
         });
