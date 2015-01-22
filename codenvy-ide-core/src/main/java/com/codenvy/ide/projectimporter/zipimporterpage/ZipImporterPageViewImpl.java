@@ -113,7 +113,7 @@ public class ZipImporterPageViewImpl extends Composite implements ZipImporterPag
         descriptionArea.clear();
         projectPublic.setValue(true);
         projectPrivate.setValue(false);
-        skipFirstLevel.setValue(false);
+        skipFirstLevel.setValue(true);
         hideUrlError();
         hideNameError();
     }
