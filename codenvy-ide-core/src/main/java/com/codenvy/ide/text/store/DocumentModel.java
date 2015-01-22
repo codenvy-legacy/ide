@@ -14,7 +14,6 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.api.texteditor.UndoManager;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
@@ -373,11 +372,5 @@ public class DocumentModel implements TextStoreMutator {
     void setLastLine(Line line) {
         assert line != null : "Line cannot be null";
         lastLine = line;
-    }
-
-    /** @see com.codenvy.ide.text.store.TextStoreMutator#getUndoManager() */
-    @Override
-    public UndoManager getUndoManager() {
-        return null;
     }
 }

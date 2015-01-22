@@ -14,7 +14,6 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.api.texteditor.UndoManager;
 
 /** An interface that allows mutation of a document. */
 public interface TextStoreMutator {
@@ -78,7 +77,4 @@ public interface TextStoreMutator {
      * {@code null} if no changes applied
      */
     TextChange insertText(Line line, int lineNumber, int column, String text, boolean canReplaceSelection);
-
-    /** @return  */
-    UndoManager getUndoManager();
 }

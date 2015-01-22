@@ -40,17 +40,6 @@ public interface TextEditorPartView extends HandlesTextOperations, HasReadOnlyPr
     Element getElement();
 
     /**
-     * Sets this viewer's undo manager.
-     *
-     * @param undoManager
-     *         the new undo manager. <code>null</code> is a valid argument.
-     */
-    void setUndoManager(UndoManager undoManager);
-
-    /** @return the undoManager */
-    UndoManager getUndoManager();
-
-    /**
      * Sets the given document as the text display model and updates the presentation accordingly.
      *
      * @param document
