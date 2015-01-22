@@ -173,7 +173,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 //        // notify handler, that part changed
 //        partStackHandler.onActivePartChanged(activePart);
     }
-    /*close active part and do action from callback*/
+    /*close active part and do action from callBack*/
     protected void closeActivePart(final CloseTabCallback closeTabCallback) {
         if (activePart != null) {
             close(activePart, closeTabCallback);
