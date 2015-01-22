@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.wizard;
+package com.codenvy.ide.wizard.project.my_wizard.runner;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
@@ -19,6 +19,7 @@ import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.dto.DtoFactory;
@@ -43,7 +44,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
     private       RunnerServiceClient    runnerServiceClient;
     private       DtoUnmarshallerFactory dtoUnmarshallerFactory;
     private       ProjectServiceClient   projectServiceClient;
-//    private final ProjectWizardRegistry  projectWizardRegistry;
+    private final ProjectWizardRegistry  projectWizardRegistry;
     private       DtoFactory             dtoFactory;
 
     /** Create wizard page. */
@@ -52,14 +53,14 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
-//                                     ProjectTypeWizardRegistry projectWizardRegistry,
+                                     ProjectWizardRegistry projectWizardRegistry,
                                      DtoFactory dtoFactory) {
         super("Select Runner", null);
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
-//        this.projectWizardRegistry = projectWizardRegistry;
+        this.projectWizardRegistry = projectWizardRegistry;
         this.dtoFactory = dtoFactory;
         view.setDelegate(this);
     }
@@ -81,6 +82,11 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
 
     @Override
     public void removeOptions() {
+    }
+
+    @Override
+    public boolean inContext() {
+        return wizardContext.getData(ProjectWizard.PROJECT_TYPE) != null;
     }
 
     @Override
@@ -126,7 +132,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage implements Sel
             @Override
             protected void onSuccess(RunnerEnvironmentTree result) {
                 ProjectTypeDefinition data = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
-//                String typeCategory = projectWizardRegistry.getWizardCategory(data.getId());
+                String typeCategory = projectWizardRegistry.getWizardCategory(data.getId());
 //                if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
 //                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
 //                    tree.addNode(result.getNode(typeCategory.toLowerCase()));

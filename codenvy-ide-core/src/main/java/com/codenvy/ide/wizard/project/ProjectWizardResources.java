@@ -14,6 +14,8 @@ import com.codenvy.ide.wizard.project.main.MainPageViewImpl;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
+import org.vectomatic.dom.svg.ui.SVGResource;
+
 /**
  * @author Ann Shumilova
  */
@@ -46,8 +48,7 @@ public interface ProjectWizardResources extends ClientBundle {
 
     @Source({"main/MainPage.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
     MainPageViewImpl.Style mainPageStyle();
+
+    @Source("environment.svg")
+    SVGResource environment();
 }
-
-
-
-

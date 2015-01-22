@@ -19,9 +19,6 @@ import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,9 +28,7 @@ import java.util.Set;
  */
 public class ProjectWizardRegistryImpl implements ProjectWizardRegistry {
     private static final String DEFAULT_CATEGORY = "Other";
-
     private final StringMap<ProjectWizardRegistrar> projectRegistrars;
-    private final Map<String, List<String>> categories = new HashMap<>();
 
     public ProjectWizardRegistryImpl() {
         projectRegistrars = Collections.createStringMap();
@@ -55,5 +50,16 @@ public class ProjectWizardRegistryImpl implements ProjectWizardRegistry {
     @Override
     public ProjectWizardRegistrar getWizardRegistrar(@Nonnull String projectTypeId) {
         return projectRegistrars.get(projectTypeId);
+    }
+
+    @Nullable
+    @Override
+    public String getWizardCategory(@Nonnull String projectTypeId) {
+        ProjectWizardRegistrar registrar = projectRegistrars.get(projectTypeId);
+        if (registrar != null) {
+            final String category = registrar.getCategory();
+            return category.isEmpty() ? DEFAULT_CATEGORY : category;
+        }
+        return null;
     }
 }

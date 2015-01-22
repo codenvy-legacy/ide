@@ -14,7 +14,7 @@ import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.google.gwt.regexp.shared.RegExp;

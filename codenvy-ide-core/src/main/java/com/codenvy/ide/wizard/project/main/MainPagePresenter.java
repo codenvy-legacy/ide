@@ -12,21 +12,17 @@ package com.codenvy.ide.wizard.project.main;
 
 import com.codenvy.api.project.gwt.client.ProjectTemplateRegistry;
 import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
-import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
-import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.NameUtils;
 import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -43,41 +39,28 @@ import java.util.Set;
  * @author Evgen Vidolob
  */
 public class MainPagePresenter extends AbstractWizardPage implements MainPageView.ActionDelegate {
-
-    private       MainPageView                  view;
-    private       ProjectTypeServiceClient      projectTypeServiceClient;
+    private final MainPageView                  view;
     private final ProjectTypeRegistry           projectTypeRegistry;
     private final ProjectTemplateRegistry       projectTemplateRegistry;
-    private       ProjectTypeWizardRegistry     wizardRegistry;
+    private       ProjectWizardRegistry         wizardRegistry;
     private       ProjectTypeDefinition         typeDescriptor;
     private       ProjectTemplateDescriptor     template;
     private       PreSelectedProjectTypeManager preSelectedProjectTypeManager;
-    private       DialogFactory                 dialogFactory;
-    private       CoreLocalizationConstant      localizationConstant;
-    private       DtoUnmarshallerFactory        dtoUnmarshallerFactory;
     private       DtoFactory                    dtoFactory;
 
     @Inject
     public MainPagePresenter(MainPageView view,
-                             ProjectTypeServiceClient projectTypeServiceClient,
                              ProjectTypeRegistry projectTypeRegistry,
                              ProjectTemplateRegistry projectTemplateRegistry,
-                             ProjectTypeWizardRegistry wizardRegistry,
+                             ProjectWizardRegistry wizardRegistry,
                              PreSelectedProjectTypeManager preSelectedProjectTypeManager,
-                             DialogFactory dialogFactory,
-                             CoreLocalizationConstant localizationConstant,
-                             DtoUnmarshallerFactory dtoUnmarshallerFactory,
                              DtoFactory dtoFactory) {
         super("Choose Project", null);
         this.view = view;
-        this.projectTypeServiceClient = projectTypeServiceClient;
         this.projectTypeRegistry = projectTypeRegistry;
         this.projectTemplateRegistry = projectTemplateRegistry;
         this.wizardRegistry = wizardRegistry;
         this.preSelectedProjectTypeManager = preSelectedProjectTypeManager;
-        this.dialogFactory = dialogFactory;
-        this.localizationConstant = localizationConstant;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
         view.setDelegate(this);
     }
@@ -136,8 +119,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         typeDescriptor = null;
         template = null;
         container.setWidget(view);
-        List<ProjectTypeDefinition> projectTypes = projectTypeRegistry.getProjectTypes();
 
+        List<ProjectTypeDefinition> projectTypes = projectTypeRegistry.getProjectTypes();
         Map<String, Set<ProjectTypeDefinition>> descriptorsByCategory = new HashMap<>();
         ProjectTypeDefinition defaultProjectTypeDescriptor = null;
 
@@ -145,8 +128,8 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
         Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
         ProjectDescriptor project = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
         for (ProjectTypeDefinition type : projectTypes) {
-            if (wizardRegistry.getWizard(type.getId()) != null) {
-                String category = wizardRegistry.getCategoryForProjectType(type.getId());
+            if (wizardRegistry.getWizardRegistrar(type.getId()) != null) {
+                String category = wizardRegistry.getWizardCategory(type.getId());
                 if (!descriptorsByCategory.containsKey(category)) {
                     descriptorsByCategory.put(category, new HashSet<ProjectTypeDefinition>());
                 }
@@ -159,15 +142,15 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
             }
             if (project == null) {
                 Array<ProjectTemplateDescriptor> templateDescriptors = projectTemplateRegistry.getTemplateDescriptors(type.getId());
-                    for (ProjectTemplateDescriptor templateDescriptor : templateDescriptors.asIterable()) {
-                        String category = templateDescriptor.getCategory() == null
-                                          ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
-                                          : templateDescriptor.getCategory();
-                        if (!samples.containsKey(category)) {
-                            samples.put(category, new HashSet<ProjectTemplateDescriptor>());
-                        }
-                        samples.get(category).add(templateDescriptor);
+                for (ProjectTemplateDescriptor templateDescriptor : templateDescriptors.asIterable()) {
+                    String category = templateDescriptor.getCategory() == null
+                                      ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
+                                      : templateDescriptor.getCategory();
+                    if (!samples.containsKey(category)) {
+                        samples.put(category, new HashSet<ProjectTemplateDescriptor>());
                     }
+                    samples.get(category).add(templateDescriptor);
+                }
             }
         }
 

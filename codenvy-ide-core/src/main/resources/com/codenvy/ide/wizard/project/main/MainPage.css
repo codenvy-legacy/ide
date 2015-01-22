@@ -102,3 +102,14 @@
     float: right;
     border-bottom: 1px solid #505050;
 }
+
+.treeIcon {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -2px;
+    pointer-events: none; /* do not allow SVG element to intercept pointer events */
+    fill: mainFontColor;
+}

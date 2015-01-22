@@ -18,7 +18,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;

@@ -55,7 +55,7 @@ import javax.annotation.Nullable;
 import static com.codenvy.api.runner.dto.RunnerMetric.ALWAYS_ON;
 import static com.codenvy.api.runner.dto.RunnerMetric.TERMINATION_TIME;
 import static com.codenvy.api.runner.internal.Constants.LINK_REL_STOP;
-import static com.codenvy.ide.api.projecttype.wizard.ProjectWizard.PROJECT_FOR_UPDATE;
+import static com.codenvy.ide.wizard.project.my_wizard.ProjectWizard.PROJECT_FOR_UPDATE;
 
 /**
  * Component that does some preliminary operations before opening/closing projects.

@@ -32,7 +32,7 @@ import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardDialog;

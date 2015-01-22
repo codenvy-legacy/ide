@@ -410,5 +410,7 @@ public class MainPageViewImpl implements MainPageView {
         String horizontalLine();
 
         String labelTitle();
+
+        String treeIcon();
     }
 }

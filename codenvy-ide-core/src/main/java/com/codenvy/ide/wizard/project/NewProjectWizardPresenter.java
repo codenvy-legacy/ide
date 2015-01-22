@@ -34,8 +34,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardDialog;
@@ -53,13 +52,14 @@ import com.codenvy.ide.wizard.project.main.MainPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.codenvy.api.project.shared.Constants.BLANK_ID;
 
 /**
  * @author Evgen Vidolob
@@ -73,7 +73,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
     private final RunnerServiceClient       runnerServiceClient;
     private final BuilderServiceClient      builderServiceClient;
     private final CoreLocalizationConstant  constant;
-    private final ProjectTypeWizardRegistry wizardRegistry;
+//    private final ProjectTypeWizardRegistry wizardRegistry;
     private final AppContext                appContext;
     private final DtoFactory                dtoFactory;
     private final EventBus                  eventBus;
@@ -98,7 +98,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
                                      MainPagePresenter mainPage,
                                      ProjectServiceClient projectService,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                     ProjectTypeWizardRegistry wizardRegistry,
+//                                     ProjectTypeWizardRegistry wizardRegistry,
                                      CoreLocalizationConstant constant,
                                      RunnerServiceClient runnerServiceClient,
                                      BuilderServiceClient builderServiceClient,
@@ -111,7 +111,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         this.projectService = projectService;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.constant = constant;
-        this.wizardRegistry = wizardRegistry;
+//        this.wizardRegistry = wizardRegistry;
         this.appContext = appContext;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
@@ -466,7 +466,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         if (currentPage == mainPage) {
             ProjectTypeDefinition descriptor = wizardContext.getData(ProjectWizard.PROJECT_TYPE);
             if (descriptor != null) {
-                wizard = wizardRegistry.getWizard(descriptor.getId());
+//                wizard = wizardRegistry.getWizard(descriptor.getId());
                 if (wizard != null) {
                     wizard.setUpdateDelegate(this);
                     if (!wizard.containsPage(mainPageProvider)) {
@@ -492,8 +492,7 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
         view.setNextButtonEnabled(wizard != null && wizard.hasNext() && currentPage.isCompleted());
         view.setFinishButtonEnabled((currentPage.isCompleted() && templateDescriptor != null) ||
                                     (templateDescriptor == null && currentPage != mainPage && wizard != null && wizard.canFinish()) ||
-                                    (descriptor != null && descriptor.getId().equals(
-                                            com.codenvy.api.project.shared.Constants.BLANK_ID) && currentPage.isCompleted()));
+                                    (descriptor != null && descriptor.getId().equals(BLANK_ID) && currentPage.isCompleted()));
 
         if (templateDescriptor != null) {
             view.setNextButtonEnabled(false);
@@ -505,10 +504,8 @@ public class NewProjectWizardPresenter implements WizardDialog, Wizard.UpdateDel
             //set info visible
             view.setInfoVisible(true);
         } else if (descriptor != null) {
-            view.setRunnerEnvironmentConfig(
-                    runnersDescriptionMap.get(descriptor.getDefaultRunner()));
-            view.setBuilderEnvironmentConfig(
-                    defaultBuilderDescriptionMap.get(descriptor.getDefaultBuilder()));
+            view.setRunnerEnvironmentConfig(runnersDescriptionMap.get(descriptor.getDefaultRunner()));
+            view.setBuilderEnvironmentConfig(defaultBuilderDescriptionMap.get(descriptor.getDefaultBuilder()));
 //            view.setRAMRequired(getRequiredRam(descriptor.getRunners()));
             view.setInfoVisible(true);
         } else {

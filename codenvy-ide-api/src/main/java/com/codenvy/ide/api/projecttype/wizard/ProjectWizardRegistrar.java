@@ -15,13 +15,12 @@ import com.codenvy.ide.collections.Array;
 import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Defines the requirements for an object that provides information for registering new project type into project wizard.
  * <p/>
  * Implementations of this interface need to be registered using a multibinder
- * in order to be picked up by {@link ProjectWizardRegistry}.
+ * in order to be picked up by project wizard.
  *
  * @author Artem Zatsarynnyy
  */
@@ -31,7 +30,7 @@ public interface ProjectWizardRegistrar {
     String getProjectTypeId();
 
     /** Returns category of the project type to add it to. */
-    @Nullable
+    @Nonnull
     String getCategory();
 
     /** Returns pages that should be added to project wizard. */
