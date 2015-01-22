@@ -147,7 +147,7 @@ public class ProjectListStructure implements TreeStructure {
         /** {@inheritDoc} */
         @Override
         public void rename(final String newName, final RenameCallback callback) {
-            projectServiceClient.rename(getData().getPath(), newName, null, new AsyncRequestCallback<Void>() {
+            projectServiceClient.rename(getPath(), newName, null, new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     ProjectNode.super.rename(newName, new RenameCallback() {
@@ -179,7 +179,7 @@ public class ProjectListStructure implements TreeStructure {
         /** {@inheritDoc} */
         @Override
         public void delete(final DeleteCallback callback) {
-            projectServiceClient.delete(getData().getPath(), new AsyncRequestCallback<Void>() {
+            projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
                 @Override
                 protected void onSuccess(Void result) {
                     ProjectNode.super.delete(new DeleteCallback() {

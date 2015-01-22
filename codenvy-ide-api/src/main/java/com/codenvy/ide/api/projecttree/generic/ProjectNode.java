@@ -46,8 +46,12 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     private         boolean                opened;
 
     @AssistedInject
-    public ProjectNode(@Assisted TreeNode<?> parent, @Assisted ProjectDescriptor data, @Assisted GenericTreeStructure treeStructure,
-                       EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public ProjectNode(@Assisted TreeNode<?> parent,
+                       @Assisted ProjectDescriptor data,
+                       @Assisted GenericTreeStructure treeStructure,
+                       EventBus eventBus,
+                       ProjectServiceClient projectServiceClient,
+                       DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, treeStructure, eventBus);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);
 
@@ -105,7 +109,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     /** {@inheritDoc} */
     @Override
     public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
-        getChildren(getData().getPath(), new AsyncCallback<Array<ItemReference>>() {
+        getChildren(getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> childItems) {
                 setChildren(getChildNodesForItems(childItems));
@@ -120,13 +124,9 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     }
 
     private Array<TreeNode<?>> getChildNodesForItems(Array<ItemReference> childItems) {
-        final boolean isShowHiddenItems = treeStructure.getSettings().isShowHiddenItems();
         Array<TreeNode<?>> oldChildren = Collections.createArray(getChildren().asIterable());
         Array<TreeNode<?>> newChildren = Collections.createArray();
         for (ItemReference item : childItems.asIterable()) {
-            if (!isShowHiddenItems && item.getName().startsWith(".")) {
-                continue;
-            }
             AbstractTreeNode node = createChildNode(item);
             if (node != null) {
                 if (oldChildren.contains(node)) {
@@ -162,7 +162,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     /** {@inheritDoc} */
     @Override
     public void delete(final DeleteCallback callback) {
-        projectServiceClient.delete(getData().getPath(), new AsyncRequestCallback<Void>() {
+        projectServiceClient.delete(getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 if (isRootProject()) {
@@ -189,7 +189,9 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     }
 
     /**
-     * Method helps to retrieve children by the specified path using Codenvy Project API.
+     * Method helps to retrieve child {@link ItemReference}s by the specified path using Codenvy Project API.
+     * <p/>
+     * It takes into account state of the 'show hidden items' setting.
      *
      * @param path
      *         path to retrieve children
@@ -197,11 +199,20 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      *         callback to return retrieved children
      */
     protected void getChildren(String path, final AsyncCallback<Array<ItemReference>> callback) {
+        final Array<ItemReference> children = Collections.createArray();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
-                callback.onSuccess(result);
+                final boolean isShowHiddenItems = getTreeStructure().getSettings().isShowHiddenItems();
+                for (ItemReference item : result.asIterable()) {
+                    if (!isShowHiddenItems && item.getName().startsWith(".")) {
+                        continue;
+                    }
+                    children.add(item);
+                }
+
+                callback.onSuccess(children);
             }
 
             @Override
@@ -223,13 +234,13 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      *
      * @param item
      *         {@link ItemReference} for which need to create node
-     * @return new node instance or <code>null</code> if the specified item is not supported
+     * @return new node instance or {@code null} if the specified item is not supported
      */
     @Nullable
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
         if ("file".equals(item.getType())) {
             return treeStructure.newFileNode(ProjectNode.this, item);
-        } else if ("folder".equals(item.getType())) {
+        } else if ("folder".equals(item.getType()) || "project".equals(item.getType())) {
             return treeStructure.newFolderNode(ProjectNode.this, item);
         }
         return null;
@@ -240,7 +251,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      *
      * @param attributeName
      *         name of the attribute to get its value
-     * @return value of the specified attribute or <code>null</code> if attribute does not exists
+     * @return value of the specified attribute or {@code null} if attribute does not exists
      */
     @Nullable
     public String getAttributeValue(String attributeName) {
@@ -256,7 +267,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
      *
      * @param attributeName
      *         name of the attribute to get its values
-     * @return {@link List} of attribute values or <code>null</code> if attribute does not exists
+     * @return {@link List} of attribute values or {@code null} if attribute does not exists
      * @see #getAttributeValue(String)
      */
     @Nullable

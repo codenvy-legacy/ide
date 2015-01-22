@@ -28,15 +28,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * A node that represents a folder (an {@link ItemReference} with type - folder).
+ * A node that represents a folder (an {@link ItemReference} with type - folder or project).
  *
  * @author Artem Zatsarynnyy
  */
 public class FolderNode extends ItemNode {
 
     @AssistedInject
-    public FolderNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, @Assisted GenericTreeStructure treeStructure,
-                      EventBus eventBus, ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public FolderNode(@Assisted TreeNode<?> parent,
+                      @Assisted ItemReference data,
+                      @Assisted GenericTreeStructure treeStructure,
+                      EventBus eventBus,
+                      ProjectServiceClient projectServiceClient,
+                      DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, treeStructure, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
@@ -49,7 +53,7 @@ public class FolderNode extends ItemNode {
     /** {@inheritDoc} */
     @Override
     public void refreshChildren(final AsyncCallback<TreeNode<?>> callback) {
-        getChildren(getData().getPath(), new AsyncCallback<Array<ItemReference>>() {
+        getChildren(getPath(), new AsyncCallback<Array<ItemReference>>() {
             @Override
             public void onSuccess(Array<ItemReference> childItems) {
                 setChildren(getChildNodesForItems(childItems));
@@ -64,14 +68,10 @@ public class FolderNode extends ItemNode {
     }
 
     private Array<TreeNode<?>> getChildNodesForItems(Array<ItemReference> childItems) {
-        final boolean isShowHiddenItems = getTreeStructure().getSettings().isShowHiddenItems();
         Array<TreeNode<?>> oldChildren = Collections.createArray(getChildren().asIterable());
         Array<TreeNode<?>> newChildren = Collections.createArray();
         for (ItemReference item : childItems.asIterable()) {
-            if (!isShowHiddenItems && item.getName().startsWith(".")) {
-                continue;
-            }
-            AbstractTreeNode node = createChildNode(item);
+            final AbstractTreeNode node = createChildNode(item);
             if (node != null) {
                 if (oldChildren.contains(node)) {
                     final int i = oldChildren.indexOf(node);
@@ -85,19 +85,30 @@ public class FolderNode extends ItemNode {
     }
 
     /**
-     * Method helps to retrieve children by the specified path using Codenvy Project API.
+     * Method helps to retrieve child {@link ItemReference}s by the specified path using Codenvy Project API.
+     * <p/>
+     * It takes into account state of the 'show hidden items' setting.
      *
      * @param path
-     *         path to retrieve cachedChildren
+     *         path to retrieve children
      * @param callback
-     *         callback to return retrieved cachedChildren
+     *         callback to return retrieved children
      */
     protected void getChildren(String path, final AsyncCallback<Array<ItemReference>> callback) {
+        final Array<ItemReference> children = Collections.createArray();
         final Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newArrayUnmarshaller(ItemReference.class);
         projectServiceClient.getChildren(path, new AsyncRequestCallback<Array<ItemReference>>(unmarshaller) {
             @Override
             protected void onSuccess(Array<ItemReference> result) {
-                callback.onSuccess(result);
+                final boolean isShowHiddenItems = getTreeStructure().getSettings().isShowHiddenItems();
+                for (ItemReference item : result.asIterable()) {
+                    if (!isShowHiddenItems && item.getName().startsWith(".")) {
+                        continue;
+                    }
+                    children.add(item);
+                }
+
+                callback.onSuccess(children);
             }
 
             @Override
@@ -120,7 +131,7 @@ public class FolderNode extends ItemNode {
     protected AbstractTreeNode<?> createChildNode(ItemReference item) {
         if ("file".equals(item.getType())) {
             return getTreeStructure().newFileNode(this, item);
-        } else if ("folder".equals(item.getType())) {
+        } else if ("folder".equals(item.getType()) || "project".equals(item.getType())) {
             return getTreeStructure().newFolderNode(this, item);
         }
         return null;
