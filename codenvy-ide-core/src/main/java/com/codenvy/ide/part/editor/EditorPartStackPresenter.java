@@ -46,7 +46,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
 
-    public interface CloseTabCallback {
+    private interface CloseTabCallback {
         void onTabsClosed();
     }
 
@@ -71,9 +71,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     close(activePart, new CloseTabCallback() {
                         @Override
                         public void onTabsClosed() {
-                            if (activePart != null) {
-                                close(activePart, this);
-                            }
+                            closeActivePart(this);
                         }
                     });
                 }
@@ -174,6 +172,14 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
 //        // notify handler, that part changed
 //        partStackHandler.onActivePartChanged(activePart);
+    }
+    /*close active part and do action from callback*/
+    protected void closeActivePart(final CloseTabCallback closeTabCallback) {
+        if (activePart != null) {
+            close(activePart, closeTabCallback);
+        } else {
+            Log.error(getClass(), "Active part is null");
+        }
     }
 
     /** {@inheritDoc} */
