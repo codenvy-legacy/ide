@@ -226,7 +226,7 @@ public class EditorAgentImpl implements EditorAgent {
         editor.close(false);
 
         String activeFilePath = activeEditor.getEditorInput().getFile().getPath();
-        if (activeFilePath == closedFilePath) {
+        if (activeFilePath.equals(closedFilePath)) {
             activeEditor = null;
         }
     }
