@@ -14,6 +14,7 @@ import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -58,6 +59,9 @@ public class CustomRunAction extends ProjectAction {
 
     @Override
     protected void updateProjectAction(ActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(appContext.getCurrentProject().getIsRunningEnabled() && !runController.isAnyAppLaunched());
+        CurrentProject currentProject = appContext.getCurrentProject();
+        boolean isRunningEnabled = currentProject != null && currentProject.getIsRunningEnabled();
+        e.getPresentation().setVisible(runController.isAnyAppLaunched() || isRunningEnabled);
+        e.getPresentation().setEnabled(!runController.isAnyAppLaunched() && isRunningEnabled);
     }
 }
