@@ -33,23 +33,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Presenter for project wizard.
+ *
  * @author Artem Zatsarynnyy
  */
 @Singleton
 public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate {
-    private final ProjectWizardView     view;
-    private final NotificationManager   notificationManager;
-    private final ProjectWizardRegistry wizardRegistry;
+    private final ProjectWizardView                   view;
+    private final NotificationManager                 notificationManager;
+    private final ProjectWizardRegistry               wizardRegistry;
+    private final DtoFactory                          dtoFactory;
+    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
+    private final ProjectServiceClient                projectServiceClient;
+    private final Provider<MainPagePresenter>         mainPageProvider;
+    private final Provider<SelectRunnerPagePresenter> runnerPageProvider;
+    private final MainPagePresenter                   mainPage;
+    private final SelectRunnerPagePresenter           runnersPage;
+    private final WizardContext                       wizardContext;
 
-    private final DtoFactory             dtoFactory;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final ProjectServiceClient   projectServiceClient;
-
-    private final Provider<MainPagePresenter>               mainPageProvider;
-    private final Provider<SelectRunnerPagePresenter>       runnerPageProvider;
-    private final MainPagePresenter                         mainPage;
-    private final SelectRunnerPagePresenter                 runnersPage;
-    private final WizardContext                             wizardContext;
     private final Map<ProjectTypeDefinition, ProjectWizard> wizardsCache;
     private       ProjectWizard                             wizard;
     private       WizardPage                                currentPage;
@@ -69,14 +70,16 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
         this.dtoFactory = dtoFactory;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.projectServiceClient = projectServiceClient;
-        this.mainPage = mainPageProvider.get();
+
+        mainPage = mainPageProvider.get();
+        runnersPage = runnersPageProvider.get();
+
         this.mainPageProvider = new Provider<MainPagePresenter>() {
             @Override
             public MainPagePresenter get() {
                 return mainPage;
             }
         };
-        this.runnersPage = runnersPageProvider.get();
         this.runnerPageProvider = new Provider<SelectRunnerPagePresenter>() {
             @Override
             public SelectRunnerPagePresenter get() {
@@ -144,10 +147,10 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
             wizard = getProjectWizard();
             wizard.flipToFirst();
 
-            Array<WizardPage> pages = wizard.getPages();
-            for (WizardPage page : pages.asIterable()) {
-                page.setContext(wizardContext);
-            }
+//            Array<WizardPage> pages = wizard.getPages();
+//            for (WizardPage page : pages.asIterable()) {
+//                page.setContext(wizardContext);
+//            }
         }
         updateButtonsState();
     }
@@ -178,11 +181,13 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
 
     /** Creates and returns 'default' project wizard with pre-defined pages. */
     private ProjectWizard getDefaultWizard() {
+        // TODO: create it with factory
         final ProjectWizard projectWizard = new ProjectWizard(notificationManager,
                                                               dtoFactory,
                                                               dtoUnmarshallerFactory,
-                                                              projectServiceClient); // TODO: create it with GIN-factory
+                                                              projectServiceClient);
         projectWizard.setUpdateDelegate(this);
+        // add pre-defined pages
         projectWizard.addPage(mainPageProvider);
         projectWizard.addPage(runnerPageProvider);
         return projectWizard;
