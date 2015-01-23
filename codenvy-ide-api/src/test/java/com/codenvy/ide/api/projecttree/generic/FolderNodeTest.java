@@ -16,10 +16,13 @@ import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
@@ -49,14 +52,18 @@ import static org.mockito.Mockito.when;
 public class FolderNodeTest extends BaseNodeTest {
     private static final String ITEM_PATH = "/project/folder/folder_name";
     private static final String ITEM_NAME = "folder_name";
+    @Captor
+    private ArgumentCaptor<AsyncRequestCallback<Array<ItemReference>>> asyncRequestCallbackCaptor;
+    @Captor
+    private ArgumentCaptor<Array<ItemReference>>                       arrayCaptor;
     @Mock
-    private ItemReference     itemReference;
+    private ItemReference                                              itemReference;
     @Mock
-    private ProjectDescriptor projectDescriptor;
+    private ProjectDescriptor                                          projectDescriptor;
     @Mock
-    private ProjectNode       projectNode;
+    private ProjectNode                                                projectNode;
     @InjectMocks
-    private FolderNode        folderNode;
+    private FolderNode                                                 folderNode;
 
     @Before
     public void setUp() {
@@ -184,7 +191,7 @@ public class FolderNodeTest extends BaseNodeTest {
     }
 
     @Test
-    public void shouldCreateChildFileNode() {
+    public void shouldCreateChildFileNode() throws Exception {
         ItemReference fileItem = mock(ItemReference.class);
         when(fileItem.getType()).thenReturn("file");
 
@@ -194,12 +201,99 @@ public class FolderNodeTest extends BaseNodeTest {
     }
 
     @Test
-    public void shouldCreateChildFolderNode() {
+    public void shouldCreateChildFolderNodeForFolderItem() {
         ItemReference folderItem = mock(ItemReference.class);
         when(folderItem.getType()).thenReturn("folder");
 
         folderNode.createChildNode(folderItem);
 
         verify(treeStructure).newFolderNode(eq(folderNode), eq(folderItem));
+    }
+
+    @Test
+    public void shouldCreateChildFolderNodeForProjectItem() {
+        ItemReference folderItem = mock(ItemReference.class);
+        when(folderItem.getType()).thenReturn("project");
+
+        folderNode.createChildNode(folderItem);
+
+        verify(treeStructure).newFolderNode(eq(folderNode), eq(folderItem));
+    }
+
+    @Test
+    public void testGetChildrenWhenHiddenItemsAreShown() throws Exception {
+        when(treeSettings.isShowHiddenItems()).thenReturn(true);
+
+        String path = "path";
+        AsyncCallback asyncCallback = mock(AsyncCallback.class);
+        Array<ItemReference> children = Collections.createArray();
+
+        ItemReference item = mock(ItemReference.class);
+        when(item.getName()).thenReturn("item");
+        ItemReference hiddenItem = mock(ItemReference.class);
+        when(hiddenItem.getName()).thenReturn(".item");
+
+        children.add(item);
+        children.add(hiddenItem);
+
+        folderNode.getChildren(path, asyncCallback);
+
+        verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
+        AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
+        Method onSuccess = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onSuccess");
+        onSuccess.invoke(requestCallback, children);
+
+        verify(asyncCallback).onSuccess(arrayCaptor.capture());
+
+        Array<ItemReference> array = arrayCaptor.getValue();
+        assertEquals(children.size(), array.size());
+        assertTrue(array.contains(item));
+        assertTrue(array.contains(hiddenItem));
+    }
+
+    @Test
+    public void testGetChildrenWhenHiddenItemsAreNotShown() throws Exception {
+        when(treeSettings.isShowHiddenItems()).thenReturn(false);
+
+        String path = "path";
+        AsyncCallback asyncCallback = mock(AsyncCallback.class);
+        Array<ItemReference> children = Collections.createArray();
+
+        ItemReference item = mock(ItemReference.class);
+        when(item.getName()).thenReturn("item");
+        ItemReference hiddenItem = mock(ItemReference.class);
+        when(hiddenItem.getName()).thenReturn(".item");
+
+        children.add(item);
+        children.add(hiddenItem);
+
+        folderNode.getChildren(path, asyncCallback);
+
+        verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
+        AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
+        Method onSuccess = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onSuccess");
+        onSuccess.invoke(requestCallback, children);
+
+        verify(asyncCallback).onSuccess(arrayCaptor.capture());
+
+        Array<ItemReference> array = arrayCaptor.getValue();
+        assertEquals(1, array.size());
+        assertTrue(array.contains(item));
+        assertFalse(array.contains(hiddenItem));
+    }
+
+    @Test
+    public void testGetChildrenWhenRequestFailure() throws Exception {
+        String path = "path";
+        AsyncCallback asyncCallback = mock(AsyncCallback.class);
+
+        folderNode.getChildren(path, asyncCallback);
+
+        verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
+        AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
+        Method onFailure = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onFailure");
+        onFailure.invoke(requestCallback, mock(Throwable.class));
+
+        verify(asyncCallback).onFailure(Matchers.<Throwable>anyObject());
     }
 }

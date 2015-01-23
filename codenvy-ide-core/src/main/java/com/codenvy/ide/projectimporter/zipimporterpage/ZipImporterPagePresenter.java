@@ -144,6 +144,7 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     @Override
     public void go(AcceptsOneWidget container) {
         clear();
+        skipFirstLevelChanged(true);
         ProjectImporterDescriptor projectImporter = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
         if (projectImporter != null) {
             view.setImporterDescription(projectImporter.getDescription());

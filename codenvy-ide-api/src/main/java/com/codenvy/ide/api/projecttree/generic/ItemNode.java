@@ -53,8 +53,12 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
      * @param dtoUnmarshallerFactory
      *         {@link DtoUnmarshallerFactory}
      */
-    public ItemNode(TreeNode<?> parent, ItemReference data, TreeStructure treeStructure, EventBus eventBus,
-                    ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public ItemNode(TreeNode<?> parent,
+                    ItemReference data,
+                    TreeStructure treeStructure,
+                    EventBus eventBus,
+                    ProjectServiceClient projectServiceClient,
+                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, treeStructure, eventBus);
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;

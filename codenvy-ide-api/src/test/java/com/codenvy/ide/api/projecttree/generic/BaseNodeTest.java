@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.projecttree.generic;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
+import com.codenvy.ide.api.projecttree.TreeSettings;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.when;
 
 /** @author Artem Zatsarynnyy */
 @RunWith(MockitoJUnitRunner.class)
@@ -30,8 +33,11 @@ public abstract class BaseNodeTest {
     protected DtoUnmarshallerFactory dtoUnmarshallerFactory;
     @Mock
     protected GenericTreeStructure   treeStructure;
+    @Mock
+    protected TreeSettings           treeSettings;
 
     @Before
     public void setUp() {
+        when(treeStructure.getSettings()).thenReturn(treeSettings);
     }
 }
