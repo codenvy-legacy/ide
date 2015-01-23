@@ -178,7 +178,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         if (activePart != null) {
             close(activePart, closeTabCallback);
         } else {
-            Log.error(getClass(), "Active part is null");
+            Log.warn(getClass(), "No active part");
         }
     }
 
@@ -201,14 +201,21 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 view.removeTab(parts.indexOf(part));
                 parts.remove(part);
                 part.removePropertyListener(propertyListener);
-                if (activePart == part) {
-                    //select another part
-                    setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
-                    partStackHandler.onActivePartChanged(activePart);
-                }
-                if (closeTabCallback != null) {
-                    closeTabCallback.onTabsClosed();
-                }
+
+                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (activePart == part) {
+                            //select another part
+                            setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
+                            partStackHandler.onActivePartChanged(activePart);
+                        }
+
+                        if (closeTabCallback != null) {
+                            closeTabCallback.onTabsClosed();
+                        }
+                    }
+                });
             }
         });
     }
