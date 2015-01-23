@@ -30,7 +30,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -173,6 +172,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 //        // notify handler, that part changed
 //        partStackHandler.onActivePartChanged(activePart);
     }
+
     /*close active part and do action from callBack*/
     protected void closeActivePart(final CloseTabCallback closeTabCallback) {
         if (activePart != null) {
@@ -203,17 +203,17 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 part.removePropertyListener(propertyListener);
                 if (activePart == part) {
                     //select another part
-                setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
+                    setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
 
-                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        partStackHandler.onActivePartChanged(activePart);
-                        if (closeTabCallback != null) {
-                            closeTabCallback.onTabsClosed();
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            partStackHandler.onActivePartChanged(activePart);
+                            if (closeTabCallback != null) {
+                                closeTabCallback.onTabsClosed();
+                            }
                         }
-                    }
-                });
+                    });
                 }
             }
         });
