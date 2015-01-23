@@ -620,7 +620,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
                 Log.error(RunController.class, exception);
             }
         };
-        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + project.getPath();
+        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + project.getPath() + ':' + appContext.getCurrentUser().getProfile().getId();
         try {
             messageBus.subscribe(channel, processStartedHandler);
         } catch (WebSocketException e) {
@@ -629,7 +629,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
     }
 
     private void stopCheckingNewProcesses(ProjectDescriptor projectDescriptor) {
-        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + projectDescriptor.getPath();
+        String channel = PROCESS_STARTED_CHANNEL + workspaceId + ':' + projectDescriptor.getPath() + ':' + appContext.getCurrentUser().getProfile().getId();
         try {
             messageBus.unsubscribe(channel, processStartedHandler);
         } catch (WebSocketException e) {
