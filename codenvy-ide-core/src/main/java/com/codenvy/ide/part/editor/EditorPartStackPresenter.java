@@ -201,21 +201,20 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 view.removeTab(parts.indexOf(part));
                 parts.remove(part);
                 part.removePropertyListener(propertyListener);
+                if (activePart == part) {
+                    //select another part
+                setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
 
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                     @Override
                     public void execute() {
-                        if (activePart == part) {
-                            //select another part
-                            setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
-                            partStackHandler.onActivePartChanged(activePart);
-                        }
-
+                        partStackHandler.onActivePartChanged(activePart);
                         if (closeTabCallback != null) {
                             closeTabCallback.onTabsClosed();
                         }
                     }
                 });
+                }
             }
         });
     }
