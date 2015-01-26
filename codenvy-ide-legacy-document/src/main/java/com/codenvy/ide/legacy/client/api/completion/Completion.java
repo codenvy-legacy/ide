@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.texteditor.codeassistant;
+package com.codenvy.ide.legacy.client.api.completion;
 
 import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Region;

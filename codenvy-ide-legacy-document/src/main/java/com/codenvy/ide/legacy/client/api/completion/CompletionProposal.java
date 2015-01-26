@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.texteditor.codeassistant;
+package com.codenvy.ide.legacy.client.api.completion;
 
 import com.codenvy.ide.api.icon.Icon;
 import com.google.gwt.user.client.ui.Widget;
