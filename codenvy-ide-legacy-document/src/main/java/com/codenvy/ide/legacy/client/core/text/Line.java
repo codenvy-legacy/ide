@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.text;
+package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.Region;
 

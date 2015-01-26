@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.text;
+package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.BadPartitioningException;
@@ -46,7 +46,7 @@ import java.util.Map;
  * <p/>
  * An <code>AbstractDocument</code> supports the following implementation plug-ins:
  * <ul>
- * <li>a text store implementing {@link org.eclipse.TextStore.text.ITextStore} for storing and managing the document's content,</li>
+ * <li>a text store implementing {@link com.codenvy.ide.legacy.client.core.text.TextStore.text.ITextStore} for storing and managing the document's content,</li>
  * <li>a line tracker implementing {@link org.eclipse.LineTracker.text.ILineTracker} to map character positions to line numbers and vice
  * versa</li>
  * </ul>
@@ -56,7 +56,7 @@ import java.util.Map;
  * This class must be subclassed. Subclasses must configure which implementation plug-ins the document instance should use.
  * Subclasses are not intended to overwrite existing methods.
  *
- * @see org.eclipse.TextStore.text.ITextStore
+ * @see com.codenvy.ide.legacy.client.core.text.TextStore.text.ITextStore
  * @see org.eclipse.LineTracker.text.ILineTracker
  */
 public abstract class AbstractDocument implements Document {

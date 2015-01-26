@@ -8,14 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.text;
+package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.LineTracker;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.RegionImpl;
+import com.codenvy.ide.legacy.client.core.text.AbstractLineTracker.DelimiterInfo;
 import com.codenvy.ide.runtime.Assert;
-import com.codenvy.ide.text.AbstractLineTracker.DelimiterInfo;
 
 import java.util.Arrays;
 import java.util.LinkedList;
