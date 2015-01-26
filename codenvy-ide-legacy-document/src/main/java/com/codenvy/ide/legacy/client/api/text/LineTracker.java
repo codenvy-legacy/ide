@@ -8,7 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
+
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Region;
 
 /**
  * A line tracker maps character positions to line numbers and vice versa. Initially the line tracker is informed about its

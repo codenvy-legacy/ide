@@ -12,7 +12,7 @@
 package com.codenvy.ide.legacy.client.api.text.rules;
 
 
-import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.Document;
 
 
 /**

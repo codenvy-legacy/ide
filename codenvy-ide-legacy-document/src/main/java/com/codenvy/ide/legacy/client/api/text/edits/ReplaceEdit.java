@@ -11,7 +11,7 @@
 package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.Document;
 
 /** Text edit to replace a range in a document with a different string. */
 public final class ReplaceEdit extends TextEdit {

@@ -12,8 +12,8 @@
 package com.codenvy.ide.legacy.client.api.text.rules;
 
 
-import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.rules.Token;
+import com.codenvy.ide.legacy.client.api.text.Document;
 
 /**
  * A token scanner scans a range of a document and reports about the token it finds.

@@ -11,22 +11,22 @@
 package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.BadPartitioningException;
 import com.codenvy.ide.api.text.BadPositionCategoryException;
-import com.codenvy.ide.api.text.DefaultPositionUpdater;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.DocumentEvent;
-import com.codenvy.ide.api.text.DocumentListener;
-import com.codenvy.ide.api.text.DocumentPartitioner;
-import com.codenvy.ide.api.text.DocumentPartitioningChangedEvent;
-import com.codenvy.ide.api.text.DocumentPartitioningListener;
-import com.codenvy.ide.api.text.LineTracker;
-import com.codenvy.ide.api.text.ListenerList;
 import com.codenvy.ide.api.text.Position;
-import com.codenvy.ide.api.text.PositionUpdater;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TypedRegion;
 import com.codenvy.ide.api.text.TypedRegionImpl;
+import com.codenvy.ide.legacy.client.api.text.BadPartitioningException;
+import com.codenvy.ide.legacy.client.api.text.DefaultPositionUpdater;
+import com.codenvy.ide.legacy.client.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.DocumentEvent;
+import com.codenvy.ide.legacy.client.api.text.DocumentListener;
+import com.codenvy.ide.legacy.client.api.text.DocumentPartitioner;
+import com.codenvy.ide.legacy.client.api.text.DocumentPartitioningChangedEvent;
+import com.codenvy.ide.legacy.client.api.text.DocumentPartitioningListener;
+import com.codenvy.ide.legacy.client.api.text.LineTracker;
+import com.codenvy.ide.legacy.client.api.text.ListenerList;
+import com.codenvy.ide.legacy.client.api.text.PositionUpdater;
 import com.codenvy.ide.runtime.Assert;
 import com.google.gwt.core.client.JavaScriptException;
 
@@ -47,7 +47,7 @@ import java.util.Map;
  * An <code>AbstractDocument</code> supports the following implementation plug-ins:
  * <ul>
  * <li>a text store implementing {@link com.codenvy.ide.legacy.client.core.text.TextStore.text.ITextStore} for storing and managing the document's content,</li>
- * <li>a line tracker implementing {@link org.eclipse.LineTracker.text.ILineTracker} to map character positions to line numbers and vice
+ * <li>a line tracker implementing {@link com.codenvy.ide.legacy.client.api.text.eclipse.LineTracker.text.ILineTracker} to map character positions to line numbers and vice
  * versa</li>
  * </ul>
  * The document can dynamically change the text store when switching between sequential rewrite mode and normal mode.
@@ -57,7 +57,7 @@ import java.util.Map;
  * Subclasses are not intended to overwrite existing methods.
  *
  * @see com.codenvy.ide.legacy.client.core.text.TextStore.text.ITextStore
- * @see org.eclipse.LineTracker.text.ILineTracker
+ * @see com.codenvy.ide.legacy.client.api.text.eclipse.LineTracker.text.ILineTracker
  */
 public abstract class AbstractDocument implements Document {
 

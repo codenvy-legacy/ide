@@ -11,9 +11,9 @@
 package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.RegionImpl;
+import com.codenvy.ide.legacy.client.api.text.Document;
 import com.codenvy.ide.runtime.Assert;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -21,9 +21,9 @@ import com.google.gwt.regexp.shared.RegExp;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Provides search and replace operations on {@link org.eclipse.Document.text.IDocument}.
+ * Provides search and replace operations on {@link com.codenvy.ide.legacy.client.api.text.eclipse.Document.text.IDocument}.
  * <p/>
- * Replaces {@link org.eclipse.Document.text.IDocument#search(int, String, boolean, boolean, boolean)}.
+ * Replaces {@link com.codenvy.ide.legacy.client.api.text.eclipse.Document.text.IDocument#search(int, String, boolean, boolean, boolean)}.
  *
  * @since 3.0
  */
@@ -219,8 +219,8 @@ public class FindReplaceDocumentAdapter implements CharSequence {
      *         if a REPLACE or REPLACE_FIND operation is not preceded by a successful FIND operation
      * @throws PatternSyntaxException
      *         if a regular expression has invalid syntax
-     * @see com.codenvy.ide.api.text.DocumentEvent
-     * @see com.codenvy.ide.api.text.DocumentListener
+     * @see com.codenvy.ide.legacy.client.api.text.DocumentEvent
+     * @see com.codenvy.ide.legacy.client.api.text.DocumentListener
      */
     public Region replace(String text, boolean regExReplace) throws BadLocationException {
         // TODO

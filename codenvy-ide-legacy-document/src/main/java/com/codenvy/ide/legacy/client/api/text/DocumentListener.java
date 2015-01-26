@@ -8,7 +8,8 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
+
 
 /**
  * Interface for objects which are interested in getting informed about document changes. A listener is informed about document

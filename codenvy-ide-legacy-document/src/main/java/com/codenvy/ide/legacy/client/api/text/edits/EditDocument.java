@@ -11,16 +11,16 @@
 package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.BadPartitioningException;
 import com.codenvy.ide.api.text.BadPositionCategoryException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.DocumentListener;
-import com.codenvy.ide.api.text.DocumentPartitioner;
-import com.codenvy.ide.api.text.DocumentPartitioningListener;
 import com.codenvy.ide.api.text.Position;
-import com.codenvy.ide.api.text.PositionUpdater;
 import com.codenvy.ide.api.text.Region;
 import com.codenvy.ide.api.text.TypedRegion;
+import com.codenvy.ide.legacy.client.api.text.BadPartitioningException;
+import com.codenvy.ide.legacy.client.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.DocumentListener;
+import com.codenvy.ide.legacy.client.api.text.DocumentPartitioner;
+import com.codenvy.ide.legacy.client.api.text.DocumentPartitioningListener;
+import com.codenvy.ide.legacy.client.api.text.PositionUpdater;
 
 class EditDocument implements Document {
 
@@ -295,58 +295,58 @@ class EditDocument implements Document {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getPartitionings() */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getPartitionings() */
     @Override
     public String[] getPartitionings() {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getLegalContentTypes(java.lang.String) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getLegalContentTypes(java.lang.String) */
     @Override
     public String[] getLegalContentTypes(String partitioning) throws BadPartitioningException {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getContentType(java.lang.String, int, boolean) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getContentType(java.lang.String, int, boolean) */
     @Override
     public String getContentType(String partitioning, int offset, boolean preferOpenPartitions)
             throws BadLocationException, BadPartitioningException {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getPartition(java.lang.String, int, boolean) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getPartition(java.lang.String, int, boolean) */
     @Override
     public TypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
             throws BadLocationException, BadPartitioningException {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#computePartitioning(java.lang.String, int, int, boolean) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#computePartitioning(java.lang.String, int, int, boolean) */
     @Override
     public TypedRegion[] computePartitioning(String partitioning, int offset, int length,
                                              boolean includeZeroLengthPartitions) throws BadLocationException, BadPartitioningException {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#setDocumentPartitioner(java.lang.String, com.codenvy.ide.api.text.DocumentPartitioner) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#setDocumentPartitioner(java.lang.String, com.codenvy.ide.legacy.client.api.text.DocumentPartitioner) */
     @Override
     public void setDocumentPartitioner(String partitioning, DocumentPartitioner partitioner) {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getDocumentPartitioner(java.lang.String) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getDocumentPartitioner(java.lang.String) */
     @Override
     public DocumentPartitioner getDocumentPartitioner(String partitioning) {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#getModificationStamp() */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#getModificationStamp() */
     @Override
     public long getModificationStamp() {
         throw new UnsupportedOperationException();
     }
 
-    /** @see com.codenvy.ide.api.text.Document#replace(int, int, java.lang.String, long) */
+    /** @see com.codenvy.ide.legacy.client.api.text.Document#replace(int, int, java.lang.String, long) */
     @Override
     public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException {
         throw new UnsupportedOperationException();

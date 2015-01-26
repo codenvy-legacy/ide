@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
 
 /**
  * This class is a thread safe list that is designed for storing lists of listeners. The implementation is optimized for minimal

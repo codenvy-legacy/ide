@@ -8,7 +8,8 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
+
 
 /**
  * A position updater is responsible for adapting document positions. When installed on a document, the position updater updates

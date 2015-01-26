@@ -8,8 +8,12 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
 
+import com.codenvy.ide.api.text.BadLocationException;
+import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.api.text.TypedRegion;
+import com.codenvy.ide.api.text.TypedRegionImpl;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.loging.Log;
 

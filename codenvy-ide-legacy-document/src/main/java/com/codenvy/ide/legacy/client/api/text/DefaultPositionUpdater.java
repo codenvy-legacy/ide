@@ -8,7 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
+
+import com.codenvy.ide.api.text.BadPositionCategoryException;
+import com.codenvy.ide.api.text.Position;
 
 /**
  * Default implementation of {@link PositionUpdater}.

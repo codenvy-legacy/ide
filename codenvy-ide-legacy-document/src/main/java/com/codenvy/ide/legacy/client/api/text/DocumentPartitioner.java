@@ -8,7 +8,9 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text;
+package com.codenvy.ide.legacy.client.api.text;
+
+import com.codenvy.ide.api.text.TypedRegion;
 
 /**
  * A document partitioner divides a document into a set of disjoint text partitions. Each partition has a content type, an offset,

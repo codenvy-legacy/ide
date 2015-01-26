@@ -11,9 +11,9 @@
 package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
-import com.codenvy.ide.api.text.DocumentEvent;
-import com.codenvy.ide.api.text.DocumentListener;
+import com.codenvy.ide.legacy.client.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.DocumentEvent;
+import com.codenvy.ide.legacy.client.api.text.DocumentListener;
 import com.codenvy.ide.runtime.Assert;
 
 class UndoCollector implements DocumentListener {

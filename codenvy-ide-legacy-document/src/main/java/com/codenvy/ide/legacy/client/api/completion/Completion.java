@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.legacy.client.api.completion;
 
-import com.codenvy.ide.api.text.Document;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.legacy.client.api.text.Document;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>

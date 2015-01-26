@@ -11,7 +11,7 @@
 package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.Document;
+import com.codenvy.ide.legacy.client.api.text.Document;
 
 /**
  * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker

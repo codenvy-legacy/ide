@@ -11,8 +11,8 @@
 package com.codenvy.ide.legacy.client.core.text;
 
 import com.codenvy.ide.api.text.BadLocationException;
-import com.codenvy.ide.api.text.LineTracker;
 import com.codenvy.ide.api.text.Region;
+import com.codenvy.ide.legacy.client.api.text.LineTracker;
 
 import java.util.Iterator;
 import java.util.List;

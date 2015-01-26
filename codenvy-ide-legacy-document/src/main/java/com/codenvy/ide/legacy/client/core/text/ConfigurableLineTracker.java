@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.legacy.client.core.text;
 
-import com.codenvy.ide.api.text.TextUtilities;
+import com.codenvy.ide.legacy.client.api.text.TextUtilities;
 import com.codenvy.ide.runtime.Assert;
 
 /**
  * Standard implementation of a generic
- * {@link org.eclipse.LineTracker.text.ILineTracker}.
+ * {@link com.codenvy.ide.legacy.client.api.text.eclipse.LineTracker.text.ILineTracker}.
  * <p>
  * The line tracker can be configured with the set of legal line delimiters.
  * Line delimiters are unconstrained. The line delimiters are used to compute

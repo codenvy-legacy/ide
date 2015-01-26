@@ -11,7 +11,7 @@
 package com.codenvy.ide.legacy.client.core.text;
 
 /**
- * Standard implementation of {@link org.eclipse.LineTracker.text.ILineTracker}.
+ * Standard implementation of {@link com.codenvy.ide.legacy.client.api.text.eclipse.LineTracker.text.ILineTracker}.
  * <p>
  * The line tracker considers the three common line delimiters which are '\n', '\r', '\r\n'.
  * <p>
