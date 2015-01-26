@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.autocomplete;
+package com.codenvy.ide.api.autocomplete;
 
 import com.codenvy.ide.ui.Popup;
 import com.codenvy.ide.ui.list.SimpleList;
