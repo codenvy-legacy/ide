@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project.main;
 
-import com.codenvy.api.project.gwt.client.ProjectTemplateRegistry;
-import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
+import com.codenvy.ide.api.projecttype.ProjectTemplateRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTypeRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
