@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.rules;
+package com.codenvy.ide.legacy.client.api.text.rules;
 
 
 /**

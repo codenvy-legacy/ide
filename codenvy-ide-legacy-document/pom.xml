@@ -50,6 +50,9 @@
                 <configuration>
                     <excludes>
                         <exclude>**/text/ConfigurableLineTracker.java</exclude>
+                        <exclude>**/text/rules/TokenScanner.java</exclude>
+                        <exclude>**/text/rules/PartitionTokenScanner.java</exclude>
+                        <exclude>**/text/rules/CharacterScanner.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
