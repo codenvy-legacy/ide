@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 /**
  * Thrown to indicate that an edit got added to a parent edit but the child edit somehow conflicts with the parent or one of it

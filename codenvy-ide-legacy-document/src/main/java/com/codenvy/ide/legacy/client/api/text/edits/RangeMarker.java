@@ -8,52 +8,34 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 
-/**
- * Text edit to insert a text at a given position in a document.
- * <p/>
- * An insert edit is equivalent to <code>ReplaceEdit(offset, 0, text)
- * </code>
- */
-public final class InsertEdit extends TextEdit {
-
-    private String fText;
+/** A range marker can be used to track positions when executing text edits. */
+public final class RangeMarker extends TextEdit {
 
     /**
-     * Constructs a new insert edit.
+     * Creates a new range marker for the given offset and length.
      *
      * @param offset
-     *         the insertion offset
-     * @param text
-     *         the text to insert
+     *         the marker's offset
+     * @param length
+     *         the marker's length
      */
-    public InsertEdit(int offset, String text) {
-        super(offset, 0);
-        fText = text;
+    public RangeMarker(int offset, int length) {
+        super(offset, length);
     }
 
     /* Copy constructor */
-    private InsertEdit(InsertEdit other) {
+    private RangeMarker(RangeMarker other) {
         super(other);
-        fText = other.fText;
     }
 
-    /**
-     * Returns the text to be inserted.
-     *
-     * @return the edit's text.
-     */
-    public String getText() {
-        return fText;
-    }
-
-    /* @see TextEdit#doCopy */
+    /* @see TextEdit#copy */
     protected TextEdit doCopy() {
-        return new InsertEdit(this);
+        return new RangeMarker(this);
     }
 
     /* @see TextEdit#accept0 */
@@ -66,22 +48,12 @@ public final class InsertEdit extends TextEdit {
 
     /* @see TextEdit#performDocumentUpdating */
     int performDocumentUpdating(Document document) throws BadLocationException {
-        document.replace(getOffset(), getLength(), fText);
-        fDelta = fText.length() - getLength();
+        fDelta = 0;
         return fDelta;
     }
 
     /* @see TextEdit#deleteChildren */
     boolean deleteChildren() {
         return false;
-    }
-
-    /*
-     * @see org.eclipse.text.edits.TextEdit#internalToString(java.lang.StringBuffer, int)
-     * @since 3.3
-     */
-    void internalToString(StringBuffer buffer, int indent) {
-        super.internalToString(buffer, indent);
-        buffer.append(" <<").append(fText); //$NON-NLS-1$
     }
 }

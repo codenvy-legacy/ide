@@ -8,43 +8,42 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 
-/** Text edit to replace a range in a document with a different string. */
-public final class ReplaceEdit extends TextEdit {
+/**
+ * Text edit to insert a text at a given position in a document.
+ * <p/>
+ * An insert edit is equivalent to <code>ReplaceEdit(offset, 0, text)
+ * </code>
+ */
+public final class InsertEdit extends TextEdit {
 
     private String fText;
 
     /**
-     * Constructs a new replace edit.
+     * Constructs a new insert edit.
      *
      * @param offset
-     *         the offset of the range to replace
-     * @param length
-     *         the length of the range to replace
+     *         the insertion offset
      * @param text
-     *         the new text
+     *         the text to insert
      */
-    public ReplaceEdit(int offset, int length, String text) {
-        super(offset, length);
-        // Assert.isNotNull(text);
+    public InsertEdit(int offset, String text) {
+        super(offset, 0);
         fText = text;
     }
 
-    /*
-     * Copy constructor
-     * @param other the edit to copy from
-     */
-    private ReplaceEdit(ReplaceEdit other) {
+    /* Copy constructor */
+    private InsertEdit(InsertEdit other) {
         super(other);
         fText = other.fText;
     }
 
     /**
-     * Returns the new text replacing the text denoted by the edit.
+     * Returns the text to be inserted.
      *
      * @return the edit's text.
      */
@@ -54,7 +53,7 @@ public final class ReplaceEdit extends TextEdit {
 
     /* @see TextEdit#doCopy */
     protected TextEdit doCopy() {
-        return new ReplaceEdit(this);
+        return new InsertEdit(this);
     }
 
     /* @see TextEdit#accept0 */
@@ -74,7 +73,7 @@ public final class ReplaceEdit extends TextEdit {
 
     /* @see TextEdit#deleteChildren */
     boolean deleteChildren() {
-        return true;
+        return false;
     }
 
     /*

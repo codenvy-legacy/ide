@@ -8,40 +8,53 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 
-/**
- * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker
- * stores a local copy of the text it captures when it gets executed.
- */
-public final class CopyingRangeMarker extends TextEdit {
+/** Text edit to replace a range in a document with a different string. */
+public final class ReplaceEdit extends TextEdit {
 
     private String fText;
 
     /**
-     * Creates a new <tt>CopyRangeMarker</tt> for the given offset and length.
+     * Constructs a new replace edit.
      *
      * @param offset
-     *         the marker's offset
+     *         the offset of the range to replace
      * @param length
-     *         the marker's length
+     *         the length of the range to replace
+     * @param text
+     *         the new text
      */
-    public CopyingRangeMarker(int offset, int length) {
+    public ReplaceEdit(int offset, int length, String text) {
         super(offset, length);
+        // Assert.isNotNull(text);
+        fText = text;
     }
 
-    /* Copy constructor */
-    private CopyingRangeMarker(CopyingRangeMarker other) {
+    /*
+     * Copy constructor
+     * @param other the edit to copy from
+     */
+    private ReplaceEdit(ReplaceEdit other) {
         super(other);
         fText = other.fText;
     }
 
+    /**
+     * Returns the new text replacing the text denoted by the edit.
+     *
+     * @return the edit's text.
+     */
+    public String getText() {
+        return fText;
+    }
+
     /* @see TextEdit#doCopy */
     protected TextEdit doCopy() {
-        return new CopyingRangeMarker(this);
+        return new ReplaceEdit(this);
     }
 
     /* @see TextEdit#accept0 */
@@ -54,13 +67,22 @@ public final class CopyingRangeMarker extends TextEdit {
 
     /* @see TextEdit#performDocumentUpdating */
     int performDocumentUpdating(Document document) throws BadLocationException {
-        fText = document.get(getOffset(), getLength());
-        fDelta = 0;
+        document.replace(getOffset(), getLength(), fText);
+        fDelta = fText.length() - getLength();
         return fDelta;
     }
 
     /* @see TextEdit#deleteChildren */
     boolean deleteChildren() {
-        return false;
+        return true;
+    }
+
+    /*
+     * @see org.eclipse.text.edits.TextEdit#internalToString(java.lang.StringBuffer, int)
+     * @since 3.3
+     */
+    void internalToString(StringBuffer buffer, int indent) {
+        super.internalToString(buffer, indent);
+        buffer.append(" <<").append(fText); //$NON-NLS-1$
     }
 }

@@ -8,39 +8,40 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 
 /**
- * Text edit to delete a range in a document.
- * <p/>
- * A delete edit is equivalent to <code>ReplaceEdit(
- * offset, length, "")</code>.
+ * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker
+ * stores a local copy of the text it captures when it gets executed.
  */
-public final class DeleteEdit extends TextEdit {
+public final class CopyingRangeMarker extends TextEdit {
+
+    private String fText;
 
     /**
-     * Constructs a new delete edit.
+     * Creates a new <tt>CopyRangeMarker</tt> for the given offset and length.
      *
      * @param offset
-     *         the offset of the range to replace
+     *         the marker's offset
      * @param length
-     *         the length of the range to replace
+     *         the marker's length
      */
-    public DeleteEdit(int offset, int length) {
+    public CopyingRangeMarker(int offset, int length) {
         super(offset, length);
     }
 
     /* Copy constructor */
-    private DeleteEdit(DeleteEdit other) {
+    private CopyingRangeMarker(CopyingRangeMarker other) {
         super(other);
+        fText = other.fText;
     }
 
     /* @see TextEdit#doCopy */
     protected TextEdit doCopy() {
-        return new DeleteEdit(this);
+        return new CopyingRangeMarker(this);
     }
 
     /* @see TextEdit#accept0 */
@@ -53,13 +54,13 @@ public final class DeleteEdit extends TextEdit {
 
     /* @see TextEdit#performDocumentUpdating */
     int performDocumentUpdating(Document document) throws BadLocationException {
-        document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
-        fDelta = -getLength();
+        fText = document.get(getOffset(), getLength());
+        fDelta = 0;
         return fDelta;
     }
 
     /* @see TextEdit#deleteChildren */
     boolean deleteChildren() {
-        return true;
+        return false;
     }
 }

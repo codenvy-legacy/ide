@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.BadPartitioningException;

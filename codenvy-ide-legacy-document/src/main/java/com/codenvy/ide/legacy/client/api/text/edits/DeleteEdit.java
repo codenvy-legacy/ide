@@ -8,34 +8,39 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.text.edits;
+package com.codenvy.ide.legacy.client.api.text.edits;
 
 import com.codenvy.ide.api.text.BadLocationException;
 import com.codenvy.ide.api.text.Document;
 
-/** A range marker can be used to track positions when executing text edits. */
-public final class RangeMarker extends TextEdit {
+/**
+ * Text edit to delete a range in a document.
+ * <p/>
+ * A delete edit is equivalent to <code>ReplaceEdit(
+ * offset, length, "")</code>.
+ */
+public final class DeleteEdit extends TextEdit {
 
     /**
-     * Creates a new range marker for the given offset and length.
+     * Constructs a new delete edit.
      *
      * @param offset
-     *         the marker's offset
+     *         the offset of the range to replace
      * @param length
-     *         the marker's length
+     *         the length of the range to replace
      */
-    public RangeMarker(int offset, int length) {
+    public DeleteEdit(int offset, int length) {
         super(offset, length);
     }
 
     /* Copy constructor */
-    private RangeMarker(RangeMarker other) {
+    private DeleteEdit(DeleteEdit other) {
         super(other);
     }
 
-    /* @see TextEdit#copy */
+    /* @see TextEdit#doCopy */
     protected TextEdit doCopy() {
-        return new RangeMarker(this);
+        return new DeleteEdit(this);
     }
 
     /* @see TextEdit#accept0 */
@@ -48,12 +53,13 @@ public final class RangeMarker extends TextEdit {
 
     /* @see TextEdit#performDocumentUpdating */
     int performDocumentUpdating(Document document) throws BadLocationException {
-        fDelta = 0;
+        document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
+        fDelta = -getLength();
         return fDelta;
     }
 
     /* @see TextEdit#deleteChildren */
     boolean deleteChildren() {
-        return false;
+        return true;
     }
 }
