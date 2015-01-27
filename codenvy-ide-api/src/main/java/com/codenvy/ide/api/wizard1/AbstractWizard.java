@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
  */
 public abstract class AbstractWizard<T> implements Wizard<T> {
     protected final T                    data;
-    //    protected       Array<Provider<? extends WizardPage<T>>> wizardPageProviders;
     protected       Array<WizardPage<T>> wizardPages;
     private         UpdateDelegate       delegate;
     private         int                  index;
@@ -32,12 +31,10 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     public AbstractWizard(T data) {
         this.data = data;
         wizardPages = Collections.createArray();
-//        wizardPageProviders = Collections.createArray();
     }
 
     public T getData() {
         return data;
-        
     }
 
     /**
@@ -123,7 +120,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     private WizardPage<T> getNextEnablePage() {
         while (++index < wizardPages.size()) {
             WizardPage<T> page = wizardPages.get(index);
-            if (page.inContext() && !page.canSkip()) {
+            if (!page.canSkip()) {
                 return page;
             }
         }
@@ -134,7 +131,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     public WizardPage<T> flipToPrevious() {
         while (--index >= 0) {
             final WizardPage<T> page = wizardPages.get(index);
-            if (page.inContext() && !page.canSkip()) {
+            if (!page.canSkip()) {
                 page.init(data);
                 return page;
             }
@@ -146,7 +143,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     public boolean hasNext() {
         for (int i = index + 1; i < wizardPages.size(); i++) {
             WizardPage<T> page = wizardPages.get(i);
-            if (page.inContext() && !page.canSkip()) {
+            if (!page.canSkip()) {
                 return true;
             }
         }
@@ -157,7 +154,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     public boolean hasPrevious() {
         for (int i = index - 1; i >= 0; i--) {
             WizardPage<T> page = wizardPages.get(i);
-            if (page.inContext() && !page.canSkip()) {
+            if (!page.canSkip()) {
                 return true;
             }
         }

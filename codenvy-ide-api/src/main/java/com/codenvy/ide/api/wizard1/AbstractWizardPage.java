@@ -44,9 +44,4 @@ public abstract class AbstractWizardPage<T> implements WizardPage<T> {
     public boolean canSkip() {
         return false;
     }
-
-    @Override
-    public boolean inContext() {
-        return true;
-    }
 }
