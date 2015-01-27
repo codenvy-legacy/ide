@@ -12,7 +12,7 @@ package com.codenvy.ide.wizard.project.importproject;
 
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.api.mvp.View;
-import com.codenvy.ide.wizard.project.ProjectWizardView;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.ImplementedBy;
 

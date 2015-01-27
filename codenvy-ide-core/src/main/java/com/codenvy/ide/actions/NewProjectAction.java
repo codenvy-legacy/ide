@@ -15,7 +15,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.wizard.project.my_wizard.ProjectWizardPresenter;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

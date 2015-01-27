@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard.project;
 
+import com.codenvy.ide.projecttype.wizard.PreSelectedProjectTypeManagerImpl;
+
 import org.junit.Assert;
 import org.junit.Test;
 

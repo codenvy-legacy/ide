@@ -13,7 +13,6 @@ package com.codenvy.ide.wizard.project.importproject;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
-import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;

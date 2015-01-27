@@ -18,13 +18,12 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardView;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.project.ProjectWizardView;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardView.EnterPressedDelegate;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -120,7 +119,7 @@ public class MainPagePresenter extends AbstractWizardPage implements MainPageVie
 
     @Override
     public boolean isCompleted() {
-        return projectImporter != null && wizardContext.getData(ProjectWizard.PROJECT_NAME) != null
+        return projectImporter != null && wizardContext.getData(ImportProjectWizard.PROJECT_NAME) != null
                && wizardContext.getData(ImportProjectWizard.PROJECT_URL) != null;
     }
 

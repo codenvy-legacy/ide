@@ -13,7 +13,6 @@ package com.codenvy.ide.projectimporter.zipimporterpage;
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -139,7 +138,7 @@ public class ZipImporterPagePresenterTest {
 
         presenter.projectNameChanged(correctName);
 
-        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_NAME), eq(correctName));
+        verify(wizardContext).putData(eq(ImportProjectWizard.PROJECT_NAME), eq(correctName));
         verify(view).hideNameError();
         verify(view, never()).showNameError();
         verify(updateDelegate).updateControls();
@@ -151,7 +150,7 @@ public class ZipImporterPagePresenterTest {
 
         presenter.projectNameChanged(correctName);
 
-        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_NAME), eq(correctName));
+        verify(wizardContext).putData(eq(ImportProjectWizard.PROJECT_NAME), eq(correctName));
         verify(view).hideNameError();
         verify(updateDelegate).updateControls();
     }
@@ -162,7 +161,7 @@ public class ZipImporterPagePresenterTest {
         String fixedName = "Test-project-For--Codenvy";
         presenter.projectNameChanged(namesWithSpace);
 
-        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_NAME), eq(fixedName));
+        verify(wizardContext).putData(eq(ImportProjectWizard.PROJECT_NAME), eq(fixedName));
         verify(view).hideNameError();
         verify(updateDelegate).updateControls();
     }
@@ -173,8 +172,8 @@ public class ZipImporterPagePresenterTest {
 
         presenter.projectNameChanged(emptyName);
 
-        verify(wizardContext, never()).putData(eq(ProjectWizard.PROJECT_NAME), anyString());
-        verify(wizardContext).removeData(eq(ProjectWizard.PROJECT_NAME));
+        verify(wizardContext, never()).putData(eq(ImportProjectWizard.PROJECT_NAME), anyString());
+        verify(wizardContext).removeData(eq(ImportProjectWizard.PROJECT_NAME));
         verify(updateDelegate).updateControls();
     }
 
@@ -184,8 +183,8 @@ public class ZipImporterPagePresenterTest {
 
         presenter.projectNameChanged(incorrectName);
 
-        verify(wizardContext, never()).putData(eq(ProjectWizard.PROJECT_NAME), anyString());
-        verify(wizardContext).removeData(eq(ProjectWizard.PROJECT_NAME));
+        verify(wizardContext, never()).putData(eq(ImportProjectWizard.PROJECT_NAME), anyString());
+        verify(wizardContext).removeData(eq(ImportProjectWizard.PROJECT_NAME));
         verify(view).showNameError();
         verify(updateDelegate).updateControls();
     }
@@ -209,14 +208,14 @@ public class ZipImporterPagePresenterTest {
         String description = "description";
         presenter.projectDescriptionChanged(description);
 
-        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_DESCRIPTION), eq(description));
+        verify(wizardContext).putData(eq(ImportProjectWizard.PROJECT_DESCRIPTION), eq(description));
     }
 
     @Test
     public void projectVisibilityChangedTest() {
         presenter.projectVisibilityChanged(true);
 
-        verify(wizardContext).putData(eq(ProjectWizard.PROJECT_VISIBILITY), eq(true));
+        verify(wizardContext).putData(eq(ImportProjectWizard.PROJECT_VISIBILITY), eq(true));
     }
 
 }

@@ -14,7 +14,6 @@ import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
-import com.codenvy.ide.wizard.project.my_wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.google.gwt.regexp.shared.RegExp;
@@ -81,14 +80,14 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
     @Override
     public void projectNameChanged(@Nonnull String name) {
         if (name.isEmpty()) {
-            wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+            wizardContext.removeData(ImportProjectWizard.PROJECT_NAME);
         } else {
             name = replaceSpaceToHyphen(name);
             if (NAME_PATTERN.test(name)) {
-                wizardContext.putData(ProjectWizard.PROJECT_NAME, name);
+                wizardContext.putData(ImportProjectWizard.PROJECT_NAME, name);
                 view.hideNameError();
             } else {
-                wizardContext.removeData(ProjectWizard.PROJECT_NAME);
+                wizardContext.removeData(ImportProjectWizard.PROJECT_NAME);
                 view.showNameError();
             }
         }
@@ -121,12 +120,12 @@ public class ZipImporterPagePresenter implements ImporterPagePresenter, ZipImpor
 
     @Override
     public void projectDescriptionChanged(@Nonnull String projectDescriptionValue) {
-        wizardContext.putData(ProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
+        wizardContext.putData(ImportProjectWizard.PROJECT_DESCRIPTION, projectDescriptionValue);
     }
 
     @Override
     public void projectVisibilityChanged(boolean aPublic) {
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, aPublic);
+        wizardContext.putData(ImportProjectWizard.PROJECT_VISIBILITY, aPublic);
     }
 
     @Override

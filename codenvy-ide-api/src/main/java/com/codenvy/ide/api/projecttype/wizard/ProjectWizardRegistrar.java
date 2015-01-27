@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
-import com.codenvy.ide.api.wizard.WizardPage;
+import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.ide.api.wizard1.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.Provider;
 
@@ -35,5 +36,5 @@ public interface ProjectWizardRegistrar {
 
     /** Returns pages that should be added to project wizard. */
     @Nonnull
-    Array<Provider<? extends WizardPage>> getWizardPages();
+    Array<Provider<? extends WizardPage<NewProject>>> getWizardPages();
 }
