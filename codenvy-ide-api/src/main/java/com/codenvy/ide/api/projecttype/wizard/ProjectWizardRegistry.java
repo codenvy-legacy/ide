@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012-2014 Codenvy, S.A.
+ * Copyright (c) 2012-2015 Codenvy, S.A.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,4 +29,14 @@ public interface ProjectWizardRegistry {
      */
     @Nullable
     ProjectWizardRegistrar getWizardRegistrar(@Nonnull String projectTypeId);
+
+    /**
+     * Returns wizard category of the specified {@code projectTypeId}.
+     *
+     * @param projectTypeId
+     *         the ID of the project type to get it's wizard category
+     * @return wizard category of the specified {@code projectTypeId}
+     */
+    @Nullable
+    String getWizardCategory(@Nonnull String projectTypeId);
 }

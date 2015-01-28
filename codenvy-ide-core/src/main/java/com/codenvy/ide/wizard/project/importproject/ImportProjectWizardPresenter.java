@@ -32,7 +32,6 @@ import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.api.wizard.WizardDialog;
@@ -149,7 +148,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     @Override
     public void show() {
         wizardContext.clear();
-        wizardContext.putData(ProjectWizard.PROJECT_VISIBILITY, true);
+        wizardContext.putData(ImportProjectWizard.PROJECT_VISIBILITY, true);
         view.showDialog();
         setPage(mainPage);
     }
@@ -185,7 +184,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
 
     @Override
     public void onImportClicked() {
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        final String projectName = wizardContext.getData(ImportProjectWizard.PROJECT_NAME);
         // Check whether project with the same name already exists.
         // Check on VFS directly because need to check ide-2 projects also.
         vfsServiceClient.getItemByPath(projectName, new AsyncRequestCallback<Item>() {
@@ -206,7 +205,7 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private void importProject() {
         final ProjectImporterDescriptor importer = wizardContext.getData(ImportProjectWizard.PROJECT_IMPORTER);
         final String importerId = importer.getId();
-        final String projectName = wizardContext.getData(ProjectWizard.PROJECT_NAME);
+        final String projectName = wizardContext.getData(ImportProjectWizard.PROJECT_NAME);
         final String url = wizardContext.getData(ImportProjectWizard.PROJECT_URL);
 
         importedProject = null;
@@ -260,9 +259,9 @@ public class ImportProjectWizardPresenter implements WizardDialog, Wizard.Update
     private NewProject getNewProjectDescriptor() {
         NewProject newProject = dtoFactory.createDto(NewProject.class);
 
-        newProject.setVisibility(wizardContext.getData(ProjectWizard.PROJECT_VISIBILITY) ? "public" : "private");
+        newProject.setVisibility(wizardContext.getData(ImportProjectWizard.PROJECT_VISIBILITY) ? "public" : "private");
 
-        String projectDescription = wizardContext.getData(ProjectWizard.PROJECT_DESCRIPTION);
+        String projectDescription = wizardContext.getData(ImportProjectWizard.PROJECT_DESCRIPTION);
         if (projectDescription != null && !projectDescription.isEmpty()) {
             newProject.setDescription(projectDescription);
         }

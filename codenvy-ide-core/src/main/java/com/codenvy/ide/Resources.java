@@ -14,12 +14,11 @@
 
 package com.codenvy.ide;
 
-import org.vectomatic.dom.svg.ui.SVGResource;
-
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.menu.MenuResources;
 import com.codenvy.ide.notification.NotificationResources;
 import com.codenvy.ide.part.projectexplorer.ProjectTreeNodeRenderer;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardResources;
 import com.codenvy.ide.ui.DialogBoxResources;
 import com.codenvy.ide.ui.buttonLoader.ButtonLoaderResources;
 import com.codenvy.ide.ui.cellview.CellTableResources;
@@ -28,10 +27,11 @@ import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.zeroClipboard.ZeroClipboardResources;
-import com.codenvy.ide.wizard.project.ProjectWizardResources;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.resources.client.ImageResource;
+
+import org.vectomatic.dom.svg.ui.SVGResource;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc.
@@ -43,10 +43,19 @@ import com.google.gwt.resources.client.ImageResource;
  * EditableContentArea.Resources,
  * PartStackUIResources,
  */
-public interface Resources extends Tree.Resources, ProjectTreeNodeRenderer.Resources,
-                                   PartStackUIResources, SimpleList.Resources,
-                                   MenuResources, DialogBoxResources, ZeroClipboardResources, NotificationResources, DataGridResources,
-                                   CellTableResources, CategoriesList.Resources, ButtonLoaderResources, ProjectWizardResources {
+public interface Resources extends Tree.Resources,
+                                   ProjectTreeNodeRenderer.Resources,
+                                   PartStackUIResources,
+                                   SimpleList.Resources,
+                                   MenuResources,
+                                   DialogBoxResources,
+                                   ZeroClipboardResources,
+                                   NotificationResources,
+                                   DataGridResources,
+                                   CellTableResources,
+                                   CategoriesList.Resources,
+                                   ButtonLoaderResources,
+                                   ProjectWizardResources {
 
     /** Interface for css resources. */
     public interface CoreCss extends CssResource {

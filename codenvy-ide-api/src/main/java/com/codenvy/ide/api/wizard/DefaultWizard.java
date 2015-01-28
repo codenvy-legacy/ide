@@ -41,7 +41,7 @@ public class DefaultWizard implements Wizard, WizardPage.CommitCallback {
     private   NotificationManager                   notificationManager;
     private   String                                title;
     private   UpdateDelegate                        delegate;
-    private   WizardContext                         wizardContext;
+    protected WizardContext                         wizardContext;
     protected Array<Provider<? extends WizardPage>> wizardPageProviders;
     protected Array<WizardPage>                     wizardPages;
     private   int                                   index;

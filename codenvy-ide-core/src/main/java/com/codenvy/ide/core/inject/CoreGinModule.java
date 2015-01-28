@@ -21,8 +21,8 @@ import com.codenvy.api.project.gwt.client.ProjectImportersServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectImportersServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectServiceClientImpl;
-import com.codenvy.api.project.gwt.client.ProjectTypeRegistry;
-import com.codenvy.api.project.gwt.client.ProjectTypeRegistryImpl;
+import com.codenvy.api.project.gwt.client.ProjectTemplateServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTemplateServiceClientImpl;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
 import com.codenvy.api.project.gwt.client.ProjectTypeServiceClientImpl;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
@@ -67,9 +67,12 @@ import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporter;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
 import com.codenvy.ide.api.projecttree.generic.NodeFactory;
+import com.codenvy.ide.api.projecttype.ProjectTemplateRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTypeRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizardRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.text.DocumentFactory;
 import com.codenvy.ide.api.theme.Theme;
@@ -123,6 +126,10 @@ import com.codenvy.ide.privacy.PrivacyPresenter;
 import com.codenvy.ide.projectimporter.ZipProjectImporter;
 import com.codenvy.ide.projectimporter.zipimporterpage.ZipImporterPagePresenter;
 import com.codenvy.ide.projecttree.TreeStructureProviderRegistryImpl;
+import com.codenvy.ide.projecttype.BlankProjectWizardRegistrar;
+import com.codenvy.ide.projecttype.ProjectTemplateRegistryImpl;
+import com.codenvy.ide.projecttype.ProjectTypeRegistryImpl;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardFactory;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactoryImpl;
@@ -171,8 +178,8 @@ import com.codenvy.ide.websocket.MessageBusImpl;
 import com.codenvy.ide.wizard.WizardDialogPresenter;
 import com.codenvy.ide.wizard.WizardDialogView;
 import com.codenvy.ide.wizard.WizardDialogViewImpl;
-import com.codenvy.ide.wizard.project.PreSelectedProjectTypeManagerImpl;
-import com.codenvy.ide.wizard.project.ProjectTypeWizardRegistryImpl;
+import com.codenvy.ide.projecttype.wizard.PreSelectedProjectTypeManagerImpl;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardRegistryImpl;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectNotificationSubscriberImpl;
 import com.codenvy.ide.wizard.project.importproject.ImportProjectWizardRegistryImpl;
 import com.codenvy.ide.workspace.PartStackPresenterFactory;
@@ -220,8 +227,9 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
 
-
-        bind(ProjectTypeWizardRegistry.class).to(ProjectTypeWizardRegistryImpl.class).in(Singleton.class);
+        GinMultibinder.newSetBinder(binder(), ProjectWizardRegistrar.class).addBinding().to(BlankProjectWizardRegistrar.class);
+        bind(ProjectWizardRegistry.class).to(ProjectWizardRegistryImpl.class).in(Singleton.class);
+        install(new GinFactoryModuleBuilder().build(ProjectWizardFactory.class));
         bind(PreSelectedProjectTypeManager.class).to(PreSelectedProjectTypeManagerImpl.class).in(Singleton.class);
         bind(ImportProjectWizardRegistry.class).to(ImportProjectWizardRegistryImpl.class).in(Singleton.class);
         bind(ImportProjectNotificationSubscriber.class).to(ImportProjectNotificationSubscriberImpl.class);
@@ -244,9 +252,12 @@ public class CoreGinModule extends AbstractGinModule {
         bind(ProjectServiceClient.class).to(ProjectServiceClientImpl.class).in(Singleton.class);
         bind(ProjectImportersServiceClient.class).to(ProjectImportersServiceClientImpl.class).in(Singleton.class);
         bind(ProjectTypeServiceClient.class).to(ProjectTypeServiceClientImpl.class).in(Singleton.class);
-        bind(ProjectTypeRegistry.class).to(ProjectTypeRegistryImpl.class).in(Singleton.class);
-        bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
+        bind(ProjectTemplateServiceClient.class).to(ProjectTemplateServiceClientImpl.class).in(Singleton.class);
         bind(BuilderServiceClient.class).to(BuilderServiceClientImpl.class).in(Singleton.class);
+        bind(RunnerServiceClient.class).to(RunnerServiceClientImpl.class).in(Singleton.class);
+
+        bind(ProjectTypeRegistry.class).to(ProjectTypeRegistryImpl.class).in(Singleton.class);
+        bind(ProjectTemplateRegistry.class).to(ProjectTemplateRegistryImpl.class).in(Singleton.class);
     }
 
     /** API Bindings, binds API interfaces to the implementations */
