@@ -205,15 +205,10 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
 
-                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            partStackHandler.onActivePartChanged(activePart);
-                            if (closeTabCallback != null) {
-                                closeTabCallback.onTabsClosed();
-                            }
-                        }
-                    });
+                    partStackHandler.onActivePartChanged(activePart);
+                    if (closeTabCallback != null) {
+                        closeTabCallback.onTabsClosed();
+                    }
                 }
             }
         });
