@@ -205,6 +205,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("uploadFile.title")
     String uploadFileTitle();
 
+    @Key("uploadFile.overwrite")
+    String uploadFileOverwrite();
+
     @Key("cancelButton")
     String cancelButton();
 

@@ -19,7 +19,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -40,7 +42,11 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     Button btnUpload;
 
     @UiField
-    FormPanel uploadForm;
+    FormPanel submitForm;
+    @UiField
+    CheckBox  overwrite;
+    @UiField
+    FlowPanel uploadPanel;
 
     FileUpload     file;
     ActionDelegate delegate;
@@ -74,7 +80,7 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
 
     /** Bind handlers. */
     private void bind() {
-        uploadForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+        submitForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
             @Override
             public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
                 delegate.onSubmitComplete(event.getResults());
@@ -96,8 +102,7 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
                 delegate.onFileNameChanged();
             }
         });
-        uploadForm.add(file);
-
+        uploadPanel.insert(file, 0);
         this.show();
     }
 
@@ -106,7 +111,8 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     public void closeDialog() {
         this.hide();
         this.onClose();
-
+        btnUpload.setEnabled(false);
+        overwrite.setValue(false);
     }
 
     /** {@inheritDoc} */
@@ -124,35 +130,45 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     /** {@inheritDoc} */
     @Override
     public void setEncoding(@Nonnull String encodingType) {
-        uploadForm.setEncoding(encodingType);
+        submitForm.setEncoding(encodingType);
     }
 
     /** {@inheritDoc} */
     @Override
     public void setAction(@Nonnull String url) {
-        uploadForm.setAction(url);
-        uploadForm.setMethod(FormPanel.METHOD_POST);
+        submitForm.setAction(url);
+        submitForm.setMethod(FormPanel.METHOD_POST);
     }
 
     /** {@inheritDoc} */
     @Override
     public void submit() {
-        uploadForm.submit();
-        uploadForm.clear();
+        overwrite.setFormValue(overwrite.getValue().toString());
+        submitForm.submit();
         btnUpload.setEnabled(false);
     }
 
     /** {@inheritDoc} */
     @Override
+    @Nonnull
     public String getFileName() {
-        return file.getName();
+        String fileName = file.getFilename();
+        if (fileName.contains("/") || fileName.contains("\\")) {
+            int index = fileName.contains("\\") ? fileName.lastIndexOf("\\") + 1 : fileName.lastIndexOf("/") + 1;
+            fileName = fileName.substring(index);
+        }
+        return fileName;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isOverwriteFileSelected() {
+        return overwrite.getValue();
     }
 
     /** {@inheritDoc} */
     @Override
     protected void onClose() {
-        uploadForm.remove(file);
-        file = null;
+        uploadPanel.remove(file);
     }
-
 }

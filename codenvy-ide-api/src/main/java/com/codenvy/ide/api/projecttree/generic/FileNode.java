@@ -37,8 +37,12 @@ import java.util.Objects;
 public class FileNode extends ItemNode implements VirtualFile {
 
     @AssistedInject
-    public FileNode(@Assisted TreeNode<?> parent, @Assisted ItemReference data, @Assisted TreeStructure treeStructure, EventBus eventBus,
-                    ProjectServiceClient projectServiceClient, DtoUnmarshallerFactory dtoUnmarshallerFactory) {
+    public FileNode(@Assisted TreeNode<?> parent,
+                    @Assisted ItemReference data,
+                    @Assisted TreeStructure treeStructure,
+                    EventBus eventBus,
+                    ProjectServiceClient projectServiceClient,
+                    DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         super(parent, data, treeStructure, eventBus, projectServiceClient, dtoUnmarshallerFactory);
     }
 
@@ -103,7 +107,7 @@ public class FileNode extends ItemNode implements VirtualFile {
      *         callback to return retrieved content
      */
     public void getContent(final AsyncCallback<String> callback) {
-        projectServiceClient.getFileContent(getData().getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
+        projectServiceClient.getFileContent(getPath(), new AsyncRequestCallback<String>(new StringUnmarshaller()) {
             @Override
             protected void onSuccess(String result) {
                 callback.onSuccess(result);
@@ -125,7 +129,7 @@ public class FileNode extends ItemNode implements VirtualFile {
      *         callback to return retrieved content
      */
     public void updateContent(String content, final AsyncCallback<Void> callback) {
-        projectServiceClient.updateFile(getData().getPath(), content, null, new AsyncRequestCallback<Void>() {
+        projectServiceClient.updateFile(getPath(), content, null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 callback.onSuccess(result);

@@ -71,7 +71,7 @@ public class ZipImporterPagePresenterTest {
         presenter.go(container);
 
         verify(view).reset();
-        verify(wizardContext).getData(eq(ImportProjectWizard.PROJECT_IMPORTER));
+        verify(wizardContext, times(2)).getData(eq(ImportProjectWizard.PROJECT_IMPORTER));
         verify(view).setImporterDescription(eq(importerDescription));
         verify(view).setInputsEnableState(eq(true));
         verify(container).setWidget(eq(view));

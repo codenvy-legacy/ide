@@ -14,6 +14,7 @@ import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;
@@ -54,8 +55,10 @@ public class RunAction extends ProjectAction {
 
     @Override
     protected void updateProjectAction(ActionEvent e) {
+        CurrentProject currentProject = appContext.getCurrentProject();
+        boolean isRunningEnabled = currentProject != null && currentProject.getRunner() != null && currentProject.getIsRunningEnabled();
         // Project launch set isRunningEnabled to false, but you still want to see the Run button.
-        e.getPresentation().setVisible(runController.isAnyAppLaunched() || appContext.getCurrentProject().getIsRunningEnabled());
-        e.getPresentation().setEnabled(!runController.isAnyAppLaunched());
+        e.getPresentation().setVisible(runController.isAnyAppLaunched() || isRunningEnabled);
+        e.getPresentation().setEnabled(!runController.isAnyAppLaunched() && isRunningEnabled);
     }
 }

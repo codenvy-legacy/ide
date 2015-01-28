@@ -179,8 +179,8 @@ public class GenericTreeStructure implements TreeStructure {
      * @return a new {@link FolderNode}
      */
     public FolderNode newFolderNode(@Nonnull TreeNode parent, @Nonnull ItemReference data) {
-        if (!"folder".equals(data.getType())) {
-            throw new IllegalArgumentException("The associated ItemReference type must be - folder.");
+        if (!"folder".equals(data.getType()) && !"project".equals(data.getType())) {
+            throw new IllegalArgumentException("The associated ItemReference type must be - folder or project.");
         }
         return getNodeFactory().newFolderNode(parent, data, this);
     }

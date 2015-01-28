@@ -297,7 +297,7 @@ public class BootstrapController {
                                           @Override
                                           protected void onFailure(Throwable error) {
                                               Log.error(BootstrapController.class, "Unable to load Factory", error);
-                                              initializationFailed("Unable to get Factory");
+                                              initializeComponentRegistry();
                                           }
                                       }
                                      );

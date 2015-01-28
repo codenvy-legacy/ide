@@ -20,7 +20,6 @@ import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.api.projecttree.VirtualFile;
-import com.codenvy.ide.api.projecttree.generic.FileNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.PartStackPresenter;
@@ -31,7 +30,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -46,6 +44,10 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack, ShowListButtonClickHandler {
 
     private ListOpenedFilesPresenter listOpenedFilesPresenter;
+
+    private interface CloseTabCallback {
+        void onTabsClosed();
+    }
 
     @Inject
     public EditorPartStackPresenter(final EditorPartStackView view, EventBus eventBus,
@@ -64,11 +66,13 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
             @Override
             public void onProjectClosed(ProjectActionEvent event) {
-                for (int i = parts.size() - 1; i >= 0; i--) {
-                    PartPresenter part = parts.get(i);
-                    if (part instanceof EditorPartPresenter) {
-                        removePart(part);
-                    }
+                if (!parts.isEmpty()) {
+                    close(activePart, new CloseTabCallback() {
+                        @Override
+                        public void onTabsClosed() {
+                            closeActivePart(this);
+                        }
+                    });
                 }
             }
         });
@@ -169,9 +173,23 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 //        partStackHandler.onActivePartChanged(activePart);
     }
 
+    /*close active part and do action from callBack*/
+    protected void closeActivePart(final CloseTabCallback closeTabCallback) {
+        if (activePart != null) {
+            close(activePart, closeTabCallback);
+        } else {
+            Log.warn(getClass(), "No active part");
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     protected void close(final PartPresenter part) {
+        close(part, null);
+    }
+
+    /*close tab and do action from callBack*/
+    protected void close(final PartPresenter part, final CloseTabCallback closeTabCallback) {
         part.onClose(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -186,7 +204,11 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                 if (activePart == part) {
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
+
                     partStackHandler.onActivePartChanged(activePart);
+                    if (closeTabCallback != null) {
+                        closeTabCallback.onTabsClosed();
+                    }
                 }
             }
         });
