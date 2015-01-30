@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.codeassist;
 
-import com.codenvy.ide.autocomplete.AutoCompleteResources;
+import com.codenvy.ide.api.autocomplete.AutoCompleteResources;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;

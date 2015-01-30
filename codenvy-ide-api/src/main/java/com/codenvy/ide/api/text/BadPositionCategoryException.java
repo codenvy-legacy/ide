@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.text;
 
+
 /**
  * Indicates the attempt to access a non-existing position category in a document.
  * <p>

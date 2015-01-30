@@ -19,7 +19,6 @@ import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.texteditor.HandlesTextOperations;
-import com.codenvy.ide.api.texteditor.HasHandlesOperationsView;
 import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.google.inject.Inject;
 
@@ -33,7 +32,6 @@ public class FormatterAction extends Action {
     private final AppContext           appContext;
     private final EditorAgent          editorAgent;
     private final AnalyticsEventLogger eventLogger;
-    private       EditorPartPresenter  editor;
 
     @Inject
     public FormatterAction(AppContext appContext, EditorAgent editorAgent, CoreLocalizationConstant localization,
@@ -51,11 +49,9 @@ public class FormatterAction extends Action {
         HandlesTextOperations handlesOperations = null;
         if (editor instanceof HandlesTextOperations) {
             handlesOperations = (HandlesTextOperations) editor;
-        } else if (editor instanceof HasHandlesOperationsView) {
-            handlesOperations = ((HasHandlesOperationsView)editor).getView();
-        }
-        if (handlesOperations != null && handlesOperations.canDoOperation(TextEditorOperations.FORMAT)) {
-            handlesOperations.doOperation(TextEditorOperations.FORMAT);
+            if (handlesOperations.canDoOperation(TextEditorOperations.FORMAT)) {
+                handlesOperations.doOperation(TextEditorOperations.FORMAT);
+            }
         }
     }
 
@@ -67,12 +63,7 @@ public class FormatterAction extends Action {
         HandlesTextOperations handlesOperations = null;
         if (editor instanceof HandlesTextOperations) {
             handlesOperations = (HandlesTextOperations) editor;
-        } else if (editor instanceof HasHandlesOperationsView) {
-            handlesOperations = ((HasHandlesOperationsView)editor).getView();
-        }
-
-        if (handlesOperations != null) {
-                isCanDoOperation = handlesOperations.canDoOperation(TextEditorOperations.FORMAT);
+            isCanDoOperation = handlesOperations.canDoOperation(TextEditorOperations.FORMAT);
         }
 
         e.getPresentation().setEnabled(isCanDoOperation);
