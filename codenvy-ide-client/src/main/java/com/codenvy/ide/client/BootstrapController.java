@@ -229,7 +229,6 @@ public class BootstrapController {
                 setTheme();
                 styleInjector.inject();
                 loadProjectTypes();
-                loadProjectTemplates();
             }
 
             @Override
@@ -248,7 +247,7 @@ public class BootstrapController {
                 for (ProjectTypeDefinition projectType : result.asIterable()) {
                     projectTypeRegistry.register(projectType);
                 }
-                loadFactory();
+                loadProjectTemplates();
             }
 
             @Override
@@ -266,6 +265,7 @@ public class BootstrapController {
                 for (ProjectTemplateDescriptor template : result.asIterable()) {
                     projectTemplateRegistry.register(template);
                 }
+                loadFactory();
             }
 
             @Override

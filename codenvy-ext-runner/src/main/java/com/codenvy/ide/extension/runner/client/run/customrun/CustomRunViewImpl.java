@@ -20,8 +20,6 @@ import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
-import com.codenvy.ide.extension.runner.client.wizard.RunnersDataAdapter;
-import com.codenvy.ide.extension.runner.client.wizard.RunnersRenderer;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;

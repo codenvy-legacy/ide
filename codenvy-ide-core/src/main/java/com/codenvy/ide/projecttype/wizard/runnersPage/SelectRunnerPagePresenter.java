@@ -23,7 +23,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 
@@ -31,26 +31,29 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.codenvy.api.project.shared.Constants.BLANK_ID;
+
 /**
  * @author Evgen Vidolob
  */
-public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> implements SelectRunnerPageView.ActionDelegate {
+public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> implements RunnersPageView.ActionDelegate {
 
     private final ProjectWizardRegistry  projectWizardRegistry;
-    private       SelectRunnerPageView   view;
-    private       RunnerServiceClient    runnerServiceClient;
-    private       DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private       ProjectServiceClient   projectServiceClient;
-    private       DtoFactory             dtoFactory;
+    private final RunnersPageView        view;
+    private final RunnerServiceClient    runnerServiceClient;
+    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
+    private final ProjectServiceClient   projectServiceClient;
+    private final DtoFactory             dtoFactory;
+    private final DialogFactory          dialogFactory;
 
-    /** Create wizard page. */
     @Inject
-    public SelectRunnerPagePresenter(SelectRunnerPageView view,
+    public SelectRunnerPagePresenter(RunnersPageView view,
                                      RunnerServiceClient runnerServiceClient,
                                      DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                      ProjectServiceClient projectServiceClient,
                                      ProjectWizardRegistry projectWizardRegistry,
-                                     DtoFactory dtoFactory) {
+                                     DtoFactory dtoFactory,
+                                     DialogFactory dialogFactory) {
         super();
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
@@ -58,12 +61,9 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
         this.projectServiceClient = projectServiceClient;
         this.projectWizardRegistry = projectWizardRegistry;
         this.dtoFactory = dtoFactory;
-        view.setDelegate(this);
-    }
+        this.dialogFactory = dialogFactory;
 
-    @Override
-    public boolean isCompleted() {
-        return true;
+        view.setDelegate(this);
     }
 
     @Override
@@ -73,70 +73,75 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
     }
 
     private void requestRunnerEnvironments() {
-//        ProjectDescriptor projectForUpdate = wizardContext.getData(ProjectWizard.PROJECT_FOR_UPDATE);
-//        if (projectForUpdate == null) {
-//            // wizard is opened for new project, so we haven't project-scoped environments
-        requestSystemEnvironments();
-//            return;
-//        }
+        // TODO: add constants for wizard context
+        final boolean isCreatingNewProject = Boolean.parseBoolean(context.get("isCreatingNewProject"));
+        if (isCreatingNewProject) {
+            // wizard is opened for new project, so we haven't project-scoped environments
+            requestSystemEnvironments();
+            return;
+        }
 
-//        final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
-//        projectServiceClient.getRunnerEnvironments(projectForUpdate.getPath(),
-//                                                   new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
-//                                                       @Override
-//                                                       protected void onSuccess(RunnerEnvironmentTree result) {
-//                                                           if (!result.getLeaves().isEmpty() || !result.getNodes().isEmpty()) {
-//                                                               view.addRunner(result);
-//                                                           }
-//                                                           requestSystemEnvironments();
-//                                                       }
-//
-//                                                       @Override
-//                                                       protected void onFailure(Throwable exception) {
-//                                                           Log.error(SelectRunnerPagePresenter.class,
-//                                                                     "Can't get project-scoped runner environments", exception);
-//                                                       }
-//                                                   });
+        final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
+        // TODO: sub-projects may be updated so should be project's path instead of name
+        final String path = dataObject.getName();
+        projectServiceClient.getRunnerEnvironments(
+                path,
+                new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(RunnerEnvironmentTree environmentTree) {
+                        if (!environmentTree.getLeaves().isEmpty() || !environmentTree.getNodes().isEmpty()) {
+                            view.addRunner(environmentTree);
+                        }
+                        requestSystemEnvironments();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        dialogFactory.createMessageDialog("", exception.getMessage(), null).show();
+                    }
+                });
     }
 
     private void requestSystemEnvironments() {
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
         runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
-            protected void onSuccess(RunnerEnvironmentTree result) {
-//                ProjectTypeDefinition projectType = data.getType();
-//                String typeCategory = projectWizardRegistry.getWizardCategory(data.getId());
-//                if (typeCategory != null && !typeCategory.equalsIgnoreCase("blank")) {
-//                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class).withDisplayName(result.getDisplayName());
-//                    tree.addNode(result.getNode(typeCategory.toLowerCase()));
-//                    view.addRunner(tree);
-//                } else {
-                view.addRunner(result);
-//                }
-                selectRunner();
+            protected void onSuccess(RunnerEnvironmentTree environmentTree) {
+                final String category = projectWizardRegistry.getWizardCategory(dataObject.getType());
+                if (category != null && !category.equalsIgnoreCase(BLANK_ID)) {
+                    RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class)
+                                                           .withDisplayName(environmentTree.getDisplayName());
+                    tree.addNode(environmentTree.getNode(category.toLowerCase()));
+                    view.addRunner(tree);
+                } else {
+                    view.addRunner(environmentTree);
+                }
+                updateView();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                Log.error(SelectRunnerPagePresenter.class, "Can't receive runners info", exception);
+                dialogFactory.createMessageDialog("", exception.getMessage(), null).show();
             }
         });
     }
 
-    private void selectRunner() {
-        final RunnersDescriptor runners = data.getRunners();
+    private void updateView() {
+        final RunnersDescriptor runners = dataObject.getRunners();
         if (runners != null) {
-            view.selectRunnerEnvironment(runners.getDefault());
-            final RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
-            if (runnerConfiguration != null) {
-                view.setRecommendedMemorySize(runnerConfiguration.getRam());
+            final String defaultRunner = runners.getDefault();
+            view.selectRunnerEnvironment(defaultRunner);
+
+            final RunnerConfiguration defaultRunnerConfig = runners.getConfigs().get(defaultRunner);
+            if (defaultRunnerConfig != null) {
+                view.setRecommendedMemorySize(defaultRunnerConfig.getRam());
             }
         }
     }
 
     @Override
     public void recommendedMemoryChanged() {
-        final RunnersDescriptor runners = data.getRunners();
+        final RunnersDescriptor runners = dataObject.getRunners();
         if (runners != null) {
             final String defaultRunner = runners.getDefault();
             final RunnerConfiguration defaultRunnerConf = runners.getConfigs().get(defaultRunner);
@@ -162,10 +167,10 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
 
             runnerConfiguration.setRam(view.getRecommendedMemorySize());
 
-            data.setRunners(runnersDescriptor);
+            dataObject.setRunners(runnersDescriptor);
             view.showRunnerDescriptions(environment.getDescription());
         } else {
-            data.setRunners(dtoFactory.createDto(RunnersDescriptor.class));
+            dataObject.setRunners(dtoFactory.createDto(RunnersDescriptor.class));
             view.showRunnerDescriptions("");
         }
     }

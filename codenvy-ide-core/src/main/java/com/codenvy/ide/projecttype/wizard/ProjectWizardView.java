@@ -23,7 +23,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void showPage(Presenter presenter);
 
-    void showDialog();
+    void showDialog(boolean isCreatingNewProject);
 
     void setRAMRequired(String amountOfRAM);
 
@@ -34,8 +34,6 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
     void setRunnerEnvironmentConfig(String text);
 
     void setInfoVisible(boolean enabled);
-
-    void setSaveActionTitle(boolean isSaveActionTitle);
 
     void setLoaderVisible(boolean enabled);
 

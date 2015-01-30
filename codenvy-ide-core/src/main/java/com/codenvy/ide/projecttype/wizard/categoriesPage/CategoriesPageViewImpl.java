@@ -20,6 +20,7 @@ import com.codenvy.ide.ui.Styles;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -314,7 +315,6 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
 
     @Override
     public void selectProjectType(final String projectTypeId) {
-
         ProjectTypeDefinition typeDescriptor = null;
         for (String category : categories.keySet()) {
             for (ProjectTypeDefinition descriptor : categories.get(category)) {
@@ -380,8 +380,7 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
         configurationArea.getElement().setInnerText("");
     }
 
-    interface MainPageViewImplUiBinder
-            extends UiBinder<DockLayoutPanel, CategoriesPageViewImpl> {
+    interface MainPageViewImplUiBinder extends UiBinder<DockLayoutPanel, CategoriesPageViewImpl> {
     }
 
     public interface Style extends Styles {

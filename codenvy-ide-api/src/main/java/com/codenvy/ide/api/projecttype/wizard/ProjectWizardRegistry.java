@@ -31,11 +31,12 @@ public interface ProjectWizardRegistry {
     ProjectWizardRegistrar getWizardRegistrar(@Nonnull String projectTypeId);
 
     /**
-     * Returns wizard category of the specified {@code projectTypeId}.
+     * Returns wizard category of the specified {@code projectTypeId}
+     * or {@code null} if none.
      *
      * @param projectTypeId
      *         the ID of the project type to get it's wizard category
-     * @return wizard category of the specified {@code projectTypeId}
+     * @return wizard category of the specified {@code projectTypeId} or {@code null}
      */
     @Nullable
     String getWizardCategory(@Nonnull String projectTypeId);
