@@ -21,6 +21,7 @@ import com.codenvy.ide.jseditor.client.annotation.AnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
 import com.codenvy.ide.jseditor.client.annotation.GutterAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.InlineAnnotationRenderer;
+import com.codenvy.ide.jseditor.client.annotation.MinimapAnnotationRenderer;
 import com.codenvy.ide.jseditor.client.annotation.QueryAnnotationsEvent;
 import com.codenvy.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
 import com.codenvy.ide.jseditor.client.changeintercept.TextChange;
@@ -47,6 +48,7 @@ import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
 import com.codenvy.ide.jseditor.client.keymap.KeyBindingAction;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
+import com.codenvy.ide.jseditor.client.minimap.HasMinimap;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.codenvy.ide.jseditor.client.position.PositionConverter.PixelCoordinates;
@@ -166,6 +168,15 @@ public class TextEditorInit<T extends EditorWidget> {
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, inlineAnnotationRenderer);
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, inlineAnnotationRenderer);
 
+        // minimap renderer
+        if (this.textEditor instanceof HasMinimap) {
+            final MinimapAnnotationRenderer minimapAnnotationRenderer = new MinimapAnnotationRenderer();
+            minimapAnnotationRenderer.setDocument(documentHandle.getDocument());
+            minimapAnnotationRenderer.setMinimap(((HasMinimap)this.textEditor).getMinimap());
+            documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, minimapAnnotationRenderer);
+            documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, minimapAnnotationRenderer);
+        }
+        
         annotationModel.setDocumentHandle(documentHandle);
         documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, annotationModel);
 
