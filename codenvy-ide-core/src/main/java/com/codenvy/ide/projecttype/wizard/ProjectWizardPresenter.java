@@ -10,20 +10,29 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard;
 
-import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
+import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
+import com.codenvy.api.runner.dto.ResourcesDescriptor;
+import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.wizard1.Wizard;
 import com.codenvy.ide.api.wizard1.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.projecttype.wizard.categoriesPage.CategoriesPagePresenter;
 import com.codenvy.ide.projecttype.wizard.runnersPage.SelectRunnerPagePresenter;
+import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -39,85 +48,57 @@ import java.util.Map;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWizardView.ActionDelegate,
-                                               CategoriesPagePresenter.ProjectTypeSelectionListener {
+public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
+                                               ProjectWizardView.ActionDelegate,
+                                               CategoriesPagePresenter.ProjectTypeSelectionListener,
+                                               CategoriesPagePresenter.ProjectTemplateSelectionListener {
+
     private final ProjectWizardView                         view;
-    private final ProjectServiceClient                      projectServiceClient;
+    private final RunnerServiceClient                       runnerServiceClient;
     private final DtoUnmarshallerFactory                    dtoUnmarshallerFactory;
     private final DtoFactory                                dtoFactory;
+    private final DialogFactory                             dialogFactory;
+    private final CoreLocalizationConstant                  constant;
     private final ProjectWizardFactory                      projectWizardFactory;
     private final ProjectWizardRegistry                     wizardRegistry;
     private final Provider<CategoriesPagePresenter>         categoriesPageProvider;
     private final Provider<SelectRunnerPagePresenter>       runnersPageProvider;
-    private final CategoriesPagePresenter                   categoriesPage;
-    private final SelectRunnerPagePresenter                 runnersPage;
     private final Map<ProjectTypeDefinition, ProjectWizard> wizardsCache;
+    private       CategoriesPagePresenter                   categoriesPage;
+    private       SelectRunnerPagePresenter                 runnersPage;
     private       ProjectWizard                             wizard;
     private       WizardPage                                currentPage;
+    private       int                                       workspaceMemory;
 
     @Inject
     public ProjectWizardPresenter(ProjectWizardView view,
-                                  ProjectServiceClient projectServiceClient,
+                                  RunnerServiceClient runnerServiceClient,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                   DtoFactory dtoFactory,
+                                  DialogFactory dialogFactory,
+                                  CoreLocalizationConstant constant,
                                   ProjectWizardFactory projectWizardFactory,
                                   ProjectWizardRegistry wizardRegistry,
                                   Provider<CategoriesPagePresenter> categoriesPageProvider,
                                   Provider<SelectRunnerPagePresenter> runnersPageProvider) {
         this.view = view;
-        this.projectServiceClient = projectServiceClient;
+        this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
+        this.dialogFactory = dialogFactory;
+        this.constant = constant;
         this.projectWizardFactory = projectWizardFactory;
         this.wizardRegistry = wizardRegistry;
-
-        categoriesPage = categoriesPageProvider.get();
-        runnersPage = runnersPageProvider.get();
-
-        this.categoriesPageProvider = new Provider<CategoriesPagePresenter>() {
-            @Override
-            public CategoriesPagePresenter get() {
-                return categoriesPage;
-            }
-        };
-        this.runnersPageProvider = new Provider<SelectRunnerPagePresenter>() {
-            @Override
-            public SelectRunnerPagePresenter get() {
-                return runnersPage;
-            }
-        };
+        this.categoriesPageProvider = categoriesPageProvider;
+        this.runnersPageProvider = runnersPageProvider;
 
         wizardsCache = new HashMap<>();
-        categoriesPage.setProjectTypeSelectionListener(this);
         view.setDelegate(this);
-    }
-
-    /** Open the project wizard for creating a new project. */
-    public void show() {
-        wizard = getDefaultWizard(null);
-        WizardPage<NewProject> firstPage = wizard.flipToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-            view.showDialog();
-        }
-    }
-
-    /** Open the project wizard for editing the specified {@code projectDescriptor}. */
-    public void show(@Nonnull ProjectDescriptor projectDescriptor) {
-        final NewProject data = dtoFactory.createDto(NewProject.class)
-                                          .withName(projectDescriptor.getName())
-                                          .withDescription(projectDescriptor.getDescription());
-        wizard = getDefaultWizard(data);
-        WizardPage<NewProject> firstPage = wizard.flipToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-            view.showDialog();
-        }
     }
 
     @Override
     public void onBackClicked() {
-        final WizardPage prevPage = wizard.flipToPrevious();
+        final WizardPage prevPage = wizard.navigateToPrevious();
         if (prevPage != null) {
             showPage(prevPage);
         }
@@ -125,7 +106,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
 
     @Override
     public void onNextClicked() {
-        final WizardPage nextPage = wizard.flipToNext();
+        final WizardPage nextPage = wizard.navigateToNext();
         if (nextPage != null) {
             showPage(nextPage);
         }
@@ -133,7 +114,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
 
     @Override
     public void onSaveClicked() {
-        wizard.onFinish();
+        wizard.complete();
+        view.close();
     }
 
     @Override
@@ -146,27 +128,103 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
     public void updateControls() {
         view.setPreviousButtonEnabled(wizard.hasPrevious());
         view.setNextButtonEnabled(wizard.hasNext() && currentPage.isCompleted());
-        view.setFinishButtonEnabled(wizard.canFinish());
+        view.setFinishButtonEnabled(wizard.canComplete());
+    }
+
+    /** Open the project wizard for creating a new project. */
+    public void show() {
+        resetState();
+        requestMemoryAndShowDialog(null);
+    }
+
+    /** Open the project wizard for editing the specified {@code project}. */
+    public void show(@Nonnull ProjectDescriptor project) {
+        resetState();
+        final NewProject dataObject = dtoFactory.createDto(NewProject.class)
+                                                .withType(project.getType())
+                                                .withName(project.getName())
+                                                .withDescription(project.getDescription())
+                                                .withVisibility(project.getVisibility())
+                                                .withAttributes(new HashMap<>(project.getAttributes()))
+                                                .withBuilders(project.getBuilders())
+                                                .withRunners(project.getRunners());
+        requestMemoryAndShowDialog(dataObject);
+    }
+
+    private void resetState() {
+        wizardsCache.clear();
+        categoriesPage = categoriesPageProvider.get();
+        runnersPage = runnersPageProvider.get();
+        categoriesPage.setProjectTypeSelectionListener(this);
+        categoriesPage.setProjectTemplateSelectionListener(this);
+    }
+
+    private void requestMemoryAndShowDialog(@Nullable final NewProject dataObject) {
+        final Unmarshallable<ResourcesDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class);
+        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(unmarshaller) {
+            @Override
+            protected void onSuccess(ResourcesDescriptor resources) {
+                workspaceMemory = Integer.valueOf(resources.getTotalMemory());
+                final String usedMemory = resources.getUsedMemory();
+                view.setRAMAvailable(getAvailableRam(usedMemory));
+
+                // show dialog
+                wizard = createDefaultWizard(dataObject);
+                final WizardPage<NewProject> firstPage = wizard.navigateToFirst();
+                if (firstPage != null) {
+                    showPage(firstPage);
+                    view.showDialog(dataObject == null);
+                }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed(), null).show();
+                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
+            }
+        });
+    }
+
+    private String getAvailableRam(String usedMemory) {
+        if (workspaceMemory > 0) {
+            Integer availableRam = workspaceMemory;
+
+            if (usedMemory != null) {
+                availableRam -= Integer.valueOf(usedMemory);
+            }
+            if (availableRam > 0) {
+                return availableRam + "MB";
+            }
+        }
+        return "undefined";
     }
 
     @Override
-    public void onProjectTypeSelected(ProjectTypeDefinition projectTypeDefinition) {
-        final NewProject prevData = wizard.getData();
-        wizard = getWizardForProjectType(projectTypeDefinition);
-        final NewProject data = wizard.getData();
+    public void onProjectTypeSelected(ProjectTypeDefinition projectType) {
+        final NewProject prevData = wizard.getDataObject();
+        wizard = getWizardForProjectType(projectType, prevData);
+        final NewProject dataObject = wizard.getDataObject();
 
-        // save values from main page to current wizard's data
-        data.setType(projectTypeDefinition.getId());
-        data.setBuilders(dtoFactory.createDto(BuildersDescriptor.class).withDefault(projectTypeDefinition.getDefaultBuilder()));
-        data.setName(prevData.getName());
-        data.setDescription(prevData.getDescription());
-        data.setVisibility(prevData.getVisibility());
+        // set values to current wizard's dataObject from main page
+        dataObject.setType(projectType.getId());
+        dataObject.setBuilders(dtoFactory.createDto(BuildersDescriptor.class).withDefault(projectType.getDefaultBuilder()));
+        dataObject.setName(prevData.getName());
+        dataObject.setDescription(prevData.getDescription());
+        dataObject.setVisibility(prevData.getVisibility());
 
-        wizard.flipToFirst();
+        final WizardPage<NewProject> firstPage = wizard.navigateToFirst();
+        if (firstPage != null) {
+            showPage(firstPage);
+        }
     }
 
-    /** Returns project wizard for the specified project type. */
-    private ProjectWizard getWizardForProjectType(@Nonnull ProjectTypeDefinition projectType) {
+    @Override
+    public void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplateDescriptor) {
+        // TODO
+    }
+
+    /** Creates or returns project wizard for the specified projectType with the given dataObject. */
+    private ProjectWizard getWizardForProjectType(@Nonnull ProjectTypeDefinition projectType, @Nullable NewProject dataObject) {
         if (wizardsCache.containsKey(projectType)) {
             return wizardsCache.get(projectType);
         }
@@ -177,10 +235,10 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
             throw new IllegalStateException("WizardRegistrar for the project type " + projectType.getId() + " isn't registered.");
         }
 
-        Array<Provider<? extends WizardPage<NewProject>>> wizardPages = wizardRegistrar.getWizardPages();
-        final ProjectWizard projectWizard = getDefaultWizard(null);
-        for (Provider<? extends WizardPage<NewProject>> provider : wizardPages.asIterable()) {
-            projectWizard.addPage(provider, 1, false);
+        Array<Provider<? extends WizardPage<NewProject>>> pageProviders = wizardRegistrar.getWizardPages();
+        final ProjectWizard projectWizard = createDefaultWizard(dataObject);
+        for (Provider<? extends WizardPage<NewProject>> provider : pageProviders.asIterable()) {
+            projectWizard.addPage(provider.get(), 1, false);
         }
 
         wizardsCache.put(projectType, projectWizard);
@@ -188,18 +246,19 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate, ProjectWiz
     }
 
     /** Creates and returns 'default' project wizard with pre-defined pages only. */
-    private ProjectWizard getDefaultWizard(@Nullable NewProject data) {
-        boolean forEdit = true;
-        if (data == null) {
-            data = dtoFactory.createDto(NewProject.class);
-            forEdit = false;
+    private ProjectWizard createDefaultWizard(@Nullable NewProject dataObject) {
+        boolean isCreatingNewProject = false;
+        if (dataObject == null) {
+            dataObject = dtoFactory.createDto(NewProject.class)
+                                   .withGeneratorDescription(dtoFactory.createDto(GeneratorDescription.class)); // shouldn't be null
+            isCreatingNewProject = true;
         }
 
-        final ProjectWizard projectWizard = projectWizardFactory.newWizard(data, forEdit);
+        final ProjectWizard projectWizard = projectWizardFactory.newWizard(dataObject, isCreatingNewProject);
         projectWizard.setUpdateDelegate(this);
-        // add pre-defined pages
-        projectWizard.addPage(categoriesPageProvider);
-        projectWizard.addPage(runnersPageProvider);
+        // add pre-defined pages - first and last
+        projectWizard.addPage(categoriesPage);
+        projectWizard.addPage(runnersPage);
         return projectWizard;
     }
 

@@ -57,8 +57,6 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
             return !(environmentTree.getNodes().isEmpty() && environmentTree.getLeaves().isEmpty());
         }
         return false;
-
-
     }
 
     @Override
@@ -84,6 +82,11 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
 
     @Override
     public String getNodeId(Object data) {
+        if (data instanceof RunnerEnvironmentTree) {
+            return ((RunnerEnvironmentTree)data).getDisplayName();
+        } else if (data instanceof RunnerEnvironmentLeaf) {
+            return ((RunnerEnvironmentLeaf)data).getDisplayName();
+        }
         return null;
     }
 
@@ -94,6 +97,7 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
 
     @Override
     public Object getParent(Object data) {
+        // TODO: implement it in order to pragmatically select a node in a tree
         return null;
     }
 
@@ -104,7 +108,6 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
 
     @Override
     public void setNodeName(Object data, String name) {
-
     }
 
     @Override
@@ -119,7 +122,7 @@ public class RunnersDataAdapter implements NodeDataAdapter<Object> {
 
     @Override
     public Array<String> getNodePath(Object data) {
-        return null;
+        return PathUtils.getNodePath(this, data);
     }
 
     @Override

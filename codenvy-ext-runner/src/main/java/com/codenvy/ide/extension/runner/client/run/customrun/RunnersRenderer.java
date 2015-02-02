@@ -8,13 +8,11 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.wizard;
+package com.codenvy.ide.extension.runner.client.run.customrun;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import elemental.dom.Element;
 import elemental.html.SpanElement;
 
-import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentLeaf;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.ide.extension.runner.client.RunnerResources;

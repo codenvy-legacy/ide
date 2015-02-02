@@ -40,8 +40,8 @@ import java.util.Map;
 /**
  * @author Evgen Vidolob
  */
-public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
-    private static SelectRunnerViewImplUiBinder ourUiBinder = GWT.create(SelectRunnerViewImplUiBinder.class);
+public class RunnersPageViewImpl implements RunnersPageView {
+    private static RunnersPageViewImplUiBinder ourUiBinder = GWT.create(RunnersPageViewImplUiBinder.class);
     private final DockLayoutPanel       rootElement;
     private final Tree<Object>          tree;
     private final RunnerEnvironmentTree root;
@@ -55,10 +55,10 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
     SimplePanel treeContainer;
     private ActionDelegate delegate;
 
-    private Map<String, RunnerEnvironment> environmentMap = new HashMap<>();
+    private Map<String, RunnerEnvironmentLeaf> environmentMap = new HashMap<>();
 
     @Inject
-    public SelectRunnerPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
+    public RunnersPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
         rootElement = ourUiBinder.createAndBindUi(this);
         recommendedMemory.getElement().setAttribute("type", "number");
         recommendedMemory.getElement().setAttribute("step", "128");
@@ -152,10 +152,12 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
 
     @Override
     public void addRunner(RunnerEnvironmentTree environmentTree) {
+        collectRunnerEnvironments(environmentTree);
+
         root.getNodes().add(environmentTree);
         tree.getModel().setRoot(root);
         tree.renderTree(1);
-        collectRunnerEnvironments(environmentTree);
+
         checkTreeVisibility(environmentTree);
     }
 
@@ -163,7 +165,7 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
         for (RunnerEnvironmentLeaf leaf : environmentTree.getLeaves()) {
             final RunnerEnvironment environment = leaf.getEnvironment();
             if (environment != null) {
-                environmentMap.put(environment.getId(), environment);
+                environmentMap.put(environment.getId(), leaf);
             }
         }
 
@@ -182,13 +184,14 @@ public class SelectRunnerPageViewImpl implements SelectRunnerPageView {
 
     @Override
     public void selectRunnerEnvironment(String environmentId) {
+        final RunnerEnvironmentLeaf environment = environmentMap.get(environmentId);
         if (environmentMap.containsKey(environmentId)) {
-            tree.getSelectionModel().selectSingleNode(environmentMap.get(environmentId));
-            delegate.environmentSelected(environmentMap.get(environmentId));
+            tree.autoExpandAndSelectNode(environment, true);
+//            tree.getSelectionModel().selectSingleNode(environmentMap.get(environmentId));
+            delegate.environmentSelected(environment.getEnvironment());
         }
     }
 
-    interface SelectRunnerViewImplUiBinder
-            extends UiBinder<DockLayoutPanel, SelectRunnerPageViewImpl> {
+    interface RunnersPageViewImplUiBinder extends UiBinder<DockLayoutPanel, RunnersPageViewImpl> {
     }
 }

@@ -18,10 +18,11 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 
 /**
- * Defines the requirements for an object that provides information for registering new project type into project wizard.
+ * Defines the requirements for an object that provides information
+ * * for registering new project type into project wizard.
  * <p/>
- * Implementations of this interface need to be registered using a multibinder
- * in order to be picked up by project wizard.
+ * Implementations of this interface need to be registered using
+ * a multibinder in order to be picked up by project wizard.
  *
  * @author Artem Zatsarynnyy
  */
@@ -34,7 +35,7 @@ public interface ProjectWizardRegistrar {
     @Nonnull
     String getCategory();
 
-    /** Returns pages that should be added to project wizard. */
+    /** Returns pages that should be used in project wizard. */
     @Nonnull
     Array<Provider<? extends WizardPage<NewProject>>> getWizardPages();
 }

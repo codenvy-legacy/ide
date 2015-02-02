@@ -20,8 +20,8 @@ import javax.annotation.Nullable;
 /**
  * @author Evgen Vidolob
  */
-@ImplementedBy(SelectRunnerPageViewImpl.class)
-public interface SelectRunnerPageView extends View<SelectRunnerPageView.ActionDelegate> {
+@ImplementedBy(RunnersPageViewImpl.class)
+public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
 //    void showRunners(Collection<RunnerDescriptor> runnerDescriptors);
 //
 //    void selectRunner(String runnerName);

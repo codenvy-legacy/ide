@@ -43,7 +43,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private final CoreLocalizationConstant coreLocalizationConstant;
     private Map<Presenter, Widget> pageCache                        = new HashMap<>();
     private HandlerRegistration    nativePreviewHandlerRegistration = null;
-    private boolean        isSaveActionTitle;
+    private boolean        isCreatingNewProject;
     private ActionDelegate delegate;
 
     @UiField
@@ -74,7 +74,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         super(false);
         this.coreLocalizationConstant = coreLocalizationConstant;
         setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
-        isSaveActionTitle = false;
         setWidget(ourUiBinder.createAndBindUi(this));
         nextStepButton.sinkEvents(Event.ONCLICK);
         previousStepButton.sinkEvents(Event.ONCLICK);
@@ -104,27 +103,15 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         delegate.onSaveClicked();
     }
 
-    @Override
-    public void setSaveActionTitle(boolean isSaveActionTitle) {
-        this.isSaveActionTitle = isSaveActionTitle;
-        if (isSaveActionTitle) {
-            setTitle(coreLocalizationConstant.projectWizardTitleText());
-            saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
-        } else {
-            setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
-            saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
-        }
-    }
-
     public void setLoaderVisible(boolean enabled) {
         if (enabled) {
             saveButton.setHTML("<i></i>");
             saveButton.setEnabled(false);
         } else {
-            if (isSaveActionTitle) {
-                saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
-            } else {
+            if (isCreatingNewProject) {
                 saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
+            } else {
+                saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
             }
             saveButton.setEnabled(true);
         }
@@ -187,7 +174,17 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void showDialog() {
+    public void showDialog(boolean isCreatingNewProject) {
+        this.isCreatingNewProject = isCreatingNewProject;
+
+        if (isCreatingNewProject) {
+            setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
+            saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
+        } else {
+            setTitle(coreLocalizationConstant.projectWizardTitleText());
+            saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
+        }
+
         show();
 
         if (nativePreviewHandlerRegistration == null) {

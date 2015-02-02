@@ -16,5 +16,5 @@ import javax.annotation.Nonnull;
 
 /** @author Artem Zatsarynnyy */
 public interface ProjectWizardFactory {
-    ProjectWizard newWizard(@Nonnull NewProject data, boolean editMode);
+    ProjectWizard newWizard(@Nonnull NewProject data, boolean isCreatingNewProject);
 }

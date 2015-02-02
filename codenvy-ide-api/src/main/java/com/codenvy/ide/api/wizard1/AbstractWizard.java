@@ -13,61 +13,77 @@ package com.codenvy.ide.api.wizard1;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * Abstract base implementation of a {@link Wizard}.
+ *
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractWizard<T> implements Wizard<T> {
-    protected final T                    data;
-    protected       Array<WizardPage<T>> wizardPages;
+    protected final T                    dataObject;
+    protected final Map<String, String>  context;
+    protected final Array<WizardPage<T>> wizardPages;
     private         UpdateDelegate       delegate;
-    private         int                  index;
+    private         int                  currentPageIndex;
 
+    /**
+     * Creates new wizard with the specified {@code dataObject} which will be passed into every added page.
+     * <p/>
+     * So multiple pages have the same {@code dataObject}, and any change to the
+     * {@code dataObject} made by one page is available to the other pages.
+     *
+     * @param dataObject
+     *         data-object for wizard
+     */
     @Inject
-    public AbstractWizard(T data) {
-        this.data = data;
+    public AbstractWizard(T dataObject) {
+        this.dataObject = dataObject;
+        context = new HashMap<>();
         wizardPages = Collections.createArray();
     }
 
-    public T getData() {
-        return data;
+    /** Returns wizard's data-object. */
+    public T getDataObject() {
+        return dataObject;
     }
 
     /**
      * Add page to wizard.
      *
-     * @param pageProvider
-     *         page that need to add
+     * @param page
+     *         page to add
      */
-    public void addPage(@Nonnull Provider<? extends WizardPage<T>> pageProvider) {
-        final WizardPage<T> page = pageProvider.get();
+    public void addPage(@Nonnull WizardPage<T> page) {
         page.setUpdateDelegate(delegate);
+        page.setContext(context);
+        page.init(dataObject);
         wizardPages.add(page);
     }
 
     /**
-     * Add page to a wizard in place with index
+     * Add page to wizard at the specified position.
      *
-     * @param pageProvider
-     *         page that needs to be added
+     * @param page
+     *         page to be stored at the specified position
      * @param index
-     *         place where the page needs to be inserted
+     *         position where the page should be inserted
      * @param replace
-     *         <code>true</code> if one needs to replace a page with a given index, and <code>false</code> if a page needs to be inserted
-     *         at a given position
+     *         {@code true} if the existed page should be replaced by the given one,
+     *         {@code false} if a page should be inserted at the specified position
      */
-    public void addPage(@Nonnull Provider<? extends WizardPage<T>> pageProvider, int index, boolean replace) {
+    public void addPage(@Nonnull WizardPage<T> page, int index, boolean replace) {
         if (index >= wizardPages.size()) {
-            addPage(pageProvider);
+            addPage(page);
             return;
         }
 
         if (replace) {
-            setPage(pageProvider, index);
+            setPage(page, index);
         } else {
             Array<WizardPage<T>> before = wizardPages.slice(0, index);
             WizardPage<T> currentPage = wizardPages.get(index);
@@ -75,15 +91,16 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
 
             wizardPages.clear();
             wizardPages.addAll(before);
-            addPage(pageProvider);
+            addPage(page);
             wizardPages.add(currentPage);
             wizardPages.addAll(after);
         }
     }
 
-    private void setPage(@Nonnull Provider<? extends WizardPage<T>> pageProvider, int index) {
-        final WizardPage<T> page = pageProvider.get();
+    private void setPage(@Nonnull WizardPage<T> page, int index) {
         page.setUpdateDelegate(delegate);
+        page.setContext(context);
+        page.init(dataObject);
         wizardPages.set(index, page);
     }
 
@@ -96,30 +113,26 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     }
 
     @Override
-    public WizardPage<T> flipToFirst() {
+    public WizardPage<T> navigateToFirst() {
         clear();
-        return flipToNext();
+        return navigateToNext();
     }
 
-    /** Clear wizard values. */
+    /** Clear wizard's navigation state. */
     private void clear() {
-        index = -1;
+        currentPageIndex = -1;
     }
 
     @Override
-    public WizardPage<T> flipToNext() {
-        final WizardPage<T> nextPage = getNextEnablePage();
-        if (nextPage != null) {
-            nextPage.init(data);
-        }
-        return nextPage;
+    public WizardPage<T> navigateToNext() {
+        return getNextPage();
     }
 
-    /** Returns next enabled page that need to be shown. */
+    /** Returns next page that may be shown. */
     @Nullable
-    private WizardPage<T> getNextEnablePage() {
-        while (++index < wizardPages.size()) {
-            WizardPage<T> page = wizardPages.get(index);
+    private WizardPage<T> getNextPage() {
+        while (++currentPageIndex < wizardPages.size()) {
+            WizardPage<T> page = wizardPages.get(currentPageIndex);
             if (!page.canSkip()) {
                 return page;
             }
@@ -128,11 +141,10 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     }
 
     @Override
-    public WizardPage<T> flipToPrevious() {
-        while (--index >= 0) {
-            final WizardPage<T> page = wizardPages.get(index);
+    public WizardPage<T> navigateToPrevious() {
+        while (--currentPageIndex >= 0) {
+            final WizardPage<T> page = wizardPages.get(currentPageIndex);
             if (!page.canSkip()) {
-                page.init(data);
                 return page;
             }
         }
@@ -141,7 +153,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
 
     @Override
     public boolean hasNext() {
-        for (int i = index + 1; i < wizardPages.size(); i++) {
+        for (int i = currentPageIndex + 1; i < wizardPages.size(); i++) {
             WizardPage<T> page = wizardPages.get(i);
             if (!page.canSkip()) {
                 return true;
@@ -152,7 +164,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
 
     @Override
     public boolean hasPrevious() {
-        for (int i = index - 1; i >= 0; i--) {
+        for (int i = currentPageIndex - 1; i >= 0; i--) {
             WizardPage<T> page = wizardPages.get(i);
             if (!page.canSkip()) {
                 return true;
@@ -162,7 +174,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
     }
 
     @Override
-    public boolean canFinish() {
+    public boolean canComplete() {
         for (WizardPage<T> page : wizardPages.asIterable()) {
             if (!page.isCompleted()) {
                 return false;
