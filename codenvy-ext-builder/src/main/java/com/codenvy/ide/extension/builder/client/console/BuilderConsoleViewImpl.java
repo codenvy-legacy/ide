@@ -66,6 +66,8 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         // this hack used for adding box shadow effect to toolbar
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setZIndex(1);
+
+        scrollPanel.getElement().setTabIndex(0);
     }
 
     /** {@inheritDoc} */
@@ -156,4 +158,14 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }
+
+    @Override
+    protected void updateFocus() {
+        if (isFocused()) {
+            scrollPanel.getElement().focus();
+        } else {
+            scrollPanel.getElement().blur();
+        }
+    }
+
 }

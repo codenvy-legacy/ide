@@ -257,4 +257,15 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         // Return the first one until we don't support multi-selection.
         return tree.getSelectionModel().getSelectedNodes().get(0);
     }
+
+    @Override
+    protected void updateFocus() {
+        /** Focus or unfocus the tree. */
+        if (isFocused()) {
+            tree.asWidget().getElement().getFirstChildElement().focus();
+        } else {
+            tree.asWidget().getElement().getFirstChildElement().blur();
+        }
+    }
+
 }

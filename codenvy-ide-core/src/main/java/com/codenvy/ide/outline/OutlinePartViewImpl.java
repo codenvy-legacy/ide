@@ -12,6 +12,7 @@ package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
@@ -43,6 +44,8 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     @UiField
     Label noOutlineCause;
 
+    private boolean outlineEnabled = false;
+
     @Inject
     public OutlinePartViewImpl(PartStackUIResources resources) {
         super(resources);
@@ -54,6 +57,8 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void disableOutline(String cause) {
+        outlineEnabled = false;
+
         clear();
         noOutlineCause.setText(cause);
         container.add(noOutline);
@@ -61,6 +66,8 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
 
     @Override
     public void enableOutline() {
+        outlineEnabled = true;
+
         Element el = container.getElement().getFirstChildElement().cast();
         el.getStyle().setProperty("position", "relative");
         el.getStyle().setProperty("width", "100%");
@@ -83,5 +90,20 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     }
 
     interface Style extends CssResource {
+    }
+
+    @Override
+    protected void updateFocus() {
+        try {
+            if (outlineEnabled) {
+                if (isFocused()) {
+                    container.getElement().getFirstChildElement().getFirstChildElement().focus();
+                } else {
+                    container.getElement().getFirstChildElement().getFirstChildElement().blur();
+                }
+            }
+        } catch (Exception e) {
+            Log.trace("ERROR: " + e.getMessage());
+        }
     }
 }

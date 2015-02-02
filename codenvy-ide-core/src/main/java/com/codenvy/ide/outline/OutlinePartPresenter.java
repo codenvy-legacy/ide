@@ -16,6 +16,8 @@ import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.parts.HasView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.texteditor.outline.HasOutline;
@@ -34,7 +36,8 @@ import org.vectomatic.dom.svg.ui.SVGResource;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart, OutlinePartView.ActionDelegate {
+public class OutlinePartPresenter extends BasePresenter implements ActivePartChangedHandler, OutlinePart,
+                                                                   OutlinePartView.ActionDelegate, HasView {
     private final OutlinePartView          view;
     private final CoreLocalizationConstant coreLocalizationConstant;
     private       HasOutline               lastHasOutlineActivePart;
@@ -67,6 +70,10 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
         return coreLocalizationConstant.outlineButtonTitle();
     }
 
+    @Override
+    public View getView() {
+        return view;
+    }
     /** {@inheritDoc} */
     @Override
     public ImageResource getTitleImage() {
@@ -122,4 +129,5 @@ public class OutlinePartPresenter extends BasePresenter implements ActivePartCha
             }
         }
     }
+
 }

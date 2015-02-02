@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.parts.base;
 
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.Focusable;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,42 +30,52 @@ import javax.annotation.Nonnull;
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  */
-public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T> {
+public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T>, Focusable {
 
     protected DockLayoutPanel toolBar;
+    protected DockLayoutPanel toolbarHeader;
     protected DockLayoutPanel container;
     protected T               delegate;
     protected ToolButton      minimizeButton;
     protected Label           titleLabel;
 
+    private boolean focused = false;
+
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
-        initWidget(container);
+        container.getElement().setAttribute("role", "part");
         container.setSize("100%", "100%");
+
+        initWidget(container);
+
         toolBar = new DockLayoutPanel(Style.Unit.PX);
         toolBar.addStyleName(resources.partStackCss().ideBasePartToolbar());
+        toolBar.getElement().setAttribute("role", "toolbar");
         container.addNorth(toolBar, 22);
 
         //this hack used for adding box shadow effect to toolbar
         toolBar.getElement().getParentElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
 
+        toolbarHeader = new DockLayoutPanel(Style.Unit.PX);
+        toolbarHeader.getElement().setAttribute("role", "toolbar-header");
 
-        DockLayoutPanel panel = new DockLayoutPanel(Style.Unit.PX);
         titleLabel = new Label();
         titleLabel.setStyleName(resources.partStackCss().ideBasePartTitleLabel());
 
         SVGImage minimize = new SVGImage(resources.minimize());
         minimize.getElement().setAttribute("name", "workBenchIconMinimize");
         minimizeButton = new ToolButton(minimize);
+        minimizeButton.setTitle("Hide");
         minimizeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 minimize();
             }
         });
-        panel.addEast(minimizeButton, 29);
-        panel.add(titleLabel);
-        toolBar.addNorth(panel, 20);
+        toolbarHeader.addEast(minimizeButton, 29);
+        toolbarHeader.add(titleLabel);
+
+        toolBar.addNorth(toolbarHeader, 20);
     }
 
     /** Call minimize on delegate. */
@@ -87,4 +98,23 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     public void setDelegate(T delegate) {
         this.delegate = delegate;
     }
+
+    @Override
+    public final void setFocus(final boolean focused) {
+        this.focused = focused;
+        updateFocus();
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
+    }
+
+    /**
+     * Override this method to set the focus to a special view element.
+     * Method is called just after updating the view focus.
+     */
+    protected void updateFocus() {
+    }
+
 }

@@ -13,7 +13,9 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -62,6 +64,8 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
 
         container.add(ourUiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("notification-minimizeBut");
+
+        scrollPanel.getElement().setTabIndex(0);
     }
 
     /** {@inheritDoc} */
@@ -83,9 +87,46 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         return count;
     }
 
+    /** scroll events to the bottom if view is visible */
+    private boolean scrollBottomRequired = false;
+
     /** {@inheritDoc} */
     @Override
     public void scrollBottom() {
-        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+        /** scroll bottom immediately if view is visible */
+        if (scrollPanel.getElement().getOffsetParent() != null) {
+            Log.trace("/ scroll immediately");
+            scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+            return;
+        }
+
+        /** otherwise, check the visibility periodically and scroll the view when it's visible */
+        if (!scrollBottomRequired) {
+            scrollBottomRequired = true;
+
+            Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+                @Override
+                public boolean execute() {
+                    Log.trace("SCHEDULER: scroll");
+
+                    if (scrollPanel.getElement().getOffsetParent() != null) {
+                        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+                        scrollBottomRequired = false;
+                        return false;
+                    }
+                    return true;
+                }
+            }, 1000);
+        }
     }
+
+    @Override
+    protected void updateFocus() {
+        if (isFocused()) {
+            scrollPanel.getElement().focus();
+        } else {
+            scrollPanel.getElement().blur();
+        }
+    }
+
 }

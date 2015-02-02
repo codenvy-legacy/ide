@@ -16,6 +16,8 @@ package com.codenvy.ide.api.parts.base;
  * @author Evgen Vidolob
  */
 public interface BaseActionDelegate {
+
     /** Hide Part from UI */
     void minimize();
+
 }

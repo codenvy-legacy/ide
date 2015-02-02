@@ -11,6 +11,8 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.parts.HasView;
+import com.codenvy.ide.api.parts.Focusable;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.PartStack;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
@@ -27,26 +29,12 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class FocusManager {
+
     private PartStack activePartStack;
 
-    private final PartStackEventHandler partStackHandler = new PartFocusChangedHandler();
+    private PartPresenter activePart;
 
     private final EventBus eventBus;
-
-    /** Handles PartStack Events */
-    private final class PartFocusChangedHandler implements PartStackEventHandler {
-        /** {@inheritDoc} */
-        @Override
-        public void onActivePartChanged(PartPresenter part) {
-            activePartChanged(part);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void onRequestFocus(PartStack partStack) {
-            setActivePartStack(partStack);
-        }
-    }
 
     /**
      * Provides a handler, that is injected into PartStack, for the FocusManager to be able to track
@@ -64,50 +52,57 @@ public class FocusManager {
         this.eventBus = eventBus;
     }
 
-    /**
-     * Fires EventBus event, that informs about new active Part
-     *
-     * @param part
-     *         instance that became active
-     */
-    protected void activePartChanged(PartPresenter part) {
-        // fire event, active part changed
-        eventBus.fireEvent(new ActivePartChangedEvent(part));
-    }
+    public static final String HIGHLIGHT_COLOR = "rgb(77, 113, 145)";
 
-    /**
-     * Activate given Part Stack
-     *
-     * @param partStack
-     */
-    protected void setActivePartStack(PartStack partStack) {
-        // nothing to do
-        if (activePartStack == partStack || partStack == null) {
+    private final PartStackEventHandler partStackHandler = new PartStackEventHandler() {
+        @Override
+        public void onRequestFocus(PartStack partStack) {
+            if (partStack == null || partStack.getActivePart() == null) {
+                return;
+            }
+
+            if (partStack == activePartStack && partStack.getActivePart() == activePart) {
+                return;
+            }
+
+            /** unfocus active part stack */
             if (activePartStack != null) {
-                Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        partStackHandler.onActivePartChanged(activePartStack.getActivePart());
-                    }
-                });
+                activePartStack.setFocus(false);
             }
-            return;
-        }
 
-        // drop focus from partStacks
-        if (activePartStack != null) {
-            activePartStack.setFocus(false);
-        }
-        // set part focused
-        activePartStack = partStack;
-        activePartStack.setFocus(true);
-
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                partStackHandler.onActivePartChanged(activePartStack.getActivePart());
+            /** unfocus active part */
+            if (activePart != null &&
+                activePart instanceof HasView && ((HasView)activePart).getView() instanceof Focusable) {
+                ((Focusable)((HasView)activePart).getView()).setFocus(false);
             }
-        });
-    }
+
+            /** remember active part stack and part */
+            activePartStack = partStack;
+            activePart = partStack.getActivePart();
+
+            /** focus part stack */
+            activePartStack.setFocus(true);
+
+            /** focus part if it has view and focusable */
+            if (activePart != null) {
+                if (activePart instanceof HasView && ((HasView)activePart).getView() instanceof Focusable) {
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            ((Focusable)((HasView)activePart).getView()).setFocus(true);
+                        }
+                    });
+                }
+            }
+
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    eventBus.fireEvent(new ActivePartChangedEvent(activePart));
+                }
+            });
+
+        }
+    };
 
 }

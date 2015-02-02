@@ -149,6 +149,8 @@ public class View extends Composite {
                 event.stopPropagation();
             }
         }, ClickEvent.getType());
+
+        /* Don't start moving the window when clicking close button */
         crossButton.addDomHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
@@ -156,6 +158,7 @@ public class View extends Composite {
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
+
         MouseHandler mouseHandler = new MouseHandler();
         header.addDomHandler(mouseHandler, MouseDownEvent.getType());
         header.addDomHandler(mouseHandler, MouseUpEvent.getType());

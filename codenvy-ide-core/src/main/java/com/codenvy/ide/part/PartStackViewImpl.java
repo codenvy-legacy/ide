@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
@@ -48,9 +49,9 @@ import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
  * @author Nikolay Zamosenchuk
  */
 public class PartStackViewImpl extends ResizeComposite implements PartStackView {
+
     private final PartStackUIResources resources;
-    // DOM Handler
-    private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
+
     // list of tabs
     private final Array<TabButton>       tabButtons          = Collections.createArray();
     final         int                    margin              = 8;//tabButtons text margin
@@ -58,10 +59,6 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     private DeckLayoutPanel contentPanel;
     private ActionDelegate  delegate;
     private TabButton       activeTabButton;
-    private boolean         focused;
-
-    private HandlerRegistration mouseDowntHandlerRegistration;
-    private HandlerRegistration contextMenuHandlerRegistration;
 
     private TabPosition tabPosition;
     private int         top;
@@ -69,13 +66,15 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     /**
      * Create View.
      *
-     * @param partStackResources
+     * @param resources
      * @param tabPosition
      * @param tabsPanel
      */
     @Inject
-    public PartStackViewImpl(PartStackUIResources partStackResources, @Assisted TabPosition tabPosition, @Assisted InsertPanel tabsPanel) {
-        resources = partStackResources;
+    public PartStackViewImpl(PartStackUIResources resources,
+                             @Assisted TabPosition tabPosition,
+                             @Assisted InsertPanel tabsPanel) {
+        this.resources = resources;
         this.tabPosition = tabPosition;
         this.tabsPanel = tabsPanel;
         contentPanel = new DeckLayoutPanel();
@@ -86,23 +85,45 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
         initWidget(contentPanel);
 
-        addFocusRequestHandler();
+        addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                if (delegate != null) {
+                    delegate.onRequestFocus();
+                }
+            }
+        }, MouseDownEvent.getType());
+
+        addDomHandler(new ContextMenuHandler() {
+            @Override
+            public void onContextMenu(ContextMenuEvent event) {
+                if (delegate != null) {
+                    delegate.onRequestFocus();
+                }
+            }
+        }, ContextMenuEvent.getType());
     }
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
-        TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
-        tabItem.ensureDebugId("tabButton-" + title);
-        tabsPanel.add(tabItem);
-        tabButtons.add(tabItem);
-        return tabItem;
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
     @Override
     public ForIsWidget getContentPanel() {
         return contentPanel;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public TabItem addTab(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
+        tabItem.ensureDebugId("tabButton-" + title);
+        tabsPanel.add(tabItem);
+        tabButtons.add(tabItem);
+        return tabItem;
     }
 
     /** {@inheritDoc} */
@@ -150,54 +171,33 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
         if (index >= 0 && index < tabButtons.size()) {
             activeTabButton = tabButtons.get(index);
             activeTabButton.addStyleName(resources.partStackCss().idePartStackToolTabSelected());
+            contentPanel.getWidget(index).getElement().setAttribute("tab-index", "" + index);
             contentPanel.showWidget(index);
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
-    }
+
+    private Widget focusedWidget;
 
     /** {@inheritDoc} */
     @Override
     public void setFocus(boolean focused) {
-        if (this.focused == focused) {
-            // already focused
-            return;
+        if (focusedWidget != null) {
+            focusedWidget.getElement().removeAttribute("active");
         }
 
-        this.focused = focused;
+        focusedWidget = contentPanel.getVisibleWidget();
 
-        // if focused already, then remove DOM handler
+        if (focused && focusedWidget != null) {
+            focusedWidget.getElement().setAttribute("active", "");
+        }
+
+        /* the style doesn't change the style of the panel, was left for future */
         if (focused) {
             contentPanel.addStyleName(resources.partStackCss().idePartStackFocused());
-            removeFocusRequestHandler();
         } else {
             contentPanel.removeStyleName(resources.partStackCss().idePartStackFocused());
-            addFocusRequestHandler();
         }
-    }
-
-    /** Add MouseDown DOM Handler */
-    protected void addFocusRequestHandler() {
-        mouseDowntHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
-        contextMenuHandlerRegistration = addDomHandler(focusRequestHandler, ContextMenuEvent.getType());
-    }
-
-    /** Remove MouseDown DOM Handler */
-    protected void removeFocusRequestHandler() {
-        if (mouseDowntHandlerRegistration != null) {
-            mouseDowntHandlerRegistration.removeHandler();
-            mouseDowntHandlerRegistration = null;
-        }
-
-        if (contextMenuHandlerRegistration != null) {
-            contextMenuHandlerRegistration.removeHandler();
-            contextMenuHandlerRegistration = null;
-        }
-
     }
 
     /** {@inheritDoc} */
@@ -247,7 +247,7 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
                 image = new Image(resources.close());
                 image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
                 tabItem.add(image);
-                tabItem.ensureDebugId("777");
+                tabItem.ensureDebugId("partStack-TabButton");
                 addHandlers();
             }
         }
@@ -270,19 +270,9 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
             }
         }
 
-        /**
-         * Create button.
-         *
-         * @param icon
-         * @param title
-         */
-        public TabButton(SVGImage icon, String title) {
-            tabItem = new FlowPanel();
-            if (title != null) {
-                tabItem.setTitle(title);
-            }
-            initWidget(tabItem);
-            tabItem.add(icon);
+        @Override
+        public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+            return addDomHandler(handler, MouseDownEvent.getType());
         }
 
         @Override
@@ -336,22 +326,7 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
                 tabItem.addStyleName(resources.partStackCss().idePartStackTabBelow());
             }
         }
+
     }
 
-    /** Notifies delegated handler */
-    private final class FocusRequestDOMHandler implements MouseDownHandler, ContextMenuHandler {
-        @Override
-        public void onMouseDown(MouseDownEvent event) {
-            if (delegate != null) {
-                delegate.onRequestFocus();
-            }
-        }
-
-        @Override
-        public void onContextMenu(ContextMenuEvent event) {
-            if (delegate != null) {
-                delegate.onRequestFocus();
-            }
-        }
-    }
 }

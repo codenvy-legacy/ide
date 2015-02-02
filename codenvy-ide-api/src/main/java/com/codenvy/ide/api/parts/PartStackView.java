@@ -13,6 +13,7 @@ package com.codenvy.ide.api.parts;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.collections.Array;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasMouseDownHandlers;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -23,16 +24,16 @@ import static com.google.gwt.user.client.ui.InsertPanel.ForIsWidget;
 /** PartStack View interface */
 public interface PartStackView extends View<PartStackView.ActionDelegate> {
 
-    /** Tab which can be clicked and closed */
-    public interface TabItem extends HasCloseHandlers<PartStackView.TabItem>, HasClickHandlers {
-    }
-
     public enum TabPosition {
         BELOW, LEFT, RIGHT
     }
 
+    /** Tab which can be clicked and closed */
+    public interface TabItem extends HasCloseHandlers<PartStackView.TabItem>, HasClickHandlers, HasMouseDownHandlers {
+    }
+
     /** Add Tab */
-    public PartStackView.TabItem addTabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable);
+    public PartStackView.TabItem addTab(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable);
 
     /** Remove Tab */
     public void removeTab(int index);
@@ -57,4 +58,5 @@ public interface PartStackView extends View<PartStackView.ActionDelegate> {
         /** PartStack is being clicked and requests Focus */
         void onRequestFocus();
     }
+
 }

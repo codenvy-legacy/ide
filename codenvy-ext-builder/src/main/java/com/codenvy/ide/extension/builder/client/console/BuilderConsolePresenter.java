@@ -12,6 +12,8 @@ package com.codenvy.ide.extension.builder.client.console;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.parts.HasView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -35,7 +37,7 @@ import javax.annotation.Nonnull;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate {
+public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate, HasView {
     private final BuilderLocalizationConstant builderLocalizationConstant;
     private final BuilderConsoleView          view;
     private final ToolbarPresenter            consoleToolbar;
@@ -60,6 +62,11 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
                 onPartActivated(event.getActivePart());
             }
         });
+    }
+
+    @Override
+    public View getView() {
+        return view;
     }
 
     private void onPartActivated(PartPresenter part) {
@@ -184,4 +191,5 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     public void clear() {
         view.clear();
     }
+
 }

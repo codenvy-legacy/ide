@@ -12,12 +12,15 @@ package com.codenvy.ide.notification;
 
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
+import com.codenvy.ide.api.parts.HasView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -46,7 +49,8 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
                                                                       NotificationItem.ActionDelegate,
                                                                       Notification.NotificationObserver,
                                                                       NotificationManagerView.ActionDelegate,
-                                                                      NotificationMessageStack.ActionDelegate {
+                                                                      NotificationMessageStack.ActionDelegate,
+                                                                      HasView {
     private static final DateTimeFormat DATA_FORMAT = DateTimeFormat.getFormat("hh:mm:ss");
     private static final String         TITLE       = "Events";
     private NotificationManagerView  view;
@@ -96,6 +100,11 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         });
     }
 
+    @Override
+    public View getView() {
+        return view;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onValueChanged() {
@@ -124,7 +133,13 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
         notificationMessageStack.addNotification(notification);
         notificationContainer.addNotification(notification);
         onValueChanged();
-        view.scrollBottom();
+
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                view.scrollBottom();
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -250,4 +265,5 @@ public class NotificationManagerImpl extends BasePresenter implements Notificati
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
     }
+
 }
