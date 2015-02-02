@@ -16,9 +16,9 @@ import javax.annotation.Nonnull;
 
 import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.jseditor.client.document.Document;
+import com.codenvy.ide.jseditor.client.gutter.Gutter;
+import com.codenvy.ide.jseditor.client.gutter.Gutter.LineNumberingChangeCallback;
 import com.codenvy.ide.jseditor.client.texteditor.EditorResources;
-import com.codenvy.ide.jseditor.client.texteditor.HasGutter;
-import com.codenvy.ide.jseditor.client.texteditor.HasGutter.LineNumberingChangeCallback;
 import com.codenvy.ide.jseditor.client.texteditor.LineStyler;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.user.client.ui.Image;
@@ -42,7 +42,7 @@ public class BreakpointRendererImpl implements BreakpointRenderer {
     private final EditorResources editorResources;
 
     /** The component responsible for gutter handling. */
-    private final HasGutter hasGutter;
+    private final Gutter hasGutter;
 
     /** The component responsible for line style handling. */
     private final LineStyler lineStyler ;
@@ -53,7 +53,7 @@ public class BreakpointRendererImpl implements BreakpointRenderer {
     @AssistedInject
     public BreakpointRendererImpl(final BreakpointResources breakpointResources,
                                   final EditorResources editorResources,
-                                  @Assisted final HasGutter hasGutter,
+                                  @Assisted final Gutter hasGutter,
                                   @Assisted final LineStyler lineStyler,
                                   @Assisted final Document document) {
         this.breakpointResources = breakpointResources;

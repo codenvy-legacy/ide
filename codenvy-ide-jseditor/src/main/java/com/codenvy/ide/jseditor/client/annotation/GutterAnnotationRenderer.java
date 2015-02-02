@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.api.text.annotation.Annotation;
 import com.codenvy.ide.jseditor.client.document.Document;
+import com.codenvy.ide.jseditor.client.gutter.Gutter;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
-import com.codenvy.ide.jseditor.client.texteditor.HasGutter;
 import com.codenvy.ide.ui.Tooltip;
 import com.codenvy.ide.ui.menu.PositionController;
 import com.codenvy.ide.util.loging.Log;
@@ -38,7 +38,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
     private static Logger LOG = Logger.getLogger(GutterAnnotationRenderer.class.getName());
 
     /** The component responsible for gutter handling. */
-    private HasGutter hasGutter;
+    private Gutter hasGutter;
 
     /** The document. */
     private Document document;
@@ -47,7 +47,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
      * Sets the component responsible for gutter handling.
      * @param hasGutter the component
      */
-    public void setHasGutter(final HasGutter hasGutter) {
+    public void setHasGutter(final Gutter hasGutter) {
         this.hasGutter = hasGutter;
     }
 

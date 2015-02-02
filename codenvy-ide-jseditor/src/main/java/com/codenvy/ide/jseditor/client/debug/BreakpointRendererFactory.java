@@ -12,20 +12,20 @@ package com.codenvy.ide.jseditor.client.debug;
 
 import com.codenvy.ide.debug.BreakpointRenderer;
 import com.codenvy.ide.jseditor.client.document.Document;
-import com.codenvy.ide.jseditor.client.texteditor.HasGutter;
+import com.codenvy.ide.jseditor.client.gutter.Gutter;
 import com.codenvy.ide.jseditor.client.texteditor.LineStyler;
 
 /** Factory for {@link BreakpointRenderer} instances.*/
 public interface BreakpointRendererFactory {
 
     /**
-     * Creates an instance of {@link BreakpointRenderer}.
+     * Creates an instance of {@link BreakpointRenderer} that uses both a gutter and a line styler.
      * @param hasGutter the gutter manager
      * @param lineStyler the line style manager
      * @param document the document
      * @return a {@link BreakpointRenderer}
      */
-    BreakpointRenderer create(final HasGutter hasGutter,
+    BreakpointRenderer create(final Gutter hasGutter,
                               final LineStyler lineStyler,
                               final Document document);
 }

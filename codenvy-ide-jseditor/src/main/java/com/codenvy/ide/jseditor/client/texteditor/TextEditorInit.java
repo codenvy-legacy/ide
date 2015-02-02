@@ -46,6 +46,7 @@ import com.codenvy.ide.jseditor.client.events.TextChangeHandler;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper;
 import com.codenvy.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
+import com.codenvy.ide.jseditor.client.gutter.HasGutter;
 import com.codenvy.ide.jseditor.client.keymap.KeyBindingAction;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.minimap.HasMinimap;
@@ -155,11 +156,13 @@ public class TextEditorInit<T extends EditorWidget> {
         // add the renderers (event handler) before the model (event source)
 
         // gutter renderer
-        final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
-        annotationRenderer.setDocument(documentHandle.getDocument());
-        annotationRenderer.setHasGutter(this.textEditor.getHasGutter());
-        documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, annotationRenderer);
-        documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, annotationRenderer);
+        if (textEditor instanceof HasGutter) {
+            final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
+            annotationRenderer.setDocument(documentHandle.getDocument());
+            annotationRenderer.setHasGutter(((HasGutter)this.textEditor).getGutter());
+            documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, annotationRenderer);
+            documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, annotationRenderer);
+        }
 
         // inline renderer
         final InlineAnnotationRenderer inlineAnnotationRenderer = new InlineAnnotationRenderer();

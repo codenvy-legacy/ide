@@ -44,7 +44,6 @@ public interface EditorWidget extends IsWidget,
                                       HasFocusHandlers,
                                       HasGutterClickHandlers,
                                       /* extended capabilities */
-                                      HasGutter,
                                       HasKeybindings,
                                       HasTextMarkers,
                                       HasLineStyler,

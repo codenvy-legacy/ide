@@ -56,6 +56,7 @@ import com.codenvy.ide.jseditor.client.events.GutterClickEvent;
 import com.codenvy.ide.jseditor.client.events.GutterClickHandler;
 import com.codenvy.ide.jseditor.client.filetype.FileTypeIdentifier;
 import com.codenvy.ide.jseditor.client.gutter.Gutters;
+import com.codenvy.ide.jseditor.client.gutter.HasGutter;
 import com.codenvy.ide.jseditor.client.keymap.Keybinding;
 import com.codenvy.ide.jseditor.client.position.PositionConverter;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
@@ -556,8 +557,8 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
 
     @Override
     public BreakpointRenderer getBreakpointRenderer() {
-        if (this.breakpointRenderer == null && this.editorWidget != null) {
-            this.breakpointRenderer = this.breakpointRendererFactory.create(this.getHasGutter(),
+        if (this.breakpointRenderer == null && this.editorWidget != null && this instanceof HasGutter) {
+            this.breakpointRenderer = this.breakpointRendererFactory.create(((HasGutter)this).getGutter(),
                                                                             this.editorWidget.getLineStyler(),
                                                                             this.document);
         }
@@ -653,14 +654,6 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         result.add(DEFAULT_CONTENT_TYPE);
 
         return result;
-    }
-
-    public HasGutter getHasGutter() {
-        if (this.editorWidget != null) {
-            return this.editorWidget;
-        } else {
-            return null;
-        }
     }
 
     public HasTextMarkers getHasTextMarkers() {
