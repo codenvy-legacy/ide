@@ -18,7 +18,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import com.google.gwt.user.client.Timer;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.codenvy.ide.Resources;
@@ -74,6 +73,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -761,5 +761,9 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public boolean isReadOnly() {
         return this.editorWidget.isReadOnly();
+    }
+
+    protected EditorWidget getEditorWidget() {
+        return this.editorWidget;
     }
 }
