@@ -99,10 +99,6 @@
             margin-right: 20px;
         }
 
-        .hidden {
-            visibility: hidden;
-        }
-
         .grayColor {
             color: #818181;
         }
@@ -130,7 +126,7 @@
                       debugId="projectWizard-nextStepButton"/>
             <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{resources.wizardCss.button}" tabIndex="7"
                       debugId="projectWizard-previousStepButton"/>
-            <g:FlowPanel ui:field="infoRAMPanel" addStyleNames="{style.hidden}">
+            <g:FlowPanel ui:field="infoRAMPanel">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="RAM Required:" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
@@ -142,10 +138,6 @@
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label ui:field="availableRAM" addStyleNames="{style.infoValue}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel} {style.infoText}">
-                    <g:Anchor text="Get More RAM" href="{locale.projectWizardLinkGetMoreRAM}" target="_blank"
-                              addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>

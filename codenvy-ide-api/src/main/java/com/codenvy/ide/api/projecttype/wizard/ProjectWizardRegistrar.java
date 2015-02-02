@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
-import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.ide.api.wizard1.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.Provider;
@@ -18,8 +18,8 @@ import com.google.inject.Provider;
 import javax.annotation.Nonnull;
 
 /**
- * Defines the requirements for an object that provides information
- * * for registering new project type into project wizard.
+ * Defines the requirements for an object that provides an information
+ * for registering project type into project wizard.
  * <p/>
  * Implementations of this interface need to be registered using
  * a multibinder in order to be picked up by project wizard.
@@ -27,15 +27,18 @@ import javax.annotation.Nonnull;
  * @author Artem Zatsarynnyy
  */
 public interface ProjectWizardRegistrar {
+    /** Key to get project wizard mode from wizard's context. */
+    String WIZARD_MODE_KEY = "ProjectWizardModeKey";
+
     /** Returns ID of the project type that should be registered in project wizard. */
     @Nonnull
     String getProjectTypeId();
 
-    /** Returns category of the project type to add it to. */
+    /** Returns project type category for the project wizard. */
     @Nonnull
     String getCategory();
 
     /** Returns pages that should be used in project wizard. */
     @Nonnull
-    Array<Provider<? extends WizardPage<NewProject>>> getWizardPages();
+    Array<Provider<? extends WizardPage<ImportProject>>> getWizardPages();
 }

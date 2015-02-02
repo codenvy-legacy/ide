@@ -114,12 +114,12 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
 
     @Override
     public WizardPage<T> navigateToFirst() {
-        clear();
+        resetNavigationState();
         return navigateToNext();
     }
 
-    /** Clear wizard's navigation state. */
-    private void clear() {
+    /** Reset wizard's navigation state. */
+    private void resetNavigationState() {
         currentPageIndex = -1;
     }
 

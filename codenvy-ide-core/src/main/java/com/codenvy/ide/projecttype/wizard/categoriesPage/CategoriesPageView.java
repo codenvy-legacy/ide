@@ -27,7 +27,10 @@ public interface CategoriesPageView extends View<CategoriesPageView.ActionDelega
 
     void selectProjectType(String projectTypeId);
 
-    void setProjectTypeCategories(Map<String, Set<ProjectTypeDefinition>> categories, Map<String, Set<ProjectTemplateDescriptor>> samples);
+    void setCategories(Map<String, Set<ProjectTypeDefinition>> typesByCategory,
+                       Map<String, Set<ProjectTemplateDescriptor>> templatesByCategory);
+
+    void updateCategories(boolean includeTemplates);
 
     void reset();
 
@@ -45,11 +48,11 @@ public interface CategoriesPageView extends View<CategoriesPageView.ActionDelega
 
     void showNameError();
 
-    void focusOnName();
+    void focusName();
 
     void disableAllExceptName();
 
-    void setAvailableProjectTypeDescriptors(List<ProjectTypeDefinition> availableProjectTypes);
+    void setProjectTypes(List<ProjectTypeDefinition> availableProjectTypes);
 
     public interface ActionDelegate {
 

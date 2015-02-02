@@ -11,12 +11,13 @@
 package com.codenvy.ide.projecttype.wizard.runnersPage;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
-import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnerEnvironment;
 import com.codenvy.api.project.shared.dto.RunnerEnvironmentTree;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.wizard1.AbstractWizardPage;
 import com.codenvy.ide.dto.DtoFactory;
@@ -32,11 +33,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.codenvy.api.project.shared.Constants.BLANK_ID;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
+ * Project wizard page for configuring runner environment.
+ *
  * @author Evgen Vidolob
+ * @author Artem Zatsarynnyy
  */
-public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> implements RunnersPageView.ActionDelegate {
+public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> implements RunnersPageView.ActionDelegate {
 
     private final ProjectWizardRegistry  projectWizardRegistry;
     private final RunnersPageView        view;
@@ -47,13 +53,13 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
     private final DialogFactory          dialogFactory;
 
     @Inject
-    public SelectRunnerPagePresenter(RunnersPageView view,
-                                     RunnerServiceClient runnerServiceClient,
-                                     DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                                     ProjectServiceClient projectServiceClient,
-                                     ProjectWizardRegistry projectWizardRegistry,
-                                     DtoFactory dtoFactory,
-                                     DialogFactory dialogFactory) {
+    public RunnersPagePresenter(RunnersPageView view,
+                                RunnerServiceClient runnerServiceClient,
+                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                                ProjectServiceClient projectServiceClient,
+                                ProjectWizardRegistry projectWizardRegistry,
+                                DtoFactory dtoFactory,
+                                DialogFactory dialogFactory) {
         super();
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
@@ -62,7 +68,6 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
         this.projectWizardRegistry = projectWizardRegistry;
         this.dtoFactory = dtoFactory;
         this.dialogFactory = dialogFactory;
-
         view.setDelegate(this);
     }
 
@@ -73,19 +78,16 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
     }
 
     private void requestRunnerEnvironments() {
-        // TODO: add constants for wizard context
-        final boolean isCreatingNewProject = Boolean.parseBoolean(context.get("isCreatingNewProject"));
-        if (isCreatingNewProject) {
+        final ProjectWizardMode wizardMode = ProjectWizardMode.parse(context.get(WIZARD_MODE_KEY));
+        if (CREATE == wizardMode) {
             // wizard is opened for new project, so we haven't project-scoped environments
             requestSystemEnvironments();
             return;
         }
 
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
-        // TODO: sub-projects may be updated so should be project's path instead of name
-        final String path = dataObject.getName();
         projectServiceClient.getRunnerEnvironments(
-                path,
+                dataObject.getProject().getName(),
                 new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
                     @Override
                     protected void onSuccess(RunnerEnvironmentTree environmentTree) {
@@ -107,14 +109,14 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
         runnerServiceClient.getRunners(new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
             @Override
             protected void onSuccess(RunnerEnvironmentTree environmentTree) {
-                final String category = projectWizardRegistry.getWizardCategory(dataObject.getType());
-                if (category != null && !category.equalsIgnoreCase(BLANK_ID)) {
+                final String category = projectWizardRegistry.getWizardCategory(dataObject.getProject().getType());
+                if (category == null || BLANK_ID.equalsIgnoreCase(category)) {
+                    view.addRunner(environmentTree);
+                } else {
                     RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class)
                                                            .withDisplayName(environmentTree.getDisplayName());
                     tree.addNode(environmentTree.getNode(category.toLowerCase()));
                     view.addRunner(tree);
-                } else {
-                    view.addRunner(environmentTree);
                 }
                 updateView();
             }
@@ -126,8 +128,9 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
         });
     }
 
+    /** Updates view from data-object. */
     private void updateView() {
-        final RunnersDescriptor runners = dataObject.getRunners();
+        final RunnersDescriptor runners = dataObject.getProject().getRunners();
         if (runners != null) {
             final String defaultRunner = runners.getDefault();
             view.selectRunnerEnvironment(defaultRunner);
@@ -141,7 +144,7 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
 
     @Override
     public void recommendedMemoryChanged() {
-        final RunnersDescriptor runners = dataObject.getRunners();
+        final RunnersDescriptor runners = dataObject.getProject().getRunners();
         if (runners != null) {
             final String defaultRunner = runners.getDefault();
             final RunnerConfiguration defaultRunnerConf = runners.getConfigs().get(defaultRunner);
@@ -167,10 +170,10 @@ public class SelectRunnerPagePresenter extends AbstractWizardPage<NewProject> im
 
             runnerConfiguration.setRam(view.getRecommendedMemorySize());
 
-            dataObject.setRunners(runnersDescriptor);
+            dataObject.getProject().setRunners(runnersDescriptor);
             view.showRunnerDescriptions(environment.getDescription());
         } else {
-            dataObject.setRunners(dtoFactory.createDto(RunnersDescriptor.class));
+            dataObject.getProject().setRunners(dtoFactory.createDto(RunnersDescriptor.class));
             view.showRunnerDescriptions("");
         }
     }
