@@ -18,8 +18,7 @@ import java.util.logging.Logger;
 
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.api.text.annotation.Annotation;
-import com.codenvy.ide.jseditor.client.document.DocumentHandle;
-import com.codenvy.ide.jseditor.client.document.UseDocumentHandle;
+import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.texteditor.HasGutter;
 import com.codenvy.ide.ui.Tooltip;
@@ -33,7 +32,7 @@ import elemental.events.EventListener;
 /**
  * Renderer for annotation marks in gutter (on the left margin of the text).
  */
-public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAnnotationModelHandler, UseDocumentHandle {
+public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAnnotationModelHandler {
 
     /** The logger. */
     private static Logger LOG = Logger.getLogger(GutterAnnotationRenderer.class.getName());
@@ -41,8 +40,8 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
     /** The component responsible for gutter handling. */
     private HasGutter hasGutter;
 
-    /** The handle on the component. */
-    private DocumentHandle documentHandle;
+    /** The document. */
+    private Document document;
 
     /**
      * Sets the component responsible for gutter handling.
@@ -77,7 +76,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
 
     private void removeAnnotationItem(final AnnotationModelEvent event, final Annotation annotation) {
         final Position position = event.getPositionOfRemovedAnnotation(annotation);
-        final TextPosition textPosition = this.documentHandle.getDocument().getPositionFromIndex(position.getOffset());
+        final TextPosition textPosition = this.document.getPositionFromIndex(position.getOffset());
         final Element annotationItem = this.hasGutter.getGutterItem(textPosition.getLine(), ANNOTATION_GUTTER);
         if (AnnotationGroupImpl.isAnnotation(annotationItem)) {
             final AnnotationGroup group = AnnotationGroupImpl.create(annotationItem);
@@ -96,7 +95,7 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
             Log.warn(GutterAnnotationRenderer.class, "No position for annotation " + annotation);
             return;
         }
-        final TextPosition textPosition = this.documentHandle.getDocument().getPositionFromIndex(position.getOffset());
+        final TextPosition textPosition = this.document.getPositionFromIndex(position.getOffset());
 
         final Element annotationItem = this.hasGutter.getGutterItem(textPosition.getLine(),
                                                                     ANNOTATION_GUTTER);
@@ -151,14 +150,8 @@ public class GutterAnnotationRenderer implements AnnotationModelHandler, ClearAn
         }
     }
 
-    @Override
-    public void setDocumentHandle(final DocumentHandle handle) {
-        this.documentHandle = handle;
-    }
-
-    @Override
-    public DocumentHandle getDocumentHandle() {
-        return this.documentHandle;
+    public void setDocument(final Document document) {
+        this.document = document;
     }
 
     @Override

@@ -156,14 +156,14 @@ public class TextEditorInit<T extends EditorWidget> {
 
         // gutter renderer
         final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
-        annotationRenderer.setDocumentHandle(documentHandle);
+        annotationRenderer.setDocument(documentHandle.getDocument());
         annotationRenderer.setHasGutter(this.textEditor.getHasGutter());
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, annotationRenderer);
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, annotationRenderer);
 
         // inline renderer
         final InlineAnnotationRenderer inlineAnnotationRenderer = new InlineAnnotationRenderer();
-        inlineAnnotationRenderer.setDocumentHandle(documentHandle);
+        inlineAnnotationRenderer.setDocument(documentHandle.getDocument());
         inlineAnnotationRenderer.setHasTextMarkers(this.textEditor.getHasTextMarkers());
         documentHandle.getDocEventBus().addHandler(AnnotationModelEvent.TYPE, inlineAnnotationRenderer);
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, inlineAnnotationRenderer);
