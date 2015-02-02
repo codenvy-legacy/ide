@@ -171,10 +171,10 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
             runnerConfiguration.setRam(view.getRecommendedMemorySize());
 
             dataObject.getProject().setRunners(runnersDescriptor);
-            view.showRunnerDescriptions(environment.getDescription());
+            view.showRunnerDescription(environment.getDescription());
         } else {
             dataObject.getProject().setRunners(dtoFactory.createDto(RunnersDescriptor.class));
-            view.showRunnerDescriptions("");
+            view.showRunnerDescription("");
         }
     }
 }

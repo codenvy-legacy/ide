@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.wizard.project;
+package com.codenvy.ide.projecttype.wizard;
 
 import com.codenvy.ide.projecttype.wizard.PreSelectedProjectTypeManagerImpl;
 

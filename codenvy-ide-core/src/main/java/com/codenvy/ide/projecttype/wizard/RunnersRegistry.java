@@ -24,7 +24,12 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author Artem Zatsarynnyy */
+/**
+ * Helps to get description of the runner by it's ID.
+ *
+ * @author Artem Zatsarynnyy
+ */
+
 @Singleton
 class RunnersRegistry {
     private final StringMap<String> descriptions;

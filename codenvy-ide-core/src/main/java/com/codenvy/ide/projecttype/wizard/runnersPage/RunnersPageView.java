@@ -28,7 +28,7 @@ public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
     /** Set  recommended memory size for runner. */
     void setRecommendedMemorySize(int recommendedRam);
 
-    void showRunnerDescriptions(String description);
+    void showRunnerDescription(String description);
 
     void addRunner(RunnerEnvironmentTree environmentTree);
 

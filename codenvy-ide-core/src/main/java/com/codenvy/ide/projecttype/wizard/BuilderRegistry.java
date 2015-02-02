@@ -24,7 +24,11 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author Artem Zatsarynnyy */
+/**
+ * Helps to get name of the builder's default environment by builder name.
+ *
+ * @author Artem Zatsarynnyy
+ */
 @Singleton
 class BuilderRegistry {
     private final StringMap<String> environments;
