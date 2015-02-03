@@ -10,21 +10,21 @@
  *******************************************************************************/
 package com.codenvy.ide.jseditor.client.annotation;
 
-import static elemental.css.CSSStyleDeclaration.Position.ABSOLUTE;
-import static elemental.css.CSSStyleDeclaration.Position.STATIC;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.codenvy.ide.api.text.annotation.Annotation;
-import com.codenvy.ide.util.dom.Elements;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Element;
 import elemental.dom.Node;
 import elemental.html.DivElement;
 import elemental.html.HTMLCollection;
 import elemental.util.Mappable;
+
+import com.codenvy.ide.api.text.annotation.Annotation;
+import com.codenvy.ide.util.dom.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static elemental.css.CSSStyleDeclaration.Position.ABSOLUTE;
+import static elemental.css.CSSStyleDeclaration.Position.STATIC;
 
 /**
  * A composite of one or more annotation displays.<br>
@@ -35,15 +35,15 @@ import elemental.util.Mappable;
 class AnnotationGroupImpl implements AnnotationGroup {
 
     private static final String ELEMENT_ROLE_VALUE_ANNOTATION = "annotation";
-    private static final String ELEMENT_ROLE_DATA_PROPERTY = "eltRole";
+    private static final String ELEMENT_ROLE_DATA_PROPERTY    = "eltRole";
     /*
      * This implementation - relies on z-index to display the higher priority annotation - uses data-* attribute (dataset) to store the
      * tooltips
      */
-    private static final String MESSAGE_DATASET_NAME = "annotationMessage";
-    private static final String TYPE_DATASET_NAME = "annotationType";
-    private static final String LAYER_DATASET_NAME = "annotationLayer";
-    private static final String OFFSET_DATASET_NAME = "annotationOffset";
+    private static final String MESSAGE_DATASET_NAME          = "annotationMessage";
+    private static final String TYPE_DATASET_NAME             = "annotationType";
+    private static final String LAYER_DATASET_NAME            = "annotationLayer";
+    private static final String OFFSET_DATASET_NAME           = "annotationOffset";
 
     private elemental.dom.Element mainElement;
 
@@ -69,6 +69,7 @@ class AnnotationGroupImpl implements AnnotationGroup {
     @Override
     public final void addAnnotation(final Annotation annotation, int offset) {
         asElemental().appendChild(buildIncludedElement(annotation, offset));
+        updateIconVisibility();
     }
 
     @Override
@@ -85,6 +86,7 @@ class AnnotationGroupImpl implements AnnotationGroup {
                     && compareStrings(getType(dataset), annotation.getType())) {
                     // we may not strictly be on the same annotation instance, but it is not discernible
                     asElemental().removeChild(element);
+                    updateIconVisibility();
                     break;
                 }
             }
@@ -94,7 +96,8 @@ class AnnotationGroupImpl implements AnnotationGroup {
     private elemental.dom.Element buildIncludedElement(Annotation annotation, int offset) {
         final elemental.dom.Element element = annotation.getImageElement();
         final CSSStyleDeclaration style = element.getStyle();
-        style.setZIndex(annotation.getLayer());
+        int layer = annotation.getLayer();
+        style.setZIndex(layer);
         style.setPosition(ABSOLUTE);
         style.setTop("0");
         style.setLeft("0");
@@ -103,10 +106,40 @@ class AnnotationGroupImpl implements AnnotationGroup {
 
         element.getDataset().setAt(MESSAGE_DATASET_NAME, annotation.getText());
         element.getDataset().setAt(TYPE_DATASET_NAME, annotation.getType());
-        element.getDataset().setAt(LAYER_DATASET_NAME, Integer.toString(annotation.getLayer()));
+        element.getDataset().setAt(LAYER_DATASET_NAME, Integer.toString(layer));
         element.getDataset().setAt(OFFSET_DATASET_NAME, Integer.toString(offset));
 
         return element;
+    }
+
+    private void updateIconVisibility() {
+        int maxLayer = 0;
+        final HTMLCollection children = asElemental().getChildren();
+        for (int i = 0; i < children.length(); i++) {
+            final Node child = (Node)children.at(i);
+            if (child instanceof elemental.dom.Element) {
+                final elemental.dom.Element element = (elemental.dom.Element)child;
+                final Mappable dataset = element.getDataset();
+                final int layer = getLayer(dataset);
+                if(maxLayer < layer){
+                    maxLayer = layer;
+                }
+            }
+        }
+
+        for (int i = 0; i < children.length(); i++) {
+            final Node child = (Node)children.at(i);
+            if (child instanceof elemental.dom.Element) {
+                final elemental.dom.Element element = (elemental.dom.Element)child;
+                final Mappable dataset = element.getDataset();
+                final int layer = getLayer(dataset);
+                if(layer >= maxLayer){
+                    element.getStyle().removeProperty("display");
+                } else {
+                    element.getStyle().setDisplay("none");
+                }
+            }
+        }
     }
 
     @Override

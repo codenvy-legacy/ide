@@ -129,7 +129,7 @@ public class OutlineImpl implements OutlinePresenter {
         });
 
         if (document != null) {
-            Log.warn(OutlineImpl.class, "Cursor model available, adding cursor handler");
+            Log.debug(OutlineImpl.class, "Cursor model available, adding cursor handler");
             cursorModel.addCursorHandler(new CursorHandler() {
 
                 @Override

@@ -163,7 +163,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         verify(part1).removePropertyListener(any(PropertyListener.class));
 
         verify(partStackEventHandler, never()).onActivePartChanged(part2);
-        stopSchedulers();
     }
 
     @Test
@@ -195,7 +194,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         verify(part1).removePropertyListener(any(PropertyListener.class));
 
         verify(partStackEventHandler, never()).onActivePartChanged(part2);
-        stopSchedulers();
     }
 
     @Test

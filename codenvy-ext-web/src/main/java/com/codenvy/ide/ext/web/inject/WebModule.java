@@ -70,6 +70,6 @@ public class WebModule extends AbstractGinModule {
     @Singleton
     @Named("PHPFileType")
     protected FileType providePHPFile(WebExtensionResource res) {
-        return new FileType("PHP file", res.phpFile(), MimeType.APPLICATION_PHP, "php");
+        return new FileType("PHP file", res.phpFile(), MimeType.APPLICATION_X_PHP, "php");
     }
 }
