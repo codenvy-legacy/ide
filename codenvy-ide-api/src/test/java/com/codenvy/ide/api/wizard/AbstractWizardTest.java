@@ -20,7 +20,9 @@ import javax.annotation.Nonnull;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,20 +33,23 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractWizardTest {
+    private final String dataObject = "dataObject";
     @Mock
-    private WizardPage<Void>     page1;
+    private WizardPage<String>     page1;
     @Mock
-    private WizardPage<Void>     page2;
+    private WizardPage<String>     page2;
     @Mock
-    private WizardPage<Void>     page3;
+    private WizardPage<String>     page3;
     @Mock
-    private WizardPage<Void>     page4;
-    private AbstractWizard<Void> wizard;
+    private WizardPage<String>     page4;
+    @Mock
+    private Wizard.UpdateDelegate  updateDelegate;
+    private AbstractWizard<String> wizard;
 
     @Before
     public void setUp() {
-        wizard = new DummyWizard(null);
-        wizard.setUpdateDelegate(mock(Wizard.UpdateDelegate.class));
+        wizard = new DummyWizard(dataObject);
+        wizard.setUpdateDelegate(updateDelegate);
     }
 
     @Test
@@ -52,6 +57,18 @@ public class AbstractWizardTest {
         wizard.addPage(page1);
         wizard.addPage(page2);
         wizard.addPage(page3);
+
+        verify(page1).setUpdateDelegate(eq(updateDelegate));
+        verify(page1).setContext(anyMapOf(String.class, String.class));
+        verify(page1).init(eq(dataObject));
+
+        verify(page2).setUpdateDelegate(eq(updateDelegate));
+        verify(page2).setContext(anyMapOf(String.class, String.class));
+        verify(page2).init(eq(dataObject));
+
+        verify(page3).setUpdateDelegate(eq(updateDelegate));
+        verify(page3).setContext(anyMapOf(String.class, String.class));
+        verify(page3).init(eq(dataObject));
 
         assertEquals(page1, wizard.navigateToFirst());
         assertEquals(page2, wizard.navigateToNext());
@@ -262,8 +279,8 @@ public class AbstractWizardTest {
         }
     }
 
-    private class DummyWizard extends AbstractWizard<Void> {
-        DummyWizard(Void dataObject) {
+    private class DummyWizard extends AbstractWizard<String> {
+        DummyWizard(String dataObject) {
             super(dataObject);
         }
 
