@@ -14,12 +14,12 @@ import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
@@ -40,8 +40,8 @@ import static org.mockito.Mockito.when;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-@GwtModule("com.codenvy.ide.Core")
-public class NotificationManagerImplTest extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public class NotificationManagerImplTest {
     @Mock
     private EventBus                 eventBus;
     @Mock
