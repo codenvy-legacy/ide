@@ -156,7 +156,7 @@ public class TextEditorInit<T extends EditorWidget> {
         // add the renderers (event handler) before the model (event source)
 
         // gutter renderer
-        if (textEditor instanceof HasGutter) {
+        if (textEditor instanceof HasGutter && ((HasGutter)this.textEditor).getGutter() != null) {
             final GutterAnnotationRenderer annotationRenderer = new GutterAnnotationRenderer();
             annotationRenderer.setDocument(documentHandle.getDocument());
             annotationRenderer.setHasGutter(((HasGutter)this.textEditor).getGutter());
@@ -172,7 +172,7 @@ public class TextEditorInit<T extends EditorWidget> {
         documentHandle.getDocEventBus().addHandler(ClearAnnotationModelEvent.TYPE, inlineAnnotationRenderer);
 
         // minimap renderer
-        if (this.textEditor instanceof HasMinimap) {
+        if (this.textEditor instanceof HasMinimap && ((HasMinimap)this.textEditor).getMinimap() != null) {
             final MinimapAnnotationRenderer minimapAnnotationRenderer = new MinimapAnnotationRenderer();
             minimapAnnotationRenderer.setDocument(documentHandle.getDocument());
             minimapAnnotationRenderer.setMinimap(((HasMinimap)this.textEditor).getMinimap());
