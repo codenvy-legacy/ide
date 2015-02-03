@@ -18,7 +18,7 @@ import com.codenvy.ide.api.projecttype.ProjectTypeRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
-import com.codenvy.ide.api.wizard1.AbstractWizardPage;
+import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.util.NameUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

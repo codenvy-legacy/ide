@@ -11,7 +11,7 @@
 package com.codenvy.ide.api.projecttype.wizard;
 
 import com.codenvy.api.project.shared.dto.ImportProject;
-import com.codenvy.ide.api.wizard1.WizardPage;
+import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.google.inject.Provider;
 

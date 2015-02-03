@@ -11,8 +11,8 @@
 package com.codenvy.ide.api.projectimporter;
 
 import com.codenvy.ide.api.mvp.Presenter;
-import com.codenvy.ide.api.wizard.Wizard;
-import com.codenvy.ide.api.wizard.WizardContext;
+import com.codenvy.ide.api.wizardOld.Wizard;
+import com.codenvy.ide.api.wizardOld.WizardContext;
 
 import javax.annotation.Nonnull;
 

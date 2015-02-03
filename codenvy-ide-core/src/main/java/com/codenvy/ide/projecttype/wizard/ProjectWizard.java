@@ -19,7 +19,7 @@ import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
-import com.codenvy.ide.api.wizard1.AbstractWizard;
+import com.codenvy.ide.api.wizard.AbstractWizard;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;

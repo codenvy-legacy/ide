@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.wizard1;
+package com.codenvy.ide.api.wizard;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;

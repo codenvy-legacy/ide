@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.api.wizard.Wizard;
-import com.codenvy.ide.api.wizard.WizardDialog;
-import com.codenvy.ide.api.wizard.WizardPage;
+import com.codenvy.ide.api.wizardOld.Wizard;
+import com.codenvy.ide.api.wizardOld.WizardDialog;
+import com.codenvy.ide.api.wizardOld.WizardPage;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
