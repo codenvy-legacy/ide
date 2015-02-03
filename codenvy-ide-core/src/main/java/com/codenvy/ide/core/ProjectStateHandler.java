@@ -269,6 +269,8 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         projectServiceClient.delete(project.getPath(), new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
+                Document.get().setTitle(constant.codenvyTabTitle());
+                rewriteBrowserHistory(null);
                 eventBus.fireEvent(new RefreshProjectTreeEvent());
             }
 
