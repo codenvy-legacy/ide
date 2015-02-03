@@ -8,14 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.jseditor.client.texteditor;
+package com.codenvy.ide.jseditor.client.gutter;
 
 import elemental.dom.Element;
 
 /**
  * Interface for components that expose a gutter.
  */
-public interface HasGutter {
+public interface Gutter {
     /**
      * Adds a gutter item.
      *
