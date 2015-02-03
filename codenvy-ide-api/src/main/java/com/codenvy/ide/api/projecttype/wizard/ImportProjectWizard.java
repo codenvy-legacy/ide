@@ -12,8 +12,8 @@ package com.codenvy.ide.api.projecttype.wizard;
 
 import com.codenvy.api.project.shared.dto.ProjectImporterDescriptor;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.wizard.DefaultWizard;
-import com.codenvy.ide.api.wizard.WizardContext;
+import com.codenvy.ide.api.wizardOld.DefaultWizard;
+import com.codenvy.ide.api.wizardOld.WizardContext;
 
 /**
  * Wizard for importing projects.

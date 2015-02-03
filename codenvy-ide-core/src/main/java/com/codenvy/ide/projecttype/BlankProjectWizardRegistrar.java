@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype;
 
-import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
-import com.codenvy.ide.api.wizard1.WizardPage;
+import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.google.inject.Provider;
@@ -28,7 +28,7 @@ import static com.codenvy.api.project.shared.Constants.BLANK_ID;
  * @author Artem Zatsarynnyy
  */
 public class BlankProjectWizardRegistrar implements ProjectWizardRegistrar {
-    private final Array<Provider<? extends WizardPage<NewProject>>> wizardPages;
+    private final Array<Provider<? extends WizardPage<ImportProject>>> wizardPages;
 
     public BlankProjectWizardRegistrar() {
         wizardPages = Collections.createArray();
@@ -45,7 +45,7 @@ public class BlankProjectWizardRegistrar implements ProjectWizardRegistrar {
     }
 
     @Nonnull
-    public Array<Provider<? extends WizardPage<NewProject>>> getWizardPages() {
+    public Array<Provider<? extends WizardPage<ImportProject>>> getWizardPages() {
         return wizardPages;
     }
 }

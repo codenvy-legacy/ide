@@ -10,11 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard;
 
-import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 
 import javax.annotation.Nonnull;
 
 /** @author Artem Zatsarynnyy */
 public interface ProjectWizardFactory {
-    ProjectWizard newWizard(@Nonnull NewProject data, boolean isCreatingNewProject);
+    ProjectWizard newWizard(@Nonnull ImportProject dataObject, @Nonnull ProjectWizardMode mode, int totalMemory);
 }

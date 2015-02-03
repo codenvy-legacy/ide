@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.wizard1;
+package com.codenvy.ide.api.wizard;
 
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * Abstract base implementation of a {@link Wizard}.
  *
+ * @author Andrey Plotnikov
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractWizard<T> implements Wizard<T> {
@@ -112,17 +113,19 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         }
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToFirst() {
-        clear();
+        resetNavigationState();
         return navigateToNext();
     }
 
-    /** Clear wizard's navigation state. */
-    private void clear() {
+    /** Reset wizard's navigation state. */
+    private void resetNavigationState() {
         currentPageIndex = -1;
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToNext() {
         return getNextPage();
@@ -140,6 +143,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         return null;
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToPrevious() {
         while (--currentPageIndex >= 0) {

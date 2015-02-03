@@ -20,7 +20,6 @@ import com.codenvy.ide.ui.Styles;
 import com.codenvy.ide.ui.list.CategoriesList;
 import com.codenvy.ide.ui.list.Category;
 import com.codenvy.ide.ui.list.CategoryRenderer;
-import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -56,21 +55,21 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
     private final DockLayoutPanel rootElement;
-    private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> projectTemplateDelegate =
+    private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> templateCategoryEventDelegate    =
             new Category.CategoryEventDelegate<ProjectTemplateDescriptor>() {
                 @Override
                 public void onListItemClicked(Element listItemBase, ProjectTemplateDescriptor itemData) {
                     selectNextWizardType(itemData);
                 }
             };
-    private final Category.CategoryEventDelegate<ProjectTypeDefinition>     projectTypeDelegate     =
+    private final Category.CategoryEventDelegate<ProjectTypeDefinition>     projectTypeCategoryEventDelegate =
             new Category.CategoryEventDelegate<ProjectTypeDefinition>() {
                 @Override
                 public void onListItemClicked(Element listItemBase, ProjectTypeDefinition itemData) {
                     selectNextWizardType(itemData);
                 }
             };
-    private final CategoryRenderer<ProjectTypeDefinition>                   projectTypeRenderer     =
+    private final CategoryRenderer<ProjectTypeDefinition>                   projectTypeCategoryRenderer      =
             new CategoryRenderer<ProjectTypeDefinition>() {
                 @Override
                 public void renderElement(Element element, ProjectTypeDefinition data) {
@@ -82,7 +81,7 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
                     return renderCategoryWithIcon(category.getTitle());
                 }
             };
-    private final CategoryRenderer<ProjectTemplateDescriptor>               projectTemplateRenderer =
+    private final CategoryRenderer<ProjectTemplateDescriptor>               templateCategoryRenderer         =
             new CategoryRenderer<ProjectTemplateDescriptor>() {
                 @Override
                 public void renderElement(Element element, ProjectTemplateDescriptor data) {
@@ -118,10 +117,10 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     RadioButton projectPublic;
 
     private ActionDelegate                              delegate;
-    private Map<String, Set<ProjectTypeDefinition>>     categories;
-    private Map<String, Set<ProjectTemplateDescriptor>> samples;
+    private Map<String, Set<ProjectTypeDefinition>>     typesByCategory;
+    private Map<String, Set<ProjectTemplateDescriptor>> templatesByCategory;
     private Resources                                   resources;
-    private CategoriesList                              list;
+    private CategoriesList                              categoriesList;
     private List<ProjectTypeDefinition>                 availableProjectTypes;
 
     @Inject
@@ -289,7 +288,7 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     }
 
     @Override
-    public void focusOnName() {
+    public void focusName() {
         new Timer() {
             @Override
             public void run() {
@@ -316,8 +315,8 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     @Override
     public void selectProjectType(final String projectTypeId) {
         ProjectTypeDefinition typeDescriptor = null;
-        for (String category : categories.keySet()) {
-            for (ProjectTypeDefinition descriptor : categories.get(category)) {
+        for (String category : typesByCategory.keySet()) {
+            for (ProjectTypeDefinition descriptor : typesByCategory.get(category)) {
                 if (descriptor.getId().equals(projectTypeId)) {
                     typeDescriptor = descriptor;
                     break;
@@ -330,7 +329,7 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
         if (typeDescriptor != null) {
             for (ProjectTypeDefinition existingProjectTypeDescriptor : availableProjectTypes) {
                 if (existingProjectTypeDescriptor.getId().equals(typeDescriptor.getId())) {
-                    list.selectElement(typeDescriptor);
+                    categoriesList.selectElement(typeDescriptor);
                     selectNextWizardType(typeDescriptor);
                 }
             }
@@ -339,40 +338,49 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     }
 
     @Override
-    public void setAvailableProjectTypeDescriptors(List<ProjectTypeDefinition> availableProjectTypes) {
+    public void setProjectTypes(List<ProjectTypeDefinition> availableProjectTypes) {
         this.availableProjectTypes = availableProjectTypes;
     }
 
     @Override
-    public void setProjectTypeCategories(Map<String, Set<ProjectTypeDefinition>> categories,
-                                         Map<String, Set<ProjectTemplateDescriptor>> samples) {
-        this.categories = categories;
-        this.samples = samples;
+    public void setCategories(Map<String, Set<ProjectTypeDefinition>> typesByCategory,
+                              Map<String, Set<ProjectTemplateDescriptor>> templatesByCategory) {
+        this.typesByCategory = typesByCategory;
+        this.templatesByCategory = templatesByCategory;
+    }
 
-        List<Category<?>> categoriesList = new ArrayList<>();
-        for (String s : categories.keySet()) {
-            Category<ProjectTypeDefinition> category = new Category<>(s, projectTypeRenderer, categories.get(s), projectTypeDelegate);
-            categoriesList.add(category);
+    @Override
+    public void updateCategories(boolean includeTemplates) {
+        List<Category<?>> categories = new ArrayList<>();
+        for (String typeCategory : typesByCategory.keySet()) {
+            categories.add(new Category<>(typeCategory,
+                                              projectTypeCategoryRenderer,
+                                              typesByCategory.get(typeCategory),
+                                              projectTypeCategoryEventDelegate));
         }
 
-        for (String s : samples.keySet()) {
-            List<ProjectTemplateDescriptor> projectTemplateDescriptors = new ArrayList<>();
-            projectTemplateDescriptors.addAll(samples.get(s));
-            Collections.sort(projectTemplateDescriptors, new ProjectTemplateDescriptorComparator());
-            Category<ProjectTemplateDescriptor> category = new Category<>(s, projectTemplateRenderer, projectTemplateDescriptors,
-                                                                          projectTemplateDelegate);
-            categoriesList.add(category);
+        if (includeTemplates) {
+            for (String templateCategory : templatesByCategory.keySet()) {
+                List<ProjectTemplateDescriptor> templateDescriptors = new ArrayList<>();
+                templateDescriptors.addAll(templatesByCategory.get(templateCategory));
+                Collections.sort(templateDescriptors, new ProjectTemplateDescriptorComparator());
+                categories.add(new Category<>(templateCategory,
+                                                  templateCategoryRenderer,
+                                                  templateDescriptors,
+                                                  templateCategoryEventDelegate));
+            }
         }
-        list.render(categoriesList);
+
+        categoriesList.render(categories);
     }
 
     @Override
     public void reset() {
         resetName();
         categoriesPanel.clear();
-        list = new CategoriesList(resources);
-        categoriesPanel.add(list);
-        com.google.gwt.dom.client.Style style = list.getElement().getStyle();
+        categoriesList = new CategoriesList(resources);
+        categoriesPanel.add(categoriesList);
+        com.google.gwt.dom.client.Style style = categoriesList.getElement().getStyle();
         style.setWidth(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setHeight(100, com.google.gwt.dom.client.Style.Unit.PCT);
         style.setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);

@@ -11,9 +11,9 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.notification.Notification;
-import com.codenvy.ide.api.wizard.DefaultWizard;
-import com.codenvy.ide.api.wizard.Wizard;
-import com.codenvy.ide.api.wizard.WizardPage;
+import com.codenvy.ide.api.wizardOld.DefaultWizard;
+import com.codenvy.ide.api.wizardOld.Wizard;
+import com.codenvy.ide.api.wizardOld.WizardPage;
 import com.google.inject.Provider;
 
 import org.junit.Assert;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link com.codenvy.ide.api.wizard.DefaultWizard} functionality.
+ * Testing {@link com.codenvy.ide.api.wizardOld.DefaultWizard} functionality.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */

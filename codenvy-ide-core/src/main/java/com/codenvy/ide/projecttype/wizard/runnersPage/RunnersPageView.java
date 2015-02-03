@@ -22,35 +22,19 @@ import javax.annotation.Nullable;
  */
 @ImplementedBy(RunnersPageViewImpl.class)
 public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
-//    void showRunners(Collection<RunnerDescriptor> runnerDescriptors);
-//
-//    void selectRunner(String runnerName);
-
-//    /**
-//     * Set selected environment.
-//     *
-//     * @param environmentName
-//     *         runner environment
-//     */
-//    void setSelectedEnvironment(String environmentName);
-
     /** Get recommended memory size for runner. */
     int getRecommendedMemorySize();
 
     /** Set  recommended memory size for runner. */
     void setRecommendedMemorySize(int recommendedRam);
 
-    void showRunnerDescriptions(String description);
+    void showRunnerDescription(String description);
 
     void addRunner(RunnerEnvironmentTree environmentTree);
 
     void selectRunnerEnvironment(String environmentId);
 
     public interface ActionDelegate {
-//        void runnerSelected(RunnerDescriptor runner);
-//
-//        void runnerEnvironmentSelected(String environmentId);
-
         void recommendedMemoryChanged();
 
         void environmentSelected(@Nullable RunnerEnvironment environment);

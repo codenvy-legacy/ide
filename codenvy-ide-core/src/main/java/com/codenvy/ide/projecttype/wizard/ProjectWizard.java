@@ -14,161 +14,201 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
+import com.codenvy.api.project.shared.dto.RunnerConfiguration;
+import com.codenvy.api.project.shared.dto.RunnersDescriptor;
+import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
-import com.codenvy.ide.api.wizard1.AbstractWizard;
-import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.json.JsonHelper;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
+import com.codenvy.ide.api.wizard.AbstractWizard;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 
+import javax.annotation.Nonnull;
+
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.CURRENT_NAME_KEY;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
+
 /**
  * Project wizard implementation that used for creating new project or updating existing one.
  *
  * @author Artem Zatsarynnyy
  */
-public class ProjectWizard extends AbstractWizard<NewProject> {
+public class ProjectWizard extends AbstractWizard<ImportProject> {
 
-    private final boolean                isCreatingNewProject;
-    private final ProjectServiceClient   projectServiceClient;
-    private final DtoUnmarshallerFactory dtoUnmarshallerFactory;
-    private final DialogFactory          dialogFactory;
-    private final DtoFactory             dtoFactory;
-    private final EventBus               eventBus;
+    private final ProjectWizardMode        mode;
+    private final int                      totalMemory;
+    private final CoreLocalizationConstant localizationConstants;
+    private final ProjectServiceClient     projectServiceClient;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final DialogFactory            dialogFactory;
+    private final EventBus                 eventBus;
 
     /**
      * Creates project wizard.
      *
      * @param dataObject
-     *         data-object
-     * @param isCreatingNewProject
-     *         {@code true} if wizard will be used for creating new project, {@code false} - for editing existed one
+     *         wizard's data-object
+     * @param mode
+     *         mode of project wizard
+     * @param totalMemory
+     *         available memory for runner
+     * @param localizationConstants
+     *         localization constants
      * @param projectServiceClient
      *         GWT-client for Project service
      * @param dtoUnmarshallerFactory
-     *         {@link DtoUnmarshallerFactory} instance
+     *         {@link com.codenvy.ide.rest.DtoUnmarshallerFactory} instance
      * @param dialogFactory
-     *         {@link DialogFactory} instance
-     * @param dtoFactory
-     *         {@link DtoFactory} instance
+     *         {@link com.codenvy.ide.ui.dialogs.DialogFactory} instance
      * @param eventBus
-     *         {@link EventBus} instance
+     *         {@link com.google.web.bindery.event.shared.EventBus} instance
      */
     @Inject
-    public ProjectWizard(@Assisted NewProject dataObject,
-                         @Assisted boolean isCreatingNewProject,
+    public ProjectWizard(@Assisted ImportProject dataObject,
+                         @Assisted ProjectWizardMode mode,
+                         @Assisted int totalMemory,
+                         CoreLocalizationConstant localizationConstants,
                          ProjectServiceClient projectServiceClient,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          DialogFactory dialogFactory,
-                         DtoFactory dtoFactory,
                          EventBus eventBus) {
         super(dataObject);
-        this.isCreatingNewProject = isCreatingNewProject;
+        this.mode = mode;
+        this.totalMemory = totalMemory;
+        this.localizationConstants = localizationConstants;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
-        this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
 
-        // TODO: add constants for wizard context
-        context.put("isCreatingNewProject", String.valueOf(isCreatingNewProject));
-        if (!isCreatingNewProject) {
-            context.put("currentProjectName", dataObject.getName());
+        context.put(WIZARD_MODE_KEY, mode.toString());
+        if (mode == UPDATE) {
+            context.put(CURRENT_NAME_KEY, dataObject.getProject().getName());
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public void complete() {
-        if (isCreatingNewProject) {
-            createProject();
-        } else {
-            boolean importFromTemplate = false; // TODO
-            if (importFromTemplate) {
-                importProject();
+    public void complete(@Nonnull final CompleteCallback callback) {
+        if (mode == CREATE) {
+            createProject(callback);
+        } else if (mode == UPDATE) {
+            updateProject(callback);
+        } else if (mode == IMPORT) {
+            final int requiredMemory = getRequiredMemory();
+            if (requiredMemory > totalMemory) {
+                final ConfirmCallback confirmCallback = new ConfirmCallback() {
+                    @Override
+                    public void accepted() {
+                        importProject(callback);
+                    }
+                };
+                dialogFactory.createMessageDialog(localizationConstants.createProjectWarningTitle(),
+                                                  localizationConstants.messagesWorkspaceRamLessRequiredRam(requiredMemory, totalMemory),
+                                                  confirmCallback).show();
             } else {
-                renameAndUpdateProject();
+                importProject(callback);
             }
         }
     }
 
-    private void createProject() {
+    private int getRequiredMemory() {
+        RunnersDescriptor runners = dataObject.getProject().getRunners();
+        if (runners != null) {
+            RunnerConfiguration configuration = runners.getConfigs().get(runners.getDefault());
+            if (configuration != null) {
+                return configuration.getRam();
+            }
+        }
+        return 0;
+    }
+
+    private void createProject(final CompleteCallback callback) {
+        final NewProject project = dataObject.getProject();
         final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.createProject(dataObject.getName(), dataObject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+        projectServiceClient.createProject(project.getName(), project, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
                 eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                callback.onCompleted();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                callback.onFailure(exception);
             }
         });
     }
 
-    // TODO: consider to use ImportProject DTO as data-object
-    private void importProject() {
-        final ImportProject importProject = dtoFactory.createDto(ImportProject.class)
-                                                      .withProject(dataObject);
-
+    private void importProject(final CompleteCallback callback) {
+        final NewProject project = dataObject.getProject();
         final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
         projectServiceClient.importProject(
-                dataObject.getName(), true, importProject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                project.getName(), true, dataObject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
                     @Override
                     protected void onSuccess(ProjectDescriptor result) {
+                        eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                        callback.onCompleted();
                     }
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                        callback.onFailure(exception);
                     }
                 });
     }
 
-    private void renameAndUpdateProject() {
-        // TODO: sub-project also may be updated (not only root-project) so should be project's path instead of name
-        final String path = dataObject.getName();
-
-        final String currentName = context.get("currentProjectName");
-        if (currentName.equals(dataObject.getName())) {
-            updateProject(path);
+    private void updateProject(final CompleteCallback callback) {
+        final NewProject project = dataObject.getProject();
+        final String currentName = context.get(CURRENT_NAME_KEY);
+        if (currentName.equals(project.getName())) {
+            doUpdateProject(callback);
         } else {
-            renameProject(path, dataObject.getName(), new AsyncCallback<Void>() {
+            renameProject(new AsyncCallback<Void>() {
                 @Override
                 public void onSuccess(Void result) {
-                    updateProject(path);
+                    doUpdateProject(callback);
                 }
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(caught.getMessage()), null).show();
+                    callback.onFailure(caught);
                 }
             });
         }
     }
 
-    private void updateProject(String path) {
+    private void doUpdateProject(final CompleteCallback callback) {
+        final NewProject project = dataObject.getProject();
         final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
-        projectServiceClient.updateProject(path, dataObject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+        projectServiceClient.updateProject(project.getName(), project, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
+                // just re-open project if it's already opened
+                eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                callback.onCompleted();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
-                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                callback.onFailure(exception);
             }
         });
     }
 
-    private void renameProject(String path, String newName, final AsyncCallback<Void> callback) {
-        projectServiceClient.rename(path, newName, null, new AsyncRequestCallback<Void>() {
+    private void renameProject(final AsyncCallback<Void> callback) {
+        final String path = context.get(CURRENT_NAME_KEY);
+        projectServiceClient.rename(path, dataObject.getProject().getName(), null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {
                 callback.onSuccess(result);

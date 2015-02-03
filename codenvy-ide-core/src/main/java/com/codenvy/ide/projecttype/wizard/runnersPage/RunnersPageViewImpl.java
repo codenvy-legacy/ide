@@ -146,7 +146,7 @@ public class RunnersPageViewImpl implements RunnersPageView {
     }
 
     @Override
-    public void showRunnerDescriptions(String description) {
+    public void showRunnerDescription(String description) {
         runnerDescription.setText(description);
     }
 

@@ -10,18 +10,16 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard.categoriesPage;
 
-import com.codenvy.api.project.shared.dto.BuildersDescriptor;
-import com.codenvy.api.project.shared.dto.NewProject;
+import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
-import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.api.projecttype.ProjectTemplateRegistry;
 import com.codenvy.ide.api.projecttype.ProjectTypeRegistry;
 import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
-import com.codenvy.ide.api.wizard1.AbstractWizardPage;
+import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.util.NameUtils;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -32,86 +30,106 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
+
 /**
+ * Main page for project wizard.
+ *
  * @author Evgen Vidolob
+ * @author Artem Zatsarynnyy
  */
-public class CategoriesPagePresenter extends AbstractWizardPage<NewProject> implements CategoriesPageView.ActionDelegate {
+public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> implements CategoriesPageView.ActionDelegate {
+    private static final String PUBLIC_VISIBILITY  = "public";
+    private static final String PRIVATE_VISIBILITY = "private";
     private final CategoriesPageView               view;
     private final ProjectTypeRegistry              projectTypeRegistry;
     private final ProjectTemplateRegistry          projectTemplateRegistry;
     private final ProjectWizardRegistry            wizardRegistry;
-    private final DtoFactory                       dtoFactory;
     private final PreSelectedProjectTypeManager    preSelectedProjectTypeManager;
     private       ProjectTypeDefinition            selectedProjectType;
     private       ProjectTemplateDescriptor        selectedProjectTemplate;
     private       ProjectTypeSelectionListener     projectTypeSelectionListener;
     private       ProjectTemplateSelectionListener projectTemplateSelectionListener;
+    private       boolean                          initialized;
 
     @Inject
     public CategoriesPagePresenter(CategoriesPageView view,
                                    ProjectTypeRegistry projectTypeRegistry,
                                    ProjectTemplateRegistry projectTemplateRegistry,
                                    ProjectWizardRegistry wizardRegistry,
-                                   DtoFactory dtoFactory,
                                    PreSelectedProjectTypeManager preSelectedProjectTypeManager) {
         super();
         this.view = view;
         this.projectTypeRegistry = projectTypeRegistry;
         this.projectTemplateRegistry = projectTemplateRegistry;
         this.wizardRegistry = wizardRegistry;
-        this.dtoFactory = dtoFactory;
         this.preSelectedProjectTypeManager = preSelectedProjectTypeManager;
 
         view.setDelegate(this);
-//        loadProjectTypesAndTemplates();
+        loadProjectTypesAndTemplates();
     }
 
     @Override
-    public void init(NewProject dataObject) {
+    public void init(ImportProject dataObject) {
         super.init(dataObject);
-
-        // TODO: add constants for wizard context
-        final boolean isCreatingNewProject = Boolean.parseBoolean(context.get("isCreatingNewProject"));
-        if (isCreatingNewProject) {
-            // set default values
-            dataObject.setVisibility("public");
+        // this page may be reused so need to init it only once
+        if (initialized) {
+            return;
         }
+        initialized = true;
+
+        final ProjectWizardMode wizardMode = ProjectWizardMode.parse(context.get(WIZARD_MODE_KEY));
+        if (CREATE == wizardMode) {
+            // set default visibility for new projects
+            dataObject.getProject().setVisibility(PUBLIC_VISIBILITY);
+
+            // set pre-selected project type
+            final String preSelectedProjectTypeId = preSelectedProjectTypeManager.getPreSelectedProjectTypeId();
+            if (wizardRegistry.getWizardRegistrar(preSelectedProjectTypeId) != null) {
+                dataObject.getProject().setType(preSelectedProjectTypeId);
+            }
+        }
+
+        view.updateCategories(UPDATE != wizardMode);
     }
 
     @Override
     public boolean isCompleted() {
-        return (selectedProjectType != null || selectedProjectTemplate != null)
-               && dataObject.getName() != null && NameUtils.checkProjectName(dataObject.getName());
+        final String projectName = dataObject.getProject().getName();
+        return projectName != null && NameUtils.checkProjectName(projectName) &&
+               (selectedProjectType != null || selectedProjectTemplate != null);
     }
 
     @Override
     public void go(final AcceptsOneWidget container) {
         container.setWidget(view);
-        loadProjectTypesAndTemplates();
         updateView();
+        view.focusName();
+    }
+
+    /** Updates view from data-object. */
+    private void updateView() {
+        if (dataObject.getProject().getType() != null
+            && (selectedProjectType == null || !selectedProjectType.getId().equals(dataObject.getProject().getType()))) {
+            view.selectProjectType(dataObject.getProject().getType());
+        }
+        view.setName(dataObject.getProject().getName());
+        view.setDescription(dataObject.getProject().getDescription());
+        view.setVisibility(dataObject.getProject().getVisibility().equals(PUBLIC_VISIBILITY));
     }
 
     @Override
     public void projectTypeSelected(ProjectTypeDefinition typeDescriptor) {
         selectedProjectType = typeDescriptor;
         selectedProjectTemplate = null;
-
-        dataObject.setType(typeDescriptor.getId());
-
-        if (dataObject.getBuilders() == null) {
-            String defaultBuilderForType = typeDescriptor.getDefaultBuilder();
-            dataObject.setBuilders(dtoFactory.createDto(BuildersDescriptor.class).withDefault(defaultBuilderForType));
-        }
-
-        if (dataObject.getRunners() == null) {
-            String defaultRunnerForType = typeDescriptor.getDefaultRunner();
-            dataObject.setRunners(dtoFactory.createDto(RunnersDescriptor.class).withDefault(defaultRunnerForType));
-        }
+        view.focusName();
 
         if (projectTypeSelectionListener != null) {
             projectTypeSelectionListener.onProjectTypeSelected(typeDescriptor);
         }
-
         updateDelegate.updateControls();
     }
 
@@ -119,24 +137,17 @@ public class CategoriesPagePresenter extends AbstractWizardPage<NewProject> impl
     public void projectTemplateSelected(ProjectTemplateDescriptor templateDescriptor) {
         selectedProjectType = null;
         selectedProjectTemplate = templateDescriptor;
-
-//        dataObject.setType(templateDescriptor.getProjectType());
-//        dataObject.setBuilders(dtoFactory.createDto(BuildersDescriptor.class)
-//                                         .withDefault(templateDescriptor.getBuilders().getDefault()));
-//        dataObject.setRunners(dtoFactory.createDto(RunnersDescriptor.class)
-//                                        .withDefault(templateDescriptor.getRunners().getDefault())
-//                                        .withConfigs(templateDescriptor.getRunners().getConfigs()));
+        view.focusName();
 
         if (projectTemplateSelectionListener != null) {
             projectTemplateSelectionListener.onProjectTemplateSelected(templateDescriptor);
         }
-
         updateDelegate.updateControls();
     }
 
     @Override
     public void projectNameChanged(String name) {
-        dataObject.setName(name);
+        dataObject.getProject().setName(name);
         updateDelegate.updateControls();
 
         if (NameUtils.checkProjectName(name)) {
@@ -148,13 +159,13 @@ public class CategoriesPagePresenter extends AbstractWizardPage<NewProject> impl
 
     @Override
     public void projectDescriptionChanged(String projectDescription) {
-        dataObject.setDescription(projectDescription);
+        dataObject.getProject().setDescription(projectDescription);
         updateDelegate.updateControls();
     }
 
     @Override
     public void projectVisibilityChanged(boolean visible) {
-        dataObject.setVisibility(visible ? "public" : "private");
+        dataObject.getProject().setVisibility(visible ? PUBLIC_VISIBILITY : PRIVATE_VISIBILITY);
         updateDelegate.updateControls();
     }
 
@@ -166,69 +177,40 @@ public class CategoriesPagePresenter extends AbstractWizardPage<NewProject> impl
         projectTemplateSelectionListener = listener;
     }
 
-    private void updateView() {
-        if (dataObject.getType() != null && (selectedProjectType == null || !selectedProjectType.getId().equals(dataObject.getType()))) {
-            view.selectProjectType(dataObject.getType());
-        }
-        view.setName(dataObject.getName());
-        view.setDescription(dataObject.getDescription());
-        view.setVisibility(dataObject.getVisibility().equals("public"));
-    }
-
     private void loadProjectTypesAndTemplates() {
-        // TODO: add constants for wizard context
-        final boolean isCreatingNewProject = Boolean.parseBoolean(context.get("isCreatingNewProject"));
-
-        ProjectTypeDefinition defaultProjectTypeDescriptor = null;
-
         List<ProjectTypeDefinition> projectTypes = projectTypeRegistry.getProjectTypes();
-        Map<String, Set<ProjectTypeDefinition>> descriptorsByCategory = new HashMap<>();
-        Map<String, Set<ProjectTemplateDescriptor>> samples = new HashMap<>();
+        Map<String, Set<ProjectTypeDefinition>> typesByCategory = new HashMap<>();
+        Map<String, Set<ProjectTemplateDescriptor>> templatesByCategory = new HashMap<>();
         for (ProjectTypeDefinition type : projectTypes) {
             if (wizardRegistry.getWizardRegistrar(type.getId()) != null) {
-                String category = wizardRegistry.getWizardCategory(type.getId());
-                if (!descriptorsByCategory.containsKey(category)) {
-                    descriptorsByCategory.put(category, new HashSet<ProjectTypeDefinition>());
+                final String category = wizardRegistry.getWizardCategory(type.getId());
+                if (!typesByCategory.containsKey(category)) {
+                    typesByCategory.put(category, new HashSet<ProjectTypeDefinition>());
                 }
-                descriptorsByCategory.get(category).add(type);
-
-                // if exist, save the default project type descriptor
-                if (preSelectedProjectTypeManager.getPreSelectedProjectTypeId().equals(type.getId())) {
-                    defaultProjectTypeDescriptor = type;
-                }
+                typesByCategory.get(category).add(type);
             }
 
-            if (!isCreatingNewProject) {
-                Array<ProjectTemplateDescriptor> templateDescriptors = projectTemplateRegistry.getTemplateDescriptors(type.getId());
-                for (ProjectTemplateDescriptor templateDescriptor : templateDescriptors.asIterable()) {
-                    String category = templateDescriptor.getCategory() == null
-                                      ? com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY
-                                      : templateDescriptor.getCategory();
-                    if (!samples.containsKey(category)) {
-                        samples.put(category, new HashSet<ProjectTemplateDescriptor>());
-                    }
-                    samples.get(category).add(templateDescriptor);
+            Array<ProjectTemplateDescriptor> templateDescriptors = projectTemplateRegistry.getTemplateDescriptors(type.getId());
+            for (ProjectTemplateDescriptor template : templateDescriptors.asIterable()) {
+                final String category = template.getCategory() == null ? DEFAULT_TEMPLATE_CATEGORY : template.getCategory();
+                if (!templatesByCategory.containsKey(category)) {
+                    templatesByCategory.put(category, new HashSet<ProjectTemplateDescriptor>());
                 }
+                templatesByCategory.get(category).add(template);
             }
         }
 
-        view.setAvailableProjectTypeDescriptors(projectTypes);
-        view.setProjectTypeCategories(descriptorsByCategory, samples);
-
-        if (isCreatingNewProject && defaultProjectTypeDescriptor != null) {
-            // if no project type, pre select maven
-            view.selectProjectType(defaultProjectTypeDescriptor.getId());
-            view.focusOnName();
-        }
+        view.setProjectTypes(projectTypes);
+        view.setCategories(typesByCategory, templatesByCategory);
     }
 
     public interface ProjectTypeSelectionListener {
-        /** Called on project type selection. */
+        /** Called when project type selected. */
         void onProjectTypeSelected(ProjectTypeDefinition projectTypeDefinition);
     }
 
     public interface ProjectTemplateSelectionListener {
-        /** Called on project template selection. */
+        /** Called when project template selected. */
         void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplateDescriptor);
     }
 }

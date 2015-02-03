@@ -14,7 +14,6 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -41,11 +40,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     private static ProjectWizardViewImplUiBinder ourUiBinder = GWT.create(ProjectWizardViewImplUiBinder.class);
 
     private final CoreLocalizationConstant coreLocalizationConstant;
-    private Map<Presenter, Widget> pageCache                        = new HashMap<>();
-    private HandlerRegistration    nativePreviewHandlerRegistration = null;
-    private boolean        isCreatingNewProject;
-    private ActionDelegate delegate;
-
     @UiField
     SimplePanel wizardPanel;
     @UiField
@@ -68,6 +62,11 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     Button      previousStepButton;
     @UiField
     Button      saveButton;
+
+    private Map<Presenter, Widget> pageCache                        = new HashMap<>();
+    private HandlerRegistration    nativePreviewHandlerRegistration = null;
+    private boolean        isCreatingNewProject;
+    private ActionDelegate delegate;
 
     @Inject
     public ProjectWizardViewImpl(com.codenvy.ide.Resources resources, CoreLocalizationConstant coreLocalizationConstant) {
@@ -103,8 +102,9 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         delegate.onSaveClicked();
     }
 
-    public void setLoaderVisible(boolean enabled) {
-        if (enabled) {
+    @Override
+    public void setLoaderVisibility(boolean visible) {
+        if (visible) {
             saveButton.setHTML("<i></i>");
             saveButton.setEnabled(false);
         } else {
@@ -118,15 +118,21 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setRAMRequired(String amountOfRAM) {
-        if (amountOfRAM == null) return;
-        requiredRAM.setText(amountOfRAM);
+    public void setRAMRequired(int amountOfRAM) {
+        if (amountOfRAM > 0) {
+            requiredRAM.setText(amountOfRAM + "MB");
+        } else {
+            requiredRAM.setText("undefined");
+        }
     }
 
     @Override
-    public void setRAMAvailable(String amountOfRAM) {
-        if (amountOfRAM == null) return;
-        availableRAM.setText(amountOfRAM);
+    public void setRAMAvailable(int amountOfRAM) {
+        if (amountOfRAM > 0) {
+            availableRAM.setText(amountOfRAM + "MB");
+        } else {
+            availableRAM.setText("undefined");
+        }
     }
 
     @Override
@@ -150,15 +156,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
             if (!runnerEnvConfText.isVisible()) runnerEnvConfText.setVisible(true);
             if (!runnerEnvConf.isVisible()) runnerEnvConf.setVisible(true);
             runnerEnvConf.setText(text);
-        }
-    }
-
-    @Override
-    public void setInfoVisible(boolean enabled) {
-        if (enabled) {
-            infoRAMPanel.getElement().getStyle().setVisibility(Visibility.VISIBLE);
-        } else {
-            infoRAMPanel.getElement().getStyle().setVisibility(Visibility.HIDDEN);
         }
     }
 
@@ -213,6 +210,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
         hide();
         pageCache.clear();
+        setLoaderVisibility(false);
     }
 
     @Override

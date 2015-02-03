@@ -19,7 +19,7 @@ import com.codenvy.ide.api.projectimporter.ImporterPagePresenter;
 import com.codenvy.ide.api.projectimporter.ProjectImporterRegistry;
 import com.codenvy.ide.api.projecttype.wizard.ImportProjectWizard;
 import com.codenvy.ide.projecttype.wizard.ProjectWizardView;
-import com.codenvy.ide.api.wizard.AbstractWizardPage;
+import com.codenvy.ide.api.wizardOld.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;

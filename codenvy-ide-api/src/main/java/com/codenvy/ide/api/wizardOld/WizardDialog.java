@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.wizard;
+package com.codenvy.ide.api.wizardOld;
 
 /**
  * Wizard dialog manages wizard pages. It's responsible for communication user with the wizard page. In typical usage, the client
