@@ -8,13 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.texteditor;
-
+package com.codenvy.ide.jseditor.client.minimap;
 
 /**
- * The interface of a document content formatter. The formatter formats ranges within documents.
+ * Interface for objects that own a minimap.
  */
-public interface ContentFormatter {
+public interface HasMinimap {
 
-    // new interface must be defined
+    /**
+     * Returns the minimap instance.
+     * @return
+     */
+    Minimap getMinimap();
 }

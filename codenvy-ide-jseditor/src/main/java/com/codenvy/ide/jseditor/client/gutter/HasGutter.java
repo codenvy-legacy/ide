@@ -8,13 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.texteditor;
-
+package com.codenvy.ide.jseditor.client.gutter;
 
 /**
- * The interface of a document content formatter. The formatter formats ranges within documents.
+ * Interface for components that manage a gutter.
  */
-public interface ContentFormatter {
+public interface HasGutter {
 
-    // new interface must be defined
+    /**
+     * Returns the gutter.
+     * @return the gutter
+     */
+    Gutter getGutter();
 }

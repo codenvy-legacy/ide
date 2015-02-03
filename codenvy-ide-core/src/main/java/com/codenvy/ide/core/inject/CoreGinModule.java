@@ -74,7 +74,6 @@ import com.codenvy.ide.api.projecttype.wizard.PreSelectedProjectTypeManager;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.text.DocumentFactory;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
 import com.codenvy.ide.build.BuildContextImpl;
@@ -131,7 +130,6 @@ import com.codenvy.ide.projecttype.wizard.ProjectWizardFactory;
 import com.codenvy.ide.projecttype.wizard.ProjectWizardRegistryImpl;
 import com.codenvy.ide.rest.AsyncRequestLoader;
 import com.codenvy.ide.selection.SelectionAgentImpl;
-import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesView;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
 import com.codenvy.ide.theme.AppearancePresenter;
@@ -332,7 +330,6 @@ public class CoreGinModule extends AbstractGinModule {
 
     /** Configures binding for Editor API */
     protected void configureEditorAPI() {
-        bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
         bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
         bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);

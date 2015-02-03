@@ -15,8 +15,7 @@ import java.util.IdentityHashMap;
 import com.codenvy.ide.api.text.Position;
 import com.codenvy.ide.api.text.annotation.Annotation;
 import com.codenvy.ide.collections.StringMap;
-import com.codenvy.ide.jseditor.client.document.DocumentHandle;
-import com.codenvy.ide.jseditor.client.document.UseDocumentHandle;
+import com.codenvy.ide.jseditor.client.document.Document;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.jseditor.client.text.TextRange;
 import com.codenvy.ide.jseditor.client.texteditor.HasTextMarkers;
@@ -26,7 +25,7 @@ import com.codenvy.ide.util.loging.Log;
 /**
  * Render the inline marks on the text.
  */
-public class InlineAnnotationRenderer implements AnnotationModelHandler, ClearAnnotationModelHandler, UseDocumentHandle {
+public class InlineAnnotationRenderer implements AnnotationModelHandler, ClearAnnotationModelHandler {
 
     /** The currently show markers. */
     private final IdentityHashMap<Annotation, MarkerRegistration> markers = new IdentityHashMap<>();
@@ -34,8 +33,8 @@ public class InlineAnnotationRenderer implements AnnotationModelHandler, ClearAn
     /** The component that handles markers. */
     private HasTextMarkers hasTextMarkers;
 
-    /** An handle to the document. */
-    private DocumentHandle documentHandle;
+    /** The document. */
+    private Document document;
 
     /**
      * Sets the component that handles markers.
@@ -88,8 +87,8 @@ public class InlineAnnotationRenderer implements AnnotationModelHandler, ClearAn
                 return;
             }
 
-            final TextPosition from = documentHandle.getDocument().getPositionFromIndex(position.getOffset());
-            final TextPosition to = documentHandle.getDocument().getPositionFromIndex(position.getOffset() + position.getLength());
+            final TextPosition from = this.document.getPositionFromIndex(position.getOffset());
+            final TextPosition to = this.document.getPositionFromIndex(position.getOffset() + position.getLength());
 
             final MarkerRegistration registration = this.hasTextMarkers.addMarker(new TextRange(from, to), className);
             if (registration != null) {
@@ -112,15 +111,14 @@ public class InlineAnnotationRenderer implements AnnotationModelHandler, ClearAn
         }
     }
 
-    @Override
-    public void setDocumentHandle(final DocumentHandle handle) {
-        this.documentHandle = handle;
+    /**
+     * Sets the document.
+     * @param document the new value
+     */
+    public void setDocument(final Document document) {
+        this.document = document;
     }
 
-    @Override
-    public DocumentHandle getDocumentHandle() {
-        return this.documentHandle;
-    }
 
     @Override
     public void onClearModel(final ClearAnnotationModelEvent event) {
