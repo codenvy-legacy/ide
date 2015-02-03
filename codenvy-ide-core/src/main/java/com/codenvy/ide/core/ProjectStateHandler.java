@@ -252,6 +252,13 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                     public void onDelete() {
                         deleteProject(project);
                     }
+
+                    @Override
+                    public void onCancel() {
+                        Document.get().setTitle(constant.codenvyTabTitle());
+                        rewriteBrowserHistory(null);
+                        eventBus.fireEvent(new RefreshProjectTreeEvent());
+                    }
                 });
         dialog.show();
     }
