@@ -28,7 +28,9 @@ import javax.annotation.Nonnull;
  */
 public interface ProjectWizardRegistrar {
     /** Key to get project wizard mode from wizard's context. */
-    String WIZARD_MODE_KEY = "ProjectWizardModeKey";
+    String WIZARD_MODE_KEY  = "ProjectWizard:Mode";
+    /** Key to get an existing name of the project that is opened for updating. */
+    String CURRENT_NAME_KEY = "ProjectWizard:CurrentProjectName";
 
     /** Returns ID of the project type that should be registered in project wizard. */
     @Nonnull

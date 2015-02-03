@@ -35,6 +35,7 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.CURRENT_NAME_KEY;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
@@ -44,7 +45,6 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZA
  */
 public class ProjectWizard extends AbstractWizard<ImportProject> {
 
-    private static final String CURRENT_NAME = "currentProjectName";
     private final ProjectWizardMode        mode;
     private final int                      totalMemory;
     private final CoreLocalizationConstant localizationConstants;
@@ -93,7 +93,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
         context.put(WIZARD_MODE_KEY, mode.toString());
         if (mode == UPDATE) {
-            context.put(CURRENT_NAME, dataObject.getProject().getName());
+            context.put(CURRENT_NAME_KEY, dataObject.getProject().getName());
         }
     }
 
@@ -170,7 +170,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
     private void updateProject(final CompleteCallback callback) {
         final NewProject project = dataObject.getProject();
-        final String currentName = context.get(CURRENT_NAME);
+        final String currentName = context.get(CURRENT_NAME_KEY);
         if (currentName.equals(project.getName())) {
             doUpdateProject(callback);
         } else {
@@ -194,7 +194,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
         projectServiceClient.updateProject(project.getName(), project, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
             @Override
             protected void onSuccess(ProjectDescriptor result) {
-                // re-open project
+                // just re-open project if it's already opened
                 eventBus.fireEvent(new OpenProjectEvent(result.getName()));
                 callback.onCompleted();
             }
@@ -207,7 +207,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     }
 
     private void renameProject(final AsyncCallback<Void> callback) {
-        final String path = context.get(CURRENT_NAME);
+        final String path = context.get(CURRENT_NAME_KEY);
         projectServiceClient.rename(path, dataObject.getProject().getName(), null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {

@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * Abstract base implementation of a {@link Wizard}.
  *
+ * @author Andrey Plotnikov
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractWizard<T> implements Wizard<T> {
@@ -112,6 +113,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         }
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToFirst() {
         resetNavigationState();
@@ -123,6 +125,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         currentPageIndex = -1;
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToNext() {
         return getNextPage();
@@ -140,6 +143,7 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         return null;
     }
 
+    @Nullable
     @Override
     public WizardPage<T> navigateToPrevious() {
         while (--currentPageIndex >= 0) {

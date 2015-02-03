@@ -54,6 +54,9 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 /**
  * Presenter for project wizard.
  *
+ * @author Evgen Vidolob
+ * @author Oleksii Orel
+ * @author Sergii Leschenko
  * @author Artem Zatsarynnyy
  */
 @Singleton

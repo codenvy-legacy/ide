@@ -31,16 +31,13 @@ public enum ProjectWizardMode {
     }
 
     public static ProjectWizardMode parse(String mode) {
-        switch (mode) {
-            case "create":
-                return CREATE;
-            case "update":
-                return UPDATE;
-            case "import":
-                return IMPORT;
-            default:
-                throw new IllegalArgumentException("");
+        for (ProjectWizardMode wizardMode : values()) {
+            if (mode.equals(wizardMode.toString())) {
+                return wizardMode;
+            }
         }
+
+        throw new IllegalArgumentException("Unknown value: " + mode);
     }
 
     @Override

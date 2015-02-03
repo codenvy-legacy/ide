@@ -18,6 +18,7 @@ import java.util.Map;
  * <p/>
  * It is completed and can not be skipped by default.
  *
+ * @author Andrey Plotnikov
  * @author Artem Zatsarynnyy
  */
 public abstract class AbstractWizardPage<T> implements WizardPage<T> {
@@ -26,7 +27,7 @@ public abstract class AbstractWizardPage<T> implements WizardPage<T> {
     protected Wizard.UpdateDelegate updateDelegate;
 
     /** Create wizard page. */
-    public AbstractWizardPage() {
+    protected AbstractWizardPage() {
     }
 
     /**
