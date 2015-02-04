@@ -223,6 +223,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = getWizardForProjectType(projectType, prevData);
+        wizard.navigateToFirst();
         final NewProject newProject = wizard.getDataObject().getProject();
 
         // some values should be shared between wizards for different project types
@@ -236,11 +237,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         if (newProject.getRunners() == null) {
             newProject.setRunners(prevData.getProject().getRunners());
         }
-
-        final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-        }
     }
 
     @Override
@@ -250,6 +246,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = importWizard == null ? importWizard = createDefaultWizard(null, IMPORT) : importWizard;
+        wizard.navigateToFirst();
         final ImportProject dataObject = wizard.getDataObject();
         final NewProject newProject = dataObject.getProject();
 
@@ -263,11 +260,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setBuilders(projectTemplate.getBuilders());
         newProject.setRunners(projectTemplate.getRunners());
         dataObject.getSource().setProject(projectTemplate.getSource());
-
-        final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-        }
     }
 
     private int getRequiredMemoryForTemplate(ProjectTemplateDescriptor projectTemplate) {
