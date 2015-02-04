@@ -26,8 +26,8 @@
             flex-flow: column;
             -webkit-flex-flow: column;
 
-            justify-content: flex-start;
-            -webkit-justify-content: flex-start;
+            justify-content: center;
+            -webkit-justify-content: center;
 
             align-items: stretch;
             -webkit-align-items: stretch;
@@ -81,8 +81,6 @@
 
             flex-flow: row;
             -webkit-flex-flow: row;
-            justify-content: flex-start;
-            -webkit-justify-content: flex-start;
 
             align-items: stretch;
             -webkit-align-items: stretch;
@@ -90,15 +88,21 @@
 
         .info-block-end {
             margin-right: 0.5em;
+            justify-content: flex-end;
+            -webkit-justify-content: flex-end;
         }
 
         .info-block-middle {
             margin-right: 0.5em;
+            justify-content: center;
+            -webkit-justify-content: center;
         }
 
         .info-block-start {
             margin-left: 0.5em;
             margin-right: 0.5em;
+            justify-content: flex-start;
+            -webkit-justify-content: flex-start;
         }
 
         .info-label {
@@ -111,15 +115,15 @@
         <div class="{style.topBorder}"/>
         <!-- Actual content -->
         <div class="{style.infoPanel-horizlayout}">
-            <div class="{style.info-block} {style.info-block-start}"  style="width:22em;">
+            <div class="{style.info-block} {style.info-block-start}" style="width:9em;">
                 <span class="{style.infoPanel-item} {style.info-label}">
                     <ui:text from="{constants.infoPaneLineLabel}"/>
                 </span>
-                <g:InlineLabel ui:field="lineNumber" addStyleNames="{style.infoPanel-item}"/>
+                <span ui:field="lineNumber" class="{style.infoPanel-item}" />
                 <span ui:field="charPosLabel" class="{style.infoPanel-item} {style.info-label}">
                     <ui:text from="{constants.infoPanelCharacterLabel}"/>
                 </span>
-                <g:InlineLabel ui:field="charPosition" addStyleNames="{style.infoPanel-item}"/>
+                <span ui:field="charPosition" class="{style.infoPanel-item}" />
             </div>
             <div class="{style.info-block} {style.info-block-middle}">
                 <span class="{style.infoPanel-item} {style.info-label}">

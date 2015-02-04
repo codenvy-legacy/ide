@@ -21,8 +21,8 @@ import com.codenvy.ide.jseditor.client.keymap.KeymapChangeHandler;
 import com.codenvy.ide.jseditor.client.text.TextPosition;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -38,8 +38,15 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 public class InfoPanel extends Composite implements KeymapChangeHandler {
 
+    private static final char NO_BREAK_SPACE = '\u00A0';
+
     /** The UI binder instance. */
     private static final InfoPanelUiBinder UIBINDER = GWT.create(InfoPanelUiBinder.class);
+
+    /**
+     * Inital budget of characters for line/char info display.
+     */
+    private static final int CHAR_INITIAL_BUDGET = 6;
 
     private final EditorTypeRegistry editorTypeRegistry;
 
@@ -50,9 +57,9 @@ public class InfoPanel extends Composite implements KeymapChangeHandler {
     @UiField
     SpanElement charPosLabel;
     @UiField
-    Label charPosition;
+    Element charPosition;
     @UiField
-    Label lineNumber;
+    Element lineNumber;
     @UiField
     Label fileType;
     @UiField
@@ -99,8 +106,8 @@ public class InfoPanel extends Composite implements KeymapChangeHandler {
      *  @param position the position in the text
      */
     public void updateCursorPosition(final TextPosition position) {
-        setCharPosition(position.getCharacter() + 1);
-        setLineNumber(position.getLine() + 1);
+         setCharPosition(position.getCharacter() + 1);
+         setLineNumber(position.getLine() + 1);
     }
 
     /**
@@ -115,30 +122,33 @@ public class InfoPanel extends Composite implements KeymapChangeHandler {
      * Changes the displayed value of the cusor line number.
      * 
      * @param lineNum the new value
+     * @return the character count of the line number
      */
-    private void setLineNumber(final Integer lineNum) {
+    private int setLineNumber(final Integer lineNum) {
         String lineString = "";
         if (lineNum != null) {
             lineString = String.valueOf(lineNum);
         }
-        this.lineNumber.setText(lineString);
+        this.lineNumber.setInnerText(lineString); // safe by construction
+        return lineString.length();
     }
 
     /**
      * Changes the displayed value of the cursor character position.
      * 
      * @param charPos the new value
+     * @return the character count of the character number
      */
     private void setCharPosition(final Integer charPos) {
         if (charPos != null) {
             final String charPosString = String.valueOf(charPos);
-            this.charPosition.setText(charPosString);
-            this.charPosition.setVisible(true);
-            this.charPosLabel.getStyle().setVisibility(Visibility.VISIBLE);
+            this.charPosition.setInnerHTML(charPosString); //safe by definition
+            this.charPosition.getStyle().setOpacity(1D);
+            this.charPosLabel.getStyle().setOpacity(1D);
         } else {
-            this.charPosition.setText("");
-            this.charPosition.setVisible(false);
-            this.charPosLabel.getStyle().setVisibility(Visibility.HIDDEN);
+            this.charPosition.setInnerHTML(NO_BREAK_SPACE + "-"); //safe by definition
+            this.charPosition.getStyle().setOpacity(0.35);
+            this.charPosLabel.getStyle().setOpacity(0.35);
         }
     }
 
