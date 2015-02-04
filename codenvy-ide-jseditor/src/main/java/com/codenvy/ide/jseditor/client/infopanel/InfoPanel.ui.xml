@@ -67,7 +67,7 @@
 
         .panelInfo {
             font-family: Helvetica Neue, Light;
-            font-size: 11px;
+            font-size: 10px;
             color: #5c5c5c;
             background-color: editorInfoBackgroundColor;
         }
