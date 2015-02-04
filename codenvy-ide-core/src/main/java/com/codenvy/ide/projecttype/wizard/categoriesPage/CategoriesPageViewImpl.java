@@ -43,6 +43,7 @@ import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,10 @@ import java.util.Set;
 public class CategoriesPageViewImpl implements CategoriesPageView {
 
     private static MainPageViewImplUiBinder ourUiBinder = GWT.create(MainPageViewImplUiBinder.class);
-    private final DockLayoutPanel rootElement;
+    private final CategoriesComparator  categoriesComparator;
+    private final ProjectTypeComparator projectTypesComparator;
+    private final TemplatesComparator   templatesComparator;
+    private final DockLayoutPanel       rootElement;
     private final Category.CategoryEventDelegate<ProjectTemplateDescriptor> templateCategoryEventDelegate    =
             new Category.CategoryEventDelegate<ProjectTemplateDescriptor>() {
                 @Override
@@ -124,9 +128,18 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     private List<ProjectTypeDefinition>                 availableProjectTypes;
 
     @Inject
-    public CategoriesPageViewImpl(Resources resources, IconRegistry iconRegistry, ProjectWizardResources wizardResources) {
+    public CategoriesPageViewImpl(Resources resources,
+                                  IconRegistry iconRegistry,
+                                  ProjectWizardResources wizardResources,
+                                  CategoriesComparator categoriesComparator,
+                                  ProjectTypeComparator projectTypesComparator,
+                                  TemplatesComparator templatesComparator) {
         this.resources = resources;
         style = wizardResources.mainPageStyle();
+        this.categoriesComparator = categoriesComparator;
+        this.projectTypesComparator = projectTypesComparator;
+        this.templatesComparator = templatesComparator;
+
         style.ensureInjected();
         this.iconRegistry = iconRegistry;
         rootElement = ourUiBinder.createAndBindUi(this);
@@ -141,9 +154,9 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
 
     @UiHandler("projectName")
     void onProjectNameChanged(KeyUpEvent event) {
-        if (projectName.getValue() != null && projectName.getValue().indexOf(" ") >= 0) {
+        if (projectName.getValue() != null && projectName.getValue().contains(" ")) {
             String tmp = projectName.getValue();
-            while (tmp.indexOf(" ") >= 0) {
+            while (tmp.contains(" ")) {
                 tmp = tmp.replaceAll(" ", "-");
             }
             projectName.setValue(tmp);
@@ -234,9 +247,7 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
         if (options != null) {
             for (String option : options) {
                 if (option != null && option.length() > 0) {
-                    optionsHTMLBuilder.append("<p>");
-                    optionsHTMLBuilder.append("- " + option);
-                    optionsHTMLBuilder.append("</p>\n");
+                    optionsHTMLBuilder.append("<p>- ").append(option).append("</p>\n");
                 }
             }
         }
@@ -298,11 +309,6 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     }
 
     @Override
-    public void disableAllExceptName() {
-        changeEnabledStateAll(false);
-    }
-
-    @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
     }
@@ -352,22 +358,28 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
     @Override
     public void updateCategories(boolean includeTemplates) {
         List<Category<?>> categories = new ArrayList<>();
+
         for (String typeCategory : typesByCategory.keySet()) {
+            List<ProjectTypeDefinition> projectTypeDescriptors = new ArrayList<>();
+            projectTypeDescriptors.addAll(typesByCategory.get(typeCategory));
+            Collections.sort(projectTypeDescriptors, projectTypesComparator);
             categories.add(new Category<>(typeCategory,
-                                              projectTypeCategoryRenderer,
-                                              typesByCategory.get(typeCategory),
-                                              projectTypeCategoryEventDelegate));
+                                          projectTypeCategoryRenderer,
+                                          projectTypeDescriptors,
+                                          projectTypeCategoryEventDelegate));
         }
+        // Sort project type categories only. Project templates categories should be in the end.
+        Collections.sort(categories, categoriesComparator);
 
         if (includeTemplates) {
             for (String templateCategory : templatesByCategory.keySet()) {
                 List<ProjectTemplateDescriptor> templateDescriptors = new ArrayList<>();
                 templateDescriptors.addAll(templatesByCategory.get(templateCategory));
-                Collections.sort(templateDescriptors, new ProjectTemplateDescriptorComparator());
+                Collections.sort(templateDescriptors, templatesComparator);
                 categories.add(new Category<>(templateCategory,
-                                                  templateCategoryRenderer,
-                                                  templateDescriptors,
-                                                  templateCategoryEventDelegate));
+                                              templateCategoryRenderer,
+                                              templateDescriptors,
+                                              templateCategoryEventDelegate));
             }
         }
 
@@ -419,5 +431,41 @@ public class CategoriesPageViewImpl implements CategoriesPageView {
         String labelTitle();
 
         String treeIcon();
+    }
+
+    /**
+     * Helps to sort categories by title.
+     *
+     * @author Oleksii Orel
+     */
+    static final class CategoriesComparator implements Comparator<Category> {
+        @Override
+        public int compare(Category o1, Category o2) {
+            return o1.getTitle().compareTo(o2.getTitle());
+        }
+    }
+
+    /**
+     * Helps to sort the project types by display name.
+     *
+     * @author Oleksii Orel
+     */
+    static final class ProjectTypeComparator implements Comparator<ProjectTypeDefinition> {
+        @Override
+        public int compare(ProjectTypeDefinition o1, ProjectTypeDefinition o2) {
+            return o1.getDisplayName().compareTo(o2.getDisplayName());
+        }
+    }
+
+    /**
+     * Helps to sort the template descriptors by display name.
+     *
+     * @author Oleksii Orel
+     */
+    static final class TemplatesComparator implements Comparator<ProjectTemplateDescriptor> {
+        @Override
+        public int compare(ProjectTemplateDescriptor o1, ProjectTemplateDescriptor o2) {
+            return o1.getDisplayName().compareTo(o2.getDisplayName());
+        }
     }
 }

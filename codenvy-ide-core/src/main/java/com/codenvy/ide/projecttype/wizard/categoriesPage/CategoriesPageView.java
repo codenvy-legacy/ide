@@ -50,8 +50,6 @@ public interface CategoriesPageView extends View<CategoriesPageView.ActionDelega
 
     void focusName();
 
-    void disableAllExceptName();
-
     void setProjectTypes(List<ProjectTypeDefinition> availableProjectTypes);
 
     public interface ActionDelegate {

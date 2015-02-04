@@ -34,6 +34,7 @@ import java.util.Map;
 
 import static com.codenvy.api.project.shared.Constants.BLANK_ID;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.PROJECT_PATH_KEY;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
@@ -85,9 +86,10 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
             return;
         }
 
+        final String projectPath = context.get(PROJECT_PATH_KEY);
         final Unmarshallable<RunnerEnvironmentTree> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(RunnerEnvironmentTree.class);
         projectServiceClient.getRunnerEnvironments(
-                dataObject.getProject().getName(),
+                projectPath,
                 new AsyncRequestCallback<RunnerEnvironmentTree>(unmarshaller) {
                     @Override
                     protected void onSuccess(RunnerEnvironmentTree environmentTree) {
