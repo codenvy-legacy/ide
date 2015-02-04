@@ -159,10 +159,12 @@ public abstract class PopupWidget<T> {
             }
         }
 
-        // save previous focus and set focus in popup
-        this.previousFocus = Elements.getDocument().getActiveElement();
-        final Element toFocus = this.listElement.getFirstElementChild();
-        toFocus.focus();
+        if (needsFocus()) {
+            // save previous focus and set focus in popup
+            this.previousFocus = Elements.getDocument().getActiveElement();
+            final Element toFocus = this.listElement.getFirstElementChild();
+            toFocus.focus();
+        }
 
         // add key event listener on popup
         this.listElement.addEventListener(Event.KEYDOWN, this.keyboardListener, false);
@@ -226,5 +228,14 @@ public abstract class PopupWidget<T> {
      */
     public Element asElement() {
         return this.popupElement;
+    }
+
+    /**
+     * Tells if the popup widget wants focus.<br/>
+     * Override the method to match needed value.
+     * @return true iff the widget needs the focus
+     */
+    public boolean needsFocus() {
+        return false;
     }
 }
