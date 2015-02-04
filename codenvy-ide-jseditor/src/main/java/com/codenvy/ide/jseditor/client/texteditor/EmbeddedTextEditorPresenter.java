@@ -18,6 +18,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import com.codenvy.ide.jseditor.client.formatter.ContentFormatter;
+import com.codenvy.ide.util.loging.Log;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import com.codenvy.ide.Resources;
@@ -427,7 +429,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
     @Override
     public void activate() {
         if (editorWidget != null) {
-            //Todo templorary desing. We need wait, because some unknown event creates problems: IDEX-1823, IDEX-1813
+            //Todo temporary decision. We need wait, because some unknown event creates problems: IDEX-1823, IDEX-1813
             Timer timer = new Timer() {
                 @Override
                 public void run() {
@@ -730,6 +732,9 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
         if (TextEditorOperations.CODEASSIST_PROPOSALS == operation) {
             return true;
         }
+        if (TextEditorOperations.FORMAT == operation) {
+                return true;
+            }
         return false;
     }
 
@@ -739,6 +744,14 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
             case TextEditorOperations.CODEASSIST_PROPOSALS:
                 if (this.document != null) {
                     this.document.getDocumentHandle().getDocEventBus().fireEvent(new CompletionRequestEvent());
+                }
+                break;
+            case TextEditorOperations.FORMAT:
+                ContentFormatter formatter = getConfiguration().getContentFormatter();
+                if (this.document != null && formatter != null) {
+                    formatter.format(getDocument());
+                } else {
+                    Log.error(getClass(), "Formatter is null");
                 }
                 break;
             default:
