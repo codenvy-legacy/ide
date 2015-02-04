@@ -33,5 +33,4 @@ public class AdditionalInformationWidget extends PopupWidget<Element> {
     public Element createItem(final Element itemModel) {
         return itemModel;
     }
-
 }
