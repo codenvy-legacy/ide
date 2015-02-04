@@ -182,23 +182,28 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 final TreeNode<?> nodeToRefresh = event.getNode();
                 if (nodeToRefresh != null) {
                     refreshAndUpdateNode(nodeToRefresh);
-                } else {
-                    currentTreeStructure.getRootNodes(new AsyncCallback<Array<TreeNode<?>>>() {
-                        @Override
-                        public void onSuccess(Array<TreeNode<?>> result) {
-                            for (TreeNode<?> childNode : result.asIterable()) {
-                                // clear children in order to force to refresh
-                                childNode.setChildren(Collections.<TreeNode<?>>createArray());
-                                refreshAndUpdateNode(childNode);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Log.error(ProjectExplorerPartPresenter.class, caught);
-                        }
-                    });
+                    return;
                 }
+                if (appContext.getCurrentProject() == null) {
+                    setTree(projectListStructureProvider.get());
+                    return;
+                }
+                currentTreeStructure.getRootNodes(new AsyncCallback<Array<TreeNode<?>>>() {
+                    @Override
+                    public void onSuccess(Array<TreeNode<?>> result) {
+                        for (TreeNode<?> childNode : result.asIterable()) {
+                            // clear children in order to force to refresh
+                            childNode.setChildren(Collections.<TreeNode<?>>createArray());
+                            refreshAndUpdateNode(childNode);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Log.error(ProjectExplorerPartPresenter.class, caught);
+                    }
+                });
+
             }
         });
 

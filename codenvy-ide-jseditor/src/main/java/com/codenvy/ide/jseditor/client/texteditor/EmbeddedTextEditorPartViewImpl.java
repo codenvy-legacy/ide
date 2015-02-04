@@ -135,7 +135,7 @@ public class EmbeddedTextEditorPartViewImpl extends Composite implements Embedde
         editorWidget.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(final FocusEvent event) {
-                delegate.editorLostFocus();
+                delegate.editorGotFocus();
             }
         });
     }
