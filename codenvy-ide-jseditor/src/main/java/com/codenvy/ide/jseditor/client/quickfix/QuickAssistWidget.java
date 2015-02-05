@@ -106,6 +106,12 @@ public class QuickAssistWidget extends PopupWidget<CompletionProposal>{
         super.validateItem(validatedItem);
     }
 
+    /* Overriden to give the popup the focus for keyboard control */
+    @Override
+    public boolean needsFocus() {
+        return true;
+    }
+
     private native CustomEvent createValidateEvent(String eventType) /*-{
         return new CustomEvent(eventType);
     }-*/;
