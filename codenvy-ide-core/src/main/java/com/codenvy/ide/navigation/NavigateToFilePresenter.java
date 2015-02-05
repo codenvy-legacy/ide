@@ -96,8 +96,9 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
             @Override
             public void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {
-                    // skip hidden items
-                    if (!item.getPath().contains("/.")) {
+                    String path = item.getPath();
+                    // skip hidden items and items that don't belong to the project
+                    if (!isItemHidden(path) && isItemBelongingToProject(path)) {
                         resultMap.put(item.getPath(), item);
                     }
                 }
@@ -151,5 +152,16 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         } catch (WebSocketException e) {
             callback.onFailure(e);
         }
+    }
+
+    private boolean isItemBelongingToProject(String path) {
+        path = path.startsWith("/") ? path.substring(1) : path;
+        String[] items = path.split("/");
+        String projectName = appContext.getCurrentProject().getProjectDescription().getName();
+        return items[0].equals(projectName);
+    }
+
+    private boolean isItemHidden(String path) {
+        return path.contains("/.");
     }
 }
