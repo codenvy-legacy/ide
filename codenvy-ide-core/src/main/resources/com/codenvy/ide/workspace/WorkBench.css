@@ -67,7 +67,7 @@
 }
 
 .ide-work-bench-parent-panel > div {
-    overflow: visible !important;
+    overflow: hidden!important;
 }
 
 svg[name="workBenchIconMinimize"] {
