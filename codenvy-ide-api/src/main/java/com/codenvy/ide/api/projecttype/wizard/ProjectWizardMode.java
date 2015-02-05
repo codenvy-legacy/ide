@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.api.projecttype.wizard;
 
+import javax.annotation.Nonnull;
+
 /**
  * Defines modes used to open a project wizard.
  *
@@ -30,7 +32,7 @@ public enum ProjectWizardMode {
         this.value = value;
     }
 
-    public static ProjectWizardMode parse(String mode) {
+    public static ProjectWizardMode parse(@Nonnull String mode) {
         for (ProjectWizardMode wizardMode : values()) {
             if (mode.equals(wizardMode.toString())) {
                 return wizardMode;
