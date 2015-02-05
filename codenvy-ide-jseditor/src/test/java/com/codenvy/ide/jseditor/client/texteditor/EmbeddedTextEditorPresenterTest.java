@@ -14,10 +14,12 @@ import com.codenvy.ide.api.editor.EditorInitException;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projecttree.VirtualFile;
+import com.codenvy.ide.api.texteditor.TextEditorOperations;
 import com.codenvy.ide.jseditor.client.JsEditorConstants;
 import com.codenvy.ide.jseditor.client.document.DocumentStorage;
 import com.codenvy.ide.jseditor.client.document.EmbeddedDocument;
 import com.codenvy.ide.jseditor.client.editorconfig.TextEditorConfiguration;
+import com.codenvy.ide.jseditor.client.formatter.ContentFormatter;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistantFactory;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -37,6 +39,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 /**
  * @author Andrienko Alexander
@@ -63,39 +66,21 @@ public class EmbeddedTextEditorPresenterTest {
     @Mock
     private EditorWidget editorWidget;
     @Mock
-    private EmbeddedDocument virtualFile;
+    private EmbeddedDocument document;
     @Mock
     private TextEditorConfiguration configuration;
     @Mock
     private NotificationManager notificationManager;
+
+    @Mock
+    private ContentFormatter contentFormatter;
 
     @InjectMocks
     private EmbeddedTextEditorPresenter<EditorWidget> embeddedTextEditorPresenter;
 
     @Test
     public void activateEditorIfEditorWidgetNotNullTest() throws EditorInitException {
-        ArgumentCaptor<Scheduler.ScheduledCommand> commandCaptor =
-                ArgumentCaptor.forClass(Scheduler.ScheduledCommand.class);
-
-        ArgumentCaptor<EditorInitCallback> callBackCaptor =
-                ArgumentCaptor.forClass(EditorInitCallback.class);
-
-        doReturn(editorWidget).when(editorWidgetFactory).createEditorWidget(Matchers.<List<String>>anyObject());
-        doReturn(virtualFile).when(editorWidget).getDocument();
-
-        embeddedTextEditorPresenter.initialize(configuration, notificationManager);
-        embeddedTextEditorPresenter.init(editorInput);
-
-        verify(Scheduler.get()).scheduleDeferred(commandCaptor.capture());
-
-        Scheduler.ScheduledCommand sheScheduledCommand = commandCaptor.getValue();
-        sheScheduledCommand.execute();
-
-        verify(documentStorage).getDocument(any(VirtualFile.class), callBackCaptor.capture());
-
-        EditorInitCallback editorInitCallBack = callBackCaptor.getValue();
-        editorInitCallBack.onReady("test");
-
+        initializeAndInitEditor();
         embeddedTextEditorPresenter.activate();
 
         //verify(editorWidget).setFocus();
@@ -112,5 +97,79 @@ public class EmbeddedTextEditorPresenterTest {
         boolean fieldValue = (boolean) delayedFocus.get(embeddedTextEditorPresenter);
 
         assertTrue(fieldValue);
+    }
+
+    @Test
+    public void doFormatOperationTest() throws EditorInitException {
+        doReturn(contentFormatter).when(configuration).getContentFormatter();
+        initializeAndInitEditor();
+
+        embeddedTextEditorPresenter.doOperation(TextEditorOperations.FORMAT);
+
+        verify(contentFormatter).format(document);
+    }
+
+    @Test
+    public void doFormatOperationWhenDocumentAndFormatterAreNullTest() throws EditorInitException {
+        embeddedTextEditorPresenter.initialize(configuration, notificationManager);
+        embeddedTextEditorPresenter.doOperation(TextEditorOperations.FORMAT);
+
+        verify(contentFormatter, never()).format(document);
+    }
+
+    @Test
+    public void doFormatOperationWhenFormatterIsNotNullButDocumentIsNullTest() throws EditorInitException {
+        doReturn(contentFormatter).when(configuration).getContentFormatter();
+
+        embeddedTextEditorPresenter.initialize(configuration, notificationManager);
+        embeddedTextEditorPresenter.doOperation(TextEditorOperations.FORMAT);
+
+        verify(contentFormatter, never()).format(document);
+    }
+
+    @Test
+    public void doFormatOperationWhenDocumentIsNotNullButFormatterIsNullTest() throws EditorInitException {
+        //formatter is null
+        doReturn(null).when(configuration).getContentFormatter();
+        initializeAndInitEditor();
+
+        embeddedTextEditorPresenter.doOperation(TextEditorOperations.FORMAT);
+
+        verify(contentFormatter, never()).format(document);
+    }
+
+    public void initializeAndInitEditor() throws EditorInitException {
+        reset(Scheduler.get());
+        ArgumentCaptor<Scheduler.ScheduledCommand> commandCaptor =
+                ArgumentCaptor.forClass(Scheduler.ScheduledCommand.class);
+
+        ArgumentCaptor<EditorInitCallback> callBackCaptor =
+                ArgumentCaptor.forClass(EditorInitCallback.class);
+
+        doReturn(editorWidget).when(editorWidgetFactory).createEditorWidget(Matchers.<List<String>>anyObject());
+        doReturn(document).when(editorWidget).getDocument();
+
+        embeddedTextEditorPresenter.initialize(configuration, notificationManager);
+        embeddedTextEditorPresenter.init(editorInput);
+
+        verify(Scheduler.get()).scheduleDeferred(commandCaptor.capture());
+
+        Scheduler.ScheduledCommand sheScheduledCommand = commandCaptor.getValue();
+        sheScheduledCommand.execute();
+
+        verify(documentStorage).getDocument(any(VirtualFile.class), callBackCaptor.capture());
+
+        EditorInitCallback editorInitCallBack = callBackCaptor.getValue();
+        editorInitCallBack.onReady("test");
+    }
+
+    @Test
+    public void canDoOperationFormatTest() {
+        assertTrue(embeddedTextEditorPresenter.canDoOperation(TextEditorOperations.CODEASSIST_PROPOSALS));
+    }
+
+    @Test
+    public void canDoOperationCodeAssistantProposalTest() {
+        assertTrue(embeddedTextEditorPresenter.canDoOperation(TextEditorOperations.FORMAT));
     }
 }

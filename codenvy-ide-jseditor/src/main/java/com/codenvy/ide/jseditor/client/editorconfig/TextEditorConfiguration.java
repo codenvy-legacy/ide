@@ -13,12 +13,12 @@ package com.codenvy.ide.jseditor.client.editorconfig;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.codenvy.ide.api.texteditor.ContentFormatter;
 import com.codenvy.ide.api.texteditor.outline.OutlineModel;
 import com.codenvy.ide.collections.StringMap;
 import com.codenvy.ide.jseditor.client.annotation.AnnotationModel;
 import com.codenvy.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
 import com.codenvy.ide.jseditor.client.codeassist.CodeAssistProcessor;
+import com.codenvy.ide.jseditor.client.formatter.ContentFormatter;
 import com.codenvy.ide.jseditor.client.partition.DocumentPartitioner;
 import com.codenvy.ide.jseditor.client.partition.DocumentPositionMap;
 import com.codenvy.ide.jseditor.client.quickfix.QuickAssistProcessor;
