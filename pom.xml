@@ -28,7 +28,6 @@
         <module>codenvy-ide-ui</module>
         <module>codenvy-ide-core</module>
         <module>codenvy-ext-builder</module>
-        <module>codenvy-ext-runner</module>
         <module>codenvy-ext-web</module>
         <module>codenvy-ext-ssh</module>
         <module>codenvy-ide-client</module>
