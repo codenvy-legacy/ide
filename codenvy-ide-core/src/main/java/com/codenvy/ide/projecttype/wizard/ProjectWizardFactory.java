@@ -15,7 +15,14 @@ import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 
 import javax.annotation.Nonnull;
 
-/** @author Artem Zatsarynnyy */
+/**
+ * Helps to create new instances of {@link ProjectWizard}.
+ *
+ * @author Artem Zatsarynnyy
+ */
 public interface ProjectWizardFactory {
-    ProjectWizard newWizard(@Nonnull ImportProject dataObject, @Nonnull ProjectWizardMode mode, int totalMemory);
+    ProjectWizard newWizard(@Nonnull ImportProject dataObject,
+                            @Nonnull ProjectWizardMode mode,
+                            int totalMemory,
+                            @Nonnull String projectPath);
 }

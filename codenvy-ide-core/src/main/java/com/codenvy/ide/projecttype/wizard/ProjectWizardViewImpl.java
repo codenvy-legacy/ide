@@ -29,9 +29,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Evgen Vidolob
  * @author Oleksii Orel
@@ -63,7 +60,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     Button      saveButton;
 
-    private Map<Presenter, Widget> pageCache                        = new HashMap<>();
     private HandlerRegistration    nativePreviewHandlerRegistration = null;
     private boolean        isCreatingNewProject;
     private ActionDelegate delegate;
@@ -161,13 +157,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     public void showPage(Presenter presenter) {
-        wizardPanel.clear();
-        if (pageCache.containsKey(presenter)) {
-            wizardPanel.add(pageCache.get(presenter));
-        } else {
-            presenter.go(wizardPanel);
-            pageCache.put(presenter, wizardPanel.getWidget());
-        }
+        presenter.go(wizardPanel);
     }
 
     @Override
@@ -209,7 +199,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
         }
 
         hide();
-        pageCache.clear();
         setLoaderVisibility(false);
     }
 
@@ -240,11 +229,9 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
 
     @Override
     protected void onClose() {
-        pageCache.clear();
         delegate.onCancelClicked();
     }
 
-    interface ProjectWizardViewImplUiBinder
-            extends UiBinder<FlowPanel, ProjectWizardViewImpl> {
+    interface ProjectWizardViewImplUiBinder extends UiBinder<FlowPanel, ProjectWizardViewImpl> {
     }
 }

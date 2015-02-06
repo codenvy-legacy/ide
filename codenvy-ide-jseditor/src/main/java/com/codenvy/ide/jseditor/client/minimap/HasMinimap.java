@@ -8,20 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projecttype.wizard.categoriesPage;
-
-import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
-
-import java.util.Comparator;
+package com.codenvy.ide.jseditor.client.minimap;
 
 /**
- * Helps to sort the template descriptors by display name.
- *
- * @author Oleksii Orel
+ * Interface for objects that own a minimap.
  */
-final class ProjectTemplateDescriptorComparator implements Comparator<ProjectTemplateDescriptor> {
-    @Override
-    public int compare(ProjectTemplateDescriptor o1, ProjectTemplateDescriptor o2) {
-        return o1.getDisplayName().compareTo(o2.getDisplayName());
-    }
+public interface HasMinimap {
+
+    /**
+     * Returns the minimap instance.
+     * @return
+     */
+    Minimap getMinimap();
 }

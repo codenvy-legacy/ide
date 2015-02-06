@@ -83,8 +83,13 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     private       ProjectWizard                             wizard;
     private       ProjectWizard                             importWizard;
     private       WizardPage                                currentPage;
+
+    /** Whether project wizard opened for creating new project or for updating an existing one? */
     private       boolean                                   isCreatingNewProject;
+    /** Total workspace memory available for runner. */
     private       int                                       totalMemory;
+    /** Contains project's path when project wizard opened for updating project. */
+    private       String                                    projectPath;
 
     @Inject
     public ProjectWizardPresenter(ProjectWizardView view,
@@ -171,6 +176,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     public void show(@Nonnull ProjectDescriptor project) {
         resetState();
         isCreatingNewProject = false;
+        projectPath = project.getPath();
         final ImportProject dataObject = dtoFactory.createDto(ImportProject.class)
                                                    .withProject(dtoFactory.createDto(NewProject.class)
                                                                           .withType(project.getType())
@@ -189,6 +195,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         runnersPage = runnersPageProvider.get();
         categoriesPage.setProjectTypeSelectionListener(this);
         categoriesPage.setProjectTemplateSelectionListener(this);
+        projectPath = null;
     }
 
     private void showDialog(@Nullable final ImportProject dataObject) {
@@ -223,6 +230,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = getWizardForProjectType(projectType, prevData);
+        wizard.navigateToFirst();
         final NewProject newProject = wizard.getDataObject().getProject();
 
         // some values should be shared between wizards for different project types
@@ -236,11 +244,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         if (newProject.getRunners() == null) {
             newProject.setRunners(prevData.getProject().getRunners());
         }
-
-        final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-        }
     }
 
     @Override
@@ -250,6 +253,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = importWizard == null ? importWizard = createDefaultWizard(null, IMPORT) : importWizard;
+        wizard.navigateToFirst();
         final ImportProject dataObject = wizard.getDataObject();
         final NewProject newProject = dataObject.getProject();
 
@@ -263,11 +267,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setBuilders(projectTemplate.getBuilders());
         newProject.setRunners(projectTemplate.getRunners());
         dataObject.getSource().setProject(projectTemplate.getSource());
-
-        final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
-        if (firstPage != null) {
-            showPage(firstPage);
-        }
     }
 
     private int getRequiredMemoryForTemplate(ProjectTemplateDescriptor projectTemplate) {
@@ -320,7 +319,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                                           .withGeneratorDescription(dtoFactory.createDto(GeneratorDescription.class)));
         }
 
-        final ProjectWizard projectWizard = projectWizardFactory.newWizard(dataObject, mode, totalMemory);
+        final ProjectWizard projectWizard = projectWizardFactory.newWizard(dataObject, mode, totalMemory, projectPath);
         projectWizard.setUpdateDelegate(this);
 
         // add pre-defined pages - first and last

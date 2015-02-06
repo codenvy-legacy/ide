@@ -35,7 +35,8 @@ import javax.annotation.Nonnull;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
-import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.CURRENT_NAME_KEY;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.PROJECT_NAME_KEY;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.PROJECT_PATH_KEY;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
@@ -62,6 +63,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
      *         mode of project wizard
      * @param totalMemory
      *         available memory for runner
+     * @param projectPath
+     *         path of the project. Make sense if wizard created for updating project
      * @param localizationConstants
      *         localization constants
      * @param projectServiceClient
@@ -77,6 +80,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     public ProjectWizard(@Assisted ImportProject dataObject,
                          @Assisted ProjectWizardMode mode,
                          @Assisted int totalMemory,
+                         @Assisted String projectPath,
                          CoreLocalizationConstant localizationConstants,
                          ProjectServiceClient projectServiceClient,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -93,7 +97,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
         context.put(WIZARD_MODE_KEY, mode.toString());
         if (mode == UPDATE) {
-            context.put(CURRENT_NAME_KEY, dataObject.getProject().getName());
+            context.put(PROJECT_NAME_KEY, dataObject.getProject().getName());
+            context.put(PROJECT_PATH_KEY, projectPath);
         }
     }
 
@@ -170,7 +175,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
     private void updateProject(final CompleteCallback callback) {
         final NewProject project = dataObject.getProject();
-        final String currentName = context.get(CURRENT_NAME_KEY);
+        final String currentName = context.get(PROJECT_NAME_KEY);
         if (currentName.equals(project.getName())) {
             doUpdateProject(callback);
         } else {
@@ -207,7 +212,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     }
 
     private void renameProject(final AsyncCallback<Void> callback) {
-        final String path = context.get(CURRENT_NAME_KEY);
+        final String path = context.get(PROJECT_PATH_KEY);
         projectServiceClient.rename(path, dataObject.getProject().getName(), null, new AsyncRequestCallback<Void>() {
             @Override
             protected void onSuccess(Void result) {

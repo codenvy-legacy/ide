@@ -228,6 +228,7 @@ public class ProjectWizardTest {
         wizard = new ProjectWizard(importProject,
                                    mode,
                                    0,
+                                   PROJECT_NAME,
                                    coreLocalizationConstant,
                                    projectServiceClient,
                                    dtoUnmarshallerFactory,

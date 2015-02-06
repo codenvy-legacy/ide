@@ -35,11 +35,19 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 
 /** An interface for editor widget implementations. */
-public interface EditorWidget extends IsWidget, HasChangeHandlers, HasFocusHandlers, HasBlurHandlers,
-                                      HasCursorActivityHandlers, HasGutter, HasKeybindings, HasTextMarkers,
-                                      HasLineStyler,
+public interface EditorWidget extends IsWidget,
+                                      RequiresResize,
+                                      /* handler interfaces */
+                                      HasBlurHandlers,
+                                      HasChangeHandlers,
+                                      HasCursorActivityHandlers,
+                                      HasFocusHandlers,
                                       HasGutterClickHandlers,
-                                      RequiresResize, UndoableEditor {
+                                      /* extended capabilities */
+                                      HasKeybindings,
+                                      HasTextMarkers,
+                                      HasLineStyler,
+                                      UndoableEditor {
 
     /**
      * Returns the contents of the editor.
