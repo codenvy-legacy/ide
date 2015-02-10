@@ -35,6 +35,9 @@ public interface MessageDialogView {
     /** Sets the window title. */
     void setTitle(String title);
 
+    /** Sets the Confirm button text. */
+    void setConfirmButtonText(String text);
+
     /** The interface for the action delegate. */
     public interface ActionDelegate {
 

@@ -13,6 +13,8 @@ package com.codenvy.ide.extension.runner.client.actions;
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.runner.dto.RunOptions;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.permits.RunActionPermit;
+import com.codenvy.ide.api.action.permits.RunActionDenyAccessDialog;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
@@ -31,32 +33,41 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class EnvironmentAction extends ProjectAction {
 
-    private final RunController        runController;
-    private final DtoFactory           dtoFactory;
-    private final CustomEnvironment    customEnvironment;
-    private final AnalyticsEventLogger eventLogger;
+    private final RunController             runController;
+    private final DtoFactory                dtoFactory;
+    private final CustomEnvironment         customEnvironment;
+    private final AnalyticsEventLogger      eventLogger;
+    private final RunActionPermit           runActionPermit;
+    private final RunActionDenyAccessDialog runActionDenyAccessDialog;
 
     @Inject
     public EnvironmentAction(RunnerResources resources, RunController runController, DtoFactory dtoFactory,
                              @Assisted("title") String title,
                              @Assisted("description") String description,
                              @Assisted CustomEnvironment customEnvironment,
-                             AnalyticsEventLogger eventLogger) {
+                             AnalyticsEventLogger eventLogger,
+                             RunActionPermit runActionPermit,
+                             RunActionDenyAccessDialog runActionDenyAccessDialog) {
         super(title, description, resources.environment());
         this.runController = runController;
         this.dtoFactory = dtoFactory;
         this.customEnvironment = customEnvironment;
         this.eventLogger = eventLogger;
+        this.runActionPermit = runActionPermit;
+        this.runActionDenyAccessDialog = runActionDenyAccessDialog;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-
-        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-        runOptions.setEnvironmentId("project://" + customEnvironment.getName());
-        runController.runActiveProject(runOptions, null, true);
+        if (runActionPermit.isAllowed()) {
+            RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+            runOptions.setEnvironmentId("project://" + customEnvironment.getName());
+            runController.runActiveProject(runOptions, null, true);
+        } else {
+            runActionDenyAccessDialog.show();
+        }
     }
 
     /** {@inheritDoc} */
