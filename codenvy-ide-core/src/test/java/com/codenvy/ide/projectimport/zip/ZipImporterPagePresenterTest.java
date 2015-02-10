@@ -19,7 +19,6 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,9 +41,9 @@ import static org.mockito.Mockito.when;
  *
  * @author Roman Nikitenko
  */
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class ZipImporterPagePresenterTest {
+    private static final String SKIP_FIRST_LEVEL_PARAM_NAME = "skipFirstLevel";
 
     @Mock
     private ZipImporterPageView      view;
@@ -77,13 +76,13 @@ public class ZipImporterPagePresenterTest {
 
     @Test
     public void shouldSkipFirstLevelByDefault() {
-        verify(parameters).put("skipFirstLevel", "true");
+        verify(parameters).put(SKIP_FIRST_LEVEL_PARAM_NAME, "true");
     }
 
     @Test
     public void testGo() {
         AcceptsOneWidget container = mock(AcceptsOneWidget.class);
-        when(parameters.get("skipFirstLevel")).thenReturn("true");
+        when(parameters.get(SKIP_FIRST_LEVEL_PARAM_NAME)).thenReturn("true");
 
         presenter.go(container);
 
@@ -135,13 +134,13 @@ public class ZipImporterPagePresenterTest {
     @Test
     public void correctProjectUrlEnteredTest() {
         String correctUrl = "https://host.com/some/path/angularjs.zip";
-        when(view.getProjectName()).thenReturn("");
+        when(view.getProjectName()).thenReturn("", "angularjs");
 
         presenter.projectUrlChanged(correctUrl);
 
         verify(view, never()).showUrlError(anyString());
         verify(importSourceDescriptor).setLocation(eq(correctUrl));
-        verify(view).hideUrlError();
+        verify(view).hideNameError();
         verify(view).setProjectName(anyString());
         verify(delegate).updateControls();
     }
@@ -156,18 +155,6 @@ public class ZipImporterPagePresenterTest {
         verify(newProject).setName(eq(correctName));
         verify(view).hideNameError();
         verify(view, never()).showNameError();
-        verify(delegate).updateControls();
-    }
-
-    @Test
-    public void correctProjectNameWithPointEnteredTest() {
-        String correctName = "Test.project..ForCodenvy";
-        when(view.getProjectName()).thenReturn(correctName);
-
-        presenter.projectNameChanged(correctName);
-
-        verify(newProject).setName(eq(correctName));
-        verify(view).hideNameError();
         verify(delegate).updateControls();
     }
 
@@ -199,7 +186,7 @@ public class ZipImporterPagePresenterTest {
     public void skipFirstLevelSelectedTest() {
         presenter.skipFirstLevelChanged(true);
 
-        verify(parameters, times(2)).put("skipFirstLevel", "true");
+        verify(parameters, times(2)).put(SKIP_FIRST_LEVEL_PARAM_NAME, "true");
         verify(delegate).updateControls();
     }
 
