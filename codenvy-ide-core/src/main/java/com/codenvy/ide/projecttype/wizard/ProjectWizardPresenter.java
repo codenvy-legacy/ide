@@ -229,7 +229,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         updateView(projectType.getDefaultBuilder(), projectType.getDefaultRunner(), -1);
 
         final ImportProject prevData = wizard.getDataObject();
-        wizard = getWizardForProjectType(projectType, prevData);
+        wizard = getWizardForProjectType(projectType);
         wizard.navigateToFirst();
         final NewProject newProject = wizard.getDataObject().getProject();
 
@@ -289,7 +289,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     }
 
     /** Creates or returns project wizard for the specified projectType with the given dataObject. */
-    private ProjectWizard getWizardForProjectType(@Nonnull ProjectTypeDefinition projectType, @Nullable ImportProject dataObject) {
+    private ProjectWizard getWizardForProjectType(@Nonnull ProjectTypeDefinition projectType) {
         if (wizardsCache.containsKey(projectType)) {
             return wizardsCache.get(projectType);
         }
@@ -301,7 +301,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         }
 
         Array<Provider<? extends WizardPage<ImportProject>>> pageProviders = wizardRegistrar.getWizardPages();
-        final ProjectWizard projectWizard = createDefaultWizard(dataObject, isCreatingNewProject ? CREATE : UPDATE);
+        final ProjectWizard projectWizard = createDefaultWizard(null, isCreatingNewProject ? CREATE : UPDATE);
         for (Provider<? extends WizardPage<ImportProject>> provider : pageProviders.asIterable()) {
             projectWizard.addPage(provider.get(), 1, false);
         }
