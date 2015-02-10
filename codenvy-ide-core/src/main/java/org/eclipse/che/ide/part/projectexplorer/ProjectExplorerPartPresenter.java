@@ -246,7 +246,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
 
     /** {@inheritDoc} */
     @Override
-    public void onNodeSelected(TreeNode<?> node) {
+    public void onNodeSelected(final TreeNode< ? > node, final SelectionModel< ? > model) {
         setSelection(new Selection<>(node));
 
         if (node != null && node instanceof StorableNode && appContext.getCurrentProject() != null) {

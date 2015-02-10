@@ -15,6 +15,7 @@ import org.eclipse.che.ide.api.mvp.View;
 import org.eclipse.che.ide.api.parts.base.BaseActionDelegate;
 import org.eclipse.che.ide.api.project.tree.TreeNode;
 import org.eclipse.che.ide.collections.Array;
+import org.eclipse.che.ide.ui.tree.SelectionModel;
 
 import javax.annotation.Nonnull;
 
@@ -89,7 +90,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
          * @param node
          *         selected node
          */
-        void onNodeSelected(TreeNode<?> node);
+        void onNodeSelected(TreeNode< ? > node, SelectionModel< ? > model);
 
         /**
          * Performs any actions in response to node expanded action.
