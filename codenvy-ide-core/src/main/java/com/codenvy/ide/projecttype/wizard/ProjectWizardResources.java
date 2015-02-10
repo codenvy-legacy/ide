@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard;
 
-import com.codenvy.ide.projecttype.wizard.categoriesPage.CategoriesPageViewImpl;
+import com.codenvy.ide.projecttype.wizard.categoriespage.CategoriesPageViewImpl;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
@@ -46,9 +46,9 @@ public interface ProjectWizardResources extends ClientBundle {
     @Source({"Wizard.css", "com/codenvy/ide/api/ui/style.css"})
     Css wizardCss();
 
-    @Source({"categoriesPage/MainPage.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
+    @Source({"categoriespage/MainPage.css", "com/codenvy/ide/api/ui/style.css", "com/codenvy/ide/ui/Styles.css"})
     CategoriesPageViewImpl.Style mainPageStyle();
 
-    @Source("runnersPage/environment.svg")
+    @Source("runnerspage/environment.svg")
     SVGResource environment();
 }

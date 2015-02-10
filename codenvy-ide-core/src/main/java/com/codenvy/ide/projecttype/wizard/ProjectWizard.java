@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard;
 
+import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
@@ -20,6 +21,7 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.wizard.AbstractWizard;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -40,7 +42,7 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.PROJ
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
- * Project wizard implementation that used for creating new project or updating existing one.
+ * Project wizard used for creating new a project or updating an existing one.
  *
  * @author Artem Zatsarynnyy
  */
@@ -51,6 +53,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     private final CoreLocalizationConstant localizationConstants;
     private final ProjectServiceClient     projectServiceClient;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final DtoFactory               dtoFactory;
     private final DialogFactory            dialogFactory;
     private final EventBus                 eventBus;
 
@@ -84,6 +87,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
                          CoreLocalizationConstant localizationConstants,
                          ProjectServiceClient projectServiceClient,
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
+                         DtoFactory dtoFactory,
                          DialogFactory dialogFactory,
                          EventBus eventBus) {
         super(dataObject);
@@ -92,6 +96,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
         this.localizationConstants = localizationConstants;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
+        this.dtoFactory = dtoFactory;
         this.dialogFactory = dialogFactory;
         this.eventBus = eventBus;
 
@@ -119,7 +124,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
                     }
                 };
                 dialogFactory.createMessageDialog(localizationConstants.createProjectWarningTitle(),
-                                                  localizationConstants.messagesWorkspaceRamLessRequiredRam(requiredMemory, totalMemory),
+                                                  localizationConstants.getMoreRam(requiredMemory, totalMemory),
                                                   confirmCallback).show();
             } else {
                 importProject(callback);
@@ -150,7 +155,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
             @Override
             protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+                final String message = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class).getMessage();
+                callback.onFailure(new Exception(message));
             }
         });
     }
@@ -168,7 +174,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
                     @Override
                     protected void onFailure(Throwable exception) {
-                        callback.onFailure(exception);
+                        final String message = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class).getMessage();
+                        callback.onFailure(new Exception(message));
                     }
                 });
     }
@@ -187,7 +194,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    callback.onFailure(caught);
+                    final String message = dtoFactory.createDtoFromJson(caught.getMessage(), ServiceError.class).getMessage();
+                    callback.onFailure(new Exception(message));
                 }
             });
         }
@@ -206,7 +214,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
             @Override
             protected void onFailure(Throwable exception) {
-                callback.onFailure(exception);
+                final String message = dtoFactory.createDtoFromJson(exception.getMessage(), ServiceError.class).getMessage();
+                callback.onFailure(new Exception(message));
             }
         });
     }

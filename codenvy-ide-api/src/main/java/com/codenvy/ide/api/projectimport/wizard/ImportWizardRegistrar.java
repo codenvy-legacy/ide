@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.projecttype.wizard;
+package com.codenvy.ide.api.projectimport.wizard;
 
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.ide.api.wizard.WizardPage;
@@ -19,33 +19,20 @@ import javax.annotation.Nonnull;
 
 /**
  * Defines the requirements for an object that provides an information
- * for registering project type into project wizard.
+ * for registering project importer into project import wizard.
  * <p/>
  * Implementations of this interface need to be registered using
- * a multibinder in order to be picked-up by project wizard.
+ * a multibinder in order to be picked up by project wizard.
  *
  * @author Artem Zatsarynnyy
  */
-public interface ProjectWizardRegistrar {
+public interface ImportWizardRegistrar {
 
-    /** Key allows to get project wizard mode from wizard's context. */
-    String WIZARD_MODE_KEY = "ProjectWizard:Mode";
-
-    /** Key allows to get project's name from wizard's context when project wizard opened for updating project. */
-    String PROJECT_NAME_KEY = "ProjectWizard:CurrentProjectName";
-
-    /** Key allows to get project's path from wizard's context when project wizard opened for updating project. */
-    String PROJECT_PATH_KEY = "ProjectWizard:CurrentProjectPath";
-
-    /** Returns ID of the project type that should be registered in project wizard. */
+    /** Returns ID of the project importer that should be registered in project import wizard. */
     @Nonnull
-    String getProjectTypeId();
+    String getImporterId();
 
-    /** Returns project type category for the project wizard. */
-    @Nonnull
-    String getCategory();
-
-    /** Returns pages that should be used in project wizard. */
+    /** Returns pages that should be used in project import wizard. */
     @Nonnull
     Array<Provider<? extends WizardPage<ImportProject>>> getWizardPages();
 }
