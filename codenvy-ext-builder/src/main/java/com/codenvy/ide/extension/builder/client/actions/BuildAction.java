@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.builder.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionPermission;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -30,24 +31,31 @@ public class BuildAction extends ProjectAction {
 
     private final BuildController      buildController;
     private final AnalyticsEventLogger eventLogger;
+    private final ActionPermission     actionPermission;
     private       BuildContext         buildContext;
 
     @Inject
-    public BuildAction(BuildController buildController, BuilderResources resources,
+    public BuildAction(BuildController buildController,
+                       BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant,
-                       AnalyticsEventLogger eventLogger, BuildContext buildContext) {
+                       AnalyticsEventLogger eventLogger,
+                       BuildContext buildContext,
+                       ActionPermission actionPermission) {
         super(localizationConstant.buildProjectControlTitle(),
               localizationConstant.buildProjectControlDescription(), resources.build());
         this.buildController = buildController;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
+        this.actionPermission = actionPermission;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        buildController.buildActiveProject(true);
+        if (actionPermission.isAllowed()) {
+            buildController.buildActiveProject(true);
+        }
     }
 
     @Override

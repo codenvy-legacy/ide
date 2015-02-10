@@ -12,6 +12,7 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.ActionPermission;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
@@ -33,6 +34,7 @@ public class CustomRunAction extends ProjectAction {
     private final AnalyticsEventLogger eventLogger;
     private final RunController        runController;
     private final CustomRunPresenter   customRunPresenter;
+    private final ActionPermission actionPermission;
 
     @Inject
     public CustomRunAction(RunController runController,
@@ -40,7 +42,8 @@ public class CustomRunAction extends ProjectAction {
                            RunnerResources resources,
                            RunnerLocalizationConstant localizationConstants,
                            AppContext appContext,
-                           AnalyticsEventLogger eventLogger) {
+                           AnalyticsEventLogger eventLogger,
+                           ActionPermission actionPermission) {
         super(localizationConstants.customRunAppActionText(),
               localizationConstants.customRunAppActionDescription(),
               resources.launchApp());
@@ -48,13 +51,16 @@ public class CustomRunAction extends ProjectAction {
         this.customRunPresenter = customRunPresenter;
         this.appContext = appContext;
         this.eventLogger = eventLogger;
+        this.actionPermission = actionPermission;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        customRunPresenter.showDialog();
+        if (actionPermission.isAllowed()) {
+            customRunPresenter.showDialog();
+        }
     }
 
     @Override

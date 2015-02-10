@@ -64,6 +64,16 @@ public class MessageDialogFooter extends Composite {
     }
 
     /**
+     * Sets the confirm button text.
+     *
+     * @param text
+     *         the text
+     */
+    public void setConfirmButtonText(final @Nonnull String text) {
+        this.okButton.setText(text);
+    }
+
+    /**
      * Handler set on the OK button.
      *
      * @param event
