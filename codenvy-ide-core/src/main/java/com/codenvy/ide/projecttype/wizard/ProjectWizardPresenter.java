@@ -31,8 +31,8 @@ import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
-import com.codenvy.ide.projecttype.wizard.categoriesPage.CategoriesPagePresenter;
-import com.codenvy.ide.projecttype.wizard.runnersPage.RunnersPagePresenter;
+import com.codenvy.ide.projecttype.wizard.categoriespage.CategoriesPagePresenter;
+import com.codenvy.ide.projecttype.wizard.runnerspage.RunnersPagePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -85,11 +85,11 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     private       WizardPage                                currentPage;
 
     /** Whether project wizard opened for creating new project or for updating an existing one? */
-    private       boolean                                   isCreatingNewProject;
+    private boolean isCreatingNewProject;
     /** Total workspace memory available for runner. */
-    private       int                                       totalMemory;
+    private int     totalMemory;
     /** Contains project's path when project wizard opened for updating project. */
-    private       String                                    projectPath;
+    private String  projectPath;
 
     @Inject
     public ProjectWizardPresenter(ProjectWizardView view,
@@ -148,7 +148,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
             @Override
             public void onFailure(Throwable e) {
                 view.setLoaderVisibility(false);
-                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(e.getMessage()), null).show();
+                dialogFactory.createMessageDialog("", e.getMessage(), null).show();
             }
         });
     }
@@ -324,7 +324,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         // add pre-defined pages - first and last
         projectWizard.addPage(categoriesPage);
-        if (mode != ProjectWizardMode.IMPORT) {
+        if (mode != IMPORT) {
             projectWizard.addPage(runnersPage);
         }
         return projectWizard;

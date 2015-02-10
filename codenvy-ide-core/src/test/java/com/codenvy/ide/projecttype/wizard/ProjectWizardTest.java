@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.projecttype.wizard;
 
+import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.NewProject;
@@ -18,6 +19,7 @@ import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.wizard.Wizard;
+import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
@@ -39,8 +41,11 @@ import java.lang.reflect.Method;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -66,6 +71,8 @@ public class ProjectWizardTest {
     private ProjectServiceClient     projectServiceClient;
     @Mock
     private DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    @Mock
+    private DtoFactory               dtoFactory;
     @Mock
     private DialogFactory            dialogFactory;
     @Mock
@@ -104,6 +111,7 @@ public class ProjectWizardTest {
     @Test
     public void shouldInvokeCallbackWhenCreatingFailure() throws Exception {
         prepareWizard(CREATE);
+        when(dtoFactory.createDtoFromJson(anyString(), any(Class.class))).thenReturn(mock(ServiceError.class));
 
         wizard.complete(completeCallback);
 
@@ -135,6 +143,7 @@ public class ProjectWizardTest {
     @Test
     public void shouldInvokeCallbackWhenCreatingProjectFromTemplateFailure() throws Exception {
         prepareWizard(IMPORT);
+        when(dtoFactory.createDtoFromJson(anyString(), any(Class.class))).thenReturn(mock(ServiceError.class));
 
         wizard.complete(completeCallback);
 
@@ -166,6 +175,7 @@ public class ProjectWizardTest {
     @Test
     public void shouldInvokeCallbackWhenUpdatingFailure() throws Exception {
         prepareWizard(UPDATE);
+        when(dtoFactory.createDtoFromJson(anyString(), any(Class.class))).thenReturn(mock(ServiceError.class));
 
         wizard.complete(completeCallback);
 
@@ -209,14 +219,15 @@ public class ProjectWizardTest {
         prepareWizard(UPDATE);
         String changedName = PROJECT_NAME + "1";
         when(newProject.getName()).thenReturn(changedName);
+        when(dtoFactory.createDtoFromJson(anyString(), any(Class.class))).thenReturn(mock(ServiceError.class));
 
         wizard.complete(completeCallback);
 
         verify(projectServiceClient).rename(eq(PROJECT_NAME), eq(changedName), anyString(), callbackCaptorForVoid.capture());
 
         AsyncRequestCallback<Void> callback = callbackCaptorForVoid.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-        onSuccess.invoke(callback, mock(Throwable.class));
+        Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
+        onFailure.invoke(callback, mock(Throwable.class));
 
         verify(projectServiceClient, never()).updateProject(anyString(),
                                                             Matchers.<ProjectUpdate>anyObject(),
@@ -232,6 +243,7 @@ public class ProjectWizardTest {
                                    coreLocalizationConstant,
                                    projectServiceClient,
                                    dtoUnmarshallerFactory,
+                                   dtoFactory,
                                    dialogFactory,
                                    eventBus);
     }

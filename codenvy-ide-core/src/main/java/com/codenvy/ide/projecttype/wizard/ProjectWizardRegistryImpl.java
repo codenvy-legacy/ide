@@ -28,20 +28,20 @@ import java.util.Set;
  */
 public class ProjectWizardRegistryImpl implements ProjectWizardRegistry {
     private static final String DEFAULT_CATEGORY = "Other";
-    private final StringMap<ProjectWizardRegistrar> projectRegistrars;
+    private final StringMap<ProjectWizardRegistrar> registrars;
 
     public ProjectWizardRegistryImpl() {
-        projectRegistrars = Collections.createStringMap();
+        registrars = Collections.createStringMap();
     }
 
     @Inject(optional = true)
     private void register(Set<ProjectWizardRegistrar> registrars) {
         for (ProjectWizardRegistrar registrar : registrars) {
             final String id = registrar.getProjectTypeId();
-            if (projectRegistrars.containsKey(id)) {
-                Log.warn(ProjectWizardRegistryImpl.class, "Wizard registrar for project type " + id + " already registered.");
+            if (this.registrars.containsKey(id)) {
+                Log.warn(ProjectWizardRegistryImpl.class, "Wizard for project type " + id + " already registered.");
             } else {
-                projectRegistrars.put(id, registrar);
+                this.registrars.put(id, registrar);
             }
         }
     }
@@ -49,13 +49,13 @@ public class ProjectWizardRegistryImpl implements ProjectWizardRegistry {
     @Nullable
     @Override
     public ProjectWizardRegistrar getWizardRegistrar(@Nonnull String projectTypeId) {
-        return projectRegistrars.get(projectTypeId);
+        return registrars.get(projectTypeId);
     }
 
     @Nullable
     @Override
     public String getWizardCategory(@Nonnull String projectTypeId) {
-        ProjectWizardRegistrar registrar = projectRegistrars.get(projectTypeId);
+        ProjectWizardRegistrar registrar = registrars.get(projectTypeId);
         if (registrar != null) {
             final String category = registrar.getCategory();
             return category.isEmpty() ? DEFAULT_CATEGORY : category;
