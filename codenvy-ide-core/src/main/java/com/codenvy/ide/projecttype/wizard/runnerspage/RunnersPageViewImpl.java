@@ -192,6 +192,11 @@ public class RunnersPageViewImpl implements RunnersPageView {
         }
     }
 
+    @Override
+    public void clearTree() {
+        root.getNodes().clear();
+    }
+
     interface RunnersPageViewImplUiBinder extends UiBinder<DockLayoutPanel, RunnersPageViewImpl> {
     }
 }

@@ -14,6 +14,8 @@ import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.mvp.View;
 import com.google.inject.ImplementedBy;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Evgen Vidolob
  * @author Oleksii Orel
@@ -29,7 +31,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void setRAMAvailable(int amountOfRAM);
 
-    void setBuilderEnvironmentConfig(String text);
+    void setBuilderEnvironmentConfig(@Nullable String text);
 
     void setRunnerEnvironmentConfig(String text);
 

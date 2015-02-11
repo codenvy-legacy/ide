@@ -248,8 +248,12 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
     @Override
     public void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplate) {
+        final BuildersDescriptor builders = projectTemplate.getBuilders();
+        final RunnersDescriptor runners = projectTemplate.getRunners();
         final int requiredMemory = getRequiredMemoryForTemplate(projectTemplate);
-        updateView(projectTemplate.getBuilders().getDefault(), projectTemplate.getRunners().getDefault(), requiredMemory);
+        updateView(builders == null ? null : builders.getDefault(),
+                   runners == null ? null : runners.getDefault(),
+                   requiredMemory);
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = importWizard == null ? importWizard = createDefaultWizard(null, IMPORT) : importWizard;
@@ -264,8 +268,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
         // set dataObject's values from projectTemplate
         newProject.setType(projectTemplate.getProjectType());
-        newProject.setBuilders(projectTemplate.getBuilders());
-        newProject.setRunners(projectTemplate.getRunners());
+        newProject.setBuilders(builders);
+        newProject.setRunners(runners);
         dataObject.getSource().setProject(projectTemplate.getSource());
     }
 
@@ -280,11 +284,19 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         return -1;
     }
 
-    private void updateView(String builderName, String runnerId, int requiredRAM) {
-        final String builderEnvName = builderRegistry.getDefaultEnvironmentName(builderName);
-        final String runnerDescription = runnersRegistry.getDescription(runnerId);
-        view.setBuilderEnvironmentConfig(builderEnvName);
-        view.setRunnerEnvironmentConfig(runnerDescription);
+    private void updateView(@Nullable String builderName, @Nullable String runnerId, int requiredRAM) {
+        if (builderName != null) {
+            final String builderEnvName = builderRegistry.getDefaultEnvironmentName(builderName);
+            view.setBuilderEnvironmentConfig(builderEnvName);
+        } else {
+            view.setBuilderEnvironmentConfig(null);
+        }
+        if (runnerId != null) {
+            final String runnerDescription = runnersRegistry.getDescription(runnerId);
+            view.setRunnerEnvironmentConfig(runnerDescription);
+        } else {
+            view.setRunnerEnvironmentConfig(null);
+        }
         view.setRAMRequired(requiredRAM);
     }
 

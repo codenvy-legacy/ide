@@ -75,6 +75,7 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+        view.clearTree();
         requestRunnerEnvironments();
     }
 
@@ -118,7 +119,9 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
                     RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class)
                                                            .withDisplayName(environmentTree.getDisplayName());
                     tree.addNode(environmentTree.getNode(category.toLowerCase()));
-                    view.addRunner(tree);
+                    if (!tree.getNodes().isEmpty()) {
+                        view.addRunner(tree);
+                    }
                 }
                 updateView();
             }

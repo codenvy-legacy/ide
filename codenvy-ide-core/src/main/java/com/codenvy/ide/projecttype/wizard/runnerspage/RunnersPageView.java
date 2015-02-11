@@ -34,6 +34,8 @@ public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
 
     void selectRunnerEnvironment(String environmentId);
 
+    void clearTree();
+
     public interface ActionDelegate {
         void recommendedMemoryChanged();
 
