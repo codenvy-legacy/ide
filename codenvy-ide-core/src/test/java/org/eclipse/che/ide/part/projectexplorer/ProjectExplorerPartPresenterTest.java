@@ -20,14 +20,19 @@ import org.eclipse.che.ide.api.project.tree.TreeNode;
 import org.eclipse.che.ide.api.project.tree.TreeStructureProviderRegistry;
 import org.eclipse.che.ide.api.project.tree.generic.ProjectNode;
 import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
+import org.eclipse.che.ide.collections.Array;
+import org.eclipse.che.ide.collections.java.JsonArrayListAdapter;
 import org.eclipse.che.ide.menu.ContextMenu;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
-
+import org.eclipse.che.ide.ui.tree.SelectionModel;
 import org.eclipse.che.ide.part.projectexplorer.DeleteNodeHandler;
 import org.eclipse.che.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import org.eclipse.che.ide.part.projectexplorer.ProjectExplorerView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -94,11 +99,40 @@ public class ProjectExplorerPartPresenterTest {
     }
 
     @Test
-    public void shouldSetSelection() throws Exception {
-        TreeNode node = mock(TreeNode.class);
-        presenter.onNodeSelected(node);
+    public void shouldSetSelectionFirstElement() throws Exception {
+        final TreeNode node = mock(TreeNode.class);
+        final SelectionModel selectionModel = mock(SelectionModel.class);
+        final Array selection = new JsonArrayListAdapter(Collections.singletonList(node));
+        when(selectionModel.getSelectedNodes()).thenReturn(selection);
+        presenter.onNodeSelected(node, selectionModel);
 
         assertEquals(node, presenter.getSelection().getFirstElement());
+    }
+
+    @Test
+    public void shouldSetSelectinoFirstElementMultiple() throws Exception {
+        final TreeNode node1 = mock(TreeNode.class);
+        final TreeNode node2 = mock(TreeNode.class);
+        final SelectionModel selectionModel = mock(SelectionModel.class);
+        final Array selection = new JsonArrayListAdapter(new ArrayList<Object>() {{
+            add(node1);
+            add(node2);
+        }});
+        when(selectionModel.getSelectedNodes()).thenReturn(selection);
+        presenter.onNodeSelected(node1, selectionModel);
+
+        assertEquals(node1, presenter.getSelection().getFirstElement());
+    }
+
+    @Test
+    public void shouldSetSelectionHead() throws Exception {
+        final TreeNode node = mock(TreeNode.class);
+        final SelectionModel selectionModel = mock(SelectionModel.class);
+        final Array selection = new JsonArrayListAdapter(Collections.singletonList(node));
+        when(selectionModel.getSelectedNodes()).thenReturn(selection);
+        presenter.onNodeSelected(node, selectionModel);
+
+        assertEquals(node, presenter.getSelection().getHeadElement());
     }
 
     @Test
@@ -109,7 +143,11 @@ public class ProjectExplorerPartPresenterTest {
         StorableNode node = mock(StorableNode.class);
         when(node.getProject()).thenReturn(project);
 
-        presenter.onNodeSelected(node);
+        final SelectionModel selectionModel = mock(SelectionModel.class);
+        final Array selection = new JsonArrayListAdapter(Collections.singletonList(node));
+        when(selectionModel.getSelectedNodes()).thenReturn(selection);
+
+        presenter.onNodeSelected(node, selectionModel);
 
         verify(currentProject).setProjectDescription(projectDescriptor);
     }
