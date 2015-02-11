@@ -21,13 +21,25 @@
             min-height: 6em;
             max-width: 60em;
             max-height: 20em;
+            padding: 1em;
         }
 
         .content {
-            width: 100%;
-            height: 100%;
-            padding: 1em;
-            word-wrap: break-word;
+            width: -webkit-fill-available;
+            width: -moz-fill-available;
+            width: fill-available;
+
+            height: 100%; /* in case the other values are not understood */
+            height: -webkit-fill-available;
+            height: -moz-fill-available;
+            height: fill-available;
+
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            -webkit-align-items: stretch;
+            align-items: stretch;
         }
     </ui:style>
 
