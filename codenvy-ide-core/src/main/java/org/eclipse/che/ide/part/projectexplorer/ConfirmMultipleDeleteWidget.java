@@ -8,12 +8,13 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.part.projectexplorer;
+package org.eclipse.che.ide.part.projectexplorer;
 
 import java.util.List;
 
-import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.projecttree.generic.StorableNode;
+import org.eclipse.che.ide.CoreLocalizationConstant;
+import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
