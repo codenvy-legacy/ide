@@ -37,7 +37,9 @@ import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
+import org.eclipse.che.ide.collections.js.JsoArray;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
+import org.eclipse.che.ide.ui.tree.SelectionModel;
 import org.eclipse.che.ide.util.Config;
 import org.eclipse.che.ide.util.loging.Log;
 
@@ -50,6 +52,9 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -247,7 +252,16 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onNodeSelected(final TreeNode< ? > node, final SelectionModel< ? > model) {
-        setSelection(new Selection<>(node));
+        final JsoArray< ? > allSelected = model.getSelectedNodes();
+        final List<Object> newSelection = new ArrayList<>();
+        for (final Object item : allSelected.asIterable()) {
+            newSelection.add(item);
+        }
+        if (newSelection.contains(node)) {
+            setSelection(new Selection<>(newSelection, node));
+        } else {
+            setSelection(new Selection<>(newSelection));
+        }
 
         if (node != null && node instanceof StorableNode && appContext.getCurrentProject() != null) {
             appContext.getCurrentProject().setProjectDescription(node.getProject().getData());
