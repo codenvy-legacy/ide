@@ -31,8 +31,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunAction extends ProjectAction {
 
-    private final RunController        runController;
-    private final AnalyticsEventLogger eventLogger;
+    private final RunController             runController;
+    private final AnalyticsEventLogger      eventLogger;
     private final RunActionPermit           runActionPermit;
     private final RunActionDenyAccessDialog runActionDenyAccessDialog;
 
@@ -58,11 +58,11 @@ public class RunAction extends ProjectAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        if(runActionPermit.isAllowed()){
-            runController.runActiveProject(null, null, true);
-        } else {
+        if (!runActionPermit.isAllowed()) {
             runActionDenyAccessDialog.show();
+            return;
         }
+        runController.runActiveProject(null, null, true);
     }
 
     @Override

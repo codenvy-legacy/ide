@@ -57,11 +57,11 @@ public class BuildAction extends ProjectAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        if (buildActionPermit.isAllowed()) {
-            buildController.buildActiveProject(true);
-        } else {
+        if (!buildActionPermit.isAllowed()) {
             buildActionDenyAccessDialog.show();
+            return;
         }
+        buildController.buildActiveProject(true);
     }
 
     @Override

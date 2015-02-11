@@ -62,11 +62,11 @@ public class CustomRunAction extends ProjectAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        if (runActionPermit.isAllowed()) {
-            customRunPresenter.showDialog();
-        } else {
+        if (!runActionPermit.isAllowed()) {
             runActionDenyAccessDialog.show();
+            return;
         }
+        customRunPresenter.showDialog();
     }
 
     @Override

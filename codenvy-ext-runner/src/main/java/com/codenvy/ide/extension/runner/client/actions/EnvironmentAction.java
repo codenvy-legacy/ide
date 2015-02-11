@@ -61,13 +61,13 @@ public class EnvironmentAction extends ProjectAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        if (runActionPermit.isAllowed()) {
-            RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
-            runOptions.setEnvironmentId("project://" + customEnvironment.getName());
-            runController.runActiveProject(runOptions, null, true);
-        } else {
+        if (!runActionPermit.isAllowed()) {
             runActionDenyAccessDialog.show();
+            return;
         }
+        RunOptions runOptions = dtoFactory.createDto(RunOptions.class);
+        runOptions.setEnvironmentId("project://" + customEnvironment.getName());
+        runController.runActiveProject(runOptions, null, true);
     }
 
     /** {@inheritDoc} */
