@@ -252,7 +252,7 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     /** {@inheritDoc} */
     @Override
     public void onNodeSelected(final TreeNode< ? > node, final SelectionModel< ? > model) {
-        final JsoArray< ? > allSelected = model.getSelectedNodes();
+        final Array< ? > allSelected = model.getSelectedNodes();
         final List<Object> newSelection = new ArrayList<>();
         for (final Object item : allSelected.asIterable()) {
             newSelection.add(item);
