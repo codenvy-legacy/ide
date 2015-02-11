@@ -29,6 +29,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Evgen Vidolob
  * @author Oleksii Orel
@@ -132,7 +134,7 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void setBuilderEnvironmentConfig(String text) {
+    public void setBuilderEnvironmentConfig(@Nullable String text) {
         if (text == null) {
             if (builderEnvConfText.isVisible()) builderEnvConfText.setVisible(false);
             if (builderEnvConf.isVisible()) builderEnvConf.setVisible(false);

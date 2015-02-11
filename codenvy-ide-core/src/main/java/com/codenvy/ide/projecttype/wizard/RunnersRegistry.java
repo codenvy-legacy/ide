@@ -24,6 +24,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 /**
  * Helps to get description of the runner by it's ID.
  *
@@ -65,7 +67,7 @@ class RunnersRegistry {
     }
 
     /** Returns description of the given runner. */
-    String getDescription(String runnerId) {
+    String getDescription(@Nonnull String runnerId) {
         return descriptions.get(runnerId);
     }
 }

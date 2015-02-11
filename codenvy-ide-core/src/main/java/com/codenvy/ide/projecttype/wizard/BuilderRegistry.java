@@ -24,6 +24,8 @@ import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 /**
  * Helps to get name of the builder's default environment by builder name.
  *
@@ -59,7 +61,7 @@ class BuilderRegistry {
     }
 
     /** Returns display name of the default environment for the given builder. */
-    String getDefaultEnvironmentName(String builderName) {
+    String getDefaultEnvironmentName(@Nonnull String builderName) {
         return environments.get(builderName);
     }
 }
