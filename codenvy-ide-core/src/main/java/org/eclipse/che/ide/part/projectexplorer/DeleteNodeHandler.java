@@ -71,24 +71,28 @@ public class DeleteNodeHandler {
      */
     public void delete(final StorableNode nodeToDelete) {
         if (nodeToDelete instanceof ProjectNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
-            checkRunningProcessesForProject(nodeToDelete, new AsyncCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean hasRunningProcesses) {
-                    if (hasRunningProcesses) {
-                        dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
-                    } else {
-                        askForDeletingNode(nodeToDelete);
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    askForDeletingNode(nodeToDelete);
-                }
-            });
+            deleteProjectNode(nodeToDelete);
         } else {
             askForDeletingNode(nodeToDelete);
         }
+    }
+
+    private void deleteProjectNode(final StorableNode projectNodeToDelete) {
+        checkRunningProcessesForProject(projectNodeToDelete, new AsyncCallback<Boolean>() {
+            @Override
+            public void onSuccess(final Boolean hasRunningProcesses) {
+                if (hasRunningProcesses) {
+                    dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
+                } else {
+                    askForDeletingNode(projectNodeToDelete);
+                }
+            }
+
+            @Override
+            public void onFailure(final Throwable caught) {
+                askForDeletingNode(projectNodeToDelete);
+            }
+        });
     }
 
     /**
