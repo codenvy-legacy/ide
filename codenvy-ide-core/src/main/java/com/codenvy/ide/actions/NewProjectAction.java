@@ -15,7 +15,7 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
+import com.codenvy.ide.projecttype.wizard.presenter.ProjectWizardPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -23,13 +23,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class NewProjectAction extends Action {
 
-    private final NewProjectWizardPresenter wizard;
-    private final AnalyticsEventLogger      eventLogger;
-    private final AppContext                appContext;
+    private final ProjectWizardPresenter wizard;
+    private final AnalyticsEventLogger   eventLogger;
+    private final AppContext             appContext;
 
     @Inject
-    public NewProjectAction(Resources resources, NewProjectWizardPresenter wizard, AnalyticsEventLogger eventLogger,
-                            AppContext appContext) {
+    public NewProjectAction(Resources resources, ProjectWizardPresenter wizard, AnalyticsEventLogger eventLogger, AppContext appContext) {
         super("Project...", "Create new project", resources.project());
         this.wizard = wizard;
         this.eventLogger = eventLogger;

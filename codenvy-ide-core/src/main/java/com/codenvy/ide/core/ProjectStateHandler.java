@@ -32,8 +32,8 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
-import com.codenvy.ide.api.wizard.WizardContext;
 import com.codenvy.ide.core.problemDialog.ProjectProblemDialog;
+import com.codenvy.ide.projecttype.wizard.presenter.ProjectWizardPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
@@ -41,7 +41,6 @@ import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.project.NewProjectWizardPresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Window;
@@ -55,7 +54,6 @@ import javax.annotation.Nullable;
 import static com.codenvy.api.runner.dto.RunnerMetric.ALWAYS_ON;
 import static com.codenvy.api.runner.dto.RunnerMetric.TERMINATION_TIME;
 import static com.codenvy.api.runner.internal.Constants.LINK_REL_STOP;
-import static com.codenvy.ide.api.projecttype.wizard.ProjectWizard.PROJECT_FOR_UPDATE;
 
 /**
  * Component that does some preliminary operations before opening/closing projects.
@@ -74,21 +72,21 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizard.PROJECT_FOR_U
 @Singleton
 public class ProjectStateHandler implements Component, OpenProjectHandler, CloseCurrentProjectHandler, ProjectDescriptorChangedHandler,
                                             ConfigureProjectHandler {
-    private final EventBus                  eventBus;
-    private final AppContext                appContext;
-    private final ProjectServiceClient      projectServiceClient;
-    private final RunnerServiceClient       runnerServiceClient;
-    private final NewProjectWizardPresenter newProjectWizard;
-    private final DtoUnmarshallerFactory    dtoUnmarshallerFactory;
-    private final CoreLocalizationConstant  constant;
-    private final DialogFactory             dialogFactory;
+    private final EventBus                 eventBus;
+    private final AppContext               appContext;
+    private final ProjectServiceClient     projectServiceClient;
+    private final RunnerServiceClient      runnerServiceClient;
+    private final ProjectWizardPresenter   projectWizardPresenter;
+    private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
+    private final CoreLocalizationConstant constant;
+    private final DialogFactory            dialogFactory;
 
     @Inject
     public ProjectStateHandler(AppContext appContext,
                                EventBus eventBus,
                                ProjectServiceClient projectServiceClient,
                                RunnerServiceClient runnerServiceClient,
-                               NewProjectWizardPresenter newProjectWizard,
+                               ProjectWizardPresenter projectWizardPresenter,
                                CoreLocalizationConstant constant,
                                DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                DialogFactory dialogFactory) {
@@ -96,7 +94,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
         this.runnerServiceClient = runnerServiceClient;
-        this.newProjectWizard = newProjectWizard;
+        this.projectWizardPresenter = projectWizardPresenter;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.constant = constant;
         this.dialogFactory = dialogFactory;
@@ -133,14 +131,9 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     @Override
     public void onConfigureProject(@Nonnull ConfigureProjectEvent event) {
         ProjectDescriptor toConfigure = event.getProject();
-
-        if (toConfigure == null) {
-            return;
+        if (toConfigure != null) {
+            projectWizardPresenter.show(toConfigure);
         }
-
-        final WizardContext context = new WizardContext();
-        context.putData(PROJECT_FOR_UPDATE, toConfigure);
-        newProjectWizard.show(context);
     }
 
     private void checkRunnerAndCloseCurrentProject(CloseCallback closeCallback, boolean closingBeforeOpening) {
