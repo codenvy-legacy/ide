@@ -38,6 +38,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("checkingProjectsList")
     String checkingProjectsList();
 
+    @Key("view.selectRunnerPage.memoryRecommendedLabel")
+    String selectRunnerPageViewMemoryRecommendedLabel();
+
     @Key("noTechnologyTitle")
     String noTechnologyTitle();
 
