@@ -198,6 +198,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         categoriesPage.setProjectTypeSelectionListener(this);
         categoriesPage.setProjectTemplateSelectionListener(this);
         projectPath = null;
+        importWizard = null;
     }
 
     private void showDialog(@Nullable final ImportProject dataObject) {
