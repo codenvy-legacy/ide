@@ -59,7 +59,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         this.resources = resources;
 
         projectTreeNodeDataAdapter = new ProjectTreeNodeDataAdapter();
-        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer);
+        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer, true);
         setContentWidget(tree.asWidget());
 
         projectHeader = new FlowPanel();
