@@ -13,7 +13,6 @@ package com.codenvy.ide.outline;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,17 +25,20 @@ import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate> implements OutlinePartView {
 
-    private static OutlinePartViewImplUiBinder ourUiBinder = GWT.create(OutlinePartViewImplUiBinder.class);
+    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {
+    }
+
+    interface Style extends CssResource {
+    }
 
     @UiField
     Style style;
 
     @UiField
-    SimplePanel container;
+    SimplePanel outlineContainer;
 
     @UiField
     DockLayoutPanel noOutline;
@@ -47,10 +49,10 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     private boolean outlineEnabled = false;
 
     @Inject
-    public OutlinePartViewImpl(PartStackUIResources resources) {
+    public OutlinePartViewImpl(PartStackUIResources resources,
+                               OutlinePartViewImplUiBinder uiBinder) {
         super(resources);
-        ourUiBinder.createAndBindUi(this);
-        super.container.add(container);
+        setContentWidget(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("outline-minimizeBut");
     }
 
@@ -61,14 +63,14 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
 
         clear();
         noOutlineCause.setText(cause);
-        container.add(noOutline);
+        outlineContainer.add(noOutline);
     }
 
     @Override
     public void enableOutline() {
         outlineEnabled = true;
 
-        Element el = container.getElement().getFirstChildElement().cast();
+        Element el = outlineContainer.getElement().getFirstChildElement().cast();
         el.getStyle().setProperty("position", "relative");
         el.getStyle().setProperty("width", "100%");
         el.getStyle().setProperty("height", "100%");
@@ -77,19 +79,13 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void clear() {
-        container.clear();
+        outlineContainer.clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget getContainer() {
-        return container;
-    }
-
-    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {
-    }
-
-    interface Style extends CssResource {
+        return outlineContainer;
     }
 
     @Override
@@ -97,13 +93,14 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
         try {
             if (outlineEnabled) {
                 if (isFocused()) {
-                    container.getElement().getFirstChildElement().getFirstChildElement().focus();
+                    outlineContainer.getElement().getFirstChildElement().getFirstChildElement().focus();
                 } else {
-                    container.getElement().getFirstChildElement().getFirstChildElement().blur();
+                    outlineContainer.getElement().getFirstChildElement().getFirstChildElement().blur();
                 }
             }
         } catch (Exception e) {
             Log.trace("ERROR: " + e.getMessage());
         }
     }
+
 }

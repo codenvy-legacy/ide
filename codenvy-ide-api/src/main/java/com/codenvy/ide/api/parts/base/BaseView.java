@@ -19,33 +19,43 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.vectomatic.dom.svg.ui.SVGImage;
 
 import javax.annotation.Nonnull;
 
 /**
- * Base view for part that must contains toolbar, this class provide one default button: "minimize" or hide part view and
- * label for view title.
+ * Base view for part. By default the view has toolbar containing part description and minimize button.
+ * Toolbar is represented as dock panel and can be simply expanded.
  *
- * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @author Codenvy crowd
  */
 public abstract class BaseView<T extends BaseActionDelegate> extends Composite implements View<T>, Focusable {
 
+    /** Root widget */
+    private DockLayoutPanel   container;
+
     protected DockLayoutPanel toolBar;
     protected DockLayoutPanel toolbarHeader;
-    protected DockLayoutPanel container;
+
     protected T               delegate;
     protected ToolButton      minimizeButton;
     protected Label           titleLabel;
 
+    /** Indicates whether this view is focused */
     private boolean focused = false;
 
+    /**
+     * Creates an instance of this view.
+     *
+     * @param resources resources
+     */
     public BaseView(PartStackUIResources resources) {
         container = new DockLayoutPanel(Style.Unit.PX);
         container.getElement().setAttribute("role", "part");
         container.setSize("100%", "100%");
-
+        container.getElement().getStyle().setOutlineStyle(Style.OutlineStyle.NONE);
         initWidget(container);
 
         toolBar = new DockLayoutPanel(Style.Unit.PX);
@@ -78,43 +88,65 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
         toolBar.addNorth(toolbarHeader, 20);
     }
 
-    /** Call minimize on delegate. */
+    /** {@inheritDoc} */
+    @Override
+    public final void setDelegate(T delegate) {
+        this.delegate = delegate;
+    }
+
+    /** Requests delegate to minimize the part */
     protected void minimize() {
-        if (delegate != null)
+        if (delegate != null) {
             delegate.minimize();
+        }
     }
 
     /**
-     * Set title for this part view.
+     * Sets content widget.
      *
-     * @param title
+     * @param widget content widget
+     */
+    public final void setContentWidget(Widget widget) {
+        container.add(widget);
+    }
+
+    /**
+     * Sets new value of part title.
+     *
+     * @param title part title
      */
     public void setTitle(@Nonnull String title) {
         titleLabel.setText(title);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(T delegate) {
-        this.delegate = delegate;
+    /**
+     * Sets new height of the toolbar.
+     *
+     * @param height new toolbar height
+     */
+    public final void setToolbarHeight(int height) {
+        container.setWidgetSize(toolBar, height);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public final void setFocus(final boolean focused) {
+    public final void setFocus(boolean focused) {
         this.focused = focused;
         updateFocus();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public boolean isFocused() {
+    public final boolean isFocused() {
         return focused;
     }
 
     /**
-     * Override this method to set the focus to a special view element.
-     * Method is called just after updating the view focus.
+     * Override this method to set the focus to necessary element inside the view.
+     * Method is called immediately when receiving or loosing the focus.
      */
     protected void updateFocus() {
+        getElement().focus();
     }
 
 }

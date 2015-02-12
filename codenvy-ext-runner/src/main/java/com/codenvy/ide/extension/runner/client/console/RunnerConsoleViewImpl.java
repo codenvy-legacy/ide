@@ -52,6 +52,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
+
+    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
+    }
+
     private static final String              PRE_STYLE         = "style='margin:0px;'";
 
     private static final String              INFO              = "[INFO]";
@@ -110,52 +114,31 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     Frame       terminalFrame;
 
     /**
-     * Tab App
-     */
-    /* @UiField
-    SimplePanel appPreviewButton;
-    @UiField
-    FlowPanel appPreviewPanel;
-    @UiField
-    Label     appPreviewUnavailablePanel;
-    @UiField
-    Frame     appPreviewFrame; */
-
-    /**
      * Terminal URL
      */
     private String terminalURL;
 
-    /**
-     * Preview application URL
-     */
-    /* private String appURL; */
-
-
-    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
-    }
-
     @Inject
-    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
-                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext, RunnerLocalizationConstant localizationConstant) {
+    public RunnerConsoleViewImpl(PartStackUIResources resources,
+                                 RunnerResources runnerResources,
+                                 RunnerConsoleViewImplUiBinder uiBinder,
+                                 AppContext appContext,
+                                 RunnerLocalizationConstant localizationConstant) {
         super(resources);
 
         this.runnerResources = runnerResources;
         this.appContext = appContext;
         this.localizationConstant = localizationConstant;
 
-        container.add(uiBinder.createAndBindUi(this));
+        setContentWidget(uiBinder.createAndBindUi(this));
 
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
         terminalFrame.getElement().setAttribute("allowtransparency", "true");
-        /* appPreviewFrame.removeStyleName("gwt-Frame"); */
 
         terminalUnavailableLabel.setVisible(true);
         terminalFrame.setVisible(false);
-        /* appPreviewUnavailablePanel.setVisible(true);
-        appPreviewFrame.setVisible(false); */
 
         // this hack used for adding box shadow effect to top panel (tabs+toolbar)
         topPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
@@ -178,19 +161,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 activateTerminal();
             }
         }, ClickEvent.getType());
-
-        /* appPreviewButton.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                activateApp();
-            }
-        }, ClickEvent.getType()); */
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
@@ -215,21 +185,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
     }
 
-    /* @Override
-    public void setAppURL(String appURL) {
-        this.appURL = appURL;
-
-        if (appURL == null) {
-            appPreviewUnavailablePanel.setVisible(true);
-            appPreviewFrame.setVisible(false);
-            appPreviewFrame.getElement().removeAttribute("src");
-        } else if (appPreviewPanel.isVisible()) {
-            appPreviewUnavailablePanel.setVisible(false);
-            appPreviewFrame.setUrl(appURL);
-            appPreviewFrame.setVisible(true);
-        }
-    } */
-
     @Override
     public void activateConsole() {
         if (tabPanel.getVisibleWidget() == 0) {
@@ -237,11 +192,8 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
 
         tabPanel.showWidget(0);
-
         consoleButton.addStyleName(runnerResources.runner().tabSelected());
         terminalButton.removeStyleName(runnerResources.runner().tabSelected());
-        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
-
         scrollBottom();
     }
 
@@ -255,7 +207,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         consoleButton.removeStyleName(runnerResources.runner().tabSelected());
         terminalButton.addStyleName(runnerResources.runner().tabSelected());
-        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
 
         if (terminalURL == null && !terminalFrame.getUrl().isEmpty()) {
             terminalUnavailableLabel.setVisible(true);
@@ -268,29 +219,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             terminalFrame.setVisible(true);
         }
     }
-
-    /* @Override
-    public void activateApp() {
-        if (tabPanel.getVisibleWidget() == 2) {
-            return;
-        }
-
-        tabPanel.showWidget(2);
-
-        consoleButton.removeStyleName(runnerResources.runner().tabSelected());
-        terminalButton.removeStyleName(runnerResources.runner().tabSelected());
-        appPreviewButton.addStyleName(runnerResources.runner().tabSelected());
-
-        if (appURL == null && !appPreviewFrame.getUrl().isEmpty()) {
-            appPreviewUnavailablePanel.setVisible(true);
-            appPreviewFrame.getElement().removeAttribute("src");
-            appPreviewFrame.setVisible(false);
-        } else if (appURL != null && appPreviewFrame.getUrl().isEmpty()) {
-            appPreviewUnavailablePanel.setVisible(false);
-            appPreviewFrame.setUrl(appURL);
-            appPreviewFrame.setVisible(true);
-        }
-    } */
 
     /** {@inheritDoc} */
     @Override
@@ -420,4 +348,5 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }
+
 }

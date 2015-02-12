@@ -13,8 +13,6 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.codenvy.ide.util.loging.Log;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -33,21 +31,22 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class NotificationManagerViewImpl extends BaseView<NotificationManagerView.ActionDelegate> implements NotificationManagerView {
+
     interface NotificationManagerViewImplUiBinder extends UiBinder<Widget, NotificationManagerViewImpl> {
     }
 
-    private static NotificationManagerViewImplUiBinder ourUiBinder = GWT.create(NotificationManagerViewImplUiBinder.class);
-
     @UiField
     FlowPanel mainPanel;
-    //    @UiField
-    Label count = new Label();
+
     @UiField
     ScrollPanel scrollPanel;
 
     @UiField(provided = true)
-    final Resources res;
-//    private ActionDelegate delegate;
+
+    Label count = new Label();
+
+    /** scroll events to the bottom if view is visible */
+    private boolean scrollBottomRequired = false;
 
     /**
      * Create view.
@@ -56,13 +55,14 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
      */
     @Inject
     public NotificationManagerViewImpl(PartStackUIResources partStackUIResources,
-                                       Resources resources) {
+                                       Resources resources,
+                                       NotificationManagerViewImplUiBinder uiBinder) {
         super(partStackUIResources);
-        this.res = resources;
+        setContentWidget(uiBinder.createAndBindUi(this));
+
         count.setStyleName(resources.notificationCss().countLabel());
         count.setVisible(false);
 
-        container.add(ourUiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("notification-minimizeBut");
 
         scrollPanel.getElement().setTabIndex(0);
@@ -87,15 +87,11 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
         return count;
     }
 
-    /** scroll events to the bottom if view is visible */
-    private boolean scrollBottomRequired = false;
-
     /** {@inheritDoc} */
     @Override
     public void scrollBottom() {
         /** scroll bottom immediately if view is visible */
         if (scrollPanel.getElement().getOffsetParent() != null) {
-            Log.trace("/ scroll immediately");
             scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
             return;
         }
@@ -107,8 +103,6 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
             Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
                 @Override
                 public boolean execute() {
-                    Log.trace("SCHEDULER: scroll");
-
                     if (scrollPanel.getElement().getOffsetParent() != null) {
                         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
                         scrollBottomRequired = false;

@@ -42,6 +42,7 @@ import javax.annotation.Nonnull;
  */
 @Singleton
 public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
+
     protected Tree<TreeNode<?>>   tree;
     private   Resources           resources;
     private   FlowPanel           projectHeader;
@@ -51,17 +52,19 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** Create view. */
     @Inject
-    public ProjectExplorerViewImpl(Resources resources, ProjectTreeNodeRenderer projectTreeNodeRenderer) {
+    public ProjectExplorerViewImpl(Resources resources,
+                                   ProjectTreeNodeRenderer projectTreeNodeRenderer) {
         super(resources);
+
         this.resources = resources;
+
+        projectTreeNodeDataAdapter = new ProjectTreeNodeDataAdapter();
+        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer);
+        setContentWidget(tree.asWidget());
 
         projectHeader = new FlowPanel();
         projectHeader.setStyleName(resources.partStackCss().idePartStackToolbarBottom());
 
-        projectTreeNodeDataAdapter = new ProjectTreeNodeDataAdapter();
-        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer);
-
-        container.add(tree.asWidget());
         tree.asWidget().ensureDebugId("projectExplorerTree-panel");
         minimizeButton.ensureDebugId("projectExplorer-minimizeBut");
 
@@ -88,40 +91,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             public void refreshChildren(AsyncCallback<TreeNode<?>> callback) {
             }
         };
-    }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setRootNodes(@Nonnull final Array<TreeNode<?>> rootNodes) {
-        // provided rootNodes should be set as child nodes for rootNode
-        rootNode.setChildren(rootNodes);
-        for (TreeNode<?> treeNode : rootNodes.asIterable()) {
-            treeNode.setParent(rootNode);
-        }
-
-        tree.getSelectionModel().clearSelections();
-        tree.getModel().setRoot(rootNode);
-        tree.renderTree(0);
-
-        if (rootNodes.isEmpty()) {
-            delegate.onNodeSelected(null);
-        } else {
-            final TreeNode<?> firstNode = rootNodes.get(0);
-            if (!firstNode.isLeaf()) {
-                // expand first node that usually represents project itself
-                tree.autoExpandAndSelectNode(firstNode, false);
-                delegate.onNodeExpanded(firstNode);
-            }
-            // auto-select first node
-            tree.getSelectionModel().selectSingleNode(firstNode);
-            delegate.onNodeSelected(firstNode);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(final ActionDelegate delegate) {
-        this.delegate = delegate;
         tree.setTreeEventHandler(new Tree.Listener<TreeNode<?>>() {
             @Override
             public void onNodeAction(TreeNodeElement<TreeNode<?>> node) {
@@ -190,6 +160,34 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
+    public void setRootNodes(@Nonnull final Array<TreeNode<?>> rootNodes) {
+        // provided rootNodes should be set as child nodes for rootNode
+        rootNode.setChildren(rootNodes);
+        for (TreeNode<?> treeNode : rootNodes.asIterable()) {
+            treeNode.setParent(rootNode);
+        }
+
+        tree.getSelectionModel().clearSelections();
+        tree.getModel().setRoot(rootNode);
+        tree.renderTree(0);
+
+        if (rootNodes.isEmpty()) {
+            delegate.onNodeSelected(null);
+        } else {
+            final TreeNode<?> firstNode = rootNodes.get(0);
+            if (!firstNode.isLeaf()) {
+                // expand first node that usually represents project itself
+                tree.autoExpandAndSelectNode(firstNode, false);
+                delegate.onNodeExpanded(firstNode);
+            }
+            // auto-select first node
+            tree.getSelectionModel().selectSingleNode(firstNode);
+            delegate.onNodeSelected(firstNode);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void updateNode(@Nonnull TreeNode<?> oldNode, @Nonnull TreeNode<?> newNode) {
         // get currently selected node
         final JsoArray<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
@@ -226,7 +224,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     public void setProjectHeader(@Nonnull ProjectDescriptor project) {
         if (toolBar.getWidgetIndex(projectHeader) < 0) {
             toolBar.addSouth(projectHeader, 28);
-            container.setWidgetSize(toolBar, 50);
+            setToolbarHeight(50);
         }
         projectHeader.clear();
 
@@ -247,7 +245,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void hideProjectHeader() {
         toolBar.remove(projectHeader);
-        container.setWidgetSize(toolBar, 22);
+        setToolbarHeight(22);
     }
 
     @Nonnull
@@ -260,7 +258,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     @Override
     protected void updateFocus() {
-        /** Focus or unfocus the tree. */
+        /** Focus or unfocus the tree */
         if (isFocused()) {
             tree.asWidget().getElement().getFirstChildElement().focus();
         } else {

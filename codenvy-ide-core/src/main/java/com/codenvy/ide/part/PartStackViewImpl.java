@@ -53,12 +53,13 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     private final PartStackUIResources resources;
 
     // list of tabs
-    private final Array<TabButton>       tabButtons          = Collections.createArray();
-    final         int                    margin              = 8;//tabButtons text margin
+    private final Array<PartButton>     tabButtons = Collections.createArray();
+    private PartButton       activeTabButton;
+
+    final         int                   margin     = 8;//tabButtons text margin
     private InsertPanel     tabsPanel;
     private DeckLayoutPanel contentPanel;
     private ActionDelegate  delegate;
-    private TabButton       activeTabButton;
 
     private TabPosition tabPosition;
     private int         top;
@@ -119,7 +120,7 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     /** {@inheritDoc} */
     @Override
     public TabItem addTab(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
-        TabButton tabItem = new TabButton(icon, title, toolTip, widget, closable);
+        PartButton tabItem = new PartButton(icon, title, toolTip, widget, closable);
         tabItem.ensureDebugId("tabButton-" + title);
         tabsPanel.add(tabItem);
         tabButtons.add(tabItem);
@@ -130,7 +131,7 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     @Override
     public void removeTab(int index) {
         if (index < tabButtons.size()) {
-            TabButton removed = tabButtons.remove(index);
+            PartButton removed = tabButtons.remove(index);
             if (tabPosition != BELOW) {
                 top -= removed.getElement().getOffsetWidth() - margin * 2 - 1;
                 if (tabPosition == LEFT) {
@@ -203,14 +204,14 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
     /** {@inheritDoc} */
     @Override
     public void updateTabItem(int index, SVGImage icon, String title, String toolTip, IsWidget widget) {
-        TabButton tabButton = tabButtons.get(index);
+        PartButton tabButton = tabButtons.get(index);
         tabButton.tabItemTitle.setText(title);
         tabButton.setTitle(toolTip);
         tabButton.update(icon, widget);
     }
 
     /** Special button for tab title. */
-    private class TabButton extends Composite implements PartStackView.TabItem {
+    private class PartButton extends Composite implements PartStackView.TabItem {
 
         private Image       image;
         private FlowPanel   tabItem;
@@ -226,19 +227,25 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
          * @param toolTip
          * @param closable
          */
-        public TabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
+        public PartButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
             this.icon = icon;
             this.widget = widget;
+
             tabItem = new FlowPanel();
             tabItem.setTitle(toolTip);
+            tabItem.ensureDebugId("partStack-TabButton");
             initWidget(tabItem);
+
             this.setStyleName(resources.partStackCss().idePartStackToolTab());
+
             if (icon != null) {
                 tabItem.add(icon);
             }
+
             tabItemTitle = new InlineLabel(title);
             tabItemTitle.addStyleName(resources.partStackCss().idePartStackTabLabel());
             tabItem.add(tabItemTitle);
+
             if (widget != null) {
                 tabItem.add(widget);
             }
@@ -247,8 +254,12 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
                 image = new Image(resources.close());
                 image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
                 tabItem.add(image);
-                tabItem.ensureDebugId("partStack-TabButton");
-                addHandlers();
+                image.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        CloseEvent.fire(PartButton.this, PartButton.this);
+                    }
+                });
             }
         }
 
@@ -283,15 +294,6 @@ public class PartStackViewImpl extends ResizeComposite implements PartStackView 
         @Override
         public HandlerRegistration addCloseHandler(CloseHandler<TabItem> handler) {
             return addHandler(handler, CloseEvent.getType());
-        }
-
-        private void addHandlers() {
-            image.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    CloseEvent.fire(TabButton.this, TabButton.this);
-                }
-            });
         }
 
         @Override

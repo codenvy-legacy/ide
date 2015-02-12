@@ -67,19 +67,9 @@
         .consoleOutput {
         }
 
-        .consoleOutputMessage {
-        }
-
         .consoleScrollPanel pre {
             font-family: "Droid Sans Mono", monospace;
             font-size: 11px;
-        }
-
-        .appPanel {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
         }
 
         .terminalFrame {
@@ -92,17 +82,6 @@
             overflow: hidden;
         }
 
-        /* .appFrame {
-            background-color: white;
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            right: 0px;
-            bottom: 0px;
-            border: 0px;
-            overflow: hidden;
-        } */
-
         .runnerNotReadyLabel {
             left: 0;
             cursor: default;
@@ -113,7 +92,6 @@
             top: 50%;
             text-shadow: 0 1px 0 rgba(0, 0, 0, 1);
         }
-
     </ui:style>
 
     <g:DockLayoutPanel unit="PX" width="100%" height="100%">
@@ -127,9 +105,6 @@
                         <g:SimplePanel ui:field="terminalButton" addStyleNames="{style.tabButtonPanel}" debugId="runnerConsole-terminal-button">
                             <g:Label text="Terminal" addStyleNames="{style.tabButtonLabel}"/>
                         </g:SimplePanel>
-                        <!--g:SimplePanel ui:field="appPreviewButton" addStyleNames="{style.tabButtonPanel}">
-                            <g:Label text="App" addStyleNames="{style.tabButtonLabel}"/>
-                        </g:SimplePanel-->
                     </g:FlowPanel>
                 </g:west>
                 <g:center>
@@ -146,10 +121,6 @@
                     <g:Label ui:field="terminalUnavailableLabel" text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}" width="100%" height="100%"/>
                     <g:Frame ui:field="terminalFrame" width="100%" height="100%" addStyleNames="{style.terminalFrame}" debugId="runnerConsoleTerminalFrame"/>
                 </g:FlowPanel>
-                <!--g:FlowPanel ui:field="appPreviewPanel" debugId="appPreviewPanel">
-                    <g:Label ui:field="appPreviewUnavailablePanel" text="{locale.runnerNotReady}" addStyleNames="{style.runnerNotReadyLabel}" width="100%" height="100%"/>
-                    <g:Frame ui:field="appPreviewFrame" width="100%" height="100%" addStyleNames="{style.appFrame}"/>
-                </g:FlowPanel-->
             </g:DeckPanel>
         </g:center>
     </g:DockLayoutPanel>
