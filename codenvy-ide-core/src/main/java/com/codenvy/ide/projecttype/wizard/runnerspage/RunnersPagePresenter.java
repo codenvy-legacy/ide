@@ -118,7 +118,10 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
                 } else {
                     RunnerEnvironmentTree tree = dtoFactory.createDto(RunnerEnvironmentTree.class)
                                                            .withDisplayName(environmentTree.getDisplayName());
-                    tree.addNode(environmentTree.getNode(category.toLowerCase()));
+                    RunnerEnvironmentTree node = environmentTree.getNode(category.toLowerCase());
+                    if (node != null) {
+                        tree.addNode(node);
+                    }
                     if (!tree.getNodes().isEmpty()) {
                         view.addRunner(tree);
                     }
