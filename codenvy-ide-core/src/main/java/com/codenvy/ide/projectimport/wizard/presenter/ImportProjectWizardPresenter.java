@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projectimport.wizard;
+package com.codenvy.ide.projectimport.wizard.presenter;
 
 import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.ImportSourceDescriptor;
@@ -21,6 +21,8 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
+import com.codenvy.ide.projectimport.wizard.ImportWizard;
+import com.codenvy.ide.projectimport.wizard.ImportWizardFactory;
 import com.codenvy.ide.projectimport.wizard.mainpage.MainPagePresenter;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.inject.Inject;

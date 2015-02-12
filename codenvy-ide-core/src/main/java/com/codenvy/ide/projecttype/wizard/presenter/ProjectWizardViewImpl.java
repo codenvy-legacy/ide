@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projecttype.wizard;
+package com.codenvy.ide.projecttype.wizard.presenter;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.mvp.Presenter;

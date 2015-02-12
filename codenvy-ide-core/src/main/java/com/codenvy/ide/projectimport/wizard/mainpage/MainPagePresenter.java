@@ -19,7 +19,7 @@ import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.projectimport.wizard.ImportWizardRegistry;
 import com.codenvy.ide.api.wizard.AbstractWizardPage;
 import com.codenvy.ide.collections.Array;
-import com.codenvy.ide.projectimport.wizard.ImportProjectWizardView.EnterPressedDelegate;
+import com.codenvy.ide.projectimport.wizard.presenter.ImportProjectWizardView.EnterPressedDelegate;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;

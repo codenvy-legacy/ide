@@ -48,6 +48,10 @@ public abstract class AbstractWizard<T> implements Wizard<T> {
         wizardPages = Collections.createArray();
     }
 
+    public Map<String, String> getContext() {
+        return context;
+    }
+
     /** Returns wizard's data-object. */
     public T getDataObject() {
         return dataObject;
