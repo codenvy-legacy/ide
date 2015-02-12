@@ -10,82 +10,60 @@
  *******************************************************************************/
 package com.codenvy.ide.api.wizard;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import static com.codenvy.ide.api.wizard.Wizard.UpdateDelegate;
+import java.util.Map;
 
 /**
- * This is an abstract base implementation of a {@link WizardPage}.
+ * Abstract base implementation of a {@link WizardPage}.
+ * <p/>
+ * It is completed and can not be skipped by default.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
+ * @author Artem Zatsarynnyy
  */
-public abstract class AbstractWizardPage implements WizardPage {
-    private final String         caption;
-    private final ImageResource  image;
-    protected     UpdateDelegate delegate;
-    protected     WizardContext  wizardContext;
+public abstract class AbstractWizardPage<T> implements WizardPage<T> {
+    protected T                     dataObject;
+    protected Map<String, String>   context;
+    protected Wizard.UpdateDelegate updateDelegate;
+
+    /** Create wizard page. */
+    protected AbstractWizardPage() {
+    }
 
     /**
-     * Create wizard page with given caption and image.
-     *
-     * @param caption
-     * @param image
+     * {@inheritDoc}
+     * <p/>
+     * Sub-classes should invoke {@code super.init} at the beginning of this method.
+     * <p/>
+     * Multiple pages have the same {@code dataObject}, and any change to the
+     * {@code dataObject} made by one page is available to the other pages.
      */
-    public AbstractWizardPage(@Nullable String caption, @Nullable ImageResource image) {
-        this.caption = caption;
-        this.image = image;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
     @Override
-    public String getCaption() {
-        return caption;
-    }
-
-    /** {@inheritDoc} */
-    @Nullable
-    @Override
-    public ImageResource getImage() {
-        return image;
+    public void init(T dataObject) {
+        this.dataObject = dataObject;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setUpdateDelegate(@Nonnull UpdateDelegate delegate) {
-        this.delegate = delegate;
+    public void setContext(@Nonnull Map<String, String> context) {
+        this.context = context;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void setContext(@Nonnull WizardContext wizardContext) {
-        this.wizardContext = wizardContext;
+    public void setUpdateDelegate(@Nonnull Wizard.UpdateDelegate delegate) {
+        this.updateDelegate = delegate;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void storeOptions() {
-        // do nothing
+    public boolean isCompleted() {
+        return true;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean canSkip() {
         return false;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean inContext() {
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void commit(@Nonnull CommitCallback callback) {
-        callback.onSuccess();
     }
 }

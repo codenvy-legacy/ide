@@ -38,6 +38,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("checkingProjectsList")
     String checkingProjectsList();
 
+    @Key("view.selectRunnerPage.memoryRecommendedLabel")
+    String selectRunnerPageViewMemoryRecommendedLabel();
+
     @Key("noTechnologyTitle")
     String noTechnologyTitle();
 
@@ -162,9 +165,6 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("createProjectFromTemplate.private")
     String createProjectFromTemplatePrivate();
-
-    @Key("projectWizard.linkGetMoreRAM")
-    String projectWizardLinkGetMoreRAM();
 
     @Key("projectWizard.defaultTitleText")
     String projectWizardDefaultTitleText();
@@ -373,7 +373,7 @@ public interface CoreLocalizationConstant extends Messages {
     String appWillBeStopped(String appName);
 
     @Key("messages.workspaceRamLessRequiredRam")
-    String messagesWorkspaceRamLessRequiredRam(int requiredMemorySize, int workspaceMemorySize);
+    String getMoreRam(int requiredMemorySize, int workspaceMemorySize);
 
     @Key("messages.updateProjectWorkspaceRamLessRequired")
     String messagesUpdateProjectWorkspaceRamLessRequired(int requiredMemorySize, int workspaceMemorySize);
@@ -387,8 +387,8 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("messages.saveChanges")
     String messagesSaveChanges(String name);
 
-    @Key("messages.promtSaveChanges")
-    String messagesPromtSaveChanges();
+    @Key("messages.promptSaveChanges")
+    String messagesPromptSaveChanges();
 
     @Key("messages.unableOpenFile")
     public String unableOpenFile(String path);
