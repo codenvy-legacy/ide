@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projectimport.wizard;
+package com.codenvy.ide.projectimport.wizard.presenter;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.mvp.View;

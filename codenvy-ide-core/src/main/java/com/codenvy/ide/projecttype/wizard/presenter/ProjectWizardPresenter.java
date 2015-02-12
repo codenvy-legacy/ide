@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.projecttype.wizard;
+package com.codenvy.ide.projecttype.wizard.presenter;
 
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
@@ -31,6 +31,8 @@ import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.json.JsonHelper;
+import com.codenvy.ide.projecttype.wizard.ProjectWizard;
+import com.codenvy.ide.projecttype.wizard.ProjectWizardFactory;
 import com.codenvy.ide.projecttype.wizard.categoriespage.CategoriesPagePresenter;
 import com.codenvy.ide.projecttype.wizard.runnerspage.RunnersPagePresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;

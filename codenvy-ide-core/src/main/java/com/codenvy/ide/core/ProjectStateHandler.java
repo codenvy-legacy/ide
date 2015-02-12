@@ -33,7 +33,7 @@ import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.core.problemDialog.ProjectProblemDialog;
-import com.codenvy.ide.projecttype.wizard.ProjectWizardPresenter;
+import com.codenvy.ide.projecttype.wizard.presenter.ProjectWizardPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;

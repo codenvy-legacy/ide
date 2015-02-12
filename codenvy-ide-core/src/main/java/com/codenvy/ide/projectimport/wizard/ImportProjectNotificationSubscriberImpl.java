@@ -15,6 +15,7 @@ import com.codenvy.ide.api.projectimport.wizard.ImportProjectNotificationSubscri
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.projectimport.wizard.presenter.ImportProjectWizardPresenter;
 import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.websocket.Message;
 import com.codenvy.ide.websocket.MessageBus;
