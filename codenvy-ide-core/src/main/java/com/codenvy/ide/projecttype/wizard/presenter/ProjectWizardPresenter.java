@@ -188,6 +188,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                                                           .withAttributes(new HashMap<>(project.getAttributes()))
                                                                           .withBuilders(project.getBuilders())
                                                                           .withRunners(project.getRunners()));
+        dataObject.getProject().setMixinTypes(project.getMixins());
         showDialog(dataObject);
     }
 
