@@ -255,6 +255,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
+        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
 
         // set dataObject's values from projectType
         newProject.setType(projectType.getId());
@@ -283,6 +284,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
+//        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
 
         // set dataObject's values from projectTemplate
         newProject.setType(projectTemplate.getProjectType());
