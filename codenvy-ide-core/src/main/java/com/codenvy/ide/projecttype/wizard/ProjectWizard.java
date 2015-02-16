@@ -18,7 +18,9 @@ import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.OpenProjectEvent;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.wizard.AbstractWizard;
 import com.codenvy.ide.dto.DtoFactory;
@@ -35,6 +37,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE_MODULE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.PROJECT_NAME_KEY;
@@ -56,6 +59,7 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     private final DtoFactory               dtoFactory;
     private final DialogFactory            dialogFactory;
     private final EventBus                 eventBus;
+    private final AppContext appContext;
 
     /**
      * Creates project wizard.
@@ -67,7 +71,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
      * @param totalMemory
      *         available memory for runner
      * @param projectPath
-     *         path of the project. Make sense if wizard created for updating project
+     *         path to the project to update if wizard created in {@link ProjectWizardMode#UPDATE} mode
+     *         or path to the folder to convert it to module if wizard created in {@link ProjectWizardMode#CREATE_MODULE} mode
      * @param localizationConstants
      *         localization constants
      * @param projectServiceClient
@@ -78,6 +83,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
      *         {@link com.codenvy.ide.ui.dialogs.DialogFactory} instance
      * @param eventBus
      *         {@link com.google.web.bindery.event.shared.EventBus} instance
+     * @param appContext
+     *         {@link com.codenvy.ide.api.app.AppContext} instance
      */
     @Inject
     public ProjectWizard(@Assisted ImportProject dataObject,
@@ -89,7 +96,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
                          DtoUnmarshallerFactory dtoUnmarshallerFactory,
                          DtoFactory dtoFactory,
                          DialogFactory dialogFactory,
-                         EventBus eventBus) {
+                         EventBus eventBus,
+                         AppContext appContext) {
         super(dataObject);
         this.mode = mode;
         this.totalMemory = totalMemory;
@@ -99,10 +107,11 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
         this.dtoFactory = dtoFactory;
         this.dialogFactory = dialogFactory;
         this.eventBus = eventBus;
+        this.appContext = appContext;
 
         context.put(WIZARD_MODE_KEY, mode.toString());
-        if (mode == UPDATE) {
-            context.put(PROJECT_NAME_KEY, dataObject.getProject().getName());
+        context.put(PROJECT_NAME_KEY, dataObject.getProject().getName());
+        if (mode == UPDATE || mode == CREATE_MODULE) {
             context.put(PROJECT_PATH_KEY, projectPath);
         }
     }
@@ -112,6 +121,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     public void complete(@Nonnull final CompleteCallback callback) {
         if (mode == CREATE) {
             createProject(callback);
+        } else if (mode == CREATE_MODULE) {
+            createModule(callback);
         } else if (mode == UPDATE) {
             updateProject(callback);
         } else if (mode == IMPORT) {
@@ -159,6 +170,26 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
                 callback.onFailure(new Exception(message));
             }
         });
+    }
+
+    private void createModule(final CompleteCallback callback) {
+        final String parentPath = appContext.getCurrentProject().getRootProject().getPath();
+        final String modulePath = context.get(PROJECT_PATH_KEY);
+        final NewProject project = dataObject.getProject();
+        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        projectServiceClient.createModule(
+                parentPath, modulePath, project, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                    @Override
+                    protected void onSuccess(ProjectDescriptor result) {
+                        eventBus.fireEvent(new RefreshProjectTreeEvent());
+                        callback.onCompleted();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        callback.onFailure(exception);
+                    }
+                });
     }
 
     private void importProject(final CompleteCallback callback) {

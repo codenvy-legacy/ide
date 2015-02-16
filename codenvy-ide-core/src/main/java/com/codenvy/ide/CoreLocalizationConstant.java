@@ -172,6 +172,9 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("projectWizard.titleText")
     String projectWizardTitleText();
 
+    @Key("projectWizard.createModule.titleText")
+    String projectWizardCreateModuleTitleText();
+
     @Key("projectWizard.defaultSaveButtonText")
     String projectWizardDefaultSaveButtonText();
 

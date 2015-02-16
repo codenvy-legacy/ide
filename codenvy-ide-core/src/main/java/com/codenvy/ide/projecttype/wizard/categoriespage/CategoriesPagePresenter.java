@@ -93,7 +93,7 @@ public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> i
             }
         }
 
-        view.updateCategories(UPDATE != wizardMode);
+        view.updateCategories(CREATE == wizardMode);
     }
 
     @Override
