@@ -61,7 +61,6 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
                                 ProjectWizardRegistry projectWizardRegistry,
                                 DtoFactory dtoFactory,
                                 DialogFactory dialogFactory) {
-        super();
         this.view = view;
         this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
