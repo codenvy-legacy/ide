@@ -54,7 +54,6 @@ public class ProjectTypeRegistryImpl implements ProjectTypeRegistry {
         if (types == null) {
             types = new ArrayList<>();
         }
-        Log.info(this.getClass(), projectType.getDisplayName() + " " + types.size());
         types.add(projectType);
     }
 }
