@@ -208,8 +208,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
             @Override
             protected void onSuccess(ResourcesDescriptor resources) {
                 totalMemory = Integer.valueOf(resources.getTotalMemory());
-                final int usedMemory = Integer.valueOf(resources.getUsedMemory());
-                view.setRAMAvailable(totalMemory - usedMemory);
+                view.setRAMAvailable(totalMemory);
 
                 // show dialog
                 wizard = createDefaultWizard(dataObject, isCreatingNewProject ? CREATE : UPDATE);
@@ -301,7 +300,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         } else {
             view.setRunnerEnvironmentConfig(null);
         }
-        view.setRAMRequired(requiredRAM);
     }
 
     /** Creates or returns project wizard for the specified projectType with the given dataObject. */

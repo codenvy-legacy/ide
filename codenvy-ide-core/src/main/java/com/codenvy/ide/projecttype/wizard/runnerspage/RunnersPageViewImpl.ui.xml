@@ -79,15 +79,6 @@
                         </g:TextArea>
                     </g:FlowPanel>
                 </g:north>
-                <g:north size="30">
-                    <g:HorizontalPanel verticalAlignment="ALIGN_MIDDLE">
-                        <g:Label text="{locale.selectRunnerPageViewMemoryRecommendedLabel}" width="165px"
-                                 addStyleNames="{style.labelPosition}"/>
-                        <g:TextBox readOnly="false" ui:field="recommendedMemory" height="12px" width="40px" maxLength="4"
-                                   addStyleNames="{style.gwt-TextBox}"
-                                   debugId="project-selectRunnerPage-recommendedMemory"/>
-                    </g:HorizontalPanel>
-                </g:north>
             </g:DockLayoutPanel>
         </g:east>
     </g:DockLayoutPanel>

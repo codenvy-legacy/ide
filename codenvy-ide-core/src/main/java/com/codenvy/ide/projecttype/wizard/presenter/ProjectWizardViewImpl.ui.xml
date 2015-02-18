@@ -128,12 +128,6 @@
                       debugId="projectWizard-previousStepButton"/>
             <g:FlowPanel ui:field="infoRAMPanel">
                 <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="RAM Required:" addStyleNames="{style.infoText}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="requiredRAM" addStyleNames="{style.infoValue}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
                     <g:Label text="RAM Available:" addStyleNames="{style.infoText}"/>
                 </g:FlowPanel>
                 <g:FlowPanel addStyleNames="{style.labelPanel}">

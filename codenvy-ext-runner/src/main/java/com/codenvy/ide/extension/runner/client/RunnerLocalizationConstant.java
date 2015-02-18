@@ -279,9 +279,6 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("view.customEnvironments.dotsNotAllowed.message")
     String customEnvironmentsViewDotsNotAllowedMessage();
 
-    @Key("view.selectRunnerPage.memoryRecommendedLabel")
-    String selectRunnerPageViewMemoryRecommendedLabel();
-
     /* RunnerConsoleView */
     @Key("view.runnerConsole.title")
     String runnerConsoleViewTitle();

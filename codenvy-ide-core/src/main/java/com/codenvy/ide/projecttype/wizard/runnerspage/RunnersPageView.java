@@ -22,11 +22,6 @@ import javax.annotation.Nullable;
  */
 @ImplementedBy(RunnersPageViewImpl.class)
 public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
-    /** Get recommended memory size for runner. */
-    int getRecommendedMemorySize();
-
-    /** Set  recommended memory size for runner. */
-    void setRecommendedMemorySize(int recommendedRam);
 
     void showRunnerDescription(String description);
 
@@ -37,8 +32,6 @@ public interface RunnersPageView extends View<RunnersPageView.ActionDelegate> {
     void clearTree();
 
     public interface ActionDelegate {
-        void recommendedMemoryChanged();
-
         void environmentSelected(@Nullable RunnerEnvironment environment);
     }
 }

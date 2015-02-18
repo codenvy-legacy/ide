@@ -27,8 +27,6 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void showDialog(boolean isCreatingNewProject);
 
-    void setRAMRequired(int amountOfRAM);
-
     void setRAMAvailable(int amountOfRAM);
 
     void setBuilderEnvironmentConfig(@Nullable String text);

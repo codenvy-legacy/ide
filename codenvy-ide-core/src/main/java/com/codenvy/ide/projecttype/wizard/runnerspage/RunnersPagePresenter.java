@@ -142,26 +142,7 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
         if (runners != null) {
             final String defaultRunner = runners.getDefault();
             view.selectRunnerEnvironment(defaultRunner);
-
-            final RunnerConfiguration defaultRunnerConfig = runners.getConfigs().get(defaultRunner);
-            if (defaultRunnerConfig != null) {
-                view.setRecommendedMemorySize(defaultRunnerConfig.getRam());
-            }
         }
-    }
-
-    @Override
-    public void recommendedMemoryChanged() {
-        final RunnersDescriptor runners = dataObject.getProject().getRunners();
-        if (runners != null) {
-            final String defaultRunner = runners.getDefault();
-            final RunnerConfiguration defaultRunnerConf = runners.getConfigs().get(defaultRunner);
-            if (defaultRunnerConf != null) {
-                defaultRunnerConf.setRam(view.getRecommendedMemorySize());
-            }
-        }
-
-        updateDelegate.updateControls();
     }
 
     @Override
@@ -175,8 +156,6 @@ public class RunnersPagePresenter extends AbstractWizardPage<ImportProject> impl
             Map<String, RunnerConfiguration> configurations = new HashMap<>();
             configurations.put(environment.getId(), runnerConfiguration);
             runnersDescriptor.setConfigs(configurations);
-
-            runnerConfiguration.setRam(view.getRecommendedMemorySize());
 
             dataObject.getProject().setRunners(runnersDescriptor);
             view.showRunnerDescription(environment.getDescription());

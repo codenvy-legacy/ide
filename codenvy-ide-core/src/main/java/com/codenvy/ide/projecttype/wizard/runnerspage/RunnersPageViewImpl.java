@@ -48,8 +48,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
     @UiField
     Label       noEnvLabel;
     @UiField
-    TextBox     recommendedMemory;
-    @UiField
     TextArea    runnerDescription;
     @UiField
     SimplePanel treeContainer;
@@ -60,9 +58,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
     @Inject
     public RunnersPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
         rootElement = ourUiBinder.createAndBindUi(this);
-        recommendedMemory.getElement().setAttribute("type", "number");
-        recommendedMemory.getElement().setAttribute("step", "128");
-        recommendedMemory.getElement().setAttribute("min", "0");
 
         root = dtoFactory.createDto(RunnerEnvironmentTree.class);
         tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
@@ -116,11 +111,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
         });
     }
 
-    @UiHandler("recommendedMemory")
-    void recommendedMemoryChanged(KeyUpEvent event) {
-        delegate.recommendedMemoryChanged();
-    }
-
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
@@ -129,20 +119,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
     @Override
     public Widget asWidget() {
         return rootElement;
-    }
-
-    @Override
-    public int getRecommendedMemorySize() {
-        try {
-            return Integer.parseInt(recommendedMemory.getText());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setRecommendedMemorySize(int recommendedRam) {
-        recommendedMemory.setText(String.valueOf(recommendedRam));
     }
 
     @Override
