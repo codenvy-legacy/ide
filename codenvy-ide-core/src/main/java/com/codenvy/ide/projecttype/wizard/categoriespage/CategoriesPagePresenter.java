@@ -32,7 +32,6 @@ import java.util.Set;
 
 import static com.codenvy.api.project.shared.Constants.DEFAULT_TEMPLATE_CATEGORY;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
-import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZARD_MODE_KEY;
 
 /**
@@ -40,6 +39,7 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZA
  *
  * @author Evgen Vidolob
  * @author Artem Zatsarynnyy
+ * @author Dmitry Shnurenko
  */
 public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> implements CategoriesPageView.ActionDelegate {
     private static final String PUBLIC_VISIBILITY  = "public";
@@ -107,7 +107,6 @@ public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> i
     public void go(final AcceptsOneWidget container) {
         container.setWidget(view);
         updateView();
-        view.focusName();
     }
 
     /** Updates view from data-object. */
@@ -125,7 +124,6 @@ public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> i
     public void projectTypeSelected(ProjectTypeDefinition typeDescriptor) {
         selectedProjectType = typeDescriptor;
         selectedProjectTemplate = null;
-        view.focusName();
 
         if (projectTypeSelectionListener != null) {
             projectTypeSelectionListener.onProjectTypeSelected(typeDescriptor);
@@ -137,7 +135,6 @@ public class CategoriesPagePresenter extends AbstractWizardPage<ImportProject> i
     public void projectTemplateSelected(ProjectTemplateDescriptor templateDescriptor) {
         selectedProjectType = null;
         selectedProjectTemplate = templateDescriptor;
-        view.focusName();
 
         if (projectTemplateSelectionListener != null) {
             projectTemplateSelectionListener.onProjectTemplateSelected(templateDescriptor);
