@@ -240,21 +240,22 @@ public class BootstrapController {
     }
 
     private void loadProjectTypes() {
-        projectTypeService.getProjectTypes(new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
+        projectTypeService.getProjectTypes(
+                new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
 
-            @Override
-            protected void onSuccess(Array<ProjectTypeDefinition> result) {
-                for (ProjectTypeDefinition projectType : result.asIterable()) {
-                    projectTypeRegistry.register(projectType);
-                }
-                loadProjectTemplates();
-            }
+                    @Override
+                    protected void onSuccess(Array<ProjectTypeDefinition> result) {
+                        for (ProjectTypeDefinition projectType : result.asIterable()) {
+                            projectTypeRegistry.register(projectType);
+                        }
+                        loadProjectTemplates();
+                    }
 
-            @Override
-            protected void onFailure(Throwable exception) {
-                Log.error(BootstrapController.class, exception);
-            }
-        });
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(BootstrapController.class, exception);
+                    }
+                });
     }
 
     private void loadProjectTemplates() {
@@ -380,43 +381,39 @@ public class BootstrapController {
         window.addEventListener(Event.FOCUS, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusIn(analyticsSessions, false);
+                onSessionUsage(analyticsSessions, false);
             }
         }, true);
 
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusOut(analyticsSessions, false);
+                onSessionUsage(analyticsSessions, false);
             }
         }, true);
 
-        onFocusIn(analyticsSessions, true); // This is necessary to forcibly print the very first event
+        onSessionUsage(analyticsSessions, true); // This is necessary to forcibly print the very first event
     }
 
-    private void onFocusIn(AnalyticsSessions analyticsSessions, boolean force) {
-        if (analyticsSessions.getIdleTime() > 600000) { // 10 min
+    private void onSessionUsage(AnalyticsSessions analyticsSessions, boolean force) {
+        if (analyticsSessions.getIdleUsageTime() > 600000) { // 10 min
             analyticsSessions.makeNew();
-            force = true;
+            logSessionUsageEvent(analyticsSessions, true);
+        } else {
+            logSessionUsageEvent(analyticsSessions, force);
+            analyticsSessions.updateUsageTime();
         }
-
-        analyticsSessions.setHasFocus(true);
-        logSessionUsageEvent(analyticsSessions, force);
     }
 
     private void onWindowClose(AnalyticsSessions analyticsSessions) {
-        if (analyticsSessions.isHasFocus() || analyticsSessions.getIdleTime() <= 60000) { // 1 min
+        if (analyticsSessions.getIdleUsageTime() <= 60000) { // 1 min
             logSessionUsageEvent(analyticsSessions, true);
+            analyticsSessions.updateUsageTime();
         }
     }
 
-    private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
-        analyticsSessions.setHasFocus(false);
-        logSessionUsageEvent(analyticsSessions, force);
-    }
-
     private void logSessionUsageEvent(AnalyticsSessions analyticsSessions, boolean force) {
-        if (force || analyticsSessions.getIdleTime() > 60000) { // 1 min, don't log frequently than once per minute
+        if (force || analyticsSessions.getIdleLogTime() > 60000) { // 1 min, don't log frequently than once per minute
             Map<String, String> parameters = new HashMap<>();
             parameters.put("SESSION-ID", analyticsSessions.getId());
 
@@ -426,7 +423,7 @@ public class BootstrapController {
                 analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
             }
 
-            analyticsSessions.updateLastLogTime();
+            analyticsSessions.updateLogTime();
         }
     }
 
@@ -563,9 +560,9 @@ public class BootstrapController {
 
 
     private static class AnalyticsSessions {
-        private String  id;
-        private long    lastLogTime;
-        private boolean hasFocus;
+        private String id;
+        private long   lastLogTime;
+        private long   lastUsageTime;
 
         private AnalyticsSessions() {
             makeNew();
@@ -575,26 +572,26 @@ public class BootstrapController {
             return id;
         }
 
-        public void updateLastLogTime() {
+        public void updateLogTime() {
             lastLogTime = System.currentTimeMillis();
+        }
+
+        public void updateUsageTime() {
+            lastUsageTime = System.currentTimeMillis();
         }
 
         public void makeNew() {
             this.id = UUID.uuid();
-            this.lastLogTime = System.currentTimeMillis();
-            this.hasFocus = false;
+            this.lastUsageTime = System.currentTimeMillis();
+            this.lastLogTime = lastUsageTime;
         }
 
-        public long getIdleTime() {
-            return System.currentTimeMillis() - lastLogTime;
+        public long getIdleUsageTime() {
+            return System.currentTimeMillis() - lastUsageTime;
         }
 
-        public boolean isHasFocus() {
-            return hasFocus;
-        }
-
-        public void setHasFocus(boolean hasFocus) {
-            this.hasFocus = hasFocus;
+        public long getIdleLogTime() {
+            return System.currentTimeMillis() - lastUsageTime;
         }
     }
 }
