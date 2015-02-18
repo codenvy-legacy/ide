@@ -18,6 +18,10 @@ import com.codenvy.api.analytics.logger.EventLogger;
 import com.codenvy.api.factory.dto.Factory;
 import com.codenvy.api.factory.dto.Ide;
 import com.codenvy.api.factory.gwt.client.FactoryServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTemplateServiceClient;
+import com.codenvy.api.project.gwt.client.ProjectTypeServiceClient;
+import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
+import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.user.gwt.client.UserProfileServiceClient;
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 import com.codenvy.api.workspace.gwt.client.WorkspaceServiceClient;
@@ -36,9 +40,12 @@ import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.WindowActionEvent;
 import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTemplateRegistry;
+import com.codenvy.ide.api.projecttype.ProjectTypeRegistry;
 import com.codenvy.ide.api.theme.Style;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
+import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.ComponentRegistry;
 import com.codenvy.ide.logger.AnalyticsEventLoggerExt;
@@ -88,6 +95,10 @@ public class BootstrapController {
     private final FactoryServiceClient         factoryService;
     private final UserProfileServiceClient     userProfileService;
     private final WorkspaceServiceClient       workspaceServiceClient;
+    private final ProjectTypeServiceClient     projectTypeService;
+    private final ProjectTemplateServiceClient projectTemplateServiceClient;
+    private final ProjectTypeRegistry          projectTypeRegistry;
+    private final ProjectTemplateRegistry      projectTemplateRegistry;
     private final PreferencesManagerImpl       preferencesManager;
     private final StyleInjector                styleInjector;
     private final CoreLocalizationConstant     coreLocalizationConstant;
@@ -95,7 +106,7 @@ public class BootstrapController {
     private final ActionManager                actionManager;
     private final AppCloseHandler              appCloseHandler;
     private final PresentationFactory          presentationFactory;
-    private       AppContext                   appContext;
+    private final AppContext                   appContext;
 
     /** Create controller. */
     @Inject
@@ -104,6 +115,10 @@ public class BootstrapController {
                                ExtensionInitializer extensionInitializer,
                                UserProfileServiceClient userProfileService,
                                WorkspaceServiceClient workspaceServiceClient,
+                               ProjectTypeServiceClient projectTypeService,
+                               ProjectTemplateServiceClient projectTemplateServiceClient,
+                               ProjectTypeRegistry projectTypeRegistry,
+                               ProjectTemplateRegistry projectTemplateRegistry,
                                PreferencesManagerImpl preferencesManager,
                                StyleInjector styleInjector,
                                CoreLocalizationConstant coreLocalizationConstant,
@@ -123,6 +138,10 @@ public class BootstrapController {
         this.extensionInitializer = extensionInitializer;
         this.userProfileService = userProfileService;
         this.workspaceServiceClient = workspaceServiceClient;
+        this.projectTypeService = projectTypeService;
+        this.projectTemplateServiceClient = projectTemplateServiceClient;
+        this.projectTypeRegistry = projectTypeRegistry;
+        this.projectTemplateRegistry = projectTemplateRegistry;
         this.preferencesManager = preferencesManager;
         this.styleInjector = styleInjector;
         this.coreLocalizationConstant = coreLocalizationConstant;
@@ -209,14 +228,50 @@ public class BootstrapController {
                 preferencesManager.load(preferences);
                 setTheme();
                 styleInjector.inject();
-
-                loadFactory();
+                loadProjectTypes();
             }
 
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(BootstrapController.class, "Unable to load user preferences", exception);
                 initializationFailed("Unable to load preferences");
+            }
+        });
+    }
+
+    private void loadProjectTypes() {
+        projectTypeService.getProjectTypes(
+                new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
+
+                    @Override
+                    protected void onSuccess(Array<ProjectTypeDefinition> result) {
+                        for (ProjectTypeDefinition projectType : result.asIterable()) {
+                            projectTypeRegistry.register(projectType);
+                        }
+                        loadProjectTemplates();
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        Log.error(BootstrapController.class, exception);
+                    }
+                });
+    }
+
+    private void loadProjectTemplates() {
+        projectTemplateServiceClient.getProjectTemplates(new AsyncRequestCallback<Array<ProjectTemplateDescriptor>>(
+                dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTemplateDescriptor.class)) {
+            @Override
+            protected void onSuccess(Array<ProjectTemplateDescriptor> result) {
+                for (ProjectTemplateDescriptor template : result.asIterable()) {
+                    projectTemplateRegistry.register(template);
+                }
+                loadFactory();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                Log.error(BootstrapController.class, exception);
             }
         });
     }
@@ -326,43 +381,39 @@ public class BootstrapController {
         window.addEventListener(Event.FOCUS, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusIn(analyticsSessions, false);
+                onSessionUsage(analyticsSessions, false);
             }
         }, true);
 
         window.addEventListener(Event.BLUR, new EventListener() {
             @Override
             public void handleEvent(Event evt) {
-                onFocusOut(analyticsSessions, false);
+                onSessionUsage(analyticsSessions, false);
             }
         }, true);
 
-        onFocusIn(analyticsSessions, true); // This is necessary to forcibly print the very first event
+        onSessionUsage(analyticsSessions, true); // This is necessary to forcibly print the very first event
     }
 
-    private void onFocusIn(AnalyticsSessions analyticsSessions, boolean force) {
-        if (analyticsSessions.getIdleTime() > 600000) { // 10 min
+    private void onSessionUsage(AnalyticsSessions analyticsSessions, boolean force) {
+        if (analyticsSessions.getIdleUsageTime() > 600000) { // 10 min
             analyticsSessions.makeNew();
-            force = true;
+            logSessionUsageEvent(analyticsSessions, true);
+        } else {
+            logSessionUsageEvent(analyticsSessions, force);
+            analyticsSessions.updateUsageTime();
         }
-
-        analyticsSessions.setHasFocus(true);
-        logSessionUsageEvent(analyticsSessions, force);
     }
 
     private void onWindowClose(AnalyticsSessions analyticsSessions) {
-        if (analyticsSessions.isHasFocus() || analyticsSessions.getIdleTime() <= 60000) { // 1 min
+        if (analyticsSessions.getIdleUsageTime() <= 60000) { // 1 min
             logSessionUsageEvent(analyticsSessions, true);
+            analyticsSessions.updateUsageTime();
         }
     }
 
-    private void onFocusOut(AnalyticsSessions analyticsSessions, boolean force) {
-        analyticsSessions.setHasFocus(false);
-        logSessionUsageEvent(analyticsSessions, force);
-    }
-
     private void logSessionUsageEvent(AnalyticsSessions analyticsSessions, boolean force) {
-        if (force || analyticsSessions.getIdleTime() > 60000) { // 1 min, don't log frequently than once per minute
+        if (force || analyticsSessions.getIdleLogTime() > 60000) { // 1 min, don't log frequently than once per minute
             Map<String, String> parameters = new HashMap<>();
             parameters.put("SESSION-ID", analyticsSessions.getId());
 
@@ -372,7 +423,7 @@ public class BootstrapController {
                 analyticsEventLoggerExt.logEvent(EventLogger.SESSION_FACTORY_USAGE, parameters);
             }
 
-            analyticsSessions.updateLastLogTime();
+            analyticsSessions.updateLogTime();
         }
     }
 
@@ -509,9 +560,9 @@ public class BootstrapController {
 
 
     private static class AnalyticsSessions {
-        private String  id;
-        private long    lastLogTime;
-        private boolean hasFocus;
+        private String id;
+        private long   lastLogTime;
+        private long   lastUsageTime;
 
         private AnalyticsSessions() {
             makeNew();
@@ -521,26 +572,26 @@ public class BootstrapController {
             return id;
         }
 
-        public void updateLastLogTime() {
+        public void updateLogTime() {
             lastLogTime = System.currentTimeMillis();
+        }
+
+        public void updateUsageTime() {
+            lastUsageTime = System.currentTimeMillis();
         }
 
         public void makeNew() {
             this.id = UUID.uuid();
-            this.lastLogTime = System.currentTimeMillis();
-            this.hasFocus = false;
+            this.lastUsageTime = System.currentTimeMillis();
+            this.lastLogTime = lastUsageTime;
         }
 
-        public long getIdleTime() {
-            return System.currentTimeMillis() - lastLogTime;
+        public long getIdleUsageTime() {
+            return System.currentTimeMillis() - lastUsageTime;
         }
 
-        public boolean isHasFocus() {
-            return hasFocus;
-        }
-
-        public void setHasFocus(boolean hasFocus) {
-            this.hasFocus = hasFocus;
+        public long getIdleLogTime() {
+            return System.currentTimeMillis() - lastUsageTime;
         }
     }
 }

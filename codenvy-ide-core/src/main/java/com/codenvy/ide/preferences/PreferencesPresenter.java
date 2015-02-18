@@ -196,7 +196,7 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate, Pre
             }
         }
         if (haveUnsavedData) {
-            dialogFactory.createConfirmDialog("", locale.messagesPromtSaveChanges(), getConfirmCallback(), getCancelCallback()).show();
+            dialogFactory.createConfirmDialog("", locale.messagesPromptSaveChanges(), getConfirmCallback(), getCancelCallback()).show();
         } else {
             view.close();
         }

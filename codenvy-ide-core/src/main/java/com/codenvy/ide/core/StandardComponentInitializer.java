@@ -13,6 +13,7 @@ package com.codenvy.ide.core;
 import com.codenvy.api.project.shared.Constants;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.actions.CloseProjectAction;
+import com.codenvy.ide.actions.CreateModuleAction;
 import com.codenvy.ide.actions.DeleteItemAction;
 import com.codenvy.ide.actions.ExpandEditorAction;
 import com.codenvy.ide.actions.FindReplaceAction;
@@ -47,9 +48,6 @@ import com.codenvy.ide.api.icon.Icon;
 import com.codenvy.ide.api.icon.IconRegistry;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.keybinding.KeyBuilder;
-import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.projecttype.wizard.ProjectTypeWizardRegistry;
-import com.codenvy.ide.api.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.connection.WsConnectionListener;
 import com.codenvy.ide.imageviewer.ImageViewerProvider;
 import com.codenvy.ide.newresource.NewFileAction;
@@ -167,6 +165,9 @@ public class StandardComponentInitializer {
     private NewProjectAction newProjectAction;
 
     @Inject
+    private CreateModuleAction createModuleAction;
+
+    @Inject
     private NewFolderAction newFolderAction;
 
     @Inject
@@ -177,12 +178,6 @@ public class StandardComponentInitializer {
 
     @Inject
     private ImageViewerProvider imageViewerProvider;
-
-    @Inject
-    private ProjectTypeWizardRegistry wizardRegistry;
-
-    @Inject
-    private NotificationManager notificationManager;
 
     @Inject
     private ProjectConfigurationAction projectConfigurationAction;
@@ -302,6 +297,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("uploadFile", uploadFileAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);
         actionManager.registerAction("projectConfiguration", projectConfigurationAction);
+        actionManager.registerAction("createModuleAction", createModuleAction);
 
         // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
@@ -323,6 +319,8 @@ public class StandardComponentInitializer {
         fileGroup.add(navigateToFileAction);
         fileGroup.add(renameItemAction);
         fileGroup.add(deleteItemAction);
+        fileGroup.addSeparator();
+        fileGroup.addAction(createModuleAction);
         fileGroup.add(saveGroup);
 
         // Compose View menu
@@ -367,6 +365,8 @@ public class StandardComponentInitializer {
         resourceOperation.add(openSelectedFileAction);
         resourceOperation.add(renameItemAction);
         resourceOperation.add(deleteItemAction);
+        resourceOperation.addSeparator();
+        resourceOperation.add(createModuleAction);
 
         DefaultActionGroup closeProjectGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("closeProjectGroup", closeProjectGroup);
@@ -418,7 +418,5 @@ public class StandardComponentInitializer {
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('s').build(), "save");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('S').build(), "saveAll");
         keyBinding.getGlobal().addKey(new KeyBuilder().action().charCode('A').build(), "findActionAction");
-
-        wizardRegistry.addWizard(com.codenvy.api.project.shared.Constants.BLANK_ID, new ProjectWizard(notificationManager));
     }
 }
