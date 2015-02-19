@@ -146,7 +146,9 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
      * Method is called immediately when receiving or loosing the focus.
      */
     protected void updateFocus() {
-        getElement().focus();
+        if (focused) {
+            getElement().focus();
+        }
     }
 
 }
