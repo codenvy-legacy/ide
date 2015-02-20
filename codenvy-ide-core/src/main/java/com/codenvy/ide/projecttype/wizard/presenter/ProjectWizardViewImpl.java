@@ -12,6 +12,7 @@ package com.codenvy.ide.projecttype.wizard.presenter;
 
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.mvp.Presenter;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.ui.window.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,6 +31,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE_MODULE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 
 /**
  * @author Evgen Vidolob
@@ -148,15 +153,18 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     }
 
     @Override
-    public void showDialog(boolean isCreatingNewProject) {
-        this.isCreatingNewProject = isCreatingNewProject;
+    public void showDialog(ProjectWizardMode wizardMode) {
+        this.isCreatingNewProject = wizardMode == CREATE;
 
-        if (isCreatingNewProject) {
+        if (wizardMode == CREATE) {
             setTitle(coreLocalizationConstant.projectWizardDefaultTitleText());
             saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
-        } else {
+        } else if (wizardMode == UPDATE) {
             setTitle(coreLocalizationConstant.projectWizardTitleText());
             saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
+        } else if (wizardMode == CREATE_MODULE) {
+            setTitle(coreLocalizationConstant.projectWizardCreateModuleTitleText());
+            saveButton.setText(coreLocalizationConstant.projectWizardDefaultSaveButtonText());
         }
 
         show();

@@ -12,6 +12,7 @@ package com.codenvy.ide.projecttype.wizard.presenter;
 
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.google.inject.ImplementedBy;
 
 import javax.annotation.Nullable;
@@ -25,7 +26,7 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void showPage(Presenter presenter);
 
-    void showDialog(boolean isCreatingNewProject);
+    void showDialog(ProjectWizardMode wizardMode);
 
     void setRAMAvailable(int amountOfRAM);
 
