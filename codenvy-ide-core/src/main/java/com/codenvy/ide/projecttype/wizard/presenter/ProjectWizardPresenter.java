@@ -13,6 +13,7 @@ package com.codenvy.ide.projecttype.wizard.presenter;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.GeneratorDescription;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
+import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE_MODULE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 
@@ -86,12 +88,11 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     private       ProjectWizard                             importWizard;
     private       WizardPage                                currentPage;
 
-    /** Whether project wizard opened for creating new project or for updating an existing one? */
-    private boolean isCreatingNewProject;
+    private ProjectWizardMode wizardMode;
     /** Total workspace memory available for runner. */
-    private int     totalMemory;
+    private int               totalMemory;
     /** Contains project's path when project wizard opened for updating project. */
-    private String  projectPath;
+    private String            projectPath;
 
     @Inject
     public ProjectWizardPresenter(ProjectWizardView view,
@@ -170,14 +171,14 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     /** Open the project wizard for creating a new project. */
     public void show() {
         resetState();
-        isCreatingNewProject = true;
+        wizardMode = CREATE;
         showDialog(null);
     }
 
     /** Open the project wizard for updating the given {@code project}. */
     public void show(@Nonnull ProjectDescriptor project) {
         resetState();
-        isCreatingNewProject = false;
+        wizardMode = UPDATE;
         projectPath = project.getPath();
         final ImportProject dataObject = dtoFactory.createDto(ImportProject.class)
                                                    .withProject(dtoFactory.createDto(NewProject.class)
@@ -192,10 +193,23 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         showDialog(dataObject);
     }
 
+    /** Open the project wizard for creating module from the given {@code folder}. */
+    public void show(@Nonnull ItemReference folder) {
+        resetState();
+        wizardMode = CREATE_MODULE;
+        projectPath = folder.getPath();
+        final ImportProject dataObject = dtoFactory.createDto(ImportProject.class)
+                                                   .withProject(dtoFactory.createDto(NewProject.class)
+                                                                          .withName(folder.getName()));
+
+        showDialog(dataObject);
+    }
+
     private void resetState() {
         wizardsCache.clear();
         categoriesPage = categoriesPageProvider.get();
         runnersPage = runnersPageProvider.get();
+        wizardMode = null;
         categoriesPage.setProjectTypeSelectionListener(this);
         categoriesPage.setProjectTemplateSelectionListener(this);
         projectPath = null;
@@ -211,11 +225,11 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                 view.setRAMAvailable(totalMemory);
 
                 // show dialog
-                wizard = createDefaultWizard(dataObject, isCreatingNewProject ? CREATE : UPDATE);
+                wizard = createDefaultWizard(dataObject, wizardMode);
                 final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
                 if (firstPage != null) {
                     showPage(firstPage);
-                    view.showDialog(isCreatingNewProject);
+                    view.showDialog(wizardMode);
                 }
             }
 
@@ -240,6 +254,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
+        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
 
         // set dataObject's values from projectType
         newProject.setType(projectType.getId());
@@ -268,6 +283,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
+//        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
 
         // set dataObject's values from projectTemplate
         newProject.setType(projectTemplate.getProjectType());
@@ -315,7 +331,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         }
 
         Array<Provider<? extends WizardPage<ImportProject>>> pageProviders = wizardRegistrar.getWizardPages();
-        final ProjectWizard projectWizard = createDefaultWizard(null, isCreatingNewProject ? CREATE : UPDATE);
+        final ProjectWizard projectWizard = createDefaultWizard(null, wizardMode);
         for (Provider<? extends WizardPage<ImportProject>> provider : pageProviders.asIterable()) {
             projectWizard.addPage(provider.get(), 1, false);
         }

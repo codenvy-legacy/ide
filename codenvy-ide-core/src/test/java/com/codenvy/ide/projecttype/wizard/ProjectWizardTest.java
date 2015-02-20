@@ -17,6 +17,7 @@ import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
 import com.codenvy.ide.CoreLocalizationConstant;
+import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.dto.DtoFactory;
@@ -42,10 +43,8 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.UPDATE;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -77,6 +76,8 @@ public class ProjectWizardTest {
     private DialogFactory            dialogFactory;
     @Mock
     private EventBus                 eventBus;
+    @Mock
+    private AppContext               appContext;
     @Mock
     private ImportProject            importProject;
     @Mock
@@ -245,6 +246,7 @@ public class ProjectWizardTest {
                                    dtoUnmarshallerFactory,
                                    dtoFactory,
                                    dialogFactory,
-                                   eventBus);
+                                   eventBus,
+                                   appContext);
     }
 }
