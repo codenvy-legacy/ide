@@ -44,6 +44,25 @@ public interface DialogFactory {
                                       @Nullable ConfirmCallback confirmCallback);
 
     /**
+     * Create a message dialog with only text as content.
+     *
+     * @param title
+     *         the window title
+     * @param content
+     *         the window content/text
+     * @param confirmCallback
+     *         the window confirm button tex
+     * @param confirmButtonTex
+     *         the callback used on Confirm
+     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     */
+
+    MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
+                                      @Nonnull IsWidget content,
+                                      @Nullable ConfirmCallback confirmCallback,
+                                      @Nonnull @Assisted("confirmButtonTex") String confirmButtonTex);
+
+    /**
      * Create a message dialog with a widget as content.
      *
      * @param title
@@ -150,8 +169,10 @@ public interface DialogFactory {
      *         the window title
      * @param content
      *         the window content/text
-     * @param firstChoiceLabel the label for the first choice
-     * @param secondeChoiceLabel the label for the first choice
+     * @param firstChoiceLabel
+     *         the label for the first choice
+     * @param secondeChoiceLabel
+     *         the label for the first choice
      * @param confirmCallback
      *         the callback used on OK
      * @param cancelCallback
@@ -159,27 +180,33 @@ public interface DialogFactory {
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull @Assisted("title") String title,
-                                     @Nonnull @Assisted("message") String content,
-                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
-                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                    @Nonnull @Assisted("message") String content,
+                                    @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                    @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
                                     @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
                                     @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
 
     /**
      * Create a choice dialog with a widget as content.
-     * 
-     * @param title the window title
-     * @param content the window content
-     * @param firstChoiceLabel the label for the first choice
-     * @param secondeChoiceLabel the label for the first choice
-     * @param firstChoiceCallback the callback used on fist choice
-     * @param secondChoiceCallback the callback used on second choice
+     *
+     * @param title
+     *         the window title
+     * @param content
+     *         the window content
+     * @param firstChoiceLabel
+     *         the label for the first choice
+     * @param secondeChoiceLabel
+     *         the label for the first choice
+     * @param firstChoiceCallback
+     *         the callback used on fist choice
+     * @param secondChoiceCallback
+     *         the callback used on second choice
      * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull String title,
-                                     @Nonnull IsWidget content,
-                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
-                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                    @Nonnull IsWidget content,
+                                    @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                    @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
                                     @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
                                     @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
 }
