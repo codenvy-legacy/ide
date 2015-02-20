@@ -165,8 +165,8 @@ public class ImportProjectWizardPresenter implements Wizard.UpdateDelegate,
         final ImportProject dataObject = dtoFactory.createDto(ImportProject.class)
                                                    .withProject(dtoFactory.createDto(NewProject.class))
                                                    .withSource(dtoFactory.createDto(Source.class)
-                                                                         .withProject(dtoFactory.createDto(ImportSourceDescriptor.class)
-                                                                                                .withLocation("")));
+                                                   .withProject(dtoFactory.createDto(ImportSourceDescriptor.class)
+                                                   .withLocation("")));
 
         final ImportWizard importWizard = importWizardFactory.newWizard(dataObject);
         importWizard.setUpdateDelegate(this);

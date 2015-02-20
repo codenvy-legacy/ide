@@ -186,8 +186,8 @@ public class RunnersPageViewImpl implements RunnersPageView {
     public void selectRunnerEnvironment(String environmentId) {
         final RunnerEnvironmentLeaf environment = environmentMap.get(environmentId);
         if (environmentMap.containsKey(environmentId)) {
-            tree.autoExpandAndSelectNode(environment, true);
-//            tree.getSelectionModel().selectSingleNode(environmentMap.get(environmentId));
+            // TODO: need to implement RunnersDataAdapter.getParent() to properly working auto-expanding feature
+            //tree.autoExpandAndSelectNode(environment, true);
             delegate.environmentSelected(environment.getEnvironment());
         }
     }
