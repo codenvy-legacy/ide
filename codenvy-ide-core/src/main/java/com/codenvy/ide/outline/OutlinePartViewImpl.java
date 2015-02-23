@@ -89,17 +89,15 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     }
 
     @Override
-    protected void updateFocus() {
+    protected void focusView() {
         try {
+            // TODO The case must be investigated.
+            // TODO It looks the outline tree element is exist when outline is enabled for active file.
             if (outlineEnabled) {
-                if (isFocused()) {
-                    outlineContainer.getElement().getFirstChildElement().getFirstChildElement().focus();
-                } else {
-                    outlineContainer.getElement().getFirstChildElement().getFirstChildElement().blur();
-                }
+                outlineContainer.getElement().getFirstChildElement().getFirstChildElement().focus();
             }
         } catch (Exception e) {
-            Log.trace("ERROR: " + e.getMessage());
+            Log.trace(e.getMessage());
         }
     }
 

@@ -157,12 +157,8 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     }
 
     @Override
-    protected void updateFocus() {
-        if (isFocused()) {
-            scrollPanel.getElement().focus();
-        } else {
-            scrollPanel.getElement().blur();
-        }
+    protected void focusView() {
+        scrollPanel.getElement().focus();
     }
 
 }

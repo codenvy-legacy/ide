@@ -41,8 +41,6 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     @UiField
     ScrollPanel scrollPanel;
 
-//    @UiField(provided = true)
-
     Label count = new Label();
 
     /** scroll events to the bottom if view is visible */
@@ -115,12 +113,8 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     }
 
     @Override
-    protected void updateFocus() {
-        if (isFocused()) {
-            scrollPanel.getElement().focus();
-        } else {
-            scrollPanel.getElement().blur();
-        }
+    protected void focusView() {
+        scrollPanel.getElement().focus();
     }
 
 }

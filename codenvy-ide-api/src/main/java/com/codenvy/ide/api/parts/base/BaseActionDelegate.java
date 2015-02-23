@@ -20,4 +20,10 @@ public interface BaseActionDelegate {
     /** Hide Part from UI */
     void minimize();
 
+    /**
+     * Activate Part when clicking the mouse.
+     * Is used when the Part contains frames and mouse events are blocked.
+     */
+    void activatePart();
+
 }

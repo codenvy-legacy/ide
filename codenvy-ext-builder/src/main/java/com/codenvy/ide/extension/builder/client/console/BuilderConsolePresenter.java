@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
  */
 @Singleton
 public class BuilderConsolePresenter extends BasePresenter implements BuilderConsoleView.ActionDelegate, HasView {
+
     private final BuilderLocalizationConstant builderLocalizationConstant;
     private final BuilderConsoleView          view;
     private final ToolbarPresenter            consoleToolbar;
@@ -46,8 +47,11 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
     private BuilderStatus currentBuilderStatus = BuilderStatus.IDLE;
 
     @Inject
-    public BuilderConsolePresenter(BuilderConsoleView view, @BuilderConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
-                                   BuilderLocalizationConstant builderLocalizationConstant, BuilderResources builderResources) {
+    public BuilderConsolePresenter(BuilderConsoleView view,
+                                   @BuilderConsoleToolbar ToolbarPresenter consoleToolbar,
+                                   EventBus eventBus,
+                                   BuilderLocalizationConstant builderLocalizationConstant,
+                                   BuilderResources builderResources) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
         this.builderLocalizationConstant = builderLocalizationConstant;

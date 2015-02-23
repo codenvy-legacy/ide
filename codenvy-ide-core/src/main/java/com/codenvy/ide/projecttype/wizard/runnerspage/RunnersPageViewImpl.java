@@ -21,7 +21,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.codenvy.ide.util.input.SignalEvent;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -41,10 +40,16 @@ import java.util.Map;
  * @author Evgen Vidolob
  */
 public class RunnersPageViewImpl implements RunnersPageView {
-    private static RunnersPageViewImplUiBinder ourUiBinder = GWT.create(RunnersPageViewImplUiBinder.class);
+
+    interface RunnersPageViewImplUiBinder extends UiBinder<DockLayoutPanel, RunnersPageViewImpl> {
+    }
+
     private final DockLayoutPanel       rootElement;
+
     private final Tree<Object>          tree;
+
     private final RunnerEnvironmentTree root;
+
     @UiField
     Label       noEnvLabel;
     @UiField
@@ -58,8 +63,12 @@ public class RunnersPageViewImpl implements RunnersPageView {
     private Map<String, RunnerEnvironmentLeaf> environmentMap = new HashMap<>();
 
     @Inject
-    public RunnersPageViewImpl(Resources resources, DtoFactory dtoFactory, RunnersRenderer runnersRenderer) {
-        rootElement = ourUiBinder.createAndBindUi(this);
+    public RunnersPageViewImpl(Resources resources,
+                               DtoFactory dtoFactory,
+                               RunnersRenderer runnersRenderer,
+                               RunnersPageViewImplUiBinder uiBinder) {
+        rootElement = uiBinder.createAndBindUi(this);
+
         recommendedMemory.getElement().setAttribute("type", "number");
         recommendedMemory.getElement().setAttribute("step", "128");
         recommendedMemory.getElement().setAttribute("min", "0");
@@ -198,6 +207,4 @@ public class RunnersPageViewImpl implements RunnersPageView {
         tree.renderTree(1);
     }
 
-    interface RunnersPageViewImplUiBinder extends UiBinder<DockLayoutPanel, RunnersPageViewImpl> {
-    }
 }

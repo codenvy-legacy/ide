@@ -11,7 +11,6 @@
 package com.codenvy.ide.workspace;
 
 import com.codenvy.ide.api.parts.WorkBenchView;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -32,9 +31,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<WorkBenchView.ActionDelegate> {
 
-    private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
-
-    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, WorkBenchViewImpl> {
+    interface WorkBenchViewImplUiBinder extends UiBinder<Widget, WorkBenchViewImpl> {
     }
 
     @UiField(provided = true)
@@ -62,7 +59,8 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
     final WorkBenchResources res;
 
     @Inject
-    public WorkBenchViewImpl(WorkBenchResources resources) {
+    public WorkBenchViewImpl(WorkBenchResources resources,
+                             WorkBenchViewImplUiBinder uiBinder) {
         this.res = resources;
         resources.workBenchCss().ensureInjected();
         add(uiBinder.createAndBindUi(this));
@@ -104,4 +102,5 @@ public class WorkBenchViewImpl extends LayoutPanel implements WorkBenchView<Work
         editorPanel.onResize();
         super.onResize();
     }
+
 }

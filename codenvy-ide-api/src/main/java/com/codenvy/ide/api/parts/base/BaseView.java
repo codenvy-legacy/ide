@@ -13,6 +13,7 @@ package com.codenvy.ide.api.parts.base;
 import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.Focusable;
 import com.codenvy.ide.api.parts.PartStackUIResources;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -132,7 +133,14 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     @Override
     public final void setFocus(boolean focused) {
         this.focused = focused;
-        updateFocus();
+        if (focused) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    focusView();
+                }
+            });
+        }
     }
 
     /** {@inheritDoc} */
@@ -142,13 +150,11 @@ public abstract class BaseView<T extends BaseActionDelegate> extends Composite i
     }
 
     /**
-     * Override this method to set the focus to necessary element inside the view.
-     * Method is called immediately when receiving or loosing the focus.
+     * Override this method to set focus to necessary element inside the view.
+     * Method is called when focusing the part view.
      */
-    protected void updateFocus() {
-        if (focused) {
-            getElement().focus();
-        }
+    protected void focusView() {
+        getElement().focus();
     }
 
 }

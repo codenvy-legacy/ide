@@ -257,13 +257,8 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     }
 
     @Override
-    protected void updateFocus() {
-        /** Focus or unfocus the tree */
-        if (isFocused()) {
-            tree.asWidget().getElement().getFirstChildElement().focus();
-        } else {
-            tree.asWidget().getElement().getFirstChildElement().blur();
-        }
+    protected void focusView() {
+        tree.asWidget().getElement().getFirstChildElement().focus();
     }
 
 }

@@ -25,11 +25,16 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     public interface ActionDelegate extends BaseActionDelegate {
     }
 
-    /** @return toolbar panel */
+    /**
+     * Returns toolbar panel.
+     *
+     * @return toolbar panel
+     */
     AcceptsOneWidget getToolbarPanel();
 
     /**
      * Set title of console part.
+     *
      * @param title title to set
      */
     void setTitle(String title);
@@ -37,9 +42,6 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
 
     /** Sets new Terminal frame URL. */
     void setTerminalURL(String terminalURL);
-
-    /** Sets new App frame URL. */
-    /* void setAppURL(String appURL); */
 
     /**
      * Activate Console tab
@@ -52,19 +54,20 @@ public interface RunnerConsoleView extends View<RunnerConsoleView.ActionDelegate
     void activateTerminal();
 
     /**
-     * Activate App preview tab
+     * Clear console. Remove all messages.
      */
-    /* void activateApp(); */
-
-    /** Clear console. Remove all messages. */
     void clearConsole();
 
-    /** Scroll to bottom of the view. */
+    /**
+     * Scroll to bottom of the view.
+     */
     void scrollBottom();
 
     /**
      * Print text in console area.
+     *
      * @param text text that need to be shown
      */
     void print(String text);
+
 }
