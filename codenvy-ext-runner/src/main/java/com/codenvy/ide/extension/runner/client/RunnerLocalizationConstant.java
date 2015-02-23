@@ -172,6 +172,9 @@ public interface RunnerLocalizationConstant extends Messages {
     @Key("messages.failedRememberOptions")
     String messagesFailedRememberOptions();
 
+    @Key("messages.largeMemoryRequest")
+    String messagesLargeMemoryRequest();
+
     @Key("messages.totalLessRequiredMemory")
     String messagesTotalLessRequiredMemory(int totalRAM, int requestedRAM);
 
@@ -185,7 +188,7 @@ public interface RunnerLocalizationConstant extends Messages {
     String messagesTotalLessCustomRunMemory(int customRunRAM, int totalRAM);
 
     @Key("messages.availableLessOverrideMemory")
-    String messagesAvailableLessOverrideMemory(int overrideRAM, int totalRAM, int usedRAM);
+    String messagesAvailableLessOverrideMemory(int availableRAM);
 
     @Key("messages.availableLessDefaultMemory")
     String messagesAvailableLessDefaultMemory(int defaultRAM, int totalRAM, int usedRAM);
@@ -223,10 +226,6 @@ public interface RunnerLocalizationConstant extends Messages {
 
     @Key("runner.panel.starts-after-launch")
     String startsAfterLaunch();
-
-    @Key("titles.ram-manager")
-    @DefaultMessage("RAM Manager")
-    String titlesRamManager();
 
     @Key("ram-manager.ram-size-must-multiple")
     @DefaultMessage("RAM size must be a multiple of {0} MB")

@@ -503,7 +503,7 @@ public class RunController implements Notification.OpenNotificationHandler, Proj
             return false;
         }
         if (availableMemory < overrideMemory) {
-            showWarning(constant.messagesAvailableLessOverrideMemory(overrideMemory, totalMemory, usedMemory));
+            showWarning(constant.messagesAvailableLessOverrideMemory(availableMemory));
             return false;
         }
         return true;

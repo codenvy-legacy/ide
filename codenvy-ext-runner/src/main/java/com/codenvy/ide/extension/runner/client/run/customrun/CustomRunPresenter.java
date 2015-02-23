@@ -24,9 +24,9 @@ import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.event.ProjectDescriptorChangedEvent;
 import com.codenvy.ide.api.notification.Notification;
 import com.codenvy.ide.api.notification.NotificationManager;
-import com.codenvy.ide.api.preferences.PreferencesManager;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
+import com.codenvy.ide.extension.runner.client.console.RunnerConsolePresenter;
 import com.codenvy.ide.extension.runner.client.run.RunController;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
@@ -39,7 +39,6 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
-import static com.codenvy.ide.extension.runner.client.RunnerExtension.PREFS_RUNNER_RAM_SIZE_DEFAULT;
 
 /**
  * Presenter for customizing running the project.
@@ -48,7 +47,9 @@ import static com.codenvy.ide.extension.runner.client.RunnerExtension.PREFS_RUNN
  */
 @Singleton
 public class CustomRunPresenter implements CustomRunView.ActionDelegate {
+    private final int                  LARGE_AMOUNT_OF_RAM = 4096;
     private RunController              runController;
+    private RunnerConsolePresenter     runnerConsole;
     private RunnerServiceClient        runnerServiceClient;
     private ProjectServiceClient       projectService;
     private CustomRunView              view;
@@ -59,11 +60,13 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
     private RunnerLocalizationConstant constant;
     private EventBus                   eventBus;
     private RunnerEnvironment          currentEnvironment;
-    private PreferencesManager         preferencesManager;
+    private int                        totalMemory;
+    private int                        usedMemory;
 
     /** Create presenter. */
     @Inject
     protected CustomRunPresenter(RunController runController,
+                                 RunnerConsolePresenter runnerConsole,
                                  RunnerServiceClient runnerServiceClient,
                                  ProjectServiceClient projectService,
                                  CustomRunView view,
@@ -72,9 +75,9 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                                  NotificationManager notificationManager,
                                  AppContext appContext,
                                  RunnerLocalizationConstant constant,
-                                 EventBus eventBus,
-                                 PreferencesManager preferencesManager) {
+                                 EventBus eventBus) {
         this.runController = runController;
+        this.runnerConsole = runnerConsole;
         this.runnerServiceClient = runnerServiceClient;
         this.projectService = projectService;
         this.view = view;
@@ -84,7 +87,6 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
         this.appContext = appContext;
         this.constant = constant;
         this.eventBus = eventBus;
-        this.preferencesManager = preferencesManager;
         this.view.setDelegate(this);
     }
 
@@ -191,8 +193,8 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
             @Override
             protected void onSuccess(ResourcesDescriptor resourcesDescriptor) {
                 int requiredMemory = 0;
-                final int totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
-                final int usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
+                totalMemory = Integer.valueOf(resourcesDescriptor.getTotalMemory());
+                usedMemory = Integer.valueOf(resourcesDescriptor.getUsedMemory());
 
                 final CurrentProject currentProject = appContext.getCurrentProject();
                 final ProjectDescriptor projectDescriptor = currentProject.getProjectDescription();
@@ -202,19 +204,6 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
                     RunnerConfiguration runnerConfiguration = runners.getConfigs().get(runners.getDefault());
                     if (runnerConfiguration != null) {
                         requiredMemory = runnerConfiguration.getRam();
-                    }
-                }
-
-                if (requiredMemory <= 0) {
-                    // the value of memory from runner configuration <= 0
-                    // try to get the value of memory from user preferences
-
-                    final String ramSize = preferencesManager.getValue(PREFS_RUNNER_RAM_SIZE_DEFAULT);
-                    if (ramSize != null) {
-                        try {
-                            requiredMemory = Integer.parseInt(ramSize);
-                        } catch (NumberFormatException ignore) {
-                        }
                     }
                 }
 
@@ -267,17 +256,14 @@ public class CustomRunPresenter implements CustomRunView.ActionDelegate {
             return false;
         }
 
-        int totalMemory = Integer.valueOf(view.getTotalMemorySize());
-        int availableMemory = Integer.valueOf(view.getAvailableMemorySize());
-
-        if (runnerMemory > totalMemory) {
-            view.showWarning(constant.messagesTotalLessCustomRunMemory(runnerMemory, totalMemory));
+        int availableMemory = totalMemory - usedMemory;
+        if (runnerMemory > availableMemory) {
+            view.showWarning(constant.messagesAvailableLessOverrideMemory(availableMemory));
             return false;
         }
 
-        if (runnerMemory > availableMemory) {
-            view.showWarning(constant.messagesAvailableLessOverrideMemory(runnerMemory, totalMemory, totalMemory - availableMemory));
-            return false;
+        if (runnerMemory > LARGE_AMOUNT_OF_RAM) {
+            runnerConsole.print("[INFO] " + constant.messagesLargeMemoryRequest());
         }
         return true;
     }
