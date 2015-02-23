@@ -12,6 +12,8 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.permits.RunActionPermit;
+import com.codenvy.ide.api.action.permits.RunActionDenyAccessDialog;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
@@ -29,27 +31,37 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunAction extends ProjectAction {
 
-    private final RunController        runController;
-    private final AnalyticsEventLogger eventLogger;
+    private final RunController             runController;
+    private final AnalyticsEventLogger      eventLogger;
+    private final RunActionPermit           runActionPermit;
+    private final RunActionDenyAccessDialog runActionDenyAccessDialog;
 
     @Inject
     public RunAction(RunController runController,
                      RunnerResources resources,
                      RunnerLocalizationConstant localizationConstants,
                      AppContext appContext,
-                     AnalyticsEventLogger eventLogger) {
+                     AnalyticsEventLogger eventLogger,
+                     RunActionPermit runActionPermit,
+                     RunActionDenyAccessDialog runActionDenyAccessDialog) {
         super(localizationConstants.runAppActionText(),
               localizationConstants.runAppActionDescription(),
               resources.launchApp());
         this.runController = runController;
         this.appContext = appContext;
         this.eventLogger = eventLogger;
+        this.runActionPermit = runActionPermit;
+        this.runActionDenyAccessDialog = runActionDenyAccessDialog;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
+        if (!runActionPermit.isAllowed()) {
+            runActionDenyAccessDialog.show();
+            return;
+        }
         runController.runActiveProject(null, null, true);
     }
 

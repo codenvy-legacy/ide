@@ -15,9 +15,6 @@ import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleToolbar;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleView;
 import com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl;
-import com.codenvy.ide.extension.runner.client.manage.ram.RamManagePresenter;
-import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerView;
-import com.codenvy.ide.extension.runner.client.manage.ram.RamManagerViewImpl;
 import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsView;
 import com.codenvy.ide.extension.runner.client.run.customenvironments.CustomEnvironmentsViewImpl;
 import com.codenvy.ide.extension.runner.client.run.customenvironments.EnvironmentActionFactory;
@@ -42,10 +39,6 @@ public class RunnerGinModule extends AbstractGinModule {
 
         bind(RunnerConsoleView.class).to(RunnerConsoleViewImpl.class).in(Singleton.class);
         bind(ToolbarPresenter.class).annotatedWith(RunnerConsoleToolbar.class).to(ToolbarPresenter.class).in(Singleton.class);
-
-        bind(RamManagerView.class).to(RamManagerViewImpl.class).in(Singleton.class);
-        GinMultibinder<PreferencePagePresenter> prefBinder = GinMultibinder.newSetBinder(binder(), PreferencePagePresenter.class);
-        prefBinder.addBinding().to(RamManagePresenter.class);
 
         bind(EnvironmentActionsManager.class).asEagerSingleton();
         install(new GinFactoryModuleBuilder().build(EnvironmentActionFactory.class));

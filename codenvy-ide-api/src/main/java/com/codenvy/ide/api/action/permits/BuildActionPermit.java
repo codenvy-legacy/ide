@@ -8,31 +8,13 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.manage.ram;
-
-
-import com.codenvy.ide.api.mvp.View;
-
-import javax.annotation.Nonnull;
+package com.codenvy.ide.api.action.permits;
 
 /**
- * @author Vitaly Parfonov
+ * Check if build action is allowed
+ *
+ * @author Oleksii Orel
  */
-public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
-
-    public interface ActionDelegate {
-
-        void validateRamSize(String value);
-
-    }
-
-    String getRam();
-
-    void showRam(String ram);
-
-    /** Show warning message. */
-    void showWarnMessage(@Nonnull String s);
-
-    /** Hide warning message. */
-    void hideWarnMessage();
+public interface BuildActionPermit {
+    boolean isAllowed();
 }

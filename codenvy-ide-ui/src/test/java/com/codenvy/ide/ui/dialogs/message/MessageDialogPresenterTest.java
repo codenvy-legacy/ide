@@ -19,6 +19,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing {@link MessageDialogPresenter} functionality.
@@ -36,7 +37,10 @@ public class MessageDialogPresenterTest extends BaseTest {
     @Override
     public void setUp() {
         super.setUp();
-        presenter = new MessageDialogPresenter(view, TITLE, MESSAGE, confirmCallback);
+
+        when(isWidget.asWidget()).thenReturn(null);
+
+        presenter = new MessageDialogPresenter(view, TITLE, isWidget, confirmCallback, CONFIRM_BUTTON_TEXT);
     }
 
     @Test
