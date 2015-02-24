@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
@@ -19,14 +20,17 @@ import org.mockito.Mock;
 /** @author Artem Zatsarynnyy */
 @GwtModule("com.codenvy.ide.ui.CodenvyUI")
 public abstract class BaseTest extends GwtTestWithMockito {
-    protected static String TITLE   = "title";
-    protected static String MESSAGE = "message";
+    protected static String TITLE               = "title";
+    protected static String MESSAGE             = "message";
+    protected static String CONFIRM_BUTTON_TEXT = "text";
     @Mock
     protected CancelCallback  cancelCallback;
     @Mock
     protected ConfirmCallback confirmCallback;
     @Mock
     protected InputCallback   inputCallback;
+    @Mock
+    protected IsWidget        isWidget;
 
     @Before
     public void setUp() {

@@ -78,6 +78,11 @@ public class MessageDialogViewImpl extends Window implements MessageDialogView {
         this.content.setWidget(content);
     }
 
+    @Override
+    public void setConfirmButtonText(final @Nonnull String text) {
+        this.footer.setConfirmButtonText(text);
+    }
+
     /** The UI binder interface for this components. */
     interface MessageWindowUiBinder extends UiBinder<Widget, MessageDialogViewImpl> {
     }

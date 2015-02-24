@@ -48,12 +48,27 @@ public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
                                   final @Nonnull @Assisted String title,
                                   final @Nonnull @Assisted IsWidget content,
                                   final @Nullable @Assisted ConfirmCallback confirmCallback) {
-        content.asWidget().ensureDebugId("info-window-message");
+        this(view, title, content, confirmCallback, null);
+    }
+
+    @AssistedInject
+    public MessageDialogPresenter(final @Nonnull MessageDialogView view,
+                                  final @Nonnull @Assisted("title") String title,
+                                  final @Nonnull @Assisted IsWidget content,
+                                  final @Nullable @Assisted ConfirmCallback confirmCallback,
+                                  final @Nullable @Assisted("confirmButtonText") String confirmButtonText) {
         this.view = view;
         this.view.setContent(content);
         this.view.setTitle(title);
         this.confirmCallback = confirmCallback;
         this.view.setDelegate(this);
+
+        if (content.asWidget() != null) {
+            content.asWidget().ensureDebugId("info-window-message");
+        }
+        if (confirmButtonText != null) {
+            view.setConfirmButtonText(confirmButtonText);
+        }
     }
 
     @Override
