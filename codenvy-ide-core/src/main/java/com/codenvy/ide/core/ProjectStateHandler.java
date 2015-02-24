@@ -12,13 +12,8 @@ package com.codenvy.ide.core;
 
 import elemental.client.Browser;
 
-import com.codenvy.api.core.rest.shared.dto.Link;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
-import com.codenvy.api.runner.dto.RunnerMetric;
-import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
@@ -37,8 +32,6 @@ import com.codenvy.ide.projecttype.wizard.presenter.ProjectWizardPresenter;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ConfirmCallback;
-import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.util.Config;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
@@ -50,10 +43,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static com.codenvy.api.runner.dto.RunnerMetric.ALWAYS_ON;
-import static com.codenvy.api.runner.dto.RunnerMetric.TERMINATION_TIME;
-import static com.codenvy.api.runner.internal.Constants.LINK_REL_STOP;
 
 /**
  * Component that does some preliminary operations before opening/closing projects.
@@ -75,29 +64,23 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     private final EventBus                 eventBus;
     private final AppContext               appContext;
     private final ProjectServiceClient     projectServiceClient;
-    private final RunnerServiceClient      runnerServiceClient;
     private final ProjectWizardPresenter   projectWizardPresenter;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final CoreLocalizationConstant constant;
-    private final DialogFactory            dialogFactory;
 
     @Inject
     public ProjectStateHandler(AppContext appContext,
                                EventBus eventBus,
                                ProjectServiceClient projectServiceClient,
-                               RunnerServiceClient runnerServiceClient,
                                ProjectWizardPresenter projectWizardPresenter,
                                CoreLocalizationConstant constant,
-                               DtoUnmarshallerFactory dtoUnmarshallerFactory,
-                               DialogFactory dialogFactory) {
+                               DtoUnmarshallerFactory dtoUnmarshallerFactory) {
         this.eventBus = eventBus;
         this.appContext = appContext;
         this.projectServiceClient = projectServiceClient;
-        this.runnerServiceClient = runnerServiceClient;
         this.projectWizardPresenter = projectWizardPresenter;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.constant = constant;
-        this.dialogFactory = dialogFactory;
     }
 
     @Override
@@ -116,7 +99,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
 
     @Override
     public void onCloseCurrentProject(CloseCurrentProjectEvent event) {
-        checkRunnerAndCloseCurrentProject(null, false);
+        closeCurrentProject(null, false);
     }
 
     @Override
@@ -136,32 +119,15 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         }
     }
 
-    private void checkRunnerAndCloseCurrentProject(CloseCallback closeCallback, boolean closingBeforeOpening) {
+    private void closeCurrentProject(CloseCallback closeCallback, boolean closingBeforeOpening) {
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject == null) {
             return;
         }
 
-        final ApplicationProcessDescriptor appProcess = appContext.getCurrentProject().getProcessDescriptor();
-        boolean alwaysOn = false;
-        if (appProcess != null) {
-            for (RunnerMetric metric : appProcess.getRunStats()) {
-                if (TERMINATION_TIME.equals(metric.getName()) && ALWAYS_ON.equals(metric.getValue())) {
-                    alwaysOn = true;
-                    break;
-                }
-            }
-        }
-
-        if (appProcess == null || alwaysOn) {
-            closeCurrentProject(closingBeforeOpening);
-            if (closeCallback != null) {
-                closeCallback.onClosed();
-            }
-        } else {
-            dialogFactory.createConfirmDialog(constant.closeProjectTitle(),
-                                              constant.appWillBeStopped(currentProject.getProjectDescription().getName()),
-                                              new ConfirmStoppingAppCallback(closeCallback, closingBeforeOpening), null).show();
+        closeCurrentProject(closingBeforeOpening);
+        if (closeCallback != null) {
+            closeCallback.onClosed();
         }
     }
 
@@ -172,7 +138,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
             protected void onSuccess(final ProjectDescriptor project) {
                 if (hasProblems(project)) {
                     if (appContext.getCurrentProject() != null) {
-                        checkRunnerAndCloseCurrentProject(new CloseCallback() {
+                        closeCurrentProject(new CloseCallback() {
                             @Override
                             public void onClosed() {
                                 openProblemProject(project);
@@ -183,7 +149,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
                     }
                 } else {
                     if (appContext.getCurrentProject() != null) {
-                        checkRunnerAndCloseCurrentProject(new CloseCallback() {
+                        closeCurrentProject(new CloseCallback() {
                             @Override
                             public void onClosed() {
                                 openProject(project);
@@ -285,33 +251,4 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
         void onClosed();
     }
 
-    private class ConfirmStoppingAppCallback implements ConfirmCallback {
-        final ProjectStateHandler.CloseCallback closeCallback;
-        final boolean                           closingBeforeOpening;
-
-        ConfirmStoppingAppCallback(CloseCallback closeCallback, boolean closingBeforeOpening) {
-            this.closeCallback = closeCallback;
-            this.closingBeforeOpening = closingBeforeOpening;
-        }
-
-        @Override
-        public void accepted() {
-            final Link stopLink = RunnerUtils.getLink(appContext.getCurrentProject().getProcessDescriptor(), LINK_REL_STOP);
-            if (stopLink != null) {
-                runnerServiceClient.stop(stopLink, new AsyncRequestCallback<ApplicationProcessDescriptor>() {
-                    @Override
-                    protected void onSuccess(ApplicationProcessDescriptor applicationProcessDescriptor) {
-                        closeCurrentProject(closingBeforeOpening);
-                        if (closeCallback != null) {
-                            closeCallback.onClosed();
-                        }
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable ignore) {
-                    }
-                });
-            }
-        }
-    }
 }
