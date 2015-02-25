@@ -158,7 +158,7 @@ public class EditorPartStackPresenterTest {
 
         verify(part1).removePropertyListener(any(PropertyListener.class));
 
-        verify(partStackEventHandler, never()).onActivePartChanged(part2);
+//        verify(partStackEventHandler, never()).onActivePartChanged(part2);
     }
 
     @Test
@@ -187,7 +187,7 @@ public class EditorPartStackPresenterTest {
 
         verify(part1).removePropertyListener(any(PropertyListener.class));
 
-        verify(partStackEventHandler, never()).onActivePartChanged(part2);
+//        verify(partStackEventHandler, never()).onActivePartChanged(part2);
     }
 
     @Test
@@ -223,7 +223,7 @@ public class EditorPartStackPresenterTest {
 
         verify(view).addTab(null, partTitle1, toolTip1, null, true);
 
-        verify(item).addClickHandler(any(ClickHandler.class));
+//        verify(item).addClickHandler(any(ClickHandler.class));
         verify(item).addCloseHandler(any(CloseHandler.class));
 
         verify(part1).go(any(AcceptsOneWidget.class));
@@ -261,7 +261,7 @@ public class EditorPartStackPresenterTest {
 
         verify(partStackEventHandler, times(1)).onRequestFocus(presenter);
         verify(part1, never()).addPropertyListener(any(PropertyListener.class));
-        verify(view, never()).addTabButton(svgImage, partTitle1, toolTip1, null, true);
+        verify(view, never()).addTab(svgImage, partTitle1, toolTip1, null, true);
 
         verify(part1, never()).go(any(AcceptsOneWidget.class));
 
