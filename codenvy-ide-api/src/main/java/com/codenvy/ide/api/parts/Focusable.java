@@ -8,16 +8,25 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.mvp;
-
-import com.google.gwt.user.client.ui.IsWidget;
+package com.codenvy.ide.api.parts;
 
 /**
- * Common interface for Views
+ * A view that implements this interface can receive keyboard focus.
  *
- * @author Andrey Plotnikov
+ * @author Vitaliy Guliy
  */
-public interface View<T> extends IsWidget {
-    /** Sets the delegate to receive events from this view. */
-    public void setDelegate(T delegate);
+public interface Focusable {
+
+    /**
+     * Explicitly focus/unfocus this view. Only one view can be focused at a time.
+     */
+    void setFocus(boolean focused);
+
+    /**
+     * Check is this view focused.
+     *
+     * @return <b>true</b> if view has focus, otherwise return <b>false</b>
+     */
+    boolean isFocused();
+
 }

@@ -14,7 +14,6 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.api.parts.base.ToolButton;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,10 +35,9 @@ import org.vectomatic.dom.svg.ui.SVGImage;
  */
 @Singleton
 public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate> implements ConsolePartView {
+
     interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl> {
     }
-
-    private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
 
     @UiField
     FlowPanel consoleArea;
@@ -48,9 +46,11 @@ public class ConsolePartViewImpl extends BaseView<ConsolePartView.ActionDelegate
     ScrollPanel scrollPanel;
 
     @Inject
-    public ConsolePartViewImpl(PartStackUIResources resources, Resources coreResources) {
+    public ConsolePartViewImpl(PartStackUIResources resources,
+                               Resources coreResources,
+                               ConsolePartViewImplUiBinder uiBinder) {
         super(resources);
-        container.add(uiBinder.createAndBindUi(this));
+        setContentWidget(uiBinder.createAndBindUi(this));
 
         ToolButton clearButton = new ToolButton(new SVGImage(coreResources.clear()));
         clearButton.addClickHandler(new ClickHandler() {

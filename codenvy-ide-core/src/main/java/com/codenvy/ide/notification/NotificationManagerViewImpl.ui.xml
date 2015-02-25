@@ -14,14 +14,20 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
     <ui:style>
+
+        .scrollPanel {
+            outline: none;
+        }
+
         .notificationPanel {
             position: relative;
             -moz-user-select: text;
             -webkit-user-select: text;
             user-select: text;
         }
+
     </ui:style>
-    <g:ScrollPanel width="100%" height="100%" ui:field="scrollPanel" debugId="notificationManager-mainPanel">
+    <g:ScrollPanel width="100%" height="100%" ui:field="scrollPanel" debugId="notificationManager-mainPanel" addStyleNames="{style.scrollPanel}">
         <g:FlowPanel ui:field="mainPanel" addStyleNames="{res.notificationCss.notificationPanel} {style.notificationPanel}"
                      debugId="eventsPart"/>
     </g:ScrollPanel>

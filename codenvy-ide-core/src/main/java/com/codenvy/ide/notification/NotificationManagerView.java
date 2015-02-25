@@ -58,7 +58,7 @@ public interface NotificationManagerView extends View<NotificationManagerView.Ac
     IsWidget getCountLabel();
 
     /**
-     * Scrolls the view to the botttom.
+     * Scrolls the view to the bottom.
      */
     void scrollBottom();
 }

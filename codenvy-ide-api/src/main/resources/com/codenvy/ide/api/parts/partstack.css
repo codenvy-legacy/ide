@@ -234,11 +234,18 @@
     height: 100%;
 }
 
+.ide-PartStack-Content div[role="part"][active] div[role="toolbar"] div[role="toolbar-header"] {
+    background-color: rgb(77, 113, 145) ! important;
+    /*background-color: rgb(87, 143, 193) ! important;*/
+    /*background-color: rgb(53, 82, 108) ! important;*/
+}
+
 .ide-Base-Part-Title-Label {
     display: inline-block;
     line-height: 22px;
     margin-left: 10px;
     vertical-align: middle;
+    cursor: default;
 }
 
 .ide-PartStack-Tool-Tab {

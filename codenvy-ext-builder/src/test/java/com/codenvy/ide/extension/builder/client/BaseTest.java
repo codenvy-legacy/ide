@@ -12,10 +12,10 @@ package com.codenvy.ide.extension.builder.client;
 
 import com.codenvy.ide.extension.builder.client.console.BuilderConsolePresenter;
 import com.codenvy.ide.websocket.MessageBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 /**
@@ -23,8 +23,8 @@ import org.mockito.Mock;
  *
  * @author Artem Zatsarynnyy
  */
-@GwtModule("com.codenvy.ide.extension.builder.Builder")
-public abstract class BaseTest extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public abstract class BaseTest {
     @Mock
     protected MessageBus              messageBus;
     @Mock

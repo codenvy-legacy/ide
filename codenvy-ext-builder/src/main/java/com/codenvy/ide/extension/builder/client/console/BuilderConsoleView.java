@@ -20,31 +20,38 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * @author Artem Zatsarynnyy
  */
 public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelegate> {
+
     public interface ActionDelegate extends BaseActionDelegate {
     }
 
-    /** @return toolbar panel */
-    AcceptsOneWidget getToolbarPanel();
+    /**
+     * Returns toolbar panel.
+     *
+     * @return toolbar panel
+     */
+     AcceptsOneWidget getToolbarPanel();
 
     /**
      * Print message to console area.
      *
-     * @param message
-     *         message that need to be shown
+     * @param message message that need to be shown
      */
     void print(String message);
 
     /**
      * Set title of console part.
      *
-     * @param title
-     *         title that need to be set
+     * @param title title that need to be set
      */
     void setTitle(String title);
 
-    /** Clear console. Remove all messages. */
+    /**
+     * Clears the console.
+     */
     void clear();
 
-    /** Scroll to bottom of the view. */
+    /**
+     * Scrolls console bottom.
+     */
     void scrollBottom();
 }

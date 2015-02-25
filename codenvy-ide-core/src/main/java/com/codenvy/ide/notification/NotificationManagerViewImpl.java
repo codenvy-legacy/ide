@@ -13,7 +13,7 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -31,21 +31,20 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class NotificationManagerViewImpl extends BaseView<NotificationManagerView.ActionDelegate> implements NotificationManagerView {
+
     interface NotificationManagerViewImplUiBinder extends UiBinder<Widget, NotificationManagerViewImpl> {
     }
 
-    private static NotificationManagerViewImplUiBinder ourUiBinder = GWT.create(NotificationManagerViewImplUiBinder.class);
-
     @UiField
     FlowPanel mainPanel;
-    //    @UiField
-    Label count = new Label();
+
     @UiField
     ScrollPanel scrollPanel;
 
-    @UiField(provided = true)
-    final Resources res;
-//    private ActionDelegate delegate;
+    Label count = new Label();
+
+    /** scroll events to the bottom if view is visible */
+    private boolean scrollBottomRequired = false;
 
     /**
      * Create view.
@@ -54,14 +53,17 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
      */
     @Inject
     public NotificationManagerViewImpl(PartStackUIResources partStackUIResources,
-                                       Resources resources) {
+                                       Resources resources,
+                                       NotificationManagerViewImplUiBinder uiBinder) {
         super(partStackUIResources);
-        this.res = resources;
+        setContentWidget(uiBinder.createAndBindUi(this));
+
         count.setStyleName(resources.notificationCss().countLabel());
         count.setVisible(false);
 
-        container.add(ourUiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("notification-minimizeBut");
+
+        scrollPanel.getElement().setTabIndex(0);
     }
 
     /** {@inheritDoc} */
@@ -86,6 +88,33 @@ public class NotificationManagerViewImpl extends BaseView<NotificationManagerVie
     /** {@inheritDoc} */
     @Override
     public void scrollBottom() {
-        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+        /** scroll bottom immediately if view is visible */
+        if (scrollPanel.getElement().getOffsetParent() != null) {
+            scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+            return;
+        }
+
+        /** otherwise, check the visibility periodically and scroll the view when it's visible */
+        if (!scrollBottomRequired) {
+            scrollBottomRequired = true;
+
+            Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+                @Override
+                public boolean execute() {
+                    if (scrollPanel.getElement().getOffsetParent() != null) {
+                        scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
+                        scrollBottomRequired = false;
+                        return false;
+                    }
+                    return true;
+                }
+            }, 1000);
+        }
     }
+
+    @Override
+    protected void focusView() {
+        scrollPanel.getElement().focus();
+    }
+
 }

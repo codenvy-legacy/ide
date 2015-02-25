@@ -20,11 +20,11 @@ import com.codenvy.ide.api.parts.PartStackType;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 
@@ -39,8 +39,8 @@ import static org.mockito.Mockito.when;
  *
  * @author Igor Vinokur
  */
-@GwtModule("com.codenvy.ide.Core")
-public class TestWorkBenchPresenter extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public class TestWorkBenchPresenter {
 
     @Mock
     private WorkBenchViewImpl         view;

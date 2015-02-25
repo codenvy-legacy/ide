@@ -24,9 +24,9 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
+import com.codenvy.test.GwtReflectionUtils;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +36,6 @@ import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.CREATE;
 import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode.IMPORT;
@@ -102,8 +100,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).createProject(eq(PROJECT_NAME), eq(newProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(ProjectDescriptor.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -119,8 +116,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).createProject(eq(PROJECT_NAME), eq(newProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-        onSuccess.invoke(callback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
 
         verify(completeCallback).onFailure(Matchers.<Throwable>anyObject());
     }
@@ -134,8 +130,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(ProjectDescriptor.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -151,8 +146,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-        onSuccess.invoke(callback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
 
         verify(completeCallback).onFailure(Matchers.<Throwable>anyObject());
     }
@@ -166,8 +160,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).updateProject(eq(PROJECT_NAME), eq(newProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(ProjectDescriptor.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -183,8 +176,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).updateProject(eq(PROJECT_NAME), eq(newProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-        onSuccess.invoke(callback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
 
         verify(completeCallback).onFailure(Matchers.<Throwable>anyObject());
     }
@@ -201,15 +193,13 @@ public class ProjectWizardTest {
         verify(projectServiceClient).rename(eq(PROJECT_NAME), eq(changedName), anyString(), callbackCaptorForVoid.capture());
 
         AsyncRequestCallback<Void> voidCallback = callbackCaptorForVoid.getValue();
-        Method onSuccessVoid = GwtReflectionUtils.getMethod(voidCallback.getClass(), "onSuccess");
-        onSuccessVoid.invoke(voidCallback, (Void)null);
+        GwtReflectionUtils.callOnSuccess(voidCallback,(Void)null);
 
         // should update
         verify(projectServiceClient).updateProject(eq(changedName), eq(newProject), callbackCaptor.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(ProjectDescriptor.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -227,8 +217,7 @@ public class ProjectWizardTest {
         verify(projectServiceClient).rename(eq(PROJECT_NAME), eq(changedName), anyString(), callbackCaptorForVoid.capture());
 
         AsyncRequestCallback<Void> callback = callbackCaptorForVoid.getValue();
-        Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-        onFailure.invoke(callback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
 
         verify(projectServiceClient, never()).updateProject(anyString(),
                                                             Matchers.<ProjectUpdate>anyObject(),

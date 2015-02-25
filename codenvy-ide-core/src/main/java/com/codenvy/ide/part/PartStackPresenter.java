@@ -25,10 +25,12 @@ import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.workspace.WorkBenchPartController;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -55,7 +57,11 @@ import java.util.Map;
  */
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
 
-    private static final int DEFAULT_SIZE = 200;
+    /** Handles PartStack actions */
+    public interface PartStackEventHandler {
+        /** PartStack is being clicked and requests Focus */
+        void onRequestFocus(PartStack partStack);
+    }
 
     private HashMap<PartPresenter, Double> partSizes = new HashMap<PartPresenter, Double>();
 
@@ -136,12 +142,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
 
     /** {@inheritDoc} */
     @Override
-    public void setFocus(boolean focused) {
-        view.setFocus(focused);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void addPart(PartPresenter part) {
         addPart(part, null);
     }
@@ -156,6 +156,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             // and return
             return;
         }
+
         if (part instanceof BasePresenter) {
             ((BasePresenter)part).setPartStack(this);
         }
@@ -171,15 +172,13 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         if (titleSVGResource != null) {
             titleSVGImage = part.decorateIcon(new SVGImage(titleSVGResource));
         }
-        TabItem tabItem =
-                view.addTabButton(titleSVGImage,
-                                  part.getTitle(),
-                                  part.getTitleToolTip(),
-                                  part.getTitleWidget(), partsClosable);
+        TabItem tabItem =view.addTab(titleSVGImage, part.getTitle(), part.getTitleToolTip(),
+                                     part.getTitleWidget(), partsClosable);
         bindEvents(tabItem, part);
         part.go(partViewContainer);
         sortPartsOnView(constraint);
         part.onOpen();
+
         // request focus
         onRequestFocus();
     }
@@ -255,7 +254,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     public void hidePart(PartPresenter part) {
         if (activePart == part) {
             if (workBenchPartController != null) {
-//                partsSize = workBenchPartController.getSize();
                 double size = workBenchPartController.getSize();
                 partSizes.put(activePart, Double.valueOf(size));
                 workBenchPartController.setHidden(true);
@@ -313,6 +311,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         });
     }
 
+    HandlerRegistration eventsBlocker;
+
     /**
      * Bind Activate and Close events to the Tab
      *
@@ -320,9 +320,31 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
      * @param part
      */
     protected void bindEvents(final TabItem item, final PartPresenter part) {
-        item.addClickHandler(new ClickHandler() {
+        item.addCloseHandler(new CloseHandler<PartStackView.TabItem>() {
             @Override
-            public void onClick(ClickEvent event) {
+            public void onClose(CloseEvent<TabItem> event) {
+                close(part);
+            }
+        });
+
+        item.addMouseDownHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                /* Blocking any events excepting Mouse UP */
+                eventsBlocker = Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
+                    @Override
+                    public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
+                        if (event.getTypeInt() == Event.ONMOUSEUP) {
+                            eventsBlocker.removeHandler();
+                            return;
+                        }
+
+                        event.cancel();
+                        event.getNativeEvent().preventDefault();
+                        event.getNativeEvent().stopPropagation();
+                    }
+                });
+
                 if (activePart == part) {
                     if (partsClosable) {
                         // request part stack to get the focus
@@ -344,13 +366,6 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
             }
         });
 
-        item.addCloseHandler(new CloseHandler<PartStackView.TabItem>() {
-            @Override
-            public void onClose(CloseEvent<TabItem> event) {
-                // close
-                close(part);
-            }
-        });
     }
 
     /**
@@ -365,18 +380,13 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void onRequestFocus() {
-        // notify partStackHandler
-        // notify handler, that part changed
         partStackHandler.onRequestFocus(PartStackPresenter.this);
     }
 
-    /** Handles PartStack actions */
-    public interface PartStackEventHandler {
-        /** PartStack is being clicked and requests Focus */
-        void onActivePartChanged(PartPresenter part);
-
-        /** PartStack is being clicked and requests Focus */
-        void onRequestFocus(PartStack partStack);
+    /** {@inheritDoc} */
+    @Override
+    public void setFocus(boolean focused) {
+        view.setFocus(focused);
     }
 
     /**
@@ -466,4 +476,5 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
         view.setTabpositions(viewPartPositions);
     }
+
 }

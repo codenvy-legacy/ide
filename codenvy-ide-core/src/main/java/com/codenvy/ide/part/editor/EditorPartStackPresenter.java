@@ -106,12 +106,9 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         if (titleSVGResource != null) {
             titleSVGImage = part.decorateIcon(new SVGImage(titleSVGResource));
         }
-        PartStackView.TabItem tabItem =
-                view.addTabButton(titleSVGImage,
-                                  part.getTitle(),
-                                  part.getTitleToolTip(),
-                                  null,
-                                  partsClosable);
+
+        PartStackView.TabItem tabItem = view.addTab(titleSVGImage, part.getTitle(),
+                                  part.getTitleToolTip(), null, partsClosable);
 
         if (part instanceof EditorWithErrors) {
             final EditorWithErrors presenter = ((EditorWithErrors)part);
@@ -135,19 +132,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
         bindEvents(tabItem, part);
         part.go(partViewContainer);
-
         setActivePart(part);
-
-//        // request focus
-//        onRequestFocus();
-
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                partStackHandler.onActivePartChanged(activePart);
-            }
-        });
-
     }
 
     /** {@inheritDoc} */
@@ -156,6 +141,7 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         if (!(part instanceof EditorPartPresenter)) {
             Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
         }
+
         if (activePart == part) {
             return;
         }
@@ -166,11 +152,9 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         } else {
             view.setActiveTab(parts.indexOf(activePart));
         }
+
         // request part stack to get the focus
         onRequestFocus();
-
-//        // notify handler, that part changed
-//        partStackHandler.onActivePartChanged(activePart);
     }
 
     /*close active part and do action from callBack*/
@@ -193,7 +177,6 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         part.onClose(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable throwable) {
-
             }
 
             @Override
@@ -205,10 +188,17 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
                     //select another part
                     setActivePart(parts.isEmpty() ? null : parts.get(parts.size() - 1));
 
-                    partStackHandler.onActivePartChanged(activePart);
-                    if (closeTabCallback != null) {
-                        closeTabCallback.onTabsClosed();
-                    }
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            if (closeTabCallback != null) {
+                                closeTabCallback.onTabsClosed();
+                            }
+                        }
+                    });
+
+
+
                 }
             }
         });

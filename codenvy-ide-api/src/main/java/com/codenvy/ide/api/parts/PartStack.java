@@ -12,20 +12,15 @@ package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.constraints.Constraints;
 import com.codenvy.ide.api.mvp.Presenter;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import java.util.List;
 
 /**
  * Part Stack is tabbed layout element, containing Parts.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  */
 public interface PartStack extends Presenter {
-
-    /** {@inheritDoc} */
-    @Override
-    void go(AcceptsOneWidget container);
 
     /**
      * Change the focused state of the PartStack to desired value

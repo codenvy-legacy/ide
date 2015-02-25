@@ -10,15 +10,15 @@
  *******************************************************************************/
 package com.codenvy.ide.ui.dialogs;
 
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 /** @author Artem Zatsarynnyy */
-@GwtModule("com.codenvy.ide.ui.CodenvyUI")
-public abstract class BaseTest extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public abstract class BaseTest  {
     protected static String TITLE   = "title";
     protected static String MESSAGE = "message";
     @Mock
