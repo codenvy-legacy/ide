@@ -17,12 +17,12 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
-import com.googlecode.gwt.test.utils.events.Browser;
+import com.google.gwtmockito.GwtMockito;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -35,36 +35,24 @@ import static org.mockito.Mockito.when;
  *
  * @author Roman Nikitenko.
  */
-@GwtModule("com.codenvy.ide.Core")
-public class UploadFileViewImplTest extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public class UploadFileViewImplTest {
 
     private UploadFileViewImpl  view;
     private UploadFilePresenter presenter;
 
-    UploadFileViewImpl.UploadFileViewBinder binder = GWT.create(UploadFileViewImpl.UploadFileViewBinder.class);
-    CoreLocalizationConstant                locale = GWT.create(CoreLocalizationConstant.class);
+
+    UploadFileViewImpl.UploadFileViewBinder binder;
+    CoreLocalizationConstant                locale;
 
     @Before
     public void setup() {
+        GwtMockito.initMocks(this);
+        binder = GWT.create(UploadFileViewImpl.UploadFileViewBinder.class);
+        locale = GWT.create(CoreLocalizationConstant.class);
         presenter = mock(UploadFilePresenter.class);
         view = new UploadFileViewImpl(binder, locale);
         view.setDelegate(presenter);
-    }
-
-    @Test
-    public void clickOnCancelButton() {
-
-        Browser.click(view.btnCancel);
-
-        verify(presenter).onCancelClicked();
-    }
-
-    @Test
-    public void clickOnUploadButton() {
-
-        Browser.click(view.btnUpload);
-
-        verify(presenter).onUploadClicked();
     }
 
     @Test

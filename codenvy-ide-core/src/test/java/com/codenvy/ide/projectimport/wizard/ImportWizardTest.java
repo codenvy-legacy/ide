@@ -23,9 +23,9 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
+import com.codenvy.test.GwtReflectionUtils;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -101,8 +100,7 @@ public class ImportWizardTest {
         verify(vfsServiceClient).getItemByPath(eq(PROJECT_NAME), callbackCaptorForItem.capture());
 
         AsyncRequestCallback<Item> callback = callbackCaptorForItem.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(Item.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(Item.class));
 
         verify(completeCallback).onFailure(any(Throwable.class));
     }
@@ -114,14 +112,12 @@ public class ImportWizardTest {
         verify(vfsServiceClient).getItemByPath(eq(PROJECT_NAME), callbackCaptorForItem.capture());
 
         AsyncRequestCallback<Item> itemCallback = callbackCaptorForItem.getValue();
-        Method onFailure = GwtReflectionUtils.getMethod(itemCallback.getClass(), "onFailure");
-        onFailure.invoke(itemCallback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(itemCallback, mock(Throwable.class));
 
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(false), eq(importProject), callbackCaptorForProject.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptorForProject.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, mock(ProjectDescriptor.class));
+        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -139,14 +135,12 @@ public class ImportWizardTest {
         verify(vfsServiceClient).getItemByPath(eq(PROJECT_NAME), callbackCaptorForItem.capture());
 
         AsyncRequestCallback<Item> itemCallback = callbackCaptorForItem.getValue();
-        Method onFailure = GwtReflectionUtils.getMethod(itemCallback.getClass(), "onFailure");
-        onFailure.invoke(itemCallback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(itemCallback, mock(Throwable.class));
 
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(false), eq(importProject), callbackCaptorForProject.capture());
 
         AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptorForProject.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-        onSuccess.invoke(callback, projectDescriptor);
+        GwtReflectionUtils.callOnSuccess(callback, projectDescriptor);
 
         verify(eventBus, times(2)).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();

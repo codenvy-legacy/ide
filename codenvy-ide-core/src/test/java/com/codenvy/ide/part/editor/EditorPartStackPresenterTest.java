@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.part.editor;
 
+import junit.framework.TestCase;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.parts.PartPresenter;
@@ -17,27 +19,24 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.GwtModule;
-import com.googlecode.gwt.test.GwtTestWithMockito;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.vectomatic.dom.svg.OMSVGSVGElement;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -54,8 +53,8 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Alexander Andrienko
  */
-@GwtModule("com.codenvy.ide.Core")
-public class EditorPartStackPresenterTest extends GwtTestWithMockito {
+@RunWith(GwtMockitoTestRunner.class)
+public class EditorPartStackPresenterTest {
 
     @Mock
     private PartStackUIResources partStackUIResources;
@@ -111,7 +110,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         presenter = new EditorPartStackPresenter(view, eventBus, partStackEventHandler, listOpenedFilesPresenter);
 
         doReturn(svgElem).when(titleSVGResource).getSvg();
-        doReturn(GWT.create(Node.class)).when(svgElem).getElement();
+        doReturn(Mockito.mock(Element.class)).when(svgElem).getElement();
 
         //define behavior part1
         doReturn(titleSVGResource).when(part1).getTitleSVGImage();
@@ -135,11 +134,10 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
     }
 
     @Test
-    public void closeTabTest() throws InvocationTargetException, IllegalAccessException {
+    public void closeTabTest() {
         presenter.addPart(part1);
         presenter.addPart(part2);
         presenter.addPart(part3);
-        stopSchedulers();
 
         assertEquals(presenter.getActivePart(), part3);
         assertTrue(presenter.getNumberOfParts() == 3);
@@ -152,9 +150,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         verify(part1).onClose(asyncRequestCallbackCaptor.capture());
 
         AsyncCallback callback1 = asyncRequestCallbackCaptor.getValue();
-
-        Method onSuccess = GwtReflectionUtils.getMethod(callback1.getClass(), "onSuccess");
-        onSuccess.invoke(callback1, (Void) null);
+        callback1.onSuccess(null);
 
         verify(view).removeTab(anyInt());
 
@@ -170,7 +166,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         presenter.addPart(part1);
         presenter.addPart(part2);
         presenter.addPart(part3);
-        stopSchedulers();
 
         assertEquals(presenter.getActivePart(), part3);
         assertTrue(presenter.getNumberOfParts() == 3);
@@ -184,8 +179,7 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
 
         AsyncCallback callback1 = asyncRequestCallbackCaptor.getValue();
 
-        Method onSuccess = GwtReflectionUtils.getMethod(callback1.getClass(), "onSuccess");
-        onSuccess.invoke(callback1, (Void) null);
+        callback1.onSuccess(null);
 
         verify(view).removeTab(anyInt());
 
@@ -199,7 +193,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
     @Test
     public void setNewActivePartTest() {
         presenter.addPart(part1);
-        stopSchedulers();
 
         presenter.setActivePart(part1);
 
@@ -219,7 +212,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         int amountOfPartsBefore = presenter.getNumberOfParts();
 
         presenter.addPart(part1);
-        stopSchedulers();
 
         int amountOfPartsAfter = presenter.getNumberOfParts();
 
@@ -246,7 +238,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
     @Test
     public void addFirstPartWithIconTest() {
         presenter.addPart(part1);
-        stopSchedulers();
 
         verify(part1).getTitleSVGImage();
 
@@ -263,7 +254,6 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         reset(part1);
 
         presenter.addPart(part1);
-        stopSchedulers();
 
         assertTrue(presenter.getNumberOfParts() == 2);
 
@@ -278,7 +268,4 @@ public class EditorPartStackPresenterTest extends GwtTestWithMockito {
         assertEquals(presenter.getActivePart(), part1);
     }
 
-    private void stopSchedulers() {
-        getBrowserSimulator().fireLoopEnd();
-    }
 }
