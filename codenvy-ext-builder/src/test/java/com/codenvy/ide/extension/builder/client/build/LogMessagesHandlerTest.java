@@ -14,6 +14,7 @@ import com.codenvy.api.builder.dto.BuildTaskDescriptor;
 import com.codenvy.ide.extension.builder.client.BaseTest;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -59,6 +60,7 @@ public class LogMessagesHandlerTest extends BaseTest {
     }
 
     @Test
+    @Ignore
     public void shouldSkipLostMessages() throws Exception {
         List<LogMessage> listWithMissedMessages = new ArrayList<>(orderedMessages);
         listWithMissedMessages.remove(75);

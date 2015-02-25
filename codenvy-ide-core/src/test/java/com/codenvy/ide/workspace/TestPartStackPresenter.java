@@ -18,7 +18,6 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +29,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -158,8 +155,7 @@ public class TestPartStackPresenter {
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback);
+                callback.onSuccess(null);
                 return callback;
             }
         }).when(part).onClose((AsyncCallback<Void>)anyObject());
@@ -168,8 +164,7 @@ public class TestPartStackPresenter {
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] arguments = invocationOnMock.getArguments();
                 AsyncCallback<Void> callback = (AsyncCallback<Void>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback);
+                callback.onSuccess(null);
                 return callback;
             }
         }).when(part2).onClose((AsyncCallback<Void>)anyObject());

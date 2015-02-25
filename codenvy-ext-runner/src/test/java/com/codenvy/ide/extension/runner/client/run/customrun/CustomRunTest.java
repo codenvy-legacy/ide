@@ -25,7 +25,7 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.extension.runner.client.BaseTest;
 import com.codenvy.ide.extension.runner.client.ProjectRunCallback;
 import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import com.codenvy.test.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -35,8 +35,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -99,8 +97,7 @@ public class CustomRunTest extends BaseTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, mock(RunnerEnvironmentTree.class));
+                GwtReflectionUtils.callOnSuccess(callback, mock(RunnerEnvironmentTree.class));
                 return callback;
             }
         }).when(projectServiceClient).getRunnerEnvironments(anyString(), Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
@@ -110,8 +107,7 @@ public class CustomRunTest extends BaseTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, mock(RunnerEnvironmentTree.class));
+                GwtReflectionUtils.callOnSuccess(callback, mock(RunnerEnvironmentTree.class));
                 return callback;
             }
         }).when(runnerServiceClient).getRunners(Matchers.<AsyncRequestCallback<RunnerEnvironmentTree>>anyObject());
@@ -121,8 +117,7 @@ public class CustomRunTest extends BaseTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<RunnerEnvironmentTree> callback = (AsyncRequestCallback<RunnerEnvironmentTree>)arguments[0];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, resourcesDescriptor);
+                GwtReflectionUtils.callOnSuccess(callback, resourcesDescriptor);
                 return callback;
             }
         }).when(runnerServiceClient).getResources(Matchers.<AsyncRequestCallback<ResourcesDescriptor>>anyObject());
