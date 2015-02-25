@@ -298,6 +298,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("navigateToFile", navigateToFileAction);
         actionManager.registerAction("projectConfiguration", projectConfigurationAction);
         actionManager.registerAction("createModuleAction", createModuleAction);
+        actionManager.registerAction("showHideHiddenFiles", showHiddenFilesAction);
 
         // Compose Save group
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
@@ -317,16 +318,12 @@ public class StandardComponentInitializer {
         fileGroup.add(projectConfigurationAction);
         fileGroup.add(uploadFileAction);
         fileGroup.add(navigateToFileAction);
+        fileGroup.add(showHiddenFilesAction);
         fileGroup.add(renameItemAction);
         fileGroup.add(deleteItemAction);
         fileGroup.addSeparator();
         fileGroup.addAction(createModuleAction);
         fileGroup.add(saveGroup);
-
-        // Compose View menu
-        DefaultActionGroup viewGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_VIEW);
-        actionManager.registerAction("showHideHiddenFiles", showHiddenFilesAction);
-        viewGroup.add(showHiddenFilesAction);
 
         // Compose Code menu
         DefaultActionGroup codeGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_CODE);
