@@ -20,6 +20,8 @@ import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
+import com.codenvy.ide.api.parts.HasView;
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.projecttree.TreeNode;
@@ -53,7 +55,8 @@ import javax.annotation.Nonnull;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart {
+public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate,
+                                                                           ProjectExplorerPart, HasView {
     private ProjectExplorerView            view;
     private EventBus                       eventBus;
     private ContextMenu                    contextMenu;
@@ -94,6 +97,11 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     @Override
     public void go(AcceptsOneWidget container) {
         container.setWidget(view);
+    }
+
+    @Override
+    public View getView() {
+        return view;
     }
 
     /** {@inheritDoc} */
@@ -320,4 +328,5 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
     }
+
 }

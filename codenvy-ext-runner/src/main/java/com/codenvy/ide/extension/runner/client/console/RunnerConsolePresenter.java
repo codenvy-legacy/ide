@@ -15,6 +15,8 @@ import com.codenvy.api.runner.gwt.client.utils.RunnerUtils;
 import com.codenvy.api.runner.internal.Constants;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
+import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.HasView;
 import com.codenvy.ide.api.parts.PartPresenter;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -40,7 +42,8 @@ import javax.annotation.Nonnull;
  * @author Vitaliy Guliy
  */
 @Singleton
-public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate {
+public class RunnerConsolePresenter extends BasePresenter implements RunnerConsoleView.ActionDelegate, HasView {
+
     private final RunnerConsoleView          view;
     private final ToolbarPresenter           consoleToolbar;
     private final RunnerResources            runnerResources;
@@ -55,8 +58,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
     private       RunnerStatus               currentRunnerStatus;
 
     @Inject
-    public RunnerConsolePresenter(RunnerConsoleView view, @RunnerConsoleToolbar ToolbarPresenter consoleToolbar, EventBus eventBus,
-                                  RunnerResources runnerResources, RunnerLocalizationConstant runnerLocalizationConstant) {
+    public RunnerConsolePresenter(RunnerConsoleView view,
+                                  @RunnerConsoleToolbar ToolbarPresenter consoleToolbar,
+                                  EventBus eventBus,
+                                  RunnerResources runnerResources,
+                                  RunnerLocalizationConstant runnerLocalizationConstant) {
         this.view = view;
         this.consoleToolbar = consoleToolbar;
         this.runnerResources = runnerResources;
@@ -234,6 +240,11 @@ public class RunnerConsolePresenter extends BasePresenter implements RunnerConso
         shellURL = RunnerUtils.getLink(processDescriptor, Constants.LINK_REL_SHELL_URL) != null ? RunnerUtils.getLink(processDescriptor,
                                                           Constants.LINK_REL_SHELL_URL).getHref() : null;
         view.setTerminalURL(shellURL);
+    }
+
+    @Override
+    public View getView() {
+        return view;
     }
 
 }

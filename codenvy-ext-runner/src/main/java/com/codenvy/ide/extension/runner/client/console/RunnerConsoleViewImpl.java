@@ -19,6 +19,8 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -52,6 +54,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDelegate> implements RunnerConsoleView {
+
+    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
+    }
+
     private static final String              PRE_STYLE         = "style='margin:0px;'";
 
     private static final String              INFO              = "[INFO]";
@@ -110,52 +116,35 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     Frame       terminalFrame;
 
     /**
-     * Tab App
-     */
-    /* @UiField
-    SimplePanel appPreviewButton;
-    @UiField
-    FlowPanel appPreviewPanel;
-    @UiField
-    Label     appPreviewUnavailablePanel;
-    @UiField
-    Frame     appPreviewFrame; */
-
-    /**
      * Terminal URL
      */
     private String terminalURL;
 
-    /**
-     * Preview application URL
-     */
-    /* private String appURL; */
-
-
-    interface RunnerConsoleViewImplUiBinder extends UiBinder<Widget, RunnerConsoleViewImpl> {
-    }
+    /** Scroll runner console bottom if visible. */
+    /** The variable means new messages appeared in console when it was invisible. */
+    private boolean scrollBottomRequired = false;
 
     @Inject
-    public RunnerConsoleViewImpl(PartStackUIResources resources, RunnerResources runnerResources,
-                                 RunnerConsoleViewImplUiBinder uiBinder, AppContext appContext, RunnerLocalizationConstant localizationConstant) {
+    public RunnerConsoleViewImpl(PartStackUIResources resources,
+                                 RunnerResources runnerResources,
+                                 RunnerConsoleViewImplUiBinder uiBinder,
+                                 AppContext appContext,
+                                 RunnerLocalizationConstant localizationConstant) {
         super(resources);
 
         this.runnerResources = runnerResources;
         this.appContext = appContext;
         this.localizationConstant = localizationConstant;
 
-        container.add(uiBinder.createAndBindUi(this));
+        setContentWidget(uiBinder.createAndBindUi(this));
 
         minimizeButton.ensureDebugId("runner-console-minimizeButton");
 
         terminalFrame.removeStyleName("gwt-Frame");
         terminalFrame.getElement().setAttribute("allowtransparency", "true");
-        /* appPreviewFrame.removeStyleName("gwt-Frame"); */
 
         terminalUnavailableLabel.setVisible(true);
         terminalFrame.setVisible(false);
-        /* appPreviewUnavailablePanel.setVisible(true);
-        appPreviewFrame.setVisible(false); */
 
         // this hack used for adding box shadow effect to top panel (tabs+toolbar)
         topPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
@@ -179,18 +168,10 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             }
         }, ClickEvent.getType());
 
-        /* appPreviewButton.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                activateApp();
-            }
-        }, ClickEvent.getType()); */
-    }
+        consolePanel.getElement().setTabIndex(0);
+        terminalFrame.getElement().setAttribute("tabindex", "0");
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
+        handleFrameEvents(terminalFrame.getElement());
     }
 
     /** {@inheritDoc} */
@@ -199,6 +180,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         return toolbarPanel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTerminalURL(String terminalURL) {
         this.terminalURL = terminalURL;
@@ -215,21 +197,7 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
     }
 
-    /* @Override
-    public void setAppURL(String appURL) {
-        this.appURL = appURL;
-
-        if (appURL == null) {
-            appPreviewUnavailablePanel.setVisible(true);
-            appPreviewFrame.setVisible(false);
-            appPreviewFrame.getElement().removeAttribute("src");
-        } else if (appPreviewPanel.isVisible()) {
-            appPreviewUnavailablePanel.setVisible(false);
-            appPreviewFrame.setUrl(appURL);
-            appPreviewFrame.setVisible(true);
-        }
-    } */
-
+    /** {@inheritDoc} */
     @Override
     public void activateConsole() {
         if (tabPanel.getVisibleWidget() == 0) {
@@ -237,14 +205,23 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
         }
 
         tabPanel.showWidget(0);
-
         consoleButton.addStyleName(runnerResources.runner().tabSelected());
         terminalButton.removeStyleName(runnerResources.runner().tabSelected());
-        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
 
         scrollBottom();
+
+        // Focus console scroll panel if runner part is active.
+        if (isFocused()) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    consolePanel.getElement().focus();
+                }
+            });
+        }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void activateTerminal() {
         if (tabPanel.getVisibleWidget() == 1) {
@@ -255,7 +232,6 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
 
         consoleButton.removeStyleName(runnerResources.runner().tabSelected());
         terminalButton.addStyleName(runnerResources.runner().tabSelected());
-        /* appPreviewButton.removeStyleName(runnerResources.runner().tabSelected()); */
 
         if (terminalURL == null && !terminalFrame.getUrl().isEmpty()) {
             terminalUnavailableLabel.setVisible(true);
@@ -267,30 +243,17 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
             terminalFrame.setUrl(terminalURL);
             terminalFrame.setVisible(true);
         }
+
+        // Focus terminal frame if runner part is active and the application is running.
+        if (isFocused() && terminalFrame.isVisible()) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    terminalFrame.getElement().focus();
+                }
+            });
+        }
     }
-
-    /* @Override
-    public void activateApp() {
-        if (tabPanel.getVisibleWidget() == 2) {
-            return;
-        }
-
-        tabPanel.showWidget(2);
-
-        consoleButton.removeStyleName(runnerResources.runner().tabSelected());
-        terminalButton.removeStyleName(runnerResources.runner().tabSelected());
-        appPreviewButton.addStyleName(runnerResources.runner().tabSelected());
-
-        if (appURL == null && !appPreviewFrame.getUrl().isEmpty()) {
-            appPreviewUnavailablePanel.setVisible(true);
-            appPreviewFrame.getElement().removeAttribute("src");
-            appPreviewFrame.setVisible(false);
-        } else if (appURL != null && appPreviewFrame.getUrl().isEmpty()) {
-            appPreviewUnavailablePanel.setVisible(false);
-            appPreviewFrame.setUrl(appURL);
-            appPreviewFrame.setVisible(true);
-        }
-    } */
 
     /** {@inheritDoc} */
     @Override
@@ -301,15 +264,42 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
     /** {@inheritDoc} */
     @Override
     public void scrollBottom() {
-        consolePanel.getElement().setScrollTop(consolePanel.getElement().getScrollHeight());
+        /** scroll bottom immediately if view is visible */
+        if (consolePanel.getElement().getOffsetParent() != null) {
+            consolePanel.getElement().setScrollTop(consolePanel.getElement().getScrollHeight());
+            return;
+        }
+
+        /** otherwise, check the visibility periodically and scroll the view when it's visible */
+        if (!scrollBottomRequired) {
+            scrollBottomRequired = true;
+
+            Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+                @Override
+                public boolean execute() {
+                    if (consolePanel.getElement().getOffsetParent() != null) {
+                        consolePanel.getElement().setScrollTop(consolePanel.getElement().getScrollHeight());
+                        scrollBottomRequired = false;
+                        return false;
+                    }
+                    return true;
+                }
+            }, 1000);
+        }
     }
 
+    /**
+     * Prints a message to terminal console.
+     *
+     * @param message
+     */
     public void print(String message) {
         if (consoleOutput.getWidgetCount() >= MAX_CONSOLE_LINES) {
             // remove first 10% of current lines on screen
             for (int i = 0; i < MAX_CONSOLE_LINES * 0.1; i++) {
                 consoleOutput.remove(0);
             }
+
             // print link to full logs in top of console
             CurrentProject currentProject = appContext.getCurrentProject();
             if (currentProject != null && currentProject.getProcessDescriptor() != null) {
@@ -338,8 +328,11 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 }
             }
         }
+
         Widget html = messageToHTML(message);
         consoleOutput.add(html);
+
+        scrollBottom();
     }
 
     private Widget messageToHTML(String message) {
@@ -420,4 +413,52 @@ public class RunnerConsoleViewImpl extends BaseView<RunnerConsoleView.ActionDele
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }
+
+    @Override
+    protected void focusView() {
+        if (tabPanel.getVisibleWidget() == 0) {
+            // focus runner console
+            consolePanel.getElement().focus();
+        } else if (tabPanel.getVisibleWidget() == 1) {
+            // focus terminal
+            terminalFrame.getElement().focus();
+        }
+    }
+
+    /**
+     * Adds handlers to terminal frame to catch mouse clicking on the frame.
+     *
+     * @param terminalFrame terminal frame object
+     */
+    private native void handleFrameEvents(final JavaScriptObject terminalFrame) /*-{
+        var instance = this;
+        terminalFrame["hovered"] = false;
+
+        terminalFrame.addEventListener('mouseover', function(e) {
+            terminalFrame["hovered"] = true;
+        }, false);
+
+        terminalFrame.addEventListener('mouseout', function(e) {
+            terminalFrame["hovered"] = false;
+        }, false);
+
+        $wnd.addEventListener('blur', function(e) {
+            if (terminalFrame["hovered"] == true) {
+                instance.@com.codenvy.ide.extension.runner.client.console.RunnerConsoleViewImpl::activatePart()();
+            }
+        }, false);
+    }-*/;
+
+    /**
+     * Ensures the view is activated when clicking the mouse.
+     */
+    private void activatePart() {
+        if (!isFocused()) {
+            setFocus(true);
+            if (delegate != null) {
+                delegate.activatePart();
+            }
+        }
+    }
+
 }

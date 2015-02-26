@@ -35,8 +35,8 @@ import com.google.inject.Singleton;
  * @author Nikolay Zamosenchuk
  */
 @Singleton
-public class
-        WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
+public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate, WorkspaceAgent {
+
     private final WorkspaceView             view;
     private final MainMenuPresenter         mainMenu;
     private final StatusPanelGroupPresenter bottomMenu;
@@ -132,7 +132,6 @@ public class
         s.src = 'http://' + host + ':' + port + '/dev_mode_on.js';
         void($doc.getElementsByTagName('head')[0].appendChild(s));
     }-*/;
-
 
     /**
      * Sets whether 'Update extension' button is visible.

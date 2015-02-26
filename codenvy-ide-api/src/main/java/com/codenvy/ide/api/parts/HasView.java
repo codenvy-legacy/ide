@@ -8,16 +8,17 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.mvp;
+package com.codenvy.ide.api.parts;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.codenvy.ide.api.mvp.View;
 
 /**
- * Common interface for Views
+ * Determines an object containing View.
  *
- * @author Andrey Plotnikov
+ * @author Vitaliy Guliy
  */
-public interface View<T> extends IsWidget {
-    /** Sets the delegate to receive events from this view. */
-    public void setDelegate(T delegate);
+public interface HasView<V extends View> {
+
+    V getView();
+
 }

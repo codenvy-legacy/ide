@@ -15,20 +15,16 @@ import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.api.notification.Notification;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The graphic container for {@link NotificationItem}. Show notification in special popup.
@@ -61,9 +57,6 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
         this.resources = resources;
         this.notificationWidget = new ArrayList<Notification>();
 
-        ScrollPanel scrollpanel = new ScrollPanel();
-        add(scrollpanel);
-
         panel = new Grid(0, 4);
         panel.getColumnFormatter().setWidth(0, "20px");
         panel.getColumnFormatter().setWidth(1, "54px");
@@ -85,7 +78,7 @@ public class NotificationContainer extends FlowPanel implements View<Notificatio
             }
         });
 
-        scrollpanel.add(panel);
+        add(panel);
     }
 
 

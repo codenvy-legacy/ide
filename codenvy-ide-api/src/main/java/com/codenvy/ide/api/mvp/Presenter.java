@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * Common interface for Presenters that are responsible for driving the UI
  * <p/>
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * @author Nikolay Zamosenchuk
  *         Jul 24, 2012
  */
 public interface Presenter {

@@ -14,6 +14,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:svgui='urn:import:org.vectomatic.dom.svg.ui'>
     <ui:with field='res' type='com.codenvy.ide.Resources'/>
+
     <ui:style type="com.codenvy.ide.outline.OutlinePartViewImpl.Style">
         .container-style {
             border: none !important;
@@ -38,8 +39,8 @@
             font-size: smaller;
         }
     </ui:style>
-    <g:SimplePanel ui:field="container" addStyleNames="{style.container-style}"
-                   debugId="outline-container">
+
+    <g:SimplePanel ui:field="outlineContainer" addStyleNames="{style.container-style}" debugId="outline-container">
         <g:DockLayoutPanel ui:field="noOutline" unit="PX" height="100%">
             <g:north size="120.0">
                 <g:SimplePanel/>
@@ -50,8 +51,7 @@
                 </g:HTMLPanel>
             </g:north>
             <g:center>
-                <g:Label ui:field="noOutlineCause" addStyleNames="{style.label-style}" debugId="outline-no-file-label" height="100%"
-                         width="70%"/>
+                <g:Label ui:field="noOutlineCause" addStyleNames="{style.label-style}" debugId="outline-no-file-label" height="100%" width="70%"/>
             </g:center>
         </g:DockLayoutPanel>
     </g:SimplePanel>

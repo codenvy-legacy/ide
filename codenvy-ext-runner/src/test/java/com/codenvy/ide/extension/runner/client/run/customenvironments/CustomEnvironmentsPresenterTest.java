@@ -19,7 +19,6 @@ import com.codenvy.ide.extension.runner.client.BaseTest;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +26,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -80,8 +77,7 @@ public class CustomEnvironmentsPresenterTest extends BaseTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncCallback<Array<CustomEnvironment>> callback = (AsyncCallback<Array<CustomEnvironment>>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, scriptsArray);
+                callback.onSuccess(mock(Array.class));
                 return callback;
             }
         }).when(environmentActionsManager)

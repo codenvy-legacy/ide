@@ -35,6 +35,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
+
     private static final String INFO  = "INFO";
     private static final String ERROR = "ERROR";
     private static final String WARN  = "WARNING";
@@ -58,20 +59,18 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     FlowPanel   consoleArea;
 
     @Inject
-    public BuilderConsoleViewImpl(PartStackUIResources resources, BuilderConsoleViewImplUiBinder uiBinder) {
+    public BuilderConsoleViewImpl(PartStackUIResources resources,
+                                  BuilderConsoleViewImplUiBinder uiBinder) {
         super(resources);
-        container.add(uiBinder.createAndBindUi(this));
+        setContentWidget(uiBinder.createAndBindUi(this));
+
         minimizeButton.ensureDebugId("builder-console-minimizeButton");
 
         // this hack used for adding box shadow effect to toolbar
         toolbarPanel.getElement().getParentElement().getStyle().setOverflow(Overflow.VISIBLE);
         toolbarPanel.getElement().getParentElement().getStyle().setZIndex(1);
-    }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setDelegate(ActionDelegate delegate) {
-        this.delegate = delegate;
+        scrollPanel.getElement().setTabIndex(0);
     }
 
     /** {@inheritDoc} */
@@ -84,13 +83,13 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     @Override
     public void print(String message) {
         HTML html = new HTML();
-        if (message.startsWith("["+INFO+"]")) {
+        if (message.startsWith("[" + INFO + "]")) {
             html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
-        } else if (message.startsWith("["+ERROR+"]")) {
+        } else if (message.startsWith("[" + ERROR + "]")) {
             html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
-        } else if (message.startsWith("["+WARN+"]")) {
+        } else if (message.startsWith("[" + WARN + "]")) {
             html.setHTML(buildSafeHtmlMessage(WARN, WARN_COLOR, message));
-        } else if (message.startsWith("["+MAVEN+"]")) {
+        } else if (message.startsWith("[" + MAVEN + "]")) {
             html.setHTML(buildHtmlMessage(MAVEN, MAVEN_COLOR, message));
         } else {
             html.setHTML(buildSafeHtmlMessage(message));
@@ -156,4 +155,10 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
                 .appendHtmlConstant("</pre>")
                 .toSafeHtml();
     }
+
+    @Override
+    protected void focusView() {
+        scrollPanel.getElement().focus();
+    }
+
 }

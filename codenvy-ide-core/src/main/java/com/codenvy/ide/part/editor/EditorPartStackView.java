@@ -15,6 +15,7 @@ import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
+import com.codenvy.ide.part.FocusManager;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -60,8 +61,10 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     private boolean focused;
 
+    private Widget focusedWidget;
+
     // DOM Handler
-    private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
+//    private final FocusRequestDOMHandler focusRequestHandler = new FocusRequestDOMHandler();
 
     private HandlerRegistration focusRequestHandlerRegistration;
 
@@ -129,7 +132,16 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         listTabsButton.setVisible(false);
         setVisible(false);
 
-        addFocusRequestHandler();
+//        addFocusRequestHandler();
+
+        addDomHandler(new MouseDownHandler() {
+            @Override
+            public void onMouseDown(MouseDownEvent event) {
+                if (delegate != null) {
+                    delegate.onRequestFocus();
+                }
+            }
+        }, MouseDownEvent.getType());
     }
 
     @Override
@@ -142,7 +154,7 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
 
     /** {@inheritDoc} */
     @Override
-    public TabItem addTabButton(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
+    public TabItem addTab(SVGImage icon, String title, String toolTip, IsWidget widget, boolean closable) {
         setVisible(true);
         TabButton tabItem = new TabButton(icon, title, toolTip, closable);
         tabsPanel.add(tabItem);
@@ -180,6 +192,8 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         if (activeTab != null) {
             activeTab.removeStyleName(partStackUIResources.partStackCss().idePartStackTabSelected());
 
+            activeTab.getElement().getStyle().clearBackgroundColor();
+
             //This code is necessary to distinguish active from inactive content and tab when testing
             if (tabs.indexOf(activeTab) != -1) {
                 contentPanel.getWidget(tabs.indexOf(activeTab)).ensureDebugId("inactiveContent");
@@ -208,35 +222,46 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
     /** {@inheritDoc} */
     @Override
     public void setFocus(boolean focused) {
-        if (this.focused == focused) {
-            // already focused
-            return;
-        }
+        this.focused = focused;
+
+//        if (focused) {
+//            parent.addStyleName(partStackUIResources.partStackCss().idePartStackFocused());
+//            removeFocusRequestHandler();
+//        } else {
+//            parent.removeStyleName(partStackUIResources.partStackCss().idePartStackFocused());
+//            addFocusRequestHandler();
+//        }
 
         this.focused = focused;
 
-        // if focused already, then remove DOM handler
-        if (focused) {
-            parent.addStyleName(partStackUIResources.partStackCss().idePartStackFocused());
-            removeFocusRequestHandler();
+        if (focused && contentPanel.getVisibleWidget() != null) {
+            contentPanel.getElement().getStyle().setProperty("borderLeftColor", FocusManager.HIGHLIGHT_COLOR);
+            contentPanel.getElement().getStyle().setProperty("borderTopColor", FocusManager.HIGHLIGHT_COLOR);
+            if (activeTab != null) {
+                activeTab.getElement().getStyle().setProperty("backgroundColor", FocusManager.HIGHLIGHT_COLOR);
+            }
         } else {
-            parent.removeStyleName(partStackUIResources.partStackCss().idePartStackFocused());
-            addFocusRequestHandler();
+            contentPanel.getElement().getStyle().clearProperty("borderLeftColor");
+            contentPanel.getElement().getStyle().clearProperty("borderTopColor");
+            if (activeTab != null) {
+                activeTab.getElement().getStyle().clearProperty("backgroundColor");
+            }
         }
+
     }
 
-    /** Add MouseDown DOM Handler */
-    protected void addFocusRequestHandler() {
-        focusRequestHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
-    }
+//    /** Add MouseDown DOM Handler */
+//    protected void addFocusRequestHandler() {
+//        focusRequestHandlerRegistration = addDomHandler(focusRequestHandler, MouseDownEvent.getType());
+//    }
 
-    /** Remove MouseDown DOM Handler */
-    protected void removeFocusRequestHandler() {
-        if (focusRequestHandlerRegistration != null) {
-            focusRequestHandlerRegistration.removeHandler();
-            focusRequestHandlerRegistration = null;
-        }
-    }
+//    /** Remove MouseDown DOM Handler */
+//    protected void removeFocusRequestHandler() {
+//        if (focusRequestHandlerRegistration != null) {
+//            focusRequestHandlerRegistration.removeHandler();
+//            focusRequestHandlerRegistration = null;
+//        }
+//    }
 
     /** {@inheritDoc} */
     @Override
@@ -301,6 +326,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
                 icon.setClassNameBaseVal(partStackUIResources.partStackCss().idePartStackTabIcon());
                 tabItem.add(this.icon);
             }
+        }
+
+        @Override
+        public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+            return addDomHandler(handler, MouseDownEvent.getType());
         }
 
         @Override
@@ -384,6 +414,11 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         }
 
         @Override
+        public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+            return addDomHandler(handler, MouseDownEvent.getType());
+        }
+
+        @Override
         public HandlerRegistration addClickHandler(ClickHandler handler) {
             return addDomHandler(handler, ClickEvent.getType());
         }
@@ -391,19 +426,20 @@ public class EditorPartStackView extends ResizeComposite implements PartStackVie
         /** {@inheritDoc} */
         @Override
         public HandlerRegistration addCloseHandler(CloseHandler<TabItem> handler) {
-            return null;
+            return addHandler(handler, CloseEvent.getType());
         }
+
     }
 
-    /** Notifies delegated handler */
-    private final class FocusRequestDOMHandler implements MouseDownHandler {
-        @Override
-        public void onMouseDown(MouseDownEvent event) {
-            if (delegate != null) {
-                delegate.onRequestFocus();
-            }
-        }
-    }
+//    /** Notifies delegated handler */
+//    private final class FocusRequestDOMHandler implements MouseDownHandler {
+//        @Override
+//        public void onMouseDown(MouseDownEvent event) {
+//            if (delegate != null) {
+//                delegate.onRequestFocus();
+//            }
+//        }
+//    }
 
     /** {@inheritDoc} */
     @Override

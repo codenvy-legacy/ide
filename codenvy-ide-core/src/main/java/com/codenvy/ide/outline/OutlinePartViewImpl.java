@@ -12,7 +12,7 @@ package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.parts.PartStackUIResources;
 import com.codenvy.ide.api.parts.base.BaseView;
-import com.google.gwt.core.client.GWT;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -25,17 +25,20 @@ import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate> implements OutlinePartView {
 
-    private static OutlinePartViewImplUiBinder ourUiBinder = GWT.create(OutlinePartViewImplUiBinder.class);
+    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {
+    }
+
+    interface Style extends CssResource {
+    }
 
     @UiField
     Style style;
 
     @UiField
-    SimplePanel container;
+    SimplePanel outlineContainer;
 
     @UiField
     DockLayoutPanel noOutline;
@@ -43,25 +46,31 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     @UiField
     Label noOutlineCause;
 
+    private boolean outlineEnabled = false;
+
     @Inject
-    public OutlinePartViewImpl(PartStackUIResources resources) {
+    public OutlinePartViewImpl(PartStackUIResources resources,
+                               OutlinePartViewImplUiBinder uiBinder) {
         super(resources);
-        ourUiBinder.createAndBindUi(this);
-        super.container.add(container);
+        setContentWidget(uiBinder.createAndBindUi(this));
         minimizeButton.ensureDebugId("outline-minimizeBut");
     }
 
     /** {@inheritDoc} */
     @Override
     public void disableOutline(String cause) {
+        outlineEnabled = false;
+
         clear();
         noOutlineCause.setText(cause);
-        container.add(noOutline);
+        outlineContainer.add(noOutline);
     }
 
     @Override
     public void enableOutline() {
-        Element el = container.getElement().getFirstChildElement().cast();
+        outlineEnabled = true;
+
+        Element el = outlineContainer.getElement().getFirstChildElement().cast();
         el.getStyle().setProperty("position", "relative");
         el.getStyle().setProperty("width", "100%");
         el.getStyle().setProperty("height", "100%");
@@ -70,18 +79,26 @@ public class OutlinePartViewImpl extends BaseView<OutlinePartView.ActionDelegate
     /** {@inheritDoc} */
     @Override
     public void clear() {
-        container.clear();
+        outlineContainer.clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget getContainer() {
-        return container;
+        return outlineContainer;
     }
 
-    interface OutlinePartViewImplUiBinder extends UiBinder<SimplePanel, OutlinePartViewImpl> {
+    @Override
+    protected void focusView() {
+        try {
+            // TODO The case must be investigated.
+            // TODO It looks the outline tree element is exist when outline is enabled for active file.
+            if (outlineEnabled) {
+                outlineContainer.getElement().getFirstChildElement().getFirstChildElement().focus();
+            }
+        } catch (Exception e) {
+            Log.trace(e.getMessage());
+        }
     }
 
-    interface Style extends CssResource {
-    }
 }

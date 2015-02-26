@@ -19,6 +19,12 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * @version $Id:
  */
 public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
+
+    /**
+     * Returns container for placing an outline view.
+     *
+     * @return container for placing an outline view
+     */
     AcceptsOneWidget getContainer();
 
     /**
@@ -49,6 +55,6 @@ public interface OutlinePartView extends View<OutlinePartView.ActionDelegate> {
      * A delegate to bind UI with logic.
      */
     public interface ActionDelegate extends BaseActionDelegate {
-
     }
+
 }

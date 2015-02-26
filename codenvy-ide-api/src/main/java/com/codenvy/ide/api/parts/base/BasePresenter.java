@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
  * @author Evgen Vidolob
  */
 public abstract class BasePresenter extends AbstractPartPresenter implements BaseActionDelegate {
+
     protected PartStack partStack;
 
     protected BasePresenter() {
@@ -34,6 +35,12 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void activatePart() {
+        partStack.setActivePart(this);
+    }
+
     /**
      * Set PartStack where this part added.
      *
@@ -42,4 +49,5 @@ public abstract class BasePresenter extends AbstractPartPresenter implements Bas
     public void setPartStack(@Nonnull PartStack partStack) {
         this.partStack = partStack;
     }
+
 }
