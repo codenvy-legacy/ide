@@ -12,6 +12,8 @@ package com.codenvy.ide.ui.dialogs.message;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
+import javax.annotation.Nonnull;
+
 /**
  * The view interface for the message dialog component.
  *
@@ -21,7 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface MessageDialogView {
 
     /** Sets the action delegate. */
-    void setDelegate(ActionDelegate delegate);
+    void setDelegate(@Nonnull ActionDelegate delegate);
 
     /** Displays the dialog window. */
     void showDialog();
@@ -30,10 +32,13 @@ public interface MessageDialogView {
     void closeDialog();
 
     /** Fill the window with its content. */
-    void setContent(IsWidget content);
+    void setContent(@Nonnull IsWidget content);
 
     /** Sets the window title. */
-    void setTitle(String title);
+    void setTitle(@Nonnull String title);
+
+    /** Sets the Confirm button text. */
+    void setConfirmButtonText(@Nonnull String text);
 
     /** The interface for the action delegate. */
     public interface ActionDelegate {

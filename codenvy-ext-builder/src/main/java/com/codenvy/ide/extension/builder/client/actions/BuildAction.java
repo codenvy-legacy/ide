@@ -12,6 +12,9 @@ package com.codenvy.ide.extension.builder.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
+import com.codenvy.ide.api.action.permits.ActionPermit;
+import com.codenvy.ide.api.action.permits.Build;
 import com.codenvy.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.build.BuildContext;
 import com.codenvy.ide.extension.builder.client.BuilderLocalizationConstant;
@@ -28,26 +31,37 @@ import com.google.inject.Singleton;
 @Singleton
 public class BuildAction extends ProjectAction {
 
-    private final BuildController      buildController;
-    private final AnalyticsEventLogger eventLogger;
-    private       BuildContext         buildContext;
+    private final BuildController        buildController;
+    private final AnalyticsEventLogger   eventLogger;
+    private final ActionPermit           buildActionPermit;
+    private final ActionDenyAccessDialog buildActionDenyAccessDialog;
+    private       BuildContext           buildContext;
 
     @Inject
-    public BuildAction(BuildController buildController, BuilderResources resources,
+    public BuildAction(BuildController buildController,
+                       BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant,
-                       AnalyticsEventLogger eventLogger, BuildContext buildContext) {
-        super(localizationConstant.buildProjectControlTitle(),
-              localizationConstant.buildProjectControlDescription(), resources.build());
+                       AnalyticsEventLogger eventLogger,
+                       BuildContext buildContext,
+                       @Build ActionPermit buildActionPermit,
+                       @Build ActionDenyAccessDialog buildActionDenyAccessDialog) {
+        super(localizationConstant.buildProjectControlTitle(), localizationConstant.buildProjectControlDescription(), resources.build());
         this.buildController = buildController;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
+        this.buildActionPermit = buildActionPermit;
+        this.buildActionDenyAccessDialog = buildActionDenyAccessDialog;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        buildController.buildActiveProject(true);
+        if (buildActionPermit.isAllowed()) {
+            buildController.buildActiveProject(true);
+        } else {
+            buildActionDenyAccessDialog.show();
+        }
     }
 
     @Override
