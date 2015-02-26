@@ -84,7 +84,7 @@ public class CustomRunTest extends BaseTest {
         when(currentProject.getProjectDescription()).thenReturn(projectDescriptor);
         when(projectDescriptor.getRunners()).thenReturn(runnersDescriptor);
         when(runnersDescriptor.getDefault()).thenReturn("Tomcat7");
-        final CurrentUser currentUser = new CurrentUser(profileDescriptor, null);
+        final CurrentUser currentUser = new CurrentUser(profileDescriptor);
 
         //currentUser.setPreferences(new HashMap<String, String>(0));
 

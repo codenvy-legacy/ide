@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.app;
 
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
+
 import java.util.Map;
 
 /**
@@ -24,6 +25,10 @@ public class CurrentUser {
     private Map<String, String> preferences;
 
     public CurrentUser() {
+    }
+
+    public CurrentUser(ProfileDescriptor profileDescriptor) {
+        this(profileDescriptor, null);
     }
 
     public CurrentUser(ProfileDescriptor profileDescriptor, Map<String, String> preferences) {
