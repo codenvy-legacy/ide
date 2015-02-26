@@ -107,6 +107,7 @@ public class BootstrapController {
     private final AppCloseHandler              appCloseHandler;
     private final PresentationFactory          presentationFactory;
     private final AppContext                   appContext;
+    private       CurrentUser                  currentUser;
 
     /** Create controller. */
     @Inject
@@ -176,6 +177,8 @@ public class BootstrapController {
                           }
                       }).inject();
 
+        currentUser = new CurrentUser();
+
         loadWorkspace();
     }
 
@@ -208,7 +211,8 @@ public class BootstrapController {
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
                                                  protected void onSuccess(final ProfileDescriptor profile) {
-                                                     loadPreferences(profile);
+                                                     currentUser.setProfile(profile);
+                                                     loadPreferences();
                                                  }
 
                                                  @Override
@@ -220,11 +224,12 @@ public class BootstrapController {
                                             );
     }
 
-    private void loadPreferences(final ProfileDescriptor profile) {
+    private void loadPreferences() {
         userProfileService.getPreferences(new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
             @Override
             protected void onSuccess(Map<String, String> preferences) {
-                appContext.setCurrentUser(new CurrentUser(profile, preferences));
+                currentUser.setPreferences(preferences);
+                appContext.setCurrentUser(currentUser);
                 preferencesManager.load(preferences);
                 setTheme();
                 styleInjector.inject();
@@ -241,7 +246,8 @@ public class BootstrapController {
 
     private void loadProjectTypes() {
         projectTypeService.getProjectTypes(
-                new AsyncRequestCallback<Array<ProjectTypeDefinition>>(dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
+                new AsyncRequestCallback<Array<ProjectTypeDefinition>>(
+                        dtoUnmarshallerFactory.newArrayUnmarshaller(ProjectTypeDefinition.class)) {
 
                     @Override
                     protected void onSuccess(Array<ProjectTypeDefinition> result) {
