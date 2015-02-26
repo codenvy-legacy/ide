@@ -208,8 +208,7 @@ public class BootstrapController {
                                                      dtoUnmarshallerFactory.newUnmarshaller(ProfileDescriptor.class)) {
                                                  @Override
                                                  protected void onSuccess(final ProfileDescriptor profile) {
-                                                     appContext.setCurrentUser(new CurrentUser(profile));
-                                                     loadPreferences();
+                                                     loadPreferences(profile);
                                                  }
 
                                                  @Override
@@ -221,10 +220,11 @@ public class BootstrapController {
                                             );
     }
 
-    private void loadPreferences() {
+    private void loadPreferences(final ProfileDescriptor profile) {
         userProfileService.getPreferences(new AsyncRequestCallback<Map<String, String>>(new StringMapUnmarshaller()) {
             @Override
             protected void onSuccess(Map<String, String> preferences) {
+                appContext.setCurrentUser(new CurrentUser(profile, preferences));
                 preferencesManager.load(preferences);
                 setTheme();
                 styleInjector.inject();
