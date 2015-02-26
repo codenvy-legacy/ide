@@ -60,7 +60,7 @@ public class MessageDialogFooter extends Composite {
      *         the new value
      */
     public void setDelegate(@Nonnull ActionDelegate delegate) {
-        this.actionDelegate = delegate;
+        actionDelegate = delegate;
     }
 
     /**

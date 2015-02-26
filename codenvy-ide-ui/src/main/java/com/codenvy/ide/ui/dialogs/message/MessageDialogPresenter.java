@@ -66,6 +66,7 @@ public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
         if (content.asWidget() != null) {
             content.asWidget().ensureDebugId("info-window-message");
         }
+
         if (confirmButtonText != null) {
             view.setConfirmButtonText(confirmButtonText);
         }

@@ -62,13 +62,13 @@ public class MessageDialogViewImpl extends Window implements MessageDialogView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.show();
+        show();
     }
 
     /** {@inheritDoc} */
     @Override
     public void closeDialog() {
-        this.hide();
+        hide();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MessageDialogViewImpl extends Window implements MessageDialogView {
     /** {@inheritDoc} */
     @Override
     public void setConfirmButtonText(@Nonnull String text) {
-        this.footer.setConfirmButtonText(text);
+        footer.setConfirmButtonText(text);
     }
 
     /** The UI binder interface for this components. */
