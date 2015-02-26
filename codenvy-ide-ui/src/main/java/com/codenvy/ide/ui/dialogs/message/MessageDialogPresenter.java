@@ -36,24 +36,40 @@ public class MessageDialogPresenter implements MessageDialog, ActionDelegate {
     private final ConfirmCallback confirmCallback;
 
     @AssistedInject
-    public MessageDialogPresenter(final @Nonnull MessageDialogView view,
-                                  final @Nonnull @Assisted("title") String title,
-                                  final @Nonnull @Assisted("message") String message,
-                                  final @Nullable @Assisted ConfirmCallback confirmCallback) {
+    public MessageDialogPresenter(@Nonnull MessageDialogView view,
+                                  @Nonnull @Assisted("title") String title,
+                                  @Nonnull @Assisted("message") String message,
+                                  @Nullable @Assisted ConfirmCallback confirmCallback) {
         this(view, title, new InlineHTML(message), confirmCallback);
     }
 
     @AssistedInject
-    public MessageDialogPresenter(final @Nonnull MessageDialogView view,
-                                  final @Nonnull @Assisted String title,
-                                  final @Nonnull @Assisted IsWidget content,
-                                  final @Nullable @Assisted ConfirmCallback confirmCallback) {
-        content.asWidget().ensureDebugId("info-window-message");
+    public MessageDialogPresenter(@Nonnull MessageDialogView view,
+                                  @Nonnull @Assisted String title,
+                                  @Nonnull @Assisted IsWidget content,
+                                  @Nullable @Assisted ConfirmCallback confirmCallback) {
+        this(view, title, content, confirmCallback, null);
+    }
+
+    @AssistedInject
+    public MessageDialogPresenter(@Nonnull MessageDialogView view,
+                                  @Nonnull @Assisted("title") String title,
+                                  @Nonnull @Assisted IsWidget content,
+                                  @Nullable @Assisted ConfirmCallback confirmCallback,
+                                  @Nullable @Assisted("confirmButtonText") String confirmButtonText) {
         this.view = view;
         this.view.setContent(content);
         this.view.setTitle(title);
         this.confirmCallback = confirmCallback;
         this.view.setDelegate(this);
+
+        if (content.asWidget() != null) {
+            content.asWidget().ensureDebugId("info-window-message");
+        }
+
+        if (confirmButtonText != null) {
+            view.setConfirmButtonText(confirmButtonText);
+        }
     }
 
     @Override

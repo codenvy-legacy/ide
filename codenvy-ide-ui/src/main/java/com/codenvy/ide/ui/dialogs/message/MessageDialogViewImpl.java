@@ -47,24 +47,28 @@ public class MessageDialogViewImpl extends Window implements MessageDialogView {
         getFooter().add(this.footer);
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setDelegate(final ActionDelegate delegate) {
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
         this.delegate = delegate;
         this.footer.setDelegate(this.delegate);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onClose() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        this.show();
+        show();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeDialog() {
-        this.hide();
+        hide();
     }
 
     @Override
@@ -72,10 +76,17 @@ public class MessageDialogViewImpl extends Window implements MessageDialogView {
         delegate.accepted();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void setContent(final IsWidget content) {
+    public void setContent(@Nonnull IsWidget content) {
         this.content.clear();
         this.content.setWidget(content);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setConfirmButtonText(@Nonnull String text) {
+        footer.setConfirmButtonText(text);
     }
 
     /** The UI binder interface for this components. */

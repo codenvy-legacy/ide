@@ -12,7 +12,10 @@ package com.codenvy.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.ide.api.action.ActionEvent;
+import com.codenvy.ide.api.action.permits.ActionPermit;
+import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
 import com.codenvy.ide.api.action.ProjectAction;
+import com.codenvy.ide.api.action.permits.Run;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
@@ -30,9 +33,11 @@ import com.google.inject.Singleton;
 @Singleton
 public class CustomRunAction extends ProjectAction {
 
-    private final AnalyticsEventLogger eventLogger;
-    private final RunController        runController;
-    private final CustomRunPresenter   customRunPresenter;
+    private final AnalyticsEventLogger   eventLogger;
+    private final RunController          runController;
+    private final CustomRunPresenter     customRunPresenter;
+    private final ActionPermit           runActionPermit;
+    private final ActionDenyAccessDialog runActionDenyAccessDialog;
 
     @Inject
     public CustomRunAction(RunController runController,
@@ -40,7 +45,9 @@ public class CustomRunAction extends ProjectAction {
                            RunnerResources resources,
                            RunnerLocalizationConstant localizationConstants,
                            AppContext appContext,
-                           AnalyticsEventLogger eventLogger) {
+                           AnalyticsEventLogger eventLogger,
+                           @Run ActionPermit runActionPermit,
+                           @Run ActionDenyAccessDialog runActionDenyAccessDialog) {
         super(localizationConstants.customRunAppActionText(),
               localizationConstants.customRunAppActionDescription(),
               resources.launchApp());
@@ -48,13 +55,19 @@ public class CustomRunAction extends ProjectAction {
         this.customRunPresenter = customRunPresenter;
         this.appContext = appContext;
         this.eventLogger = eventLogger;
+        this.runActionPermit = runActionPermit;
+        this.runActionDenyAccessDialog = runActionDenyAccessDialog;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        customRunPresenter.showDialog();
+        if (runActionPermit.isAllowed()) {
+            customRunPresenter.showDialog();
+        } else {
+            runActionDenyAccessDialog.show();
+        }
     }
 
     @Override

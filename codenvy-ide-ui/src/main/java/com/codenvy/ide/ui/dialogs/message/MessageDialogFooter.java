@@ -59,8 +59,18 @@ public class MessageDialogFooter extends Composite {
      * @param delegate
      *         the new value
      */
-    public void setDelegate(final ActionDelegate delegate) {
-        this.actionDelegate = delegate;
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
+        actionDelegate = delegate;
+    }
+
+    /**
+     * Sets the confirm button text.
+     *
+     * @param text
+     *         the text
+     */
+    public void setConfirmButtonText(@Nonnull String text) {
+        okButton.setText(text);
     }
 
     /**
