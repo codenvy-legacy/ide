@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -48,8 +47,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
     @UiField
     Label       noEnvLabel;
     @UiField
-    TextBox     recommendedMemory;
-    @UiField
     TextArea    runnerDescription;
     @UiField
     SimplePanel treeContainer;
@@ -63,10 +60,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
                                RunnersRenderer runnersRenderer,
                                RunnersPageViewImplUiBinder uiBinder) {
         rootElement = uiBinder.createAndBindUi(this);
-
-        recommendedMemory.getElement().setAttribute("type", "number");
-        recommendedMemory.getElement().setAttribute("step", "128");
-        recommendedMemory.getElement().setAttribute("min", "0");
 
         root = dtoFactory.createDto(RunnerEnvironmentTree.class);
         tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
