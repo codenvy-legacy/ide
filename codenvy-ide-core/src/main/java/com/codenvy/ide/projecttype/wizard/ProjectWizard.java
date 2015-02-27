@@ -13,6 +13,7 @@ package com.codenvy.ide.projecttype.wizard;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
@@ -194,12 +195,12 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
 
     private void importProject(final CompleteCallback callback) {
         final NewProject project = dataObject.getProject();
-        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        final Unmarshallable<ImportResponse> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ImportResponse.class);
         projectServiceClient.importProject(
-                project.getName(), true, dataObject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                project.getName(), true, dataObject, new AsyncRequestCallback<ImportResponse>(unmarshaller) {
                     @Override
-                    protected void onSuccess(ProjectDescriptor result) {
-                        eventBus.fireEvent(new OpenProjectEvent(result.getName()));
+                    protected void onSuccess(ImportResponse result) {
+                        eventBus.fireEvent(new OpenProjectEvent(result.getProjectDescriptor().getName()));
                         callback.onCompleted();
                     }
 
