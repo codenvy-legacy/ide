@@ -13,6 +13,7 @@ package com.codenvy.ide.projectimport.wizard;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
@@ -127,19 +128,19 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
     private void importProject(final CompleteCallback callback) {
         final String projectName = dataObject.getProject().getName();
         importProjectNotificationSubscriber.subscribe(projectName);
-        final Unmarshallable<ProjectDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ProjectDescriptor.class);
+        final Unmarshallable<ImportResponse> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ImportResponse.class);
         projectServiceClient.importProject(
-                projectName, false, dataObject, new AsyncRequestCallback<ProjectDescriptor>(unmarshaller) {
+                projectName, false, dataObject, new AsyncRequestCallback<ImportResponse>(unmarshaller) {
                     @Override
-                    protected void onSuccess(final ProjectDescriptor result) {
+                    protected void onSuccess(final ImportResponse result) {
                         importProjectNotificationSubscriber.onSuccess();
                         callback.onCompleted();
 
                         // propose user to get more RAM and open project
-                        checkRam(result, new ConfirmCallback() {
+                        checkRam(result.getProjectDescriptor(), new ConfirmCallback() {
                             @Override
                             public void accepted() {
-                                openProject(result);
+                                openProject(result.getProjectDescriptor());
                             }
                         });
                     }

@@ -12,6 +12,7 @@ package com.codenvy.ide.projectimport.wizard;
 
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectProblem;
@@ -56,11 +57,11 @@ public class ImportWizardTest {
     private static final String PROJECT_NAME = "project1";
 
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<Item>>              callbackCaptorForItem;
+    private ArgumentCaptor<AsyncRequestCallback<Item>>           callbackCaptorForItem;
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<ProjectDescriptor>> callbackCaptorForProject;
+    private ArgumentCaptor<AsyncRequestCallback<ImportResponse>> callbackCaptorForProject;
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<Void>>              callbackCaptorForVoid;
+    private ArgumentCaptor<AsyncRequestCallback<Void>>           callbackCaptorForVoid;
 
     @Mock
     private ProjectServiceClient                projectServiceClient;
@@ -116,8 +117,10 @@ public class ImportWizardTest {
 
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(false), eq(importProject), callbackCaptorForProject.capture());
 
-        AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptorForProject.getValue();
-        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
+        ImportResponse importResponse = mock(ImportResponse.class);
+        when(importResponse.getProjectDescriptor()).thenReturn(mock(ProjectDescriptor.class));
+        AsyncRequestCallback<ImportResponse> callback = callbackCaptorForProject.getValue();
+        GwtReflectionUtils.callOnSuccess(callback, importResponse);
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -125,9 +128,11 @@ public class ImportWizardTest {
 
     @Test
     public void shouldImportAndOpenProjectForConfiguring() throws Exception {
+        ImportResponse importResponse = mock(ImportResponse.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
         List<ProjectProblem> problems = mock(List.class);
         when(problems.isEmpty()).thenReturn(false);
+        when(importResponse.getProjectDescriptor()).thenReturn(projectDescriptor);
         when(projectDescriptor.getProblems()).thenReturn(problems);
 
         wizard.complete(completeCallback);
@@ -139,8 +144,8 @@ public class ImportWizardTest {
 
         verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(false), eq(importProject), callbackCaptorForProject.capture());
 
-        AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptorForProject.getValue();
-        GwtReflectionUtils.callOnSuccess(callback, projectDescriptor);
+        AsyncRequestCallback<ImportResponse> callback = callbackCaptorForProject.getValue();
+        GwtReflectionUtils.callOnSuccess(callback, importResponse);
 
         verify(eventBus, times(2)).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();

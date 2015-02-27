@@ -13,6 +13,7 @@ package com.codenvy.ide.projecttype.wizard;
 import com.codenvy.api.core.rest.shared.dto.ServiceError;
 import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ImportProject;
+import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectUpdate;
@@ -59,8 +60,11 @@ public class ProjectWizardTest {
 
     @Captor
     private ArgumentCaptor<AsyncRequestCallback<ProjectDescriptor>> callbackCaptor;
+
     @Captor
-    private ArgumentCaptor<AsyncRequestCallback<Void>>              callbackCaptorForVoid;
+    private ArgumentCaptor<AsyncRequestCallback<ImportResponse>> importCallbackCaptor;
+    @Captor
+    private ArgumentCaptor<AsyncRequestCallback<Void>>           callbackCaptorForVoid;
 
     @Mock
     private CoreLocalizationConstant coreLocalizationConstant;
@@ -127,10 +131,12 @@ public class ProjectWizardTest {
 
         wizard.complete(completeCallback);
 
-        verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), callbackCaptor.capture());
+        verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), importCallbackCaptor.capture());
 
-        AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
-        GwtReflectionUtils.callOnSuccess(callback, mock(ProjectDescriptor.class));
+        ImportResponse importResponse = mock(ImportResponse.class);
+        when(importResponse.getProjectDescriptor()).thenReturn(mock(ProjectDescriptor.class));
+        AsyncRequestCallback<ImportResponse> callback = importCallbackCaptor.getValue();
+        GwtReflectionUtils.callOnSuccess(callback, importResponse);
 
         verify(eventBus).fireEvent(Matchers.<Event<Object>>anyObject());
         verify(completeCallback).onCompleted();
@@ -143,9 +149,9 @@ public class ProjectWizardTest {
 
         wizard.complete(completeCallback);
 
-        verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), callbackCaptor.capture());
+        verify(projectServiceClient).importProject(eq(PROJECT_NAME), eq(true), eq(importProject), importCallbackCaptor.capture());
 
-        AsyncRequestCallback<ProjectDescriptor> callback = callbackCaptor.getValue();
+        AsyncRequestCallback<ImportResponse> callback = importCallbackCaptor.getValue();
         GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
 
         verify(completeCallback).onFailure(Matchers.<Throwable>anyObject());

@@ -12,6 +12,8 @@ package com.codenvy.ide.api.app;
 
 import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 
+import java.util.Map;
+
 /**
  * Describes current state of user.
  *
@@ -20,12 +22,18 @@ import com.codenvy.api.user.shared.dto.ProfileDescriptor;
 public class CurrentUser {
 
     private ProfileDescriptor   profileDescriptor;
+    private Map<String, String> preferences;
 
     public CurrentUser() {
     }
 
     public CurrentUser(ProfileDescriptor profileDescriptor) {
+        this(profileDescriptor, null);
+    }
+
+    public CurrentUser(ProfileDescriptor profileDescriptor, Map<String, String> preferences) {
         this.profileDescriptor = profileDescriptor;
+        this.preferences = preferences;
     }
 
     /**
@@ -42,18 +50,25 @@ public class CurrentUser {
     }
 
     /**
+     * Return current preferences
+     *
+     * @return
+     */
+    public Map<String, String> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Map<String, String> preferences) {
+        this.preferences = preferences;
+    }
+
+    /**
      * Determines whether the user is permanent.
      *
      * @return <b>true</b> for permanent user, <b>false</b> otherwise
      */
     public boolean isUserPermanent() {
-        if (profileDescriptor != null && profileDescriptor.getAttributes() != null) {
-            if ("true".equals(profileDescriptor.getAttributes().get("temporary"))) {
-                return false;
-            }
-        }
-
-        return true;
+        return preferences == null || !"true".equals(preferences.get("temporary"));
     }
 
 }
