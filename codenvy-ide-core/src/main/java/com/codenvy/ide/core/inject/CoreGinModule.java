@@ -49,7 +49,6 @@ import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.filetypes.FileType;
 import com.codenvy.ide.api.filetypes.FileTypeRegistry;
 import com.codenvy.ide.api.icon.IconRegistry;
-import com.codenvy.ide.api.projectimport.wizard.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.notification.NotificationManager;
 import com.codenvy.ide.api.parts.ConsolePart;
@@ -63,6 +62,7 @@ import com.codenvy.ide.api.parts.WorkBenchView;
 import com.codenvy.ide.api.parts.WorkspaceAgent;
 import com.codenvy.ide.api.preferences.PreferencePagePresenter;
 import com.codenvy.ide.api.preferences.PreferencesManager;
+import com.codenvy.ide.api.projectimport.wizard.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.projectimport.wizard.ImportWizardRegistrar;
 import com.codenvy.ide.api.projectimport.wizard.ImportWizardRegistry;
 import com.codenvy.ide.api.projecttree.TreeStructureProviderRegistry;
@@ -75,7 +75,18 @@ import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.theme.Theme;
 import com.codenvy.ide.api.theme.ThemeAgent;
+import com.codenvy.ide.bootstrap.DefaultIconsComponent;
+import com.codenvy.ide.bootstrap.FactoryComponent;
+import com.codenvy.ide.bootstrap.PreferencesComponent;
+import com.codenvy.ide.bootstrap.ProfileComponent;
+import com.codenvy.ide.bootstrap.ProjectTemplatesComponent;
+import com.codenvy.ide.bootstrap.ProjectTypeComponent;
+import com.codenvy.ide.bootstrap.StandartComponent;
+import com.codenvy.ide.bootstrap.WorkspaceComponent;
+import com.codenvy.ide.bootstrap.ZeroClipboardInjector;
 import com.codenvy.ide.build.BuildContextImpl;
+import com.codenvy.ide.core.Component;
+import com.codenvy.ide.core.ProjectStateHandler;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
@@ -182,6 +193,7 @@ import com.codenvy.ide.workspace.WorkspaceViewImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+import com.google.gwt.inject.client.multibindings.GinMapBinder;
 import com.google.gwt.inject.client.multibindings.GinMultibinder;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Provides;
@@ -218,6 +230,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(AnalyticsEventLogger.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
         bind(AnalyticsEventLoggerExt.class).to(AnalyticsEventLoggerImpl.class).in(Singleton.class);
 
+        configureComponents();
         configureProjectWizard();
         configureImportWizard();
         configurePlatformApiGwtClients();
@@ -225,6 +238,21 @@ public class CoreGinModule extends AbstractGinModule {
         configureCoreUI();
         configureEditorAPI();
         configureProjectTree();
+    }
+
+    private void configureComponents() {
+        GinMapBinder<String, Component> mapBinder =
+                GinMapBinder.newMapBinder(binder(), String.class, Component.class);
+        mapBinder.addBinding("Default Icons").to(DefaultIconsComponent.class);
+        mapBinder.addBinding("ZeroClipboard").to(ZeroClipboardInjector.class);
+        mapBinder.addBinding("Preferences").to(PreferencesComponent.class);
+        mapBinder.addBinding("Workspace").to(WorkspaceComponent.class);
+        mapBinder.addBinding("Profile").to(ProfileComponent.class);
+        mapBinder.addBinding("Project Types").to(ProjectTypeComponent.class);
+        mapBinder.addBinding("Project Templates").to(ProjectTemplatesComponent.class);
+        mapBinder.addBinding("Factory").to(FactoryComponent.class);
+        mapBinder.addBinding("Project State Handler").to(ProjectStateHandler.class);
+        mapBinder.addBinding("Standard components").to(StandartComponent.class);
     }
 
     private void configureProjectWizard() {

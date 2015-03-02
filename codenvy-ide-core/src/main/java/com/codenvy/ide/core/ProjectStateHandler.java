@@ -101,7 +101,7 @@ public class ProjectStateHandler implements Component, OpenProjectHandler, Close
     }
 
     @Override
-    public void start(Callback<Component, ComponentException> callback) {
+    public void start(Callback<Component, Exception> callback) {
         eventBus.addHandler(OpenProjectEvent.TYPE, this);
         eventBus.addHandler(CloseCurrentProjectEvent.TYPE, this);
         eventBus.addHandler(ProjectDescriptorChangedEvent.TYPE, this);

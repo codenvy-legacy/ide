@@ -14,17 +14,25 @@ import com.google.gwt.core.client.Callback;
 
 /**
  * Components that have to be started on application's startup
- * must implement this interface. Please don't directly implement this interface
- * used {@link ComponentImpl} instead.
+ * must implement this interface.
+ * All components are registered via gin map binding.
+ * For example, if you have YourComponent class, implementation of this interface, you must write in your GinModule this:
+ * <code>
+ *   GinMapBinder<String, Component> mapBinder =
+ *   GinMapBinder.newMapBinder(binder(), String.class, Component.class);
+ *   mapBinder.addBinding("your key").to(YourComponent.class);
+ *</code>
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *
+ * @author Nikolay Zamosenchuk
+ * @author Evgen Vidolob
  */
 public interface Component {
     /**
-     * Starts Component. It should send corresponding Event, when started.
-     * Please refer for {@link ComponentImpl}
+     * Starts Component.
+     * Must do not throw any exceptions.
+     * All exceptions must be passed in {@code Callback.onFailure(java.lang.Exception)}
      *
-     * @throws Exception
      */
-    public void start(Callback<Component, ComponentException> callback);
+    void start(Callback<Component, Exception> callback);
 }

@@ -8,12 +8,14 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.client;
+package com.codenvy.ide.bootstrap;
 
 import com.codenvy.ide.Resources;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /** @author Evgen Vidolob */
+@Singleton
 public class StyleInjector {
     private Resources resources;
 
