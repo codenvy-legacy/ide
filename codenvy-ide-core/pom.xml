@@ -144,12 +144,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>${org.reflections.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${com.google.gwt.version}</version>
@@ -178,6 +172,16 @@
             <artifactId>gwtmockito</artifactId>
             <version>${com.google.gwt.gwtmockito}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>gwt-user</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>gwt-dev</artifactId>
+                    <groupId>com.google.gwt</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -190,6 +194,12 @@
             <artifactId>mockito-core</artifactId>
             <version>${org.mockito.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hamcrest-core</artifactId>
+                    <groupId>org.hamcrest</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>
