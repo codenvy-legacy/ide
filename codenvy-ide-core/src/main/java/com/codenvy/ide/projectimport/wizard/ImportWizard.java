@@ -22,7 +22,6 @@ import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.api.vfs.gwt.client.VfsServiceClient;
 import com.codenvy.api.vfs.shared.dto.Item;
 import com.codenvy.ide.CoreLocalizationConstant;
-import com.codenvy.ide.api.event.ConfigureProjectEvent;
 import com.codenvy.ide.api.event.OpenProjectEvent;
 import com.codenvy.ide.api.projectimport.wizard.ImportProjectNotificationSubscriber;
 import com.codenvy.ide.api.wizard.AbstractWizard;
@@ -156,9 +155,9 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
 
     private void openProject(ProjectDescriptor project) {
         eventBus.fireEvent(new OpenProjectEvent(project.getName()));
-        if (!project.getProblems().isEmpty()) {
-            eventBus.fireEvent(new ConfigureProjectEvent(project));
-        }
+        //if (!project.getProblems().isEmpty()) {
+        //    eventBus.fireEvent(new ConfigureProjectEvent(project));
+        //}
     }
 
     private String getImportErrorMessage(Throwable exception) {

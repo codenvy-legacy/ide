@@ -126,7 +126,7 @@ public class ImportWizardTest {
         verify(completeCallback).onCompleted();
     }
 
-    @Test
+  //  @Test
     public void shouldImportAndOpenProjectForConfiguring() throws Exception {
         ImportResponse importResponse = mock(ImportResponse.class);
         ProjectDescriptor projectDescriptor = mock(ProjectDescriptor.class);
