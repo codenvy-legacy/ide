@@ -17,8 +17,8 @@ import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.test.GwtReflectionUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +26,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 import static com.codenvy.ide.api.projecttree.TreeNode.RenameCallback;
@@ -109,8 +107,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                GwtReflectionUtils.callOnSuccess(callback, (Void)null);
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -131,8 +128,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
+                GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).rename(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -156,8 +152,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                GwtReflectionUtils.callOnSuccess(callback, (Void)null);
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -176,8 +171,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
+                GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -198,8 +192,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, content);
+                GwtReflectionUtils.callOnSuccess(callback, content);
                 return callback;
             }
         }).when(projectServiceClient).getFileContent(anyString(), (AsyncRequestCallback<String>)anyObject());
@@ -218,8 +211,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<String> callback = (AsyncRequestCallback<String>)arguments[1];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
+                GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).getFileContent(anyString(), (AsyncRequestCallback<String>)anyObject());
@@ -240,8 +232,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                GwtReflectionUtils.callOnSuccess(callback, (Void)null);
                 return callback;
             }
         }).when(projectServiceClient).updateFile(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -263,8 +254,7 @@ public class FileNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[3];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
+                GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).updateFile(anyString(), anyString(), anyString(), (AsyncRequestCallback<Void>)anyObject());
