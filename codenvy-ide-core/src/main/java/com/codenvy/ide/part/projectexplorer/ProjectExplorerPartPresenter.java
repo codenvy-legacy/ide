@@ -14,14 +14,16 @@ import com.codenvy.api.project.gwt.client.ProjectServiceClient;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.event.ItemEvent;
+import com.codenvy.ide.api.event.ItemHandler;
 import com.codenvy.ide.api.event.NodeChangedEvent;
 import com.codenvy.ide.api.event.NodeChangedHandler;
 import com.codenvy.ide.api.event.ProjectActionEvent;
 import com.codenvy.ide.api.event.ProjectActionHandler;
 import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.event.RefreshProjectTreeHandler;
-import com.codenvy.ide.api.parts.HasView;
 import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.parts.HasView;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.parts.base.BasePresenter;
 import com.codenvy.ide.api.projecttree.TreeNode;
@@ -47,6 +49,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nonnull;
+
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.CREATED;
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.DELETED;
 
 /**
  * Project Explorer displays project's tree in a dedicated part (view).
@@ -179,22 +184,24 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         eventBus.addHandler(RefreshProjectTreeEvent.TYPE, new RefreshProjectTreeHandler() {
             @Override
             public void onRefresh(RefreshProjectTreeEvent event) {
-                final TreeNode<?> nodeToRefresh = event.getNode();
-                if (nodeToRefresh != null) {
-                    refreshAndUpdateNode(nodeToRefresh);
-                    return;
-                }
                 if (appContext.getCurrentProject() == null) {
                     setTree(projectListStructureProvider.get());
                     return;
                 }
+
+                final TreeNode<?> nodeToRefresh = event.getNode();
+                if (nodeToRefresh != null) {
+                    refreshAndSelectNode(nodeToRefresh);
+                    return;
+                }
+
                 currentTreeStructure.getRootNodes(new AsyncCallback<Array<TreeNode<?>>>() {
                     @Override
                     public void onSuccess(Array<TreeNode<?>> result) {
                         for (TreeNode<?> childNode : result.asIterable()) {
                             // clear children in order to force to refresh
                             childNode.setChildren(Collections.<TreeNode<?>>createArray());
-                            refreshAndUpdateNode(childNode);
+                            refreshAndSelectNode(childNode);
                         }
                     }
 
@@ -203,7 +210,6 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                         Log.error(ProjectExplorerPartPresenter.class, caught);
                     }
                 });
-
             }
         });
 
@@ -218,14 +224,16 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     view.selectNode(event.getNode());
                 }
             }
+        });
 
+        eventBus.addHandler(ItemEvent.TYPE, new ItemHandler() {
             @Override
-            public void onNodeChildrenChanged(NodeChangedEvent event) {
-                if (appContext.getCurrentProject() == null) {
-                    // any opened project - all projects list is shown
-                    setTree(currentTreeStructure);
-                } else {
-                    refreshAndUpdateNode(event.getNode());
+            public void onItem(final ItemEvent event) {
+                if (DELETED == event.getOperation()) {
+                    refreshAndSelectNode(event.getItem().getParent());
+                } else if (CREATED == event.getOperation()) {
+                    updateNode(view.getSelectedNode());
+                    view.expandAndSelectNode(event.getItem());
                 }
             }
         });
@@ -310,11 +318,25 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         });
     }
 
-    private void refreshAndUpdateNode(TreeNode<?> node) {
+    private void refreshNode(TreeNode<?> node, final AsyncCallback<TreeNode<?>> callback) {
         node.refreshChildren(new AsyncCallback<TreeNode<?>>() {
             @Override
             public void onSuccess(TreeNode<?> result) {
                 updateNode(result);
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+        });
+    }
+
+    private void refreshAndSelectNode(TreeNode<?> node) {
+        refreshNode(node, new AsyncCallback<TreeNode<?>>() {
+            @Override
+            public void onSuccess(TreeNode<?> result) {
                 view.selectNode(result);
             }
 
@@ -328,5 +350,4 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
     }
-
 }

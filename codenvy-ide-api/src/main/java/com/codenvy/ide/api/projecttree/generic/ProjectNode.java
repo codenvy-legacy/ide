@@ -24,8 +24,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     private final   GenericTreeStructure   treeStructure;
     private         boolean                opened;
 
-    @AssistedInject
+    @Inject
     public ProjectNode(@Assisted TreeNode<?> parent,
                        @Assisted ProjectDescriptor data,
                        @Assisted GenericTreeStructure treeStructure,

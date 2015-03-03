@@ -52,12 +52,12 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     void selectNode(@Nonnull TreeNode<?> node);
 
     /**
-     * Select and expand the specified node in the view.
+     * Expand the tree to the specified {@code node} and select it.
      *
      * @param node
-     *         node to select
+     *         node to expand and select
      */
-    void selectAndExpandNode(@Nonnull TreeNode<?> node);
+    void expandAndSelectNode(@Nonnull TreeNode<?> node);
 
     /**
      * Sets title of part.
@@ -92,7 +92,7 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
         void onNodeSelected(TreeNode<?> node);
 
         /**
-         * Performs any actions in response to node expanded (opened) action.
+         * Performs any actions in response to node expanded action.
          *
          * @param node
          *         expanded node

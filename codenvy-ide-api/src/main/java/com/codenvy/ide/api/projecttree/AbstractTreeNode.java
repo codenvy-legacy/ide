@@ -11,6 +11,7 @@
 package com.codenvy.ide.api.projecttree;
 
 import com.codenvy.ide.api.event.NodeChangedEvent;
+import com.codenvy.ide.api.event.RefreshProjectTreeEvent;
 import com.codenvy.ide.api.projecttree.generic.ProjectNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
@@ -160,7 +161,7 @@ public abstract class AbstractTreeNode<T> implements TreeNode<T> {
     public void delete(DeleteCallback callback) {
         if (parent != null) {
             parent.getChildren().remove(this);
-            eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent(parent));
+            eventBus.fireEvent(new RefreshProjectTreeEvent(parent));
         }
         // do not reset parent in order to know which parent this node belonged to before deleting
         callback.onDeleted();

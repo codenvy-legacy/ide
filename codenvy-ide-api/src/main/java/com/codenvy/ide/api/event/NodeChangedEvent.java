@@ -49,17 +49,6 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
         return new NodeChangedEvent(node, NodeAction.RENAMED);
     }
 
-    /**
-     * Creates new {@link NodeChangedEvent}.
-     *
-     * @param node
-     *         the node whose children have changed
-     * @return new {@link NodeChangedEvent}
-     */
-    public static NodeChangedEvent createNodeChildrenChangedEvent(TreeNode<?> node) {
-        return new NodeChangedEvent(node, NodeAction.CHILDREN_CHANGED);
-    }
-
     @Override
     public Type<NodeChangedHandler> getAssociatedType() {
         return TYPE;
@@ -80,15 +69,12 @@ public class NodeChangedEvent extends GwtEvent<NodeChangedHandler> {
             case RENAMED:
                 handler.onNodeRenamed(this);
                 break;
-            case CHILDREN_CHANGED:
-                handler.onNodeChildrenChanged(this);
-                break;
             default:
                 break;
         }
     }
 
     public static enum NodeAction {
-        RENAMED, CHILDREN_CHANGED
+        RENAMED
     }
 }
