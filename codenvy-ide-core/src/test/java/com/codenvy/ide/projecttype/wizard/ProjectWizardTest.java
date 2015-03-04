@@ -234,7 +234,6 @@ public class ProjectWizardTest {
     private void prepareWizard(ProjectWizardMode mode) {
         wizard = new ProjectWizard(importProject,
                                    mode,
-                                   0,
                                    PROJECT_NAME,
                                    coreLocalizationConstant,
                                    projectServiceClient,

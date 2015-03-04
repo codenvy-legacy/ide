@@ -23,6 +23,5 @@ import javax.annotation.Nonnull;
 public interface ProjectWizardFactory {
     ProjectWizard newWizard(@Nonnull ImportProject dataObject,
                             @Nonnull ProjectWizardMode mode,
-                            int totalMemory,
                             @Nonnull String projectPath);
 }

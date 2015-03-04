@@ -18,10 +18,8 @@ import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
-import com.codenvy.api.project.shared.dto.RunnerConfiguration;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.project.shared.dto.Source;
-import com.codenvy.api.runner.dto.ResourcesDescriptor;
 import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
@@ -31,16 +29,12 @@ import com.codenvy.ide.api.wizard.Wizard;
 import com.codenvy.ide.api.wizard.WizardPage;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.dto.DtoFactory;
-import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.projecttype.wizard.ProjectWizardFactory;
 import com.codenvy.ide.projecttype.wizard.categoriespage.CategoriesPagePresenter;
 import com.codenvy.ide.projecttype.wizard.runnerspage.RunnersPagePresenter;
-import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
-import com.codenvy.ide.rest.Unmarshallable;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
-import com.codenvy.ide.util.loging.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -89,8 +83,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     private       WizardPage                                currentPage;
 
     private ProjectWizardMode wizardMode;
-    /** Total workspace memory available for runner. */
-    private int               totalMemory;
     /** Contains project's path when project wizard opened for updating project. */
     private String            projectPath;
 
@@ -216,35 +208,18 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         importWizard = null;
     }
 
-    private void showDialog(@Nullable final ImportProject dataObject) {
-        final Unmarshallable<ResourcesDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class);
-        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ResourcesDescriptor resources) {
-                totalMemory = Integer.valueOf(resources.getTotalMemory());
-                final int usedMemory = Integer.valueOf(resources.getUsedMemory());
-                view.setRAMAvailable(totalMemory - usedMemory);
-
-                // show dialog
-                wizard = createDefaultWizard(dataObject, wizardMode);
-                final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
-                if (firstPage != null) {
-                    showPage(firstPage);
-                    view.showDialog(wizardMode);
-                }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                dialogFactory.createMessageDialog(constant.createProjectWarningTitle(), constant.messagesGetResourcesFailed(), null).show();
-                Log.error(getClass(), JsonHelper.parseJsonMessage(exception.getMessage()));
-            }
-        });
+    private void showDialog(@Nullable ImportProject dataObject) {
+        wizard = createDefaultWizard(dataObject, wizardMode);
+        final WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
+        if (firstPage != null) {
+            showPage(firstPage);
+            view.showDialog(wizardMode);
+        }
     }
 
     @Override
     public void onProjectTypeSelected(ProjectTypeDefinition projectType) {
-        updateView(projectType.getDefaultBuilder(), projectType.getDefaultRunner(), -1);
+        updateView(projectType.getDefaultBuilder(), projectType.getDefaultRunner());
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = getWizardForProjectType(projectType);
@@ -271,10 +246,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
     public void onProjectTemplateSelected(ProjectTemplateDescriptor projectTemplate) {
         final BuildersDescriptor builders = projectTemplate.getBuilders();
         final RunnersDescriptor runners = projectTemplate.getRunners();
-        final int requiredMemory = getRequiredMemoryForTemplate(projectTemplate);
         updateView(builders == null ? null : builders.getDefault(),
-                   runners == null ? null : runners.getDefault(),
-                   requiredMemory);
+                   runners == null ? null : runners.getDefault());
 
         final ImportProject prevData = wizard.getDataObject();
         wizard = importWizard == null ? importWizard = createDefaultWizard(null, IMPORT) : importWizard;
@@ -286,7 +259,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
-//        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
 
         // set dataObject's values from projectTemplate
         newProject.setType(projectTemplate.getProjectType());
@@ -295,18 +267,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         dataObject.getSource().setProject(projectTemplate.getSource());
     }
 
-    private int getRequiredMemoryForTemplate(ProjectTemplateDescriptor projectTemplate) {
-        RunnersDescriptor runners = projectTemplate.getRunners();
-        if (runners != null) {
-            RunnerConfiguration recommendedConf = runners.getConfigs().get("recommend");
-            if (recommendedConf != null) {
-                return recommendedConf.getRam();
-            }
-        }
-        return -1;
-    }
-
-    private void updateView(@Nullable String builderName, @Nullable String runnerId, int requiredRAM) {
+    private void updateView(@Nullable String builderName, @Nullable String runnerId) {
         if (builderName != null) {
             final String builderEnvName = builderRegistry.getDefaultEnvironmentName(builderName);
             view.setBuilderEnvironmentConfig(builderEnvName);
@@ -319,7 +280,6 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         } else {
             view.setRunnerEnvironmentConfig(null);
         }
-        view.setRAMRequired(requiredRAM);
     }
 
     /** Creates or returns project wizard for the specified projectType with the given dataObject. */
@@ -353,7 +313,7 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                                           .withGeneratorDescription(dtoFactory.createDto(GeneratorDescription.class)));
         }
 
-        final ProjectWizard projectWizard = projectWizardFactory.newWizard(dataObject, mode, totalMemory, projectPath);
+        final ProjectWizard projectWizard = projectWizardFactory.newWizard(dataObject, mode, projectPath);
         projectWizard.setUpdateDelegate(this);
 
         // add pre-defined pages - first and last
