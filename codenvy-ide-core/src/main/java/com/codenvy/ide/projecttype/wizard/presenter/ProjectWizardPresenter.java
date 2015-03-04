@@ -252,16 +252,18 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         final NewProject newProject = wizard.getDataObject().getProject();
 
         // some values should be shared between wizards for different project types
-        newProject.setName(prevData.getProject().getName());
-        newProject.setDescription(prevData.getProject().getDescription());
-        newProject.setVisibility(prevData.getProject().getVisibility());
-        newProject.setMixinTypes(prevData.getProject().getMixinTypes());
+        NewProject prevDataProject = prevData.getProject();
+        newProject.setName(prevDataProject.getName());
+        newProject.setDescription(prevDataProject.getDescription());
+        newProject.setVisibility(prevDataProject.getVisibility());
+        newProject.setMixinTypes(prevDataProject.getMixinTypes());
+        newProject.setAttributes(prevDataProject.getAttributes());
 
         // set dataObject's values from projectType
         newProject.setType(projectType.getId());
         newProject.setBuilders(dtoFactory.createDto(BuildersDescriptor.class).withDefault(projectType.getDefaultBuilder()));
         if (newProject.getRunners() == null) {
-            newProject.setRunners(prevData.getProject().getRunners());
+            newProject.setRunners(prevDataProject.getRunners());
         }
     }
 
