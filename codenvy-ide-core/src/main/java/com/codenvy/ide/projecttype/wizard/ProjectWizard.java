@@ -16,8 +16,6 @@ import com.codenvy.api.project.shared.dto.ImportProject;
 import com.codenvy.api.project.shared.dto.ImportResponse;
 import com.codenvy.api.project.shared.dto.NewProject;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
-import com.codenvy.api.project.shared.dto.RunnerConfiguration;
-import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.app.AppContext;
 import com.codenvy.ide.api.event.OpenProjectEvent;
@@ -28,7 +26,6 @@ import com.codenvy.ide.dto.DtoFactory;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.ui.dialogs.ConfirmCallback;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -53,14 +50,13 @@ import static com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar.WIZA
 public class ProjectWizard extends AbstractWizard<ImportProject> {
 
     private final ProjectWizardMode        mode;
-    private final int                      totalMemory;
     private final CoreLocalizationConstant localizationConstants;
     private final ProjectServiceClient     projectServiceClient;
     private final DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     private final DtoFactory               dtoFactory;
     private final DialogFactory            dialogFactory;
     private final EventBus                 eventBus;
-    private final AppContext appContext;
+    private final AppContext               appContext;
 
     /**
      * Creates project wizard.
@@ -69,8 +65,6 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
      *         wizard's data-object
      * @param mode
      *         mode of project wizard
-     * @param totalMemory
-     *         available memory for runner
      * @param projectPath
      *         path to the project to update if wizard created in {@link ProjectWizardMode#UPDATE} mode
      *         or path to the folder to convert it to module if wizard created in {@link ProjectWizardMode#CREATE_MODULE} mode
@@ -90,7 +84,6 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
     @Inject
     public ProjectWizard(@Assisted ImportProject dataObject,
                          @Assisted ProjectWizardMode mode,
-                         @Assisted int totalMemory,
                          @Assisted String projectPath,
                          CoreLocalizationConstant localizationConstants,
                          ProjectServiceClient projectServiceClient,
@@ -101,7 +94,6 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
                          AppContext appContext) {
         super(dataObject);
         this.mode = mode;
-        this.totalMemory = totalMemory;
         this.localizationConstants = localizationConstants;
         this.projectServiceClient = projectServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
@@ -127,32 +119,8 @@ public class ProjectWizard extends AbstractWizard<ImportProject> {
         } else if (mode == UPDATE) {
             updateProject(callback);
         } else if (mode == IMPORT) {
-            final int requiredMemory = getRequiredMemory();
-            if (requiredMemory > totalMemory) {
-                final ConfirmCallback confirmCallback = new ConfirmCallback() {
-                    @Override
-                    public void accepted() {
-                        importProject(callback);
-                    }
-                };
-                dialogFactory.createMessageDialog(localizationConstants.createProjectWarningTitle(),
-                                                  localizationConstants.getMoreRam(requiredMemory, totalMemory),
-                                                  confirmCallback).show();
-            } else {
-                importProject(callback);
-            }
+            importProject(callback);
         }
-    }
-
-    private int getRequiredMemory() {
-        RunnersDescriptor runners = dataObject.getProject().getRunners();
-        if (runners != null) {
-            RunnerConfiguration configuration = runners.getConfigs().get(runners.getDefault());
-            if (configuration != null) {
-                return configuration.getRam();
-            }
-        }
-        return 0;
     }
 
     private void createProject(final CompleteCallback callback) {

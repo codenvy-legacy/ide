@@ -51,7 +51,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 
 import static com.codenvy.ide.api.event.FileEvent.FileOperation.CLOSE;
-import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.DELETE;
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.DELETED;
 import static com.codenvy.ide.api.notification.Notification.Type.ERROR;
 import static com.codenvy.ide.api.notification.Notification.Type.INFO;
 
@@ -139,7 +139,7 @@ public class EditorAgentImpl implements EditorAgent {
             @Override
             public void onItem(ItemEvent event) {
                 final ItemNode item = event.getItem();
-                if (event.getOperation() == DELETE && item instanceof FolderNode) {
+                if (event.getOperation() == DELETED && item instanceof FolderNode) {
                     closeAllFilesByPath(item.getPath());
                 }
             }

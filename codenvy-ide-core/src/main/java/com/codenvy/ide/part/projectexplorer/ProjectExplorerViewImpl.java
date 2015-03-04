@@ -214,7 +214,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
     /** {@inheritDoc} */
     @Override
-    public void selectAndExpandNode(TreeNode<?> node) {
+    public void expandAndSelectNode(@Nonnull TreeNode<?> node) {
         tree.autoExpandAndSelectNode(node, true);
         delegate.onNodeSelected(node);
     }

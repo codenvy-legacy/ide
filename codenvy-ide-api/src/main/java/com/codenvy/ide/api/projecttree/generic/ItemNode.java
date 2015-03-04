@@ -25,6 +25,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.DELETED;
+
 /**
  * Abstract base class for all tree nodes that represent an {@link ItemReference}.
  * There are exactly two kinds of {@link ItemNode}: {@link FileNode}, {@link FolderNode}.
@@ -204,7 +206,7 @@ public abstract class ItemNode extends AbstractTreeNode<ItemReference> implement
                         callback.onFailure(exception);
                     }
                 });
-                eventBus.fireEvent(new ItemEvent(ItemNode.this, ItemEvent.ItemOperation.DELETE));
+                eventBus.fireEvent(new ItemEvent(ItemNode.this, DELETED));
             }
 
             @Override

@@ -54,6 +54,6 @@ public class ItemEvent extends GwtEvent<ItemHandler> {
     }
 
     public enum ItemOperation {
-        CREATE, DELETE
+        CREATED, DELETED
     }
 }

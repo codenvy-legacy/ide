@@ -55,12 +55,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
     @UiField
     Label       runnerEnvConf;
     @UiField
-    FlowPanel   infoRAMPanel;
-    @UiField
-    Label       requiredRAM;
-    @UiField
-    Label       availableRAM;
-    @UiField
     Button      nextStepButton;
     @UiField
     Button      previousStepButton;
@@ -117,24 +111,6 @@ public class ProjectWizardViewImpl extends Window implements ProjectWizardView {
                 saveButton.setText(coreLocalizationConstant.projectWizardSaveButtonText());
             }
             saveButton.setEnabled(true);
-        }
-    }
-
-    @Override
-    public void setRAMRequired(int amountOfRAM) {
-        if (amountOfRAM > 0) {
-            requiredRAM.setText(amountOfRAM + "MB");
-        } else {
-            requiredRAM.setText("undefined");
-        }
-    }
-
-    @Override
-    public void setRAMAvailable(int amountOfRAM) {
-        if (amountOfRAM > 0) {
-            availableRAM.setText(amountOfRAM + "MB");
-        } else {
-            availableRAM.setText("undefined");
         }
     }
 

@@ -14,14 +14,21 @@ import com.codenvy.api.project.shared.dto.ItemReference;
 import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.action.ActionEvent;
-import com.codenvy.ide.api.event.NodeChangedEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.app.CurrentProject;
+import com.codenvy.ide.api.event.ItemEvent;
+import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.json.JsonHelper;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
+import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.CREATED;
 
 /**
  * Action to create new folder.
@@ -44,25 +51,51 @@ public class NewFolderAction extends AbstractNewResourceAction {
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
 
-        dialogFactory.createInputDialog(
+        InputDialog inputDialog = dialogFactory.createInputDialog(
                 localizationConstant.newResourceTitle(localizationConstant.actionNewFolderTitle()),
                 localizationConstant.newResourceLabel(localizationConstant.actionNewFolderTitle().toLowerCase()),
                 new InputCallback() {
                     @Override
                     public void accepted(String value) {
-                        final StorableNode parent = getParent();
-                        projectServiceClient.createFolder(getParent().getPath() + '/' + value, new AsyncRequestCallback<ItemReference>() {
+                        onAccepted(value);
+                    }
+                }, null).withValidator(folderNameValidator);
+        inputDialog.show();
+    }
+
+    private void onAccepted(String value) {
+        final StorableNode parent = getParent();
+        if (parent == null) {
+            throw new IllegalStateException("No selected parent.");
+        }
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject == null) {
+            throw new IllegalStateException("No opened project.");
+        }
+
+        final String folderPath = getParent().getPath() + '/' + value;
+        projectServiceClient.createFolder(folderPath, new AsyncRequestCallback<ItemReference>() {
+            @Override
+            protected void onSuccess(ItemReference result) {
+                currentProject.getCurrentTree().getNodeByPath(
+                        folderPath,
+                        new AsyncCallback<TreeNode<?>>() {
                             @Override
-                            protected void onSuccess(ItemReference result) {
-                                eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
+                            public void onSuccess(TreeNode<?> treeNode) {
+                                eventBus.fireEvent(new ItemEvent((ItemNode)treeNode, CREATED));
                             }
 
                             @Override
-                            protected void onFailure(Throwable exception) {
-                                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+                            public void onFailure(Throwable throwable) {
+                                Log.error(NewFolderAction.class, throwable);
                             }
                         });
-                    }
-                }, null).withValidator(folderNameValidator).show();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
+            }
+        });
     }
 }
