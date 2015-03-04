@@ -131,6 +131,12 @@ public class ProjectListStructure implements TreeStructure {
         }
 
         /** {@inheritDoc} */
+        @Override
+        public boolean canContainsFolder() {
+            return false;
+        }
+
+        /** {@inheritDoc} */
         @Nonnull
         @Override
         public String getId() {

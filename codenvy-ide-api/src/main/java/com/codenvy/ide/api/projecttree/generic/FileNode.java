@@ -160,4 +160,9 @@ public class FileNode extends ItemNode implements VirtualFile {
     public int hashCode() {
         return Objects.hash(getData());
     }
+
+    @Override
+    public boolean canContainsFolder() {
+        return false;
+    }
 }

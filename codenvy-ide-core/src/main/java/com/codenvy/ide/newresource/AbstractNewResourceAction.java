@@ -105,7 +105,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
 
     private void onAccepted(String value) {
         final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
-        final StorableNode parent = getParent();
+        final StorableNode parent = getNewResourceParent();
         if (parent == null) {
             throw new IllegalStateException("No selected parent.");
         }
@@ -149,7 +149,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
 
     @Override
     public void updateProjectAction(ActionEvent e) {
-        e.getPresentation().setEnabled(getParent() != null);
+        e.getPresentation().setEnabled(getNewResourceParent() != null);
     }
 
     /**
@@ -176,9 +176,9 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
         return null;
     }
 
-    /** Returns parent for creating new item. */
+    /** Returns parent for creating new item or {@code null} if resource can not be created. */
     @Nullable
-    protected StorableNode getParent() {
+    protected StorableNode getNewResourceParent() {
         Selection<?> selection = selectionAgent.getSelection();
         if (selection != null && selection.getFirstElement() != null) {
             if (selection.getFirstElement() instanceof StorableNode) {

@@ -74,6 +74,12 @@ public class ProjectNode extends AbstractTreeNode<ProjectDescriptor> implements 
     }
 
     /** {@inheritDoc} */
+    @Override
+    public boolean canContainsFolder() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
     @Nonnull
     @Override
     public String getId() {
