@@ -20,7 +20,6 @@ import com.codenvy.ide.api.parts.PartStackView;
 import com.codenvy.ide.api.parts.PropertyListener;
 import com.codenvy.ide.texteditor.openedfiles.ListOpenedFilesPresenter;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -39,8 +38,8 @@ import org.vectomatic.dom.svg.ui.SVGResource;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
