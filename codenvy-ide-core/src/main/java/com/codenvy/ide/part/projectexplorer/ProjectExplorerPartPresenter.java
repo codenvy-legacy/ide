@@ -232,7 +232,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 if (DELETED == event.getOperation()) {
                     refreshAndSelectNode(event.getItem().getParent());
                 } else if (CREATED == event.getOperation()) {
-                    updateNode(view.getSelectedNode());
+                    final TreeNode<?> selectedNode = view.getSelectedNode();
+                    updateNode(selectedNode.getParent());
+                    updateNode(selectedNode);
                     view.expandAndSelectNode(event.getItem());
                 }
             }

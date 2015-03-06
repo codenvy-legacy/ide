@@ -395,6 +395,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
      * @param constraint
      */
     protected void sortPartsOnView(Constraints constraint) {
+        // TODO remake method of sorting
         int oldPartPosition;
         int partPositionsSize = viewPartPositions.size();
         int positionOfLastElement = viewPartPositions.get(partPositionsSize - 1);
