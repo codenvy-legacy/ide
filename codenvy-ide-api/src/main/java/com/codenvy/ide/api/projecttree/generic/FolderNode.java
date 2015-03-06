@@ -143,4 +143,10 @@ public class FolderNode extends ItemNode {
     public GenericTreeStructure getTreeStructure() {
         return (GenericTreeStructure)super.getTreeStructure();
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean canContainsFolder() {
+        return true;
+    }
 }

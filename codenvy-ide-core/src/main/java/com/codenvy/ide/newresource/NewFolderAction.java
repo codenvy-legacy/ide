@@ -64,7 +64,7 @@ public class NewFolderAction extends AbstractNewResourceAction {
     }
 
     private void onAccepted(String value) {
-        final StorableNode parent = getParent();
+        final StorableNode parent = getNewResourceParent();
         if (parent == null) {
             throw new IllegalStateException("No selected parent.");
         }
@@ -73,7 +73,7 @@ public class NewFolderAction extends AbstractNewResourceAction {
             throw new IllegalStateException("No opened project.");
         }
 
-        final String folderPath = getParent().getPath() + '/' + value;
+        final String folderPath = parent.getPath() + '/' + value;
         projectServiceClient.createFolder(folderPath, new AsyncRequestCallback<ItemReference>() {
             @Override
             protected void onSuccess(ItemReference result) {
@@ -97,5 +97,11 @@ public class NewFolderAction extends AbstractNewResourceAction {
                 dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
             }
         });
+    }
+
+    @Override
+    public void updateProjectAction(ActionEvent e) {
+        final StorableNode parent = getNewResourceParent();
+        e.getPresentation().setEnabledAndVisible(parent != null && parent.canContainsFolder());
     }
 }

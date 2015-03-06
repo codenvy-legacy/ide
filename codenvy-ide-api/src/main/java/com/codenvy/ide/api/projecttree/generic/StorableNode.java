@@ -26,4 +26,10 @@ public interface StorableNode<T> extends TreeNode<T> {
 
     /** Returns path of the item which this node represents. */
     String getPath();
+
+    /**
+     * Checks whether node can contains folders or not.
+     * If {@code false} - new folders should not be created under this node.
+     */
+    boolean canContainsFolder();
 }
