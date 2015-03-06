@@ -26,12 +26,4 @@ public interface NodeChangedHandler extends EventHandler {
      *         an event specifying the details about the renamed node
      */
     void onNodeRenamed(NodeChangedEvent event);
-
-    /**
-     * Invoked when a node is added to or removed from a parent node.
-     *
-     * @param event
-     *         an event specifying the details about the whose children have changed
-     */
-    void onNodeChildrenChanged(NodeChangedEvent event);
 }

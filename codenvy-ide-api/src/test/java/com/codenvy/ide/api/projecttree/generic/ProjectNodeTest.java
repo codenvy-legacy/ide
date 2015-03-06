@@ -16,8 +16,8 @@ import com.codenvy.ide.api.projecttree.TreeNode;
 import com.codenvy.ide.collections.Array;
 import com.codenvy.ide.collections.Collections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.test.GwtReflectionUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +28,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.lang.reflect.Method;
 
 import static com.codenvy.ide.api.projecttree.TreeNode.DeleteCallback;
 import static org.junit.Assert.assertEquals;
@@ -112,8 +110,7 @@ public class ProjectNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
-                Method onSuccess = GwtReflectionUtils.getMethod(callback.getClass(), "onSuccess");
-                onSuccess.invoke(callback, (Void)null);
+                GwtReflectionUtils.callOnSuccess(callback, (Void)null);
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -132,8 +129,7 @@ public class ProjectNodeTest extends BaseNodeTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Object[] arguments = invocation.getArguments();
                 AsyncRequestCallback<Void> callback = (AsyncRequestCallback<Void>)arguments[1];
-                Method onFailure = GwtReflectionUtils.getMethod(callback.getClass(), "onFailure");
-                onFailure.invoke(callback, mock(Throwable.class));
+                GwtReflectionUtils.callOnFailure(callback, mock(Throwable.class));
                 return callback;
             }
         }).when(projectServiceClient).delete(anyString(), (AsyncRequestCallback<Void>)anyObject());
@@ -200,8 +196,7 @@ public class ProjectNodeTest extends BaseNodeTest {
 
         verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
         AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onSuccess");
-        onSuccess.invoke(requestCallback, children);
+        GwtReflectionUtils.callOnSuccess(requestCallback, children);
 
         verify(asyncCallback).onSuccess(arrayCaptor.capture());
 
@@ -231,8 +226,7 @@ public class ProjectNodeTest extends BaseNodeTest {
 
         verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
         AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
-        Method onSuccess = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onSuccess");
-        onSuccess.invoke(requestCallback, children);
+        GwtReflectionUtils.callOnSuccess(requestCallback, children);
 
         verify(asyncCallback).onSuccess(arrayCaptor.capture());
 
@@ -251,8 +245,7 @@ public class ProjectNodeTest extends BaseNodeTest {
 
         verify(projectServiceClient).getChildren(eq(path), asyncRequestCallbackCaptor.capture());
         AsyncRequestCallback<Array<ItemReference>> requestCallback = asyncRequestCallbackCaptor.getValue();
-        Method onFailure = GwtReflectionUtils.getMethod(requestCallback.getClass(), "onFailure");
-        onFailure.invoke(requestCallback, mock(Throwable.class));
+        GwtReflectionUtils.callOnFailure(requestCallback, mock(Throwable.class));
 
         verify(asyncCallback).onFailure(Matchers.<Throwable>anyObject());
     }

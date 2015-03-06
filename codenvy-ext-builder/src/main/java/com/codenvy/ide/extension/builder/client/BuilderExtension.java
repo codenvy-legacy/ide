@@ -97,7 +97,7 @@ public class BuilderExtension {
                                        WorkspaceAgent workspaceAgent,
                                        BuilderConsolePresenter builderConsolePresenter,
                                        @BuilderConsoleToolbar ToolbarPresenter builderConsoleToolbar) {
-        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.AFTER, "Events"));
+        workspaceAgent.openPart(builderConsolePresenter, PartStackType.INFORMATION, new Constraints(Anchor.BEFORE, "Runner"));
 
         // add toolbar with indicators to Builder console
         DefaultActionGroup consoleToolbarActionGroup = new DefaultActionGroup(GROUP_BUILDER_CONSOLE_TOOLBAR, false, actionManager);

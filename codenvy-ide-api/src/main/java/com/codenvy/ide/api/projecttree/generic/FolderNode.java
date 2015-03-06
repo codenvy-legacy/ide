@@ -20,8 +20,8 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  */
 public class FolderNode extends ItemNode {
 
-    @AssistedInject
+    @Inject
     public FolderNode(@Assisted TreeNode<?> parent,
                       @Assisted ItemReference data,
                       @Assisted GenericTreeStructure treeStructure,

@@ -49,13 +49,6 @@
             box-shadow: 0 -1px 0 0 tabBorder;
         }
 
-        .labelPanel {
-            float: left;
-            display: block;
-            font-size: 11px;
-            min-width: 90px;
-        }
-
         .labelPanelLeft {
             float: left;
             display: block;
@@ -94,11 +87,6 @@
             height: 20px;
         }
 
-        .infoValue {
-            margin-left: 2px;
-            margin-right: 20px;
-        }
-
         .grayColor {
             color: #818181;
         }
@@ -126,14 +114,6 @@
                       debugId="projectWizard-nextStepButton"/>
             <g:Button ui:field="previousStepButton" text="Previous" addStyleNames="{resources.wizardCss.button}" tabIndex="7"
                       debugId="projectWizard-previousStepButton"/>
-            <g:FlowPanel ui:field="infoRAMPanel">
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label text="RAM Available:" addStyleNames="{style.infoText}"/>
-                </g:FlowPanel>
-                <g:FlowPanel addStyleNames="{style.labelPanel}">
-                    <g:Label ui:field="availableRAM" addStyleNames="{style.infoValue}"/>
-                </g:FlowPanel>
-            </g:FlowPanel>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

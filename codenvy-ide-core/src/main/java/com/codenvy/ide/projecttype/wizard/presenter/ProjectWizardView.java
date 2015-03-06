@@ -28,8 +28,6 @@ public interface ProjectWizardView extends View<ProjectWizardView.ActionDelegate
 
     void showDialog(ProjectWizardMode wizardMode);
 
-    void setRAMAvailable(int amountOfRAM);
-
     void setBuilderEnvironmentConfig(@Nullable String text);
 
     void setRunnerEnvironmentConfig(String text);

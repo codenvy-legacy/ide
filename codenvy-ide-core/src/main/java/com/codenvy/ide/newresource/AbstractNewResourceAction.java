@@ -17,10 +17,14 @@ import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.action.Action;
 import com.codenvy.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.ProjectAction;
+import com.codenvy.ide.api.app.AppContext;
+import com.codenvy.ide.api.app.CurrentProject;
 import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.event.NodeChangedEvent;
-import com.codenvy.ide.api.projecttree.AbstractTreeNode;
+import com.codenvy.ide.api.event.ItemEvent;
+import com.codenvy.ide.api.projecttree.TreeNode;
+import com.codenvy.ide.api.projecttree.VirtualFile;
 import com.codenvy.ide.api.projecttree.generic.FileNode;
+import com.codenvy.ide.api.projecttree.generic.ItemNode;
 import com.codenvy.ide.api.projecttree.generic.StorableNode;
 import com.codenvy.ide.api.selection.Selection;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -29,14 +33,19 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.codenvy.ide.ui.dialogs.InputCallback;
+import com.codenvy.ide.ui.dialogs.input.InputDialog;
 import com.codenvy.ide.ui.dialogs.input.InputValidator;
 import com.codenvy.ide.util.NameUtils;
+import com.codenvy.ide.util.loging.Log;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.vectomatic.dom.svg.ui.SVGResource;
 
 import javax.annotation.Nullable;
+
+import static com.codenvy.ide.api.event.ItemEvent.ItemOperation.CREATED;
 
 /**
  * Implementation of an {@link Action} that provides an ability to create new resource (e.g. file, folder).
@@ -53,6 +62,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
     protected       EditorAgent              editorAgent;
     protected       ProjectServiceClient     projectServiceClient;
     protected       EventBus                 eventBus;
+    protected       AppContext               appContext;
     protected       AnalyticsEventLogger     eventLogger;
     protected       DtoUnmarshallerFactory   dtoUnmarshallerFactory;
     protected       DialogFactory            dialogFactory;
@@ -81,7 +91,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
             eventLogger.log(this);
         }
 
-        dialogFactory.createInputDialog(
+        InputDialog inputDialog = dialogFactory.createInputDialog(
                 coreLocalizationConstant.newResourceTitle(title),
                 coreLocalizationConstant.newResourceLabel(title.toLowerCase()),
                 new InputCallback() {
@@ -89,23 +99,23 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
                     public void accepted(String value) {
                         onAccepted(value);
                     }
-                }, null).withValidator(fileNameValidator).show();
+                }, null).withValidator(fileNameValidator);
+        inputDialog.show();
     }
 
     private void onAccepted(String value) {
         final String name = getExtension().isEmpty() ? value : value + '.' + getExtension();
         final StorableNode parent = getParent();
+        if (parent == null) {
+            throw new IllegalStateException("No selected parent.");
+        }
+
         projectServiceClient.createFile(
                 parent.getPath(), name, getDefaultContent(), getMimeType(),
                 new AsyncRequestCallback<ItemReference>(dtoUnmarshallerFactory.newUnmarshaller(ItemReference.class)) {
                     @Override
-                    protected void onSuccess(ItemReference result) {
-                        eventBus.fireEvent(NodeChangedEvent.createNodeChildrenChangedEvent((AbstractTreeNode<?>)parent));
-                        if ("file".equals(result.getType())) {
-                            final FileNode file = new FileNode(parent, result, appContext.getCurrentProject().getCurrentTree(), eventBus,
-                                                               projectServiceClient, dtoUnmarshallerFactory);
-                            editorAgent.openEditor(file);
-                        }
+                    protected void onSuccess(final ItemReference result) {
+                        onFileCreated(result);
                     }
 
                     @Override
@@ -113,6 +123,28 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
                         dialogFactory.createMessageDialog("", JsonHelper.parseJsonMessage(exception.getMessage()), null).show();
                     }
                 });
+    }
+
+    private void onFileCreated(final ItemReference result) {
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject == null) {
+            throw new IllegalStateException("No opened project.");
+        }
+
+        currentProject.getCurrentTree().getNodeByPath(result.getPath(), new AsyncCallback<TreeNode<?>>() {
+            @Override
+            public void onSuccess(TreeNode<?> treeNode) {
+                eventBus.fireEvent(new ItemEvent((ItemNode)treeNode, CREATED));
+                if ("file".equals(result.getType())) {
+                    editorAgent.openEditor((VirtualFile)treeNode);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.error(AbstractNewResourceAction.class, throwable);
+            }
+        });
     }
 
     @Override
@@ -165,6 +197,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
                       EditorAgent editorAgent,
                       ProjectServiceClient projectServiceClient,
                       EventBus eventBus,
+                      AppContext appContext,
                       AnalyticsEventLogger eventLogger,
                       DtoUnmarshallerFactory dtoUnmarshallerFactory,
                       DialogFactory dialogFactory,
@@ -173,6 +206,7 @@ public abstract class AbstractNewResourceAction extends ProjectAction {
         this.editorAgent = editorAgent;
         this.projectServiceClient = projectServiceClient;
         this.eventBus = eventBus;
+        this.appContext = appContext;
         this.eventLogger = eventLogger;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
