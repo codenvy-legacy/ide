@@ -20,8 +20,6 @@ import com.codenvy.api.project.shared.dto.ProjectTemplateDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectTypeDefinition;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
 import com.codenvy.api.project.shared.dto.Source;
-import com.codenvy.api.runner.gwt.client.RunnerServiceClient;
-import com.codenvy.ide.CoreLocalizationConstant;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardMode;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistrar;
 import com.codenvy.ide.api.projecttype.wizard.ProjectWizardRegistry;
@@ -33,7 +31,6 @@ import com.codenvy.ide.projecttype.wizard.ProjectWizard;
 import com.codenvy.ide.projecttype.wizard.ProjectWizardFactory;
 import com.codenvy.ide.projecttype.wizard.categoriespage.CategoriesPagePresenter;
 import com.codenvy.ide.projecttype.wizard.runnerspage.RunnersPagePresenter;
-import com.codenvy.ide.rest.DtoUnmarshallerFactory;
 import com.codenvy.ide.ui.dialogs.DialogFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -64,11 +61,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                                CategoriesPagePresenter.ProjectTemplateSelectionListener {
 
     private final ProjectWizardView                         view;
-    private final RunnerServiceClient                       runnerServiceClient;
-    private final DtoUnmarshallerFactory                    dtoUnmarshallerFactory;
     private final DtoFactory                                dtoFactory;
     private final DialogFactory                             dialogFactory;
-    private final CoreLocalizationConstant                  constant;
     private final BuilderRegistry                           builderRegistry;
     private final RunnersRegistry                           runnersRegistry;
     private final ProjectWizardFactory                      projectWizardFactory;
@@ -88,11 +82,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
 
     @Inject
     public ProjectWizardPresenter(ProjectWizardView view,
-                                  RunnerServiceClient runnerServiceClient,
-                                  DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                   DtoFactory dtoFactory,
                                   DialogFactory dialogFactory,
-                                  CoreLocalizationConstant constant,
                                   BuilderRegistry builderRegistry,
                                   RunnersRegistry runnersRegistry,
                                   ProjectWizardFactory projectWizardFactory,
@@ -100,11 +91,8 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
                                   Provider<CategoriesPagePresenter> categoriesPageProvider,
                                   Provider<RunnersPagePresenter> runnersPageProvider) {
         this.view = view;
-        this.runnerServiceClient = runnerServiceClient;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
         this.dialogFactory = dialogFactory;
-        this.constant = constant;
         this.builderRegistry = builderRegistry;
         this.runnersRegistry = runnersRegistry;
         this.projectWizardFactory = projectWizardFactory;
@@ -232,7 +220,9 @@ public class ProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setDescription(prevDataProject.getDescription());
         newProject.setVisibility(prevDataProject.getVisibility());
         newProject.setMixinTypes(prevDataProject.getMixinTypes());
-        newProject.setAttributes(prevDataProject.getAttributes());
+        if (wizardMode == UPDATE) {
+            newProject.setAttributes(prevDataProject.getAttributes());
+        }
 
         // set dataObject's values from projectType
         newProject.setType(projectType.getId());
