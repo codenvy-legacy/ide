@@ -13,7 +13,6 @@ package com.codenvy.ide.api.app;
 import com.codenvy.api.project.shared.dto.BuildersDescriptor;
 import com.codenvy.api.project.shared.dto.ProjectDescriptor;
 import com.codenvy.api.project.shared.dto.RunnersDescriptor;
-import com.codenvy.api.runner.dto.ApplicationProcessDescriptor;
 import com.codenvy.ide.api.projecttree.TreeStructure;
 
 import javax.annotation.Nullable;
@@ -23,14 +22,14 @@ import java.util.List;
  * Describe current state of project.
  *
  * @author Vitaly Parfonov
+ * @author Valeriy Svydenko
  */
 public class CurrentProject {
 
     private ProjectDescriptor projectDescription;
     private boolean isRunningEnabled = true;
-    private ApplicationProcessDescriptor processDescriptor;
-    private ProjectDescriptor            rootProject;
-    private TreeStructure                tree;
+    private ProjectDescriptor rootProject;
+    private TreeStructure     tree;
 
     /**
      * By default:
@@ -42,14 +41,6 @@ public class CurrentProject {
     public CurrentProject(ProjectDescriptor projectDescription) {
         this.projectDescription = projectDescription;
         this.rootProject = projectDescription;
-    }
-
-    public ApplicationProcessDescriptor getProcessDescriptor() {
-        return processDescriptor;
-    }
-
-    public void setProcessDescriptor(ApplicationProcessDescriptor processDescriptor) {
-        this.processDescriptor = processDescriptor;
     }
 
     /**

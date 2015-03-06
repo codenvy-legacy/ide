@@ -8,31 +8,33 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.manage.ram;
-
-
-import com.codenvy.ide.api.mvp.View;
+package com.codenvy.ide.api.projecttype;
 
 import javax.annotation.Nonnull;
 
 /**
- * @author Vitaly Parfonov
+ * The class contains values of runner categories.
+ *
+ * @author Dmitry Shnurenko
  */
-public interface RamManagerView extends View<RamManagerView.ActionDelegate> {
+public enum RunnerCategory {
+    CPP("CPP"),
+    GO("GO"),
+    JAVA("JAVA"),
+    JAVASCRIPT("JAVASCRIPT"),
+    PHP("PHP"),
+    PYTHON("PYTHON"),
+    RUBY("RUBY");
 
-    public interface ActionDelegate {
+    private final String type;
 
-        void validateRamSize(String value);
-
+    RunnerCategory(@Nonnull String type) {
+        this.type = type;
     }
 
-    String getRam();
-
-    void showRam(String ram);
-
-    /** Show warning message. */
-    void showWarnMessage(@Nonnull String s);
-
-    /** Hide warning message. */
-    void hideWarnMessage();
+    @Nonnull
+    @Override
+    public String toString() {
+        return type;
+    }
 }
