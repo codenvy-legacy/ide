@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- License Agreement at http://iconmonstr.com/license/ -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+<path id="wrench-16-icon" d="M320.312,364.616c-8.046-8.046-19.162-12.297-30.523-11.663c-18.815,1.051-37.98-5.607-52.354-19.981
+	c-19.2-19.2-24.636-46.944-16.321-70.99l43.654,43.654c17.032,1.003,43.364-25.329,42.362-42.359l-43.654-43.656
+	c24.045-8.315,51.787-2.878,70.988,16.321c14.375,14.374,21.033,33.539,19.982,52.354c-0.635,11.371,3.61,22.471,11.663,30.523
+	L462,414.71V138.265H225.087c-12.762,0-25.005-5.056-34.048-14.06L158.35,91.66H50v328.68h326.037L320.312,364.616z"/>
+</svg>

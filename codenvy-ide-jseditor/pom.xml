@@ -161,9 +161,9 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegion.java</exclude>
-                        <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegionQueue.java</exclude>
-                        <exclude>**/com/codenvy/ide/jseditor/client/annotation/AnnotationModelEvent.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/reconciler/DirtyRegion.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/reconciler/DirtyRegionQueue.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/annotation/AnnotationModelEvent.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

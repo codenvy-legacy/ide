@@ -1,0 +1,71 @@
+<!--
+
+    Copyright (c) 2012-2015 Codenvy, S.A.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+      Codenvy, S.A. - initial API and implementation
+
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:with field='res' type='org.eclipse.che.ide.Resources'/>
+    <ui:with field='locale' type='org.eclipse.che.ide.about.AboutLocalizationConstant'/>
+
+    <ui:image field="logo" src="logo.png"/>
+    <ui:style>
+        .emptyBorder {
+            margin: 6px;
+        }
+
+        .image {
+            margin-top: 12px;
+            margin-left: 10px;
+        }
+
+        .label {
+            margin: 6px 5px 0 15px;
+            margin-right: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            float: left;
+            clear: left;
+        }
+
+        .spacing {
+            margin-top: 10px;
+        }
+
+        .value {
+            font-size: 11px;
+            float: left;
+            margin-top: 6px;
+        }
+
+        @sprite .bg {
+            gwt-image: "logo";
+            background-position: center;
+            background-size: 175px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="290px" height="165px" addStyleNames="{style.emptyBorder}">
+        <g:north size="70">
+            <g:FlowPanel height="100%" width="100%" addStyleNames="{style.bg}">
+            </g:FlowPanel>
+        </g:north>
+        <g:center>
+            <g:FlowPanel addStyleNames="{style.spacing} {res.coreCss.mainText}">
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutVersion}"/>
+                <g:Label ui:field="version" addStyleNames="{style.value}"/>
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutRevision}"/>
+                <g:Label ui:field="revision" addStyleNames="{style.value}"/>
+                <g:Label addStyleNames="{style.label}" text="{locale.aboutBuildTime}"/>
+                <g:Label ui:field="buildTime" addStyleNames="{style.value}"/>
+            </g:FlowPanel>
+        </g:center>
+    </g:DockLayoutPanel>
+</ui:UiBinder> 

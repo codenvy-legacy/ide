@@ -1,0 +1,99 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2015 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.che.ide.keybinding;
+
+import org.eclipse.che.ide.api.keybinding.Scheme;
+import org.eclipse.che.ide.collections.Array;
+import org.eclipse.che.ide.collections.Collections;
+import org.eclipse.che.ide.collections.IntegerMap;
+import org.eclipse.che.ide.collections.StringMap;
+import org.eclipse.che.ide.util.input.CharCodeWithModifiers;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author Evgen Vidolob
+ * @author Artem Zatsarynnyy
+ */
+public class SchemeImpl implements Scheme {
+
+    private String id;
+
+    private String description;
+
+    private IntegerMap<Array<String>> handlers;
+
+    private StringMap<CharCodeWithModifiers> actionId2CharCode;
+
+    public SchemeImpl(String id, String description) {
+        this.id = id;
+        this.description = description;
+        handlers = Collections.createIntegerMap();
+        actionId2CharCode = Collections.createStringMap();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getSchemeId() {
+        return id;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void addKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId) {
+        final int digest = key.getKeyDigest();
+        if (!handlers.hasKey(digest)) {
+            handlers.put(digest, Collections.<String>createArray());
+        }
+        handlers.get(digest).add(actionId);
+        actionId2CharCode.put(actionId, key);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void removeKey(@Nonnull CharCodeWithModifiers key, @Nonnull String actionId) {
+        final int digest = key.getKeyDigest();
+
+        Array<String> array = handlers.get(digest);
+        if (array != null) {
+            array.remove(actionId);
+            if (array.isEmpty()) {
+                handlers.erase(digest);
+            }
+        }
+
+        actionId2CharCode.remove(actionId);
+    }
+
+    /** {@inheritDoc} */
+    @Nonnull
+    @Override
+    public Array<String> getActionIds(int digest) {
+        if (handlers.hasKey(digest)) {
+            return handlers.get(digest);
+        }
+        return Collections.createArray();
+    }
+
+    /** {@inheritDoc} */
+    @Nullable
+    @Override
+    public CharCodeWithModifiers getKeyBinding(@Nonnull String actionId) {
+        return actionId2CharCode.get(actionId);
+    }
+}
