@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.7.0-SNAPSHOT</version>
+        <version>3.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ext-ssh</artifactId>
     <packaging>jar</packaging>
@@ -197,10 +197,10 @@
                         </goals>
                         <configuration>
                             <dtoPackages>
-                                <package>com.codenvy.ide.ext.ssh.dto</package>
+                                <package>org.eclipse.che.ide.ext.ssh.dto</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.ext.ssh.dto.client.DtoClientImpls</genClassName>
+                            <genClassName>org.eclipse.che.ide.ext.ssh.dto.client.DtoClientImpls</genClassName>
                             <impl>client</impl>
                         </configuration>
                     </execution>
@@ -212,10 +212,10 @@
                         </goals>
                         <configuration>
                             <dtoPackages>
-                                <package>com.codenvy.ide.ext.ssh.dto</package>
+                                <package>org.eclipse.che.ide.ext.ssh.dto</package>
                             </dtoPackages>
                             <outputDirectory>${dto-generator-out-directory}</outputDirectory>
-                            <genClassName>com.codenvy.ide.ext.ssh.dto.server.DtoServerImpls</genClassName>
+                            <genClassName>org.eclipse.che.ide.ext.ssh.dto.server.DtoServerImpls</genClassName>
                             <impl>server</impl>
                         </configuration>
                     </execution>

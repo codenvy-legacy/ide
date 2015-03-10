@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.7.0-SNAPSHOT</version>
+        <version>3.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-jseditor</artifactId>
     <name>Codenvy :: JsEditor</name>
@@ -151,7 +151,7 @@
                         <configuration>
                             <url>${requirejs.upstream.url}</url>
                             <fromFile>require.js</fromFile>
-                            <toFile>${project.build.directory}/requirejs-${requirejs.upstream.version}/com/codenvy/ide/jseditor/public/require.js</toFile>
+                            <toFile>${project.build.directory}/requirejs-${requirejs.upstream.version}/org/eclipse/che/ide/jseditor/public/require.js</toFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -161,9 +161,9 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegion.java</exclude>
-                        <exclude>**/com/codenvy/ide/jseditor/client/reconciler/DirtyRegionQueue.java</exclude>
-                        <exclude>**/com/codenvy/ide/jseditor/client/annotation/AnnotationModelEvent.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/reconciler/DirtyRegion.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/reconciler/DirtyRegionQueue.java</exclude>
+                        <exclude>**/org/eclipse/che/ide/jseditor/client/annotation/AnnotationModelEvent.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

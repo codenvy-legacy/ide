@@ -16,7 +16,7 @@
     <parent>
         <artifactId>codenvy-ide-parent</artifactId>
         <groupId>com.codenvy.ide</groupId>
-        <version>3.7.0-SNAPSHOT</version>
+        <version>3.8.0-SNAPSHOT</version>
     </parent>
     <artifactId>codenvy-ide-client</artifactId>
     <packaging>jar</packaging>
@@ -169,7 +169,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.util.ExtensionManagerGenerator</mainClass>
+                            <mainClass>org.eclipse.che.util.ExtensionManagerGenerator</mainClass>
                             <arguments>
                                 <argument>--rootDir=${generated.sources.directory}</argument>
                             </arguments>
@@ -182,7 +182,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.util.IDEInjectorGenerator</mainClass>
+                            <mainClass>org.eclipse.che.util.IDEInjectorGenerator</mainClass>
                             <arguments>
                                 <argument>--rootDir=${generated.sources.directory}</argument>
                             </arguments>
@@ -195,7 +195,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.codenvy.util.DtoFactoryVisitorRegistryGenerator</mainClass>
+                            <mainClass>org.eclipse.che.util.DtoFactoryVisitorRegistryGenerator</mainClass>
                             <arguments>
                                 <argument>--rootDir=${generated.sources.directory}</argument>
                             </arguments>

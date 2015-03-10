@@ -1,0 +1,245 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2015 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+@def animationDuration 300ms;
+
+.popup, .glass {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.popup {
+    z-index: popupZIndex;
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+}
+
+.glass {
+    background: #373737;
+    opacity: 0.0;
+    /*-moz-transition: all animationDuration;*/
+    /*-webkit-transition: all animationDuration;*/
+    /*transition: all animationDuration;*/
+}
+
+.glassVisible {
+    opacity: 0.4;
+}
+
+.positioner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-pack: center;
+    -moz-box-align: center;
+
+    display: box;
+    box-orient: vertical;
+    box-pack: center;
+    box-align: center;
+}
+
+.positioner:focus {
+    outline: none;
+}
+
+.content {
+    display: inline-block;
+    background: windowContentBackground;
+    border: 1px solid tabBorder;
+    -moz-box-shadow: 0 0px 4px 0px tabBorder;
+    -webkit-box-shadow: 0 0px 4px 0px tabBorder;
+    box-shadow: 0 0px 4px 0px tabBorder;
+
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    /*-moz-transition: all animationDuration;*/
+    /*-webkit-transition: all animationDuration;*/
+    transition: all animationDuration;
+
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+    opacity: 0.0;
+}
+
+.contentVisible {
+    -moz-transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+    opacity: 1.0;
+}
+
+.header {
+    background: windowHeaderBackground;
+    border-bottom: 1px solid tabBorder;
+    height: 26px;
+    padding-left: 12px;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    cursor: default;
+}
+
+.footer {
+    background: windowHeaderBackground;
+    border-top: 1px solid tabBorder;
+    display: inline-block;
+    padding: 0;
+    width: 100%;
+    user-select: none;
+    float: left;
+    height: 42px;
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    background-color: windowSeparatorColor;
+}
+
+.alignBtn {
+    float: right;
+    margin-right: 10px;
+    margin-top: 9px;
+}
+
+.iconButton {
+    min-width: 30px !important;
+    padding: 5px !important;
+}
+
+.iconButton svg {
+    fill : mainFontColor;
+}
+
+.headerTitleWrapper {
+    display: table;
+    height: 100%;
+    cursor: default;
+}
+
+.headerTitleLabel {
+    vertical-align: middle;
+    display: table-cell;
+    cursor: default;
+}
+
+@if (org.eclipse.che.ide.api.theme.Style.theme.getId().equals(org.eclipse.che.ide.theme.DarkTheme.DARK_THEME_ID)) {
+    @sprite .crossButton {
+        gwt-image: "closeDark";
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        cursor: pointer;
+    }
+    @sprite .crossButton:hover {
+        gwt-image: "closeDarkHover";
+    }
+} @else {
+    @sprite .crossButton {
+        gwt-image: "closeWhite";
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        cursor: pointer;
+    }
+    @sprite .crossButton:hover {
+        gwt-image: "closeWhiteHover";
+    }
+}
+
+.button, .blueButton {
+    float: right;
+    border-radius: 1px;
+    height: 28px;
+    min-width: 65px;
+    color: rgba(255, 255, 255, 1);
+}
+
+/* button styles */
+.button {
+    background: #515151;
+    border-width: 1px;
+    border-style: solid;
+    margin: 5px;
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px rgba(110, 110, 110, 1);
+    border-color: rgba(12, 12, 13, 0.7);
+}
+
+.button:HOVER {
+    background: #414141;
+}
+
+.button:ACTIVE {
+    background: #414141;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.button[disabled], .button[disabled]:HOVER {
+    background: rgba(81, 81, 81, 0.35);
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.button[disabled] svg, .button[disabled]:HOVER svg{
+    opacity : 0.5;
+}
+
+/* Blue button styles */
+.blueButton {
+    background: #256c9f;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 0px 0px rgba(55, 126, 172, 1);
+    border-color: #2f3237;
+}
+
+.blueButton:HOVER {
+    background: #18537e;
+}
+
+.blueButton:ACTIVE {
+    background: #18537e;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.29), inset 0px 1px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.blueButton[disabled], .blueButton[disabled]:HOVER {
+    background: rgba(37, 108, 159, 0.35);
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.label {
+	font-family: mainFontFamily;
+	font-size: fontSize;
+	color: mainFontColor;
+}
+
+svg.image {
+    fill: mainFontColor;
+    width: 56px;
+    height: 56px;
+}
