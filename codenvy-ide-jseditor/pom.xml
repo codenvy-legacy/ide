@@ -151,7 +151,7 @@
                         <configuration>
                             <url>${requirejs.upstream.url}</url>
                             <fromFile>require.js</fromFile>
-                            <toFile>${project.build.directory}/requirejs-${requirejs.upstream.version}/com/codenvy/ide/jseditor/public/require.js</toFile>
+                            <toFile>${project.build.directory}/requirejs-${requirejs.upstream.version}/org/eclipse/che/ide/jseditor/public/require.js</toFile>
                         </configuration>
                     </execution>
                 </executions>
