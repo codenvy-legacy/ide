@@ -8,16 +8,16 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.actions;
+package org.eclipse.che.ide.extension.runner.client.actions;
 
-import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
-import com.codenvy.ide.api.action.ActionEvent;
+import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
+import org.eclipse.che.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.permits.ActionPermit;
 import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
-import com.codenvy.ide.api.action.ProjectAction;
+import org.eclipse.che.ide.api.action.ProjectAction;
 import com.codenvy.ide.api.action.permits.Run;
-import com.codenvy.ide.api.app.AppContext;
-import com.codenvy.ide.api.app.CurrentProject;
+import org.eclipse.che.ide.api.app.AppContext;
+import org.eclipse.che.ide.api.app.CurrentProject;
 import com.codenvy.ide.extension.runner.client.RunnerLocalizationConstant;
 import com.codenvy.ide.extension.runner.client.RunnerResources;
 import com.codenvy.ide.extension.runner.client.run.RunController;

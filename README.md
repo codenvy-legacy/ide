@@ -1,5 +1,7 @@
 # Codenvy IDE 3.0
 
+Note: It is preferred to build the /github.com/codenvy/sdk or github.com/codenvy/assembly-che packages to get a running build of the IDE itself.
+
 ### How to run Codenvy IDE 3 demo application:
 
 1) Build all IDE 3 modules from the root of the project:

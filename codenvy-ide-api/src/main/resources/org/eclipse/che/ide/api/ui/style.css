@@ -1,0 +1,207 @@
+/*******************************************************************************
+ * Copyright (c) 2012-2015 Codenvy, S.A.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Codenvy, S.A. - initial API and implementation
+ *******************************************************************************/
+
+/*Tabs*/
+
+@eval tabBorder org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval inactiveTabBackground org.eclipse.che.ide.api.theme.Style.getInactiveTabBackground();
+@eval inactiveTabBorderColor org.eclipse.che.ide.api.theme.Style.getInactiveTabBorderColor();
+@eval activeTabBackground org.eclipse.che.ide.api.theme.Style.getActiveTabBackground();
+@eval activeTabBorderColor org.eclipse.che.ide.api.theme.Style.getActiveTabBorderColor();
+@eval tabsPanelBackground org.eclipse.che.ide.api.theme.Style.getTabsPanelBackground();
+@eval highlightFocus org.eclipse.che.ide.api.theme.Style.getHighlightFocus();
+
+@eval hoverBackgroundColor org.eclipse.che.ide.api.theme.Style.getHoverBackgroundColor();
+@eval lightGreyBackground org.eclipse.che.ide.api.theme.Style.getLightGreyBackground();
+@eval barBackgroundColor org.eclipse.che.ide.api.theme.Style.getBarBackgroundColor();
+
+@eval partBackground org.eclipse.che.ide.api.theme.Style.getPartBackground();
+@eval partToolbar org.eclipse.che.ide.api.theme.Style.getPartToolbar();
+@eval partToolbarActive org.eclipse.che.ide.api.theme.Style.getPartToolbarActive();
+@eval partToolbarShadow org.eclipse.che.ide.api.theme.Style.getPartToolbarShadow();
+@eval partToolbarSeparatorTopColor org.eclipse.che.ide.api.theme.Style.getPartToolbarSeparatorTopColor();
+@eval partToolbarSeparatorBottomColor org.eclipse.che.ide.api.theme.Style.getPartToolbarSeparatorBottomColor();
+
+@eval consolePanelColor org.eclipse.che.ide.api.theme.Style.getConsolePanelColor();
+
+@eval tabBorderShadow org.eclipse.che.ide.api.theme.Style.getTabBorderShadow();
+@eval buttonTextShadow org.eclipse.che.ide.api.theme.Style.getButtonTextShadow();
+@eval minimizeIconColor org.eclipse.che.ide.api.theme.Style.getMinimizeIconColor();
+
+/* Indicates a completed action. Preferred text color is lightTextColor. */
+@eval completedBackgroundColor org.eclipse.che.ide.api.theme.Style.getCompletedBackgroundColor();
+@eval progressColor org.eclipse.che.ide.api.theme.Style.getProgressColor();
+/* Background color for an item selected with the keyboard */
+@eval keyboardSelectionBackgroundColor org.eclipse.che.ide.api.theme.Style.getKeyboardSelectionBackgroundColor();
+@eval anchorColor org.eclipse.che.ide.api.theme.Style.getAnchorColor();
+
+/* Tree */
+@eval hoverBackground org.eclipse.che.ide.api.theme.Style.getHoverBackground();
+@eval selectionBackground org.eclipse.che.ide.api.theme.Style.getSelectionBackground();
+@eval treeTextFileColor org.eclipse.che.ide.api.theme.Style.getTreeTextFileColor();
+@eval treeTextFolderColor org.eclipse.che.ide.api.theme.Style.getTreeTextFolderColor();
+@eval treeTextShadow org.eclipse.che.ide.api.theme.Style.getTreeTextShadow();
+@eval treeIconFileColor org.eclipse.che.ide.api.theme.Style.getTreeIconFileColor();
+
+/* Button */
+@eval buttonTopColor org.eclipse.che.ide.api.theme.Style.getButtonTopColor();
+@eval buttonColor org.eclipse.che.ide.api.theme.Style.getButtonColor();
+@eval buttonHoverTextColor org.eclipse.che.ide.api.theme.Style.getButtonHoverTextColor();
+@eval buttonHoverColor org.eclipse.che.ide.api.theme.Style.getButtonHoverColor();
+@eval svgUrlShadow org.eclipse.che.ide.api.theme.Style.getSvgUrlShadow();
+@eval socialButtonColor org.eclipse.che.ide.api.theme.Style.getSocialButtonColor();
+
+/* notable button */
+@eval notableButtonTopColor org.eclipse.che.ide.api.theme.Style.getNotableButtonTopColor();
+@eval notableButtonColor org.eclipse.che.ide.api.theme.Style.getNotableButtonColor();
+
+/*input*/
+@eval inputBackground org.eclipse.che.ide.api.theme.Style.getInputBackground();
+
+/*Editor*/
+@eval editorBackgroundColor org.eclipse.che.ide.api.theme.Style.getEditorBackgroundColor();
+@eval editorCurrentLineColor org.eclipse.che.ide.api.theme.Style.getEditorCurrentLineColor();
+@eval editorDefaultFontColor org.eclipse.che.ide.api.theme.Style.getEditorDefaultFontColor();
+@eval editorCursorColor org.eclipse.che.ide.api.theme.Style.getEditorCursorColor();
+@eval editorSelectionColor org.eclipse.che.ide.api.theme.Style.getEditorSelectionColor();
+@eval editorInactiveSelectionColor org.eclipse.che.ide.api.theme.Style.getEditorInactiveSelectionColor();
+
+@eval editoGutterColor org.eclipse.che.ide.api.theme.Style.getEditorGutterColor();
+@eval editorGutterLineNumberColor org.eclipse.che.ide.api.theme.Style.getEditorLineNumberColor();
+@eval editorGutterSeparatorColor org.eclipse.che.ide.api.theme.Style.getEditorSeparatorColor();
+
+@eval completionPopupBorderColor org.eclipse.che.ide.api.theme.Style.getCompletionPopupBorderColor();
+@eval completionPopupBackgroundColor org.eclipse.che.ide.api.theme.Style.getCompletionPopupBackgroundColor();
+@eval editorInfoBorderColor org.eclipse.che.ide.api.theme.Style.getEditorInfoBorderColor();
+@eval editorInfoBorderShadowColor org.eclipse.che.ide.api.theme.Style.getEditorInfoBorderShadowColor();
+@eval editorInfoBackgroundColor org.eclipse.che.ide.api.theme.Style.getEditorInfoBackgroundColor();
+
+/* Listbox, TextBox... */
+@eval boxBorderColor org.eclipse.che.ide.api.theme.Style.getBoxBorderColor();
+@eval boxBackgroundColor org.eclipse.che.ide.api.theme.Style.getBoxBackgroundColor();
+@eval boxBackgroundColorDisabled org.eclipse.che.ide.api.theme.Style.getBoxBackgroundColorDisabled();
+@eval boxTextColor org.eclipse.che.ide.api.theme.Style.getBoxTextColor();
+@eval boxTextShadow org.eclipse.che.ide.api.theme.Style.getBoxTextShadow();
+@eval boxInnerShadow org.eclipse.che.ide.api.theme.Style.getBoxInnerShadow();
+@eval boxOuterShadow org.eclipse.che.ide.api.theme.Style.getBoxOuterShadow();
+
+/* Sizes */
+@def dividerThickness 1px;
+@def popupPadding 24px;
+@def titlePaddingBottom 16px;
+@def buttonSpacing 10px;
+@def labelPaddingBottom 6px;
+@def examplePaddingTop 4px;
+@def formButtonPaddingTop 18px;
+@def sideBarHorizontalPadding 12px;
+@def splitterWidth 8px;
+@def splitterOverlap 4px;
+@def toolbarIconSize 16px;
+
+/* Font Sizes */
+@def fontSize 13px;
+@def largeFontSize 16px;
+@def productFontSize 20px;
+@def landingTitleFontSize 20px;
+@def titleFontSize 16px;
+@def secondaryTextFontSize 11px;
+@def smallFontSize 10px;
+@def largeLabel 14px;
+@def largeDropdownLabel 12px;
+@def boxFontSize 12px;
+@def buttonFontSize 12px;
+
+/* Fonts */
+@def alternativeFontFamily "Helvetica Neue", "Myriad Pro","open sans", arial, sans-serif;
+@def fileTreeFontFamily "Helvetica Neue", "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def fileTreeFontFamilyFile "Helvetica Neue Regular", "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def mainFontFamily "Helvetica Neue", "Myriad Pro", arial, Verdana, Verdana, sans-serif;
+@def editorLineHeight 15px;
+@def editorFontFamily 'Andale Mono', monospace;
+@def outputFontFamily 'Droid Sans Mono', monospace;
+
+/*Main Menu*/
+@eval mainMenuBkgColor org.eclipse.che.ide.api.theme.Style.getMainMenuBkgColor();
+@eval mainMenuFontColor org.eclipse.che.ide.api.theme.Style.getMainMenuFontColor();
+@def fontMenuSize 12px;
+
+@eval mainFontColor org.eclipse.che.ide.api.theme.Style.getMainFontColor();
+@eval tabFontColor org.eclipse.che.ide.api.theme.Style.getTabFontColor();
+@eval welcomeFontColor org.eclipse.che.ide.api.theme.Style.getWelcomeFontColor();
+@eval captionFontColor org.eclipse.che.ide.api.theme.Style.getCaptionFontColor();
+@eval factoryLinkColor org.eclipse.che.ide.api.theme.Style.getFactoryLinkColor();
+@eval lightTextColor org.eclipse.che.ide.api.theme.Style.getLightTextColor();
+@eval lightestTextColor org.eclipse.che.ide.api.theme.Style.getLightestTextColor();
+@eval radioButtonBackgroundColor org.eclipse.che.ide.api.theme.Style.getRadioButtonBackgroundColor();
+@eval disabledMenuItemColor org.eclipse.che.ide.api.theme.Style.getDeisabledMenuColor();
+
+/*Toolbar*/
+@eval toolbarBackgroundColor org.eclipse.che.ide.api.theme.Style.getToolbarBackgroundColor();
+@eval toolbarIconColor org.eclipse.che.ide.api.theme.Style.getToolbarIconColor();
+
+@eval tooltipBackgroundColor org.eclipse.che.ide.api.theme.Style.getTooltipBackgroundColor();
+
+/* DialogBox*/
+@eval dialogTopLeft org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogTopCenter org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogTopRight org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogMiddleLeft org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogMiddleRight org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomLeft org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomCenter org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogBottomRight org.eclipse.che.ide.api.theme.Style.getTabBorderColor();
+@eval dialogContentBackground org.eclipse.che.ide.api.theme.Style.getDialogContentBackground();
+
+/*Window*/
+@eval windowContentBackground org.eclipse.che.ide.api.theme.Style.getWindowContentBackground();
+@eval windowHeaderBackground org.eclipse.che.ide.api.theme.Style.getWindowHeaderBackground();
+@eval windowSeparatorColor org.eclipse.che.ide.api.theme.Style.getWindowSeparatorColor();
+
+/*syntax highlight*/
+@eval keyword org.eclipse.che.ide.api.theme.Style.getEditorKeyWord();
+@eval atom org.eclipse.che.ide.api.theme.Style.getEditorAtom();
+@eval number org.eclipse.che.ide.api.theme.Style.getEditorNumber();
+@eval deff org.eclipse.che.ide.api.theme.Style.getEditorDef();
+@eval variable org.eclipse.che.ide.api.theme.Style.getEditorVariable();
+@eval variable2 org.eclipse.che.ide.api.theme.Style.getEditorVariable2();
+@eval property org.eclipse.che.ide.api.theme.Style.getEditorProperty();
+@eval operator org.eclipse.che.ide.api.theme.Style.getEditorOperator();
+@eval comment org.eclipse.che.ide.api.theme.Style.getEditorComment();
+@eval string org.eclipse.che.ide.api.theme.Style.getEditorString();
+@eval string2 org.eclipse.che.ide.api.theme.Style.getEditorString2();
+@eval smeta org.eclipse.che.ide.api.theme.Style.getEditorMeta();
+@eval error org.eclipse.che.ide.api.theme.Style.getEditorError();
+@eval builtin org.eclipse.che.ide.api.theme.Style.getEditorBuiltin();
+@eval tag org.eclipse.che.ide.api.theme.Style.getEditorTag();
+@eval attribute org.eclipse.che.ide.api.theme.Style.getEditorAttribute();
+
+/*wizard*/
+@eval stepsPanelColor org.eclipse.che.ide.api.theme.Style.getWizardStepsColor();
+@eval stepsPanelBorerColor org.eclipse.che.ide.api.theme.Style.getWizardStepsBorderColor();
+@eval wizardIconColor org.eclipse.che.ide.api.theme.Style.getToolbarIconColor();
+
+/*Cell widgets*/
+@eval cellOddRow org.eclipse.che.ide.api.theme.Style.getCellOddRow();
+@eval cellEvenRow org.eclipse.che.ide.api.theme.Style.getCellEvenRow();
+@eval cellKeyboardSelectedRow org.eclipse.che.ide.api.theme.Style.getCellKeyboardSelectedRow();
+@eval cellHoveredRow org.eclipse.che.ide.api.theme.Style.getCellHoveredRow();
+
+/*Events*/
+@eval successEventColor org.eclipse.che.ide.api.theme.Style.getSuccessEventColor();
+@eval errorEventColor org.eclipse.che.ide.api.theme.Style.getErrorEventColor();
+@eval linkColor org.eclipse.che.ide.api.theme.Style.getLinkColor();
+@eval delimeterColor org.eclipse.che.ide.api.theme.Style.getDelimeterColor();
+
+/*Events*/
+@eval outputFontColor org.eclipse.che.ide.api.theme.Style.getOutputFontColor();
+@eval outputLinkColor org.eclipse.che.ide.api.theme.Style.getOutputLinkColor();
+
+

@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.extension.runner.client.actions;
+package org.eclipse.che.ide.extension.runner.client.actions;
 
 import com.codenvy.api.analytics.client.logger.AnalyticsEventLogger;
 import com.codenvy.api.runner.dto.RunOptions;
