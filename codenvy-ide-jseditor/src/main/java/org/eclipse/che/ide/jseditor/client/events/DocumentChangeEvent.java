@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.che.ide.jseditor.client.events;
 
-import org.eclipse.che.ide.jseditor.client.document.DocumentHandle;
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.eclipse.che.ide.jseditor.client.document.DocumentHandle;
 
 public class DocumentChangeEvent extends GwtEvent<DocumentChangeHandler> {
 
@@ -61,5 +62,14 @@ public class DocumentChangeEvent extends GwtEvent<DocumentChangeHandler> {
 
     public DocumentHandle getDocument() {
         return document;
+    }
+
+    @Override
+    public String toString() {
+        return "DocumentChangeEvent{" +
+               "offset=" + offset +
+               ", length=" + length +
+               ", text='" + text + '\'' +
+               '}';
     }
 }

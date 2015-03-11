@@ -15,12 +15,15 @@ import org.eclipse.che.ide.collections.StringMap;
 import org.eclipse.che.ide.jseditor.client.annotation.AnnotationModel;
 import org.eclipse.che.ide.jseditor.client.changeintercept.ChangeInterceptorProvider;
 import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistProcessor;
+import org.eclipse.che.ide.jseditor.client.formatter.ContentFormatter;
 import org.eclipse.che.ide.jseditor.client.partition.ConstantPartitioner;
 import org.eclipse.che.ide.jseditor.client.partition.DocumentPartitioner;
+import org.eclipse.che.ide.jseditor.client.partition.DocumentPositionMap;
 import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistProcessor;
 import org.eclipse.che.ide.jseditor.client.reconciler.Reconciler;
-import org.eclipse.che.ide.jseditor.client.formatter.ContentFormatter;
-import org.eclipse.che.ide.jseditor.client.partition.DocumentPositionMap;
+import org.eclipse.che.ide.jseditor.client.reconciler.ReconcilerWithAutoSave;
+
+import javax.annotation.Nonnull;
 
 /**
  * Default implementation of the {@link TextEditorConfiguration}.
@@ -49,9 +52,10 @@ public class DefaultTextEditorConfiguration implements TextEditorConfiguration {
 
     @Override
     public Reconciler getReconciler() {
-        return null;
+        return new ReconcilerWithAutoSave(DocumentPartitioner.DEFAULT_CONTENT_TYPE, getPartitioner());
     }
 
+    @Nonnull
     @Override
     public DocumentPartitioner getPartitioner() {
         return new ConstantPartitioner();

@@ -11,12 +11,11 @@
 package org.eclipse.che.ide.jseditor.client.reconciler;
 
 import org.eclipse.che.ide.jseditor.client.partition.DocumentPartitioner;
-import org.eclipse.che.ide.util.executor.BasicIncrementalScheduler;
 
 /**
  * Factory for {@link Reconciler} instances.
  */
 public interface ReconcilerFactory {
 
-    Reconciler create(String partitioning, BasicIncrementalScheduler scheduler, DocumentPartitioner partitioner);
+    Reconciler create(String partitioning, DocumentPartitioner partitioner);
 }

@@ -12,6 +12,7 @@ package org.eclipse.che.ide.jseditor.client.reconciler;
 
 import org.eclipse.che.ide.jseditor.client.document.UseDocumentHandle;
 import org.eclipse.che.ide.jseditor.client.events.DocumentChangeHandler;
+import org.eclipse.che.ide.jseditor.client.texteditor.TextEditor;
 
 /**
  * An <code>Reconciler</code> defines and maintains a model of the content of the text view document in the presence of changes applied to
@@ -27,7 +28,7 @@ public interface Reconciler extends UseDocumentHandle, DocumentChangeHandler {
      * Installs the reconciler on the given text view. After this method has been finished, the reconciler is operational, i.e., it works
      * without requesting further client actions until <code>uninstall</code> is called.
      */
-    void install();
+    void install(TextEditor editor);
 
     /**
      * Removes the reconciler from the text view it has previously been installed on.

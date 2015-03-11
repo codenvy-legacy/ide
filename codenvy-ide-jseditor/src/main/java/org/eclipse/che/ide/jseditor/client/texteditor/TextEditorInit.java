@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.che.ide.jseditor.client.texteditor;
 
-import java.util.List;
-import java.util.logging.Logger;
+import elemental.events.KeyboardEvent.KeyCode;
+import elemental.events.MouseEvent;
+
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.eclipse.che.ide.api.text.TypedRegion;
 import org.eclipse.che.ide.collections.StringMap;
 import org.eclipse.che.ide.collections.StringMap.IterationCallback;
 import org.eclipse.che.ide.jseditor.client.annotation.AnnotationModel;
+import org.eclipse.che.ide.jseditor.client.annotation.AnnotationModelEvent;
 import org.eclipse.che.ide.jseditor.client.annotation.ClearAnnotationModelEvent;
 import org.eclipse.che.ide.jseditor.client.annotation.GutterAnnotationRenderer;
 import org.eclipse.che.ide.jseditor.client.annotation.InlineAnnotationRenderer;
@@ -27,39 +30,37 @@ import org.eclipse.che.ide.jseditor.client.changeintercept.TextChange;
 import org.eclipse.che.ide.jseditor.client.changeintercept.TextChangeInterceptor;
 import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistCallback;
 import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistProcessor;
+import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistant;
+import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import org.eclipse.che.ide.jseditor.client.codeassist.CompletionProposal;
 import org.eclipse.che.ide.jseditor.client.codeassist.CompletionReadyCallback;
 import org.eclipse.che.ide.jseditor.client.codeassist.CompletionsSource;
 import org.eclipse.che.ide.jseditor.client.document.DocumentHandle;
-import org.eclipse.che.ide.jseditor.client.events.CompletionRequestHandler;
-import org.eclipse.che.ide.jseditor.client.events.GutterClickEvent;
-import org.eclipse.che.ide.jseditor.client.events.TextChangeHandler;
-import org.eclipse.che.ide.jseditor.client.keymap.KeyBindingAction;
-import org.eclipse.che.ide.jseditor.client.keymap.Keybinding;
-import org.eclipse.che.ide.jseditor.client.partition.DocumentPartitioner;
-import org.eclipse.che.ide.jseditor.client.position.PositionConverter;
-import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistProcessor;
-import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistantFactory;
-import org.eclipse.che.ide.jseditor.client.reconciler.Reconciler;
-import org.eclipse.che.ide.jseditor.client.annotation.AnnotationModelEvent;
-import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistant;
-import org.eclipse.che.ide.jseditor.client.codeassist.CodeAssistantFactory;
 import org.eclipse.che.ide.jseditor.client.editorconfig.TextEditorConfiguration;
 import org.eclipse.che.ide.jseditor.client.events.CompletionRequestEvent;
+import org.eclipse.che.ide.jseditor.client.events.CompletionRequestHandler;
 import org.eclipse.che.ide.jseditor.client.events.DocumentChangeEvent;
+import org.eclipse.che.ide.jseditor.client.events.GutterClickEvent;
 import org.eclipse.che.ide.jseditor.client.events.GutterClickHandler;
 import org.eclipse.che.ide.jseditor.client.events.TextChangeEvent;
+import org.eclipse.che.ide.jseditor.client.events.TextChangeHandler;
 import org.eclipse.che.ide.jseditor.client.events.doc.DocReadyWrapper;
 import org.eclipse.che.ide.jseditor.client.events.doc.DocReadyWrapper.DocReadyInit;
 import org.eclipse.che.ide.jseditor.client.gutter.Gutters;
 import org.eclipse.che.ide.jseditor.client.gutter.HasGutter;
+import org.eclipse.che.ide.jseditor.client.keymap.KeyBindingAction;
+import org.eclipse.che.ide.jseditor.client.keymap.Keybinding;
 import org.eclipse.che.ide.jseditor.client.minimap.HasMinimap;
+import org.eclipse.che.ide.jseditor.client.partition.DocumentPartitioner;
+import org.eclipse.che.ide.jseditor.client.position.PositionConverter;
 import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistAssistant;
+import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistProcessor;
+import org.eclipse.che.ide.jseditor.client.quickfix.QuickAssistantFactory;
+import org.eclipse.che.ide.jseditor.client.reconciler.Reconciler;
 import org.eclipse.che.ide.jseditor.client.text.TextPosition;
-import com.google.web.bindery.event.shared.EventBus;
 
-import elemental.events.KeyboardEvent.KeyCode;
-import elemental.events.MouseEvent;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Initialization controller for the text editor.
@@ -138,7 +139,7 @@ public class TextEditorInit<T extends EditorWidget> {
         if (reconciler != null) {
             reconciler.setDocumentHandle(documentHandle);
             documentHandle.getDocEventBus().addHandler(DocumentChangeEvent.TYPE, reconciler);
-            reconciler.install();
+            reconciler.install(textEditor);
         }
     }
 

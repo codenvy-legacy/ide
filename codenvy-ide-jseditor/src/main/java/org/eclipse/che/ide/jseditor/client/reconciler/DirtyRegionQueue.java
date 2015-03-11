@@ -14,7 +14,8 @@ import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
 
 /**
- * Queue used by {@link ReconcilerImpl} to manage dirty regions. When a dirty region is inserted into the queue, the queue tries to fold it
+ * Queue used by {@link ReconcilerWithAutoSave} to manage dirty regions. When a dirty region is inserted into the queue, the queue tries
+ * to fold it
  * into the neighboring dirty region.
  */
 class DirtyRegionQueue {
@@ -27,9 +28,19 @@ class DirtyRegionQueue {
         super();
     }
 
+    private static boolean nullSafeStringsEquals(final String s1, final String s2) {
+        if (s1 == s2) {
+            return true;
+        }
+        if (s1 == null) {
+            return false;
+        }
+        return s1.equals(s2);
+    }
+
     /**
      * Adds a dirty region to the end of the dirty-region queue.
-     * 
+     *
      * @param dr the dirty region to add
      */
     public void addDirtyRegion(DirtyRegion dr) {
@@ -57,16 +68,6 @@ class DirtyRegionQueue {
             // Don't merge- just add the new one onto the queue.
             fDirtyRegions.add(dr);
         }
-    }
-
-    private static boolean nullSafeStringsEquals(final String s1, final String s2) {
-        if (s1 == s2) {
-            return true;
-        }
-        if (s1 == null) {
-            return false;
-        }
-        return s1.equals(s2);
     }
 
     /**
