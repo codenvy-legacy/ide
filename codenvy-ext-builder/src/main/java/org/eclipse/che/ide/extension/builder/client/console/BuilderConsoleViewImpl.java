@@ -44,7 +44,7 @@ import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
 
-    private static final int MAX_LINE_COUNT = 100;
+    private static final int MAX_LINE_COUNT = 1000;
 
     private static final String INFO  = "INFO";
     private static final String ERROR = "ERROR";
