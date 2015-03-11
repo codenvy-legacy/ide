@@ -15,7 +15,6 @@ import elemental.events.MouseEvent;
 
 import org.eclipse.che.api.project.shared.dto.ProjectDescriptor;
 import org.eclipse.che.ide.Resources;
-import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.project.tree.AbstractTreeNode;
 import org.eclipse.che.ide.api.project.tree.TreeNode;
@@ -60,7 +59,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         this.resources = resources;
 
         projectTreeNodeDataAdapter = new ProjectTreeNodeDataAdapter();
-        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer);
+        tree = Tree.create(resources, projectTreeNodeDataAdapter, projectTreeNodeRenderer, true);
         setContentWidget(tree.asWidget());
 
         projectHeader = new FlowPanel();
@@ -105,7 +104,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeContextMenu(final int mouseX, final int mouseY, TreeNodeElement<TreeNode<?>> node) {
-                delegate.onNodeSelected(node.getData());
+                delegate.onNodeSelected(node.getData(), tree.getSelectionModel());
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
                     @Override
                     public void execute() {
@@ -129,7 +128,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
 
             @Override
             public void onNodeSelected(TreeNodeElement<TreeNode<?>> node, SignalEvent event) {
-                delegate.onNodeSelected(node.getData());
+                delegate.onNodeSelected(node.getData(), tree.getSelectionModel());
             }
 
             @Override
@@ -173,7 +172,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         tree.renderTree(0);
 
         if (rootNodes.isEmpty()) {
-            delegate.onNodeSelected(null);
+            delegate.onNodeSelected(null, tree.getSelectionModel());
         } else {
             final TreeNode<?> firstNode = rootNodes.get(0);
             if (!firstNode.isLeaf()) {
@@ -183,7 +182,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
             }
             // auto-select first node
             tree.getSelectionModel().selectSingleNode(firstNode);
-            delegate.onNodeSelected(firstNode);
+            delegate.onNodeSelected(firstNode, tree.getSelectionModel());
         }
     }
 
@@ -191,7 +190,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void updateNode(@Nonnull TreeNode<?> oldNode, @Nonnull TreeNode<?> newNode) {
         // get currently selected node
-        final JsoArray<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
+        final Array<TreeNode<?>> selectedNodes = tree.getSelectionModel().getSelectedNodes();
         TreeNode<?> selectedNode = null;
         if (!selectedNodes.isEmpty()) {
             selectedNode = selectedNodes.get(0);
@@ -210,14 +209,14 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
     @Override
     public void selectNode(@Nonnull TreeNode<?> node) {
         tree.getSelectionModel().selectSingleNode(node);
-        delegate.onNodeSelected(node);
+        delegate.onNodeSelected(node, tree.getSelectionModel());
     }
 
     /** {@inheritDoc} */
     @Override
     public void expandAndSelectNode(@Nonnull TreeNode<?> node) {
         tree.autoExpandAndSelectNode(node, true);
-        delegate.onNodeSelected(node);
+        delegate.onNodeSelected(node, tree.getSelectionModel());
     }
 
     /** {@inheritDoc} */

@@ -23,6 +23,8 @@ import org.eclipse.che.ide.part.projectexplorer.DeleteNodeHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.List;
+
 /**
  * Action for deleting an item which is selected in 'Project Explorer'.
  *
@@ -53,8 +55,12 @@ public class DeleteItemAction extends Action {
         eventLogger.log(this);
 
         Selection<?> selection = selectionAgent.getSelection();
-        if (selection != null && selection.getFirstElement() != null && selection.getFirstElement() instanceof StorableNode) {
-            deleteNodeHandler.delete((StorableNode)selection.getFirstElement());
+        if (selection != null && !selection.isEmpty() & selection.getHeadElement() instanceof StorableNode) {
+            if (selection.isSingleSelection()) {
+                deleteNodeHandler.delete((StorableNode)selection.getHeadElement());
+            } else {
+                deleteNodeHandler.deleteNodes((List<StorableNode>)selection.getAllElements());
+            }
         }
     }
 

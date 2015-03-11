@@ -27,7 +27,10 @@ import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import org.eclipse.che.ide.rest.Unmarshallable;
 import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
 import org.eclipse.che.ide.ui.dialogs.DialogFactory;
+import org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog;
+import org.eclipse.che.ide.ui.dialogs.message.MessageDialog;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,6 +38,11 @@ import static org.eclipse.che.api.runner.ApplicationStatus.NEW;
 import static org.eclipse.che.api.runner.ApplicationStatus.RUNNING;
 import static org.eclipse.che.ide.api.notification.Notification.Type.ERROR;
 import static org.eclipse.che.ide.api.project.tree.TreeNode.DeleteCallback;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Used for deleting a {@link StorableNode}.
@@ -71,24 +79,28 @@ public class DeleteNodeHandler {
      */
     public void delete(final StorableNode nodeToDelete) {
         if (nodeToDelete instanceof ProjectNode || nodeToDelete instanceof ProjectListStructure.ProjectNode) {
-            checkRunningProcessesForProject(nodeToDelete, new AsyncCallback<Boolean>() {
-                @Override
-                public void onSuccess(Boolean hasRunningProcesses) {
-                    if (hasRunningProcesses) {
-                        dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
-                    } else {
-                        askForDeletingNode(nodeToDelete);
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    askForDeletingNode(nodeToDelete);
-                }
-            });
+            deleteProjectNode(nodeToDelete);
         } else {
             askForDeletingNode(nodeToDelete);
         }
+    }
+
+    private void deleteProjectNode(final StorableNode projectNodeToDelete) {
+        checkRunningProcessesForProject(projectNodeToDelete, new AsyncCallback<Boolean>() {
+            @Override
+            public void onSuccess(final Boolean hasRunningProcesses) {
+                if (hasRunningProcesses) {
+                    dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
+                } else {
+                    askForDeletingNode(projectNodeToDelete);
+                }
+            }
+
+            @Override
+            public void onFailure(final Throwable caught) {
+                askForDeletingNode(projectNodeToDelete);
+            }
+        });
     }
 
     /**
@@ -116,11 +128,42 @@ public class DeleteNodeHandler {
     }
 
     /**
+     * Ask the user to confirm the (multiple) delete operation.
+     *
+     * @param nodeToDelete
+     */
+    private void askForDeletingNodes(final List<StorableNode> nodesToDelete) {
+        final ConfirmDialog dialog = dialogFactory.createConfirmDialog(localization.deleteMultipleDialogTitle(),
+                                          getDialogWidget(nodesToDelete),
+                                          new ConfirmCallback() {
+            @Override
+            public void accepted() {
+                for (final StorableNode nodeToDelete : nodesToDelete) {
+                    nodeToDelete.delete(new DeleteCallback() {
+                        @Override
+                        public void onDeleted() {
+                        }
+
+                        @Override
+                        public void onFailure(final Throwable caught) {
+                            notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+                        }
+                    });
+                }
+            }
+        }, null);
+        dialog.show();
+    }
+
+    private IsWidget getDialogWidget(final List<StorableNode> nodesToDelete) {
+        return new ConfirmMultipleDeleteWidget(nodesToDelete, this.localization);
+    }
+
+    /**
      * Check whether there are running processes for the resource that will be deleted.
      *
      * @param projectNode
-     * @param callback
-     *         callback returns true if project has any running processes and false - otherwise
+     * @param callback callback returns true if project has any running processes and false - otherwise
      */
     private void checkRunningProcessesForProject(StorableNode projectNode, final AsyncCallback<Boolean> callback) {
         Unmarshallable<Array<ApplicationProcessDescriptor>> unmarshaller =
@@ -178,5 +221,88 @@ public class DeleteNodeHandler {
             return localization.deleteProjectDialogQuestion(node.getName());
         }
         return localization.deleteNodeDialogQuestion(node.getName());
+    }
+
+    public void deleteNodes(final List<StorableNode> nodes) {
+        if (nodes != null && !nodes.isEmpty()) {
+            if (nodes.size() == 1) {
+                delete(nodes.get(0));
+            } else {
+                final List<StorableNode> projects = extractProjectNodes(nodes);
+                if (projects.isEmpty()) {
+                    askForDeletingNodes(nodes);
+                } else if (projects.size() < nodes.size()) {
+                    // mixed project and non-project nodes
+                    final MessageDialog dialog = dialogFactory.createMessageDialog(localization.mixedProjectDeleteTitle(),
+                                                      localization.mixedProjectDeleteMessage(),
+                                                      null);
+                    dialog.show();
+                } else {
+                    // only projects
+                    deleteProjectNodes(projects);
+                }
+            }
+        }
+    }
+
+    private void deleteProjectNodes(final List<StorableNode> nodes) {
+        final Queue<StorableNode> nodeStack = new LinkedList<>(nodes);
+        checkRunningForAllProjects(nodeStack, new AsyncCallback<Boolean>() {
+            @Override
+            public void onSuccess(final Boolean result) {
+                if (result) {
+                    dialogFactory.createMessageDialog("", localization.stopProcessesBeforeDeletingProject(), null).show();
+                } else {
+                    askForDeletingNodes(nodes);
+                }
+            }
+            @Override
+            public void onFailure(final Throwable caught) {
+                notificationManager.showNotification(new Notification(caught.getMessage(), ERROR));
+            }
+        });
+    }
+
+    private void checkRunningForAllProjects(final Queue<StorableNode> nodes, final AsyncCallback<Boolean> callback) {
+        if (!nodes.isEmpty()) {
+            final StorableNode projectNode = nodes.remove();
+            checkRunningProcessesForProject(projectNode, new AsyncCallback<Boolean>() {
+                @Override
+                public void onSuccess(final Boolean result) {
+                    if (result == null) {
+                        callback.onFailure(new Exception("Could not check 'running' state for project " + projectNode.getName()));
+                    } else {
+                        if (result) {
+                            callback.onSuccess(true);
+                        } else {
+                            checkRunningForAllProjects(nodes, callback);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(final Throwable caught) {
+                    callback.onFailure(caught);
+                }
+            });
+        } else {
+            callback.onSuccess(false);
+        }
+    }
+
+    /**
+     * Search all the nodes that are project nodes inside the given nodes.
+     * 
+     * @param nodes the nodes
+     * @return the project nodes
+     */
+    private List<StorableNode> extractProjectNodes(final List<StorableNode> nodes) {
+        final List<StorableNode> result = new ArrayList<>();
+        for (StorableNode node : nodes) {
+            if (node instanceof ProjectNode || node instanceof ProjectListStructure.ProjectNode) {
+                result.add(node);
+            }
+        }
+        return result;
     }
 }
