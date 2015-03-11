@@ -31,30 +31,22 @@ public class Annotation {
      * Value: <code>"org.eclipse.che.ide.api.text.annotation.unknown"</code>
      */
     public final static String TYPE_UNKNOWN = "org.eclipse.che.ide.api.text.annotation.unknown"; //$NON-NLS-1$
-
-    /** The type of this annotation. */
-    private String type;
-
-    /** Indicates whether this annotation is persistent or not. */
-    private boolean isPersistent = false;
-
-    /** Indicates whether this annotation is marked as deleted or not. */
-    private boolean markedAsDeleted = false;
-
-    /** The text associated with this annotation. */
-    private String text;
-
     /** Annotation drawing layer. */
     protected int layer;
-
     /** Image associated with this annotation */
     protected ImageResource image;
-
     /** Image associated with this annotation */
     protected SVGResource imageSVG;
-
     /** Element associated with this annotation */
     protected Element imageElement;
+    /** The type of this annotation. */
+    private String type;
+    /** Indicates whether this annotation is persistent or not. */
+    private boolean isPersistent    = false;
+    /** Indicates whether this annotation is marked as deleted or not. */
+    private boolean markedAsDeleted = false;
+    /** The text associated with this annotation. */
+    private String text;
 
     /** Creates a new annotation that is not persistent and type less. */
     protected Annotation() {
@@ -104,7 +96,7 @@ public class Annotation {
      *         image associated with this annotation
      */
     public Annotation(String type, boolean isPersistent, String text, int layer, ImageResource image) {
-        this(type, isPersistent, text, 0, image, null);
+        this(type, isPersistent, text, layer, image, null);
     }
 
     /**
@@ -163,6 +155,15 @@ public class Annotation {
     }
 
     /**
+     * Returns the type of the annotation.
+     *
+     * @return the type of the annotation
+     */
+    public String getType() {
+        return type == null ? TYPE_UNKNOWN : type;
+    }
+
+    /**
      * Sets the type of this annotation.
      *
      * @param type
@@ -170,15 +171,6 @@ public class Annotation {
      */
     public void setType(String type) {
         this.type = type;
-    }
-
-    /**
-     * Returns the type of the annotation.
-     *
-     * @return the type of the annotation
-     */
-    public String getType() {
-        return type == null ? TYPE_UNKNOWN : type;
     }
 
     /**
@@ -203,6 +195,15 @@ public class Annotation {
     }
 
     /**
+     * Returns the text associated with this annotation.
+     *
+     * @return the text associated with this annotation or <code>null</code>
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
      * Sets the text associated with this annotation.
      *
      * @param text
@@ -210,15 +211,6 @@ public class Annotation {
      */
     public void setText(String text) {
         this.text = text;
-    }
-
-    /**
-     * Returns the text associated with this annotation.
-     *
-     * @return the text associated with this annotation or <code>null</code>
-     */
-    public String getText() {
-        return text;
     }
 
     /**
