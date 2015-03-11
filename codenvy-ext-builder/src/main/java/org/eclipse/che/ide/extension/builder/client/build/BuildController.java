@@ -197,6 +197,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
             return;
         }
 
+        console.clear();
+
         lastBuildTaskDescriptor = null;
         buildContext.setBuildTaskDescriptor(null);
         activeProject = appContext.getCurrentProject().getProjectDescription();
