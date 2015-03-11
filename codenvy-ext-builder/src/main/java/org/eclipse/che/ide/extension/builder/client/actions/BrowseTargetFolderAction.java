@@ -52,7 +52,7 @@ public class BrowseTargetFolderAction extends ProjectAction {
                          + Config.getCurrentWorkspace().getId()
                          + "/browse/"
                          + buildContext.getBuildTaskDescriptor().getTaskId()
-                         + "?path=target";
+                         + "?path";
             Window.open(url, "", "");
         }
     }

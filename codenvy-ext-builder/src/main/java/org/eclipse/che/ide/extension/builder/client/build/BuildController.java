@@ -319,13 +319,9 @@ public class BuildController implements Notification.OpenNotificationHandler {
                  + Config.getCurrentWorkspace().getId()
                  + "/browse/"
                  + descriptor.getTaskId()
-                 + "?path=target";
+                 + "?path";
 
-        return "Browse <a href=\"" + url + "\" target=\"_blank\" " +
-               "style=\"color: #61b7ef;\"" +
-               "onmouseover=\"this.style.textDecoration='underline';\" " +
-               "onmouseout=\"this.style.textDecoration='none';\" " +
-               " ><b>target</b></a> folder of the build";
+        return "Browse <a href=\"" + url + "\" target=\"_blank\" style=\"color: #61b7ef;\"><b>working</b></a> folder of the build";
     }
 
     /** Process changing build status. */
@@ -342,7 +338,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 console.setCurrentBuilderStatus(BuilderStatus.DONE);
                 console.print("[INFO] " + notification.getMessage());
 
-                console.print("[MAVEN] " + getTargetFolderURL(descriptor));
+                console.print("[INFO] " + getTargetFolderURL(descriptor));
 
                 buildContext.setBuilding(false);
                 break;
@@ -358,7 +354,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 console.setCurrentBuilderStatus(BuilderStatus.FAILED);
                 console.print("[ERROR] " + notification.getMessage());
 
-                console.print("[MAVEN] " + getTargetFolderURL(descriptor));
+                console.print("[INFO] " + getTargetFolderURL(descriptor));
 
                 buildContext.setBuilding(false);
                 break;

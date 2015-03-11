@@ -12,11 +12,10 @@ package org.eclipse.che.ide.extension.builder.client.console;
 
 import org.eclipse.che.ide.api.parts.PartStackUIResources;
 import org.eclipse.che.ide.api.parts.base.BaseView;
+import org.eclipse.che.ide.util.MessageBuilder;
+import org.eclipse.che.ide.util.MessageType;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SimpleHtmlSanitizer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -35,18 +34,11 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
-
-    private static final String INFO  = "INFO";
-    private static final String ERROR = "ERROR";
-    private static final String WARN  = "WARNING";
-    private static final String MAVEN = "MAVEN";
-
-    private static final String PRE_STYLE   = "style='margin:0px;'";
-
-    private static final String INFO_COLOR  = "lightgreen";
-    private static final String WARN_COLOR  = "#FFBA00";
-    private static final String ERROR_COLOR = "#F62217";
-    private static final String MAVEN_COLOR = "#61b7ef";
+    private static final String INFO   = "INFO";
+    private static final String ERROR  = "ERROR";
+    private static final String WARN   = "WARNING";
+    private static final String MAVEN  = "MAVEN";
+    private static final String GRADLE = "GRADLE";
 
     interface BuilderConsoleViewImplUiBinder extends UiBinder<Widget, BuilderConsoleViewImpl> {
     }
@@ -83,16 +75,20 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     @Override
     public void print(String message) {
         HTML html = new HTML();
+        MessageBuilder messageBuilder = new MessageBuilder().message(message);
+
         if (message.startsWith("[" + INFO + "]")) {
-            html.setHTML(buildSafeHtmlMessage(INFO, INFO_COLOR, message));
+            html.setHTML(messageBuilder.type(MessageType.INFO).sanitizing(false).build());
         } else if (message.startsWith("[" + ERROR + "]")) {
-            html.setHTML(buildSafeHtmlMessage(ERROR, ERROR_COLOR, message));
+            html.setHTML(messageBuilder.type(MessageType.ERROR).build());
         } else if (message.startsWith("[" + WARN + "]")) {
-            html.setHTML(buildSafeHtmlMessage(WARN, WARN_COLOR, message));
+            html.setHTML(messageBuilder.type(MessageType.WARNING).build());
         } else if (message.startsWith("[" + MAVEN + "]")) {
-            html.setHTML(buildHtmlMessage(MAVEN, MAVEN_COLOR, message));
+            html.setHTML(messageBuilder.type(MessageType.MAVEN).build());
+        } else if (message.startsWith("[" + GRADLE + "]")) {
+            html.setHTML(messageBuilder.type(MessageType.GRADLE).build());
         } else {
-            html.setHTML(buildSafeHtmlMessage(message));
+            html.setHTML(messageBuilder.build());
         }
         html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
         consoleArea.add(html);
@@ -108,52 +104,6 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     @Override
     public void scrollBottom() {
         scrollPanel.getElement().setScrollTop(scrollPanel.getElement().getScrollHeight());
-    }
-
-    /**
-     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml.
-     * @param type message type (info, error etc.)
-     * @param color color constant
-     * @param message message to print
-     * @return message in SafeHtml
-     */
-    private SafeHtml buildSafeHtmlMessage(String type, String color, String message) {
-        return new SafeHtmlBuilder()
-                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
-                .appendHtmlConstant("[<span style='color:" + color + ";'><b>" + type + "</b></span>]")
-                .append(SimpleHtmlSanitizer.sanitizeHtml(message.substring(("[" + type + "]").length())))
-                .appendHtmlConstant("</pre>")
-                .toSafeHtml();
-    }
-
-    /**
-     * Returns partially sanitized message. The method allows to place html inside the message.
-     *
-     * @param type message type (info, error etc.)
-     * @param color color constant
-     * @param message message to print
-     * @return message in SafeHtml
-     */
-    private SafeHtml buildHtmlMessage(String type, String color, String message) {
-        return new SafeHtmlBuilder()
-                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
-                .appendHtmlConstant("[<span style='color:" + color + ";'><b>" + type + "</b></span>]")
-                .appendHtmlConstant (message.substring(("[" + type + "]").length()))
-                .appendHtmlConstant("</pre>")
-                .toSafeHtml();
-    }
-
-    /**
-     * Return sanitized message (with all restricted HTML-tags escaped) in SafeHtml
-     * @param message message to print
-     * @return message in SafeHtml
-     */
-    private SafeHtml buildSafeHtmlMessage(String message) {
-        return new SafeHtmlBuilder()
-                .appendHtmlConstant("<pre " + PRE_STYLE + ">")
-                .append(SimpleHtmlSanitizer.sanitizeHtml(message))
-                .appendHtmlConstant("</pre>")
-                .toSafeHtml();
     }
 
     @Override
