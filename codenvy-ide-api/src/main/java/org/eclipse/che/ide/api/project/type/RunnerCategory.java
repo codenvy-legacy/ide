@@ -18,13 +18,13 @@ import javax.annotation.Nonnull;
  * @author Dmitry Shnurenko
  */
 public enum RunnerCategory {
-    CPP("CPP"),
-    GO("GO"),
-    JAVA("JAVA"),
-    JAVASCRIPT("JAVASCRIPT"),
-    PHP("PHP"),
-    PYTHON("PYTHON"),
-    RUBY("RUBY");
+    CPP("cpp"),
+    GO("go"),
+    JAVA("java"),
+    JAVASCRIPT("javascript"),
+    PHP("php"),
+    PYTHON("python"),
+    RUBY("ruby");
 
     private final String type;
 
