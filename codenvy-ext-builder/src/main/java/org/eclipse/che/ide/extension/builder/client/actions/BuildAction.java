@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.che.ide.extension.builder.client.actions;
 
-import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
-import org.eclipse.che.ide.api.action.ActionEvent;
 import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
 import com.codenvy.ide.api.action.permits.ActionPermit;
 import com.codenvy.ide.api.action.permits.Build;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
+import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.ProjectAction;
+import org.eclipse.che.ide.api.app.CurrentProject;
 import org.eclipse.che.ide.api.build.BuildContext;
 import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
 import org.eclipse.che.ide.extension.builder.client.BuilderResources;
 import org.eclipse.che.ide.extension.builder.client.build.BuildController;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * Action to build current project.
@@ -33,9 +35,9 @@ public class BuildAction extends ProjectAction {
 
     private final BuildController        buildController;
     private final AnalyticsEventLogger   eventLogger;
+    private final BuildContext           buildContext;
     private final ActionPermit           buildActionPermit;
     private final ActionDenyAccessDialog buildActionDenyAccessDialog;
-    private       BuildContext           buildContext;
 
     @Inject
     public BuildAction(BuildController buildController,
@@ -67,6 +69,12 @@ public class BuildAction extends ProjectAction {
     @Override
     protected void updateProjectAction(ActionEvent e) {
         e.getPresentation().setVisible(true);
-        e.getPresentation().setEnabled(appContext.getCurrentProject().getBuilder() != null && !buildContext.isBuilding());
+
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject == null) {
+            e.getPresentation().setEnabled(false);
+        } else {
+            e.getPresentation().setEnabled(currentProject.getBuilder() != null && !buildContext.isBuilding());
+        }
     }
 }

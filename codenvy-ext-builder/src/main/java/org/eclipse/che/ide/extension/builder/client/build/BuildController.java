@@ -90,7 +90,6 @@ public class BuildController implements Notification.OpenNotificationHandler {
     private final DialogFactory       dialogFactory;
     /** Descriptor of the last build task. */
     private       BuildTaskDescriptor lastBuildTaskDescriptor;
-    private       BuilderMetric       lastWaitingTimeLimit;
     private       EditorAgent         editorAgent;
 
     private String baseUrl;
@@ -197,6 +196,8 @@ public class BuildController implements Notification.OpenNotificationHandler {
             notificationManager.showNotification(notification);
             return;
         }
+
+        console.clear();
 
         lastBuildTaskDescriptor = null;
         buildContext.setBuildTaskDescriptor(null);
@@ -413,7 +414,6 @@ public class BuildController implements Notification.OpenNotificationHandler {
         }
         BuilderMetric waitingTimeLimit = getBuilderMetric(BuilderMetric.TERMINATION_TIME);
         if (waitingTimeLimit != null) {
-            lastWaitingTimeLimit = waitingTimeLimit;
             double terminationTime = NumberFormat.getDecimalFormat().parse(waitingTimeLimit.getValue());
             final double terminationTimeout = terminationTime - System.currentTimeMillis();
             final String value = StringUtils.timeMlsToHumanReadable((long)terminationTimeout);
@@ -466,20 +466,6 @@ public class BuildController implements Notification.OpenNotificationHandler {
         return builderMetric;
     }
 
-//    /**
-//     * Parses given string to find the decimal number.
-//     * @param str input to parse
-//     * @return decimal number
-//     */
-//    private native float getNumber(String str) /*-{
-//        var pattern = new RegExp("[0-9]+(\.[0-9]+)?");
-//        var result = pattern.exec(str);
-//        if (result != null && result.length > 0){
-//            return parseFloat(result[0]);
-//        }
-//        return 0;
-//    }-*/;
-
     @Nullable
     private BuilderMetric getBuilderMetric(String metricName) {
         if (lastBuildTaskDescriptor != null) {
@@ -511,5 +497,4 @@ public class BuildController implements Notification.OpenNotificationHandler {
         }
         return null;
     }
-
 }

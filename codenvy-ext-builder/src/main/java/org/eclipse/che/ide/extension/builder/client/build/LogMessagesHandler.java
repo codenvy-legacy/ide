@@ -57,6 +57,7 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onMessageReceived(LogMessage result) {
         if (result.num == lastPrintedMessageNum + 1) {
@@ -70,9 +71,7 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
         flushTimer.schedule(5000);
     }
 
-    /**
-     * Print all messages from buffer for the moment and stop handling
-     */
+    /** Print all messages from buffer for the moment and stop handling. */
     void stop() {
         printAllPostponedMessages();
         flushTimer.cancel();
@@ -105,6 +104,7 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
         lastPrintedMessageNum = logMessage.num;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void onErrorReceived(Throwable throwable) {
         try {
@@ -119,6 +119,7 @@ class LogMessagesHandler extends SubscriptionHandler<LogMessage> {
 class LogMessageUnmarshaller implements Unmarshallable<LogMessage> {
     LogMessage logMessage;
 
+    /** {@inheritDoc} */
     @Override
     public void unmarshal(Message response) throws UnmarshallerException {
         JSONObject jsonObject = JSONParser.parseStrict(response.getBody()).isObject();
@@ -129,6 +130,7 @@ class LogMessageUnmarshaller implements Unmarshallable<LogMessage> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public LogMessage getPayload() {
         return logMessage;

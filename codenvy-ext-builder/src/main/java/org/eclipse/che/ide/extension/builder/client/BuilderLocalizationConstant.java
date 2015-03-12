@@ -74,4 +74,6 @@ public interface BuilderLocalizationConstant extends Messages {
     /* BuilderConsoleView */
     @Key("view.builderConsole.title")
     String builderConsoleViewTitle();
+
+    String fullBuildLogConsoleLink();
 }

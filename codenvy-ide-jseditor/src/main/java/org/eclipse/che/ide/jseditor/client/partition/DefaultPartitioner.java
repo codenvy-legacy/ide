@@ -55,6 +55,7 @@ public class DefaultPartitioner implements DocumentPartitioner {
 
     public void initialize() {
         this.documentPositionMap.addPositionCategory(this.positionCategory);
+        this.documentPositionMap.setContentLength(this.documentHandle.getDocument().getContentsCharCount());
     }
 
     private void updatePositions() {

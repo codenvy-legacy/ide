@@ -19,7 +19,6 @@ public interface CellTableResources extends CellTable.Resources {
     public interface CellTableStyle extends CellTable.Style {
     }
 
-    ;
 
     @Override
     @Source({"cellTable.css", "org/eclipse/che/ide/api/ui/style.css"})

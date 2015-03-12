@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.che.ide.projecttree;
 
+import com.google.inject.Inject;
+
 import org.eclipse.che.ide.api.project.tree.TreeStructureProvider;
 import org.eclipse.che.ide.api.project.tree.TreeStructureProviderRegistry;
 import org.eclipse.che.ide.api.project.tree.generic.GenericTreeStructureProvider;
-import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
 import org.eclipse.che.ide.collections.StringMap;
 import org.eclipse.che.ide.util.loging.Log;
-import com.google.inject.Inject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -59,8 +59,6 @@ public class TreeStructureProviderRegistryImpl implements TreeStructureProviderR
     @Nonnull
     @Override
     public TreeStructureProvider getTreeStructureProvider(@Nonnull String projectTypeId) {
-        Array<String> keys = projectType2TreeProvider.getKeys();
-        Log.info(this.getClass(), keys.size());
         final String providerId = projectType2TreeProvider.get(projectTypeId);
         if (providerId != null) {
             TreeStructureProvider provider = treeProviders.get(providerId);
