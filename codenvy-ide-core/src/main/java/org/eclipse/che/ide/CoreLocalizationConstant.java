@@ -254,11 +254,20 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.messageUrlInvalid")
     String importProjectMessageUrlInvalid();
 
-    @Key("importProject.name")
-    String importProjectName();
+    @Key("importProjectFromLocation.name")
+    String importProjectFromLocationName();
 
-    @Key("importProject.description")
-    String importProjectDescription();
+    @Key("importProjectFromLocation.description")
+    String importProjectFromLocationDescription();
+
+    @Key("importLocalProject.name")
+    String importLocalProjectName();
+
+    @Key("importLocalProject.description")
+    String importLocalProjectDescription();
+
+    @Key("importLocalProject.openZipTitle")
+    String importLocalProjectOpenZipTitle();
 
     @Key("importProject.importButton")
     String importProjectButton();

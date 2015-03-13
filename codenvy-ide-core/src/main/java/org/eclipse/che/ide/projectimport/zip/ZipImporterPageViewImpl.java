@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.ide.projectimport.zip;
 
+import org.eclipse.che.ide.projectimport.ProjectImporterResource;
 import org.eclipse.che.ide.ui.Styles;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -51,7 +52,7 @@ public class ZipImporterPageViewImpl extends Composite implements ZipImporterPag
     private ActionDelegate delegate;
 
     @Inject
-    public ZipImporterPageViewImpl(ZipProjectImporterResource resource,
+    public ZipImporterPageViewImpl(ProjectImporterResource resource,
                                    ZipImporterPageViewImplUiBinder uiBinder) {
         style = resource.zipImporterPageStyle();
         style.ensureInjected();
