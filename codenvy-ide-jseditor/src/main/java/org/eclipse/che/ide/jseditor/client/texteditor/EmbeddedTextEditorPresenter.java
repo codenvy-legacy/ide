@@ -298,7 +298,7 @@ public class EmbeddedTextEditorPresenter<T extends EditorWidget> extends Abstrac
                         };
                         final ChoiceDialog choice = dialogFactory.createChoiceDialog(constant.fileUpdateTitle(),
                                                           constant.fileUpdateMessage(event.getFilePath()),
-                                                          constant.fileUpdateOvewrite(),
+                                                          constant.fileUpdateOverwrite(),
                                                           constant.fileUpdateKeepUnsaved(),
                                                           callback,
                                                           null);
