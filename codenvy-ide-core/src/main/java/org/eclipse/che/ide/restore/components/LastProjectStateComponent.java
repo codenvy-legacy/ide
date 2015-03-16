@@ -26,7 +26,7 @@ import org.eclipse.che.ide.restore.Callback;
 import org.eclipse.che.ide.restore.StateComponent;
 
 /**
- * //
+ * {@link StateComponent} responsible for saving/restoring last opened project.
  *
  * @author Artem Zatsarynnyy
  */

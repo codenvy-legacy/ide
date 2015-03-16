@@ -53,7 +53,7 @@ import org.eclipse.che.ide.preferences.PreferencesManagerImpl;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import org.eclipse.che.ide.rest.StringMapUnmarshaller;
-import org.eclipse.che.ide.restore.StateManager;
+import org.eclipse.che.ide.restore.AppStateManager;
 import org.eclipse.che.ide.toolbar.PresentationFactory;
 import org.eclipse.che.ide.util.Config;
 import org.eclipse.che.ide.util.UUID;
@@ -106,10 +106,10 @@ public class BootstrapController {
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
     private final AppCloseHandler              appCloseHandler;
-    private final StateManager stateManager;
-    private final PresentationFactory presentationFactory;
-    private final AppContext          appContext;
-    private       CurrentUser         currentUser;
+    private final AppStateManager              appStateManager;
+    private final PresentationFactory          presentationFactory;
+    private final AppContext                   appContext;
+    private       CurrentUser                  currentUser;
 
     /** Create controller. */
     @Inject
@@ -136,7 +136,7 @@ public class BootstrapController {
                                final ThemeAgent themeAgent,
                                ActionManager actionManager,
                                AppCloseHandler appCloseHandler,
-                               StateManager stateManager) {
+                               AppStateManager appStateManager) {
         this.componentRegistry = componentRegistry;
         this.workspaceProvider = workspaceProvider;
         this.extensionInitializer = extensionInitializer;
@@ -158,7 +158,7 @@ public class BootstrapController {
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.analyticsEventLoggerExt = analyticsEventLoggerExt;
         this.appCloseHandler = appCloseHandler;
-        this.stateManager = stateManager;
+        this.appStateManager = appStateManager;
 
         presentationFactory = new PresentationFactory();
 
@@ -366,7 +366,7 @@ public class BootstrapController {
 
         Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle());
 
-        stateManager.restoreState();
+        appStateManager.restoreState();
 
         processStartupParameters();
 

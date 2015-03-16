@@ -15,7 +15,7 @@ import org.eclipse.che.dto.shared.DTO;
 import java.util.List;
 
 /**
- * DTO describes the state of the Codenvy application.
+ * DTO describes Codenvy application's state that may be saved/restored.
  *
  * @author Artem Zatsarynnyy
  */

@@ -490,10 +490,10 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("privacy.tooltip.privateMessage")
     String privacyTooltipPrivateMessage();
 
-    /* StateManager */
-    @Key("stateManager.savingMessage")
+    /* AppStateManager */
+    @Key("appStateManager.savingMessage")
     String waitSavingMessage();
 
-    @Key("stateManager.restoringMessage")
+    @Key("appStateManager.restoringMessage")
     String waitRestoringMessage();
 }

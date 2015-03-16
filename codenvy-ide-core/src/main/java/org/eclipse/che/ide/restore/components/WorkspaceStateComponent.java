@@ -21,7 +21,7 @@ import org.eclipse.che.ide.restore.StateComponent;
 import org.eclipse.che.ide.util.loging.Log;
 
 /**
- * //
+ * {@link StateComponent} responsible for saving/restoring workspace state, like opening/closing parts.
  *
  * @author Artem Zatsarynnyy
  */

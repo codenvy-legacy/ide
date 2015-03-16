@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Manages (save/restore) the states of the Codenvy application between sessions.
+ * Manages (save/restore) the states of the Codenvy application.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class StateManager {
+public class AppStateManager {
     /** The name of the property for the mappings in user preferences. */
     private static final String PREFERENCE_PROPERTY_NAME = "CodenvyAppState";
 
@@ -45,12 +45,12 @@ public class StateManager {
     private final List<StateComponent> stateComponents;
 
     @Inject
-    public StateManager(PreferencesManager preferencesManager,
-                        DtoFactory dtoFactory,
-                        CoreLocalizationConstant localizationConstant,
-                        AsyncRequestLoader loader,
-                        LastProjectStateComponent lastProjectStateComponent,
-                        OpenedFilesStateComponent openedFilesStateComponent) {
+    public AppStateManager(PreferencesManager preferencesManager,
+                           DtoFactory dtoFactory,
+                           CoreLocalizationConstant localizationConstant,
+                           AsyncRequestLoader loader,
+                           LastProjectStateComponent lastProjectStateComponent,
+                           OpenedFilesStateComponent openedFilesStateComponent) {
         this.preferencesManager = preferencesManager;
         this.dtoFactory = dtoFactory;
         this.loader = loader;
@@ -59,7 +59,6 @@ public class StateManager {
         waitRestoringMessage = localizationConstant.waitRestoringMessage();
 
         stateComponents = new ArrayList<>();
-
         stateComponents.add(lastProjectStateComponent);
         stateComponents.add(openedFilesStateComponent);
     }

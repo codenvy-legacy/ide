@@ -28,7 +28,7 @@ import org.eclipse.che.ide.util.loging.Log;
 import java.util.List;
 
 /**
- * //
+ * {@link StateComponent} responsible for saving/restoring opened files.
  *
  * @author Artem Zatsarynnyy
  */
