@@ -55,10 +55,10 @@ public interface JsEditorConstants extends Messages {
     @DefaultMessage("{0} has been modified. Save changes?")
     String askWindowSaveChangesMessage(String name);
 
-    @DefaultMessage("An error occured while initializing the editor.\nReloading the page may be necessary.")
+    @DefaultMessage("An error occurred while initializing the editor.\nReloading the page may be necessary.")
     String editorInitErrorMessage();
 
-    @DefaultMessage("An error occured while loading the file.")
+    @DefaultMessage("An error occurred while loading the file.")
     String editorFileErrorMessage();
 
     @DefaultMessage("Finishing editor initialization")
@@ -72,7 +72,7 @@ public interface JsEditorConstants extends Messages {
     String fileUpdateMessage(String path);
 
     @DefaultMessage("Overwrite")
-    String fileUpdateOvewrite();
+    String fileUpdateOverwrite();
 
     @DefaultMessage("Keep my changes")
     String fileUpdateKeepUnsaved();

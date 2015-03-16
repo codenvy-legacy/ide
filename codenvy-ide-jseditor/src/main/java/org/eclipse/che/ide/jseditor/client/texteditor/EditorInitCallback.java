@@ -25,7 +25,7 @@ abstract class EditorInitCallback<T extends EditorWidget> implements EmbeddedDoc
     /** The message displayed while waiting for the editor init. */
     private final String waitEditorMessageString;
 
-    /** Flag that tells if the editor intiialization was finished. */
+    /** Flag that tells if the editor initialization was finished. */
     private boolean editorModuleReady;
     /** The content of the document to open. */
     private String receivedContent;

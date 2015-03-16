@@ -35,7 +35,7 @@ public interface ReadOnlyDocument {
     int getIndexFromPosition(TextPosition position);
 
     /**
-     * Returns the curosr position in the editor.
+     * Returns the cursor position in the editor.
      *
      * @return the cursor position
      */
