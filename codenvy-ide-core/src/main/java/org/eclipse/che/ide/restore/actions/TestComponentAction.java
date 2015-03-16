@@ -14,7 +14,7 @@ import org.eclipse.che.ide.api.action.Action;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
-import org.eclipse.che.ide.restore.StateComponent;
+import org.eclipse.che.ide.restore.AppStateComponent;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * @author Artem Zatsarynnyy
  */
-public class TestComponentAction extends Action implements StateComponent {
+public class TestComponentAction extends Action implements AppStateComponent {
     @Override
     public void actionPerformed(ActionEvent e) {
         Map<String, String> parameters = e.getParameters();

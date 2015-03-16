@@ -17,16 +17,16 @@ import org.eclipse.che.ide.api.parts.OutlinePart;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
-import org.eclipse.che.ide.restore.StateComponent;
+import org.eclipse.che.ide.restore.AppStateComponent;
 import org.eclipse.che.ide.util.loging.Log;
 
 /**
- * {@link StateComponent} responsible for saving/restoring workspace state, like opening/closing parts.
+ * {@link AppStateComponent} responsible for saving/restoring workspace state, like opening/closing parts.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class WorkspaceStateComponent implements StateComponent {
+public class WorkspaceStateComponent implements AppStateComponent {
 
     private final WorkspaceAgent workspaceAgent;
     private final OutlinePart    outlinePart;

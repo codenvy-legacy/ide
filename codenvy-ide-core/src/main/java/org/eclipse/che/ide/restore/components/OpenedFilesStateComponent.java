@@ -22,18 +22,18 @@ import org.eclipse.che.ide.api.project.tree.TreeNode;
 import org.eclipse.che.ide.api.project.tree.VirtualFile;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
-import org.eclipse.che.ide.restore.StateComponent;
+import org.eclipse.che.ide.restore.AppStateComponent;
 import org.eclipse.che.ide.util.loging.Log;
 
 import java.util.List;
 
 /**
- * {@link StateComponent} responsible for saving/restoring opened files.
+ * {@link AppStateComponent} responsible for saving/restoring opened files.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class OpenedFilesStateComponent implements StateComponent {
+public class OpenedFilesStateComponent implements AppStateComponent {
 
     private final AppContext appContext;
     private final EventBus   eventBus;

@@ -11,12 +11,10 @@
 package org.eclipse.che.ide.restore;
 
 /**
- * //
+ * Callback that should be called when {@link AppStateComponent} has finished to performed saving/restoring operation.
  *
  * @author Artem Zatsarynnyy
  */
 public interface Callback {
-
-    /** Called when action has performed saving or restoring. */
     void onPerformed();
 }

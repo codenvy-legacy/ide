@@ -23,15 +23,15 @@ import org.eclipse.che.ide.api.event.ProjectActionHandler;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
-import org.eclipse.che.ide.restore.StateComponent;
+import org.eclipse.che.ide.restore.AppStateComponent;
 
 /**
- * {@link StateComponent} responsible for saving/restoring last opened project.
+ * {@link AppStateComponent} responsible for saving/restoring last opened project.
  *
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class LastProjectStateComponent implements StateComponent {
+public class LastProjectStateComponent implements AppStateComponent {
 
     private final EventBus             eventBus;
     private final ProjectServiceClient projectServiceClient;

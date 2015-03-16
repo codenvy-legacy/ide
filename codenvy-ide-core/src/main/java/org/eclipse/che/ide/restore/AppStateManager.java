@@ -17,15 +17,14 @@ import org.eclipse.che.ide.CoreLocalizationConstant;
 import org.eclipse.che.ide.api.preferences.PreferencesManager;
 import org.eclipse.che.ide.dto.DtoFactory;
 import org.eclipse.che.ide.rest.AsyncRequestLoader;
-import org.eclipse.che.ide.restore.components.LastProjectStateComponent;
-import org.eclipse.che.ide.restore.components.OpenedFilesStateComponent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Manages (save/restore) the states of the Codenvy application.
+ * Manages (save/restore) the states of the Codenvy application between sessions.
  *
  * @author Artem Zatsarynnyy
  */
@@ -39,32 +38,29 @@ public class AppStateManager {
     /** The message displayed while waiting for restoring state. */
     private final String waitRestoringMessage;
 
-    private final PreferencesManager   preferencesManager;
-    private final DtoFactory           dtoFactory;
-    private final AsyncRequestLoader   loader;
-    private final List<StateComponent> stateComponents;
+    private final Set<AppStateComponent> appStateComponents;
+    private final PreferencesManager     preferencesManager;
+    private final DtoFactory             dtoFactory;
+    private final AsyncRequestLoader     loader;
 
     @Inject
-    public AppStateManager(PreferencesManager preferencesManager,
+    public AppStateManager(Set<AppStateComponent> appStateComponents,
+                           PreferencesManager preferencesManager,
                            DtoFactory dtoFactory,
-                           CoreLocalizationConstant localizationConstant,
                            AsyncRequestLoader loader,
-                           LastProjectStateComponent lastProjectStateComponent,
-                           OpenedFilesStateComponent openedFilesStateComponent) {
+                           CoreLocalizationConstant localizationConstant) {
+        this.appStateComponents = appStateComponents;
         this.preferencesManager = preferencesManager;
         this.dtoFactory = dtoFactory;
         this.loader = loader;
 
         waitSavingMessage = localizationConstant.waitSavingMessage();
         waitRestoringMessage = localizationConstant.waitRestoringMessage();
-
-        stateComponents = new ArrayList<>();
-        stateComponents.add(lastProjectStateComponent);
-        stateComponents.add(openedFilesStateComponent);
     }
 
+    /** Save Codenvy application's state by calling all registered {@link AppStateComponent}s. */
     public void saveState() {
-        final Iterator<StateComponent> iterator = stateComponents.iterator();
+        final Iterator<AppStateComponent> iterator = appStateComponents.iterator();
         if (!iterator.hasNext()) {
             return;
         }
@@ -87,8 +83,9 @@ public class AppStateManager {
         performSave(iterator.next(), stateToSave, callback);
     }
 
+    /** Restore Codenvy application's state by calling all registered {@link AppStateComponent}s. */
     public void restoreState() {
-        final Iterator<StateComponent> iterator = stateComponents.iterator();
+        final Iterator<AppStateComponent> iterator = appStateComponents.iterator();
         if (!iterator.hasNext()) {
             return;
         }
@@ -110,11 +107,11 @@ public class AppStateManager {
         performRestore(iterator.next(), stateToRestore, callback);
     }
 
-    private void performSave(StateComponent component, AppState state, Callback callback) {
+    private void performSave(AppStateComponent component, AppState state, Callback callback) {
         component.save(state, callback);
     }
 
-    private void performRestore(StateComponent component, AppState state, Callback callback) {
+    private void performRestore(AppStateComponent component, AppState state, Callback callback) {
         component.restore(state, callback);
     }
 
