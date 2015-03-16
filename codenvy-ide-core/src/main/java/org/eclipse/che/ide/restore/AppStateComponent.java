@@ -12,14 +12,15 @@ package org.eclipse.che.ide.restore;
 
 /**
  * Defines the requirements for an object that can be used for
- * saving/restoring a particular part of the Codenvy application's state.
+ * (re-)storing a particular part of the Codenvy application's state.
  *
  * @author Artem Zatsarynnyy
  */
 public interface AppStateComponent {
 
     /**
-     * Save the application's state to the provided {@code appState} object.
+     * Called every time when the application's state should be saved
+     * (for example, on logout or when closing the browser's tab).
      *
      * @param appState
      *         {@link AppState} instance describes the app state
@@ -29,7 +30,8 @@ public interface AppStateComponent {
     void save(AppState appState, Callback callback);
 
     /**
-     * Restore the application's state from the provided {@code appState} object.
+     * Called every time when the application's state should be restored
+     * (after loading the Codenvy app).
      *
      * @param appState
      *         {@link AppState} instance describes the app state

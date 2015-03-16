@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Manages (save/restore) the states of the Codenvy application between sessions.
+ * Responsible for persisting and restoring the Codenvy application's state between sessions.
+ * Uses user preferences as storage for storing serialized state.
  *
  * @author Artem Zatsarynnyy
  */
