@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author Artem Zatsarynnyy
  */
-@DTO
+//@DTO
 public interface AppState {
 
     /** Get last opened project path or {@code null} if none. */

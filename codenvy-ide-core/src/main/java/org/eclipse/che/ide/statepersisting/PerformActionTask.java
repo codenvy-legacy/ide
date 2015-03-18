@@ -43,6 +43,7 @@ public class PerformActionTask implements Task {
             });
         } else {
             action.actionPerformed(actionEvent);
+
             callback.onPerformed();
         }
     }

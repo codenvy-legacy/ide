@@ -11,20 +11,25 @@
 package org.eclipse.che.ide.statepersisting;
 
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.eclipse.che.api.user.shared.dto.ProfileDescriptor;
 import org.eclipse.che.ide.CoreLocalizationConstant;
 import org.eclipse.che.ide.api.action.Action;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.Presentation;
 import org.eclipse.che.ide.api.app.AppContext;
+import org.eclipse.che.ide.api.app.CurrentProject;
 import org.eclipse.che.ide.api.controlflow.Task;
 import org.eclipse.che.ide.api.controlflow.TaskFlow;
 import org.eclipse.che.ide.api.editor.EditorAgent;
 import org.eclipse.che.ide.api.editor.EditorPartPresenter;
+import org.eclipse.che.ide.api.event.CloseCurrentProjectEvent;
+import org.eclipse.che.ide.api.event.CloseCurrentProjectHandler;
 import org.eclipse.che.ide.api.event.ProjectActionEvent;
 import org.eclipse.che.ide.api.event.ProjectActionHandler;
 import org.eclipse.che.ide.api.preferences.PreferencesManager;
@@ -37,9 +42,11 @@ import org.eclipse.che.ide.restore.AppStateComponent;
 import org.eclipse.che.ide.toolbar.PresentationFactory;
 import org.eclipse.che.ide.util.loging.Log;
 
+import javax.annotation.Nonnull;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +56,7 @@ import java.util.Map;
  * @author Artem Zatsarynnyy
  */
 @Singleton
-public class AppStateManager implements Component, ProjectActionHandler {
+public class AppStateManager implements Component, ProjectActionHandler, CloseCurrentProjectHandler {
     /** The name of the property for the mappings in user preferences. */
     private static final String PREFERENCE_PROPERTY_NAME = "CodenvyAppState";
 
@@ -66,6 +73,8 @@ public class AppStateManager implements Component, ProjectActionHandler {
     private final PresentationFactory   presentationFactory;
     private final Provider<EditorAgent> editorAgentProvider;
     private final AppContext            appContext;
+
+    private AppState myAppState;
 
     @Inject
     public AppStateManager(AsyncRequestLoader loader,
@@ -94,6 +103,8 @@ public class AppStateManager implements Component, ProjectActionHandler {
     public void start(Callback<Component, ComponentException> callback) {
         eventBus.addHandler(ProjectActionEvent.TYPE, this);
 //        callback.onSuccess(this);
+
+        readStateFromPreferences();
     }
 
     @Override
@@ -128,18 +139,19 @@ public class AppStateManager implements Component, ProjectActionHandler {
         });
 
 
+
         final String projectPath = event.getProject().getPath();
 
         // restore the state of the project's workspace
 
-//        final ProjectState stateToRestore = appState.getProjects().get(projectPath);
-//        if (stateToRestore != null) {
-//            restoreState(stateToRestore);
-//        }
+        final ProjectState stateToRestore = myAppState.getProjects().get(projectPath);
+        if (stateToRestore != null) {
+            restoreState(stateToRestore);
+        }
     }
 
     /** Restore Codenvy application's state by calling all registered {@link AppStateComponent}s. */
-//    private void restoreState(@Nonnull final ProjectState projectState) {
+    private void restoreState(@Nonnull final ProjectState projectState) {
 //        final Map<String, Map<String, String>> actions = projectState.getActions();
 //
 //        final Iterator<AppStateComponent> iterator = appStateComponents.iterator();
@@ -160,25 +172,28 @@ public class AppStateManager implements Component, ProjectActionHandler {
 //
 //        loader.show(waitRestoringMessage);
 //        performRestore(iterator.next(), projectState, callback);
-//    }
+    }
+
     @Override
     public void onProjectClosed(ProjectActionEvent event) {
-        final String projectPath = event.getProject().getPath();
-
-        // save the state of the project's workspace
+        persist();
     }
 
     public void persist() {
-        final AppState appState = dtoFactory.createDto(AppState.class);
-        saveOpenedFiles(appState);
-        writeStateToPreferences(appState);
+        saveOpenedFiles();
+        writeStateToPreferences();
     }
 
-    private void saveOpenedFiles(AppState appState) {
-        final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
+    private void saveOpenedFiles() {
+        final CurrentProject currentProject = appContext.getCurrentProject();
+        if (currentProject == null) {
+            return;
+        }
+
+        final String projectPath = currentProject.getRootProject().getPath();
 
         ProjectState projectState = dtoFactory.createDto(ProjectState.class);
-        appState.getProjects().put(projectPath, projectState);
+        myAppState.getProjects().put(projectPath, projectState);
 
         Map<String, Map<String, String>> actions = projectState.getActions();
 
@@ -194,38 +209,44 @@ public class AppStateManager implements Component, ProjectActionHandler {
         }
     }
 
-    private void writeStateToPreferences(AppState appState) {
-        final String json = dtoFactory.toJson(appState);
+    private void writeStateToPreferences() {
+        final String json = dtoFactory.toJson(myAppState);
         preferencesManager.setValue(PREFERENCE_PROPERTY_NAME, json);
+        preferencesManager.flushPreferences(new AsyncCallback<ProfileDescriptor>() {
+            @Override
+            public void onSuccess(ProfileDescriptor result) {
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+        });
     }
 
-    public void restore() {
-        final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
+//    public void restore() {
+//        final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
+//
+//        final AppState appState = readStateFromPreferences();
+//        ProjectState projectState = appState.getProjects().get(projectPath);
+//
+//        Map<String, Map<String, String>> actions = projectState.getActions();
+//        for (Map.Entry<String, Map<String, String>> entry : actions.entrySet()) {
+//            final String actionId = entry.getKey();
+//            final Map<String, String> parameters = entry.getValue();
+//
+//            // TODO: need to perform actions in async way if need
+//            performAction(actionId, parameters);
+//        }
+//    }
 
-        final AppState appState = readStateFromPreferences();
-        ProjectState projectState = appState.getProjects().get(projectPath);
-
-        Map<String, Map<String, String>> actions = projectState.getActions();
-        for (Map.Entry<String, Map<String, String>> entry : actions.entrySet()) {
-            final String actionId = entry.getKey();
-            final Map<String, String> parameters = entry.getValue();
-
-            // TODO: need to perform actions in async way if need
-            performAction(actionId, parameters);
-        }
-    }
-
-    private AppState readStateFromPreferences() {
+    private void readStateFromPreferences() {
         final String json = preferencesManager.getValue(PREFERENCE_PROPERTY_NAME);
-        final AppState appState;
         if (json != null) {
-            appState = dtoFactory.createDtoFromJson(json, AppState.class);
+            myAppState = dtoFactory.createDtoFromJson(json, AppState.class);
         } else {
             // TODO: remove it. For testing only.
-            appState = createTestAppState();
+            myAppState = createTestAppState();
         }
-//        return null;
-        return appState;
     }
 
     private void performAction(String actionId, Map<String, String> parameters) {
@@ -259,5 +280,10 @@ public class AppStateManager implements Component, ProjectActionHandler {
         projectStates.put("/spring", projectState);
 
         return dtoFactory.createDto(AppState.class).withProjects(projectStates);
+    }
+
+    @Override
+    public void onCloseCurrentProject(CloseCurrentProjectEvent event) {
+
     }
 }

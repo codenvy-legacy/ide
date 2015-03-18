@@ -12,7 +12,6 @@ package org.eclipse.che.ide.statepersisting;
 
 import org.eclipse.che.dto.shared.DTO;
 
-import java.util.List;
 import java.util.Map;
 
 /**

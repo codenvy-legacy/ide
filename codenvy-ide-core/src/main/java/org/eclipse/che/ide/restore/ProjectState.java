@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Artem Zatsarynnyy
  */
-@DTO
+//@DTO
 public interface ProjectState {
 
     /** Get paths of all opened files. */
