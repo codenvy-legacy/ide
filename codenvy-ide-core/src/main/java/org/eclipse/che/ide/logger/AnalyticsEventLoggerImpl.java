@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.che.ide.logger;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.eclipse.che.api.analytics.shared.dto.EventParameters;
 import org.eclipse.che.api.user.gwt.client.UserServiceClient;
 import org.eclipse.che.api.user.shared.dto.UserDescriptor;
@@ -25,8 +28,6 @@ import org.eclipse.che.ide.websocket.MessageBuilder;
 import org.eclipse.che.ide.websocket.MessageBus;
 import org.eclipse.che.ide.websocket.events.ConnectionOpenedHandler;
 import org.eclipse.che.ide.websocket.rest.RequestCallback;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -34,10 +35,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
+import static com.google.gwt.http.client.RequestBuilder.POST;
 import static org.eclipse.che.ide.MimeType.APPLICATION_JSON;
 import static org.eclipse.che.ide.rest.HTTPHeader.CONTENTTYPE;
-import static com.google.gwt.http.client.RequestBuilder.POST;
-import static java.lang.Math.max;
 
 /**
  * API to track Analytics events.
@@ -172,9 +172,7 @@ public class AnalyticsEventLoggerImpl implements AnalyticsEventLoggerExt {
         }
 
         if (actionClass != null) {
-            String actionClassName = actionClass.getName();
-            actionClassName = actionClassName.substring(max(0, actionClassName.length() - MAX_PARAM_VALUE_LENGTH));
-            additionalParams.put(SOURCE_PARAM, actionClassName);
+            additionalParams.put(SOURCE_PARAM, actionClass.getName());
         }
 
         putReservedParameters(additionalParams);
