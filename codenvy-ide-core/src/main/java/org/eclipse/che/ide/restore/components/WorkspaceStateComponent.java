@@ -18,6 +18,7 @@ import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
 import org.eclipse.che.ide.restore.AppStateComponent;
+import org.eclipse.che.ide.restore.ProjectState;
 import org.eclipse.che.ide.util.loging.Log;
 
 /**
@@ -37,22 +38,18 @@ public class WorkspaceStateComponent implements AppStateComponent {
         this.outlinePart = outlinePart;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void save(AppState appState, final Callback callback) {
-        Log.info(this.getClass(), "has started saving");
-
+    public void save(ProjectState appState, final Callback callback) {
         callback.onPerformed();
-
-        Log.info(this.getClass(), "has finished saving");
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void restore(AppState appState, final Callback callback) {
-        Log.info(this.getClass(), "has started restoring");
-
-        if (appState.isOutlineShown()) {
+    public void restore(ProjectState appState, final Callback callback) {
+//        if (appState.isOutlineShown()) {
             workspaceAgent.setActivePart(outlinePart);
-        }
+//        }
 
         callback.onPerformed();
     }

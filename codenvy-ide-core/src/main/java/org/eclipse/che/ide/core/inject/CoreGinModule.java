@@ -140,9 +140,6 @@ import org.eclipse.che.ide.projecttype.wizard.PreSelectedProjectTypeManagerImpl;
 import org.eclipse.che.ide.projecttype.wizard.ProjectWizardFactory;
 import org.eclipse.che.ide.projecttype.wizard.ProjectWizardRegistryImpl;
 import org.eclipse.che.ide.rest.AsyncRequestLoader;
-import org.eclipse.che.ide.restore.AppStateComponent;
-import org.eclipse.che.ide.restore.components.LastProjectStateComponent;
-import org.eclipse.che.ide.restore.components.OpenedFilesStateComponent;
 import org.eclipse.che.ide.selection.SelectionAgentImpl;
 import org.eclipse.che.ide.texteditor.openedfiles.ListOpenedFilesView;
 import org.eclipse.che.ide.texteditor.openedfiles.ListOpenedFilesViewImpl;
@@ -228,11 +225,6 @@ public class CoreGinModule extends AbstractGinModule {
         configureCoreUI();
         configureEditorAPI();
         configureProjectTree();
-
-        // Note that the adding order may be important for restoring app restoring
-        GinMultibinder<AppStateComponent> appStateComponentsBinder = GinMultibinder.newSetBinder(binder(), AppStateComponent.class);
-        appStateComponentsBinder.addBinding().to(LastProjectStateComponent.class);
-        appStateComponentsBinder.addBinding().to(OpenedFilesStateComponent.class);
     }
 
     private void configureProjectWizard() {

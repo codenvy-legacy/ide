@@ -23,20 +23,20 @@ public interface AppStateComponent {
      * (for example, on logout or when closing the browser's tab).
      *
      * @param appState
-     *         {@link AppState} instance describes the app state
+     *         {@link ProjectState} instance describes the app state
      * @param callback
      *         callback that should be called when saving has finished
      */
-    void save(AppState appState, Callback callback);
+    void save(ProjectState appState, Callback callback);
 
     /**
      * Called every time when the application's state should be restored
      * (after loading the Codenvy app).
      *
      * @param appState
-     *         {@link AppState} instance describes the app state
+     *         {@link ProjectState} instance describes the app state
      * @param callback
      *         callback that should be called when saving has finished
      */
-    void restore(AppState appState, Callback callback);
+    void restore(ProjectState appState, Callback callback);
 }

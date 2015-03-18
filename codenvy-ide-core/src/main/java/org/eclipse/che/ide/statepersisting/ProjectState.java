@@ -8,22 +8,25 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.restore.actions;
+package org.eclipse.che.ide.statepersisting;
 
-import org.eclipse.che.ide.api.action.Action;
-import org.eclipse.che.ide.api.action.ActionEvent;
-import org.eclipse.che.ide.restore.Callback;
+import org.eclipse.che.dto.shared.DTO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * //
+ * DTO describes the state of the project.
  *
  * @author Artem Zatsarynnyy
  */
-public abstract class AbstractRestoreAction extends Action {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("");
-    }
+@DTO
+public interface ProjectState {
 
-    protected abstract void actionPerformed(ActionEvent e, Callback callback);
+    /** Get project states. */
+    Map<String, Map<String, String>> getActions();
+
+    void setActions(Map<String, Map<String, String>> actions);
+
+    ProjectState withActions(Map<String, Map<String, String>> actions);
 }

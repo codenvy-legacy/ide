@@ -24,6 +24,7 @@ import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.restore.AppState;
 import org.eclipse.che.ide.restore.Callback;
 import org.eclipse.che.ide.restore.AppStateComponent;
+import org.eclipse.che.ide.restore.ProjectState;
 
 /**
  * {@link AppStateComponent} responsible for saving/restoring last opened project.
@@ -44,14 +45,16 @@ public class LastProjectStateComponent implements AppStateComponent {
         this.projectServiceClient = projectServiceClient;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void save(AppState appState, final Callback callback) {
+    public void save(ProjectState appState, Callback callback) {
         callback.onPerformed();
     }
 
+    /** {@inheritDoc} */
     @Override
-    public void restore(AppState appState, final Callback callback) {
-        final String lastProjectPath = appState.getLastProjectPath();
+    public void restore(ProjectState appState, final Callback callback) {
+        final String lastProjectPath = "" /*appState.getLastProjectPath()*/;
 
         projectServiceClient.getProject(lastProjectPath, new AsyncRequestCallback<ProjectDescriptor>() {
             @Override

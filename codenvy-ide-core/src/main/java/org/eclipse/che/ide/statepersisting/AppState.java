@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.restore;
+package org.eclipse.che.ide.statepersisting;
 
 import org.eclipse.che.dto.shared.DTO;
 

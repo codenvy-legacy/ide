@@ -10,27 +10,32 @@
  *******************************************************************************/
 package org.eclipse.che.ide.core;
 
-import org.eclipse.che.ide.collections.Array;
-import org.eclipse.che.ide.collections.Collections;
-import org.eclipse.che.ide.util.loging.Log;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
+
+import org.eclipse.che.ide.collections.Array;
+import org.eclipse.che.ide.collections.Collections;
+import org.eclipse.che.ide.statepersisting.AppStateManager;
+import org.eclipse.che.ide.util.loging.Log;
 
 /**
  * @author Nikolay Zamosenchuk
  * @author Artem Zatsarynnyy
  */
 public class ComponentRegistry {
-    private Array<Component>             pendingComponents;
-    private StandardComponentInitializer componentInitializer;
+    private final Array<Component>             pendingComponents;
+    private final StandardComponentInitializer componentInitializer;
 
     /** Instantiates Component Registry. All components should be listed in this constructor. */
     @Inject
-    public ComponentRegistry(ProjectStateHandler projectStateHandler, StandardComponentInitializer componentInitializer) {
+    public ComponentRegistry(StandardComponentInitializer componentInitializer,
+                             ProjectStateHandler projectStateHandler,
+                             AppStateManager appStateManager) {
         this.componentInitializer = componentInitializer;
         pendingComponents = Collections.createArray();
         pendingComponents.add(projectStateHandler);
+//        pendingComponents.add(appStateManager);
     }
 
     /**

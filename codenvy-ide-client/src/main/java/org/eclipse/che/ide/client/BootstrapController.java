@@ -14,6 +14,22 @@ import elemental.client.Browser;
 import elemental.events.Event;
 import elemental.events.EventListener;
 
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+
 import org.eclipse.che.api.analytics.logger.EventLogger;
 import org.eclipse.che.api.factory.dto.Factory;
 import org.eclipse.che.api.factory.dto.Ide;
@@ -53,27 +69,12 @@ import org.eclipse.che.ide.preferences.PreferencesManagerImpl;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import org.eclipse.che.ide.rest.StringMapUnmarshaller;
-import org.eclipse.che.ide.restore.AppStateManager;
+import org.eclipse.che.ide.statepersisting.AppStateManager;
 import org.eclipse.che.ide.toolbar.PresentationFactory;
 import org.eclipse.che.ide.util.Config;
 import org.eclipse.che.ide.util.UUID;
 import org.eclipse.che.ide.util.loging.Log;
 import org.eclipse.che.ide.workspace.WorkspacePresenter;
-import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -106,10 +107,10 @@ public class BootstrapController {
     private final EventBus                     eventBus;
     private final ActionManager                actionManager;
     private final AppCloseHandler              appCloseHandler;
-    private final AppStateManager              appStateManager;
-    private final PresentationFactory          presentationFactory;
-    private final AppContext                   appContext;
-    private       CurrentUser                  currentUser;
+    private final AppStateManager appStateManager;
+    private final PresentationFactory presentationFactory;
+    private final AppContext          appContext;
+    private       CurrentUser         currentUser;
 
     /** Create controller. */
     @Inject
@@ -332,6 +333,7 @@ public class BootstrapController {
                             @Override
                             public void execute() {
                                 displayIDE();
+                                appStateManager.start(null);
                             }
                         });
                     }
@@ -365,8 +367,6 @@ public class BootstrapController {
         workspacePresenter.go(mainPanel);
 
         Document.get().setTitle(coreLocalizationConstant.codenvyTabTitle());
-
-        appStateManager.restoreState();
 
         processStartupParameters();
 
