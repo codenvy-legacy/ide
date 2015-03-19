@@ -54,6 +54,8 @@ public interface ToolbarResources extends ClientBundle {
         String tooltip();
 
         String caret();
+
+        String rightPanel();
     }
 
     @Source({"toolbar.css", "org/eclipse/che/ide/api/ui/style.css"})

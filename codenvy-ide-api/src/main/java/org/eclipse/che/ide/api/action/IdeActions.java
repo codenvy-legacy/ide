@@ -23,6 +23,7 @@ public interface IdeActions {
     String GROUP_HELP           = "helpGroup";
 
     String GROUP_MAIN_TOOLBAR  = "mainToolBar";
+    String GROUP_RIGHT_TOOLBAR = "rightToolBar";
     String GROUP_BUILD_TOOLBAR = "buildGroupToolbar";
     String GROUP_RUN_TOOLBAR   = "runGroupToolbar";
 
@@ -37,6 +38,6 @@ public interface IdeActions {
     String GROUP_RIGHT_MAIN_MENU = "rightMainMenu";
 
     String GROUP_CENTER_STATUS_PANEL = "centerStatusPanelGroup";
-    String GROUP_LEFT_STATUS_PANEL    = "leftStatusPanelGroup";
+    String GROUP_LEFT_STATUS_PANEL   = "leftStatusPanelGroup";
     String GROUP_RIGHT_STATUS_PANEL  = "rightStatusPanelGroup";
 }

@@ -28,7 +28,9 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate> {
 
     void setPlace(@Nonnull String place);
 
-    void setActionGroup(@Nonnull ActionGroup actionGroup);
+    void setLeftActionGroup(@Nonnull ActionGroup actionGroup);
+
+    void setRightActionGroup(@Nonnull ActionGroup actionGroup);
 
     void setAddSeparatorFirst(boolean addSeparatorFirst);
 }

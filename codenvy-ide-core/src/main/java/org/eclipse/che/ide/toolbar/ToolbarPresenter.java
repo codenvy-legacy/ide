@@ -34,12 +34,16 @@ public class ToolbarPresenter implements Presenter, ToolbarView.ActionDelegate {
     public ToolbarPresenter(ToolbarView view) {
         this.view = view;
         this.view.setDelegate(this);
+        this.view.setAddSeparatorFirst(true);
+        this.view.setPlace(ActionPlaces.MAIN_TOOLBAR);
     }
 
     public void bindMainGroup(ActionGroup group) {
-        view.setAddSeparatorFirst(true);
-        view.setPlace(ActionPlaces.MAIN_TOOLBAR);
-        view.setActionGroup(group);
+        view.setLeftActionGroup(group);
+    }
+
+    public void bindRightGroup(ActionGroup group) {
+        view.setRightActionGroup(group);
     }
 
     /** {@inheritDoc} */
