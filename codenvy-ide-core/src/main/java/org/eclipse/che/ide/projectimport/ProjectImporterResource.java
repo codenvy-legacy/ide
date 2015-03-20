@@ -8,20 +8,26 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.projectimport.zip;
+package org.eclipse.che.ide.projectimport;
 
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
+import org.eclipse.che.ide.projectimport.local.LocalZipImporterPageViewImpl;
+import org.eclipse.che.ide.projectimport.zip.ZipImporterPageViewImpl;
+
 /**
  * @author Roman Nikitenko
  */
-public interface ZipProjectImporterResource extends ClientBundle {
+public interface ProjectImporterResource extends ClientBundle {
 
     public interface Css extends CssResource {
         String inputError();
     }
 
-    @Source({"ZipImporterPage.css", "org/eclipse/che/ide/ui/Styles.css"})
+    @Source({"org/eclipse/che/ide/projectimport/ImporterPage.css", "org/eclipse/che/ide/ui/Styles.css"})
     ZipImporterPageViewImpl.Style zipImporterPageStyle();
+
+    @Source({"org/eclipse/che/ide/projectimport/ImporterPage.css", "org/eclipse/che/ide/ui/Styles.css"})
+    LocalZipImporterPageViewImpl.Style localZipImporterPageStyle();
 }

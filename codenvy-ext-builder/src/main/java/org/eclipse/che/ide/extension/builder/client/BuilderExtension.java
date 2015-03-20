@@ -69,13 +69,17 @@ public class BuilderExtension {
         buildMenuActionGroup.add(clearConsoleAction, Constraints.LAST);
         buildMenuActionGroup.add(browseTargetFolderAction, Constraints.LAST);
 
-        // add actions on main toolbar
-        DefaultActionGroup mainToolbarGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_TOOLBAR);
-        DefaultActionGroup buildToolbarGroup = new DefaultActionGroup(IdeActions.GROUP_BUILD_TOOLBAR, false, actionManager);
-        actionManager.registerAction(IdeActions.GROUP_BUILD_TOOLBAR, buildToolbarGroup);
-        buildToolbarGroup.add(buildAction);
+        DefaultActionGroup buildToolbarGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_BUILD_TOOLBAR);
+
+        if (buildToolbarGroup == null) {
+            buildToolbarGroup = new DefaultActionGroup(IdeActions.GROUP_BUILD_TOOLBAR, false, actionManager);
+            DefaultActionGroup rightToolbar = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RIGHT_TOOLBAR);
+            rightToolbar.add(buildToolbarGroup, Constraints.FIRST);//new Constraints(Anchor.BEFORE, IdeActions.GROUP_RUN_TOOLBAR));
+                             actionManager.registerAction(IdeActions.GROUP_BUILD_TOOLBAR, buildToolbarGroup);
+        }
+        buildToolbarGroup.add(buildAction, Constraints.FIRST);
         buildToolbarGroup.addSeparator();
-        mainToolbarGroup.add(buildToolbarGroup, new Constraints(Anchor.BEFORE, IdeActions.GROUP_RUN_TOOLBAR));
+
 
         // add actions in context menu
         DefaultActionGroup contextMenuGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_MAIN_CONTEXT_MENU);

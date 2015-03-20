@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.che.ide.actions;
 
+import com.google.inject.Inject;
+
 import org.eclipse.che.ide.api.action.Action;
 import org.eclipse.che.ide.api.action.ActionGroup;
 import org.eclipse.che.ide.api.action.ActionManager;
@@ -18,7 +20,6 @@ import org.eclipse.che.ide.api.action.IdeActions;
 import org.eclipse.che.ide.api.constraints.Anchor;
 import org.eclipse.che.ide.api.constraints.Constraints;
 import org.eclipse.che.ide.util.loging.Log;
-import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,6 +62,11 @@ public class ActionManagerImpl implements ActionManager {
         Constraints afterCode = new Constraints(Anchor.AFTER, IdeActions.GROUP_CODE);
         mainMenu.add(buildGroup, afterCode);
 
+        DefaultActionGroup runGroup = new DefaultActionGroup("Run", true, this);
+        registerAction(IdeActions.GROUP_RUN, runGroup);
+        Constraints afterBuild = new Constraints(Anchor.AFTER, IdeActions.GROUP_BUILD);
+        mainMenu.add(runGroup, afterBuild);
+
         DefaultActionGroup windowGroup = new DefaultActionGroup("Window", true, this);
         registerAction(IdeActions.GROUP_WINDOW, windowGroup);
         mainMenu.add(windowGroup);
@@ -91,7 +97,9 @@ public class ActionManagerImpl implements ActionManager {
         // register default action groups for main toolbar
         DefaultActionGroup mainToolbarGroup = new DefaultActionGroup(this);
         registerAction(IdeActions.GROUP_MAIN_TOOLBAR, mainToolbarGroup);
-
+        // register default action groups for right toolbar
+        DefaultActionGroup rightToolbarGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_RIGHT_TOOLBAR, rightToolbarGroup);
 
         // register default action groups for down toolbar
         DefaultActionGroup leftStatusPanelGroup = new DefaultActionGroup(this);

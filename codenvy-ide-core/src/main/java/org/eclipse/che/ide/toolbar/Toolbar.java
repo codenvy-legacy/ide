@@ -30,19 +30,34 @@ public class Toolbar extends Composite {
         RESOURCES.toolbar().ensureInjected();
     }
 
-    private FlowPanel panel;
+    private FlowPanel rootPanel;
+    private FlowPanel leftToolbar;
+    private FlowPanel rightToolbar;
 
     public Toolbar() {
-        panel = new FlowPanel();
-        initWidget(panel);
+        rootPanel = new FlowPanel();
+        rightToolbar = new FlowPanel();
+        leftToolbar = new FlowPanel();
+        initWidget(rootPanel);
+        rootPanel.add(leftToolbar);
+        rootPanel.add(rightToolbar);
+        rightToolbar.addStyleName(RESOURCES.toolbar().rightPanel());
         setStyleName(RESOURCES.toolbar().toolbarPanel());
     }
 
-    public void add(@Nonnull Widget widget) {
-        panel.add(widget);
+    public void addToMainPanel(@Nonnull Widget widget) {
+        leftToolbar.add(widget);
     }
 
-    public void clear() {
-        panel.clear();
+
+    public void addToRightPanel(@Nonnull Widget widget) {
+        rightToolbar.add(widget);
+    }
+
+    public void clearMainPanel() {
+        leftToolbar.clear();
+    }
+    public void clearRightPanel() {
+        rightToolbar.clear();
     }
 }

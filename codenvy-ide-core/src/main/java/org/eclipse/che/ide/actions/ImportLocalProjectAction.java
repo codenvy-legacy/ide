@@ -10,37 +10,36 @@
  *******************************************************************************/
 package org.eclipse.che.ide.actions;
 
-import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import org.eclipse.che.ide.projectimport.wizard.presenter.ImportProjectWizardPresenter;
+import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
 import org.eclipse.che.ide.CoreLocalizationConstant;
 import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.api.action.Action;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.app.AppContext;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.eclipse.che.ide.projectimport.local.LocalZipImporterPagePresenter;
 
 /**
- * Import project from location action
+ * Import project from local zip action
  *
  * @author Roman Nikitenko
  */
 @Singleton
-public class ImportProjectFromLocationAction extends Action {
+public class ImportLocalProjectAction extends Action {
 
-    private final ImportProjectWizardPresenter presenter;
-    private final AnalyticsEventLogger         eventLogger;
-    private final AppContext                   appContext;
+    private final LocalZipImporterPagePresenter presenter;
+    private final AnalyticsEventLogger          eventLogger;
+    private final AppContext                    appContext;
 
     @Inject
-    public ImportProjectFromLocationAction(ImportProjectWizardPresenter presenter,
-                                           CoreLocalizationConstant locale,
-                                           AnalyticsEventLogger eventLogger,
-                                           Resources resources,
-                                           AppContext appContext) {
-        super(locale.importProjectFromLocationName(), locale.importProjectFromLocationDescription(), null, resources.importProject());
+    public ImportLocalProjectAction(LocalZipImporterPagePresenter presenter,
+                                    CoreLocalizationConstant locale,
+                                    AnalyticsEventLogger eventLogger,
+                                    Resources resources,
+                                    AppContext appContext) {
+        super(locale.importLocalProjectName(), locale.importLocalProjectDescription(), null, resources.importProject());
         this.presenter = presenter;
         this.eventLogger = eventLogger;
         this.appContext = appContext;

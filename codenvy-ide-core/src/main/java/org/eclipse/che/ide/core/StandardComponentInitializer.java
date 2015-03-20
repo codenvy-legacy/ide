@@ -16,6 +16,7 @@ import org.eclipse.che.ide.actions.CreateModuleAction;
 import org.eclipse.che.ide.actions.DeleteItemAction;
 import org.eclipse.che.ide.actions.FindReplaceAction;
 import org.eclipse.che.ide.actions.FormatterAction;
+import org.eclipse.che.ide.actions.ImportLocalProjectAction;
 import org.eclipse.che.ide.actions.ImportProjectFromLocationAction;
 import org.eclipse.che.ide.actions.NavigateToFileAction;
 import org.eclipse.che.ide.actions.NewProjectAction;
@@ -57,6 +58,7 @@ import org.eclipse.che.ide.api.keybinding.KeyBindingAgent;
 import org.eclipse.che.ide.api.keybinding.KeyBuilder;
 
 import org.eclipse.che.ide.newresource.NewFolderAction;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -162,6 +164,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private ImportProjectFromLocationAction importProjectFromLocationAction;
+
+    @Inject
+    private ImportLocalProjectAction importLocalProjectAction;
 
     @Inject
     private NewProjectAction newProjectAction;
@@ -271,14 +276,16 @@ public class StandardComponentInitializer {
         fileTypeRegistry.registerFileType(jpgFile);
         editorRegistry.registerDefaultEditor(jpgFile, imageViewerProvider);
 
-        // Compose Import Project group
+        // Compose Import Project groupRun
         DefaultActionGroup importProjectGroup = new DefaultActionGroup("Import Project", true, actionManager);
         importProjectGroup.getTemplatePresentation().setSVGIcon(resources.importProject());
         actionManager.registerAction(IdeActions.GROUP_IMPORT_PROJECT, importProjectGroup);
         actionManager.registerAction("importProjectFromLocation", importProjectFromLocationAction);
+        actionManager.registerAction("importLocalProjectAction", importLocalProjectAction);
         importProjectGroup.addAction(importProjectFromLocationAction);
+        importProjectGroup.addAction(importLocalProjectAction);
 
-        // Compose New group
+        // Compose New groupRun
         DefaultActionGroup newGroup = new DefaultActionGroup("New", true, actionManager);
         newGroup.getTemplatePresentation().setDescription("Create...");
         newGroup.getTemplatePresentation().setSVGIcon(resources.newResource());
@@ -302,7 +309,7 @@ public class StandardComponentInitializer {
         actionManager.registerAction("createModuleAction", createModuleAction);
         actionManager.registerAction("showHideHiddenFiles", showHiddenFilesAction);
 
-        // Compose Save group
+        // Compose Save groupRun
         DefaultActionGroup saveGroup = new DefaultActionGroup(actionManager);
         actionManager.registerAction("saveGroup", saveGroup);
         actionManager.registerAction("save", saveAction);
@@ -407,6 +414,9 @@ public class StandardComponentInitializer {
         mainToolbarGroup.addSeparator();
         mainToolbarGroup.add(changeResourceGroup);
         toolbarPresenter.bindMainGroup(mainToolbarGroup);
+
+        DefaultActionGroup rightToolbarGroup = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RIGHT_TOOLBAR);
+        toolbarPresenter.bindRightGroup(rightToolbarGroup);
 
 
         // Define hot-keys
