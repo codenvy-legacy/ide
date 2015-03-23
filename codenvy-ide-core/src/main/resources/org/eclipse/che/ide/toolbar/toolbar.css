@@ -59,6 +59,12 @@
     margin-top: 1px;
 }
 
+
+.rightPanel {
+    float: right !important;
+    white-space: nowrap;
+}
+
 .toolbarPanel .iconButtonPanel,
 .toolbarPanel .iconButtonPanelOver,
 .toolbarPanel .iconButtonPanelDown,

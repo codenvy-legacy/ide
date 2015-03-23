@@ -97,7 +97,9 @@ public class ActionManagerImpl implements ActionManager {
         // register default action groups for main toolbar
         DefaultActionGroup mainToolbarGroup = new DefaultActionGroup(this);
         registerAction(IdeActions.GROUP_MAIN_TOOLBAR, mainToolbarGroup);
-
+        // register default action groups for right toolbar
+        DefaultActionGroup rightToolbarGroup = new DefaultActionGroup(this);
+        registerAction(IdeActions.GROUP_RIGHT_TOOLBAR, rightToolbarGroup);
 
         // register default action groups for down toolbar
         DefaultActionGroup leftStatusPanelGroup = new DefaultActionGroup(this);
