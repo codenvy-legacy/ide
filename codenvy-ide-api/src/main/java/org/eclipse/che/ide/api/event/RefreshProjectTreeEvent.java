@@ -22,11 +22,15 @@ public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler>
 
     /** Type class used to register this event. */
     public static Type<RefreshProjectTreeHandler> TYPE = new Type<>();
-    private final TreeNode<?> node;
+
+    /** Node refresh */
+    private TreeNode<?> node;
+
+    /** Refresh each expanded node of subtree. */
+    private boolean refreshSubtree;
 
     /** Create new {@link RefreshProjectTreeEvent} for refreshing project tree's root. */
     public RefreshProjectTreeEvent() {
-        this.node = null;
     }
 
     /**
@@ -39,6 +43,20 @@ public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler>
         this.node = node;
     }
 
+    /**
+     * Create new {@link RefreshProjectTreeEvent} for refreshing the specified {@code node}.
+     *
+     * @param node
+     *         node to refresh
+     * @param refreshSubtree
+     *
+     */
+    public RefreshProjectTreeEvent(TreeNode<?> node, boolean refreshSubtree) {
+        this.node = node;
+        this.refreshSubtree = refreshSubtree;
+    }
+
+
     @Override
     public Type<RefreshProjectTreeHandler> getAssociatedType() {
         return TYPE;
@@ -47,6 +65,11 @@ public class RefreshProjectTreeEvent extends GwtEvent<RefreshProjectTreeHandler>
     /** @return the node to refresh */
     public TreeNode<?> getNode() {
         return node;
+    }
+
+    /** @return whether subtree needs to be refreshed */
+    public boolean refreshSubtree() {
+        return refreshSubtree;
     }
 
     @Override

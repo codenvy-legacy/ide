@@ -82,6 +82,8 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
     @Nonnull
     TreeNode<?> getSelectedNode();
 
+    Array<TreeNode<?>> getOpenedTreeNodes();
+
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate extends BaseActionDelegate {
         /**
