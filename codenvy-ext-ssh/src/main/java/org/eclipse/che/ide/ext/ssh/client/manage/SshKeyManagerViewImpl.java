@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.che.ide.ext.ssh.client.manage;
 
-import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.ext.ssh.client.SshLocalizationConstant;
 import org.eclipse.che.ide.ext.ssh.client.SshResources;
 import org.eclipse.che.ide.ext.ssh.dto.KeyItem;
+import org.eclipse.che.ide.ui.cellview.CellTableResources;
+
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -45,7 +46,7 @@ import java.util.List;
 /**
  * The implementation of {@link SshKeyManagerView}.
  *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author Andrey Plotnikov
  */
 @Singleton
 public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerView {
@@ -75,7 +76,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
      * @param locale
      */
     @Inject
-    protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale, Resources res) {
+    protected SshKeyManagerViewImpl(SshResources resources, SshLocalizationConstant locale, CellTableResources res) {
         this.res = resources;
         this.locale = locale;
 
@@ -146,7 +147,7 @@ public class SshKeyManagerViewImpl extends Composite implements SshKeyManagerVie
 
             @Override
             public void render(Context context, KeyItem object, SafeHtmlBuilder sb) {
-                if (object != null && object.getPublicKeyUrl() != null) {
+                if (object != null) {
                     sb.appendHtmlConstant(
                             "<div id=\"" + UIObject.DEBUG_ID_PREFIX + "window-preferences-sshKeys-cellTable-delete-" + context.getIndex() +
                             "\">");

@@ -242,17 +242,20 @@ public interface CoreLocalizationConstant extends Messages {
     @DefaultMessage("Looks like your project needs to be configured")
     String projectExplorerProblemProjetTitle();
 
-    @Key("importProject.messageSuccess")
+    @Key("importProject.message.success")
     String importProjectMessageSuccess();
 
-    @Key("importProject.messageFailure")
+    @Key("importProject.message.failure")
     String importProjectMessageFailure();
 
-    @Key("importProject.messageStartWithWhiteSpace")
+    @Key("importProject.message.startWithWhiteSpace")
     String importProjectMessageStartWithWhiteSpace();
 
-    @Key("importProject.messageUrlInvalid")
+    @Key("importProject.message.urlInvalid")
     String importProjectMessageUrlInvalid();
+
+    @Key("importProject.message.unableGetSshKey")
+    String importProjectMessageUnableGetSshKey();
 
     @Key("importProjectFromLocation.name")
     String importProjectFromLocationName();
@@ -275,20 +278,11 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("importProject.importing")
     String importingProject();
 
-    @Key("importProject.importerFieldTitle")
-    String importProjectImporterFieldTitle();
-
     @Key("importProject.uriFieldTitle")
     String importProjectUriFieldTitle();
 
-    @Key("importProject.projectNameFieldTitle")
-    String importProjectProjectNameFieldTitle();
-
     @Key("importProject.viewTitle")
     String importProjectViewTitle();
-
-    @Key("importProject.warningTitle")
-    String importProjectWarningTitle();
 
     @Key("importProject.importer.info")
     String importProjectImporterInfo();

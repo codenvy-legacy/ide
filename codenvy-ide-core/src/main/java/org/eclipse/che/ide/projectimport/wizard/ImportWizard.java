@@ -15,10 +15,6 @@ import org.eclipse.che.api.project.gwt.client.ProjectServiceClient;
 import org.eclipse.che.api.project.shared.dto.ImportProject;
 import org.eclipse.che.api.project.shared.dto.ImportResponse;
 import org.eclipse.che.api.project.shared.dto.ProjectDescriptor;
-import org.eclipse.che.api.project.shared.dto.RunnerConfiguration;
-import org.eclipse.che.api.project.shared.dto.RunnersDescriptor;
-import org.eclipse.che.api.runner.dto.ResourcesDescriptor;
-import org.eclipse.che.api.runner.gwt.client.RunnerServiceClient;
 import org.eclipse.che.api.vfs.gwt.client.VfsServiceClient;
 import org.eclipse.che.api.vfs.shared.dto.Item;
 
@@ -33,8 +29,6 @@ import org.eclipse.che.ide.dto.DtoFactory;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
 import org.eclipse.che.ide.rest.Unmarshallable;
-import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
-import org.eclipse.che.ide.ui.dialogs.DialogFactory;
 import org.eclipse.che.ide.util.loging.Log;
 
 import com.google.inject.Inject;
@@ -52,11 +46,9 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
 
     private final ProjectServiceClient                projectServiceClient;
     private final VfsServiceClient                    vfsServiceClient;
-    private final RunnerServiceClient                 runnerServiceClient;
     private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
     private final DtoFactory                          dtoFactory;
     private final EventBus                            eventBus;
-    private final DialogFactory                       dialogFactory;
     private final CoreLocalizationConstant            localizationConstant;
     private final ImportProjectNotificationSubscriber importProjectNotificationSubscriber;
 
@@ -69,16 +61,12 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
      *         GWT-client for Project service
      * @param vfsServiceClient
      *         GWT-client for VFS service
-     * @param runnerServiceClient
-     *         GWT-client for Runner
      * @param dtoUnmarshallerFactory
      *         {@link DtoUnmarshallerFactory} instance
      * @param dtoFactory
      *         {@link DtoFactory} instance
      * @param eventBus
      *         {@link EventBus} instance
-     * @param dialogFactory
-     *         {@link DialogFactory} instance
      * @param localizationConstant
      *         {@link CoreLocalizationConstant} instance
      */
@@ -86,21 +74,17 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
     public ImportWizard(@Assisted ImportProject dataObject,
                         ProjectServiceClient projectServiceClient,
                         VfsServiceClient vfsServiceClient,
-                        RunnerServiceClient runnerServiceClient,
                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                         DtoFactory dtoFactory,
                         EventBus eventBus,
-                        DialogFactory dialogFactory,
                         CoreLocalizationConstant localizationConstant,
                         ImportProjectNotificationSubscriber importProjectNotificationSubscriber) {
         super(dataObject);
         this.projectServiceClient = projectServiceClient;
         this.vfsServiceClient = vfsServiceClient;
-        this.runnerServiceClient = runnerServiceClient;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dtoFactory = dtoFactory;
         this.eventBus = eventBus;
-        this.dialogFactory = dialogFactory;
         this.localizationConstant = localizationConstant;
         this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
     }
@@ -131,29 +115,28 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
         final String projectName = dataObject.getProject().getName();
         importProjectNotificationSubscriber.subscribe(projectName);
         final Unmarshallable<ImportResponse> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ImportResponse.class);
-        projectServiceClient.importProject(
-                projectName, false, dataObject, new AsyncRequestCallback<ImportResponse>(unmarshaller) {
-                    @Override
-                    protected void onSuccess(final ImportResponse result) {
-                        importProjectNotificationSubscriber.onSuccess();
-                        callback.onCompleted();
 
-                        // propose user to get more RAM and open project
-                        checkRam(result.getProjectDescriptor(), new ConfirmCallback() {
-                            @Override
-                            public void accepted() {
-                                openProject(result.getProjectDescriptor());
-                            }
-                        });
-                    }
+        projectServiceClient.importProject(projectName, false, dataObject, new AsyncRequestCallback<ImportResponse>(unmarshaller) {
+            @Override
+            protected void onSuccess(final ImportResponse result) {
+                importProjectNotificationSubscriber.onSuccess();
+                callback.onCompleted();
+                openProject(result.getProjectDescriptor());
+            }
 
-                    @Override
-                    protected void onFailure(Throwable exception) {
-                        importProjectNotificationSubscriber.onFailure(exception.getMessage());
-                        deleteProject(projectName);
-                        callback.onFailure(new Exception(getImportErrorMessage(exception)));
-                    }
-                });
+            @Override
+            protected void onFailure(Throwable exception) {
+                importProjectNotificationSubscriber.onFailure(exception.getMessage());
+                deleteProject(projectName);
+
+                String errorMessage = getImportErrorMessage(exception);
+                if (errorMessage.equals("Unable get private ssh key")) {
+                    callback.onFailure(new Exception(localizationConstant.importProjectMessageUnableGetSshKey()));
+                    return;
+                }
+                callback.onFailure(new Exception(errorMessage));
+            }
+        });
     }
 
     private void openProject(ProjectDescriptor project) {
@@ -186,41 +169,6 @@ public class ImportWizard extends AbstractWizard<ImportProject> {
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(ImportWizard.class, exception);
-            }
-        });
-    }
-
-    private void checkRam(final ProjectDescriptor projectDescriptor, final ConfirmCallback callback) {
-        int requiredRAM = 0;
-        final RunnersDescriptor runners = projectDescriptor.getRunners();
-        if (runners != null) {
-            final RunnerConfiguration defaultRunnerConf = runners.getConfigs().get(runners.getDefault());
-            if (defaultRunnerConf != null) {
-                requiredRAM = defaultRunnerConf.getRam();
-            }
-        }
-        if (requiredRAM <= 0) {
-            callback.accepted();
-            return;
-        }
-
-        final int finalRequiredRAM = requiredRAM;
-        final Unmarshallable<ResourcesDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class);
-        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ResourcesDescriptor result) {
-                final int workspaceRAM = Integer.valueOf(result.getTotalMemory());
-                if (workspaceRAM < finalRequiredRAM) {
-                    dialogFactory.createMessageDialog(localizationConstant.createProjectWarningTitle(),
-                                                      localizationConstant.getMoreRam(finalRequiredRAM, workspaceRAM),
-                                                      callback).show();
-                }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.accepted();
-                Log.error(ImportWizard.class, exception.getMessage());
             }
         });
     }
