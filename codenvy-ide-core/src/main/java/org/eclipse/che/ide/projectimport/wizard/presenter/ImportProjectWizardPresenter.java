@@ -25,8 +25,8 @@ import org.eclipse.che.ide.dto.DtoFactory;
 import org.eclipse.che.ide.projectimport.wizard.ImportWizardFactory;
 import org.eclipse.che.ide.projectimport.wizard.ImportWizard;
 import org.eclipse.che.ide.projectimport.wizard.mainpage.MainPagePresenter;
-import org.eclipse.che.ide.projectimport.wizard.mainpage.MainPagePresenter;
 import org.eclipse.che.ide.ui.dialogs.DialogFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

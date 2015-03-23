@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.che.ide.ext.ssh.client.upload;
 
-import org.eclipse.che.ide.api.notification.Notification;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.parts.ConsolePart;
 import org.eclipse.che.ide.ext.ssh.client.SshLocalizationConstant;
@@ -23,8 +22,6 @@ import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
-
-import static org.eclipse.che.ide.api.notification.Notification.Type.ERROR;
 
 /**
  * Main appointment of this class is upload private SSH key to the server.
@@ -92,15 +89,13 @@ public class UploadSshKeyPresenter implements UploadSshKeyView.ActionDelegate {
     @Override
     public void onSubmitComplete(@Nonnull String result) {
         if (result.isEmpty()) {
-            UploadSshKeyPresenter.this.view.close();
+            view.close();
             callback.onSuccess(null);
         } else {
             if (result.startsWith("<pre>") && result.endsWith("</pre>")) {
                 result = result.substring(5, (result.length() - 6));
             }
-            console.print(result);
-            Notification notification = new Notification(result, ERROR);
-            notificationManager.showNotification(notification);
+            notificationManager.showError(result);
             callback.onFailure(new Throwable(result));
         }
     }

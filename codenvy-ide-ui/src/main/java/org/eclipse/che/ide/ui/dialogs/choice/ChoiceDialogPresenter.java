@@ -19,8 +19,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
-
 /**
  * {@link ChoiceDialog} implementation.
  * 

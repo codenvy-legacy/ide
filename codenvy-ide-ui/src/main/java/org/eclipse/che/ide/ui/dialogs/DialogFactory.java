@@ -20,12 +20,8 @@ import org.eclipse.che.ide.ui.dialogs.message.MessageDialog;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.assistedinject.Assisted;
 
-import org.eclipse.che.ide.ui.dialogs.choice.ChoiceDialog;
-import org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog;
-import org.eclipse.che.ide.ui.dialogs.message.MessageDialog;
-
 /**
- * Factory for {@link org.eclipse.che.ide.ui.dialogs.message.MessageDialog}, {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} and {@link InputDialog} components.
+ * Factory for {@link MessageDialog}, {@link ConfirmDialog} and {@link InputDialog} components.
  *
  * @author Mickaël Leduque
  * @author Artem Zatsarynnyy
@@ -41,7 +37,7 @@ public interface DialogFactory {
      *         the window content/text
      * @param confirmCallback
      *         the callback used on OK
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
                                       @Nonnull @Assisted("message") String content,
@@ -56,7 +52,7 @@ public interface DialogFactory {
      *         the window content
      * @param confirmCallback
      *         the callback used on OK
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     MessageDialog createMessageDialog(@Nonnull String title,
                                       @Nonnull IsWidget content,
@@ -73,7 +69,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     ConfirmDialog createConfirmDialog(@Nonnull @Assisted("title") String title,
                                       @Nonnull @Assisted("message") String content,
@@ -91,7 +87,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     ConfirmDialog createConfirmDialog(@Nonnull String title,
                                       @Nonnull IsWidget content,
@@ -109,7 +105,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return an {@link org.eclipse.che.ide.ui.dialogs.input.InputDialog} instance
+     * @return an {@link InputDialog} instance
      */
     InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
                                   @Nonnull @Assisted("label") String label,
@@ -137,7 +133,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return an {@link org.eclipse.che.ide.ui.dialogs.input.InputDialog} instance
+     * @return an {@link InputDialog} instance
      */
     InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
                                   @Nonnull @Assisted("label") String label,
@@ -154,13 +150,15 @@ public interface DialogFactory {
      *         the window title
      * @param content
      *         the window content/text
-     * @param firstChoiceLabel the label for the first choice
-     * @param secondeChoiceLabel the label for the first choice
-     * @param confirmCallback
-     *         the callback used on OK
-     * @param cancelCallback
-     *         the callback used on cancel
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @param firstChoiceLabel
+     *         the label for the first choice
+     * @param secondChoiceLabel
+     *         the label for the second choice
+     * @param firstChoiceCallback
+     *         the callback used on fist choice
+     * @param secondChoiceCallback
+     *         the callback used on second choice
+     * @return a {@link ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull @Assisted("title") String title,
                                      @Nonnull @Assisted("message") String content,
@@ -171,14 +169,20 @@ public interface DialogFactory {
 
     /**
      * Create a choice dialog with a widget as content.
-     * 
-     * @param title the window title
-     * @param content the window content
-     * @param firstChoiceLabel the label for the first choice
-     * @param secondeChoiceLabel the label for the first choice
-     * @param firstChoiceCallback the callback used on fist choice
-     * @param secondChoiceCallback the callback used on second choice
-     * @return a {@link org.eclipse.che.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     *
+     * @param title
+     *         the window title
+     * @param content
+     *         the window content
+     * @param firstChoiceLabel
+     *         the label for the first choice
+     * @param secondChoiceLabel
+     *         the label for the first choice
+     * @param firstChoiceCallback
+     *         the callback used on fist choice
+     * @param secondChoiceCallback
+     *         the callback used on second choice
+     * @return a {@link ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull String title,
                                      @Nonnull IsWidget content,
