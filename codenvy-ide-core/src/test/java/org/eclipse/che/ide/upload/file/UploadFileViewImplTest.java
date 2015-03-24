@@ -8,11 +8,11 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.file;
 
 import org.eclipse.che.ide.CoreLocalizationConstant;
-import org.eclipse.che.ide.upload.UploadFilePresenter;
-import org.eclipse.che.ide.upload.UploadFileViewImpl;
+import org.eclipse.che.ide.upload.file.UploadFilePresenter;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwtmockito.GwtMockito;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
+import org.eclipse.che.ide.upload.file.UploadFileViewImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link UploadFileViewImpl} functionality.
+ * Testing {@link org.eclipse.che.ide.upload.file.UploadFileViewImpl} functionality.
  *
  * @author Roman Nikitenko.
  */

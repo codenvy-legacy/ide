@@ -8,7 +8,7 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.file;
 
 import org.eclipse.che.api.project.shared.dto.ProjectDescriptor;
 import org.eclipse.che.ide.api.app.AppContext;
@@ -19,12 +19,13 @@ import org.eclipse.che.ide.api.project.tree.generic.FolderNode;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.api.selection.SelectionAgent;
 
-import org.eclipse.che.ide.upload.UploadFilePresenter;
-import org.eclipse.che.ide.upload.UploadFileView;
+import org.eclipse.che.ide.upload.file.UploadFilePresenter;
+
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.eclipse.che.ide.upload.file.UploadFileView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
