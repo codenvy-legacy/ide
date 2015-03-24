@@ -11,7 +11,6 @@
 package org.eclipse.che.ide.upload.file;
 
 import org.eclipse.che.ide.CoreLocalizationConstant;
-import org.eclipse.che.ide.upload.file.UploadFilePresenter;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Button;
@@ -22,7 +21,6 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwtmockito.GwtMockito;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
-import org.eclipse.che.ide.upload.file.UploadFileViewImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link org.eclipse.che.ide.upload.file.UploadFileViewImpl} functionality.
+ * Testing {@link UploadFileViewImpl} functionality.
  *
  * @author Roman Nikitenko.
  */
@@ -42,8 +40,6 @@ import static org.mockito.Mockito.when;
 public class UploadFileViewImplTest {
 
     private UploadFileViewImpl  view;
-    private UploadFilePresenter presenter;
-
 
     UploadFileViewImpl.UploadFileViewBinder binder;
     CoreLocalizationConstant                locale;
@@ -53,7 +49,7 @@ public class UploadFileViewImplTest {
         GwtMockito.initMocks(this);
         binder = GWT.create(UploadFileViewImpl.UploadFileViewBinder.class);
         locale = GWT.create(CoreLocalizationConstant.class);
-        presenter = mock(UploadFilePresenter.class);
+        UploadFilePresenter presenter = mock(UploadFilePresenter.class);
         view = new UploadFileViewImpl(binder, locale);
         view.setDelegate(presenter);
     }
