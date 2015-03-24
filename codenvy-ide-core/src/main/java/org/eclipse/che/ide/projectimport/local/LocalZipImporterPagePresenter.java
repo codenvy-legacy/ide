@@ -17,11 +17,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.eclipse.che.api.project.gwt.client.ProjectServiceClient;
 import org.eclipse.che.api.project.shared.dto.ImportResponse;
-import org.eclipse.che.api.project.shared.dto.ProjectDescriptor;
-import org.eclipse.che.api.project.shared.dto.RunnerConfiguration;
-import org.eclipse.che.api.project.shared.dto.RunnersDescriptor;
-import org.eclipse.che.api.runner.dto.ResourcesDescriptor;
-import org.eclipse.che.api.runner.gwt.client.RunnerServiceClient;
 import org.eclipse.che.api.vfs.gwt.client.VfsServiceClient;
 import org.eclipse.che.api.vfs.shared.dto.Item;
 import org.eclipse.che.ide.CoreLocalizationConstant;
@@ -30,9 +25,6 @@ import org.eclipse.che.ide.api.project.wizard.ImportProjectNotificationSubscribe
 import org.eclipse.che.ide.dto.DtoFactory;
 import org.eclipse.che.ide.json.JsonHelper;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
-import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
-import org.eclipse.che.ide.rest.Unmarshallable;
-import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
 import org.eclipse.che.ide.ui.dialogs.DialogFactory;
 import org.eclipse.che.ide.util.NameUtils;
 import org.eclipse.che.ide.util.loging.Log;
@@ -52,9 +44,7 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
     private final EventBus                            eventBus;
     private final VfsServiceClient                    vfsServiceClient;
     private final ProjectServiceClient                projectServiceClient;
-    private final RunnerServiceClient                 runnerServiceClient;
     private final DialogFactory                       dialogFactory;
-    private final DtoUnmarshallerFactory              dtoUnmarshallerFactory;
     private final ImportProjectNotificationSubscriber importProjectNotificationSubscriber;
 
     @Inject
@@ -66,9 +56,7 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
                                          EventBus eventBus,
                                          VfsServiceClient vfsServiceClient,
                                          ProjectServiceClient projectServiceClient,
-                                         RunnerServiceClient runnerServiceClient,
                                          DialogFactory dialogFactory,
-                                         DtoUnmarshallerFactory dtoUnmarshallerFactory,
                                          ImportProjectNotificationSubscriber importProjectNotificationSubscriber) {
         this.view = view;
         this.locale = locale;
@@ -78,9 +66,7 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
         this.eventBus = eventBus;
         this.vfsServiceClient = vfsServiceClient;
         this.projectServiceClient = projectServiceClient;
-        this.runnerServiceClient = runnerServiceClient;
         this.dialogFactory = dialogFactory;
-        this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.importProjectNotificationSubscriber = importProjectNotificationSubscriber;
         this.view.setDelegate(this);
     }
@@ -162,15 +148,9 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
     private void importSuccess(ImportResponse importResponse) {
         view.closeDialog();
         importProjectNotificationSubscriber.onSuccess();
-        final ProjectDescriptor project = importResponse.getProjectDescriptor();
 
-        // propose user to get more RAM and open project
-        checkRam(project, new ConfirmCallback() {
-            @Override
-            public void accepted() {
-                eventBus.fireEvent(new OpenProjectEvent(project.getName()));
-            }
-        });
+        String projectName = importResponse.getProjectDescriptor().getName();
+        eventBus.fireEvent(new OpenProjectEvent(projectName));
     }
 
     private void importFailure(String error) {
@@ -196,7 +176,7 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
     private String extractProjectName(@Nonnull String zipName) {
         int indexStartProjectName = zipName.lastIndexOf("\\") + 1;
         int indexFinishProjectName = zipName.indexOf(".zip");
-        if (indexStartProjectName != 0 && indexFinishProjectName != (-1)) {
+        if (indexFinishProjectName != (-1)) {
             return zipName.substring(indexStartProjectName, indexFinishProjectName);
         }
         return "";
@@ -212,41 +192,6 @@ public class LocalZipImporterPagePresenter implements LocalZipImporterPageView.A
             @Override
             protected void onFailure(Throwable exception) {
                 Log.error(LocalZipImporterPagePresenter.class, exception);
-            }
-        });
-    }
-
-    private void checkRam(final ProjectDescriptor projectDescriptor, final ConfirmCallback callback) {
-        int requiredRAM = 0;
-        final RunnersDescriptor runners = projectDescriptor.getRunners();
-        if (runners != null) {
-            final RunnerConfiguration defaultRunnerConf = runners.getConfigs().get(runners.getDefault());
-            if (defaultRunnerConf != null) {
-                requiredRAM = defaultRunnerConf.getRam();
-            }
-        }
-        if (requiredRAM <= 0) {
-            callback.accepted();
-            return;
-        }
-
-        final int finalRequiredRAM = requiredRAM;
-        final Unmarshallable<ResourcesDescriptor> unmarshaller = dtoUnmarshallerFactory.newUnmarshaller(ResourcesDescriptor.class);
-        runnerServiceClient.getResources(new AsyncRequestCallback<ResourcesDescriptor>(unmarshaller) {
-            @Override
-            protected void onSuccess(ResourcesDescriptor result) {
-                final int workspaceRAM = Integer.valueOf(result.getTotalMemory());
-                if (workspaceRAM < finalRequiredRAM) {
-                    dialogFactory.createMessageDialog(locale.createProjectWarningTitle(),
-                                                      locale.getMoreRam(finalRequiredRAM, workspaceRAM),
-                                                      callback).show();
-                }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception) {
-                callback.accepted();
-                Log.error(LocalZipImporterPagePresenter.class, exception.getMessage());
             }
         });
     }

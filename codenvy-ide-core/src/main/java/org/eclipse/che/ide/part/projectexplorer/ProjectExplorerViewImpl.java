@@ -19,7 +19,7 @@ import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.api.project.tree.AbstractTreeNode;
 import org.eclipse.che.ide.api.project.tree.TreeNode;
 import org.eclipse.che.ide.collections.Array;
-import org.eclipse.che.ide.collections.js.JsoArray;
+import org.eclipse.che.ide.collections.Collections;
 import org.eclipse.che.ide.ui.tree.Tree;
 import org.eclipse.che.ide.ui.tree.TreeNodeElement;
 import org.eclipse.che.ide.util.input.SignalEvent;
@@ -158,6 +158,19 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         });
     }
 
+    @Override
+    public Array<TreeNode<?>> getOpenedTreeNodes() {
+        Array<TreeNodeElement<TreeNode<?>>> treeNodes = tree.getVisibleTreeNodes();
+        Array<TreeNode<?>> openedNodes = Collections.createArray();
+        for (int i = 0; i < treeNodes.size(); i++) {
+            TreeNodeElement<TreeNode<?>> treeNodeElement = treeNodes.get(i);
+            if (treeNodeElement.isOpen()) {
+                openedNodes.add(treeNodeElement.getData());
+            }
+        }
+        return openedNodes;
+    }
+
     /** {@inheritDoc} */
     @Override
     public void setRootNodes(@Nonnull final Array<TreeNode<?>> rootNodes) {
@@ -233,7 +246,7 @@ public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.Action
         projectHeader.add(delimiter);
 
         SVGImage projectVisibilityImage = new SVGImage("private".equals(project.getVisibility()) ? resources.privateProject()
-                                                                                                 : resources.publicProject());
+                : resources.publicProject());
         projectVisibilityImage.getElement().setAttribute("class", resources.partStackCss().idePartStackToolbarBottomIcon());
         projectHeader.add(projectVisibilityImage);
 

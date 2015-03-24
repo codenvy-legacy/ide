@@ -44,7 +44,8 @@ public class RequireJsLoader {
                         final String[] moduleKeys) {
         // require with default config
         final RequirejsConfig defaultConfig = RequirejsConfig.create();
-        defaultConfig.setBaseUrl(GWT.getModuleBaseForStaticFiles());
+        /** Using GWT.getModuleBaseForStaticFiles() blocks CodeMirror to run under Super Dev Mode */
+        defaultConfig.setBaseUrl(GWT.getModuleBaseURL());
         defaultConfig.setWaitSeconds(0);
 
         require(new RequirejsCallback() {
@@ -74,21 +75,22 @@ public class RequireJsLoader {
                         final String[] moduleKeys) {
         if (!requirejsLoaded && !requirejsLoadFailed) {
             Log.debug(RequireJsLoader.class, "Loading require.js.");
-            ScriptInjector.fromUrl(GWT.getModuleBaseForStaticFiles() + "require.js")
-                          .setWindow(ScriptInjector.TOP_WINDOW)
-                          .setCallback(new Callback<Void, Exception>() {
-                              @Override
-                              public void onSuccess(final Void result) {
-                                  Log.debug(RequireJsLoader.class, "require.js loaded.");
-                                  configureGlobalErrorCallback();
-                                  requireScripts(callback, errorHandler, config, requiredScripts, moduleKeys);
-                                  requirejsLoaded = true;
-                              }
+            /** Using GWT.getModuleBaseForStaticFiles() blocks CodeMirror to run under Super Dev Mode */
+            ScriptInjector.fromUrl(GWT.getModuleBaseURL() + "require.js")
+                    .setWindow(ScriptInjector.TOP_WINDOW)
+                    .setCallback(new Callback<Void, Exception>() {
+                        @Override
+                        public void onSuccess(final Void result) {
+                            Log.debug(RequireJsLoader.class, "require.js loaded.");
+                            configureGlobalErrorCallback();
+                            requireScripts(callback, errorHandler, config, requiredScripts, moduleKeys);
+                            requirejsLoaded = true;
+                        }
 
-                              @Override
-                              public void onFailure(final Exception e) {
-                                  Log.error(RequireJsLoader.class, "Unable to load require.js", e);
-                                  requirejsLoadFailed = true;
+                        @Override
+                        public void onFailure(final Exception e) {
+                            Log.error(RequireJsLoader.class, "Unable to load require.js", e);
+                            requirejsLoadFailed = true;
                               }
                           }).inject();
         } else if (!requirejsLoadFailed) {

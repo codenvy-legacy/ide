@@ -37,7 +37,7 @@ public interface DialogFactory {
      *         the window content/text
      * @param confirmCallback
      *         the callback used on OK
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
                                       @Nonnull @Assisted("message") String content,
@@ -54,7 +54,7 @@ public interface DialogFactory {
      *         the window confirm button tex
      * @param confirmButtonText
      *         the callback used on Confirm
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
 
     MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
@@ -71,7 +71,7 @@ public interface DialogFactory {
      *         the window content
      * @param confirmCallback
      *         the callback used on OK
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     MessageDialog createMessageDialog(@Nonnull String title,
                                       @Nonnull IsWidget content,
@@ -88,7 +88,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     ConfirmDialog createConfirmDialog(@Nonnull @Assisted("title") String title,
                                       @Nonnull @Assisted("message") String content,
@@ -106,7 +106,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     ConfirmDialog createConfirmDialog(@Nonnull String title,
                                       @Nonnull IsWidget content,
@@ -124,7 +124,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return an {@link com.codenvy.ide.ui.dialogs.input.InputDialog} instance
+     * @return an {@link InputDialog} instance
      */
     InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
                                   @Nonnull @Assisted("label") String label,
@@ -152,7 +152,7 @@ public interface DialogFactory {
      *         the callback used on OK
      * @param cancelCallback
      *         the callback used on cancel
-     * @return an {@link com.codenvy.ide.ui.dialogs.input.InputDialog} instance
+     * @return an {@link InputDialog} instance
      */
     InputDialog createInputDialog(@Nonnull @Assisted("title") String title,
                                   @Nonnull @Assisted("label") String label,
@@ -172,17 +172,17 @@ public interface DialogFactory {
      * @param firstChoiceLabel
      *         the label for the first choice
      * @param secondChoiceLabel
-     *         the label for the first choice
+     *         the label for the second choice
      * @param firstChoiceCallback
-     *         the callback used on OK
+     *         the callback used on fist choice
      * @param secondChoiceCallback
-     *         the callback used on cancel
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     *         the callback used on second choice
+     * @return a {@link ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull @Assisted("title") String title,
-                                    @Nonnull @Assisted("message") String content,
-                                    @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
-                                    @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                     @Nonnull @Assisted("message") String content,
+                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
                                     @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
                                     @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
 
@@ -201,12 +201,12 @@ public interface DialogFactory {
      *         the callback used on fist choice
      * @param secondChoiceCallback
      *         the callback used on second choice
-     * @return a {@link com.codenvy.ide.ui.dialogs.confirm.ConfirmDialog} instance
+     * @return a {@link ConfirmDialog} instance
      */
     ChoiceDialog createChoiceDialog(@Nonnull String title,
-                                    @Nonnull IsWidget content,
-                                    @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
-                                    @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
+                                     @Nonnull IsWidget content,
+                                     @Nonnull @Assisted("firstChoice") String firstChoiceLabel,
+                                     @Nonnull @Assisted("secondChoice") String secondChoiceLabel,
                                     @Nullable @Assisted("firstCallback") ConfirmCallback firstChoiceCallback,
                                     @Nullable @Assisted("secondCallback") ConfirmCallback secondChoiceCallback);
 }

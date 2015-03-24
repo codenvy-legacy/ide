@@ -75,7 +75,7 @@ public class BuilderExtension {
             buildToolbarGroup = new DefaultActionGroup(IdeActions.GROUP_BUILD_TOOLBAR, false, actionManager);
             DefaultActionGroup rightToolbar = (DefaultActionGroup)actionManager.getAction(IdeActions.GROUP_RIGHT_TOOLBAR);
             rightToolbar.add(buildToolbarGroup, Constraints.FIRST);//new Constraints(Anchor.BEFORE, IdeActions.GROUP_RUN_TOOLBAR));
-                             actionManager.registerAction(IdeActions.GROUP_BUILD_TOOLBAR, buildToolbarGroup);
+            actionManager.registerAction(IdeActions.GROUP_BUILD_TOOLBAR, buildToolbarGroup);
         }
         buildToolbarGroup.add(buildAction, Constraints.FIRST);
         buildToolbarGroup.addSeparator();

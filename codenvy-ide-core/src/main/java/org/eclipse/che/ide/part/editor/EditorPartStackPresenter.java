@@ -111,23 +111,26 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
         }
 
         PartStackView.TabItem tabItem = view.addTab(titleSVGImage, part.getTitle(),
-                                  part.getTitleToolTip(), null, partsClosable);
+                part.getTitleToolTip(), null, partsClosable);
 
         if (part instanceof EditorWithErrors) {
             final EditorWithErrors presenter = ((EditorWithErrors)part);
             final TabItemWithMarks tab = (TabItemWithMarks)tabItem;
+
             part.addPropertyListener(new PropertyListener() {
                 @Override
                 public void propertyChanged(PartPresenter source, int propId) {
-                    if (presenter.getErrorState().equals(EditorWithErrors.EditorState.ERROR)) {
-                        tab.setErrorMark(true);
-                    } else {
-                        tab.setErrorMark(false);
-                    }
-                    if (presenter.getErrorState().equals(EditorWithErrors.EditorState.WARNING)) {
-                        tab.setWarningMark(true);
-                    } else {
-                        tab.setWarningMark(false);
+                    if (presenter.getErrorState() != null) {
+                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.ERROR)) {
+                            tab.setErrorMark(true);
+                        } else {
+                            tab.setErrorMark(false);
+                        }
+                        if (presenter.getErrorState().equals(EditorWithErrors.EditorState.WARNING)) {
+                            tab.setWarningMark(true);
+                        } else {
+                            tab.setWarningMark(false);
+                        }
                     }
                 }
             });

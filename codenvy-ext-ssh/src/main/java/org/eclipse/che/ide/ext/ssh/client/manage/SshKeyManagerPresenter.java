@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.che.ide.ext.ssh.client.manage;
 
-import org.eclipse.che.api.user.gwt.client.UserServiceClient;
-import org.eclipse.che.api.user.shared.dto.UserDescriptor;
-import org.eclipse.che.ide.api.notification.Notification;
+import org.eclipse.che.ide.api.app.AppContext;
+import org.eclipse.che.ide.api.app.CurrentUser;
 import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.preferences.AbstractPreferencePagePresenter;
 import org.eclipse.che.ide.collections.Array;
@@ -26,9 +25,9 @@ import org.eclipse.che.ide.ext.ssh.dto.PublicKey;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.rest.AsyncRequestLoader;
 import org.eclipse.che.ide.rest.DtoUnmarshallerFactory;
+import org.eclipse.che.ide.ui.dialogs.CancelCallback;
 import org.eclipse.che.ide.ui.dialogs.ConfirmCallback;
 import org.eclipse.che.ide.ui.dialogs.DialogFactory;
-import org.eclipse.che.ide.util.loging.Log;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -39,8 +38,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nonnull;
 
-import static org.eclipse.che.ide.api.notification.Notification.Type.ERROR;
-
 /**
  * The presenter for managing ssh keys.
  *
@@ -49,13 +46,14 @@ import static org.eclipse.che.ide.api.notification.Notification.Type.ERROR;
 @Singleton
 public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter implements SshKeyManagerView.ActionDelegate {
     public static final String GITHUB_HOST = "github.com";
+
+    private AppContext              appContext;
     private DtoUnmarshallerFactory  dtoUnmarshallerFactory;
     private DialogFactory           dialogFactory;
     private SshKeyManagerView       view;
     private SshKeyService           service;
     private SshLocalizationConstant constant;
     private EventBus                eventBus;
-    private UserServiceClient       userService;
     private AsyncRequestLoader      loader;
     private UploadSshKeyPresenter   uploadSshKeyPresenter;
     private NotificationManager     notificationManager;
@@ -65,10 +63,10 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
     public SshKeyManagerPresenter(SshKeyManagerView view,
                                   SshKeyService service,
                                   SshResources resources,
+                                  AppContext appContext,
                                   SshLocalizationConstant constant,
                                   EventBus eventBus,
                                   AsyncRequestLoader loader,
-                                  UserServiceClient userService,
                                   UploadSshKeyPresenter uploadSshKeyPresenter,
                                   NotificationManager notificationManager,
                                   DtoUnmarshallerFactory dtoUnmarshallerFactory,
@@ -76,13 +74,13 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
         super(constant.sshManagerTitle(), constant.sshManagerCategory(), resources.sshKeyManager());
 
         this.view = view;
+        this.appContext = appContext;
         this.dtoUnmarshallerFactory = dtoUnmarshallerFactory;
         this.dialogFactory = dialogFactory;
         this.view.setDelegate(this);
         this.service = service;
         this.constant = constant;
         this.eventBus = eventBus;
-        this.userService = userService;
         this.loader = loader;
         this.uploadSshKeyPresenter = uploadSshKeyPresenter;
         this.notificationManager = notificationManager;
@@ -101,9 +99,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
             @Override
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderGetPublicSshKeyMessage(key.getHost()));
-                Notification notification = new Notification(
-                        SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showError(SafeHtmlUtils.fromString(exception.getMessage()).asString());
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
@@ -114,12 +110,26 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
     public void onDeleteClicked(@Nonnull final KeyItem key) {
         dialogFactory.createConfirmDialog(constant.deleteSshKeyTitle(),
                                           constant.deleteSshKeyQuestion(key.getHost()).asString(),
-                                          new ConfirmCallback() {
-                                              @Override
-                                              public void accepted() {
-                                                  deleteKey(key);
-                                              }
-                                          }, null).show();
+                                          getConfirmCallbackForDelete(key),
+                                          getCancelCallback()).show();
+    }
+
+    private ConfirmCallback getConfirmCallbackForDelete(@Nonnull final KeyItem key) {
+        return new ConfirmCallback() {
+            @Override
+            public void accepted() {
+                deleteKey(key);
+            }
+        };
+    }
+
+    private CancelCallback getCancelCallback() {
+        return new CancelCallback() {
+            @Override
+            public void cancelled() {
+                //for now do nothing but it need for tests
+            }
+        };
     }
 
     private void deleteKey(final KeyItem key) {
@@ -133,9 +143,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
             @Override
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
-                Notification notification = new Notification(
-                        SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showError(SafeHtmlUtils.fromString(exception.getMessage()).asString());
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
@@ -154,9 +162,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
 
                 @Override
                 protected void onFailure(Throwable exception) {
-                    Notification notification = new Notification(
-                            SafeHtmlUtils.fromString(exception.getMessage()).asString(), ERROR);
-                    notificationManager.showNotification(notification);
+                    notificationManager.showError(SafeHtmlUtils.fromString(exception.getMessage()).asString());
                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
                 }
             });
@@ -181,34 +187,24 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
     /** {@inheritDoc} */
     @Override
     public void onGenerateGithubKeyClicked() {
-        loader.show();
-        userService.getCurrentUser(new AsyncRequestCallback<UserDescriptor>(dtoUnmarshallerFactory.newUnmarshaller(UserDescriptor.class)) {
-            @Override
-            protected void onSuccess(UserDescriptor result) {
-                loader.hide();
-                if (service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
-                    service.getSshKeyProviders().get(GITHUB_HOST)
-                           .generateKey(result.getId(), new AsyncCallback<Void>() {
-                               @Override
-                               public void onSuccess(Void result) {
-                                   refreshKeys();
-                               }
+        CurrentUser user = appContext.getCurrentUser();
+        if (user != null && service.getSshKeyProviders().containsKey(GITHUB_HOST)) {
+            generateGithubKey(user);
+        } else {
+            notificationManager.showError(constant.sshKeysProviderNotFound(GITHUB_HOST));
+        }
+    }
 
-                               @Override
-                               public void onFailure(Throwable exception) {
-                                   getFailedKey(GITHUB_HOST);
-                               }
-                           });
-                } else {
-                    Notification notification = new Notification(constant.sshKeysProviderNotFound(GITHUB_HOST), ERROR);
-                    notificationManager.showNotification(notification);
-                }
+    private void generateGithubKey(CurrentUser user) {
+        service.getSshKeyProviders().get(GITHUB_HOST).generateKey(user.getProfile().getId(), new AsyncCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                refreshKeys();
             }
 
             @Override
-            protected void onFailure(Throwable exception) {
-                loader.hide();
-                Log.error(SshKeyManagerPresenter.class, exception);
+            public void onFailure(Throwable exception) {
+                getFailedKey(GITHUB_HOST);
             }
         });
     }
@@ -233,8 +229,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderGetSshKeysMessage());
                 refreshKeys();
-                Notification notification = new Notification(exception.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showError(exception.getMessage());
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
@@ -251,8 +246,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
             @Override
             public void onFailure(Throwable caught) {
                 loader.hide(constant.loaderDeleteSshKeyMessage(key.getHost()));
-                Notification notification = new Notification(constant.deleteSshKeyFailed(), ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showError(constant.deleteSshKeyFailed());
                 refreshKeys();
             }
 
@@ -289,8 +283,7 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
             @Override
             public void onFailure(Throwable exception) {
                 loader.hide(constant.loaderGetSshKeysMessage());
-                Notification notification = new Notification(exception.getMessage(), ERROR);
-                notificationManager.showNotification(notification);
+                notificationManager.showError(exception.getMessage());
                 eventBus.fireEvent(new ExceptionThrownEvent(exception));
             }
         });
@@ -305,6 +298,4 @@ public class SshKeyManagerPresenter extends AbstractPreferencePagePresenter impl
     public void revertChanges() {
 
     }
-
-
 }

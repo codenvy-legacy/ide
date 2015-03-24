@@ -37,7 +37,6 @@ import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
-import org.eclipse.che.ide.collections.js.JsoArray;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.ui.tree.SelectionModel;
 import org.eclipse.che.ide.util.Config;
@@ -69,7 +68,7 @@ import static org.eclipse.che.ide.api.event.ItemEvent.ItemOperation.DELETED;
  */
 @Singleton
 public class ProjectExplorerPartPresenter extends BasePresenter implements ProjectExplorerView.ActionDelegate,
-                                                                           ProjectExplorerPart, HasView {
+        ProjectExplorerPart, HasView {
     private ProjectExplorerView            view;
     private EventBus                       eventBus;
     private ContextMenu                    contextMenu;
@@ -80,6 +79,9 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
     private TreeStructure                  currentTreeStructure;
     private DeleteNodeHandler              deleteNodeHandler;
     private Provider<ProjectListStructure> projectListStructureProvider;
+
+    /** A list of nodes is used for asynchronously refreshing the tree. */
+    private Array<TreeNode<?>>             nodesToRefresh;
 
     /** Instantiates the Project Explorer presenter. */
     @Inject
@@ -197,9 +199,14 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                     return;
                 }
 
-                final TreeNode<?> nodeToRefresh = event.getNode();
-                if (nodeToRefresh != null) {
-                    refreshAndSelectNode(nodeToRefresh);
+                if (event.refreshSubtree()) {
+                    nodesToRefresh = view.getOpenedTreeNodes();
+                    refreshTreeNodes();
+                    return;
+                }
+
+                if (event.getNode() != null) {
+                    refreshAndSelectNode(event.getNode());
                     return;
                 }
 
@@ -247,6 +254,32 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
                 }
             }
         });
+    }
+
+
+    /**
+     * Asynchronously refreshes all nodes from the nodesToRefresh list.
+     */
+    private void refreshTreeNodes() {
+        if (nodesToRefresh != null && !nodesToRefresh.isEmpty()) {
+            TreeNode<?> treeNode = nodesToRefresh.get(0);
+            nodesToRefresh.remove(0);
+
+            refreshNode(treeNode, new AsyncCallback<TreeNode<?>>() {
+                @Override
+                public void onSuccess(TreeNode<?> result) {
+                    refreshTreeNodes();
+                }
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Log.error(ProjectExplorerPartPresenter.class, caught);
+
+                    // Skip current node and continue refreshing.
+                    refreshTreeNodes();
+                }
+            });
+        }
     }
 
     /** {@inheritDoc} */
@@ -366,7 +399,10 @@ public class ProjectExplorerPartPresenter extends BasePresenter implements Proje
         });
     }
 
+    // TODO remove this method in the nearest feature
+    // TODO just use updateNode of view
     private void updateNode(TreeNode<?> node) {
         view.updateNode(node, node);
     }
+
 }
