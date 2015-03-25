@@ -333,7 +333,7 @@ public class BootstrapController {
                             @Override
                             public void execute() {
                                 displayIDE();
-                                appStateManager.start(null);
+//                                appStateManager.start(null);
                             }
                         });
                     }

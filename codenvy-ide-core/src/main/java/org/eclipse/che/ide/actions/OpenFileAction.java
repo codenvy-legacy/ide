@@ -10,14 +10,24 @@
  *******************************************************************************/
 package org.eclipse.che.ide.actions;
 
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+
 import org.eclipse.che.api.project.shared.dto.ProjectDescriptor;
-
+import org.eclipse.che.api.promises.client.Promise;
+import org.eclipse.che.api.promises.client.callback.CallbackPromiseHelper;
+import org.eclipse.che.api.promises.client.callback.CallbackPromiseHelper.Call;
 import org.eclipse.che.ide.CoreLocalizationConstant;
-
 import org.eclipse.che.ide.api.action.Action;
 import org.eclipse.che.ide.api.action.ActionEvent;
+import org.eclipse.che.ide.api.action.PromisableAction;
 import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.app.CurrentProject;
+import org.eclipse.che.ide.api.editor.EditorPartPresenter;
+import org.eclipse.che.ide.api.event.ActivePartChangedEvent;
+import org.eclipse.che.ide.api.event.ActivePartChangedHandler;
 import org.eclipse.che.ide.api.event.FileEvent;
 import org.eclipse.che.ide.api.event.ProjectActionEvent;
 import org.eclipse.che.ide.api.event.ProjectActionHandler;
@@ -26,10 +36,6 @@ import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.project.tree.TreeNode;
 import org.eclipse.che.ide.api.project.tree.generic.FileNode;
 import org.eclipse.che.ide.util.loging.Log;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,13 +46,14 @@ import static org.eclipse.che.ide.api.notification.Notification.Type.WARNING;
  * @author Sergii Leschenko
  */
 @Singleton
-public class OpenFileAction extends Action {
+public class OpenFileAction extends Action implements PromisableAction {
     private final EventBus                 eventBus;
     private final AppContext               appContext;
     private final NotificationManager      notificationManager;
     private final CoreLocalizationConstant localization;
 
     private HandlerRegistration reopenFileHandler;
+    private HandlerRegistration handlerRegistration;
 
     @Inject
     public OpenFileAction(EventBus eventBus,
@@ -97,7 +104,6 @@ public class OpenFileAction extends Action {
     }
 
     private void openFileByPath(final String filePath) {
-        Log.error(getClass(), "there");
         final CurrentProject currentProject = appContext.getCurrentProject();
         if (currentProject != null) {
             currentProject.getCurrentTree().getNodeByPath(filePath, new AsyncCallback<TreeNode<?>>() {
@@ -119,5 +125,33 @@ public class OpenFileAction extends Action {
                 }
             });
         }
+    }
+
+    @Override
+    public Promise<Void> promise(ActionEvent e) {
+        final String activeProjectPath = appContext.getCurrentProject().getRootProject().getPath();
+        final String relPathToOpen = e.getParameters().get("file");
+
+        final Call<Void, Throwable> call = new Call<Void, Throwable>() {
+            @Override
+            public void makeCall(final Callback<Void, Throwable> callback) {
+                handlerRegistration = eventBus.addHandler(ActivePartChangedEvent.TYPE, new ActivePartChangedHandler() {
+                    @Override
+                    public void onActivePartChanged(ActivePartChangedEvent event) {
+                        if (event.getActivePart() instanceof EditorPartPresenter) {
+                            EditorPartPresenter editor = (EditorPartPresenter)event.getActivePart();
+                            if ((activeProjectPath + "/" + relPathToOpen).equals(editor.getEditorInput().getFile().getPath())) {
+                                handlerRegistration.removeHandler();
+                                callback.onSuccess(null);
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        actionPerformed(e);
+
+        return CallbackPromiseHelper.createFromCallback(call);
     }
 }

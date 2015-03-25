@@ -12,19 +12,28 @@ package org.eclipse.che.ide.actions;
 
 import com.google.inject.Inject;
 
+import org.eclipse.che.api.promises.client.Function;
+import org.eclipse.che.api.promises.client.FunctionException;
+import org.eclipse.che.api.promises.client.Promise;
+import org.eclipse.che.api.promises.client.js.Promises;
 import org.eclipse.che.ide.api.action.Action;
+import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.ActionGroup;
 import org.eclipse.che.ide.api.action.ActionManager;
 import org.eclipse.che.ide.api.action.DefaultActionGroup;
 import org.eclipse.che.ide.api.action.IdeActions;
+import org.eclipse.che.ide.api.action.PromisableAction;
 import org.eclipse.che.ide.api.constraints.Anchor;
 import org.eclipse.che.ide.api.constraints.Constraints;
+import org.eclipse.che.ide.util.Pair;
 import org.eclipse.che.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -144,6 +153,40 @@ public class ActionManagerImpl implements ActionManager {
 
     public boolean isGroup(String actionId) {
         return getActionImpl(actionId, true) instanceof ActionGroup;
+    }
+
+    @Override
+    public Promise<Void> performActions(List<Pair<Action, ActionEvent>> actions) {
+        Promise<Void> promise = Promises.resolve(null);
+        return chainRecursively(promise, actions.iterator());
+    }
+
+    private Promise<Void> chainRecursively(Promise<Void> promise, Iterator<Pair<Action, ActionEvent>> iterator) {
+        if (iterator.hasNext()) {
+            final Pair<Action, ActionEvent> pair = iterator.next();
+
+            Promise<Void> p = promise.chain(new Function<Void, Promise<Void>>() {
+                @Override
+                public Promise<Void> apply(Void arg) throws FunctionException {
+                    Log.info(ActionManagerImpl.class, pair.second.getParameters().get("file"));
+                    return performAction(pair.first, pair.second);
+                }
+            });
+
+            return chainRecursively(p, iterator);
+        } else {
+            return promise;
+        }
+    }
+
+    private Promise<Void> performAction(Action action, ActionEvent event) {
+        if (action instanceof PromisableAction) {
+            return ((PromisableAction)action).promise(event);
+        } else {
+            action.actionPerformed(event);
+            // TODO: need to return Promise from Call
+            return Promises.resolve(null);
+        }
     }
 
     public Action getParentGroup(final String groupId,

@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.che.ide.api.action;
 
+import org.eclipse.che.api.promises.client.Promise;
+import org.eclipse.che.ide.api.constraints.Constraints;
 import org.eclipse.che.ide.api.extension.SDK;
+import org.eclipse.che.ide.util.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * A manager for actions. Used to register and unregister actions, also
@@ -93,4 +99,6 @@ public interface ActionManager {
      * @return true if the ID represents an action group, false otherwise.
      */
     public boolean isGroup(String actionId);
+
+    public Promise<Void> performActions(List<Pair<Action, ActionEvent>> actions);
 }
