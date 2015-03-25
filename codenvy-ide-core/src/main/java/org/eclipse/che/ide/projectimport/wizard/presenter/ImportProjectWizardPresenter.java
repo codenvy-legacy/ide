@@ -196,7 +196,6 @@ public class ImportProjectWizardPresenter implements Wizard.UpdateDelegate,
     public void onImporterSelected(ProjectImporterDescriptor importer) {
         final ImportProject prevData = wizard.getDataObject();
         wizard = getWizardForImporter(importer);
-        wizard.navigateToFirst();
         final ImportProject dataObject = wizard.getDataObject();
         final NewProject newProject = dataObject.getProject();
 
@@ -206,6 +205,11 @@ public class ImportProjectWizardPresenter implements Wizard.UpdateDelegate,
         newProject.setName(prevData.getProject().getName());
         newProject.setDescription(prevData.getProject().getDescription());
         newProject.setVisibility(prevData.getProject().getVisibility());
+
+        WizardPage<ImportProject> firstPage = wizard.navigateToFirst();
+        if (firstPage != null) {
+            firstPage.init(dataObject);
+        }
 
         WizardPage<ImportProject> importerPage = wizard.navigateToNext();
         importerPage.go(mainPage.getImporterPanel());
