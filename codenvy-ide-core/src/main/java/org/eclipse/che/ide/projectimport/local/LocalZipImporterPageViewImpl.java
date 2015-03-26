@@ -82,6 +82,7 @@ public class LocalZipImporterPageViewImpl extends Window implements LocalZipImpo
         projectName.getElement().setAttribute("maxlength", "32");
         projectDescription.getElement().setAttribute("maxlength", "256");
         importButton.addStyleName(ideResources.Css().buttonLoader());
+        importButton.addStyleName(ideResources.wizardCss().buttonPrimary());
         importButton.setEnabled(false);
         skipFirstLevel.setValue(true);
     }
