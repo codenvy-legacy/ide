@@ -223,6 +223,21 @@ public interface CoreLocalizationConstant extends Messages {
     @Key("uploadFile.overwrite")
     String uploadFileOverwrite();
 
+    @Key("uploadFolderFromZip.name")
+    String uploadFolderFromZipName();
+
+    @Key("uploadFolderFromZip.description")
+    String uploadFolderFromZipDescription();
+
+    @Key("uploadFolderFromZip.title")
+    String uploadFolderFromZipTitle();
+
+    @Key("uploadFolderFromZip.overwrite")
+    String uploadFolderFromZipOverwrite();
+
+    @Key("uploadFolderFromZip.skipFirstLevel")
+    String uploadFolderFromZipSkipFirstLevel();
+
     @Key("cancelButton")
     String cancelButton();
 
@@ -231,6 +246,9 @@ public interface CoreLocalizationConstant extends Messages {
 
     @Key("openFileFieldTitle")
     String openFileFieldTitle();
+
+    @Key("uploadFolderFromZip.openZipFieldTitle")
+    String uploadFolderFromZipOpenZipFieldTitle();
 
     @Key("projectExplorer.button.title")
     String projectExplorerButtonTitle();

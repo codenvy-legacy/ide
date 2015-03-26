@@ -8,8 +8,15 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.folder;
 
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.google.web.bindery.event.shared.EventBus;
+
+import org.eclipse.che.ide.api.editor.EditorAgent;
+import org.eclipse.che.ide.api.editor.EditorPartPresenter;
 import org.eclipse.che.ide.api.event.FileContentUpdateEvent;
 import org.eclipse.che.ide.api.event.RefreshProjectTreeEvent;
 import org.eclipse.che.ide.api.notification.NotificationManager;
@@ -17,35 +24,33 @@ import org.eclipse.che.ide.api.project.tree.generic.FileNode;
 import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.api.selection.SelectionAgent;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The purpose of this class is upload file
  *
  * @author Roman Nikitenko.
  */
-public class UploadFilePresenter implements UploadFileView.ActionDelegate {
+public class UploadFolderFromZipPresenter implements UploadFolderFromZipView.ActionDelegate {
 
-    private UploadFileView      view;
-    private SelectionAgent      selectionAgent;
-    private String              restContext;
-    private String              workspaceId;
-    private EventBus            eventBus;
-    private NotificationManager notificationManager;
+    private UploadFolderFromZipView view;
+    private EditorAgent             editorAgent;
+    private SelectionAgent          selectionAgent;
+    private String                  restContext;
+    private String                  workspaceId;
+    private EventBus                eventBus;
+    private NotificationManager     notificationManager;
 
     @Inject
-    public UploadFilePresenter(UploadFileView view,
-                               @Named("restContext") String restContext,
-                               @Named("workspaceId") String workspaceId,
-                               SelectionAgent selectionAgent,
-                               EventBus eventBus,
-                               NotificationManager notificationManager) {
-
+    public UploadFolderFromZipPresenter(UploadFolderFromZipView view,
+                                        @Named("restContext") String restContext,
+                                        @Named("workspaceId") String workspaceId,
+                                        SelectionAgent selectionAgent,
+                                        EditorAgent editorAgent,
+                                        EventBus eventBus,
+                                        NotificationManager notificationManager) {
         this.restContext = restContext;
         this.workspaceId = workspaceId;
+        this.editorAgent = editorAgent;
         this.selectionAgent = selectionAgent;
         this.eventBus = eventBus;
         this.view = view;
@@ -68,7 +73,9 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onSubmitComplete(String result) {
+        view.setLoaderVisibility(false);
         eventBus.fireEvent(new RefreshProjectTreeEvent(getParent()));
+
         if (result != null && !result.isEmpty()) {
             view.closeDialog();
             notificationManager.showError(parseMessage(result));
@@ -76,8 +83,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
         }
 
         if (view.isOverwriteFileSelected()) {
-            String path = getParent().getPath() + "/" + view.getFileName();
-            eventBus.fireEvent(new FileContentUpdateEvent(path));
+            updateOpenedEditors();
         }
         view.closeDialog();
     }
@@ -85,8 +91,9 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     /** {@inheritDoc} */
     @Override
     public void onUploadClicked() {
+        view.setLoaderVisibility(true);
         view.setEncoding(FormPanel.ENCODING_MULTIPART);
-        view.setAction(restContext + "/project/" + workspaceId + "/uploadfile" + getParent().getPath());
+        view.setAction(restContext + "/project/" + workspaceId + "/upload/zipfolder/" + getParent().getPath());
         view.submit();
     }
 
@@ -94,7 +101,7 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
     @Override
     public void onFileNameChanged() {
         String fileName = view.getFileName();
-        boolean enabled = !fileName.isEmpty();
+        boolean enabled = !fileName.isEmpty() && fileName.contains(".zip");
         view.setEnabledUploadButton(enabled);
     }
 
@@ -127,5 +134,14 @@ public class UploadFilePresenter implements UploadFileView.ActionDelegate {
             endIndex = message.indexOf("</pre>");
         }
         return (endIndex != -1) ? message.substring(startIndex, endIndex) : message.substring(startIndex);
+    }
+
+    private void updateOpenedEditors() {
+        for (EditorPartPresenter partPresenter : editorAgent.getOpenedEditors().getValues().asIterable()) {
+            String filePath = partPresenter.getEditorInput().getFile().getPath();
+            if (filePath.contains(getParent().getPath())) {
+                eventBus.fireEvent(new FileContentUpdateEvent(filePath));
+            }
+        }
     }
 }

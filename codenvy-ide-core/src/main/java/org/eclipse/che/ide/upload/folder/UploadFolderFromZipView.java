@@ -8,18 +8,18 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.folder;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
 
 /**
- * The view of {@link UploadFilePresenter}.
+ * The view of {@link UploadFolderFromZipPresenter}.
  *
  * @author Roman Nikitenko.
  */
-public interface UploadFileView extends IsWidget {
+public interface UploadFolderFromZipView extends IsWidget {
 
     public interface ActionDelegate {
         /** Performs any actions appropriate in response to the user having pressed the Cancel button. */
@@ -45,6 +45,14 @@ public interface UploadFileView extends IsWidget {
 
     /** Close dialog */
     void closeDialog();
+
+    /**
+     * Set the visibility state of the loader.
+     *
+     * @param isVisible
+     *         <code>true</code> if visible.
+     */
+    void setLoaderVisibility(boolean isVisible);
 
     /** Sets the delegate to receive events from this view. */
     void setDelegate(ActionDelegate delegate);

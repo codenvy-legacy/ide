@@ -11,37 +11,35 @@
 package org.eclipse.che.ide.actions;
 
 import org.eclipse.che.api.analytics.client.logger.AnalyticsEventLogger;
-
 import org.eclipse.che.ide.CoreLocalizationConstant;
-import org.eclipse.che.ide.upload.file.UploadFilePresenter;
 import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.api.action.ActionEvent;
 import org.eclipse.che.ide.api.action.ProjectAction;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.api.selection.SelectionAgent;
-
+import org.eclipse.che.ide.upload.folder.UploadFolderFromZipPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Upload file Action
+ * Upload folder from zip Action
  *
  * @author Roman Nikitenko
  */
 @Singleton
-public class UploadFileAction extends ProjectAction {
+public class UploadFolderFromZipAction extends ProjectAction {
 
-    private final UploadFilePresenter  presenter;
-    private final SelectionAgent       selectionAgent;
-    private final AnalyticsEventLogger eventLogger;
+    private final UploadFolderFromZipPresenter presenter;
+    private final SelectionAgent               selectionAgent;
+    private final AnalyticsEventLogger         eventLogger;
 
     @Inject
-    public UploadFileAction(UploadFilePresenter presenter,
-                            CoreLocalizationConstant locale,
-                            SelectionAgent selectionAgent,
-                            AnalyticsEventLogger eventLogger,
-                            Resources resources) {
-        super(locale.uploadFileName(), locale.uploadFileDescription(), resources.uploadFile());
+    public UploadFolderFromZipAction(UploadFolderFromZipPresenter presenter,
+                                     CoreLocalizationConstant locale,
+                                     SelectionAgent selectionAgent,
+                                     AnalyticsEventLogger eventLogger,
+                                     Resources resources) {
+        super(locale.uploadFolderFromZipName(), locale.uploadFolderFromZipDescription(), resources.uploadFile());
         this.presenter = presenter;
         this.selectionAgent = selectionAgent;
         this.eventLogger = eventLogger;
