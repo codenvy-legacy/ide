@@ -31,6 +31,7 @@ import org.eclipse.che.ide.actions.ShowHiddenFilesAction;
 import org.eclipse.che.ide.actions.ShowPreferencesAction;
 import org.eclipse.che.ide.actions.UndoAction;
 import org.eclipse.che.ide.actions.UploadFileAction;
+import org.eclipse.che.ide.actions.UploadFolderFromZipAction;
 import org.eclipse.che.ide.connection.WsConnectionListener;
 import org.eclipse.che.ide.imageviewer.ImageViewerProvider;
 import org.eclipse.che.ide.newresource.NewFileAction;
@@ -161,6 +162,9 @@ public class StandardComponentInitializer {
 
     @Inject
     private UploadFileAction uploadFileAction;
+
+    @Inject
+    private UploadFolderFromZipAction uploadFolderFromZipAction;
 
     @Inject
     private ImportProjectFromLocationAction importProjectFromLocationAction;
@@ -304,6 +308,7 @@ public class StandardComponentInitializer {
         newGroup.addAction(newXmlFileAction);
 
         actionManager.registerAction("uploadFile", uploadFileAction);
+        actionManager.registerAction("uploadFolderFromZip", uploadFolderFromZipAction);
         actionManager.registerAction("navigateToFile", navigateToFileAction);
         actionManager.registerAction("projectConfiguration", projectConfigurationAction);
         actionManager.registerAction("createModuleAction", createModuleAction);
@@ -326,6 +331,7 @@ public class StandardComponentInitializer {
         fileGroup.add(closeProjectAction);
         fileGroup.add(projectConfigurationAction);
         fileGroup.add(uploadFileAction);
+        fileGroup.add(uploadFolderFromZipAction);
         fileGroup.add(navigateToFileAction);
         fileGroup.add(showHiddenFilesAction);
         fileGroup.add(renameItemAction);

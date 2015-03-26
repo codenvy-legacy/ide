@@ -8,10 +8,11 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.file;
 
 import org.eclipse.che.ide.CoreLocalizationConstant;
 import org.eclipse.che.ide.ui.window.Window;
+
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -91,18 +92,7 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     /** {@inheritDoc} */
     @Override
     public void showDialog() {
-        file = new FileUpload();
-        file.setHeight("22px");
-        file.setWidth("100%");
-        file.setName("file");
-        file.ensureDebugId("file-uploadFile-ChooseFile");
-        file.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                delegate.onFileNameChanged();
-            }
-        });
-        uploadPanel.insert(file, 0);
+        addFile();
         this.show();
     }
 
@@ -170,5 +160,20 @@ public class UploadFileViewImpl extends Window implements UploadFileView {
     @Override
     protected void onClose() {
         uploadPanel.remove(file);
+    }
+
+    private void addFile() {
+        file = new FileUpload();
+        file.setHeight("22px");
+        file.setWidth("100%");
+        file.setName("file");
+        file.ensureDebugId("file-uploadFile-ChooseFile");
+        file.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(ChangeEvent event) {
+                delegate.onFileNameChanged();
+            }
+        });
+        uploadPanel.insert(file, 0);
     }
 }

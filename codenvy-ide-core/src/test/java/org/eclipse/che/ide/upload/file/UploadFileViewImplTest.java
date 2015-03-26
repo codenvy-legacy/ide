@@ -8,11 +8,10 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.che.ide.upload;
+package org.eclipse.che.ide.upload.file;
 
 import org.eclipse.che.ide.CoreLocalizationConstant;
-import org.eclipse.che.ide.upload.UploadFilePresenter;
-import org.eclipse.che.ide.upload.UploadFileViewImpl;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -41,8 +40,6 @@ import static org.mockito.Mockito.when;
 public class UploadFileViewImplTest {
 
     private UploadFileViewImpl  view;
-    private UploadFilePresenter presenter;
-
 
     UploadFileViewImpl.UploadFileViewBinder binder;
     CoreLocalizationConstant                locale;
@@ -52,7 +49,7 @@ public class UploadFileViewImplTest {
         GwtMockito.initMocks(this);
         binder = GWT.create(UploadFileViewImpl.UploadFileViewBinder.class);
         locale = GWT.create(CoreLocalizationConstant.class);
-        presenter = mock(UploadFilePresenter.class);
+        UploadFilePresenter presenter = mock(UploadFilePresenter.class);
         view = new UploadFileViewImpl(binder, locale);
         view.setDelegate(presenter);
     }

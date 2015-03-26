@@ -68,8 +68,10 @@ import org.eclipse.che.ide.theme.ThemeAgentImpl;
 import org.eclipse.che.ide.toolbar.ToolbarPresenter;
 import org.eclipse.che.ide.toolbar.ToolbarView;
 import org.eclipse.che.ide.toolbar.ToolbarViewImpl;
-import org.eclipse.che.ide.upload.UploadFileView;
-import org.eclipse.che.ide.upload.UploadFileViewImpl;
+import org.eclipse.che.ide.upload.file.UploadFileView;
+import org.eclipse.che.ide.upload.file.UploadFileViewImpl;
+import org.eclipse.che.ide.upload.folder.UploadFolderFromZipView;
+import org.eclipse.che.ide.upload.folder.UploadFolderFromZipViewImpl;
 import org.eclipse.che.ide.workspace.WorkspacePresenter;
 import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.about.AboutViewImpl;
@@ -321,6 +323,7 @@ public class CoreGinModule extends AbstractGinModule {
 
         bind(OpenProjectView.class).to(OpenProjectViewImpl.class);
         bind(UploadFileView.class).to(UploadFileViewImpl.class);
+        bind(UploadFolderFromZipView.class).to(UploadFolderFromZipViewImpl.class);
         bind(PreferencesView.class).to(PreferencesViewImpl.class).in(Singleton.class);
         bind(NavigateToFileView.class).to(NavigateToFileViewImpl.class).in(Singleton.class);
         bind(AboutView.class).to(AboutViewImpl.class);
