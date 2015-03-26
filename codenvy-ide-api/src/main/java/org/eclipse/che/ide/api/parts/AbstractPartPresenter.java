@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.che.ide.api.parts;
 
-import org.eclipse.che.ide.api.selection.Selection;
-import org.eclipse.che.ide.util.ListenerManager;
-import org.eclipse.che.ide.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.eclipse.che.ide.api.selection.Selection;
+import org.eclipse.che.ide.util.ListenerManager;
+import org.eclipse.che.ide.util.ListenerManager.Dispatcher;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @author Stéphane Daviet
+ * @author Valeriy Svydenko
  */
 public abstract class AbstractPartPresenter implements PartPresenter {
     private ListenerManager<PropertyListener> manager;
@@ -96,7 +97,7 @@ public abstract class AbstractPartPresenter implements PartPresenter {
     /** {@inheritDoc} */
     @Override
     public int getSize() {
-        return 200;
+        return 285;
     }
 
     /** {@inheritDoc} */
