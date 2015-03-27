@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.che.ide.extension.builder.client.actions;
 
-import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
-import com.codenvy.ide.api.action.permits.ActionPermit;
-import com.codenvy.ide.api.action.permits.Build;
+import org.eclipse.che.ide.api.action.permits.ActionDenyAccessDialog;
+import org.eclipse.che.ide.api.action.permits.ActionPermit;
+import org.eclipse.che.ide.api.action.permits.Build;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

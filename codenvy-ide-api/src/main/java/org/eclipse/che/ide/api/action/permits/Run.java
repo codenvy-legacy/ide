@@ -8,15 +8,22 @@
  * Contributors:
  *   Codenvy, S.A. - initial API and implementation
  *******************************************************************************/
-package com.codenvy.ide.api.action.permits;
+package org.eclipse.che.ide.api.action.permits;
+
+import com.google.inject.BindingAnnotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Interface to the information deny access dialog component.
+ * Used to bind run action.
  *
  * @author Oleksii Orel
  */
-public interface ActionDenyAccessDialog {
-
-    /** Operate the message dialog: show it and manage user actions. */
-    void show();
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@BindingAnnotation
+public @interface Run {
 }
