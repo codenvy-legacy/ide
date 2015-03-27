@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.che.ide.notification;
 
-import org.eclipse.che.ide.Resources;
+import com.google.gwt.user.client.Window;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.api.notification.Notification;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
-import com.google.gwt.user.client.Window;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public class NotificationMessageStack implements NotificationMessage.ActionDeleg
     /** Show notification message. */
     private void showMessage() {
         int left = Window.getClientWidth() - NotificationMessage.WIDTH - 30;
-        for (int i = 0, top = 30; i < POPUP_COUNT && i < messages.size(); i++, top += NotificationMessage.HEIGHT + 20) {
+        for (int i = 0, top = 53; i < POPUP_COUNT && i < messages.size(); i++, top += NotificationMessage.HEIGHT + 20) {
             NotificationMessage popup = messages.get(i);
             if (popup.isShowing()) {
                 popup.setPopupPosition(left, top);
