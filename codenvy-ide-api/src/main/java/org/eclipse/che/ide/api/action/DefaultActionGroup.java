@@ -12,12 +12,14 @@ package org.eclipse.che.ide.api.action;
 
 import org.eclipse.che.ide.api.constraints.Anchor;
 import org.eclipse.che.ide.api.constraints.Constraints;
-import org.eclipse.che.ide.util.Pair;
-import org.eclipse.che.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Iterator;
+
 
 /**
  * A default implementation of {@link ActionGroup}. Provides the ability
@@ -30,11 +32,15 @@ import java.util.List;
  * @author Evgen Vidolob
  */
 public class DefaultActionGroup extends ActionGroup {
-    /** Contains instances of AnAction */
-    private final List<Action>                    mySortedChildren = new ArrayList<>();
+    private static final Action[] EMPTY_ACTIONS = new Action[0];
     /** Contains instances of Pair */
-    private final List<Pair<Action, Constraints>> myPairs          = new ArrayList<>();
+    private final Map<Action, Constraints> myPairs = new LinkedHashMap<>();
+    /** Contains instances of sorted Actions */
+    private Action[] mySortedActions;
+
     private ActionManager actionManager;
+
+    private boolean needSorting = false;
 
     public DefaultActionGroup(ActionManager actionManager) {
         this(null, false, actionManager);
@@ -62,11 +68,12 @@ public class DefaultActionGroup extends ActionGroup {
         for (int i = 0; i < actions.size(); i++) {
             Action action = actions.get(i);
 
-            String id = actionManager.getId(action);
-            if (id != null && id.equals(actionId)) {
-                return i;
+            if (action != null) {
+                String id = actionManager.getId(action);
+                if (id != null && id.equals(actionId)) {
+                    return i;
+                }
             }
-
         }
         return -1;
     }
@@ -127,62 +134,15 @@ public class DefaultActionGroup extends ActionGroup {
         }
         // Check that action isn't already registered
         if (!(action instanceof Separator)) {
-            if (mySortedChildren.contains(action)) {
-                throw new IllegalArgumentException("cannot add an action twice: " + action);
-            }
-            for (Pair<Action, Constraints> pair : myPairs) {
-                if (action.equals(pair.first)) {
+            for (Map.Entry<Action, Constraints> entry : myPairs.entrySet()) {
+                if (action.equals(entry.getKey())) {
                     throw new IllegalArgumentException("cannot add an action twice: " + action);
                 }
             }
         }
-
-        constraint = constraint.clone();
-
-        if (constraint.myAnchor == Anchor.FIRST) {
-            mySortedChildren.add(0, action);
-        } else if (constraint.myAnchor == Anchor.LAST) {
-            mySortedChildren.add(action);
-        } else {
-            if (addToSortedList(action, constraint, actionManager)) {
-                actionAdded(action, actionManager);
-            } else {
-                myPairs.add(new Pair<>(action, constraint));
-            }
-        }
-
+        myPairs.put(action, constraint);
+        needSorting = true;
         return new ActionInGroup(this, action);
-    }
-
-    private void actionAdded(Action addedAction, ActionManager actionManager) {
-        String addedActionId = actionManager.getId(addedAction);
-        if (addedActionId == null) {
-            return;
-        }
-        outer:
-        while (!myPairs.isEmpty()) {
-            for (int i = 0; i < myPairs.size(); i++) {
-                Pair<Action, Constraints> pair = myPairs.get(i);
-                if (addToSortedList(pair.first, pair.second, actionManager)) {
-                    myPairs.remove(i);
-                    continue outer;
-                }
-            }
-            break;
-        }
-    }
-
-    private boolean addToSortedList(Action action, Constraints constraint, ActionManager actionManager) {
-        int index = findIndex(constraint.myRelativeToActionId, mySortedChildren, actionManager);
-        if (index == -1) {
-            return false;
-        }
-        if (constraint.myAnchor == Anchor.BEFORE) {
-            mySortedChildren.add(index, action);
-        } else {
-            mySortedChildren.add(index + 1, action);
-        }
-        return true;
     }
 
     /**
@@ -192,23 +152,20 @@ public class DefaultActionGroup extends ActionGroup {
      *         Action to be removed
      */
     public final void remove(Action action) {
-        if (!mySortedChildren.remove(action)) {
-            for (int i = 0; i < myPairs.size(); i++) {
-                Pair<Action, Constraints> pair = myPairs.get(i);
-                if (pair.first.equals(action)) {
-                    myPairs.remove(i);
-                    break;
-                }
+        for (Map.Entry<Action, Constraints> entry : myPairs.entrySet()) {
+            if (entry.getKey().equals(action)) {
+                myPairs.entrySet().remove(entry);
+                needSorting = true;
+                break;
             }
         }
     }
 
     /** Removes all children actions (separators as well) from the group. */
     public final void removeAll() {
-        mySortedChildren.clear();
         myPairs.clear();
+        needSorting = true;
     }
-
     /**
      * Returns group's children in the order determined by constraints.
      *
@@ -218,44 +175,91 @@ public class DefaultActionGroup extends ActionGroup {
      */
     @Override
     public final Action[] getChildren(ActionEvent e) {
-        boolean hasNulls = false;
 
-        // Mix sorted actions and pairs
-        int sortedSize = mySortedChildren.size();
-        Action[] children = new Action[sortedSize + myPairs.size()];
-        for (int i = 0; i < sortedSize; i++) {
-            Action action = mySortedChildren.get(i);
-            if (action == null) {
-                Log.error(getClass(), "Empty sorted child: " + this + ", " + getClass() + "; index=" + i);
-            }
-
-            hasNulls |= action == null;
-            children[i] = action;
+        if (needSorting) {
+            mySortedActions = getSortedActions();
+            needSorting = false;
         }
-        for (int i = 0; i < myPairs.size(); i++) {
-            final Pair<Action, Constraints> pair = myPairs.get(i);
-            Action action = pair.first;
-            if (action == null) {
-                Log.error(getClass(), "Empty pair child: " + this + ", " + getClass() + "; index=" + i);
-            }
-            hasNulls |= action == null;
-            children[i + sortedSize] = action;
-        }
-
-        if (hasNulls) {
-            return mapNotNull(children, new Action[0]);
-        }
-        return children;
+        return mySortedActions == null ? EMPTY_ACTIONS : mySortedActions;
     }
 
-    private Action[] mapNotNull(Action[] arr, Action[] emptyArray) {
-        List<Action> result = new ArrayList<>(arr.length);
-        for (Action t : arr) {
-            if (t != null) {
-                result.add(t);
+    /**
+     * Sorts actions depending on their constraints and their input order.
+     * @return An array of sorted actions
+     */
+    private Action[] getSortedActions() {
+        List<Action> result = new ArrayList<>();
+        Map<Action, Constraints> unsortedMap = new LinkedHashMap<>();
+
+        for (Map.Entry<Action, Constraints> entry : myPairs.entrySet()) {
+
+            Action action = entry.getKey();
+            Constraints constraints = entry.getValue();
+
+            // if action is added to result list, it needs to call
+            // checkUnsorted method to look for another actions, that must be
+            // before or after this action
+            if (constraints.myAnchor.equals(Anchor.FIRST)) {
+                result.add(0, action);
+                checkUnsorted(unsortedMap, action, result);
+            } else if (constraints.myAnchor.equals(Anchor.LAST)) {
+                result.add(action);
+                checkUnsorted(unsortedMap, action, result);
+            } else {
+                // find related action in result list, if found, add action
+                // before or after it. If not, add to unsorted map
+                int index = findIndex(constraints.myRelativeToActionId, result, actionManager);
+                if (index == -1) {
+                    unsortedMap.put(action, constraints);
+                } else {
+                    if (constraints.myAnchor.equals(Anchor.BEFORE)) {
+                        result.add(index, action);
+                        checkUnsorted(unsortedMap, action, result);
+                    } else if (constraints.myAnchor.equals(Anchor.AFTER)) {
+                        result.add(index + 1, action);
+                        checkUnsorted(unsortedMap, action, result);
+                    }
+                }
             }
         }
-        return result.toArray(emptyArray);
+        // append left unsorted actions to the end
+        result.addAll(unsortedMap.keySet());
+        return result.toArray(new Action[result.size()]);
+    }
+
+    /**
+     * This method checks unsorted map for actions, that depend
+     * on action, received in parameter. If found ones, adds it
+     * @param unsortedMap - map with unsorted actions
+     * @param action - action, that is a condition for actions in unsorted list
+     * @param result - result list
+     */
+    private void checkUnsorted(Map<Action, Constraints> unsortedMap,
+                               Action action,
+                               List<Action> result) {
+        Iterator<Map.Entry<Action, Constraints>> itr = unsortedMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<Action, Constraints> entry = itr.next();
+
+            String actionId = actionManager.getId(action);
+
+            Action relatedAction = entry.getKey();
+            Constraints relatedConstraints = entry.getValue();
+
+            // if dependant action constraints match depends on our action
+            // add it to result and remove from unsorted list
+            if (relatedConstraints.myRelativeToActionId.equals(actionId)) {
+                if (relatedConstraints.myAnchor.equals(Anchor.BEFORE)) {
+                    result.add(result.indexOf(action), relatedAction);
+                } else if (relatedConstraints.myAnchor.equals(Anchor.AFTER)) {
+                    result.add(result.indexOf(action) + 1, relatedAction);
+                }
+                itr.remove();
+                // recursive call of this method, but now passing the 'relatedAction'
+                // to find another actions, that related to 'relatedAction
+                checkUnsorted(unsortedMap, relatedAction, result);
+            }
+        }
     }
 
     /**
@@ -264,20 +268,11 @@ public class DefaultActionGroup extends ActionGroup {
      * @return number of children in the group
      */
     public final int getChildrenCount() {
-        return mySortedChildren.size() + myPairs.size();
+        return myPairs.size();
     }
 
     public final Action[] getChildActionsOrStubs() {
-        // Mix sorted actions and pairs
-        int sortedSize = mySortedChildren.size();
-        Action[] children = new Action[sortedSize + myPairs.size()];
-        for (int i = 0; i < sortedSize; i++) {
-            children[i] = mySortedChildren.get(i);
-        }
-        for (int i = 0; i < myPairs.size(); i++) {
-            children[i + sortedSize] = myPairs.get(i).first;
-        }
-        return children;
+        return mySortedActions == null ? EMPTY_ACTIONS : mySortedActions;
     }
 
     public final void addAll(ActionGroup group) {
