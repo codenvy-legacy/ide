@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.che.ide.extension.builder.client.actions;
 
+import com.codenvy.ide.api.action.permits.ActionDenyAccessDialog;
+import com.codenvy.ide.api.action.permits.ActionPermit;
+import com.codenvy.ide.api.action.permits.Build;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -30,29 +33,37 @@ import org.eclipse.che.ide.extension.builder.client.build.BuildController;
 @Singleton
 public class BuildAction extends ProjectAction {
 
-    private final BuildController      buildController;
-    private final AnalyticsEventLogger eventLogger;
-    private final BuildContext         buildContext;
+    private final BuildController        buildController;
+    private final AnalyticsEventLogger   eventLogger;
+    private final BuildContext           buildContext;
+    private final ActionPermit           buildActionPermit;
+    private final ActionDenyAccessDialog buildActionDenyAccessDialog;
 
     @Inject
     public BuildAction(BuildController buildController,
                        BuilderResources resources,
                        BuilderLocalizationConstant localizationConstant,
                        AnalyticsEventLogger eventLogger,
-                       BuildContext buildContext) {
-        super(localizationConstant.buildProjectControlTitle(),
-              localizationConstant.buildProjectControlDescription(),
-              resources.build());
+                       BuildContext buildContext,
+                       @Build ActionPermit buildActionPermit,
+                       @Build ActionDenyAccessDialog buildActionDenyAccessDialog) {
+        super(localizationConstant.buildProjectControlTitle(), localizationConstant.buildProjectControlDescription(), resources.build());
         this.buildController = buildController;
         this.eventLogger = eventLogger;
         this.buildContext = buildContext;
+        this.buildActionPermit = buildActionPermit;
+        this.buildActionDenyAccessDialog = buildActionDenyAccessDialog;
     }
 
     /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
         eventLogger.log(this);
-        buildController.buildActiveProject(true);
+        if (buildActionPermit.isAllowed()) {
+            buildController.buildActiveProject(true);
+        } else {
+            buildActionDenyAccessDialog.show();
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.che.ide.ui.dialogs;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
 import org.junit.Before;
@@ -21,12 +22,15 @@ import org.mockito.Mock;
 public abstract class BaseTest  {
     protected static String TITLE   = "title";
     protected static String MESSAGE = "message";
+    protected static String CONFIRM_BUTTON_TEXT = "text";
     @Mock
     protected CancelCallback  cancelCallback;
     @Mock
     protected ConfirmCallback confirmCallback;
     @Mock
     protected InputCallback   inputCallback;
+    @Mock
+    protected IsWidget        isWidget;
 
     @Before
     public void setUp() {

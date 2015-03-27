@@ -43,7 +43,7 @@ public class MessageDialogFooter extends Composite {
     @UiField
     Button                 okButton;
     /** The action delegate. */
-    private MessageDialogView.ActionDelegate actionDelegate;
+    private ActionDelegate actionDelegate;
 
     @Inject
     public MessageDialogFooter(final @Nonnull UILocalizationConstant messages) {
@@ -59,8 +59,18 @@ public class MessageDialogFooter extends Composite {
      * @param delegate
      *         the new value
      */
-    public void setDelegate(final MessageDialogView.ActionDelegate delegate) {
-        this.actionDelegate = delegate;
+    public void setDelegate(@Nonnull ActionDelegate delegate) {
+        actionDelegate = delegate;
+    }
+
+    /**
+     * Sets the confirm button text.
+     *
+     * @param text
+     *         the text
+     */
+    public void setConfirmButtonText(@Nonnull String text) {
+        okButton.setText(text);
     }
 
     /**

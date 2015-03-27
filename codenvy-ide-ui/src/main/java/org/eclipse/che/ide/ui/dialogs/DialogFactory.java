@@ -44,6 +44,25 @@ public interface DialogFactory {
                                       @Nullable ConfirmCallback confirmCallback);
 
     /**
+     * Create a message dialog with only text as content.
+     *
+     * @param title
+     *         the window title
+     * @param content
+     *         the window content/text
+     * @param confirmCallback
+     *         the window confirm button tex
+     * @param confirmButtonText
+     *         the callback used on Confirm
+     * @return a {@link ConfirmDialog} instance
+     */
+
+    MessageDialog createMessageDialog(@Nonnull @Assisted("title") String title,
+                                      @Nonnull IsWidget content,
+                                      @Nullable ConfirmCallback confirmCallback,
+                                      @Nonnull @Assisted("confirmButtonText") String confirmButtonText);
+
+    /**
      * Create a message dialog with a widget as content.
      *
      * @param title

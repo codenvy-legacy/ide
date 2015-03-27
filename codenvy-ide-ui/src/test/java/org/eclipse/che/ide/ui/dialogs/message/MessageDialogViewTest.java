@@ -44,6 +44,13 @@ public class MessageDialogViewTest extends BaseTest {
     }
 
     @Test
+    public void shouldSetConfirmButtonText() throws Exception {
+        view.setConfirmButtonText(CONFIRM_BUTTON_TEXT);
+
+        verify(footer).setConfirmButtonText(eq(CONFIRM_BUTTON_TEXT));
+    }
+
+    @Test
     public void shouldSetDelegateOnFooter() throws Exception {
         view.setDelegate(actionDelegate);
 

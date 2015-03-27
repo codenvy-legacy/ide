@@ -17,20 +17,16 @@ import org.eclipse.che.api.project.shared.dto.RunnerEnvironment;
 import org.eclipse.che.api.project.shared.dto.RunnerEnvironmentLeaf;
 import org.eclipse.che.api.project.shared.dto.RunnerEnvironmentTree;
 import org.eclipse.che.ide.Resources;
-import org.eclipse.che.ide.Resources;
 import org.eclipse.che.ide.dto.DtoFactory;
 import org.eclipse.che.ide.ui.tree.Tree;
 import org.eclipse.che.ide.ui.tree.TreeNodeElement;
 import org.eclipse.che.ide.util.input.SignalEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -46,15 +42,10 @@ public class RunnersPageViewImpl implements RunnersPageView {
     }
 
     private final DockLayoutPanel       rootElement;
-
     private final Tree<Object>          tree;
-
     private final RunnerEnvironmentTree root;
-
     @UiField
     Label       noEnvLabel;
-    @UiField
-    TextBox     recommendedMemory;
     @UiField
     TextArea    runnerDescription;
     @UiField
@@ -69,10 +60,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
                                RunnersRenderer runnersRenderer,
                                RunnersPageViewImplUiBinder uiBinder) {
         rootElement = uiBinder.createAndBindUi(this);
-
-        recommendedMemory.getElement().setAttribute("type", "number");
-        recommendedMemory.getElement().setAttribute("step", "128");
-        recommendedMemory.getElement().setAttribute("min", "0");
 
         root = dtoFactory.createDto(RunnerEnvironmentTree.class);
         tree = Tree.create(resources, new RunnersDataAdapter(), runnersRenderer);
@@ -126,11 +113,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
         });
     }
 
-    @UiHandler("recommendedMemory")
-    void recommendedMemoryChanged(KeyUpEvent event) {
-        delegate.recommendedMemoryChanged();
-    }
-
     @Override
     public void setDelegate(ActionDelegate delegate) {
         this.delegate = delegate;
@@ -139,20 +121,6 @@ public class RunnersPageViewImpl implements RunnersPageView {
     @Override
     public Widget asWidget() {
         return rootElement;
-    }
-
-    @Override
-    public int getRecommendedMemorySize() {
-        try {
-            return Integer.parseInt(recommendedMemory.getText());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setRecommendedMemorySize(int recommendedRam) {
-        recommendedMemory.setText(String.valueOf(recommendedRam));
     }
 
     @Override
