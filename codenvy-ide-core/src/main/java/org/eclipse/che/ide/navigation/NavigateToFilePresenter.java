@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.che.ide.navigation;
 
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import com.google.web.bindery.event.shared.EventBus;
+
 import org.eclipse.che.api.project.shared.dto.ItemReference;
-
-import org.eclipse.che.ide.CoreLocalizationConstant;
-
 import org.eclipse.che.ide.CoreLocalizationConstant;
 import org.eclipse.che.ide.api.app.AppContext;
 import org.eclipse.che.ide.api.event.FileEvent;
@@ -31,16 +35,9 @@ import org.eclipse.che.ide.websocket.WebSocketException;
 import org.eclipse.che.ide.websocket.rest.RequestCallback;
 import org.eclipse.che.ide.websocket.rest.Unmarshallable;
 
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import com.google.web.bindery.event.shared.EventBus;
-
+import static com.google.gwt.http.client.RequestBuilder.GET;
 import static org.eclipse.che.ide.MimeType.APPLICATION_JSON;
 import static org.eclipse.che.ide.rest.HTTPHeader.ACCEPT;
-import static com.google.gwt.http.client.RequestBuilder.GET;
 
 /**
  * Presenter for file navigation (find file by name and open it).
@@ -100,10 +97,10 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
             @Override
             public void onSuccess(Array<ItemReference> result) {
                 for (ItemReference item : result.asIterable()) {
-                    String path = item.getPath();
-                    // skip hidden items and items that don't belong to the project
-                    if (!isItemHidden(path) && isItemBelongingToProject(path)) {
-                        resultMap.put(item.getPath(), item);
+                    final String path = item.getPath();
+                    // skip hidden items
+                    if (!isItemHidden(path)) {
+                        resultMap.put(path, item);
                     }
                 }
                 callback.onSuccess(resultMap.getValues());
@@ -138,7 +135,7 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
 
     private void search(String fileName, final AsyncCallback<Array<ItemReference>> callback) {
         final String projectPath = appContext.getCurrentProject().getRootProject().getPath();
-        final String url = SEARCH_URL + projectPath + "?name=" + URL.encodePathSegment(fileName);
+        final String url = SEARCH_URL + projectPath + "/?name=" + URL.encodePathSegment(fileName);
         Message message = new MessageBuilder(GET, url).header(ACCEPT, APPLICATION_JSON).build();
         Unmarshallable<Array<ItemReference>> unmarshaller = dtoUnmarshallerFactory.newWSArrayUnmarshaller(ItemReference.class);
         try {
@@ -156,13 +153,6 @@ public class NavigateToFilePresenter implements NavigateToFileView.ActionDelegat
         } catch (WebSocketException e) {
             callback.onFailure(e);
         }
-    }
-
-    private boolean isItemBelongingToProject(String path) {
-        path = path.startsWith("/") ? path.substring(1) : path;
-        String[] items = path.split("/");
-        String projectName = appContext.getCurrentProject().getProjectDescription().getName();
-        return items[0].equals(projectName);
     }
 
     private boolean isItemHidden(String path) {
