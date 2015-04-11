@@ -37,6 +37,7 @@ import org.eclipse.che.ide.api.project.tree.generic.StorableNode;
 import org.eclipse.che.ide.api.selection.Selection;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.collections.Collections;
+import org.eclipse.che.ide.collections.js.JsoArray;
 import org.eclipse.che.ide.rest.AsyncRequestCallback;
 import org.eclipse.che.ide.ui.tree.SelectionModel;
 import org.eclipse.che.ide.util.Config;
