@@ -19,10 +19,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,6 +38,11 @@ import org.eclipse.che.ide.api.parts.PartStackUIResources;
 import org.eclipse.che.ide.api.parts.base.BaseView;
 import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 /**
  * Implements {@link BuilderConsoleView}.
  *
@@ -45,6 +52,12 @@ import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
 public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDelegate> implements BuilderConsoleView {
 
     private static final int MAX_LINE_COUNT = 1000;
+
+    /** Rate (limit per 1 sec.) */
+    private static final int LIMIT        = 300;
+
+    /** Period to print all collected messages. */
+    private static final int FLUSH_PERIOD = 500;
 
     private static final String INFO  = "INFO";
     private static final String ERROR = "ERROR";
@@ -57,6 +70,10 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     private static final String WARN_COLOR  = "#FFBA00";
     private static final String ERROR_COLOR = "#F62217";
     private static final String MAVEN_COLOR = "#61b7ef";
+
+    private static final String FULL_LOGS_WIDGET_ID = "logs_link";
+
+    private final List<String> buffer;
 
     private final BuildContext                buildContext;
     private final BuilderLocalizationConstant localizationConstant;
@@ -73,6 +90,15 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
                                   BuildContext buildContext,
                                   BuilderLocalizationConstant localizationConstant) {
         super(resources);
+
+        buffer = new ArrayList<>();
+        new Timer() {
+            @Override
+            public void run() {
+                printCollectedMessages();
+            }
+        }.scheduleRepeating(FLUSH_PERIOD);
+
         this.buildContext = buildContext;
         this.localizationConstant = localizationConstant;
 
@@ -87,6 +113,30 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
         scrollPanel.getElement().setTabIndex(0);
     }
 
+    /** Print all postponed messages in correct order. */
+    private void printCollectedMessages() {
+        if (buffer.isEmpty()) {
+            return;
+        }
+
+        int firstMessageNum = 0;
+        if (buffer.size() > LIMIT) {
+            firstMessageNum = buffer.size() - LIMIT;
+
+            printLine("--------------------------------------------------------------------------------------");
+            printLine("-------------------------------- " + firstMessageNum + " MESSAGES MISSED --------------------------------");
+            consoleArea.add(getFullLogsWidget(getFullLogsLink()));
+            printLine("--------------------------------------------------------------------------------------");
+        }
+
+        final ListIterator<String> iterator = buffer.listIterator(firstMessageNum);
+        while (iterator.hasNext()) {
+            printLine(iterator.next());
+        }
+
+        buffer.clear();
+    }
+
     /** {@inheritDoc} */
     @Override
     public AcceptsOneWidget getToolbarPanel() {
@@ -96,6 +146,31 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
     /** {@inheritDoc} */
     @Override
     public void print(String message) {
+        buffer.add(message);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void printFF(char ch) {
+        if (consoleArea.getWidgetCount() > 0) {
+            final Widget firstWidget = consoleArea.getWidget(0);
+            if (!firstWidget.getElement().getId().equals(FULL_LOGS_WIDGET_ID)) {
+                consoleArea.insert(getFullLogsWidget(getFullLogsLink()), 0);
+            }
+        }
+
+        final HTML html = new InlineHTML();
+        final SafeHtml safeHtml = new SafeHtmlBuilder()
+                .appendHtmlConstant("<span>")
+                .append(SimpleHtmlSanitizer.sanitizeHtml(String.valueOf(ch)))
+                .appendHtmlConstant("</span>")
+                .toSafeHtml();
+        html.setHTML(safeHtml);
+        html.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
+        consoleArea.add(html);
+    }
+
+    private void printLine(String message) {
         cleanOverHeadLines();
 
         HTML html = new HTML();
@@ -125,27 +200,32 @@ public class BuilderConsoleViewImpl extends BaseView<BuilderConsoleView.ActionDe
             consoleArea.remove(0);
         }
 
+        consoleArea.insert(getFullLogsWidget(getFullLogsLink()), 0);
+    }
+
+    @Nullable
+    private String getFullLogsLink() {
         final BuildTaskDescriptor buildTaskDescriptor = buildContext.getBuildTaskDescriptor();
         if (buildTaskDescriptor == null) {
-            return;
+            return null;
         }
 
         final Link logLink = buildTaskDescriptor.getLink("view build log");
         if (logLink == null) {
-            return;
+            return null;
         }
 
         final String logUrl = logLink.getHref();
         if (logUrl == null) {
-            return;
+            return null;
         }
 
-        // print link to full logs in top of console
-        consoleArea.insert(getFullLogsWidget(logUrl), 0);
+        return logUrl;
     }
 
     private Widget getFullLogsWidget(String logUrl) {
         HTML html = new HTML();
+        html.getElement().setId(FULL_LOGS_WIDGET_ID);
         html.getElement().getStyle().setProperty("fontFamily", "\"Droid Sans Mono\", monospace");
         html.getElement().getStyle().setProperty("fontSize", "11px");
         html.getElement().getStyle().setProperty("paddingLeft", "2px");
