@@ -10,6 +10,16 @@
  *******************************************************************************/
 package org.eclipse.che.ide.extension.builder.client.build;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import com.google.web.bindery.event.shared.EventBus;
+
 import org.eclipse.che.api.builder.BuildStatus;
 import org.eclipse.che.api.builder.dto.BuildOptions;
 import org.eclipse.che.api.builder.dto.BuildTaskDescriptor;
@@ -29,7 +39,6 @@ import org.eclipse.che.ide.api.notification.NotificationManager;
 import org.eclipse.che.ide.api.parts.WorkspaceAgent;
 import org.eclipse.che.ide.collections.Array;
 import org.eclipse.che.ide.dto.DtoFactory;
-import org.eclipse.che.ide.extension.builder.client.BuilderExtension;
 import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
 import org.eclipse.che.ide.extension.builder.client.console.BuilderConsolePresenter;
 import org.eclipse.che.ide.json.JsonHelper;
@@ -44,23 +53,18 @@ import org.eclipse.che.ide.util.loging.Log;
 import org.eclipse.che.ide.websocket.MessageBus;
 import org.eclipse.che.ide.websocket.WebSocketException;
 import org.eclipse.che.ide.websocket.rest.SubscriptionHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import com.google.web.bindery.event.shared.EventBus;
 
 import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.gwt.user.client.Window.Navigator.getUserAgent;
 import static org.eclipse.che.ide.api.notification.Notification.Status.FINISHED;
 import static org.eclipse.che.ide.api.notification.Notification.Status.PROGRESS;
 import static org.eclipse.che.ide.api.notification.Notification.Type.ERROR;
 import static org.eclipse.che.ide.api.notification.Notification.Type.INFO;
+import static org.eclipse.che.ide.extension.builder.client.BuilderExtension.BUILD_OUTPUT_CHANNEL;
+import static org.eclipse.che.ide.extension.builder.client.BuilderExtension.BUILD_STATUS_CHANNEL;
 
 /**
  * Controls building application.
@@ -88,14 +92,15 @@ public class BuildController implements Notification.OpenNotificationHandler {
     protected     Notification        notification;
     private       BuildContext        buildContext;
     private final DialogFactory       dialogFactory;
-    /** Descriptor of the last build task. */
     private       BuildTaskDescriptor lastBuildTaskDescriptor;
     private       EditorAgent         editorAgent;
+    /** Timer for printing dots instead of logs in FireFox. FF freezes while intensive outputting. */
+    private final Timer               ffTimer;
 
-    private String baseUrl;
+    private final String builderURL;
 
     @Inject
-    protected BuildController(@Named("restContext") String baseUrl,
+    protected BuildController(@Named("restContext") String restContext,
                               EventBus eventBus,
                               WorkspaceAgent workspaceAgent,
                               AppContext appContext,
@@ -109,8 +114,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               MessageBus messageBus,
                               BuildContext buildContext,
                               DialogFactory dialogFactory) {
-        this.baseUrl = baseUrl;
-
+        this.builderURL = Window.Location.getProtocol() + "//" + Window.Location.getHost() + restContext + "/builder/";
         this.workspaceAgent = workspaceAgent;
         this.appContext = appContext;
         this.console = console;
@@ -137,6 +141,13 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 lastBuildTaskDescriptor = null;
             }
         });
+
+        ffTimer = new Timer() {
+            @Override
+            public void run() {
+                console.printFF('.');
+            }
+        };
     }
 
     @Override
@@ -225,7 +236,12 @@ public class BuildController implements Notification.OpenNotificationHandler {
                               } else {
                                   isBuildInProgress = true;
                                   startCheckingStatus(result);
-                                  startCheckingOutput(result);
+
+                                  if (getUserAgent().contains("Firefox")) {
+                                      ffTimer.scheduleRepeating(1000);
+                                  } else {
+                                      startCheckingOutput(result);
+                                  }
                               }
                           }
 
@@ -256,7 +272,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                     protected void onErrorReceived(Throwable exception) {
                         isBuildInProgress = false;
                         try {
-                            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
+                            messageBus.unsubscribe(BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), this);
                             Log.error(BuildController.class, exception);
                         } catch (WebSocketException e) {
                             Log.error(BuildController.class, e);
@@ -270,7 +286,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
                 };
 
         try {
-            messageBus.subscribe(BuilderExtension.BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
+            messageBus.subscribe(BUILD_STATUS_CHANNEL + buildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
             Log.error(BuildController.class, e);
         }
@@ -278,7 +294,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
 
     private void stopCheckingStatus() {
         try {
-            messageBus.unsubscribe(BuilderExtension.BUILD_STATUS_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildStatusHandler);
+            messageBus.unsubscribe(BUILD_STATUS_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildStatusHandler);
         } catch (WebSocketException e) {
             Log.error(BuildController.class, e);
         }
@@ -287,7 +303,7 @@ public class BuildController implements Notification.OpenNotificationHandler {
     private void startCheckingOutput(BuildTaskDescriptor buildTaskDescriptor) {
         buildOutputHandler = new LogMessagesHandler(buildTaskDescriptor, console, messageBus);
         try {
-            messageBus.subscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
+            messageBus.subscribe(BUILD_OUTPUT_CHANNEL + buildTaskDescriptor.getTaskId(), buildOutputHandler);
         } catch (WebSocketException e) {
             Log.error(BuildController.class, e);
         }
@@ -296,13 +312,22 @@ public class BuildController implements Notification.OpenNotificationHandler {
     public void showRunningBuild(BuildTaskDescriptor buildTaskDescriptor, String initialMessage) {
         console.setActive();
         console.print(initialMessage);
-        this.startCheckingOutput(buildTaskDescriptor);
+        startCheckingOutput(buildTaskDescriptor);
     }
 
     private void stopCheckingOutput() {
+        if (ffTimer.isRunning()) {
+            ffTimer.cancel();
+            return;
+        }
+
+        final String channelId = BUILD_OUTPUT_CHANNEL + lastBuildTaskDescriptor.getTaskId();
+        if (buildOutputHandler == null || !messageBus.isHandlerSubscribed(buildOutputHandler, channelId)) {
+            return;
+        }
         buildOutputHandler.stop();
         try {
-            messageBus.unsubscribe(BuilderExtension.BUILD_OUTPUT_CHANNEL + lastBuildTaskDescriptor.getTaskId(), buildOutputHandler);
+            messageBus.unsubscribe(channelId, buildOutputHandler);
         } catch (WebSocketException e) {
             Log.error(BuildController.class, e);
         }
@@ -311,16 +336,16 @@ public class BuildController implements Notification.OpenNotificationHandler {
     /**
      * Returns URL to the target folder.
      *
-     * @param descriptor build task descriptor
+     * @param descriptor
+     *         build task descriptor
      * @return url to the target folder of the build
      */
     private String getTargetFolderURL(BuildTaskDescriptor descriptor) {
-        String url = Window.Location.getProtocol() + "//"
-                 + Window.Location.getHost() + baseUrl + "/builder/"
-                 + Config.getCurrentWorkspace().getId()
-                 + "/browse/"
-                 + descriptor.getTaskId()
-                 + "?path=target";
+        final String url = builderURL
+                           + Config.getCurrentWorkspace().getId()
+                           + "/browse/"
+                           + descriptor.getTaskId()
+                           + "?path=target";
 
         return "Browse <a href=\"" + url + "\" target=\"_blank\" " +
                "style=\"color: #61b7ef;\"" +

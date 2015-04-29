@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  */
 public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelegate> {
 
-    public interface ActionDelegate extends BaseActionDelegate {
+    interface ActionDelegate extends BaseActionDelegate {
     }
 
     /**
@@ -37,6 +37,9 @@ public interface BuilderConsoleView extends View<BuilderConsoleView.ActionDelega
      * @param message message that need to be shown
      */
     void print(String message);
+
+    /** Do not use it. This is workaround of freezing FF (see IDEX-2327). */
+    void printFF(char ch);
 
     /**
      * Set title of console part.

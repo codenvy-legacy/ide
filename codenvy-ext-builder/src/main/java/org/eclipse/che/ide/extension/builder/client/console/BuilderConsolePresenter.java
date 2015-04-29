@@ -10,22 +10,22 @@
  *******************************************************************************/
 package org.eclipse.che.ide.extension.builder.client.console;
 
-import org.eclipse.che.ide.api.event.ActivePartChangedEvent;
-import org.eclipse.che.ide.api.event.ActivePartChangedHandler;
-import org.eclipse.che.ide.api.parts.HasView;
-import org.eclipse.che.ide.api.mvp.View;
-import org.eclipse.che.ide.api.parts.PartPresenter;
-import org.eclipse.che.ide.api.parts.base.BasePresenter;
-import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
-import org.eclipse.che.ide.extension.builder.client.BuilderResources;
-import org.eclipse.che.ide.extension.builder.client.build.BuilderStatus;
-import org.eclipse.che.ide.toolbar.ToolbarPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.eclipse.che.ide.api.event.ActivePartChangedEvent;
+import org.eclipse.che.ide.api.event.ActivePartChangedHandler;
+import org.eclipse.che.ide.api.mvp.View;
+import org.eclipse.che.ide.api.parts.HasView;
+import org.eclipse.che.ide.api.parts.PartPresenter;
+import org.eclipse.che.ide.api.parts.base.BasePresenter;
+import org.eclipse.che.ide.extension.builder.client.BuilderLocalizationConstant;
+import org.eclipse.che.ide.extension.builder.client.BuilderResources;
+import org.eclipse.che.ide.extension.builder.client.build.BuilderStatus;
+import org.eclipse.che.ide.toolbar.ToolbarPresenter;
 import org.vectomatic.dom.svg.ui.SVGImage;
 import org.vectomatic.dom.svg.ui.SVGResource;
 
@@ -178,12 +178,18 @@ public class BuilderConsolePresenter extends BasePresenter implements BuilderCon
         if (activePart == null || !activePart.equals(this)) {
             isUnread = true;
         }
-        firePropertyChange(TITLE_PROPERTY);
     }
 
-    /**
-     * Set the console active (selected) in the parts stack.
-     */
+    /** Do not use it. This is workaround of freezing FF (see IDEX-2327). */
+    public void printFF(char ch) {
+        view.printFF(ch);
+        PartPresenter activePart = partStack.getActivePart();
+        if (activePart == null || !activePart.equals(this)) {
+            isUnread = true;
+        }
+    }
+
+    /** Set the console active (selected) in the parts stack. */
     public void setActive() {
         PartPresenter activePart = partStack.getActivePart();
         if (activePart == null || !activePart.equals(this)) {
